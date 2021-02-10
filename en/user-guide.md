@@ -120,10 +120,10 @@ $ export PATH=$PATH:$(pwd)
 ```
 
 ### Configuration 
-To access Kubernetes cluster with kubectl, cluster configuration file (kubeconfig) is required. On TOAST web console, open **Container > Kubernetes** and select a cluster to access. From **Basic Information**, click **Download** of **Configuration Files** to download a configuration file. Change the downloaded configuration file to a location of choice to serve as reference for kubectl execution. 
+To access Kubernetes cluster with kubectl, cluster configuration file (kubeconfig) is required. On NHN Cloud web console, open **Container > Kubernetes** and select a cluster to access. From **Basic Information**, click **Download** of **Configuration Files** to download a configuration file. Change the downloaded configuration file to a location of choice to serve as reference for kubectl execution. 
 
 > [Caution]
-> A configuration file downloaded from TOAST web console includes cluster information and token for authentication. With the file, you're authorized to access corresponding Kubernetes clusters. Take cautions for not losing configuration files.   
+> A configuration file downloaded from NHN Cloud web console includes cluster information and token for authentication. With the file, you're authorized to access corresponding Kubernetes clusters. Take cautions for not losing configuration files.   
 
 kubectl requires a cluster configuration file every time it is executed, so a cluster configuration file must be specified by using the `--kubeconfig` option. However, if the environment variable includes specific path for a cluster configuration file, there is no need to specify each option. 
 
@@ -188,7 +188,7 @@ nginx-deployment-7fd6966748-pvrzs   1/1     Running   0          4m13s
 nginx-deployment-7fd6966748-wv7rd   1/1     Running   0          4m13s
 ```
 
-To use images saved at TOAST Container Registry, first create a secret to login to user registry. 
+To use images saved at NHN Cloud Container Registry, first create a secret to login to user registry. 
 
 ```
 $ kubectl create secret docker-registry registry-credential --docker-server={user registry address} --docker-username={email address for Toast account} --docker-password={service or integrated Appkey}
@@ -219,7 +219,7 @@ spec:
 ```
 
 > [Note]
-> Regarding how to use TOAST Container Registry, see [User Guide for Container Registry](/Container/Container%20Registry/en/user-guide).
+> Regarding how to use NHN Cloud Container Registry, see [User Guide for Container Registry](/Container/Container%20Registry/en/user-guide).
 
 ### Creating LoadBalancer 
 To define service object of Kubernetes, a manifest comprised of the following items is required: 
@@ -674,7 +674,7 @@ $ curl --resolve test.example.com:80:123.123.123.44 http://test.example.com/
 ```
 
 ## Kubernetes Dashboard 
-TOAST Kubernetes provides default web UI dashboard. For more details on Kubernetes Dashboard, see documents at [Web UI (Dashboard)](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/). 
+NHN Cloud Kubernetes provides default web UI dashboard. For more details on Kubernetes Dashboard, see documents at [Web UI (Dashboard)](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/). 
 
 ### Opening Dashboard Services
 User Kubernetes has the `kubernetes-dashboard` service object which has been already created to publicly open dashboard. 
@@ -705,7 +705,7 @@ However, the `kubernetes-dashboard` object belongs to ClusterIP type and is not 
 
 #### Change into LoadBalancer 
 
-Once the type of service object is changed into `LoadBalancer`, TOAST Load Balancer is created out of the cluster, which is associated with load balancer and service object. By querying service object associated with the load balanacer, IP of the load balancer shows at **EXTERNAL-IP**. See [LoadBalancer Service](/Container/Kubernetes/en/user-guide/#loadbalancer) for the description of service objects of the `LoadBalancer` type.  
+Once the type of service object is changed into `LoadBalancer`, NHN Cloud Load Balancer is created out of the cluster, which is associated with load balancer and service object. By querying service object associated with the load balanacer, IP of the load balancer shows at **EXTERNAL-IP**. See [LoadBalancer Service](/Container/Kubernetes/en/user-guide/#loadbalancer) for the description of service objects of the `LoadBalancer` type.  
 
 ![dashboard-01.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-01.png)
 
@@ -795,7 +795,7 @@ Enter printed token on the browser, and you can login as user with the administr
 
 
 ## Persistent Volume 
-Persistent Volume or PV is a Kubernetes resource representing physical storage volume. One PV is attached to one TOAST Block Storage. For more details, see [Persistent Volume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/). 
+Persistent Volume or PV is a Kubernetes resource representing physical storage volume. One PV is attached to one NHN Cloud Block Storage. For more details, see [Persistent Volume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/). 
 
 Persistent Volume Claims, or PVC is required to attach PV to pods. PVC defines necessary volume requirements, including volume and read/write modes. 
 
@@ -825,14 +825,14 @@ Volume is reclaimed after it is used up, in three methods: Delete, Retain, or Re
 
 ### Static Provisioning 
 
-To enable static provisioning, user must have the block storage prepared. Go to **Storage > Block Storage** on TOAST web console, and click **Create Block Storages** to create block storages to be attached to PV. See Block Stroage Guide for [Creating Block Storages](/Storage/Block%20Storage/en/console-guide/#_2).  
+To enable static provisioning, user must have the block storage prepared. Go to **Storage > Block Storage** on NHN Cloud web console, and click **Create Block Storages** to create block storages to be attached to PV. See Block Stroage Guide for [Creating Block Storages](/Storage/Block%20Storage/en/console-guide/#_2).  
 
 To provision PV, ID of a block storage is required. Select a block storage from the list of block storages on **Storage > Block Storage**. Check ID on the **Information** tab at the bottom of the block storage name. 
 
 > [Caution]
 > Block storage must be on the same availability area with the node group instance to run pods; otherwise, attachement is unavailable. 
 
-Create manifest for storage class. To enable TOAST Block Storage, **provisioner** must be configured with `kubernetes.io/cinder`. 
+Create manifest for storage class. To enable NHN Cloud Block Storage, **provisioner** must be configured with `kubernetes.io/cinder`. 
 
 ```yaml
 # storage_class.yaml
@@ -854,7 +854,7 @@ NAME         PROVISIONER            AGE
 sc-default   kubernetes.io/cinder   8s
 ```
 
-Write PV manifest to be attached to block storage. Enter storage class name for **spec.storageClassName**. To enable TOAST Block Storage, **spec.accessModes** must be configured with 'ReadWriteOnce'. Choose 'Delete' or 'Retain' for **spec.presistentVolumeReclaimPolicy**.
+Write PV manifest to be attached to block storage. Enter storage class name for **spec.storageClassName**. To enable NHN Cloud Block Storage, **spec.accessModes** must be configured with 'ReadWriteOnce'. Choose 'Delete' or 'Retain' for **spec.presistentVolumeReclaimPolicy**.
 
 ```yaml
 # pv-static.yaml
@@ -927,7 +927,7 @@ pv-static-001   10Gi       RWO            Delete           Bound    default/pvc-
 
 ### Dynamic Provisioning 
 
-With Dynamic Provisioning, block storage is automatically created in reference of attributes defined at storage class. You may speify the type of TOAST Block Storages for **parameters.type** of the storage class manifest. If not specified, it is configured with HDD type.  
+With Dynamic Provisioning, block storage is automatically created in reference of attributes defined at storage class. You may speify the type of NHN Cloud Block Storages for **parameters.type** of the storage class manifest. If not specified, it is configured with HDD type.  
 
 | Type | Configured Value |
 | --- | --- |
@@ -969,7 +969,7 @@ spec:
   storageClassName: sc-ssd
 ```
 
-With PVC provisioning, PV is automatically created. At the same time, block storage attached to the PV is also automatically created, and you can check it from the list of block storages on the **Storage > Block Storage** page of TOAST web console. 
+With PVC provisioning, PV is automatically created. At the same time, block storage attached to the PV is also automatically created, and you can check it from the list of block storages on the **Storage > Block Storage** page of NHN Cloud web console. 
 
 ```
 $ kubectl apply -f pvc-dynamic.yaml
@@ -1037,4 +1037,4 @@ Filesystem      Size  Used Avail Use% Mounted on
 ...
 ```
 
-You can also check block storage attachement from **Storage > Block Storage** on TOAST web console. 
+You can also check block storage attachement from **Storage > Block Storage** on NHN Cloud web console. 
