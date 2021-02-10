@@ -104,7 +104,7 @@ KubernetesでGPU基盤ワークロードの実行が必要な場合、 GPUイン
 クラスターまたはノードグループ作成プロセスでインスタンスタイプを選択する時、 `g2`タイプを選択するとGPUノードグループを作成できます。
 
 > [参考]
-> TOAST GPUインスタンスで提供されるGPUはNVIDIA系です。 ([使用可能なGPUの仕様を確認](/Compute/GPU%20Instance/ja/overview/#gpu))
+> NHN Cloud GPUインスタンスで提供されるGPUはNVIDIA系です。 ([使用可能なGPUの仕様を確認](/Compute/GPU%20Instance/ja/overview/#gpu))
 > NVIDIA GPUを利用するために必要なKubernetesのnvidia-device-pluginは、GPUノードグループの作成時に自動的にインストールされます。
 
 作成されたGPUノードの基本的な設定のヘルスチェックおよび簡単な動作テストは次のような方法を利用できます。
@@ -722,10 +722,10 @@ $ export PATH=$PATH:$(pwd)
 ```
 
 ### 設定
-kubectlでKubernetesクラスターにアクセスするには、クラスター設定ファイル(kubeconfig)が必要です。TOAST Webコンソールで**Container > Kubernetes**サービスページを開き、アクセスするクラスターを選択します。下部、**基本情報**タブで**設定ファイル**項目の**ダウンロード**ボタンを押して設定ファイルをダウンロードします。ダウンロードした設定ファイルは、任意の位置へ移動させ、kubectl実行時に参照できるように準備します。
+kubectlでKubernetesクラスターにアクセスするには、クラスター設定ファイル(kubeconfig)が必要です。NHN Cloud Webコンソールで**Container > Kubernetes**サービスページを開き、アクセスするクラスターを選択します。下部、**基本情報**タブで**設定ファイル**項目の**ダウンロード**ボタンを押して設定ファイルをダウンロードします。ダウンロードした設定ファイルは、任意の位置へ移動させ、kubectl実行時に参照できるように準備します。
 
 > [注意]
-> TOAST Webコンソールからダウンロードした設定ファイルは、クラスター情報と認証のためのトークンなどが含まれています。設定ファイルがある場合は該当Kubernetesクラスターにアクセスできる権限を持ちます。設定ファイルを絶対に紛失しないように注意してください。
+> NHN Cloud Webコンソールからダウンロードした設定ファイルは、クラスター情報と認証のためのトークンなどが含まれています。設定ファイルがある場合は該当Kubernetesクラスターにアクセスできる権限を持ちます。設定ファイルを絶対に紛失しないように注意してください。
 
 kubectlは実行するたびにクラスター設定ファイルが必要です。したがって、毎回`--kubeconfig`オプションを利用してクラスター設定ファイルを指定する必要があります。しかし、環境変数にクラスター設定ファイルパスが保存されている場合は、毎回オプションを指定する必要はありません。
 
@@ -891,7 +891,7 @@ status:
 * ValidatingAdmissionWebhook
 
 ## LoadBalancerサービス
-Kubernetesアプリケーションの基本実行単位Podは、CNI(Container Network Interface)でクラスターネットワークに接続されます。基本的にクラスターの外部からPodにはアクセスできません。Podのサービスをクラスターの外部に公開するにはKubernetesの`LoadBalancer`サービス(Service)オブジェクト(object)を利用して外部に公開するパスを作成する必要があります。LoadBalancerサービスオブジェクトを作成すると、クラスターの外部にTOAST Load Balancerが作成され、サービスオブジェクトと接続されます。
+Kubernetesアプリケーションの基本実行単位Podは、CNI(Container Network Interface)でクラスターネットワークに接続されます。基本的にクラスターの外部からPodにはアクセスできません。Podのサービスをクラスターの外部に公開するにはKubernetesの`LoadBalancer`サービス(Service)オブジェクト(object)を利用して外部に公開するパスを作成する必要があります。LoadBalancerサービスオブジェクトを作成すると、クラスターの外部にNHN Cloud Load Balancerが作成され、サービスオブジェクトと接続されます。
 
 ### WebサーバーPod作成
 次のように2個のnginx Podを実行するデフォルトデプロイメント(deployment)オブジェクトマニフェストファイルを作成し、オブジェクトを作成します。
@@ -933,7 +933,7 @@ nginx-deployment-7fd6966748-pvrzs   1/1     Running   0          4m13s
 nginx-deployment-7fd6966748-wv7rd   1/1     Running   0          4m13s
 ```
 
-TOAST Container Registryに保存したイメージを使用したい場合は、先にユーザーレジストリにログインするためのシークレット(secret)を作成する必要があります。
+NHN Cloud Container Registryに保存したイメージを使用したい場合は、先にユーザーレジストリにログインするためのシークレット(secret)を作成する必要があります。
 
 ```
 $ kubectl create secret docker-registry registry-credential --docker-server={ユーザーレジストリアドレス} --docker-username={Toastアカウントemailアドレス} --docker-password={サービスAppkeyまたは統合Appkey}
@@ -964,7 +964,7 @@ spec:
 ```
 
 > [参考]
-> TOAST Container Registryの使用方法は[Container Registry使用ガイド](/Container/Container%20Registry/ja/user-guide)文書を参照してください。
+> NHN Cloud Container Registryの使用方法は[Container Registry使用ガイド](/Container/Container%20Registry/ja/user-guide)文書を参照してください。
 
 ### LoadBalancerサービスの作成
 Kubernetesのサービスオブジェクトを定義するには、次の項目で構成されたマニフェストが必要です。
@@ -1419,7 +1419,7 @@ $ curl --resolve test.example.com:80:123.123.123.44 http://test.example.com/
 ```
 
 ## Kubernetesダッシュボード
-TOAST Kubernetesサービスは、基本Web UIダッシュボード(dashboard)を提供します。Kubernetesダッシュボードの詳細は、[Web UI (ダッシュボード)](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/)文書を参照してください。
+NHN Cloud Kubernetesサービスは、基本Web UIダッシュボード(dashboard)を提供します。Kubernetesダッシュボードの詳細は、[Web UI (ダッシュボード)](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/)文書を参照してください。
 
 ### ダッシュボードサービス公開
 ユーザーKubernetesにはダッシュボードを公開するための`kubernetes-dashboard`サービスオブジェクトがあらかじめ作成されています。
@@ -1450,7 +1450,7 @@ Events:
 
 #### LoadBalancerサービスオブジェクトに変更
 
-サービスオブジェクトを`LoadBalancer`タイプに変更すると、クラスターの外部にTOAST Load Balancerが作成され、ロードバランサー、サービスオブジェクトと接続されます。ロードバランサーと接続したサービスオブジェクトを照会すると、**EXTERNAL-IP**フィールドにロードバランサーのIPが表示されます。`LoadBalancer`タイプのサービスオブジェクトの詳細は[LoadBalancerサービス](/Container/Kubernetes/ja/user-guide/#loadbalancer)を参照してください。下の図は`LoadBalancer`タイプのサービスを利用してダッシュボードを外部に公開する構造を表しています。
+サービスオブジェクトを`LoadBalancer`タイプに変更すると、クラスターの外部にNHN Cloud Load Balancerが作成され、ロードバランサー、サービスオブジェクトと接続されます。ロードバランサーと接続したサービスオブジェクトを照会すると、**EXTERNAL-IP**フィールドにロードバランサーのIPが表示されます。`LoadBalancer`タイプのサービスオブジェクトの詳細は[LoadBalancerサービス](/Container/Kubernetes/ja/user-guide/#loadbalancer)を参照してください。下の図は`LoadBalancer`タイプのサービスを利用してダッシュボードを外部に公開する構造を表しています。
 
 ![dashboard-01.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-01.png)
 
@@ -1541,7 +1541,7 @@ eyJhbGc...-QmXA
 
 
 ## パシステントボリューム
-パシステントボリューム(Persistent Volume、PV)は物理保存装置(volume)を表現するKubernetesのリソースです。1つのPVは1つのTOAST Block Storageと接続されます。詳細は[パシステントボリューム](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)文書を参照してください。
+パシステントボリューム(Persistent Volume、PV)は物理保存装置(volume)を表現するKubernetesのリソースです。1つのPVは1つのNHN Cloud Block Storageと接続されます。詳細は[パシステントボリューム](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)文書を参照してください。
 
 PVをPodに接続して使用するには、パシステントボリュームクレーム(Persistent Volume Claims、PVC)オブジェクトが必要です。PVCは容量、読み取り/書き込みモードなど、ボリュームの要求事項を定義します。
 
@@ -1571,14 +1571,14 @@ PVをPodにマウントして使用します。
 
 ### 静的プロビジョニング
 
-静的プロビジョニング(static provisioning)は、ユーザーが直接ブロックストレージを準備する必要があります。TOAST Webコンソールの**Storage > Block Storage**サービスページで**ブロックストレージ作成**ボタンを押して、PVと接続するブロックストレージを作成します。ブロックストレージガイドの[ブロックストレージ作成](/Storage/Block%20Storage/ja/console-guide/#_2)を参照してください。
+静的プロビジョニング(static provisioning)は、ユーザーが直接ブロックストレージを準備する必要があります。NHN Cloud Webコンソールの**Storage > Block Storage**サービスページで**ブロックストレージ作成**ボタンを押して、PVと接続するブロックストレージを作成します。ブロックストレージガイドの[ブロックストレージ作成](/Storage/Block%20Storage/ja/console-guide/#_2)を参照してください。
 
 PVを作成するにはブロックストレージのIDが必要です。**Storage > Block Storage**サービスページのブロックストレージリストから使用するブロックストレージを選択します。下部**情報**タブのブロックストレージ名項目でIDを確認できます。
 
 > [注意]
 > ブロックストレージと、Podを起動するノードグループインスタンスのアベイラビリティゾーンは、同じにする必要があります。アベイラビリティゾーンが異なると接続できません。
 
-ストレージクラスマニフェストを作成します。TOAST Block Storageを使用するには**provisioner**を必ず`kubernetes.io/cinder`に設定する必要があります。
+ストレージクラスマニフェストを作成します。NHN Cloud Block Storageを使用するには**provisioner**を必ず`kubernetes.io/cinder`に設定する必要があります。
 
 ```yaml
 # storage_class.yaml
@@ -1600,7 +1600,7 @@ NAME         PROVISIONER            AGE
 sc-default   kubernetes.io/cinder   8s
 ```
 
-ブロックストレージと、接続するPVマニフェストを作成します。**spec.storageClassName**にはストレージクラス名を入力します。TOAST Block Storageを使用するには**spec.accessModes**は`ReadWriteOnce`に設定する必要があります。**spec.presistentVolumeReclaimPolicy**は`Delete`または`Retain`に設定できます。
+ブロックストレージと、接続するPVマニフェストを作成します。**spec.storageClassName**にはストレージクラス名を入力します。NHN Cloud Block Storageを使用するには**spec.accessModes**は`ReadWriteOnce`に設定する必要があります。**spec.presistentVolumeReclaimPolicy**は`Delete`または`Retain`に設定できます。
 
 ```yaml
 # pv-static.yaml
@@ -1673,7 +1673,7 @@ pv-static-001   10Gi       RWO            Delete           Bound    default/pvc-
 
 ### 動的プロビジョニング
 
-動的プロビジョニング(dynamic provisioning)は、ストレージクラスに定義されたプロパティを参照して自動的にブロックストレージを作成します。ストレージクラスマニフェストの**parameters.type**にTOAST Block Storageタイプを指定できます。指定しない場合は、HDDタイプに設定されます。
+動的プロビジョニング(dynamic provisioning)は、ストレージクラスに定義されたプロパティを参照して自動的にブロックストレージを作成します。ストレージクラスマニフェストの**parameters.type**にNHN Cloud Block Storageタイプを指定できます。指定しない場合は、HDDタイプに設定されます。
 
 | タイプ | 設定値 |
 | --- | --- |
@@ -1715,7 +1715,7 @@ spec:
   storageClassName: sc-ssd
 ```
 
-PVCを作成すると、PVが自動的に作成されます。PVに接続されたブロックストレージも自動的に作成され、TOAST Webコンソール**Storage > Block Storage**サービスページのブロックストレージリストで確認できます。
+PVCを作成すると、PVが自動的に作成されます。PVに接続されたブロックストレージも自動的に作成され、NHN Cloud Webコンソール**Storage > Block Storage**サービスページのブロックストレージリストで確認できます。
 
 ```
 $ kubectl apply -f pvc-dynamic.yaml
@@ -1783,4 +1783,4 @@ Filesystem      Size  Used Avail Use% Mounted on
 ...
 ```
 
-TOAST Webコンソール**Storage > Block Storage**サービスページでも、ブロックストレージの接続情報を確認できます。
+NHN Cloud Webコンソール**Storage > Block Storage**サービスページでも、ブロックストレージの接続情報を確認できます。

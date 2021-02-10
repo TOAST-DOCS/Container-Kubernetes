@@ -1,5 +1,5 @@
 ## Container > Kubernetes > 概要
-ここではKubernetesとは何か、そしてTOASTで提供するKubernetesサービスについて説明します。
+ここではKubernetesとは何か、そしてNHN Cloudで提供するKubernetesサービスについて説明します。
 
 ## Kubernetes
 Kubernetesは、コンテナ化されたワークロードとサービスを管理できるオープンソースのプラットフォームです。Kubernetesは次のような機能を提供します。
@@ -28,13 +28,13 @@ Kubernetesクラスターは、マスターとノードで構成されます。
 ノードは、ユーザーのアプリケーションが起動するワーカーマシンです。1つのクラスターには複数のノードが存在できます。ノードはマスターと接続すると動作します。マスターのアプリケーション起動、停止などのコマンドに応じてそのまま実行します。
 
 
-## TOAST Kubernetes
-TOAST Kubernetesサービスは、クラウドでKubernetesを正しく安全に起動できるようにKubernetesクラスターを作成し、管理できるサービスです。ユーザーはWebコンソールを利用してTOASTに最適なKubernetesクラスターを作成し、管理できます。安全かつ効率的に運営を行えるように、マスターはTOASTで管理し、ユーザーはノードとサービス、 Pod(ポッド)などを管理します。
+## NHN Cloud Kubernetes
+NHN Cloud Kubernetesサービスは、クラウドでKubernetesを正しく安全に起動できるようにKubernetesクラスターを作成し、管理できるサービスです。ユーザーはWebコンソールを利用してNHN Cloudに最適なKubernetesクラスターを作成し、管理できます。安全かつ効率的に運営を行えるように、マスターはNHN Cloudで管理し、ユーザーはノードとサービス、 Pod(ポッド)などを管理します。
 
-TOAST Kubernetesサービスの主な機能は次のとおりです。
+NHN Cloud Kubernetesサービスの主な機能は次のとおりです。
 
-* TOASTに最適なKubernetesクラスターの作成と管理
-    * TOASTの基盤サービスと連携
+* NHN Cloudに最適なKubernetesクラスターの作成と管理
+    * NHN Cloudの基盤サービスと連携
     * ロードバランサーを利用したサービス公開
     * ブロックストレージと連携したパシステントボリューム(Persistent Volume、PV)をサポート
 
