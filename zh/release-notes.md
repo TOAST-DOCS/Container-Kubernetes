@@ -1,9 +1,23 @@
-## Container > Kubernetes > 릴리스 노트
+## Container > Kubernetes > Release Notes
 
-### 2020. 08. 25.
-#### 기능 개선
-* 콘솔에서 Kubernetes 클러스터를 생성할 때, 임의의 영역(zone)을 선택할 수 있습니다.
+### February 23, 2021
+* Changed the distribution version of the images used at the time of generating clusters or node groups.
+  * Image update
 
-### 2020. 06. 23.
-#### 신규 서비스 출시
-* 콘솔에서 Kubernetes 클러스터를 생성하고 관리할 수 있습니다.
+### January 26, 2021
+#### Bug Fixes
+
+* Fixed an issue where autoscaler does not work in an environment with no internet gateway connection.
+  * Image update
+
+### October 27, 2020
+#### More Feature
+* Kubernetes clusters now support GPU-based node groups.
+
+### August 25, 2020
+#### Feature Updates
+* A random zone can be selected when creating a Kubernetes cluster on console.
+
+### June 23, 2020
+#### Release of New Service 
+* Kubernetes clusters can be created and managed on console. 
