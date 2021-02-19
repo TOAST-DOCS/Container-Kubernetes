@@ -10,6 +10,16 @@
 * Fixed an issue where autoscaler does not work in an environment with no internet gateway connection.
   * Image update
 
+### December 29, 2020
+#### Feature Updates
+- Kubernetes CSR (Certificate Signing Request) is now available.
+
+### November 24, 2020
+#### More Features
+- Autoscaling is now available.
+#### Feature Updates
+- Remaining load balancers and floating IPs are also deleted when deleting clusters.
+
 ### October 27, 2020
 #### More Feature
 * Kubernetes clusters now support GPU-based node groups.
