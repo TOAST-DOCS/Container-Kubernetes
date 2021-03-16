@@ -1,6 +1,13 @@
 ## Container > Kubernetes > 릴리스 노트
 
+### 2021. 03. 23.
+
+#### 기능 개선
+
+* 사용자 클러스터에서 발생한 이벤트를 NHN CloudTrail에서 확인할 수 있습니다.
+
 ### 2021. 02. 23.
+
 #### 기능 개선
 * Kubernetes 승인 컨트롤러(admission controller)에 PodSecurityPolicy 플러그인이 추가되었습니다.
 * 클러스터 및 노드 그룹 생성 시 사용하는 이미지의 배포판 버전이 변경되었습니다.
