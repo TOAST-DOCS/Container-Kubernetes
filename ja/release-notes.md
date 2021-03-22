@@ -1,6 +1,13 @@
 ## Container > Kubernetes > リリースノート
 
+### 2021. 03. 23.
+
+#### 機能追加
+
+* ユーザークラスターで発生したイベントをNHN CloudTrailで確認できます。
+
 ### 2021. 02. 23.
+
 #### 機能改善
 * Kubernetes承認コントローラー(admission controller)にPodSecurityPolicyプラグインが追加されました。
 * クラスターおよびノードグループ作成時に使用するイメージの配布版バージョンが変更されました。
