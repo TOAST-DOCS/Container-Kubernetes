@@ -1,5 +1,9 @@
 ## Container > Kubernetes > Release Notes
 
+### March 23, 2021
+#### More Features
+* Events occurred in a user cluster can be checked in NHN CloudTrail.
+
 ### February 23, 2021
 * Changed the distribution version of the images used at the time of generating clusters or node groups.
   * Image update
