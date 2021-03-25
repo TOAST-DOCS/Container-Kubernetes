@@ -4,7 +4,7 @@
 #### More Features
 * Events occurred in a user cluster can be checked in NHN CloudTrail.
 
-#### 버그 수정
+#### Bug Fixes
 * Fixed an issue where it does not initialize properly when a node group is created with a graphic-optimized instance type (g2).
 
 ### February 23, 2021
