@@ -942,7 +942,7 @@ nginx-deployment-7fd6966748-wv7rd   1/1     Running   0          4m13s
 만약 NHN Cloud Container Registry에 저장한 이미지를 사용하고 싶다면 먼저 사용자 레지스트리에 로그인하기 위한 시크릿(secret)을 만들어야 합니다.
 
 ```
-$ kubectl create secret docker-registry registry-credential --docker-server={사용자 레지스트리 주소} --docker-username={Toast 계정 email 주소} --docker-password={서비스 Appkey 또는 통합 Appkey}
+$ kubectl create secret docker-registry registry-credential --docker-server={사용자 레지스트리 주소} --docker-username={NHN Cloud 계정 email 주소} --docker-password={서비스 Appkey 또는 통합 Appkey}
 secret/registry-credential created
 
 $ kubectl get secrets
