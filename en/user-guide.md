@@ -946,7 +946,7 @@ nginx-deployment-7fd6966748-wv7rd   1/1     Running   0          4m13s
 To use images saved at NHN Cloud Container Registry, first create a secret to login to user registry. 
 
 ```
-$ kubectl create secret docker-registry registry-credential --docker-server={user registry address} --docker-username={email address for Toast account} --docker-password={service or integrated Appkey}
+$ kubectl create secret docker-registry registry-credential --docker-server={user registry address} --docker-username={email address for NHN Cloud account} --docker-password={service or integrated Appkey}
 secret/registry-credential created
 
 $ kubectl get secrets
