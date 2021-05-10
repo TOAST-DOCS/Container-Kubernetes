@@ -992,7 +992,7 @@ persistentvolumeclaim/pvc-dynamic   Bound    pvc-c63da3f9-dfcb-4cae-a9a9-6713799
 
 ### Mounting PVC to Pods 
 
-To mount PVC to a pod, mount information must be defined at the pod manifest. Enter pvc name to use for `spec.volumes.persistenVolumeClame.claimName`; enter paths to mount for `spec.containers.volumeMounts.mountPath`.
+To mount PVC to a pod, mount information must be defined at the pod manifest. Enter pvc name to use for `spec.volumes.persistenVolumeClaim.claimName`; enter paths to mount for `spec.containers.volumeMounts.mountPath`.
 
 In the example as blow, pvc created with dynamic provisioning is mounted to `/usr/share/nginx/html` of the pod. 
 
