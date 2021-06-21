@@ -1,5 +1,11 @@
 ## Container > Kubernetes > Release Notes
 
+### 2021. 06. 29.
+#### More Features
+
+* Supports Kubernetes v1.18.19.
+* Can upgrade the cluster version.
+
 ### March 23, 2021
 #### More Features
 * Events occurred in a user cluster can be checked in NHN CloudTrail.
