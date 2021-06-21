@@ -900,6 +900,101 @@ The type of plugin applied to the admission controller varies depending on the t
 - TaintNodesByCondition
 - ValidatingAdmissionWebhook
 
+### Cluster upgrade
+NHN Cloud Kubernetes Service supports the Kubernetes component upgrade for the currently operating Kubernetes clusters.  
+
+#### Policy of supporting different Kubernetes versions
+Kubernetes version is represented as `x.y.z`. `x` is the major, `y` is the minor, and `z` is the patch version. If features are added, it is a major or minor version upgrade. If it provides features compatible with previous versions such as bug fixes, it is a patch version. For more information about this, please see [Semantic Versioning 2.0.0](https://semver.org/).
+
+Kubernetes clusters can upgrade the Kubernetes components while in operation. To this end, each Kubernetes component defines whether to support the features based on the Kubernetes version difference. In minor version, for example, the difference of one version supports the Kubernetes component upgrade for the operating clusters by supporting the mutual feature compatibility. It also defines the upgrade sequence for each type of the components. For more information please see [Version Skew Policy](https://kubernetes.io/releases/version-skew-policy/).
+
+#### Feature Behavior
+Explains how the Kubernetes cluster upgrade feature supported by NHN Cloud works. 
+
+##### Kubernetes Version Control
+NHN Cloud's Kubernetes cluster controls the Kubernetes versions per cluster master and worker node group. Master's Kubernetes version can be checked in the cluster view screen, and the Kubernetes version of the worker node group can be checked in the screen view of each worker node group. 
+
+##### Upgrade Rules
+When upgrading, NHN Cloud's Kubernetes Cluster version control and Kubernetes versioning support policy must be followed to keep the proper sequence.  The following rules are applied to NHN Cloud's Kubernetes cluster upgrade features.
+
+* Upgrade commands must be given to each master and worker node group. 
+* In order to upgrade, the Kubernetes version of the master and all worker node groups must match.
+* Master must be upgraded first in order to upgrade the worker node group. 
+* Can be upgraded to the next version of the current version (minor version+1). 
+* Downgrade is not supported. 
+* If the cluster is being updated due to the operation of other features, upgrade cannot be proceeded.
+
+The following table shows whether upgrade is possible while upgrading the Kubernetes version. The following conditions are used for the example: 
+
+* List of Kubernetes versions supported by NHN Cloud: v1.17.6, v1.18.19, v1.19.10
+* Clusters are created as v1.17.6
+
+|Status | Master version | Whether master can be upgraded | Worker node group version | Whether worker node group can be upgraded
+ | --- | :-: | :-: | :-: | :-: |
+ | Initial state| v1.17.6 | Possible (Note 1) | v1.17.6 | Not possible (Note 2) | 
+ | State after master upgrade | v1.18.19 | Not possible (Note 3) | v1.17.6 | Possible (Note 4) | 
+| State after worker node group upgrade | v1.18.19 | Possible (Note 1) | v1.18.19 | Not possible (Note 2) |
+ | State after master upgrade | v1.19.10 | Not possible (Note 3) | v1.18.19 | Possible (Note 4) | 
+| State after worker node group upgrade | v1.19.10 | Not possible (Note 5) | v1.19.10 | Not possible (Note 2)| 
+
+(Note 1) Upgrade is possible because the versions of the master and all worker node groups are matching
+(Note 2) Worker node groups can be upgraded once the master is upgraded
+(Note 3) The versions of the master and all worker node groups must match in order to upgrade
+(Note 4) Upgrade is possible because the master is upgraded
+(Note 5) Upgrade is not possible because the latest version supported by NHN Cloud is being used
+
+
+##### Upgrading master components
+NHN Cloud's Kubernetes cluster master consists of a number of masters to ensure high availability. Since upgrade is carried out by taking the rolling update method for the master, the availability of the clusters is guaranteed.  
+
+In this process, the following might happen:
+
+* Kubernetes API can fail temporarily.
+
+
+##### Upgrading worker components
+Worker components can be upgraded for each worker node group. Worker components are upgraded in the following steps:
+
+1. Deactivate the cluster auto scaler feature.(Note 1)
+2. Add a buffer node to the worker node group(Note 2).
+3. Perform the following tasks for all worker nodes within the worker node group:
+   1. Evict the working pods from the worker node, and make the nodes not schedulable.
+   2. Upgrade worker components.
+   3. Make the nodes schedulable.
+4. Evict working pods from the buffer node, and delete the buffer node.
+5. Reactivate the cluster auto scaler feature. (Note 1)
+
+(Note 1) This step is valid only if the cluster autoscaler feature is enabled before starting the upgrade feature.
+(Note 2) Buffer node is an extra node which is created so that the pods evicted from existing worker nodes can be rescheduled during the upgrade process. It is created having the same scale as the worker node defined in that worker node group, and is automatically deleted when the upgrade process is over. This node is charged based on the instance fee policy. 
+
+In this process, the following might happen:
+
+* Pods in service will be evicted and scheduled to another node. (To find out more about pod eviction, please refer to the notes in the below.)
+* Autoscaler feature does not work. 
+
+
+> [Pod eviction cautions]
+> 1. Pods operated by daemonset controller are not evicted.
+> Daemonset controller runs the pod for each worker node, so the pods run by Daemonset controller cannot run in other nodes. While upgrading the worker node group, the pods run by the Daemonset controller will not be evicted. 
+> 2. Pods that use the local storage will lose the previous data as they are evicted.
+> Pods that use the local storage of the node by using `emptyDir` will lose the previous data when being evicted. This is because the storage space in the local node cannot be relocated to another node. 
+> 3. Pods that cannot be copied to another node will not be relocated to another node.
+> If the pods run by controllers such as (ReplicationController), (ReplicaSet), (Job), (Daemonset), and (StatefulSet) are evicted, they will be rescheduled to another node by the controller. However, the pods not run by these controllers will not be scheduled to another node after being evicted.
+> 4. Eviction can fail or slow down due to the PodDisruptionBudgets (PDB) setting.
+> You can define the number of pods to maintain with the PodDisruptionBudgets(PDB) setting. Depending on how this setting is set, it may not be possible to evict pods or evicting pods can take longer than normal during upgrade. If pod eviction fails, upgrade fails as well. So if the PDB is enabled, appropriate PDB setting will ensure proper pod eviction. To find out more about PDB setting, please see [here](https://kubernetes.io/docs/tasks/run-application/configure-pdb/).
+
+To find out more about safely evicting pods, please see [Safely Drain a Node](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/).
+
+##### System Pod Upgrade
+If the versions match after upgrading the versions of the master and all worker node groups, the system pod which runs for Kubernetes cluster configuration will be upgraded.
+
+#### Supported Versions
+NHN Cloud Kubernetes Service supports the following versions: 
+
+* v1.17.6
+* v1.18.19
+
+
 ## LoadBalancer Service
 Pod is a basic executio unit of a Kubernetes application and it is connected to a cluster network via CNI (Container Network Interface). Basically, access to pod is unavailble from cluster externals. To open up pod services outside of a cluster, a path to be made public must be created by using Kubernetes' `LoadBalancer` service object. 
 
