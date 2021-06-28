@@ -988,6 +988,9 @@ To find out more about safely evicting pods, please see [Safely Drain a Node](ht
 ##### System Pod Upgrade
 If the versions match after upgrading the versions of the master and all worker node groups, the system pod which runs for Kubernetes cluster configuration will be upgraded.
 
+> [Caution]
+> If you do not upgrade the worker node group after upgrading the master, some pods might not work properly.
+
 #### Supported Versions
 NHN Cloud Kubernetes Service supports the following versions: 
 
