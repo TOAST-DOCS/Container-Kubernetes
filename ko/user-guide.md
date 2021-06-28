@@ -9,7 +9,7 @@ Kubernetes 서비스를 사용하려면 먼저 클러스터를 생성해야 합�
 | 항목 | 설명 |
 | --- | --- |
 | 클러스터 이름 | Kubernetes 클러스터의 이름, 20자 이내로 영문 소문자와 숫자, '-'만 입력 가능하며 영문 소문자로 시작해야 하고 영문 소문자 또는 숫자로 끝나야 합니다. |
-| 쿠버네티스 버전 | 사용할 Kubernetes 버전 |
+| Kubernetes 버전 | 사용할 Kubernetes 버전 |
 | VPC | 클러스터에 연결할 VPC 네트워크 |
 | 서브넷 | VPC에 정의된 서브넷 중 클러스터를 구성하는 인스턴스에 연결할 서브넷 |
 | 이미지 | 클러스터를 구성하는 인스턴스에 사용할 이미지 |
@@ -52,7 +52,7 @@ Kubernetes 서비스를 사용하려면 먼저 클러스터를 생성해야 합�
 | --- | --- |
 | 노드 그룹 이름 | 노드 그룹 이름과 ID |
 | 클러스터 이름 | 노드 그룹이 속한 클러스터의 이름과 ID |
-| 쿠버네티스 버전 | 사용 중인 Kubernetes 버전 |
+| Kubernetes 버전 | 사용 중인 Kubernetes 버전 |
 | 가용성 영역 | 노드 그룹 인스턴스가 생성된 영역 |
 | 인스턴스 타입 | 노드 그룹 인스턴스 사양 |
 | 이미지 타입 | 노드 그룹 인스턴스에 사용한 이미지 종류 |
@@ -91,7 +91,7 @@ Kubernetes 서비스를 사용하려면 먼저 클러스터를 생성해야 합�
 동작 중인 노드 그룹에서 노드를 삭제할 수 있습니다. 노드 그룹 정보 조회 페이지의 노드 목록 탭을 클릭하면 현재 노드 목록이 나타납니다. 노드 목록 중 삭제할 노드를 선택하고 노드 삭제 버튼을 클릭하면 확인 대화 상자가 나타납니다. 삭제할 노드 이름을 다시 한번 확인하고 확인 버튼을 클릭하면 노드가 삭제됩니다.
 
 >[주의]
->삭제되는 노드에서 동작하고 있던 파드는 강제 종료 됩니다. 삭제될 노드에서 동작 중인 파드를 안전하게 다른 노드로 옮기기 위해서는 drain 명령을 내려야 합니다. 노드가 drain 된 후에도 새로운 파드는 이 노드에 스케쥴링 될 수 있습니다. 새로운 파드가 삭제될 노드에 스케쥴링되는 것을 방지하기 위해서는 cordon 명령을 내려야 합니다. 안전한 노드 관리에 대한 좀 더 자세한 내용은 아래 문서를 참고하세요.
+>삭제되는 노드에서 동작하고 있던 파드는 강제 종료 됩니다. 삭제될 노드에서 동작 중인 파드를 안전하게 다른 노드로 옮기기 위해서는 drain 명령을 내려야 합니다. 노드가 drain 된 후에도 새로운 파드는 이 노드에 스케줄링 될 수 있습니다. 새로운 파드가 삭제될 노드에 스케줄링되는 것을 방지하기 위해서는 cordon 명령을 내려야 합니다. 안전한 노드 관리에 대한 좀 더 자세한 내용은 아래 문서를 참고하세요.
 
 >[주의]
 >오토 스케일러가 활성화된 노드 그룹은 수동으로 노드를 삭제할 수 없습니다.
@@ -218,10 +218,10 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 > GPU가 필요없는 워크로드가 GPU 노드에 할당되는 것을 막고 싶다면 [Taint 및 Toleration 개요](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)를 참고하세요.
 
 ### 오토 스케일러
-오토 스케일러는 노드 그룹의 가용 리소스가 부족해 파드(pod)를 스케쥴링할 수 없거나 노드의 사용률이 일정 수준 이하로 유지되는 경우 노드의 수를 자동으로 조정하는 기능입니다. 이 기능은 노드 그룹별로 설정할 수 있고, 서로 독립적으로 동작합니다.  이 기능은 Kubernetes 프로젝트의 공식 지원 기능인 cluster-autoscaler 기능을 기반으로 합니다. 자세한 사항은 [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler)를 참고하세요.
+오토 스케일러는 노드 그룹의 가용 리소스가 부족해 파드(pod)를 스케줄링할 수 없거나 노드의 사용률이 일정 수준 이하로 유지되는 경우 노드의 수를 자동으로 조정하는 기능입니다. 이 기능은 노드 그룹별로 설정할 수 있고, 서로 독립적으로 동작합니다.  이 기능은 Kubernetes 프로젝트의 공식 지원 기능인 cluster-autoscaler 기능을 기반으로 합니다. 자세한 사항은 [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler)를 참고하세요.
 
 > [참고]
-> 쿠버네티스 서비스에 적용된 `cluster-autoscaler`의 버전은 `1.19.0`입니다.
+> Kubernetes 서비스에 적용된 `cluster-autoscaler`의 버전은 `1.19.0`입니다.
 
 #### 용어 정리
 오토 스케일러 기능에서 사용하는 용어와 그 의미는 다음과 같습니다.
@@ -265,7 +265,7 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 #### 증설 및 감축 조건
 아래의 조건을 모두 만족하면 노드를 증설합니다.
 
-* 파드가 스케쥴링될 수 있는 노드가 없음
+* 파드가 스케줄링될 수 있는 노드가 없음
 * 현재 노드 수가 최대 노드 수보다 작음
 
 아래의 조건을 모두 만족하면 노드를 감축합니다.
@@ -375,7 +375,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-1   Ready    <none>   77s   v1.17.6
 autoscaler-test-default-w-ohw5ab5wpzug-node-2   Ready    <none>   78s   v1.17.6
 ```
 
-`Pending` 상태였던 파드가 노드 증설 이후 정상 스케쥴링된 것을 확인할 수 있습니다.
+`Pending` 상태였던 파드가 노드 증설 이후 정상 스케줄링된 것을 확인할 수 있습니다.
 
 ```
 # kubectl get pods -o wide
@@ -606,7 +606,7 @@ php-apache   Deployment/php-apache   250%/50%   1         30        5          2
 ```
 
 ##### 4. 오토 스케일러 동작 확인
-파드를 조회해보면 파드의 수가 늘어나면서 일부 파드는 `node-0`에 스케쥴링되어 Running 상태가 됐지만 일부는 Pending 상태인 것을 확인할 수 있습니다
+파드를 조회해보면 파드의 수가 늘어나면서 일부 파드는 `node-0`에 스케줄링되어 Running 상태가 됐지만 일부는 Pending 상태인 것을 확인할 수 있습니다
 
 ```
 # kubectl get pods -o wide
@@ -620,7 +620,7 @@ php-apache-79544c9bd9-mplnn   0/1     Pending   0          19s     <none>       
 php-apache-79544c9bd9-t2knw   1/1     Running   0          80s     10.100.8.40   autoscaler-test-default-w-ohw5ab5wpzug-node-0   <none>           <none>
 ```
 
-파드를 스케쥴링하지 못하는 상황이 바로 오토 스케일러의 노드 증설 조건입니다. Cluster Autoscaler 파드가 제공하는 상태 정보를 조회해보면 ScaleUp이 InProgress 상태가 된 것을 확인할 수 있습니다.
+파드를 스케줄링하지 못하는 상황이 바로 오토 스케일러의 노드 증설 조건입니다. Cluster Autoscaler 파드가 제공하는 상태 정보를 조회해보면 ScaleUp이 InProgress 상태가 된 것을 확인할 수 있습니다.
 
 ```
 # kubectl get cm/cluster-autoscaler-status -n nhn-ng-default-worker -o yaml
@@ -662,7 +662,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready      <none>   22d   v1.17.
 autoscaler-test-default-w-ohw5ab5wpzug-node-8   Ready      <none>   90s   v1.17.6
 ```
 
-Pending 상태였던 파드 모두 정상 스케쥴링되어 Running 상태가 된 것을 확인할 수 있습니다.
+Pending 상태였던 파드 모두 정상 스케줄링되어 Running 상태가 된 것을 확인할 수 있습니다.
 
 ```
 # kubectl get pods -o wide
@@ -754,7 +754,7 @@ Server Version: version.Info{Major:"1", Minor:"15", GitVersion:"v1.15.7", GitCom
 * Server Version: 클러스터를 구성하고 있는 Kubernetes 버전 정보
 
 ### CSR(CertificateSigningRequest)
-쿠버네티스의 인증 API(Certificate API)를 통해 쿠버네티스 API 클라이언트를 위한 X.509 인증서(certificate)를 요청하고 발급할 수 있습니다. CSR 자원은 인증서를 요청하고, 요청에 대해 승인/거부를 결정할 수 있도록 합니다. 자세한 사항은 [Certificate Signing Requests](https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/) 문서를 참고하세요.
+Kubernetes의 인증 API(Certificate API)를 통해 Kubernetes API 클라이언트를 위한 X.509 인증서(certificate)를 요청하고 발급할 수 있습니다. CSR 자원은 인증서를 요청하고, 요청에 대해 승인/거부를 결정할 수 있도록 합니다. 자세한 사항은 [Certificate Signing Requests](https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/) 문서를 참고하세요.
 
 #### CSR 요청과 발급 승인 예제
 먼저 개인키(private key)를 생성합니다. 인증서 생성에 관한 자세한 내용은 [Certificates](https://kubernetes.io/docs/concepts/cluster-administration/certificates/) 문서를 참고하세요.
@@ -895,6 +895,110 @@ status:
 * StorageObjectInUseProtection
 * TaintNodesByCondition
 * ValidatingAdmissionWebhook
+
+### 클러스터 업그레이드
+NHN Cloud Kubernetes 서비스는 동작 중인 Kubernetes 클러스터의 Kubernetes 구성 요소 업그레이드를 지원합니다. 
+
+#### Kubernetes 버전 차이 지원 정책
+Kubernetes 버전은 `x.y.z`로 표현됩니다. `x`는 메이저 버전, `y`는 마이너 버전, `z`는 패치 버전입니다. 기능이 추가되면 메이저 버전 혹은 마이너 버전을 올리고, 버그 수정과 같이 이전 버전과 호환되는 기능을 제공하면 패치 버전을 올립니다. 좀 더 자세한 내용은 [Semantic Versioning 2.0.0](https://semver.org/)을 참고하세요.
+
+Kubernetes 클러스터는 동작 중인 상태에서 Kubernetes 구성 요소를 업그레이드할 수 있습니다. 이를 위해 Kubernetes 구성 요소별로 Kubernetes 버전 차이에 따른 기능 지원 여부를 정의하고 있습니다. 마이너 버전을 기준으로 한 단계의 버전 차이는 상호 기능 호환을 지원함으로써 동작 중인 클러스터의 Kubernetes 구성 요소 업그레이드를 지원합니다. 또 구성 요소 종류 별로 업그레이드 순서를 정의하고 있습니다. 좀 더 자세한 내용은 [Version Skew Policy](https://kubernetes.io/releases/version-skew-policy/)를 참고하세요.
+
+#### 기능 동작 방식
+NHN Cloud에서 지원하는 Kubernetes 클러스터 업그레이드 기능의 동작 방식에 대해 설명합니다. 
+
+##### Kubernetes 버전 관리
+NHN Cloud의 Kubernetes 클러스터는 클러스터 마스터와 워커 노드 그룹 별로 Kubernetes 버전을 관리합니다. 마스터의 Kubernetes 버전은 클러스터 조회 화면에서 확인할 수 있고, 워커 노드 그룹의 Kubernetes 버전은 각 워커 노드 그룹 조회 화면에서 확인할 수 있습니다. 
+
+##### 업그레이드 규칙
+NHN Cloud의 Kubernetes 클러스터 버전 관리 방식과 Kubernetes 버전 차이 지원 정책에 의해 구성 요소별로 순서에 맞게 업그레이드해야 합니다. NHN Cloud의 Kubernetes 클러스터 업그레이드 기능에 적용되는 규칙은 다음과 같습니다.
+
+* 마스터와 각 워커 노드 그룹 별로 업그레이드 명령을 실행해야 합니다. 
+* 마스터의 Kubernetes 버전과 모든 워커 노드 그룹의 Kubernetes 버전이 일치해야 업그레이드가 가능합니다.
+* 마스터가 가장 먼저 업그레이드 한 후 워커 노드 그룹을 업그레이드할 수 있습니다. 
+* 현재 버전의 다음 버전(마이너 버전 기준 +1)으로 업그레이드 가능합니다. 
+* 다운그레이드는 지원하지 않습니다. 
+* 다른 기능의 동작으로 인해 클러스터가 업데이트 중인 상태에서는 업그레이드가 불가능합니다. 
+
+다음 예시는 Kubernetes 버전을 업그레이드 과정에서 업그레이드 가능 여부를 표로 나타낸 것입니다. 예시에 사용된 조건은 다음과 같습니다. 
+
+* NHN Cloud가 지원하는 Kubernetes 버전 목록: v1.17.6, v1.18.19, v1.19.10
+* 클러스터는 v1.17.6으로 생성
+
+| 상태 | 마스터 버전 | 마스터 업그레이드 가능 여부 | 워커 노드 그룹 버전 | 워커 노드 그룹 업그레이드 가능 여부
+| --- | :-: | :-: | :-: | :-: |
+| 초기 상태| v1.17.6 | 가능① | v1.17.6 | 불가능 ② | 
+| 마스터 업그레이드 후 상태 | v1.18.19 | 불가능 ③ | v1.17.6 | 가능 ④ | 
+| 워커 노드 그룹 업그레이드 후 상태 | v1.18.19 | 가능 ① | v1.18.19 | 불가능 ② |
+| 마스터 업그레이드 후 상태 | v1.19.10 | 불가능 ③ | v1.18.19 | 가능 ④ | 
+| 워커 노드 그룹 업그레이드 후 상태 | v1.19.10 | 불가능 ⑤ | v1.19.10 | 불가능 ② |
+
+주석
+
+* ① 마스터와 모든 워커 노드 그룹의 버전이 일치하는 상태이기 때문에 업그레이드 가능
+* ② 워커 노드 그룹은 마스터가 업그레이드된 후 업그레이드 가능
+* ③ 마스터와 모든 워커 노드 그룹의 버전이 일치해야 업그레이드 가능
+* ④ 마스터가 업그레이드됐기 때문에 업그레이드 가능
+* ⑤ NHN Cloud에서 지원하는 가장 최신 버전을 사용하고 있기 때문에 업그레이드 불가능
+
+
+##### 마스터 구성 요소 업그레이드
+NHN Cloud의 Kubernetes 클러스터 마스터는 고가용성 보장을 위해 다수의 마스터로 구성되어 있습니다. 마스터에 대해 롤링 업데이트 방식으로 업그레이드되기 때문에 클러스터의 가용성이 보장됩니다. 
+
+이 과정에서 아래와 같은 일들이 발생할 수 있습니다.
+
+* Kubernetes API가 일시적으로 실패할 수 있습니다.
+
+
+##### 워커 구성 요소 업그레이드
+워커 노드 그룹 별로 워커 구성 요소를 업그레이드할 수 있습니다. 워커 구성 요소 업그레이드는 다음 순서로 진행됩니다.
+
+1. 클러스터 오토스케일러 기능을 비활성화 합니다.①
+2. 해당 워커 노드 그룹에 버퍼 노드② 를 추가합니다.
+3. 워커 노드 그룹 내의 모든 워커 노드에 대해 순차적으로 아래 작업을 수행합니다.
+    1. 해당 워커 노드에서 동작 중인 파드를 축출하고, 노드를 스케줄 불가능한 상태로 전환합니다.
+    2. 워커 구성 요소를 업그레이드합니다.
+    3. 노드를 스케줄 가능한 상태로 전환합니다.
+4. 버퍼 노드에서 동작 중인 파드를 축출하고 버퍼 노드를 삭제합니다.
+5. 클러스터 오토스케일러 기능을 다시 활성화 합니다.①
+
+
+주석
+
+* ① 이 단계는 업그레이드 기능 시작 전 클러스터 오토스케일러 기능이 활성화 되어 있는 경우에만 유효합니다.
+* ② 버퍼 노드란 업그레이드 과정 중 기존 워커 노드에서 축출당한 파드가 다시 스케줄링 가능하도록 생성해놓는 여유 노드를 말합니다. 해당 워커 노드 그룹에서 정의한 워커 노드와 동일한 규격의 노드로 생성되며, 업그레이드 과정이 종료될 때 자동으로 삭제됩니다. 이 노드는 Instance 요금 정책에 따라 비용이 청구됩니다. 
+
+이 과정에서 아래와 같은 일들이 발생할 수 있습니다.
+
+* 서비스 중인 파드가 축출되어 다른 노드로 스케줄링 됩니다(파드 축출에 대한 더 자세한 내용은 아래 파드 축출 관련 유의 사항을 참고하시길 바랍니다).
+* 오토스케일러 기능이 동작하지 않습니다. 
+
+
+> [파드 축출 관련 유의 사항]
+> 1. 데몬셋(daemonset) 컨트롤러에 의한 파드는 축출되지 않습니다.
+> 데몬셋 컨트롤러는 각 워커 노드 별로 파드를 실행하기 떄문에 데몬셋 컨트롤러에 의해 실행된 파드는 축출되더라도 다른 노드에서 실행될 수 없습니다. 워커 노드 그룹 업그레이드 과정에서 데몬셋 컨트롤러에 의해 실행된 파드는 축출하지 않습니다. 
+> 2. 로컬 저장 공간을 사용하는 파드는 축출되면서 사용하던 데이터를 잃게 됩니다.
+> `emptyDir`을 이용해 노드의 로컬 저장 공간을 사용하는 파드는 축출되면서 사용하던 데이터를 잃게 됩니다. 노드의 로컬에 저장된 저장 공간이 다른 노드로 옮겨갈 수 없기 때문입니다. 
+> 3. 다른 노드로 복제가 불가능한 파드는 다른 노드로 옮겨지지 않습니다.
+> 리플리케이션 컨트롤러(ReplicationController), 레플리카셋(ReplicaSet), 잡(Job), 데몬셋(Daemonset), 스테이트풀(StatefulSet)와 같은 컨트롤러에 의해 실행된 파드가 축출되면 컨트롤러에 의해 다른 노드로 스케줄링 됩니다. 하지만 이와 같은 컨트롤러를 이용하지 않은 파드는 축출된 후 다른 노드로 스케줄링되지 않습니다. 
+> 4. PodDisruptionBudgets(PDB) 설정에 의해 축출에 실패하거나 느려질 수 있습니다.
+> PodDisruptionBudgets(PDB) 설정으로 유지해야 할 파드 수를 정의할 수 있습니다. 이 기능 설정으로 인해 업그레이드 과정에서 파드 축출이 불가능할 수도 있고, 파드 축출 시간이 길어질 수 있습니다. 파드 축출에 실패하면 업그레이드가 실패합니다. 따라서 PDB 설정이 되어 있는 경우 적절한 PDB 설정으로 파드 축출이 원활히 동작할 수 있도록 설정해야 합니다. PDB 설정에 대한 더 자세한 내용은 [여기](https://kubernetes.io/docs/tasks/run-application/configure-pdb/)를 참고하세요.
+
+
+안전한 파드 축출에 대한 좀 더 상세한 설명은 [Safely Drain a Node](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)를 참고하세요
+
+##### 시스템 파드 업그레이드
+마스터와 모든 워커 노드 그룹을 업그레이드하여 버전이 일치하게 되면 Kubernetes 클러스터 구성을 위해 동작하는 시스템 파드가 업그레이드 됩니다.
+
+> [주의]
+> 마스터 업그레이드 후 워커 노드 그룹을 업그레이드하지 않으면 일부 파드가 정상적으로 동작하지 않을 수 있습니다.
+
+#### 지원 버전
+NHN Cloud Kubernetes 서비스는 아래 버전을 지원합니다. 
+
+* v1.17.6
+* v1.18.19
+
 
 ## LoadBalancer 서비스
 Kubernetes 애플리케이션의 기본 실행 단위인 파드(pod)는 CNI(Container Network Interface)로 클러스터 네트워크에 연결됩니다. 기본적으로 클러스터 외부에서 파드로는 접근할 수 없습니다. 파드의 서비스를 클러스터 외부에 공개하려면 Kubernetes의 `LoadBalancer` 서비스(Service) 객체(object)를 이용해 외부에 공개할 경로를 만들어야 합니다. LoadBalancer 서비스 객체를 만들면 클러스터 외부에 NHN Cloud Load Balancer가 생성되어 서비스 객체와 연결됩니다.
@@ -1744,7 +1848,7 @@ persistentvolumeclaim/pvc-dynamic   Bound    pvc-c63da3f9-dfcb-4cae-a9a9-6713799
 
 ### 파드에 PVC 마운트
 
-파드에 PVC를 마운트하려면 파드 매니페스트에 마운트 정보를 정의해야 합니다. `spec.volumes.persistenVolumeClame.claimName`에 사용할 PVC 이름을 입력합니다. 그리고 `spec.containers.volumeMounts.mountPath`에 마운트할 경로를 입력합니다.
+파드에 PVC를 마운트하려면 파드 매니페스트에 마운트 정보를 정의해야 합니다. `spec.volumes.persistenVolumeClaim.claimName`에 사용할 PVC 이름을 입력합니다. 그리고 `spec.containers.volumeMounts.mountPath`에 마운트할 경로를 입력합니다.
 
 아래 예제는 정적 프로비저닝으로 생성한 PVC를 파드의 `/usr/share/nginx/html`에 마운트합니다.
 

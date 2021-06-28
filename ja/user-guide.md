@@ -1836,7 +1836,7 @@ persistentvolumeclaim/pvc-dynamic   Bound    pvc-c63da3f9-dfcb-4cae-a9a9-6713799
 
 ### PodにPVCマウント
 
-PodにPVCをマウントするには、Podマニフェストにマウント情報を定義する必要があります。`spec.volumes.persistenVolumeClame.claimName`に使用するPVC名を入力します。そして`spec.containers.volumeMounts.mountPath`にマウントするパスを入力します。
+PodにPVCをマウントするには、Podマニフェストにマウント情報を定義する必要があります。`spec.volumes.persistenVolumeClaim.claimName`に使用するPVC名を入力します。そして`spec.containers.volumeMounts.mountPath`にマウントするパスを入力します。
 
 下記の例は、静的プロビジョニングで作成したPVCをPodの`/usr/share/nginx/html`にマウントします。
 
