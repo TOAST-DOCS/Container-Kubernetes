@@ -1062,7 +1062,7 @@ Commercial support is available at
 
 
 ### NGINX Ingress Controllerのインストール
-NGINX Ingress Controllerは、数多く使用されているイングレスコントローラーの中の1つです。詳細は[NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/)と[NGINX Ingress Controller for Kubernetes](https://docs.nginx.com/nginx-ingress-controller/overview/)文書を参照してください。
+NGINX Ingress Controllerは、数多く使用されているイングレスコントローラーの中の1つです。詳細は[NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/)と[NGINX Ingress Controller for Kubernetes](https://www.nginx.com/products/nginx-ingress-controller/)文書を参照してください。
 
 NGINX Ingress Controllerは、必要なリソースをすぐに作成できるように、あらかじめ定義したマニフェストファイルを提供します。このマニフェストを利用すると、簡単に必要なリソースを作成できます。
 
