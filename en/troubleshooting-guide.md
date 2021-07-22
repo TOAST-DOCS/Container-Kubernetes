@@ -113,6 +113,8 @@ fi
 echo "[`date`] Finish to synchronize logrotate configuration"
 EOF
 $
+$ chmod +x sync_logrotate.sh
+$
 $ crontab <<EOF
 0 0  * * * ~/logrotate_for_container/sync_logrotate.sh > ~/logrotate_for_container/sync_logrotate.log
 EOF
