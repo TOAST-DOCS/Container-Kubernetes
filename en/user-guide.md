@@ -706,8 +706,7 @@ User can register reservation script when creating clusters and additional node 
     * eservation script is executed during the instance initialization process while initializing the worker node.
     * After the reservation script has been executed, it sets and registers the instance as the worker node of the ‘worker node group’.
 * Script detail
-    * User must use bash script.
-    * shabang(`#!/bin/bash`) is not necessary in the script detail.
+    * The first line of a scheduled script must start with  #!.
     * The maximum size of script is 64KB.
     * The script is executed by root authority.
     * The script execution records are saved to the below location.
