@@ -1,5 +1,10 @@
 ## Container > Kubernetes > Release Notes
 
+### 2021. 07. 27.
+
+#### More Features
+* Reservation script feature is available when creating node groups.
+
 ### 2021. 06. 29.
 #### More Features
 
