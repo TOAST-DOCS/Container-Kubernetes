@@ -693,6 +693,28 @@ NAME                                            STATUS   ROLES    AGE   VERSION
 autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.17.6
 ```
 
+
+### Reservation script
+User can register reservation script when creating clusters and additional node groups. Below are the features of the reservation script.
+
+* Feature setting
+    * This feature can be set by worker node group.
+    * The reservation script entered when creating clusters are applied to the default worker node group.
+    * The reservation script entered when creating additional node groups are applied to the corresponding worker node group.
+    * The contents of the reservation script cannot be changed once the worker node group has been created.
+* Script execution time
+    * eservation script is executed during the instance initialization process while initializing the worker node.
+    * After the reservation script has been executed, it sets and registers the instance as the worker node of the ‘worker node group’.
+* Script detail
+    * User must use bash script.
+    * shabang(`#!/bin/bash`) is not necessary in the script detail.
+    * The maximum size of script is 64KB.
+    * The script is executed by root authority.
+    * The script execution records are saved to the below location.
+        * Script exit code: `/var/log/userscript.exitcode`
+        * Standard output and error stream of script: `/var/log/userscript.output`
+
+
 ## Cluster Management
 To run and manage clusters from a remote host, 'kubectl', which is the command line tool (CLI) as provided by Kubernetes, is required.
 
