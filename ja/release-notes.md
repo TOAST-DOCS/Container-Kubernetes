@@ -8,7 +8,7 @@
 * ワーカーノードにコンテナログローテーションの設定が追加されました。
     * イメージアップデート
         * CentOS 7.8 - Container (2021.07.27)
-    * コンテナログ管理については[こちら](/Container/Kubernetes/ko/troubleshooting-guide)を参照してください。
+    * コンテナログ管理については[こちら](/Container/Kubernetes/ja/troubleshooting-guide)を参照してください。
 
 ### 2021. 06. 29.
 
