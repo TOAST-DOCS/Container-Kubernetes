@@ -1,11 +1,11 @@
-## Container > Kubernetes > 문제 해결 가이드
+## Container > Kubernetes > Troubleshooting Guide
 
-Kubernetes 서비스를 사용하면서 겪을 수 있는 다양한 문제들에 대한 해결 방법을 설명합니다.
+This guide explains how to solve various problems that you might encounter while using the Kubernetes service.
 
-### > 워커 노드의 컨테이너 로그 파일 크기가 커지면서 디스크 공간이 줄어듭니다.
+### > Disk space is reduced as the size of the worker node's container log file increases.
 
-#### 로그 로테이션 설정하기
-컨테이너 로그 파일 관리(최대 파일 크기, 로그 파일 개수 설정 등)를 위해 워커 노드에 아래와 같은 설정을 추가합니다.
+#### Set log rotation
+For container log file management (setting the maximum file size, the number of log files, and so on), add the following setting to the worker node.
 
 ```
 $ sudo bash -c "cat > /etc/logrotate.d/docker" <<EOF
@@ -24,37 +24,37 @@ $ sudo bash -c "cat > /etc/logrotate.d/docker" <<EOF
 EOF
 ```
 
-워커 노드에서는 매일 새벽 3시경 cron을 통해 상기 설정 기반의 컨테이너 로그 로테이션이 수행됩니다.
+In the worker node, container log rotation based on the setting above is performed through cron at around 3 AM every day.
 
-> [참고] `CentOS 7.8 - Container (2021.07.27)` 이후의 인스턴스 이미지에는 위와 같은 로그 로테이션 설정이 기본으로 제공됩니다.
+> [Note] For instance images later than `CentOS 7.8 - Container (2021.07.27)`, the log rotation setting as above is provided by default.
 <br>
 
-#### 로그 로테이션 설정 동기화하기
+#### Synchronize log rotation setting
 
-클러스터 운용 과정에서 다음과 같은 경우 일부 워커 노드의 로그 로테이션 설정이 달라지는 상황이 발생할 수도 있습니다.
-  * 노드 그룹 간 인스턴스 이미지가 다른 경우
-    * 로그 로테이션 설정 적용 이미지 기반 노드 vs 미적용 이미지 기반 노드
-  * 로그 로테이션 설정 미적용 이미지 기반 노드에 직접 설정을 추가한 경우
-    * 클러스터 오토 스케일러 혹은 노드 그룹 크기 조정을 통해 추가된 신규 노드 vs 기존 노드
-  * 로그 로테이션 설정 내역을 직접 변경 적용한 경우
-    * 클러스터 오토 스케일러 혹은 노드 그룹 크기 조정을 통해 추가된 신규 노드 vs 기존 노드
+While operating clusters, log rotation setting for some of the worker nodes might change in the following cases:
+  * When the instance images are different between node groups
+    * Node based on images with log rotation setting applied vs. unapplied
+  * When the setting is added directly to the node based on images with log rotation setting unapplied
+    * New node added by cluster auto scaler or node group size adjustment vs. existing node
+  * When the log rotation setting details are changed and applied directly
+    * New node added by cluster auto scaler or node group size adjustment vs. existing node
 
-위와 같은 상황에서 모든 워커 노드에 대해 일관된 로그 로테이션 설정을 유지하고 싶다면 다음과 같은 동기화 방법을 고려해 볼 수 있습니다.
+To keep the log rotation setting consistent for all worker nodes in the circumstances above, you can consider the following method for synchronization.
 
-##### ```SSH를 통한 로그 로테이션 설정 파일 동기화하기```
+##### ```Synchronize the log rotation setting file via SSH```
 
-아래는 클러스터의 모든 워커 노드에 대해 ssh를 기반으로 로그 로테이션 설정 파일을 비교 후, 필요한 노드에 복사해 주는 스크립트를 생성해 주는 쉘 커맨드입니다.
+The code shown below is the shell commands to create a script that compares the log rotation setting file for the cluster's all worker nodes based on SSH, and copies the file to the nodes that require the setting.
 
-커맨드 실행에 앞서 필요한 것은 다음과 같습니다.
+The following are the prerequisites for executing the commands.
 
-* 워커 노드에 대한 ssh 포트 오픈 (security group에서 tcp 22번 포트 오픈)
-* 워커 노드 생성 시 사용한 keypair 파일
-* kubectl 바이너리
-* 대상 클러스터에 대한 kubeconfig 파일
-* 동기화 소스로 사용할 logrotate 설정 파일
+* Open SSH port for the worker node (open TCP port 22 from the security group)
+* The key pair file that was used to create the worker node
+* The kubectl binary
+* The kubeconfig file for the target cluster
+* The logrotate setting file to be used as the synchronization source
 
-아래에서 3개의 cp 명령의 첫 파라미터 값을 적절히 수정하여 실행하면 됩니다.<br>
-실행 완료 후 생성된 쉘 스크립트 및 cron job을 통해 매일 자정에 동기화 작업이 수행됩니다.
+You need to modify the first parameter of 3 cp commands before running the commands.<br>
+A synchronization task is performed every midnight using the shell script and cron job generated after the command execution is completed.
 ```
 $ cd ~
 $ mkdir logrotate_for_container
@@ -123,4 +123,4 @@ $
 
 
 
-> [참고] 상기 내용은 동기화를 위한 하나의 방법일 뿐이며, 사용자 환경에 더 적절한 방법이 있다면 그것을 통해 동기화 작업이 수행되도록 하면 됩니다.
+> [Note] The description above is only one of the methods for synchronization. If there is a better way for your environment, you can use it to perform synchronization.
