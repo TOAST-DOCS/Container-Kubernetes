@@ -7,7 +7,7 @@
 * Added container log rotation setting to the worker nodes.
     * Image update
         * CentOS 7.8 - Container (2021.07.27)
-    * Refer to [Troubleshooting Guide](/Container/Kubernetes/ko/troubleshooting-guide) for details on container log management.
+    * Refer to [Troubleshooting Guide](/Container/Kubernetes/en/troubleshooting-guide) for details on container log management.
 
 ### 2021. 06. 29.
 #### More Features
