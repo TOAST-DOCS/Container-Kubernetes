@@ -257,7 +257,7 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 | 감축 | 노드 감축 활성 여부 설정 | 활성/비활성 | 활성 | - |
 | 리소스 사용량 임계치 | 감축의 기준인 리소스 사용량 임계 영역의 기준값 | 1-100 | 50 | % |
 | 임계 영역 유지 시간| 감축 대상이 될 노드의 임계치 이하의 리소스 사용량 유지 시간| 1-1440 | 10 | 분 |
-| 증설 후 지연 시간 | 노드 증설 후 감축 대상 노드로 모니터링하기 시작까지의 지연 시간| 1-1440 | 10 | 분 |
+| 증설 후 지연 시간 | 노드 증설 후 감축 대상 노드로 모니터링하기 시작까지의 지연 시간| 10-1440 | 10 | 분 |
 
 > [주의]
 > 오토 스케일러가 활성화된 노드 그룹은 수동으로 노드를 추가하거나 삭제할 수 없습니다.
@@ -878,7 +878,7 @@ status:
 > * 평촌 리전: 2020년 12월 24일 이후에 생성한 클러스터
 
 ### 승인 컨트롤러(admission controller) 플러그인
-승인 컨트롤러는 Kubernetes API 서버 요청을 가로채 객체를 변경하거나 요청을 거부할 수 있습니다. 승인 컨트롤러에 대한 자세한 설명은 [승인 컨트롤러](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/)를 참고하세요. 그리고 승인 컨트롤러의 사용 에제는 [승인 컨트롤러 가이드](https://kubernetes.io/blog/2019/03/21/a-guide-to-kubernetes-admission-controllers/)를 참고하세요.
+승인 컨트롤러는 Kubernetes API 서버 요청을 가로채 객체를 변경하거나 요청을 거부할 수 있습니다. 승인 컨트롤러에 대한 자세한 설명은 [승인 컨트롤러](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/)를 참고하세요. 그리고 승인 컨트롤러의 사용 예제는 [승인 컨트롤러 가이드](https://kubernetes.io/blog/2019/03/21/a-guide-to-kubernetes-admission-controllers/)를 참고하세요.
 
 클러스터 생성 시점에 따라 승인 컨트롤러에 적용되는 플러그인의 종류가 다릅니다. 자세한 내용은 리전별 생성 시점에 따른 플러그인 목록을 참고하세요.
 
@@ -1019,6 +1019,7 @@ NHN Cloud Kubernetes 서비스는 아래 버전을 지원합니다.
 
 * v1.17.6
 * v1.18.19
+* v1.19.13
 
 
 ## LoadBalancer 서비스
@@ -1186,6 +1187,128 @@ Commercial support is available at
 </body>
 </html>
 ```
+
+### 로드 밸런서 상세 옵션 설정
+Kubernetes의 서비스 객체를 정의할 때 로드 밸런서의 여러 가지 옵션을 설정할 수 있습니다.
+
+>
+> 이 기능은 Kubernetes v1.19.13 이후 버전의 클러스터에만 적용 가능합니다.
+>
+
+#### 세션 지속성 설정
+로드 밸런서의 세션 지속성을 설정할 수 있습니다.
+* 설정 위치는 `.spec.sessionAffinity`입니다.
+* 다음 중 하나로 설정할 수 있습니다.
+    * `None`: 세션 지속성을 `없음`으로 설정합니다. 미설정 시 기본값입니다.
+    * `ClientIP`: 세션 지속성을 `SOURCE_IP`로 설정합니다.
+
+#### 로드 밸런서 삭제 시 플로팅 IP 주소 보존 여부 설정
+로드 밸런서에는 플로팅 IP가 부착되어 있습니다. 로드 밸런서 삭제 시 로드 밸런서에 부착된 플로팅 IP의 삭제 혹은 보존 여부를 설정할 수 있습니다.
+* 설정 위치는 `.metadata.annotations` 하위의 `loadbalancer.openstack.org/keep-floatingip`입니다.
+* 다음 중 하나로 설정할 수 있습니다.
+    * `true`: 플로팅 IP를 보존합니다.
+    * `false`: 플로팅 IP를 삭제합니다. 미설정 시 기본값입니다.
+
+#### 리스너 연결 제한 설정
+리스너의 연결 제한을 설정할 수 있습니다.
+* 설정 위치는 `.metadata.annotations` 하위의 `loadbalancer.openstack.org/connection-limit`입니다.
+* 다음과 같이 설정할 수 있습니다.
+    * 양수 설정 시 해당 값으로 설정됩니다.
+    * 미설정 시 기본값(60000)으로 설정됩니다.
+
+#### 리스너 프로토콜 설정
+리스너의 프로토콜을 설정할 수 있습니다.
+* 설정 위치는 `.metadata.annotations` 하위의 `loadbalancer.nhncloud/listener-protocol`입니다.
+* 다음 중 하나로 설정할 수 있습니다.
+    * `TCP`: 미설정 시 기본값입니다.
+    * `HTTP`
+    * `HTTPS`
+    * `TERMINATED_HTTPS`: `TERMINATED_HTTPS`로 설정합니다. SSL 버전, 인증서, 개인키 정보를 추가 설정해야 합니다.
+
+SSL 버전은 다음과 같이 설정할 수 있습니다.
+* 설정 위치는 `.metadata.annotations` 하위의 `loadbalancer.nhncloud/listener-terminated-https-tls-version`입니다.
+* 다음 중 하나로 설정할 수 있습니다.
+    * `TLSv1.2`: 미설정 시 기본값입니다.
+    * `TLSv1.1`
+    * `TLSv1.0_2016`
+    * `TLSv1.0`
+    * `SSLv3`
+
+인증서 정보는 다음과 같이 설정할 수 있습니다.
+* 설정 위치는 `.metadata.annotations` 하위의 `loadbalancer.nhncloud/listener-terminated-https-cert`입니다.
+* 시작줄 및 끝줄을 포함해야 합니다.
+
+개인키 정보는 다음과 같이 설정할 수 있습니다.
+* 설정 위치는 `.metadata.annotations` 하위의 `loadbalancer.nhncloud/listener-terminated-https-key`입니다.
+* 시작줄 및 끝줄을 포함해야 합니다.
+
+다음은 리스너 프로토콜을 `TERMINATED_HTTPS`로 설정할 때의 매니페스트 예제입니다. 인증서 정보와 개인키 정보는 일부 생략되어 있습니다.
+```yaml
+metadata:
+  name: echosvr-svc
+  labels:
+    app: echosvr
+  annotations:
+    loadbalancer.nhncloud/listener-protocol: TERMINATED_HTTPS
+    loadbalancer.nhncloud/listener-terminated-https-tls-version: TLSv1.2
+    loadbalancer.nhncloud/listener-terminated-https-cert: |
+      -----BEGIN CERTIFICATE-----
+      MIIDZTCCAk0CCQDVfXIZ2uxcCTANBgkqhkiG9w0BAQUFADBvMQswCQYDVQQGEwJL
+      ...
+      fnsAY7JvmAUg
+      -----END CERTIFICATE-----
+    loadbalancer.nhncloud/listener-terminated-https-key: |
+      -----BEGIN RSA PRIVATE KEY-----
+      MIIEowIBAAKCAQEAz+U5VNZ8jTPs2Y4NVAdUWLhsNaNjRWQm4tqVPTxIrnY0SF8U
+      ...
+      u6X+8zlOYDOoS2BuG8d2brfKBLu3As5VAcAPLcJhE//3IVaZHxod
+      -----END RSA PRIVATE KEY-----
+```
+
+#### 로드 밸런싱 방식 설정
+로드 밸런싱 방식을 설정할 수 있습니다.
+* 설정 위치는 `.metadata.annotations` 하위의 `loadbalancer.nhncloud/pool-lb-method`입니다.
+* 다음 중 하나로 설정할 수 있습니다.
+    * `ROUND_ROBIN`: 미설정 시 기본값입니다.
+    * `LEAST_CONNECTIONS`
+    * `SOURCE_IP`
+
+#### 상태 확인 프로토콜 설정
+상태 확인 프로토콜을 설정할 수 있습니다.
+* 설정 위치는 `.metadata.annotations` 하위의 `loadbalancer.nhncloud/healthmonitor-type`입니다.
+* 다음 중 하나로 설정할 수 있습니다.
+    * `HTTP`: HTTP 메서드, HTTP 상태 코드, URL 추가 설정해야 합니다.
+    * `HTTPS`: HTTP URL, HTTP 메서드, HTTP 상태 코드를 추가 설정해야 합니다.
+    * `TCP`: 미설정 시 기본값입니다.
+
+HTTP URL은 다음과 같이 설정할 수 있습니다.
+* 설정 위치는 `.metadata.annotations` 하위의 `loadbalancer.nhncloud/healthmonitor-http-url`입니다.
+* 미설정 시 `/`으로 설정됩니다.
+
+HTTP 메서드는 다음과 같이 설정할 수 있습니다.
+* 설정 위치는 `.metadata.annotations` 하위의 `loadbalancer.nhncloud/healthmonitor-http-method`입니다.
+* 미설정 시 `GET`으로 설정됩니다.
+
+HTTP 상태 코드는 다음과 같이 설정할 수 있습니다.
+* 설정 위치는 `.metadata.annotations` 하위의 `loadbalancer.nhncloud/healthmonitor-http-expected-code`입니다.
+* 미설정 시 `200`으로 설정됩니다.
+
+#### 상태 확인 주기 설정
+상태 확인 주기를 설정할 수 있습니다.
+* 설정 위치는 `.metadata.annotations` 하위의 `loadbalancer.nhncloud/healthmonitor-delay`입니다.
+* 초 단위로 설정합니다.
+* 미설정 시 60초로 설정됩니다.
+
+#### 상태 확인 최대 응답 시간 설정
+상태 확인 최대 응답 시간을 설정할 수 있습니다.
+* 설정 위치는 `.metadata.annotations` 하위의 `loadbalancer.nhncloud/healthmonitor-timeout`입니다.
+* 초 단위로 설정합니다.
+* 미설정 시 30초로 설정됩니다.
+
+#### 상태 확인 최대 재시도 횟수 설정
+상태 확인 최대 재시도 횟수를 설정할 수 있습니다.
+* 설정 위치는 `.metadata.annotations` 하위의 `loadbalancer.nhncloud/healthmonitor-max-retries`입니다.
+* 미설정 시 3회로 설정됩니다.
 
 
 ## 인그레스 컨트롤러
