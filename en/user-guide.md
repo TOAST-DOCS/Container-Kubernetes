@@ -155,7 +155,6 @@ GPU nodes that belong to Kubernetes clusters provide resources such as `nvidia.c
 To use GPU, enter as shown in the sample file below to be allocated with the `nvidia.com/gpu` resource.
 
 * resnet.yaml
-
 ```
 apiVersion: v1
 kind: Pod
@@ -172,7 +171,7 @@ spec:
       resources:
         limits:
           nvidia.com/gpu: 1
-```
+``` 
 
 You should see the following results if you run the above file.
 
