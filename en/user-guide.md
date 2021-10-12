@@ -22,8 +22,6 @@ To enable Kubernetes, a cluster must be created. Go to **Container > Kubernetes*
 
 Enter information as required and click **Create Clusters**, and a cluster begins to be created. You may check status from the list of clusters. It takes about 10 minutes to create; more time may be required depending on the cluster setting.  
 
-> [Caution]
-> With a cluster created, a default node group is created. After a default node group is created, the number of nodes cannot be modified. When you need more nodes, a new node group must be created. 
 
 
 ### Querying Clusters 
@@ -33,10 +31,10 @@ A newly created cluster can be found on **Container > Kubernetes**. Select a clu
 | --- | --- |
 | Cluster Name | Name and ID of Kubernetes Cluster |
 | Node Count | Number of instances of all nodes comprising a cluster |
-| Kubernetes Veresion | Kubernetes version in service |
+| Kubernetes Version | Kubernetes version in service |
 | VPC | VPC network attached to cluster |
 | Subnet | Subnet associated to a node instance comprising a cluster |
-| API Endpoint | URI of API endpoint to access cluster for opearation |
+| API Endpoint | URI of API endpoint to access cluster for operation |
 | Configuration File | Download button of configuration file required to access cluster for operation |
 
 ### Deleting Clusters 
@@ -67,13 +65,13 @@ On the **Basic Information** tab, check the following:
 Find the list of instances comprising a node group from the **List of Nodes** tab. 
 
 ### Creating Node Groups 
-Along with a new cluste, a default node group is created, but more node groups can be created depending on the needs. If higher specifications are required to run a container, or more worker node instances are required to scale out, node groups may be additionally created. Click **Create Node Groups** from the page of node group list, and the page of creating a node group shows up. Following items are required to create a node group:  
+Along with a new cluster, a default node group is created, but more node groups can be created depending on the needs. If higher specifications are required to run a container, or more worker node instances are required to scale out, node groups may be additionally created. Click **Create Node Groups** from the page of node group list, and the page of creating a node group shows up. Following items are required to create a node group:  
 
 | Item | Description |
 | --- | --- |
 | Availability Area | Area to create instances comprising a cluster |
 | Node Group Name | Name of additional node group, comprised of alphabets, numbers, '-', and '.' |
-| Instance Type | Specificiations of an instance for additional node group |
+| Instance Type | Specifications of an instance for additional node group |
 | Node Count | Number of instances for additional node group |
 | Keypair | Keypair to access additional node group |
 | Block Storage Type | Type of block storage of instance for additional node group |
@@ -88,30 +86,36 @@ Select a node group to delete from the list of node groups, and click **Delete N
 
 Nodes can be added to operating node groups. The current list of nodes will appear upon clicking the node list tab on the node group information query page. Nodes can be added by selecting the Add Node button and entering the number of nodes you want.
 
-> [Caution] Nodes cannot be manually added to node groups on which autoscaler is enabled.
+> [Caution]
+> Nodes cannot be manually added to node groups on which autoscaler is enabled.
 
 ### Deleting node from node group
 
 Nodes can be deleted from operating node groups. The current list of nodes will appear upon clicking the node list tab on the node group information query page. A confirmation dialog box will appear when a user selects nodes for deletion and clicks the Delete Node button. When the user confirms the node name and selects the OK button, the node will be deleted.
 
-> [Caution] Pods that were operating in the deleted node will go through force shutdown. To safely transfer pods from the currently operating nodes to be deleted to other nodes, you must run the "drain" command. New pods can be scheduled on nodes even after they are drained. To prevent new pods from being scheduled in nodes that are to be deleted, you must run the "cordon" command. For more information on safe node management, see the document below.
+> [Caution]
+> Pods that were operating in the deleted node will go through force shutdown. To safely transfer pods from the currently operating nodes to be deleted to other nodes, you must run the "drain" command. New pods can be scheduled on nodes even after they are drained. To prevent new pods from being scheduled in nodes that are to be deleted, you must run the "cordon" command. For more information on safe node management, see the document below.
 
-> [Caution] Nodes cannot be manually deleted from node groups on which autoscaler is enabled.
+> [Caution]
+> Nodes cannot be manually deleted from node groups on which autoscaler is enabled.
 
-- [Safe node drain](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)
-- [Manual node management](https://kubernetes.io/docs/concepts/architecture/nodes/#manual-node-administration)
+* [Safe node drain](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)
+* [Manual node management](https://kubernetes.io/docs/concepts/architecture/nodes/#manual-node-administration)
 
 ### Using a GPU node group
 
 Node groups composed of GPU instances can be created with Kubernetes when you need to run workload based on GPU. Select ‘g2’ type when selecting an instance type during the process of generating the clusters or node groups to make a GPU node group.
 
-> [Note] GPU provided by NHN Cloud GPU instance is affiliated with NVIDIA. ([Identify available GPU specifications that can be used](https://github.com/TOAST-DOCS/Container-Kubernetes/blob/alpha/Compute/GPU Instance/ko/overview/#gpu)) nvidia-device-plugin necessary for Kubernetes for NVIDIA GPU usage will be installed automatically when creating a GPU node group.
+> [Note]
+> GPU provided by NHN Cloud GPU instance is affiliated with NVIDIA. ([Identify available GPU specifications that can be used](https://github.com/TOAST-DOCS/Container-Kubernetes/blob/alpha/Compute/GPU Instance/ko/overview/#gpu))
+> nvidia-device-plugin necessary for Kubernetes for NVIDIA GPU usage will be installed automatically when creating a GPU node group.
 
 To check the default setting and run a simple operation test for the created GPU node, use the following method:
 
 #### Node level status check
 
-Access the GPU node and run the ‘nvidia-smi’ command. The GPU driver is working normally if the output shows the following:
+Access the GPU node and run the ‘nvidia-smi’ command.
+The GPU driver is working normally if the output shows the following:
 
 ```
 $ nvidia-smi
@@ -136,7 +140,8 @@ Mon Jul 27 14:38:07 2020
 
 #### Kubernetes level status check
 
-Use the ‘kubectl’ command to view information about available GPU resources at the cluster level. Below are commands and execution results that displays the number of GPU cores available for each node.
+Use the ‘kubectl’ command to view information about available GPU resources at the cluster level.
+Below are commands and execution results that displays the number of GPU cores available for each node.
 
 ```
 $ kubectl get nodes -A -o custom-columns='NAME:.metadata.name,GPU Allocatable:.status.allocatable.nvidia\.com/gpu,GPU Capacity:.status.capacity.nvidia\.com/gpu'
@@ -146,9 +151,10 @@ my-cluster-default-w-vdqxpwisjjsk-node-1   1                 1
 
 #### Sample workload execution for GPU testing
 
-GPU nodes that belong to Kubernetes clusters provide resources such as `nvidia.com/gpu` in addition to CPU and memory. To use GPU, enter as shown in the sample file below to be allocated with the `nvidia.com/gpu` resource.
+GPU nodes that belong to Kubernetes clusters provide resources such as `nvidia.com/gpu` in addition to CPU and memory.
+To use GPU, enter as shown in the sample file below to be allocated with the `nvidia.com/gpu` resource.
 
-- resnet.yaml
+* resnet.yaml
 
 ```
 apiVersion: v1
@@ -215,13 +221,15 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
    100 100.0   210.4  0.001  0.982 0.00020
 ```
 
-> [Note] To prevent workloads that do not require GPU from being allocated to GPU nodes, please see [Taints and Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/).
+> [Note]
+> To prevent workloads that do not require GPU from being allocated to GPU nodes, please see [Taints and Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/).
 
 ### Autoscaler
 
 Autoscaler automatically adjusts the number of nodes in a node group if it runs out of available resources to schedule pods or if its node usage rate drops below a certain threshold. Autoscaler can be individually added to node groups which then function independently from each other. This feature is based on Kubernetes Project's official feature, Cluster Autoscaler. For more information, please visit [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler).
 
-> [Note] The version of the `cluster-autoscaler` applied to Kubernetes service is `1.19.0.`
+> [Note]
+> The version of the `cluster-autoscaler` applied to Kubernetes service is `1.19.0.`
 
 #### Glossary
 
@@ -232,22 +240,23 @@ Terms used in relation to the autoscaler and their meanings are as follows:
 | Scale Up   | Increase a number of nodes. |
 | Scale Down | Decrease a number of nodes. |
 
-> [Caution] If worker nodes are working in an environment with no Internet connection, autoscaler container images must be manually added to the worker nodes. This task is applied to the following targets:
+> [Caution]
+> If worker nodes are working in an environment with no Internet connection, autoscaler container images must be manually added to the worker nodes. This task is applied to the following targets:
 >
-> -  Pangyo Region: Node groups created before November 24, 2020
-> -  Pyeongchon Region: Node groups created before November 19, 2020
+> * Pangyo Region: Node groups created before November 24, 2020
+> * Pyeongchon Region: Node groups created before November 19, 2020
 >
 > Autoscaler container images are in the following directory:
 >
-> - k8s.gcr.io/autoscaling/cluster-autoscaler:v1.19.0
+> * k8s.gcr.io/autoscaling/cluster-autoscaler:v1.19.0
 
 #### Autoscaler Settings
 
 Autoscaler can be added per node group and it works independently from each other. Autoscaler can be set up in various ways, as listed below:
 
--  Set up on the default node groups upon creating a cluster.
--  Set up on additional node groups upon adding the node groups.
--  Set up on existing node groups.
+* Set up on the default node groups upon creating a cluster.
+* Set up on additional node groups upon adding the node groups.
+* Set up on existing node groups.
 
 Activating the autoscaler enables the following options:
 
@@ -260,27 +269,28 @@ Activating the autoscaler enables the following options:
 | Threshold Duration       | The duration of below-threshold resource usage for target nodes to scale down | 1-1440         | 10      | minutes |
 | Post Scale-up Delay      | Delay before starting to monitor for scale-down targets after scaling up | 1-1440         | 10      | minutes |
 
-> [Caution] Nodes cannot be manually added to or deleted from node groups on which autoscaler is enabled.
+> [Caution]
+> Nodes cannot be manually added to or deleted from node groups on which autoscaler is enabled.
 
 #### Scale-up/down Conditions
 
 Scales up if all of the following conditions are met:
 
--  There are no more available nodes to schedule pods.
--  The current number of nodes is below the maximum limit.
+* There are no more available nodes to schedule pods.
+* The current number of nodes is below the maximum limit.
 
 Scales down if all of the following conditions are met:
 
--  Nodes use resources below the threshold for the set critical area duration.
--  The current number of nodes exceeds the minimum limit.
+* Nodes use resources below the threshold for the set critical area duration.
+* The current number of nodes exceeds the minimum limit.
 
 If some nodes contain at least one pod that meets the following conditions, then they will be excluded from the list of nodes to be scaled down:
 
-- Pods restricted by "PodDisruptionBudget"
-- Pods in the "kube-system" namespace
-- Pods not started by control objects such as "deployment" or "replicaset"
-- Pods that use the local storage
-- Pods that cannot be moved to other nodes because of the restrictions such as "node selector"
+* Pods restricted by "PodDisruptionBudget"
+* Pods in the "kube-system" namespace
+* Pods not started by control objects such as "deployment" or "replicaset"
+* Pods that use the local storage
+* Pods that cannot be moved to other nodes because of the restrictions such as "node selector"
 
 For more information on the conditions for scale-up/down, see [Cluster Autoscaler FAQ](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md).
 
@@ -305,7 +315,8 @@ Enables autoscaling on the default node group of the cluster you want. For this 
 
 Deploy pods using the following manifest:
 
-> [Caution] Just like this manifest, all manifests must have a container resource request defined on them.
+> [Caution]
+> Just like this manifest, all manifests must have a container resource request defined on them.
 
 ```
 apiVersion: apps/v1
@@ -376,7 +387,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-1   Ready    <none>   77s   v1.17.6
 autoscaler-test-default-w-ohw5ab5wpzug-node-2   Ready    <none>   78s   v1.17.6
 ```
 
-The hitherto "pending" pods are now normally scheduled after the scale-up.
+The pods that were in "pending" status are now normally scheduled after the scale-up.
 
 ```
 # kubectl get pods -o wide
@@ -454,9 +465,9 @@ LAST SEEN   TYPE     REASON      OBJECT                                         
 
 You can check the status of each node group's autoscaler through "configmap/cluster-autoscaler-status." Configmaps are created ind different namespaces for different node groups. The following is the naming convention for each node group namespace created by the autoscaler:
 
-- Format: nhn-ng-{node group name}
-- Enter a node group name in {node group name}.
-- The default node group name is "default-worker."
+* Format: nhn-ng-{node group name}
+* Enter a node group name in {node group name}.
+* The default node group name is "default-worker."
 
 The status of the default node group's autoscaler can be checked using the following method. For more information, see [Cluster Autoscaler FAQ](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md).
 
@@ -502,7 +513,8 @@ metadata:
   uid: e72bd1a2-a56f-41b4-92ee-d11600386558
 ```
 
-> [Note] As for the status information, the `Cluster-wide` area has the same information as `NodeGroups.`
+> [Note]
+> As for the status information, the `Cluster-wide` area has the same information as `NodeGroups.`
 
 #### Example of an action working with HPA (HorizontalPodAutoscale)
 
@@ -516,7 +528,7 @@ Enable Autoscaler as shown in the above example.
 
 Deploy a container that creates CPU load for a certain amount of time after receiving a web request. The, expose the service. The following is taken from the `php-apache.yaml` file.
 
-```
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -553,6 +565,9 @@ spec:
   - port: 80
   selector:
     run: php-apache
+```
+
+```
 # kubectl apply -f php-apache.yaml
 deployment.apps/php-apache created
 service/php-apache created
@@ -703,7 +718,7 @@ User can register reservation script when creating clusters and additional node 
     * The reservation script entered when creating additional node groups are applied to the corresponding worker node group.
     * The contents of the reservation script cannot be changed once the worker node group has been created.
 * Script execution time
-    * eservation script is executed during the instance initialization process while initializing the worker node.
+    * Reservation script is executed during the instance initialization process while initializing the worker node.
     * After the reservation script has been executed, it sets and registers the instance as the worker node of the ‘worker node group’.
 * Script detail
     * The first line of a scheduled script must start with  #!.
@@ -738,7 +753,7 @@ $ chmod +x kubectl
 #### Change Location or Specify Paths 
 Change location to the path specified for an environment variable so as to execute kubectl on any path, or add the path including kubectl to an environment variable.  
 
-* Change Loation to Path Specified for Environment Variable 
+* Change Location to Path Specified for Environment Variable 
 ```
 $ sudo mv kubectl /usr/local/bin/
 ```
@@ -875,10 +890,11 @@ status:
     type: Approved
 ```
 
-> [Caution] This feature is provided only when the time of cluster creation falls within the following period:
+> [Caution] 
+> This feature is provided only when the time of cluster creation falls within the following period:
 >
-> - Pangyo region: Cluster created as of December 29, 2020
-> - Pyeongchon region: Cluster created as of December 24, 2020
+> * Pangyo region: Cluster created as of December 29, 2020
+> * Pyeongchon region: Cluster created as of December 24, 2020
 
 ### Admission Controller plugin
 
@@ -888,38 +904,38 @@ The type of plugin applied to the admission controller varies depending on the t
 
 #### Clusters created before February 22, 2021 for the Pangyo region; clusters created before February 17, 2021 for the Pyeongchon region
 
-- DefaultStorageClass
-- DefaultTolerationSeconds
-- LimitRanger
-- MutatingAdmissionWebhook
-- NamespaceLifecycle
-- NodeRestriction
-- PersistentVolumeClaimResize
-- Priority
-- ResourceQuota
-- RuntimeClass
-- ServiceAccount
-- StorageObjectInUseProtection
-- TaintNodesByCondition
-- ValidatingAdmissionWebhook
+* DefaultStorageClass
+* DefaultTolerationSeconds
+* LimitRanger
+* MutatingAdmissionWebhook
+* NamespaceLifecycle
+* NodeRestriction
+* PersistentVolumeClaimResize
+* Priority
+* ResourceQuota
+* RuntimeClass
+* ServiceAccount
+* StorageObjectInUseProtection
+* TaintNodesByCondition
+* ValidatingAdmissionWebhook
 
 #### Clusters created on February 23, 2021 or later for the Pangyo region; clusters created on February 18, 2021 or later for the Pyeongchon region
 
-- DefaultStorageClass
-- DefaultTolerationSeconds
-- LimitRanger
-- MutatingAdmissionWebhook
-- NamespaceLifecycle
-- NodeRestriction
-- PersistentVolumeClaimResize
-- PodSecurityPolicy (newly added)
-- Priority
-- ResourceQuota
-- RuntimeClass
-- ServiceAccount
-- StorageObjectInUseProtection
-- TaintNodesByCondition
-- ValidatingAdmissionWebhook
+* DefaultStorageClass
+* DefaultTolerationSeconds
+* LimitRanger
+* MutatingAdmissionWebhook
+* NamespaceLifecycle
+* NodeRestriction
+* PersistentVolumeClaimResize
+* PodSecurityPolicy (newly added)
+* Priority
+* ResourceQuota
+* RuntimeClass
+* ServiceAccount
+* StorageObjectInUseProtection
+* TaintNodesByCondition
+* ValidatingAdmissionWebhook
 
 ### Cluster upgrade
 NHN Cloud Kubernetes Service supports the Kubernetes component upgrade for the currently operating Kubernetes clusters.  
@@ -951,18 +967,20 @@ The following table shows whether upgrade is possible while upgrading the Kubern
 * Clusters are created as v1.17.6
 
 |Status | Master version | Whether master can be upgraded | Worker node group version | Whether worker node group can be upgraded
- | --- | :-: | :-: | :-: | :-: |
- | Initial state| v1.17.6 | Possible (Note 1) | v1.17.6 | Not possible (Note 2) | 
- | State after master upgrade | v1.18.19 | Not possible (Note 3) | v1.17.6 | Possible (Note 4) | 
+| --- | :-: | :-: | :-: | :-: |
+| Initial state| v1.17.6 | Possible (Note 1) | v1.17.6 | Not possible (Note 2) | 
+| State after master upgrade | v1.18.19 | Not possible (Note 3) | v1.17.6 | Possible (Note 4) | 
 | State after worker node group upgrade | v1.18.19 | Possible (Note 1) | v1.18.19 | Not possible (Note 2) |
- | State after master upgrade | v1.19.10 | Not possible (Note 3) | v1.18.19 | Possible (Note 4) | 
+| State after master upgrade | v1.19.10 | Not possible (Note 3) | v1.18.19 | Possible (Note 4) | 
 | State after worker node group upgrade | v1.19.10 | Not possible (Note 5) | v1.19.10 | Not possible (Note 2)| 
 
-(Note 1) Upgrade is possible because the versions of the master and all worker node groups are matching
-(Note 2) Worker node groups can be upgraded once the master is upgraded
-(Note 3) The versions of the master and all worker node groups must match in order to upgrade
-(Note 4) Upgrade is possible because the master is upgraded
-(Note 5) Upgrade is not possible because the latest version supported by NHN Cloud is being used
+Notes
+
+* (Note 1) Upgrade is possible because the versions of the master and all worker node groups are matching
+* (Note 2) Worker node groups can be upgraded once the master is upgraded
+* (Note 3) The versions of the master and all worker node groups must match in order to upgrade
+* (Note 4) Upgrade is possible because the master is upgraded
+* (Note 5) Upgrade is not possible because the latest version supported by NHN Cloud is being used
 
 
 ##### Upgrading master components
@@ -976,17 +994,19 @@ In this process, the following might happen:
 ##### Upgrading worker components
 Worker components can be upgraded for each worker node group. Worker components are upgraded in the following steps:
 
-1. Deactivate the cluster auto scaler feature.(Note 1)
-2. Add a buffer node to the worker node group(Note 2).
+1. Deactivate the cluster auto scaler feature. (Note 1)
+2. Add a buffer node (Note 2) to the worker node group.
 3. Perform the following tasks for all worker nodes within the worker node group:
-   1. Evict the working pods from the worker node, and make the nodes not schedulable.
-   2. Upgrade worker components.
-   3. Make the nodes schedulable.
+    1. Evict the working pods from the worker node, and make the nodes not schedulable.
+    2. Upgrade worker components.
+    3. Make the nodes schedulable.
 4. Evict working pods from the buffer node, and delete the buffer node.
 5. Reactivate the cluster auto scaler feature. (Note 1)
 
-(Note 1) This step is valid only if the cluster autoscaler feature is enabled before starting the upgrade feature.
-(Note 2) Buffer node is an extra node which is created so that the pods evicted from existing worker nodes can be rescheduled during the upgrade process. It is created having the same scale as the worker node defined in that worker node group, and is automatically deleted when the upgrade process is over. This node is charged based on the instance fee policy. 
+Notes
+
+* (Note 1) This step is valid only if the cluster autoscaler feature is enabled before starting the upgrade feature.
+*  (Note 2) Buffer node is an extra node which is created so that the pods evicted from existing worker nodes can be rescheduled during the upgrade process. It is created having the same scale as the worker node defined in that worker node group, and is automatically deleted when the upgrade process is over. This node is charged based on the instance fee policy. 
 
 In this process, the following might happen:
 
@@ -1065,7 +1085,7 @@ nginx-deployment-7fd6966748-wv7rd   1/1     Running   0          4m13s
 To use images saved at NHN Cloud Container Registry, first create a secret to login to user registry. 
 
 ```
-$ kubectl create secret docker-registry registry-credential --docker-server={user registry address} --docker-username={email address for NHN Cloud account} --docker-password={service or integrated Appkey}
+$ kubectl create secret docker-registry registry-credential --docker-server={user registry address} --docker-username={email address for NHN Cloud account} --docker-password={service Appkey or integrated Appkey}
 secret/registry-credential created
 
 $ kubectl get secrets
@@ -1611,6 +1631,7 @@ Access `https://{EXTERNAL-IP}` on the web browser to load the Kubernetes dashboa
 #### Open Services with Ingress 
 
 Ingress refers to the network object providing routing to access many services within a cluster. The setting of an ingress object runs by ingress controller. The `kubernetes-dashboard` service object can go public through ingress. See [Ingress Controller](/Container/Kubernetes/en/user-guide/#_16) regarding description on ingress and ingress controller. Below figure shows the structure of making dashboard public through ingress.
+
 ![dashboard-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-02.png)
 
 Install `NGINX Ingress Controller` in reference of the [Install NGINX Ingress Controller](/Container/Kubernetes/en/user-guide/#nginx-ingress-controller) and create service of the `LoadBalancer` type. Write manifest to create an ingress object, like below: 
