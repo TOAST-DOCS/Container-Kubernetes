@@ -4,7 +4,7 @@
 Cluster refers to a group of instances that comprise user's Kubernetes. 
 
 ### Creating Clusters
-To enable Kubernetes, a cluster must be created. Go to **Container > Kubernetes** and click **Create Clusters** and a page of creating clusters opens. Following items are required to create a cluster: 
+To enable Kubernetes, a cluster must be created. Go to **Container > Kubernetes** and click **Create Cluster** and a page of creating clusters opens. The following items are required to create a cluster: 
 
 | Item | Description |
 | --- | --- |
@@ -20,7 +20,7 @@ To enable Kubernetes, a cluster must be created. Go to **Container > Kubernetes*
 | Block Storage Type | Type of block storage for a default node group instance |
 | Block Storage Size | Size of block storage for a default node group instance |
 
-Enter information as required and click **Create Clusters**, and a cluster begins to be created. You may check status from the list of clusters. It takes about 10 minutes to create; more time may be required depending on the cluster setting.  
+Enter information as required and click **Create Cluster**, and a cluster begins to be created. You may check status from the list of clusters. It takes about 10 minutes to create; more time may be required depending on the cluster setting.  
 
 
 
@@ -65,7 +65,7 @@ On the **Basic Information** tab, check the following:
 Find the list of instances comprising a node group from the **List of Nodes** tab. 
 
 ### Creating Node Groups 
-Along with a new cluster, a default node group is created, but more node groups can be created depending on the needs. If higher specifications are required to run a container, or more worker node instances are required to scale out, node groups may be additionally created. Click **Create Node Groups** from the page of node group list, and the page of creating a node group shows up. Following items are required to create a node group:  
+Along with a new cluster, a default node group is created, but more node groups can be created depending on the needs. If higher specifications are required to run a container, or more worker node instances are required to scale out, node groups may be additionally created. Click **Create Node Groups** from the page of node group list, and the page of creating a node group shows up. The following items are required to create a node group:  
 
 | Item | Description |
 | --- | --- |
@@ -938,7 +938,7 @@ The type of plugin applied to the admission controller varies depending on the t
 * ValidatingAdmissionWebhook
 
 ### Cluster upgrade
-NHN Cloud Kubernetes Service supports the Kubernetes component upgrade for the currently operating Kubernetes clusters.  
+NHN Cloud Kubernetes service supports the Kubernetes component upgrade for the currently operating Kubernetes clusters.  
 
 #### Policy of supporting different Kubernetes versions
 Kubernetes version is represented as `x.y.z`. `x` is the major, `y` is the minor, and `z` is the patch version. If features are added, it is a major or minor version upgrade. If it provides features compatible with previous versions such as bug fixes, it is a patch version. For more information about this, please see [Semantic Versioning 2.0.0](https://semver.org/).
@@ -1033,7 +1033,7 @@ If the versions match after upgrading the versions of the master and all worker 
 > If you do not upgrade the worker node group after upgrading the master, some pods might not work properly.
 
 #### Supported Versions
-NHN Cloud Kubernetes Service supports the following versions: 
+NHN Cloud Kubernetes service supports the following versions: 
 
 * v1.17.6
 * v1.18.19
@@ -1568,7 +1568,7 @@ $ curl --resolve test.example.com:80:123.123.123.44 http://test.example.com/
 ```
 
 ## Kubernetes Dashboard 
-NHN Cloud Kubernetes provides default web UI dashboard. For more details on Kubernetes Dashboard, see documents at [Web UI (Dashboard)](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/). 
+NHN Cloud Kubernetes service provides default web UI dashboard. For more details on Kubernetes Dashboard, see documents at [Web UI (Dashboard)](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/). 
 
 ### Opening Dashboard Services
 User Kubernetes has the `kubernetes-dashboard` service object which has been already created to publicly open dashboard. 
