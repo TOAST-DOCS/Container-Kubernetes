@@ -1,5 +1,12 @@
 ## Container > Kubernetes > Release Notes
 
+### October 26, 2021
+
+#### Added Features
+
+* Supports Kubernetes v1.19.13.
+* When creating a LoadBalancer type service object, various options for the load balancer can be set.
+
 ### July 27, 2021
 
 #### Added Features

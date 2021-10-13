@@ -13,10 +13,10 @@ To enable Kubernetes, a cluster must be created. Go to **Container > Kubernetes*
 | VPC | VPC network to be attached to clusters |
 | Subnet | subnet, among those defined for VPC, to be associated with instances that comprise a cluster VPC |
 | Image | Images for instances comprising a cluster |
-| Availability Area | Area to create a default node group instance |
-| Instance Type | Instance specifications for a default node group |
+| Availability Zone | Area to create a default node group instance |
+| Flavor | Instance specifications for a default node group |
 | Node Count | Number of instances for a default node group |
-| Keypair | Keypair to access default node group |
+| Key pair | Key pair to access default node group |
 | Block Storage Type | Type of block storage for a default node group instance |
 | Block Storage Size | Size of block storage for a default node group instance |
 
@@ -54,8 +54,8 @@ On the **Basic Information** tab, check the following:
 | Node Group Name | Name and ID of a node group|
 | Cluster Name | Name and ID of a cluster to which a node group is included |
 | Kubernetes Version | Kubernetes version in service |
-| Availability Area | Area in which a node group instance is created |
-| Instance Type | Specifications of a node group instance |
+| Availability Zone | Area in which a node group instance is created |
+| Flavor | Specifications of a node group instance |
 | Image Type | Type of image for a node group instance |
 | Block Storage Size | Size of block storage for a node group instance |
 | Created Date | Time when node group was created |
@@ -69,11 +69,11 @@ Along with a new cluster, a default node group is created, but more node groups 
 
 | Item | Description |
 | --- | --- |
-| Availability Area | Area to create instances comprising a cluster |
+| Availability Zone | Area to create instances comprising a cluster |
 | Node Group Name | Name of additional node group, comprised of alphabets, numbers, '-', and '.' |
-| Instance Type | Specifications of an instance for additional node group |
+| Flavor | Specifications of an instance for additional node group |
 | Node Count | Number of instances for additional node group |
-| Keypair | Keypair to access additional node group |
+| Key pair | Key pair to access additional node group |
 | Block Storage Type | Type of block storage of instance for additional node group |
 | Block Storage Size | Size of block storage of instance for additional node group |
 
@@ -104,7 +104,7 @@ Nodes can be deleted from operating node groups. The current list of nodes will 
 
 ### Using a GPU node group
 
-Node groups composed of GPU instances can be created with Kubernetes when you need to run workload based on GPU. Select ‘g2’ type when selecting an instance type during the process of generating the clusters or node groups to make a GPU node group.
+Node groups composed of GPU instances can be created with Kubernetes when you need to run workload based on GPU. Select `g2` type when selecting a flavor during the process of generating the clusters or node groups to make a GPU node group.
 
 > [Note]
 > GPU provided by NHN Cloud GPU instance is affiliated with NVIDIA. ([Identify available GPU specifications that can be used](https://github.com/TOAST-DOCS/Container-Kubernetes/blob/alpha/Compute/GPU Instance/ko/overview/#gpu))
@@ -114,7 +114,7 @@ To check the default setting and run a simple operation test for the created GPU
 
 #### Node level status check
 
-Access the GPU node and run the ‘nvidia-smi’ command.
+Access the GPU node and run the `nvidia-smi` command.
 The GPU driver is working normally if the output shows the following:
 
 ```
@@ -140,7 +140,7 @@ Mon Jul 27 14:38:07 2020
 
 #### Kubernetes level status check
 
-Use the ‘kubectl’ command to view information about available GPU resources at the cluster level.
+Use the `kubectl` command to view information about available GPU resources at the cluster level.
 Below are commands and execution results that displays the number of GPU cores available for each node.
 
 ```
@@ -266,7 +266,7 @@ Activating the autoscaler enables the following options:
 | Scale Down               | Enable/Disable Node Scale-down                               | Enable/Disable | Enable  | -       |
 | Resource Usage Threshold | Reference value to determine resource usage threshold for scale-down | 1-100          | 50      | %       |
 | Threshold Duration       | The duration of below-threshold resource usage for target nodes to scale down | 1-1440         | 10      | minutes |
-| Post Scale-up Delay      | Delay before starting to monitor for scale-down targets after scaling up | 1-1440         | 10      | minutes |
+| Post Scale-up Delay      | Delay before starting to monitor for scale-down targets after scaling up | 10-1440         | 10      | minutes |
 
 > [Caution]
 > Nodes cannot be manually added to or deleted from node groups on which autoscaler is enabled.
@@ -718,7 +718,7 @@ User can register reservation script when creating clusters and additional node 
     * The contents of the reservation script cannot be changed once the worker node group has been created.
 * Script execution time
     * Reservation script is executed during the instance initialization process while initializing the worker node.
-    * After the reservation script has been executed, it sets and registers the instance as the worker node of the ‘worker node group’.
+    * After the reservation script has been executed, it sets and registers the instance as the worker node of the 'worker node group'.
 * Script detail
     * The first line of a scheduled script must start with  #!.
     * The maximum size of script is 64KB.
@@ -1036,10 +1036,11 @@ NHN Cloud Kubernetes service supports the following versions:
 
 * v1.17.6
 * v1.18.19
+* v1.19.13
 
 
 ## LoadBalancer Service
-Pod is a basic executio unit of a Kubernetes application and it is connected to a cluster network via CNI (Container Network Interface). Basically, access to pod is unavailble from cluster externals. To open up pod services outside of a cluster, a path to be made public must be created by using Kubernetes' `LoadBalancer` service object. 
+Pod is a basic execution unit of a Kubernetes application and it is connected to a cluster network via CNI (Container Network Interface). Basically, access to pod is unavailble from cluster externals. To open up pod services outside of a cluster, a path to be made public must be created by using Kubernetes' `LoadBalancer` service object. 
 
 ### Creating Web Server Pods 
 Write deployment object manifest file to execute the following two nginx pods and create an object. 
@@ -1204,6 +1205,128 @@ Commercial support is available at
 </html>
 ```
 
+### Setting Detailed Options for Load Balancer
+When defining service objects in Kubernetes, you can set several options for the load balancer.
+
+> [Note]
+> This feature is only applicable to clusters of Kubernetes v1.19.13 or later.
+>
+
+#### Set the session affinity
+You can set the session affinity for the load balancer.
+* The setting location is `.spec.sessionAffinity`.
+* It can be set to one of the following:
+    * `None`: Set session affinity to `None`. The default when not set.
+    * `ClientIP`: Set session affinity to `SOURCE_IP`.
+
+#### Set whether to keep a floating IP address when deleting the load balancer
+The load balancer has a floating IP associated with it. You can set whether to delete or keep the floating IP associated with the load balancer when deleting the load balancer.
+* The setting location is `loadbalancer.openstack.org/keep-floatingip` under `.metadata.annotations`.
+* It can be set to one of the following:
+    * `true`: Keep the floating IP.
+    * `false`: Delete the floating IP. The default when not set.
+
+#### Set the listener connection limit
+You can set the connection limit for a listener.
+* The setting location is `loadbalancer.openstack.org/connection-limit` under `.metadata.annotations`.
+* It can be set as follows:
+    * If you set a positive number, it will be set to that value.
+    * If not set, it is set to the default value (60000).
+
+#### Set the listener protocol
+You can set the protocol of the listener.
+* The setting location is `loadbalancer.nhncloud/listener-protocol` under `.metadata.annotations`.
+* It can be set to one of the following:
+    * `TCP`: The default when not set.
+    * `HTTP`
+    * `HTTPS`
+    * `TERMINATED_HTTPS`: Set it to `TERMINATED_HTTPS`. SSL version, certificate, and private key information must be set additionally.
+
+The SSL version can be set as follows:
+* The setting location is `loadbalancer.nhncloud/listener-terminated-https-tls-version` under `.metadata.annotations`.
+* It can be set to one of the following:
+    * `TLSv1.2`: The default when not set.
+    * `TLSv1.1`
+    * `TLSv1.0_2016`
+    * `TLSv1.0`
+    * `SSLv3`
+
+Certificate information can be set as follows.
+* The setting location is `loadbalancer.nhncloud/listener-terminated-https-cert` under `.metadata.annotations`.
+* It must include start and end lines.
+
+Private key information can be set as follows.
+* The setting location is `loadbalancer.nhncloud/listener-terminated-https-key` under `.metadata.annotations`.
+* It must include start and end lines.
+
+The following is an example of manifest for setting the listener protocol to `TERMINATED_HTTPS`. Certificate information and private key information are partially omitted.
+```yaml
+metadata:
+  name: echosvr-svc
+  labels:
+    app: echosvr
+  annotations:
+    loadbalancer.nhncloud/listener-protocol: TERMINATED_HTTPS
+    loadbalancer.nhncloud/listener-terminated-https-tls-version: TLSv1.2
+    loadbalancer.nhncloud/listener-terminated-https-cert: |
+      -----BEGIN CERTIFICATE-----
+      MIIDZTCCAk0CCQDVfXIZ2uxcCTANBgkqhkiG9w0BAQUFADBvMQswCQYDVQQGEwJL
+      ...
+      fnsAY7JvmAUg
+      -----END CERTIFICATE-----
+    loadbalancer.nhncloud/listener-terminated-https-key: |
+      -----BEGIN RSA PRIVATE KEY-----
+      MIIEowIBAAKCAQEAz+U5VNZ8jTPs2Y4NVAdUWLhsNaNjRWQm4tqVPTxIrnY0SF8U
+      ...
+      u6X+8zlOYDOoS2BuG8d2brfKBLu3As5VAcAPLcJhE//3IVaZHxod
+      -----END RSA PRIVATE KEY-----
+```
+
+#### Set the load balancing method
+You can set the load balancing method.
+* The setting location is `loadbalancer.nhncloud/pool-lb-method` under `.metadata.annotations`.
+* It can be set to one of the following:
+    * `ROUND_ROBIN`: The default when not set.
+    * `LEAST_CONNECTIONS`
+    * `SOURCE_IP`    
+
+#### Set the health check protocol
+You can set the health check protocol.
+* The setting location is `loadbalancer.nhncloud/healthmonitor-type` under `.metadata.annotations`.
+* It can be set to one of the following:
+    * `HTTP`: You must additionally set HTTP URL, HTTP method, and HTTP status code.
+    * `HTTPS`: You must additionally set HTTP URL, HTTP method, and HTTP status code.
+    * `TCP`: The default when not set.    
+
+The HTTP URL can be set as follows:
+* The setting location is `loadbalancer.nhncloud/healthmonitor-http-url` under `.metadata.annotations`.
+* If not set, it is set to `/`.
+
+The HTTP method can be set as follows:
+* The setting location is `loadbalancer.nhncloud/healthmonitor-http-method` under `.metadata.annotations`.
+* If not set, it is set to `GET`.
+
+The HTTP status code can be set as follows:
+* The setting location is `loadbalancer.nhncloud/healthmonitor-http-expected-code` under `.metadata.annotations`.
+* If not set, it is set to `200`.
+
+#### Set the health check interval
+You can set the health check interval.
+* The setting location is `loadbalancer.nhncloud/healthmonitor-delay` under `.metadata.annotations`.
+* Set the value in seconds.
+* If not set, it is set to 60 seconds.
+
+#### Set the health check maximum response time
+You can set the maximum response time for health checks.
+* The setting location is `loadbalancer.nhncloud/healthmonitor-timeout` under `.metadata.annotations`.
+* Set the value in seconds.
+* If not set, it is set to 30 seconds.
+
+#### Set the maximum number of retries for a health check
+You can set the maximum number of retries for a health check.
+* The setting location is `loadbalancer.nhncloud/healthmonitor-max-retries` under `.metadata.annotations`.
+* If not set, it is set to 3 times.
+
 
 ## Ingress Controller 
 Ingress Controller routes HTTP and HTTPS requests from cluster externals to internal services, in reference of the rules that are defined at ingress object so as to provide SSL/TSL closure and virtual hosting. For more details on Ingress Controller and Ingress, see [Ingress Controller](https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/), [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/).
@@ -1229,8 +1352,8 @@ deployment.apps/nginx-ingress-controller created
 limitrange/ingress-nginx created
 ```
 
-### Creating LoadBalancer 
-Since ingress controller is also created as a pod, LoadBalancer or NodePort must be created to be made public. The LoadBalancer service manifest is defined to process HTTP and HTTPS like below: 
+### Creating LoadBalancer Service
+Since ingress controller is also created as a pod, a LoadBalancer or NodePort service must be created to be made public. Define a LoadBalancer service manifest that can process HTTP and HTTPS like below: 
 
 ```yaml
 # ingress-nginx-lb.yaml
@@ -1261,7 +1384,7 @@ spec:
     app.kubernetes.io/part-of: ingress-nginx
 ```
 
-After service object is created, check if it is associated with an external load balancer. The **EXTERNAL-IP** field must include floating IP address setting. 
+After a service object is created, check if it is associated with an external load balancer. The **EXTERNAL-IP** field must include floating IP address. 
 
 ```
 $ kubectl apply -f ingress-nginx-lb.yaml
@@ -1273,7 +1396,7 @@ ingress-nginx   LoadBalancer   10.254.2.128   123.123.123.41   80:30820/TCP,443:
 ```
 
 ### Diverging Service on URI 
-Ingress controller can diverge services based on URI. Below figure shows the structure of a simple example of service divergence based on URI. 
+Ingress controller can diverge services based on URI. The following figure shows the structure of a simple example of service divergence based on URI. 
 
 ![ingress-01.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/ingress-01.png)
 
@@ -1470,7 +1593,7 @@ service "tea-svc" deleted
 ```
 
 ### Service Divergence on Host 
-Ingress controller can diverge services based on the host name. Below figure shows the structure of a simple example of service divergence based on the host name. 
+Ingress controller can diverge services based on the host name. The following figure shows the structure of a simple example of service divergence based on the host name. 
 
 ![ingress-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/ingress-02.png)
 
@@ -1598,7 +1721,7 @@ However, the `kubernetes-dashboard` object belongs to ClusterIP type and is not 
 
 #### Change into LoadBalancer 
 
-Once the type of service object is changed into `LoadBalancer`, NHN Cloud Load Balancer is created out of the cluster, which is associated with load balancer and service object. By querying service object associated with the load balanacer, IP of the load balancer shows at **EXTERNAL-IP**. See [LoadBalancer Service](/Container/Kubernetes/en/user-guide/#loadbalancer) for the description of service objects of the `LoadBalancer` type.  
+Once the type of service object is changed into `LoadBalancer`, NHN Cloud Load Balancer is created out of the cluster, which is associated with load balancer and service object. By querying service object associated with the load balanacer, IP of the load balancer is displayed in the **EXTERNAL-IP** field. See [LoadBalancer Service](/Container/Kubernetes/en/user-guide/#loadbalancer) for the description of service objects of the `LoadBalancer` type. The following figure shows the structure of making dashboard public using the `LoadBalancer` type service.
 
 ![dashboard-01.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-01.png)
 
@@ -1629,7 +1752,7 @@ Access `https://{EXTERNAL-IP}` on the web browser to load the Kubernetes dashboa
 
 #### Open Services with Ingress 
 
-Ingress refers to the network object providing routing to access many services within a cluster. The setting of an ingress object runs by ingress controller. The `kubernetes-dashboard` service object can go public through ingress. See [Ingress Controller](/Container/Kubernetes/en/user-guide/#_16) regarding description on ingress and ingress controller. Below figure shows the structure of making dashboard public through ingress.
+Ingress refers to the network object providing routing to access many services within a cluster. The setting of an ingress object runs by ingress controller. The `kubernetes-dashboard` service object can go public through ingress. See [Ingress Controller](/Container/Kubernetes/en/user-guide/#_16) regarding description on ingress and ingress controller. The following figure shows the structure of making dashboard public through ingress.
 
 ![dashboard-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-02.png)
 
@@ -1724,7 +1847,7 @@ To enable static provisioning, user must have the block storage prepared. Go to 
 To provision PV, ID of a block storage is required. Select a block storage from the list of block storages on **Storage > Block Storage**. Check ID on the **Information** tab at the bottom of the block storage name. 
 
 > [Caution]
-> Block storage must be on the same availability area with the node group instance to run pods; otherwise, attachement is unavailable. 
+> Block storage must be on the same availability zone with the node group instance to run pods; otherwise, attachement is unavailable. 
 
 Create manifest for storage class. To enable NHN Cloud Block Storage, **provisioner** must be configured with `kubernetes.io/cinder`. 
 
@@ -1828,10 +1951,10 @@ With Dynamic Provisioning, block storage is automatically created in reference o
 | HDD | General HDD |
 | SSD | General SSD |
 
-Block storage must be on the same availability area of the node group to be allowed for attachment. You may specify the availability area to create a block storage for **parameters.availability** of the storage class manifest. Check the availability area of a node group to be attached from the list of node groups.  
+Block storage must be on the same availability zone of the node group to be allowed for attachment. You may specify the availability zone to create a block storage for **parameters.availability** of the storage class manifest. Check the availability zone of a node group to be attached from the list of node groups.  
 
 > [Caution]
-> Without availability area specified for the storage class manifest, a block storage is created at a random availability area. It is a must to specify availability area, becuase, if a block storage is located at a different availability area from its node group, it may not be properly attached.  
+> Without availability zone specified for the storage class manifest, a block storage is created at a random availability zone. It is a must to specify availability zone, becuase, if a block storage is located at a different availability zone from its node group, it may not be properly attached.  
 
 ```yaml
 # storage_class.yaml
