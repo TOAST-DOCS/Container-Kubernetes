@@ -23,7 +23,6 @@ To enable Kubernetes, a cluster must be created. Go to **Container > Kubernetes*
 Enter information as required and click **Create Cluster**, and a cluster begins to be created. You may check status from the list of clusters. It takes about 10 minutes to create; more time may be required depending on the cluster setting.  
 
 
-
 ### Querying Clusters 
 A newly created cluster can be found on **Container > Kubernetes**. Select a cluster and the information shows at the bottom. 
 
@@ -1005,7 +1004,7 @@ Worker components can be upgraded for each worker node group. Worker components 
 Notes
 
 * (Note 1) This step is valid only if the cluster autoscaler feature is enabled before starting the upgrade feature.
-*  (Note 2) Buffer node is an extra node which is created so that the pods evicted from existing worker nodes can be rescheduled during the upgrade process. It is created having the same scale as the worker node defined in that worker node group, and is automatically deleted when the upgrade process is over. This node is charged based on the instance fee policy. 
+* (Note 2) Buffer node is an extra node which is created so that the pods evicted from existing worker nodes can be rescheduled during the upgrade process. It is created having the same scale as the worker node defined in that worker node group, and is automatically deleted when the upgrade process is over. This node is charged based on the instance fee policy. 
 
 In this process, the following might happen:
 
@@ -1732,7 +1731,7 @@ $ kubectl -n kube-system patch svc/kubernetes-dashboard -p '{"spec":{"type":"Loa
 service/kubernetes-dashboard patched
 ```
 
-After the type of service object `kubernetes-dashboard` is changed to `LoadBalancer`, you can check load balancer IP from the **EXTERNAL-IP**  field.  
+After the type of service object `kubernetes-dashboard` is changed to `LoadBalancer`, you can check load balancer IP from the **EXTERNAL-IP** field.  
 
 ```
 $ kubectl get svc -n kube-system
