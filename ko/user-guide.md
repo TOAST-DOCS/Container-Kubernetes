@@ -1198,11 +1198,11 @@ Kubernetes의 서비스 객체를 정의할 때 로드 밸런서의 여러 가�
 #### 세션 지속성 설정
 로드 밸런서의 세션 지속성을 설정할 수 있습니다.
 
-* 설정 위치는 `.spec.sessionAffinity`입니다.
+* 설정 위치는 .spec.sessionAffinity입니다.
 * 다음 중 하나로 설정할 수 있습니다.
-    * `None`: 세션 지속성을 `없음`으로 설정합니다. 미설정 시 기본값입니다.
-    * `ClientIP`: 세션 지속성을 `SOURCE_IP`로 설정합니다.
-* 로드 밸런싱 방식이 `SOURCE_IP`인 경우 세션 지속성 설정은 무시되고, 세션 지속성 설정은 `없음`으로 설정됩니다.
+    * None: 세션 지속성을 '없음'으로 설정합니다. 미설정 시 기본값입니다.
+    * ClientIP: 세션 지속성을 SOURCE_IP로 설정합니다.
+* 로드 밸런싱 방식이 SOURCE_IP인 경우 세션 지속성 설정은 무시되고, 세션 지속성 설정은 '없음'으로 설정됩니다.
 * v1.17.6, v1.18.19 클러스터
     * 로드 밸런서 생성 후에는 변경이 불가능합니다.
 * v1.19.13 이후 클러스터
@@ -1211,32 +1211,32 @@ Kubernetes의 서비스 객체를 정의할 때 로드 밸런서의 여러 가�
 #### 로드 밸런서 삭제 시 플로팅 IP 주소 보존 여부 설정
 로드 밸런서에는 플로팅 IP가 연결되어 있습니다. 로드 밸런서 삭제 시 로드 밸런서에 연결된 플로팅 IP의 삭제 혹은 보존 여부를 설정할 수 있습니다.
 
-* 설정 위치는 `.metadata.annotations` 하위의 `loadbalancer.openstack.org/keep-floatingip`입니다.
+* 설정 위치는 .metadata.annotations 하위의 loadbalancer.openstack.org/keep-floatingip입니다.
 * 다음 중 하나로 설정할 수 있습니다.
-    * `true`: 플로팅 IP를 보존합니다.
-    * `false`: 플로팅 IP를 삭제합니다. 미설정 시 기본값입니다.
+    * true: 플로팅 IP를 보존합니다.
+    * false: 플로팅 IP를 삭제합니다. 미설정 시 기본값입니다.
 
 #### 리스너 연결 제한 설정
 리스너의 연결 제한을 설정할 수 있습니다.
 
-* 설정 위치는 `.metadata.annotations` 하위의 `loadbalancer.openstack.org/connection-limit`입니다.
+* 설정 위치는 .metadata.annotations 하위의 loadbalancer.openstack.org/connection-limit입니다.
 * v1.17.6, v1.18.19 클러스터
     * 최소값 1, 최대값 60000입니다. 
-    * 설정하지 않으면 `-1`로 설정되며, 실제 로드 밸런서에 적용되는 값은 `2000`입니다.
+    * 설정하지 않으면 -1로 설정되며, 실제 로드 밸런서에 적용되는 값은 2000입니다.
 * v1.19.13 이후 클러스터
     * 최소값 1, 최대값 60000입니다. 
-    * 설정하지 않거나 범위에서 벗어나는 값을 입력한 경우 기본값인 `60000`으로 설정됩니다.
+    * 설정하지 않거나 범위에서 벗어나는 값을 입력한 경우 기본값인 60000으로 설정됩니다.
 
 
 #### 리스너 프로토콜 설정
 리스너의 프로토콜을 설정할 수 있습니다.
 
-* 설정 위치는 `.metadata.annotations` 하위의 `loadbalancer.nhncloud/listener-protocol`입니다.
+* 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/listener-protocol입니다.
 * 다음 중 하나로 설정할 수 있습니다.
-    * `TCP`: 미설정 시 기본값입니다.
-    * `HTTP`
-    * `HTTPS`
-    * `TERMINATED_HTTPS`: `TERMINATED_HTTPS`로 설정합니다. SSL 버전, 인증서, 개인키 정보를 추가 설정해야 합니다.
+    * TCP: 미설정 시 기본값입니다.
+    * HTTP
+    * HTTPS
+    * TERMINATED_HTTPS: TERMINATED_HTTPS로 설정합니다. SSL 버전, 인증서, 개인키 정보를 추가 설정해야 합니다.
 
 > [주의]
 > 리스너 프로토콜 설정은 서비스 객체를 변경해도 로드 밸런서에 적용되지 않습니다. 
@@ -1246,25 +1246,25 @@ Kubernetes의 서비스 객체를 정의할 때 로드 밸런서의 여러 가�
 
 SSL 버전은 다음과 같이 설정할 수 있습니다.
 
-* 설정 위치는 `.metadata.annotations` 하위의 `loadbalancer.nhncloud/listener-terminated-https-tls-version`입니다.
+* 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/listener-terminated-https-tls-version입니다.
 * 다음 중 하나로 설정할 수 있습니다.
-    * `TLSv1.2`: 미설정 시 기본값입니다.
-    * `TLSv1.1`
-    * `TLSv1.0_2016`
-    * `TLSv1.0`
-    * `SSLv3`
+    * TLSv1.2: 미설정 시 기본값입니다.
+    * TLSv1.1
+    * TLSv1.0_2016
+    * TLSv1.0
+    * SSLv3
 
 인증서 정보는 다음과 같이 설정할 수 있습니다.
 
-* 설정 위치는 `.metadata.annotations` 하위의 `loadbalancer.nhncloud/listener-terminated-https-cert`입니다.
+* 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/listener-terminated-https-cert입니다.
 * 시작줄 및 끝줄을 포함해야 합니다.
 
 개인키 정보는 다음과 같이 설정할 수 있습니다.
 
-* 설정 위치는 `.metadata.annotations` 하위의 `loadbalancer.nhncloud/listener-terminated-https-key`입니다.
+* 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/listener-terminated-https-key입니다.
 * 시작줄 및 끝줄을 포함해야 합니다.
 
-다음은 리스너 프로토콜을 `TERMINATED_HTTPS`로 설정할 때의 매니페스트 예제입니다. 인증서 정보와 개인키 정보는 일부 생략되어 있습니다.
+다음은 리스너 프로토콜을 TERMINATED_HTTPS로 설정할 때의 매니페스트 예제입니다. 인증서 정보와 개인키 정보는 일부 생략되어 있습니다.
 ```yaml
 metadata:
   name: echosvr-svc
@@ -1290,63 +1290,63 @@ metadata:
 #### 로드 밸런싱 방식 설정
 로드 밸런싱 방식을 설정할 수 있습니다.
 
-* 설정 위치는 `.metadata.annotations` 하위의 `loadbalancer.nhncloud/pool-lb-method`입니다.
+* 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/pool-lb-method입니다.
 * 다음 중 하나로 설정할 수 있습니다.
-    * `ROUND_ROBIN`: 미설정 시 기본값입니다.
-    * `LEAST_CONNECTIONS`
-    * `SOURCE_IP`
+    * ROUND_ROBIN: 미설정 시 기본값입니다.
+    * LEAST_CONNECTIONS
+    * SOURCE_IP
 
 
 #### 상태 확인 프로토콜 설정
 상태 확인 프로토콜을 설정할 수 있습니다.
 
-* 설정 위치는 `.metadata.annotations` 하위의 `loadbalancer.nhncloud/healthmonitor-type`입니다.
+* 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/healthmonitor-type입니다.
 * 다음 중 하나로 설정할 수 있습니다.
-    * `HTTP`: HTTP URL, HTTP 메서드, HTTP 상태 코드를 추가 설정해야 합니다.
-    * `HTTPS`: HTTP URL, HTTP 메서드, HTTP 상태 코드를 추가 설정해야 합니다.
-    * `TCP`: 미설정 시 기본값입니다.
+    * HTTP: HTTP URL, HTTP 메서드, HTTP 상태 코드를 추가 설정해야 합니다.
+    * HTTPS: HTTP URL, HTTP 메서드, HTTP 상태 코드를 추가 설정해야 합니다.
+    * TCP: 미설정 시 기본값입니다.
 
 HTTP URL은 다음과 같이 설정할 수 있습니다.
 
-* 설정 위치는 `.metadata.annotations` 하위의 `loadbalancer.nhncloud/healthmonitor-http-url`입니다.
-* 설정값은 `/`으로 시작해야 합니다.
-* 설정하지 않거나 규칙에 맞지 않는 값을 입력하면 기본값인 `/`로 설정됩니다.
+* 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/healthmonitor-http-url입니다.
+* 설정값은 /으로 시작해야 합니다.
+* 설정하지 않거나 규칙에 맞지 않는 값을 입력하면 기본값인 /로 설정됩니다.
 
 HTTP 메서드는 다음과 같이 설정할 수 있습니다.
 
-* 설정 위치는 `.metadata.annotations` 하위의 `loadbalancer.nhncloud/healthmonitor-http-method`입니다.
-* 현재 `GET`만 지원하고 있으며, 설정하지 않거나 다른 값을 입력하면 기본값인 `GET`으로 설정됩니다.
+* 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/healthmonitor-http-method입니다.
+* 현재 GET만 지원하고 있으며, 설정하지 않거나 다른 값을 입력하면 기본값인 GET으로 설정됩니다.
 
 HTTP 상태 코드는 다음과 같이 설정할 수 있습니다.
 
-* 설정 위치는 `.metadata.annotations` 하위의 `loadbalancer.nhncloud/healthmonitor-http-expected-code`입니다.
-* 단일값(예: `200`), 목록(예: `200,202`), 범위(예: `200-204`) 형태로 입력할 수 있습니다.
-* 설정하지 않거나 규칙에 맞지 않는 값을 입력하면 기본값인 `200`으로 설정됩니다.
+* 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/healthmonitor-http-expected-code입니다.
+* 단일값(예: 200), 목록(예: 200,202), 범위(예: 200-204) 형태로 입력할 수 있습니다.
+* 설정하지 않거나 규칙에 맞지 않는 값을 입력하면 기본값인 200으로 설정됩니다.
 
 #### 상태 확인 주기 설정
 상태 확인 주기를 설정할 수 있습니다.
 
-* 설정 위치는 `.metadata.annotations` 하위의 `loadbalancer.nhncloud/healthmonitor-delay`입니다.
+* 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/healthmonitor-delay입니다.
 * 초 단위로 설정합니다.
 * 최소값 1, 최대값 5000입니다.
-* 설정하지 않거나 범위에서 벗어나는 값을 입력하면 기본값인 `60`으로 설정됩니다.
+* 설정하지 않거나 범위에서 벗어나는 값을 입력하면 기본값인 60으로 설정됩니다.
 
 #### 상태 확인 최대 응답 시간 설정
 상태 확인 최대 응답 시간을 설정할 수 있습니다.
 
-* 설정 위치는 `.metadata.annotations` 하위의 `loadbalancer.nhncloud/healthmonitor-timeout`입니다.
+* 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/healthmonitor-timeout입니다.
 * 초 단위로 설정합니다.
 * 최소값 1, 최대값 5000입니다.
-* 이 설정은 반드시 `상태 확인 주기 설정` 설정값보다 작아야 합니다.
-* 설정하지 않거나 범위에서 벗어나는 값을 입력하면 기본값인 `30`으로 설정됩니다.
-* 단, 입력값 혹은 설정값이 `상태 확인 주기 설정`보다 크면 `상태 확인 주기 설정` 설정값의 1/2로 설정됩니다.
+* 이 설정은 반드시 상태 확인 주기 설정 설정값보다 작아야 합니다.
+* 설정하지 않거나 범위에서 벗어나는 값을 입력하면 기본값인 30으로 설정됩니다.
+* 단, 입력값 혹은 설정값이 상태 확인 주기 설정보다 크면 상태 확인 주기 설정의 1/2로 설정됩니다.
 
 #### 상태 확인 최대 재시도 횟수 설정
 상태 확인 최대 재시도 횟수를 설정할 수 있습니다.
 
-* 설정 위치는 `.metadata.annotations` 하위의 `loadbalancer.nhncloud/healthmonitor-max-retries`입니다.
+* 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/healthmonitor-max-retries입니다.
 * 최소값 1, 최대값 10입니다.
-* 설정하지 않거나 범위에서 벗어나는 값을 입력하면 기본값인 `3`으로 설정됩니다.
+* 설정하지 않거나 범위에서 벗어나는 값을 입력하면 기본값인 3으로 설정됩니다.
 
 
 ## 인그레스 컨트롤러
