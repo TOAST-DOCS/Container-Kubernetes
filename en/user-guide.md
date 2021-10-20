@@ -224,7 +224,7 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 
 ### Autoscaler
 
-Autoscaler automatically adjusts the number of nodes in a node group if it runs out of available resources to schedule pods or if its node usage rate drops below a certain threshold. Autoscaler can be individually added to node groups which then function independently from each other. This feature is based on Kubernetes Project's official feature, Cluster Autoscaler. For more information, please visit [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler).
+Autoscaler is a feature that automatically adjusts the number of nodes when a node group does not have enough resources available to schedule pods or when the node's utilization remains below a certain level. Autoscaler can be set for each node group and operates independently of each other. This feature is based on the cluster-autoscaler feature, an officially supported feature of the Kubernetes project. For more information, please visit [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler).
 
 > [Note]
 > The version of the `cluster-autoscaler` applied to Kubernetes service is `1.19.0.`
@@ -239,33 +239,33 @@ Terms used in relation to the autoscaler and their meanings are as follows:
 | Scale Down | Decrease a number of nodes. |
 
 > [Caution]
-> If worker nodes are working in an environment with no Internet connection, autoscaler container images must be manually added to the worker nodes. This task is applied to the following targets:
+> If worker nodes are working in an environment with no Internet connection, autoscaler container images must be manually installed on the worker nodes. This task is required for the following targets:
 >
 > * Pangyo Region: Node groups created before November 24, 2020
 > * Pyeongchon Region: Node groups created before November 19, 2020
 >
-> Autoscaler container images are in the following directory:
+> The container image path of autoscaler is as follows:
 >
 > * k8s.gcr.io/autoscaling/cluster-autoscaler:v1.19.0
 
 #### Autoscaler Settings
 
-Autoscaler can be added per node group and it works independently from each other. Autoscaler can be set up in various ways, as listed below:
+Autoscaler is set and operated for each node group. Autoscaler can be set up in various ways, as listed below:
 
-* Set up on the default node groups upon creating a cluster.
-* Set up on additional node groups upon adding the node groups.
+* Set up on the default node groups when creating a cluster.
+* Set up on additional node groups when adding the node groups.
 * Set up on existing node groups.
 
 Activating the autoscaler enables the following options:
 
-| Settings                 | Meaning                                                      | Valid Range    | Default | Unit    |
+| Settings Item                | Meaning                                                      | Valid Range    | Default | Unit    |
 | ------------------------ | ------------------------------------------------------------ | -------------- | ------- | ------- |
-| Min. Node Qty            | Minimum node quantity that can be scaled down                | 1-10           | 1       | unit    |
-| Max. Node Qty            | Maximum node quantity that can be scaled up                  | 1-10           | 10      | units   |
-| Scale Down               | Enable/Disable Node Scale-down                               | Enable/Disable | Enable  | -       |
-| Resource Usage Threshold | Reference value to determine resource usage threshold for scale-down | 1-100          | 50      | %       |
-| Threshold Duration       | The duration of below-threshold resource usage for target nodes to scale down | 1-1440         | 10      | minutes |
-| Post Scale-up Delay      | Delay before starting to monitor for scale-down targets after scaling up | 10-1440         | 10      | minutes |
+| Minimum Node Count            | Minimum number of nodes that can be scaled down                | 1-10           | 1       | unit    |
+| Maximum Node Count            | Maximum number of nodes that can be scaled up                  | 1-10           | 10      | unit   |
+| Scaling Down               | Enable/Disable Node Scale-down                               | Enable/Disable | Enable  | -       |
+| Resource Usage Threshold | Reference value to determine resource usage threshold range for scale-down | 1-100          | 50      | %       |
+| Threshold Duration       | The duration for retaining resource usage of target nodes to scale down below the threshold  | 1-1440         | 10      | minutes |
+| Scale-down Delay After Scale-up      | Delay before starting to monitor for scale-down targets after scaling up | 10-1440         | 10      | minutes |
 
 > [Caution]
 > Nodes cannot be manually added to or deleted from node groups on which autoscaler is enabled.
@@ -302,12 +302,12 @@ Enables autoscaling on the default node group of the cluster you want. For this 
 
 | Settings                 | Value  |
 | ------------------------ | ------ |
-| Min. Node Qty            | 1      |
-| Max. Node Qty            | 5      |
-| Scale Down               | Enable |
+| Minimum Node Count            | 1      |
+| Maximum Node Count            | 5      |
+| Scaling Down               | Enable |
 | Resource Usage Threshold | 50     |
 | Threshold Duration       | 3      |
-| Post Scale-up Delay      | 5      |
+| Scale-down Delay After Scale-up      | 5      |
 
 ##### 2. Deploying Pods
 
@@ -1208,18 +1208,25 @@ Commercial support is available at
 When defining service objects in Kubernetes, you can set several options for the load balancer.
 
 > [Note]
-> This feature is only applicable to clusters of Kubernetes v1.19.13 or later.
+> The features without additional version information are only applicable to clusters of Kubernetes v1.19.13 or later.
 >
 
 #### Set the session affinity
 You can set the session affinity for the load balancer.
+
 * The setting location is `.spec.sessionAffinity`.
 * It can be set to one of the following:
     * `None`: Set session affinity to `None`. The default when not set.
     * `ClientIP`: Set session affinity to `SOURCE_IP`.
+* If the load balancing method is `SOURCE_IP`, the session affinity setting is ignored, and the session affinity setting is set to `None`.
+* Clusters of v1.17.6, v1.18.19
+    * Changes cannot be made after the load balancer is created.
+* Clusters of v1.19.13 or later
+    * The setting can be changed even after the load balancer is created.
 
 #### Set whether to keep a floating IP address when deleting the load balancer
 The load balancer has a floating IP associated with it. You can set whether to delete or keep the floating IP associated with the load balancer when deleting the load balancer.
+
 * The setting location is `loadbalancer.openstack.org/keep-floatingip` under `.metadata.annotations`.
 * It can be set to one of the following:
     * `true`: Keep the floating IP.
@@ -1227,13 +1234,19 @@ The load balancer has a floating IP associated with it. You can set whether to d
 
 #### Set the listener connection limit
 You can set the connection limit for a listener.
+
 * The setting location is `loadbalancer.openstack.org/connection-limit` under `.metadata.annotations`.
-* It can be set as follows:
-    * If you set a positive number, it will be set to that value.
-    * If not set, it is set to the default value (60000).
+* Clusters of v1.17.6, v1.18.19
+    * Minimum value of 1, maximum value of 60000.
+    * It you do not set it, it is set to `-1`, and the value applied to the actual load balancer is `2000`.
+* Clusters of v1.19.13 or later
+    * Minimum value of 1, maximum value of 60000.
+    * If not set or a value out of range is entered, it is set to the default value of `60000`.
+
 
 #### Set the listener protocol
 You can set the protocol of the listener.
+
 * The setting location is `loadbalancer.nhncloud/listener-protocol` under `.metadata.annotations`.
 * It can be set to one of the following:
     * `TCP`: The default when not set.
@@ -1241,7 +1254,14 @@ You can set the protocol of the listener.
     * `HTTPS`
     * `TERMINATED_HTTPS`: Set it to `TERMINATED_HTTPS`. SSL version, certificate, and private key information must be set additionally.
 
+> [Caution]
+> The listener protocol setting is not applied to the load balancer even if you change the service object.
+> To change the listener protocol setting, you must delete the service object and then create it again.
+> Please note that in this case, the load balancer is deleted and then re-created.
+
+
 The SSL version can be set as follows:
+
 * The setting location is `loadbalancer.nhncloud/listener-terminated-https-tls-version` under `.metadata.annotations`.
 * It can be set to one of the following:
     * `TLSv1.2`: The default when not set.
@@ -1250,11 +1270,13 @@ The SSL version can be set as follows:
     * `TLSv1.0`
     * `SSLv3`
 
-Certificate information can be set as follows.
+Certificate information can be set as follows:
+
 * The setting location is `loadbalancer.nhncloud/listener-terminated-https-cert` under `.metadata.annotations`.
 * It must include start and end lines.
 
-Private key information can be set as follows.
+Private key information can be set as follows:
+
 * The setting location is `loadbalancer.nhncloud/listener-terminated-https-key` under `.metadata.annotations`.
 * It must include start and end lines.
 
@@ -1283,48 +1305,64 @@ metadata:
 
 #### Set the load balancing method
 You can set the load balancing method.
+
 * The setting location is `loadbalancer.nhncloud/pool-lb-method` under `.metadata.annotations`.
 * It can be set to one of the following:
     * `ROUND_ROBIN`: The default when not set.
     * `LEAST_CONNECTIONS`
-    * `SOURCE_IP`    
+    * `SOURCE_IP`
+
 
 #### Set the health check protocol
 You can set the health check protocol.
+
 * The setting location is `loadbalancer.nhncloud/healthmonitor-type` under `.metadata.annotations`.
 * It can be set to one of the following:
     * `HTTP`: You must additionally set HTTP URL, HTTP method, and HTTP status code.
     * `HTTPS`: You must additionally set HTTP URL, HTTP method, and HTTP status code.
-    * `TCP`: The default when not set.    
+    * `TCP`: The default when not set.
 
 The HTTP URL can be set as follows:
+
 * The setting location is `loadbalancer.nhncloud/healthmonitor-http-url` under `.metadata.annotations`.
-* If not set, it is set to `/`.
+* The setting value must start with `/`.
+* If not set or a value that does not match the rule is entered, it is set to the default value of `/`.
 
 The HTTP method can be set as follows:
+
 * The setting location is `loadbalancer.nhncloud/healthmonitor-http-method` under `.metadata.annotations`.
-* If not set, it is set to `GET`.
+* Currently, only `GET` is supported. If not set or another value is entered, it will be set to `GET`, which is the default value.
 
 The HTTP status code can be set as follows:
+
 * The setting location is `loadbalancer.nhncloud/healthmonitor-http-expected-code` under `.metadata.annotations`.
-* If not set, it is set to `200`.
+* You can enter the value in the form of a single value (e.g. `200`), a list (e.g. `200,202`), or a range (e.g. `200-204`).
+* If not set or a value that does not match the rule is entered, it is set to the default value of `200`.
 
 #### Set the health check interval
 You can set the health check interval.
+
 * The setting location is `loadbalancer.nhncloud/healthmonitor-delay` under `.metadata.annotations`.
 * Set the value in seconds.
-* If not set, it is set to 60 seconds.
+* Minimum value of 1, maximum value of 5000.
+* If not set or a value out of range is entered, it is set to the default value of `60`.
 
 #### Set the health check maximum response time
 You can set the maximum response time for health checks.
+
 * The setting location is `loadbalancer.nhncloud/healthmonitor-timeout` under `.metadata.annotations`.
 * Set the value in seconds.
-* If not set, it is set to 30 seconds.
+* Minimum value of 1, maximum value of 5000.
+* This setting must be smaller than the `Health check interval setting` setting value.
+* If not set or a value out of range is entered, it is set to the default value of `30`.
+* However, if the input value or setting value is greater than the `Health check interval setting`, it is set to 1/2 of the `Health check interval setting` setting value.
 
 #### Set the maximum number of retries for a health check
 You can set the maximum number of retries for a health check.
+
 * The setting location is `loadbalancer.nhncloud/healthmonitor-max-retries` under `.metadata.annotations`.
-* If not set, it is set to 3 times.
+* Minimum value of 1, maximum value of 10.
+* If not set or a value out of range is entered, it is set to the default value of `3`.
 
 
 ## Ingress Controller 
