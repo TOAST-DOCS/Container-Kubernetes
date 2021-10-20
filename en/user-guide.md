@@ -1214,11 +1214,11 @@ When defining service objects in Kubernetes, you can set several options for the
 #### Set the session affinity
 You can set the session affinity for the load balancer.
 
-* The setting location is `.spec.sessionAffinity`.
+* The setting location is .spec.sessionAffinity.
 * It can be set to one of the following:
-    * `None`: Set session affinity to `None`. The default when not set.
-    * `ClientIP`: Set session affinity to `SOURCE_IP`.
-* If the load balancing method is `SOURCE_IP`, the session affinity setting is ignored, and the session affinity setting is set to `None`.
+    * None: Set session affinity to None. The default when not set.
+    * ClientIP: Set session affinity to SOURCE_IP.
+* If the load balancing method is SOURCE_IP, the session affinity setting is ignored, and the session affinity setting is set to None.
 * Clusters of v1.17.6, v1.18.19
     * Changes cannot be made after the load balancer is created.
 * Clusters of v1.19.13 or later
@@ -1227,32 +1227,32 @@ You can set the session affinity for the load balancer.
 #### Set whether to keep a floating IP address when deleting the load balancer
 The load balancer has a floating IP associated with it. You can set whether to delete or keep the floating IP associated with the load balancer when deleting the load balancer.
 
-* The setting location is `loadbalancer.openstack.org/keep-floatingip` under `.metadata.annotations`.
+* The setting location is loadbalancer.openstack.org/keep-floatingip under .metadata.annotations.
 * It can be set to one of the following:
-    * `true`: Keep the floating IP.
-    * `false`: Delete the floating IP. The default when not set.
+    * true: Keep the floating IP.
+    * false: Delete the floating IP. The default when not set.
 
 #### Set the listener connection limit
 You can set the connection limit for a listener.
 
-* The setting location is `loadbalancer.openstack.org/connection-limit` under `.metadata.annotations`.
+* The setting location is loadbalancer.openstack.org/connection-limit under .metadata.annotations.
 * Clusters of v1.17.6, v1.18.19
     * Minimum value of 1, maximum value of 60000.
-    * It you do not set it, it is set to `-1`, and the value applied to the actual load balancer is `2000`.
+    * It you do not set it, it is set to -1, and the value applied to the actual load balancer is 2000.
 * Clusters of v1.19.13 or later
     * Minimum value of 1, maximum value of 60000.
-    * If not set or a value out of range is entered, it is set to the default value of `60000`.
+    * If not set or a value out of range is entered, it is set to the default value of 60000.
 
 
 #### Set the listener protocol
 You can set the protocol of the listener.
 
-* The setting location is `loadbalancer.nhncloud/listener-protocol` under `.metadata.annotations`.
+* The setting location is loadbalancer.nhncloud/listener-protocol under .metadata.annotations.
 * It can be set to one of the following:
-    * `TCP`: The default when not set.
-    * `HTTP`
-    * `HTTPS`
-    * `TERMINATED_HTTPS`: Set it to `TERMINATED_HTTPS`. SSL version, certificate, and private key information must be set additionally.
+    * TCP: The default when not set.
+    * HTTP
+    * HTTPS
+    * TERMINATED_HTTPS: Set it to TERMINATED_HTTPS. SSL version, certificate, and private key information must be set additionally.
 
 > [Caution]
 > The listener protocol setting is not applied to the load balancer even if you change the service object.
@@ -1262,22 +1262,22 @@ You can set the protocol of the listener.
 
 The SSL version can be set as follows:
 
-* The setting location is `loadbalancer.nhncloud/listener-terminated-https-tls-version` under `.metadata.annotations`.
+* The setting location is loadbalancer.nhncloud/listener-terminated-https-tls-version under .metadata.annotations.
 * It can be set to one of the following:
-    * `TLSv1.2`: The default when not set.
-    * `TLSv1.1`
-    * `TLSv1.0_2016`
-    * `TLSv1.0`
-    * `SSLv3`
+    * TLSv1.2: The default when not set.
+    * TLSv1.1
+    * TLSv1.0_2016
+    * TLSv1.0
+    * SSLv3
 
 Certificate information can be set as follows:
 
-* The setting location is `loadbalancer.nhncloud/listener-terminated-https-cert` under `.metadata.annotations`.
+* The setting location is loadbalancer.nhncloud/listener-terminated-https-cert under .metadata.annotations.
 * It must include start and end lines.
 
 Private key information can be set as follows:
 
-* The setting location is `loadbalancer.nhncloud/listener-terminated-https-key` under `.metadata.annotations`.
+* The setting location is loadbalancer.nhncloud/listener-terminated-https-key under .metadata.annotations.
 * It must include start and end lines.
 
 The following is an example of manifest for setting the listener protocol to `TERMINATED_HTTPS`. Certificate information and private key information are partially omitted.
@@ -1306,63 +1306,63 @@ metadata:
 #### Set the load balancing method
 You can set the load balancing method.
 
-* The setting location is `loadbalancer.nhncloud/pool-lb-method` under `.metadata.annotations`.
+* The setting location is loadbalancer.nhncloud/pool-lb-method under .metadata.annotations.
 * It can be set to one of the following:
-    * `ROUND_ROBIN`: The default when not set.
-    * `LEAST_CONNECTIONS`
-    * `SOURCE_IP`
+    * ROUND_ROBIN: The default when not set.
+    * LEAST_CONNECTIONS
+    * SOURCE_IP
 
 
 #### Set the health check protocol
 You can set the health check protocol.
 
-* The setting location is `loadbalancer.nhncloud/healthmonitor-type` under `.metadata.annotations`.
+* The setting location is loadbalancer.nhncloud/healthmonitor-type under .metadata.annotations.
 * It can be set to one of the following:
-    * `HTTP`: You must additionally set HTTP URL, HTTP method, and HTTP status code.
-    * `HTTPS`: You must additionally set HTTP URL, HTTP method, and HTTP status code.
-    * `TCP`: The default when not set.
+    * HTTP: You must additionally set HTTP URL, HTTP method, and HTTP status code.
+    * HTTPS: You must additionally set HTTP URL, HTTP method, and HTTP status code.
+    * TCP: The default when not set.
 
 The HTTP URL can be set as follows:
 
-* The setting location is `loadbalancer.nhncloud/healthmonitor-http-url` under `.metadata.annotations`.
-* The setting value must start with `/`.
-* If not set or a value that does not match the rule is entered, it is set to the default value of `/`.
+* The setting location is loadbalancer.nhncloud/healthmonitor-http-url under .metadata.annotations.
+* The setting value must start with /.
+* If not set or a value that does not match the rule is entered, it is set to the default value of /.
 
 The HTTP method can be set as follows:
 
-* The setting location is `loadbalancer.nhncloud/healthmonitor-http-method` under `.metadata.annotations`.
-* Currently, only `GET` is supported. If not set or another value is entered, it will be set to `GET`, which is the default value.
+* The setting location is loadbalancer.nhncloud/healthmonitor-http-method under .metadata.annotations.
+* Currently, only GET is supported. If not set or another value is entered, it will be set to GET, which is the default value.
 
 The HTTP status code can be set as follows:
 
-* The setting location is `loadbalancer.nhncloud/healthmonitor-http-expected-code` under `.metadata.annotations`.
-* You can enter the value in the form of a single value (e.g. `200`), a list (e.g. `200,202`), or a range (e.g. `200-204`).
-* If not set or a value that does not match the rule is entered, it is set to the default value of `200`.
+* The setting location is loadbalancer.nhncloud/healthmonitor-http-expected-code under .metadata.annotations.
+* You can enter the value in the form of a single value (e.g. 200), a list (e.g. 200,202), or a range (e.g. 200-204).
+* If not set or a value that does not match the rule is entered, it is set to the default value of 200.
 
 #### Set the health check interval
 You can set the health check interval.
 
-* The setting location is `loadbalancer.nhncloud/healthmonitor-delay` under `.metadata.annotations`.
+* The setting location is loadbalancer.nhncloud/healthmonitor-delay under .metadata.annotations.
 * Set the value in seconds.
 * Minimum value of 1, maximum value of 5000.
-* If not set or a value out of range is entered, it is set to the default value of `60`.
+* If not set or a value out of range is entered, it is set to the default value of 60.
 
 #### Set the health check maximum response time
 You can set the maximum response time for health checks.
 
-* The setting location is `loadbalancer.nhncloud/healthmonitor-timeout` under `.metadata.annotations`.
+* The setting location is loadbalancer.nhncloud/healthmonitor-timeout under .metadata.annotations.
 * Set the value in seconds.
 * Minimum value of 1, maximum value of 5000.
-* This setting must be smaller than the `Health check interval setting` setting value.
-* If not set or a value out of range is entered, it is set to the default value of `30`.
-* However, if the input value or setting value is greater than the `Health check interval setting`, it is set to 1/2 of the `Health check interval setting` setting value.
+* This setting must be smaller than the Health check interval setting setting value.
+* If not set or a value out of range is entered, it is set to the default value of 30.
+* However, if the input value or setting value is greater than the Health check interval setting, it is set to 1/2 of the Health check interval setting setting value.
 
 #### Set the maximum number of retries for a health check
 You can set the maximum number of retries for a health check.
 
-* The setting location is `loadbalancer.nhncloud/healthmonitor-max-retries` under `.metadata.annotations`.
+* The setting location is loadbalancer.nhncloud/healthmonitor-max-retries under .metadata.annotations.
 * Minimum value of 1, maximum value of 10.
-* If not set or a value out of range is entered, it is set to the default value of `3`.
+* If not set or a value out of range is entered, it is set to the default value of 3.
 
 
 ## Ingress Controller 
