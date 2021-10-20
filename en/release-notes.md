@@ -6,6 +6,8 @@
 
 * Supports Kubernetes v1.19.13.
 * When creating a LoadBalancer type service object, various options for the load balancer can be set.
+* The minimum value of the autoscaler's 'Scale-down Delay After Scale-up' setting has been changed to 10 minutes.
+* In new clusters, the default worker node group can be deleted if there are two or more worker node groups.
 
 ### July 27, 2021
 
