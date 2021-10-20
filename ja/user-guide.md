@@ -1185,11 +1185,11 @@ Commercial support is available at
 #### セッション持続性設定
 ロードバランサーのセッション持続性を設定できます。
 
-* 設定位置は`.spec.sessionAffinity`です。
+* 設定位置は.spec.sessionAffinityです。
 * 次の中から1つを設定できます。
-    * `None`：セッション持続性を`なし`に設定します。未設定時のデフォルト値です。
-    * `ClientIP`：セッション持続性を`SOURCE_IP`に設定します。
-* ロードバランシング方式が`SOURCE_IP`の場合、セッション持続性設定は無視され、セッション持続性設定は`なし`に設定されます。
+    * None：セッション持続性を`なし`に設定します。未設定時のデフォルト値です。
+    * ClientIP：セッション持続性をSOURCE_IPに設定します。
+* ロードバランシング方式がSOURCE_IPの場合、セッション持続性設定は無視され、セッション持続性設定は`なし`に設定されます。
 * v1.17.6, v1.18.19クラスタ
     * ロードバランサーの作成後は変更できません。
 * v1.19.13以降のクラスタ
@@ -1198,32 +1198,32 @@ Commercial support is available at
 #### ロードバランサーを削除する時にFloating IPアドレスを保存するかどうかの設定
 ロードバランサーにはFloating IPが接続されています。ロードバランサーの削除時にロードバランサーに接続されたFloating IPを削除あるいは保存するかどうかを設定できます。
 
-* 設定位置は`.metadata.annotations`下の`loadbalancer.openstack.org/keep-floatingip`です。
+* 設定位置は.metadata.annotations下のloadbalancer.openstack.org/keep-floatingipです。
 * 次の中から1つを設定できます。
-    * `true`：Floating IPを保存します。
-    * `false`：Floating IPを削除します。未設定時のデフォルト値です。
+    * true：Floating IPを保存します。
+    * false：Floating IPを削除します。未設定時のデフォルト値です。
 
 #### リスナー接続制限設定
 リスナーの接続制限を設定できます。
 
-* 設定位置は`.metadata.annotations`下の`loadbalancer.openstack.org/connection-limit`です。
+* 設定位置は.metadata.annotations下のloadbalancer.openstack.org/connection-limitです。
 * v1.17.6, v1.18.19クラスタ
     * 最小値1、最大値60000です。 
-    * 設定していない場合、`-1`に設定され、実際のロードバランサーに適用される値は`2000`です。
+    * 設定していない場合、-1に設定され、実際のロードバランサーに適用される値は2000です。
 * v1.19.13以降のクラスタ
     * 最小値1、最大値60000です。 
-    * 設定していなかったり範囲外の値を入力した場合、デフォルト値の`60000`に設定されます。
+    * 設定していなかったり範囲外の値を入力した場合、デフォルト値の60000に設定されます。
 
 
 #### リスナープロトコル設定
 リスナーのプロトコルを設定できます。
 
-* 設定位置は`.metadata.annotations`下の`loadbalancer.nhncloud/listener-protocol`です。
+* 設定位置は.metadata.annotations下のloadbalancer.nhncloud/listener-protocolです。
 * 次の中から1つを設定できます。
-    * `TCP`：未設定時のデフォルト値です。
-    * `HTTP`
-    * `HTTPS`
-    * `TERMINATED_HTTPS`：`TERMINATED_HTTPS`に設定します。 SSLバージョン、証明書、秘密鍵情報を追加設定する必要があります。
+    * TCP：未設定時のデフォルト値です。
+    * HTTP
+    * HTTPS
+    * TERMINATED_HTTPS：TERMINATED_HTTPSに設定します。 SSLバージョン、証明書、秘密鍵情報を追加設定する必要があります。
 
 > [注意]
 > リスナープロトコル設定は、サービスオブジェクトを変更してもロードバランサーに適用されません。 
@@ -1233,22 +1233,22 @@ Commercial support is available at
 
 SSLバージョンは次のように設定できます。
 
-* 設定位置は`.metadata.annotations`下の`loadbalancer.nhncloud/listener-terminated-https-tls-version`です。
+* 設定位置は.metadata.annotations下のloadbalancer.nhncloud/listener-terminated-https-tls-versionです。
 * 次の中から1つを設定できます。
-    * `TLSv1.2`：未設定時のデフォルト値です。
-    * `TLSv1.1`
-    * `TLSv1.0_2016`
-    * `TLSv1.0`
-    * `SSLv3`
+    * TLSv1.2：未設定時のデフォルト値です。
+    * TLSv1.1
+    * TLSv1.0_2016
+    * TLSv1.0
+    * SSLv3
 
 証明書情報は次のように設定できます。
 
-* 設定位置は`.metadata.annotations`下の`loadbalancer.nhncloud/listener-terminated-https-cert`です。
+* 設定位置は.metadata.annotations下のloadbalancer.nhncloud/listener-terminated-https-certです。
 * 開始行および最終行を含める必要があります。
 
 秘密鍵情報は次のように設定できます。
 
-* 設定位置は`.metadata.annotations`下の`loadbalancer.nhncloud/listener-terminated-https-key`です。
+* 設定位置は.metadata.annotations下のloadbalancer.nhncloud/listener-terminated-https-keyです。
 * 開始行および最終行を含める必要があります。
 
 次はリスナープロトコルを`TERMINATED_HTTPS`に設定する時のマニフェスト例です。証明書情報と秘密鍵情報は一部省略されています。
@@ -1277,63 +1277,63 @@ metadata:
 #### ロードバランシング方式設定
 ロードバランシング方式を設定できます。
 
-* 設定位置は`.metadata.annotations`下の`loadbalancer.nhncloud/pool-lb-method`です。
+* 設定位置は.metadata.annotations下のloadbalancer.nhncloud/pool-lb-methodです。
 * 次の中から1つを設定できます。
-    * `ROUND_ROBIN`：未設定時のデフォルト値です。
-    * `LEAST_CONNECTIONS`
-    * `SOURCE_IP`
+    * ROUND_ROBIN：未設定時のデフォルト値です。
+    * LEAST_CONNECTIONS
+    * SOURCE_IP
 
 
 #### ヘルスチェックプロトコル設定
 ヘルスチェックプロトコルを設定できます。
 
-* 設定位置は`.metadata.annotations`下の`loadbalancer.nhncloud/healthmonitor-type`です。
+* 設定位置は.metadata.annotations下のloadbalancer.nhncloud/healthmonitor-typeです。
 * 次の中から1つを設定できます。
-    * `HTTP`：HTTP URL、HTTPメソッド、HTTPステータスコードを追加設定する必要があります。
-    * `HTTPS`：HTTP URL、HTTPメソッド、 HTTPステータスコードを追加設定する必要があります。
-    * `TCP`：未設定時のデフォルト値です。
+    * HTTP：HTTP URL、HTTPメソッド、HTTPステータスコードを追加設定する必要があります。
+    * HTTPS：HTTP URL、HTTPメソッド、 HTTPステータスコードを追加設定する必要があります。
+    * TCP：未設定時のデフォルト値です。
 
 HTTP URLは次のように設定できます。
 
-* 設定位置は`.metadata.annotations`下の`loadbalancer.nhncloud/healthmonitor-http-url`です。
-* 設定値は`/`で開始する必要があります。
-* 設定していないか、ルールに準じていない値を入力した場合、デフォルト値の`/`に設定されます。
+* 設定位置は.metadata.annotations下のloadbalancer.nhncloud/healthmonitor-http-urlです。
+* 設定値は/で開始する必要があります。
+* 設定していないか、ルールに準じていない値を入力した場合、デフォルト値の/に設定されます。
 
 HTTPメソッドは次のように設定できます。
 
-* 設定位置は`.metadata.annotations`下の`loadbalancer.nhncloud/healthmonitor-http-method`です。
-* 現在`GET`のみサポートしており、設定していないか、他の値を入力すると、デフォルト値の`GET`に設定されます。
+* 設定位置は.metadata.annotations下のloadbalancer.nhncloud/healthmonitor-http-methodです。
+* 現在GETのみサポートしており、設定していないか、他の値を入力すると、デフォルト値のGETに設定されます。
 
 HTTPステータスコードは次のように設定できます。
 
-* 設定位置は`.metadata.annotations`下の`loadbalancer.nhncloud/healthmonitor-http-expected-code`です。
-* 単一の値(例：`200`)、リスト(例：`200,202`)、範囲(例：`200-204`) の形式で入力できます。
-* 設定していないか、ルールに準じていない値を入力すると、デフォルト値の`200`に設定されます。
+* 設定位置は.metadata.annotations下のloadbalancer.nhncloud/healthmonitor-http-expected-codeです。
+* 単一の値(例：200)、リスト(例：200,202)、範囲(例：200-204) の形式で入力できます。
+* 設定していないか、ルールに準じていない値を入力すると、デフォルト値の200に設定されます。
 
 #### ヘルスチェック周期設定
 ヘルスチェック周期を設定できます。
 
-* 設定位置は`.metadata.annotations`下の`loadbalancer.nhncloud/healthmonitor-delay`です。
+* 設定位置は.metadata.annotations下のloadbalancer.nhncloud/healthmonitor-delayです。
 * 秒単位で設定します。
 * 最小値1、最大値5000です。
-* 設定していないか、範囲外の値を入力すると、デフォルト値の`60`に設定されます。
+* 設定していないか、範囲外の値を入力すると、デフォルト値の60に設定されます。
 
 #### ヘルスチェック最大レスポンス時間設定
 
 ヘルスチェック最大レスポンス時間を設定できます。
-* 設定位置は`.metadata.annotations`下の`loadbalancer.nhncloud/healthmonitor-timeout`です。
+* 設定位置は.metadata.annotations下のloadbalancer.nhncloud/healthmonitor-timeoutです。
 * 秒単位で設定します。
 * 最小値1、最大値5000です。
-* この設定は、必ず`ヘルスチェック周期設定`設定値より小さくする必要があります。
-* 設定していないか、範囲外の値を入力すると、デフォルト値の`30`に設定されます。
-* ただし、入力値または設定値が`ヘルスチェック周期設定`より大きい場合、`ヘルスチェック周期設定`設定値の1/2に設定されます。
+* この設定は、必ずヘルスチェック周期設定設定値より小さくする必要があります。
+* 設定していないか、範囲外の値を入力すると、デフォルト値の30に設定されます。
+* ただし、入力値または設定値がヘルスチェック周期設定より大きい場合、ヘルスチェック周期設定設定値の1/2に設定されます。
 
 #### ヘルスチェック最大再試行回数設定
 
 ヘルスチェック最大再試行回数を設定できます。
-* 設定位置は`.metadata.annotations`下の`loadbalancer.nhncloud/healthmonitor-max-retries`です。
+* 設定位置は.metadata.annotations下のloadbalancer.nhncloud/healthmonitor-max-retriesです。
 * 最小値1、最大値10です。
-* 設定していないか、範囲外の値を入力すると、デフォルト値の`3`に設定されます。
+* 設定していないか、範囲外の値を入力すると、デフォルト値の3に設定されます。
 
 
 ## イングレスコントローラー
