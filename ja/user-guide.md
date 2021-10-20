@@ -255,7 +255,7 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 | 削除 | ノードの削除を行うかどうかの設定 | 有効/無効 | 有効 | - |
 | リソース使用量しきい値 | 削除の基準であるリソース使用量しきい値の基準値 | 1-100 | 50 | % |
 | しきい値維持時間| 削除対象になるノードのしきい値以下のリソース使用量維持時間| 1-1440 | 10 | 分 |
-| 増設後の遅延時間 | ノード増設後、削除対象ノードでモニタリングを開始するまでの遅延時間| 1-1440 | 10 | 分 |
+| 増設後の遅延時間 | ノード増設後、削除対象ノードでモニタリングを開始するまでの遅延時間| 10-1440 | 10 | 分 |
 
 > [注意]
 > オートスケーラーが有効になっているノードグループは手動でノードを追加または削除できません。
@@ -1007,6 +1007,7 @@ NHN Cloud Kubernetesサービスは、以下のバージョンをサポートし
 
 * v1.17.6
 * v1.18.19
+* v1.19.13
 
 
 ## LoadBalancerサービス
@@ -1144,7 +1145,7 @@ nginx-svc    LoadBalancer   10.254.134.18   123.123.123.30   8080:30013/TCP   3m
 
 
 ### インターネットによるサービステスト
-ロードバランサーに設定されたFloating IPにHTTPリクエストを送ってKubernetesクラスターのWebサーバーPodが応答するかを確認します。サービスオブジェクトのTCP/8080ポートをPodのTCP/80ポートと接続するように設定したため、TCP/8080ポートにリクエストを送る必要があります。外部ロードバランサーとサービスオブジェクト、Podが正常に接続されていれば、Webサーバーはnginx基本ページをレスポンスします。
+ロードバランサーに接続されたFloating IPにHTTPリクエストを送ってKubernetesクラスターのWebサーバーPodが応答するかを確認します。サービスオブジェクトのTCP/8080ポートをPodのTCP/80ポートと接続するように設定したため、TCP/8080ポートにリクエストを送る必要があります。外部ロードバランサーとサービスオブジェクト、Podが正常に接続されていれば、Webサーバーはnginx基本ページをレスポンスします。
 
 ```
 $ curl http://123.123.123.30:8080
@@ -1174,6 +1175,165 @@ Commercial support is available at
 </body>
 </html>
 ```
+
+### ロードバランサー詳細オプション設定
+> 別途表示されていない機能はKubernetes v1.19.13以降のバージョンのクラスタにのみ適用可能です。
+
+> [参考]
+> この機能はKubernetes v1.19.13以降のバージョンのクラスタにのみ適用可能です。
+>
+#### セッション持続性設定
+ロードバランサーのセッション持続性を設定できます。
+
+* 設定位置は.spec.sessionAffinityです。
+* 次の中から1つを設定できます。
+    * None：セッション持続性を`なし`に設定します。未設定時のデフォルト値です。
+    * ClientIP：セッション持続性をSOURCE_IPに設定します。
+* ロードバランシング方式がSOURCE_IPの場合、セッション持続性設定は無視され、セッション持続性設定は`なし`に設定されます。
+* v1.17.6, v1.18.19クラスタ
+    * ロードバランサーの作成後は変更できません。
+* v1.19.13以降のクラスタ
+    * ロードバランサーの作成後も変更可能です。
+
+#### ロードバランサーを削除する時にFloating IPアドレスを保存するかどうかの設定
+ロードバランサーにはFloating IPが接続されています。ロードバランサーの削除時にロードバランサーに接続されたFloating IPを削除あるいは保存するかどうかを設定できます。
+
+* 設定位置は.metadata.annotations下のloadbalancer.openstack.org/keep-floatingipです。
+* 次の中から1つを設定できます。
+    * true：Floating IPを保存します。
+    * false：Floating IPを削除します。未設定時のデフォルト値です。
+
+#### リスナー接続制限設定
+リスナーの接続制限を設定できます。
+
+* 設定位置は.metadata.annotations下のloadbalancer.openstack.org/connection-limitです。
+* v1.17.6, v1.18.19クラスタ
+    * 最小値1、最大値60000です。 
+    * 設定していない場合、-1に設定され、実際のロードバランサーに適用される値は2000です。
+* v1.19.13以降のクラスタ
+    * 最小値1、最大値60000です。 
+    * 設定していなかったり範囲外の値を入力した場合、デフォルト値の60000に設定されます。
+
+
+#### リスナープロトコル設定
+リスナーのプロトコルを設定できます。
+
+* 設定位置は.metadata.annotations下のloadbalancer.nhncloud/listener-protocolです。
+* 次の中から1つを設定できます。
+    * TCP：未設定時のデフォルト値です。
+    * HTTP
+    * HTTPS
+    * TERMINATED_HTTPS：TERMINATED_HTTPSに設定します。 SSLバージョン、証明書、秘密鍵情報を追加設定する必要があります。
+
+> [注意]
+> リスナープロトコル設定は、サービスオブジェクトを変更してもロードバランサーに適用されません。 
+> リスナープロトコルの設定を変更するには、サービスオブジェクトを削除してから再度作成する必要があります。
+> この場合、ロードバランサーが削除された後、再度作成されるため、注意してください。
+
+
+SSLバージョンは次のように設定できます。
+
+* 設定位置は.metadata.annotations下のloadbalancer.nhncloud/listener-terminated-https-tls-versionです。
+* 次の中から1つを設定できます。
+    * TLSv1.2：未設定時のデフォルト値です。
+    * TLSv1.1
+    * TLSv1.0_2016
+    * TLSv1.0
+    * SSLv3
+
+証明書情報は次のように設定できます。
+
+* 設定位置は.metadata.annotations下のloadbalancer.nhncloud/listener-terminated-https-certです。
+* 開始行および最終行を含める必要があります。
+
+秘密鍵情報は次のように設定できます。
+
+* 設定位置は.metadata.annotations下のloadbalancer.nhncloud/listener-terminated-https-keyです。
+* 開始行および最終行を含める必要があります。
+
+次はリスナープロトコルを`TERMINATED_HTTPS`に設定する時のマニフェスト例です。証明書情報と秘密鍵情報は一部省略されています。
+```yaml
+metadata:
+  name: echosvr-svc
+  labels:
+    app: echosvr
+  annotations:
+    loadbalancer.nhncloud/listener-protocol: TERMINATED_HTTPS
+    loadbalancer.nhncloud/listener-terminated-https-tls-version: TLSv1.2
+    loadbalancer.nhncloud/listener-terminated-https-cert: |
+      -----BEGIN CERTIFICATE-----
+      MIIDZTCCAk0CCQDVfXIZ2uxcCTANBgkqhkiG9w0BAQUFADBvMQswCQYDVQQGEwJL
+      ...
+      fnsAY7JvmAUg
+      -----END CERTIFICATE-----
+    loadbalancer.nhncloud/listener-terminated-https-key: |
+      -----BEGIN RSA PRIVATE KEY-----
+      MIIEowIBAAKCAQEAz+U5VNZ8jTPs2Y4NVAdUWLhsNaNjRWQm4tqVPTxIrnY0SF8U
+      ...
+      u6X+8zlOYDOoS2BuG8d2brfKBLu3As5VAcAPLcJhE//3IVaZHxod
+      -----END RSA PRIVATE KEY-----
+```
+
+#### ロードバランシング方式設定
+ロードバランシング方式を設定できます。
+
+* 設定位置は.metadata.annotations下のloadbalancer.nhncloud/pool-lb-methodです。
+* 次の中から1つを設定できます。
+    * ROUND_ROBIN：未設定時のデフォルト値です。
+    * LEAST_CONNECTIONS
+    * SOURCE_IP
+
+
+#### ヘルスチェックプロトコル設定
+ヘルスチェックプロトコルを設定できます。
+
+* 設定位置は.metadata.annotations下のloadbalancer.nhncloud/healthmonitor-typeです。
+* 次の中から1つを設定できます。
+    * HTTP：HTTP URL、HTTPメソッド、HTTPステータスコードを追加設定する必要があります。
+    * HTTPS：HTTP URL、HTTPメソッド、 HTTPステータスコードを追加設定する必要があります。
+    * TCP：未設定時のデフォルト値です。
+
+HTTP URLは次のように設定できます。
+
+* 設定位置は.metadata.annotations下のloadbalancer.nhncloud/healthmonitor-http-urlです。
+* 設定値は/で開始する必要があります。
+* 設定していないか、ルールに準じていない値を入力した場合、デフォルト値の/に設定されます。
+
+HTTPメソッドは次のように設定できます。
+
+* 設定位置は.metadata.annotations下のloadbalancer.nhncloud/healthmonitor-http-methodです。
+* 現在GETのみサポートしており、設定していないか、他の値を入力すると、デフォルト値のGETに設定されます。
+
+HTTPステータスコードは次のように設定できます。
+
+* 設定位置は.metadata.annotations下のloadbalancer.nhncloud/healthmonitor-http-expected-codeです。
+* 単一の値(例：200)、リスト(例：200,202)、範囲(例：200-204) の形式で入力できます。
+* 設定していないか、ルールに準じていない値を入力すると、デフォルト値の200に設定されます。
+
+#### ヘルスチェック周期設定
+ヘルスチェック周期を設定できます。
+
+* 設定位置は.metadata.annotations下のloadbalancer.nhncloud/healthmonitor-delayです。
+* 秒単位で設定します。
+* 最小値1、最大値5000です。
+* 設定していないか、範囲外の値を入力すると、デフォルト値の60に設定されます。
+
+#### ヘルスチェック最大レスポンス時間設定
+
+ヘルスチェック最大レスポンス時間を設定できます。
+* 設定位置は.metadata.annotations下のloadbalancer.nhncloud/healthmonitor-timeoutです。
+* 秒単位で設定します。
+* 最小値1、最大値5000です。
+* この設定は、必ずヘルスチェック周期設定設定値より小さくする必要があります。
+* 設定していないか、範囲外の値を入力すると、デフォルト値の30に設定されます。
+* ただし、入力値または設定値がヘルスチェック周期設定より大きい場合、ヘルスチェック周期設定設定値の1/2に設定されます。
+
+#### ヘルスチェック最大再試行回数設定
+
+ヘルスチェック最大再試行回数を設定できます。
+* 設定位置は.metadata.annotations下のloadbalancer.nhncloud/healthmonitor-max-retriesです。
+* 最小値1、最大値10です。
+* 設定していないか、範囲外の値を入力すると、デフォルト値の3に設定されます。
 
 
 ## イングレスコントローラー
