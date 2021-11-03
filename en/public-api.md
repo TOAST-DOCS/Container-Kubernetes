@@ -47,7 +47,7 @@ X-Auth-Token: {tokenId}
 | clusters.stack_id | Body | UUID | 마스터 노드 그룹과 연결된 heat stack UUID |
 | clusters.status | Body | String | 클러스터 상태 |
 | clusters.labels | Body | Object | 클러스터 레이블 |
-| clusters.labels.kube_tag | Body |String | 마스터 노드 그룹 쿠버네티스 버전 |
+| clusters.labels.kube_tag | Body |String | 마스터 노드 그룹 Kubernetes 버전 |
 | clusters.labels.availability_zone | Body | String | 기본 워커 노드 그룹 적용 : 가용성 영역 |
 | clusters.labels.node_image | Body | UUID | 기본 워커 노드 그룹 적용 : 베이스 이미지 uuid |
 | clusters.labels.boot_volume_type | Body | String | 기본 워커 노드 그룹 적용 : 블록 스토리지 종류|
@@ -179,7 +179,7 @@ X-Auth-Token: {tokenId}
 | created_at | Body | String | 생성 시간(UTC) |
 | updated_at | Body | String | 최근 업데이트 시간(UTC) |
 | labels | Body | Object | 클러스터 레이블 |
-| labels.kube_tag | Body |String | 마스터 노드 그룹 쿠버네티스 버전 |
+| labels.kube_tag | Body |String | 마스터 노드 그룹 Kubernetes 버전 |
 | labels.availability_zone | Body | String | 기본 워커 노드 그룹 적용 : 가용성 영역 |
 | labels.node_image | Body | UUID | 기본 워커 노드 그룹 적용 : 베이스 이미지 uuid |
 | labels.boot_volume_type | Body | String | 기본 워커 노드 그룹 적용 : 블록 스토리지 종류|
@@ -322,7 +322,7 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_unneeded_time | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 임계 영역 유지 시간 |
 | labels.ca_scale_down_util_thresh | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 리소스 사용량 임계치  |
 | labels.ca_scale_down_delay_after_add | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 증설 후 감축 지연 시간 |
-| labels.kube_tag | Body | String | O | 쿠버네티스 버전 |
+| labels.kube_tag | Body | String | O | Kubernetes 버전 |
 | labels.user_script | Body | String | X | 예약 스크립트 |
 | flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 flavor UUID |
 | fixed_network | Body | UUID | O | VPC Network UUID |
@@ -667,7 +667,7 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_unneeded_time | Body | String | 워커 노드 그룹 적용 : 오토 스케일러: 임계 영역 유지 시간 |
 | labels.ca_scale_down_util_thresh | Body | String | 워커 노드 그룹 적용 : 오토 스케일러: 리소스 사용량 임계치  |
 | labels.ca_scale_down_delay_after_add | Body | String | 워커 노드 그룹 적용 : 오토 스케일러: 증설 후 감축 지연 시간 |
-| labels.kube_tag | Body | String | 워커 노드 그룹 쿠버네티스 버전 |
+| labels.kube_tag | Body | String | 워커 노드 그룹 Kubernetes 버전 |
 | labels.user_script | Body | String | 예약 스크립트 |
 | max_node_count | Body | Integer | 최대 노드 수 |
 | min_node_count | Body | Integer | 최소 노드 수 |
@@ -1063,7 +1063,7 @@ X-Auth-Token: {tokenId}
 | tokenId | Header | String | O | 토큰 ID |
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
 | NODEGROUP_ID_OR_NAME | URL | UUID or String | O | 노드 그룹 UUID 또는 노드 그룹 이름 | 
-| version | Body | String | O | 쿠버네티스 버전 |
+| version | Body | String | O | Kubernetes 버전 |
 
 <details><summary>예시</summary>
 <p>
@@ -1100,9 +1100,9 @@ X-Auth-Token: {tokenId}
 
 ## 기타 기능
 
-### 지원되는 쿠버네티스 버전 보기
+### 지원되는 Kubernetes 버전 보기
 
-NHN Cloud Kubernetes 서비스에서 지원하는 쿠버네티스 버전을 조회합니다.
+NHN Cloud Kubernetes 서비스에서 지원하는 Kubernetes 버전을 조회합니다.
 
 ```
 GET /v1/supports
@@ -1125,8 +1125,8 @@ X-Auth-Token: {tokenId}
 
 | 이름 | 종류 | 형식 | 설명 |
 |---|---|---|---|
-| supported_k8s | Body | Object | 지원되는 쿠버네티스 버전 객체 |
-| supported_k8s."버전 이름" | Body | String | 쿠버네티스 버전의 유효성 여부(True/False) |
+| supported_k8s | Body | Object | 지원되는 Kubernetes 버전 객체 |
+| supported_k8s."버전 이름" | Body | String | Kubernetes 버전의 유효성 여부(True/False) |
 
 <details><summary>예시</summary>
 <p>
