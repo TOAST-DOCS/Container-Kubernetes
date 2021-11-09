@@ -1,6 +1,6 @@
 ## Container > Kubernetes > API v2 가이드
 
-Kubernetes 클러스터를 구성하는 API를 기술합니다.
+Kubernetes 클러스터를 구성하기 위한 API를 기술합니다.
 API를 사용하려면 API 엔드포인트와 토큰 등이 필요합니다. [API 사용 준비](/Compute/Compute/ko/identity-api/)를 참고하여 API 사용에 필요한 정보를 준비합니다.
 
 모든 API는 `kubernetes` 타입 엔드포인트를 이용해 호출합니다.
@@ -41,8 +41,8 @@ X-Auth-Token: {tokenId}
 | clusters | Body | Array | 클러스터 정보 객체 목록 |
 | clusters.uuid | Body | UUID | 클러스터 UUID |
 | clusters.name | Body | String | 클러스터 이름 |
-| clusters.flavor_id | Body | UUID | 기본 워커 노드의 flavor UUID|
-| clusters.keypair | Body | UUID | 기본 워커 노드 그룹에 적용된 keypair UUID |
+| clusters.flavor_id | Body | UUID | 기본 워커 노드의 인스턴스 타입 UUID|
+| clusters.keypair | Body | UUID | 기본 워커 노드 그룹에 적용된 키 페어 UUID |
 | clusters.node_count | Body | Integer| 전체 워커 노드 수 |
 | clusters.stack_id | Body | UUID | 마스터 노드 그룹과 연결된 heat stack UUID |
 | clusters.status | Body | String | 클러스터 상태 |
@@ -53,7 +53,7 @@ X-Auth-Token: {tokenId}
 | clusters.labels.boot_volume_type | Body | String | 기본 워커 노드 그룹 적용 : 블록 스토리지 종류|
 | clusters.labels.boot_volume_size | Body | String | 기본 워커 노드 그룹 적용 : 블록 스토리지 사이즈(GB) |
 | clusters.labels.external_network_id | Body | String | 인터넷 게이트웨이에 연결된 VPC network UUID |
-| clusters.labels.external_subnet_id_list | Body | String | 인터넷 게이트웨이에 연결된 subnet UUID 목록(콜론으로 구분) |
+| clusters.labels.external_subnet_id_list | Body | String | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분) |
 | clusters.labels.cert_manager_api | Body | String | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
 | clusters.labels.ca_enable | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 기능 활성화 여부 ("True" / "False") |
 | clusters.labels.ca_max_node_count | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최대 노드 수 |
@@ -163,15 +163,15 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|
 | uuid | Body | UUID | 클러스터 UUID |
 | name | Body | String | 클러스터 이름 |
-| flavor_id | Body | UUID | 기본 워커 노드의 flavor UUID|
-| keypair | Body | UUID | 기본 워커 노드 그룹에 적용된 keypair UUID |
+| flavor_id | Body | UUID | 기본 워커 노드의 인스턴스 타입 UUID|
+| keypair | Body | UUID | 기본 워커 노드 그룹에 적용된 키 페어 UUID |
 | node_count | Body | Integer| 전체 워커 노드 수 |
 | stack_id | Body | UUID | 마스터 노드 그룹과 연결된 heat stack UUID |
 | status | Body | String | 클러스터 상태 |
 | status_reason | Body | String | 클러스터 상태 이유(null 가능) |
 | discovery_url | Body | String | ETCD discovery 시 사용 가능한 URL |
 | api_address | Body | String | Kubernetes API 엔드포인트 |
-| project_id | Body | String | 프로젝트(=테넌트) ID |
+| project_id | Body | String | 프로젝트(테넌트) ID |
 | fixed_network | Body | UUID | VPC UUID|
 | fixed_subnet | Body | UUID | VPC Subnet UUID |
 | node_addresses | Body | String List | 워커 노드 IP 주소 목록 |
@@ -181,11 +181,11 @@ X-Auth-Token: {tokenId}
 | labels | Body | Object | 클러스터 레이블 |
 | labels.kube_tag | Body |String | 마스터 노드 그룹 Kubernetes 버전 |
 | labels.availability_zone | Body | String | 기본 워커 노드 그룹 적용 : 가용성 영역 |
-| labels.node_image | Body | UUID | 기본 워커 노드 그룹 적용 : 베이스 이미지 uuid |
+| labels.node_image | Body | UUID | 기본 워커 노드 그룹 적용 : 베이스 이미지 UUID |
 | labels.boot_volume_type | Body | String | 기본 워커 노드 그룹 적용 : 블록 스토리지 종류|
 | labels.boot_volume_size | Body | String | 기본 워커 노드 그룹 적용 : 블록 스토리지 사이즈(GB) |
 | labels.external_network_id | Body | String | 인터넷 게이트웨이에 연결된 VPC network UUID |
-| labels.external_subnet_id_list | Body | String | 인터넷 게이트웨이에 연결된 subnet UUID 목록(콜론으로 구분) |
+| labels.external_subnet_id_list | Body | String | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분) |
 | labels.cert_manager_api | Body | String | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
 | labels.ca_enable | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 기능 활성화 여부 ("True" / "False") |
 | labels.ca_max_node_count | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최대 노드 수 |
@@ -303,17 +303,17 @@ X-Auth-Token: {tokenId}
 | 이름 | 종류 | 형식 | 필수 | 설명 |
 |---|---|---|---|---|
 | tokenId | Header | String | O | 토큰 ID |
-| keypair | Body | String | O | 기본 워커 노드 그룹에 적용할 keypair |
+| keypair | Body | String | O | 기본 워커 노드 그룹에 적용할 키 페어 |
 | name | Body | String | O | 클러스터 이름 |
 | cluster_template_id | Body | String | O | 클러스터 템플릿 ID. 반드시 "iaas_console"로 설정 |
 | node_count | Body | String | O | 기본 워커 노드 그룹에 적용할 노드 수 |
 | labels | Body | Object | O | 클러스터 생성 정보 개체 |
 | labels.availability_zone | Body | String | O | 기본 워커 노드 그룹 적용 : 가용성 영역 |
-| labels.node_image | Body | UUID | O | 기본 워커 노드 그룹 적용 : 베이스 이미지 uuid |
+| labels.node_image | Body | UUID | O | 기본 워커 노드 그룹 적용 : 베이스 이미지 UUID |
 | labels.boot_volume_type | Body | String | O | 기본 워커 노드 그룹 적용 : 블록 스토리지 종류|
 | labels.boot_volume_size | Body | String | O | 기본 워커 노드 그룹 적용 : 블록 스토리지 사이즈(GB) |
 | labels.external_network_id | Body | String | X | 인터넷 게이트웨이에 연결된 VPC network UUID |
-| labels.external_subnet_id_list | Body | String | X | 인터넷 게이트웨이에 연결된 subnet UUID 목록(콜론으로 구분) |
+| labels.external_subnet_id_list | Body | String | X | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분) |
 | labels.cert_manager_api | Body | String | O | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
 | labels.ca_enable | Body | String | O | 기본 워커 노드 그룹 적용 : 오토 스케일러: 기능 활성화 여부 ("True" / "False") |
 | labels.ca_max_node_count | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최대 노드 수 |
@@ -324,7 +324,7 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_delay_after_add | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 증설 후 감축 지연 시간 |
 | labels.kube_tag | Body | String | O | Kubernetes 버전 |
 | labels.user_script | Body | String | X | 예약 스크립트 |
-| flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 flavor UUID |
+| flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
 | fixed_network | Body | UUID | O | VPC Network UUID |
 | fixed_subnet | Body | UUID | O | VPC Subnet UUID |
 
@@ -441,7 +441,7 @@ X-Auth-Token: {tokenId}
 | nodes_to_remove | Body | String List | X | 삭제하고자 하는 노드 UUID |
 
 * 주의 사항
-  * 노드를 감축하는 경우(즉, 일부 노드 삭제) 삭제할 노드를 지정하는 경우 `nodes_to_remove`를 설정해야 한다. 삭제할 노드를 지정하지 않는 경우 삭제 대상 노드는 무작위로 선택된다. 
+  * 노드를 감축하는 경우(즉, 일부 노드 삭제) 삭제할 노드를 지정하려면 **nodes_to_remove**를 설정해야 합니다. 삭제할 노드를 지정하지 않으면 삭제 대상 노드는 무작위로 선택됩니다.
   * node_count 최소 1, 최대 10(단, 최대값은 quota로 조정 가능)
 
 <details><summary>증설 예시</summary>
@@ -570,7 +570,7 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|
 | nodegroups | Body | Array | 노드 그룹 정보 객체 목록 |
 | nodegroups.uuid | Body | UUID | 노드 그룹 UUID |
-| nodegroups.flavor_id | Body | UUID | 노드 그룹 flavor UUID |
+| nodegroups.flavor_id | Body | UUID | 노드 그룹 인스턴스 타입 UUID |
 | nodegroups.image_id | Body | UUID | 노드 그룹 베이스 이미지 UUID |
 | nodegroups.max_node_count | Body | Integer | 노드 그룹 최대 노드 수 |
 | nodegroups.min_node_count | Body | Integer | 노드 그룹 최소 노드 수 |
@@ -650,15 +650,15 @@ X-Auth-Token: {tokenId}
 | uuid | Body | UUID | 노드 그룹 UUID |
 | name | Body | String | 노드 그룹 이름 |
 | cluster_id | Body  | UUID | 노드 그룹이 속한 클러스터 UUID |
-| flavor_id | Body | UUID | 노드에서 사용하는 flavor UUID |
+| flavor_id | Body | UUID | 노드에서 사용하는 인스턴스 타입 UUID |
 | image_id | Body | UUID | 노드에서 사용하는 베이스 이미지 UUID |
 | labels | Body | Object | 노드 그룹 생성 정보 개체 |
 | labels.availability_zone | Body | String | 워커 노드 그룹 적용 : 가용성 영역 |
-| labels.node_image | Body | UUID | 워커 노드 그룹 적용 : 베이스 이미지 uuid |
+| labels.node_image | Body | UUID | 워커 노드 그룹 적용 : 베이스 이미지 UUID |
 | labels.boot_volume_type | Body | String | 워커 노드 그룹 적용 : 블록 스토리지 종류|
 | labels.boot_volume_size | Body | String | 워커 노드 그룹 적용 : 블록 스토리지 사이즈(GB) |
 | labels.external_network_id | Body | String | 인터넷 게이트웨이에 연결된 VPC network UUID |
-| labels.external_subnet_id_list | Body | String | 인터넷 게이트웨이에 연결된 subnet UUID 목록(콜론으로 구분) |
+| labels.external_subnet_id_list | Body | String | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분) |
 | labels.cert_manager_api | Body | String | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
 | labels.ca_enable | Body | String | 워커 노드 그룹 적용 : 오토 스케일러: 기능 활성화 여부 ("True" / "False") |
 | labels.ca_max_node_count | Body | String | 워커 노드 그룹 적용 : 오토 스케일러: 최대 노드 수 |
@@ -673,7 +673,7 @@ X-Auth-Token: {tokenId}
 | min_node_count | Body | Integer | 최소 노드 수 |
 | node_addresses | Body | String list | 노드 IP 주소 목록 |
 | node_count | Body | Integer | 노드 수 |
-| project_id | Body | String | 프로젝트(=테넌트) ID |
+| project_id | Body | String | 프로젝트(테넌트) ID |
 | role | Body | String | 노드 그룹 역할 |
 | stack_id | Body | UUID | 노드 그룹에 연결된 heat stack UUID |
 | status | Body | String | 노드 그룹 상태 |
@@ -779,7 +779,7 @@ X-Auth-Token: {tokenId}
 
 | 이름 | 종류 | 형식 | 필수 | 설명 |
 |---|---|---|---|---|
-| flavor_id | Body | UUID | O |  노드에서 사용하는 flavor UUID |
+| flavor_id | Body | UUID | O |  노드에서 사용하는 인스턴스 타입 UUID |
 | image_id | Body | UUID | O | 노드에서 사용하는 베이스 이미지 UUID |
 | labels | Body | Object | O | 노드 그룹 생성 정보 개체 |
 | labels.availability_zone | Body | String | O | 기본 워커 노드 그룹 적용 : 가용성 영역 |
@@ -826,7 +826,7 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|
 | uuid | Body | UUID | 노드 그룹 UUID |
 | cluster_id | Body  | UUID | 노드 그룹이 속한 클러스터 UUID |
-| flavor_id | Body | UUID |  노드에서 사용하는 flavor UUID |
+| flavor_id | Body | UUID |  노드에서 사용하는 인스턴스 타입 UUID |
 | image_id | Body | UUID | 노드에서 사용하는 베이스 이미지 UUID |
 | labels | Body | Object | 노드 그룹 생성 정보 개체 |
 | labels.availability_zone | Body | String | 기본 워커 노드 그룹 적용 : 가용성 영역 |
@@ -844,7 +844,7 @@ X-Auth-Token: {tokenId}
 | min_node_count | Body | Integer | 최소 노드 수 |
 | name | BODY | String | 노드 그룹 이름 |
 | node_count | Body | Integer | 노드 수(기본값: 1) |
-| project_id | Body | String | 프로젝트(=테넌트) ID |
+| project_id | Body | String | 프로젝트(테넌트) ID |
 | role | Body | String | 노드 그룹 역할 |
 
 <details><summary>예시</summary>
