@@ -890,13 +890,8 @@ status:
 * MutatingAdmissionWebhook
 * NamespaceLifecycle
 * NodeRestriction
-* PersistentVolumeClaimResize
-* Priority
 * ResourceQuota
-* RuntimeClass
 * ServiceAccount
-* StorageObjectInUseProtection
-* TaintNodesByCondition
 * ValidatingAdmissionWebhook
 
 #### 판교 리전 2021년 2월 23일 이후에 생성한 클러스터 및 평촌 리전 2021년 2월 18일 이후에 생성한 클러스터
@@ -907,14 +902,9 @@ status:
 * MutatingAdmissionWebhook
 * NamespaceLifecycle
 * NodeRestriction
-* PersistentVolumeClaimResize
 * PodSecurityPolicy(신규 추가)
-* Priority
 * ResourceQuota
-* RuntimeClass
 * ServiceAccount
-* StorageObjectInUseProtection
-* TaintNodesByCondition
 * ValidatingAdmissionWebhook
 
 ### 클러스터 업그레이드
@@ -1195,6 +1185,11 @@ Kubernetes의 서비스 객체를 정의할 때 로드 밸런서의 여러 가�
 > 별도로 표시되어 있지 않은 기능은 Kubernetes v1.19.13 이후 버전의 클러스터에만 적용 가능합니다.
 >
 
+> [주의]
+> 아래 기능의 설정값은 모두 문자열 형식으로 입력해야 합니다. YAML 파일 입력 형식에서 입력값 형태에 관계없이 문자열 형식으로 입력하기 위해서는 입력값을 큰따옴표(")로 감싸주면 됩니다. YAML 파일 형식에 대한 더 자세한 내용은 [Yaml Cookbook](https://yaml.org/YAML_for_ruby.html) 문서를 참조하세요.
+>
+
+
 #### 세션 지속성 설정
 로드 밸런서의 세션 지속성을 설정할 수 있습니다.
 
@@ -1215,6 +1210,9 @@ Kubernetes의 서비스 객체를 정의할 때 로드 밸런서의 여러 가�
 * 다음 중 하나로 설정할 수 있습니다.
     * true: 플로팅 IP를 보존합니다.
     * false: 플로팅 IP를 삭제합니다. 미설정 시 기본값입니다.
+
+> [주의]
+> 2021년 10월 26일 이전에 생성된 v1.18.19 클러스터는 로드 밸런서가 삭제될 때 플로팅 IP가 삭제되지 않는 문제가 있습니다. 고객 센터의 1:1 문의를 통해 문의주시면 이 문제를 해결하기 위한 절차에 대해 상세히 알려드리겠습니다.
 
 #### 리스너 연결 제한 설정
 리스너의 연결 제한을 설정할 수 있습니다.
