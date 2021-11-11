@@ -1,5 +1,11 @@
 ## Container > Kubernetes > Release Notes
 
+### November 23, 2021
+
+#### Added Features
+* Released the public API for the Kubernetes service.
+     * For details on the public API, refer to [API Guide](/Container/Kubernetes/en/public-api).
+
 ### October 26, 2021
 
 #### Added Features
