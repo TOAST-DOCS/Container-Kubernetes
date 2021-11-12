@@ -49,10 +49,10 @@ X-Auth-Token: {tokenId}
 | clusters.labels | Body | Object | 클러스터 레이블 |
 | clusters.labels.kube_tag | Body |String | 마스터 노드 그룹 Kubernetes 버전 |
 | clusters.labels.availability_zone | Body | String | 기본 워커 노드 그룹 적용 : 가용성 영역 |
-| clusters.labels.node_image | Body | UUID | 기본 워커 노드 그룹 적용 : 베이스 이미지 uuid |
+| clusters.labels.node_image | Body | UUID | 기본 워커 노드 그룹 적용 : 베이스 이미지 UUID |
 | clusters.labels.boot_volume_type | Body | String | 기본 워커 노드 그룹 적용 : 블록 스토리지 종류|
 | clusters.labels.boot_volume_size | Body | String | 기본 워커 노드 그룹 적용 : 블록 스토리지 사이즈(GB) |
-| clusters.labels.external_network_id | Body | String | 인터넷 게이트웨이에 연결된 VPC network UUID |
+| clusters.labels.external_network_id | Body | String | 인터넷 게이트웨이에 연결된 VPC 네트워크 UUID |
 | clusters.labels.external_subnet_id_list | Body | String | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분) |
 | clusters.labels.cert_manager_api | Body | String | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
 | clusters.labels.ca_enable | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 기능 활성화 여부 ("True" / "False") |
@@ -173,7 +173,7 @@ X-Auth-Token: {tokenId}
 | api_address | Body | String | Kubernetes API 엔드포인트 |
 | project_id | Body | String | 프로젝트(테넌트) ID |
 | fixed_network | Body | UUID | VPC UUID|
-| fixed_subnet | Body | UUID | VPC Subnet UUID |
+| fixed_subnet | Body | UUID | VPC 서브넷 UUID |
 | node_addresses | Body | String List | 워커 노드 IP 주소 목록 |
 | master_addresses | Body | String List | 마스터 노드 IP 주소 목록 |
 | created_at | Body | String | 생성 시간(UTC) |
@@ -184,7 +184,7 @@ X-Auth-Token: {tokenId}
 | labels.node_image | Body | UUID | 기본 워커 노드 그룹 적용 : 베이스 이미지 UUID |
 | labels.boot_volume_type | Body | String | 기본 워커 노드 그룹 적용 : 블록 스토리지 종류|
 | labels.boot_volume_size | Body | String | 기본 워커 노드 그룹 적용 : 블록 스토리지 사이즈(GB) |
-| labels.external_network_id | Body | String | 인터넷 게이트웨이에 연결된 VPC network UUID |
+| labels.external_network_id | Body | String | 인터넷 게이트웨이에 연결된 VPC 네트워크 UUID |
 | labels.external_subnet_id_list | Body | String | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분) |
 | labels.cert_manager_api | Body | String | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
 | labels.ca_enable | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 기능 활성화 여부 ("True" / "False") |
@@ -312,7 +312,7 @@ X-Auth-Token: {tokenId}
 | labels.node_image | Body | UUID | O | 기본 워커 노드 그룹 적용 : 베이스 이미지 UUID |
 | labels.boot_volume_type | Body | String | O | 기본 워커 노드 그룹 적용 : 블록 스토리지 종류|
 | labels.boot_volume_size | Body | String | O | 기본 워커 노드 그룹 적용 : 블록 스토리지 사이즈(GB) |
-| labels.external_network_id | Body | String | X | 인터넷 게이트웨이에 연결된 VPC network UUID |
+| labels.external_network_id | Body | String | X | 인터넷 게이트웨이에 연결된 VPC 네트워크 UUID |
 | labels.external_subnet_id_list | Body | String | X | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분) |
 | labels.cert_manager_api | Body | String | O | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
 | labels.ca_enable | Body | String | O | 기본 워커 노드 그룹 적용 : 오토 스케일러: 기능 활성화 여부 ("True" / "False") |
@@ -325,8 +325,8 @@ X-Auth-Token: {tokenId}
 | labels.kube_tag | Body | String | O | Kubernetes 버전 |
 | labels.user_script | Body | String | X | 예약 스크립트 |
 | flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
-| fixed_network | Body | UUID | O | VPC Network UUID |
-| fixed_subnet | Body | UUID | O | VPC Subnet UUID |
+| fixed_network | Body | UUID | O | VPC 네트워크 UUID |
+| fixed_subnet | Body | UUID | O | VPC 서브넷 UUID |
 
 
 <details><summary>예시</summary>
@@ -441,8 +441,8 @@ X-Auth-Token: {tokenId}
 | nodes_to_remove | Body | String List | X | 삭제하고자 하는 노드 UUID |
 
 * 주의 사항
-  * 노드를 감축하는 경우(즉, 일부 노드 삭제) 삭제할 노드를 지정하려면 **nodes_to_remove**를 설정해야 합니다. 삭제할 노드를 지정하지 않으면 삭제 대상 노드는 무작위로 선택됩니다.
-  * node_count 최소 1, 최대 10(단, 최대값은 quota로 조정 가능)
+    * 노드를 감축하는 경우(즉, 일부 노드 삭제) 삭제할 노드를 지정하려면 **nodes_to_remove**를 설정해야 합니다. 삭제할 노드를 지정하지 않으면 삭제 대상 노드는 무작위로 선택됩니다.
+    * node_count 최소 1, 최대 10(단, 최대값은 quota로 조정 가능)
 
 <details><summary>증설 예시</summary>
 <p>
@@ -657,7 +657,7 @@ X-Auth-Token: {tokenId}
 | labels.node_image | Body | UUID | 워커 노드 그룹 적용 : 베이스 이미지 UUID |
 | labels.boot_volume_type | Body | String | 워커 노드 그룹 적용 : 블록 스토리지 종류|
 | labels.boot_volume_size | Body | String | 워커 노드 그룹 적용 : 블록 스토리지 사이즈(GB) |
-| labels.external_network_id | Body | String | 인터넷 게이트웨이에 연결된 VPC network UUID |
+| labels.external_network_id | Body | String | 인터넷 게이트웨이에 연결된 VPC 네트워크 UUID |
 | labels.external_subnet_id_list | Body | String | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분) |
 | labels.cert_manager_api | Body | String | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
 | labels.ca_enable | Body | String | 워커 노드 그룹 적용 : 오토 스케일러: 기능 활성화 여부 ("True" / "False") |
