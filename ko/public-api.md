@@ -12,6 +12,61 @@ API를 사용하려면 API 엔드포인트와 토큰 등이 필요합니다. [AP
 
 API 응답에 가이드에 명시되지 않은 필드가 나타날 수 있습니다. 이런 필드는 NHN Cloud 내부 용도로 사용되며 사전 공지 없이 변경될 수 있으므로 사용하지 않습니다.
 
+## API에 사용되는 리소스 정보 확인
+
+Kubernetes 서비스 API는 클러스터 및 노드 그룹 구성을 위해 여러 가지 리소스를 사용합니다. 리소스별 정보 확인 방법은 다음과 같습니다.
+
+### 인터넷 게이트웨이에 연결된 VPC 네트워크 UUID
+
+인터넷 게이트웨이에 연결된 VPC 네트워크는 VPC 네트워크 목록 조회 API에 **router:external=True**  쿼리 파라미터를 이용해 조회할 수 있습니다.
+
+```
+GET /v2.0/networks?router:external=True
+```
+
+네트워크 목록 조회 API에 대한 좀 더 자세한 내용은 [네트워크 목록 보기](https://docs.toast.com/ko/Network/VPC/ko/public-api/#_2)를 참고하세요.
+
+
+### 인터넷 게이트웨이에 연결된 서브넷 UUID 목록
+
+인터넷 게이트웨이에 연결된 VPC 네트워크와 연결된 서브넷 UUID를 입력합니다. 여러 서브넷이 조회됐다면 콜론(`:`)으로 연결해 입력합니다. 서브넷 목록 조회 API에 대한 좀 더 자세한 내용은 [서브넷 목록 보기](https://docs.toast.com/ko/Network/VPC/ko/public-api/#_6)을 참고하세요.
+
+
+### VPC 네트워크 UUID
+
+노드와 연결할 내부 VPC 네트워크 UUID를 입력합니다. 네트워크 목록 조회 API에 대한 좀 더 자세한 내용은 [네트워크 목록 보기](https://docs.toast.com/ko/Network/VPC/ko/public-api/#_2)을 참고하세요.
+
+### VPC 서브넷 UUID
+
+노드와 연결할 내부 VPC 네트워크와 연결된 서브넷 UUID를 입력합니다. 서브넷 목록 조회 API에 대한 좀 더 자세한 내용은 [서브넷 목록 보기](https://docs.toast.com/ko/Network/VPC/ko/public-api/#_6)을 참고하세요.
+
+### 가용성 영역 UUID
+
+노드를 생성할 가용성 영역 UUID를 입력합니다. 가용성 영역 목록 조회 API에 대한 좀 더 자세한 내용은 [가용성 목록 보기](https://docs.toast.com/ko/Compute/Instance/ko/public-api/#_9)을 참고하세요.
+
+### 키페어 UUID
+
+노드 접속에 사용할 키페어를 입력합니다. 키페어 목록 조회 API에 대한 좀 더 자세한 내용은 [키페어 목록 보기](https://docs.toast.com/ko/Compute/Instance/ko/public-api/#_13)을 참고하세요.
+
+### 베이스 이미지 UUID
+
+노드에 사용할 베이스 이미지 UUID를 입력합니다. 리전별 베이스 이미지 UUID는 다음과 같습니다.
+
+| 리전 | 베이스 이미지 UUID |
+|---|---|
+| 한국(판교) 리전 | 2b03f75e-c583-4198-8821-6eba31ab621e |
+| 한국(평촌) 리전 | a3c175ce-6477-4de0-b8d1-168dc9235fef |
+
+### 블록 스토리지 종류
+
+노드에 사용할 블록 스토리지 UUID를 입력합니다. 블록 스토리지 타입 목록 조회 API에 대한 좀 더 자세한 내용은 [볼륨 타입 목록 보기](https://docs.toast.com/ko/Storage/Block%20Storage/ko/public-api/#_2)를 참고하세요.
+
+### 인스턴스 타입 UUID
+
+생성할 노드의 인스턴스 타입 UUID를 입력합니다. 인스턴스 타입 목록 조회 API에 대한 좀 더 자세한 내용은 [인스턴스 타입 목록 보기](https://docs.toast.com/ko/Compute/Instance/ko/public-api/#_2)를 참고하세요.
+
+
+
 ## 클러스터
 
 ### 클러스터 목록 보기
@@ -42,7 +97,7 @@ X-Auth-Token: {tokenId}
 | clusters.uuid | Body | UUID | 클러스터 UUID |
 | clusters.name | Body | String | 클러스터 이름 |
 | clusters.flavor_id | Body | UUID | 기본 워커 노드의 인스턴스 타입 UUID|
-| clusters.keypair | Body | UUID | 기본 워커 노드 그룹에 적용된 키 페어 UUID |
+| clusters.keypair | Body | UUID | 기본 워커 노드 그룹에 적용된 키페어 UUID |
 | clusters.node_count | Body | Integer| 전체 워커 노드 수 |
 | clusters.stack_id | Body | UUID | 마스터 노드 그룹과 연결된 heat stack UUID |
 | clusters.status | Body | String | 클러스터 상태 |
@@ -162,7 +217,7 @@ X-Auth-Token: {tokenId}
 | uuid | Body | UUID | 클러스터 UUID |
 | name | Body | String | 클러스터 이름 |
 | flavor_id | Body | UUID | 기본 워커 노드의 인스턴스 타입 UUID|
-| keypair | Body | UUID | 기본 워커 노드 그룹에 적용된 키 페어 UUID |
+| keypair | Body | UUID | 기본 워커 노드 그룹에 적용된 키페어 UUID |
 | node_count | Body | Integer| 전체 워커 노드 수 |
 | stack_id | Body | UUID | 마스터 노드 그룹과 연결된 heat stack UUID |
 | status | Body | String | 클러스터 상태 |
@@ -291,7 +346,7 @@ X-Auth-Token: {tokenId}
 | 이름 | 종류 | 형식 | 필수 | 설명 |
 |---|---|---|---|---|
 | tokenId | Header | String | O | 토큰 ID |
-| keypair | Body | String | O | 기본 워커 노드 그룹에 적용할 키 페어 |
+| keypair | Body | String | O | 기본 워커 노드 그룹에 적용할 키페어 UUID |
 | name | Body | String | O | 클러스터 이름 |
 | cluster_template_id | Body | String | O | 클러스터 템플릿 ID. 반드시 "iaas_console"로 설정 |
 | node_count | Body | String | O | 기본 워커 노드 그룹에 적용할 노드 수 |
@@ -315,7 +370,6 @@ X-Auth-Token: {tokenId}
 | flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
 | fixed_network | Body | UUID | O | VPC 네트워크 UUID |
 | fixed_subnet | Body | UUID | O | VPC 서브넷 UUID |
-
 
 <details><summary>예시</summary>
 <p>
@@ -773,7 +827,7 @@ X-Auth-Token: {tokenId}
 
 ```json
 {
-    "name": "aaaaaa",
+    "name": "added-nodegroup",
     "node_count": 1,
     "flavor_id": "6ef27f21-c774-4c0e-84ff-7dd4a762571f",
     "image_id": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
@@ -849,7 +903,7 @@ X-Auth-Token: {tokenId}
     ],
     "max_node_count": null,
     "min_node_count": 1,
-    "name": "aaaaaa",
+    "name": "added-nodegroup",
     "node_count": 1,
     "project_id": "1ffeaca9bbf94ab1aa9cffdec29a258a",
     "role": "worker",
