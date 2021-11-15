@@ -29,24 +29,24 @@ GET /v2.0/networks?router:external=True
 
 ### 인터넷 게이트웨이에 연결된 서브넷 UUID 목록
 
-인터넷 게이트웨이에 연결된 VPC 네트워크와 연결된 서브넷 UUID를 입력합니다. 여러 서브넷이 조회됐다면 콜론(`:`)으로 연결해 입력합니다. 서브넷 목록 조회 API에 대한 좀 더 자세한 내용은 [서브넷 목록 보기](https://docs.toast.com/ko/Network/VPC/ko/public-api/#_6)을 참고하세요.
+인터넷 게이트웨이에 연결된 VPC 네트워크와 연결된 서브넷 UUID를 입력합니다. 여러 서브넷이 조회됐다면 콜론(`:`)으로 연결해 입력합니다. 서브넷 목록 조회 API에 대한 좀 더 자세한 내용은 [서브넷 목록 보기](https://docs.toast.com/ko/Network/VPC/ko/public-api/#_6)를 참고하세요.
 
 
 ### VPC 네트워크 UUID
 
-노드와 연결할 내부 VPC 네트워크 UUID를 입력합니다. 네트워크 목록 조회 API에 대한 좀 더 자세한 내용은 [네트워크 목록 보기](https://docs.toast.com/ko/Network/VPC/ko/public-api/#_2)을 참고하세요.
+노드와 연결할 내부 VPC 네트워크 UUID를 입력합니다. 네트워크 목록 조회 API에 대한 좀 더 자세한 내용은 [네트워크 목록 보기](https://docs.toast.com/ko/Network/VPC/ko/public-api/#_2)를 참고하세요.
 
 ### VPC 서브넷 UUID
 
-노드와 연결할 내부 VPC 네트워크와 연결된 서브넷 UUID를 입력합니다. 서브넷 목록 조회 API에 대한 좀 더 자세한 내용은 [서브넷 목록 보기](https://docs.toast.com/ko/Network/VPC/ko/public-api/#_6)을 참고하세요.
+노드와 연결할 내부 VPC 네트워크와 연결된 서브넷 UUID를 입력합니다. 서브넷 목록 조회 API에 대한 좀 더 자세한 내용은 [서브넷 목록 보기](https://docs.toast.com/ko/Network/VPC/ko/public-api/#_6)를 참고하세요.
 
 ### 가용성 영역 UUID
 
-노드를 생성할 가용성 영역 UUID를 입력합니다. 가용성 영역 목록 조회 API에 대한 좀 더 자세한 내용은 [가용성 목록 보기](https://docs.toast.com/ko/Compute/Instance/ko/public-api/#_9)을 참고하세요.
+노드를 생성할 가용성 영역 UUID를 입력합니다. 가용성 영역 목록 조회 API에 대한 좀 더 자세한 내용은 [가용성 목록 보기](https://docs.toast.com/ko/Compute/Instance/ko/public-api/#_9)를 참고하세요.
 
 ### 키페어 UUID
 
-노드 접속에 사용할 키페어를 입력합니다. 키페어 목록 조회 API에 대한 좀 더 자세한 내용은 [키페어 목록 보기](https://docs.toast.com/ko/Compute/Instance/ko/public-api/#_13)을 참고하세요.
+노드 접속에 사용할 키페어를 입력합니다. 키페어 목록 조회 API에 대한 좀 더 자세한 내용은 [키페어 목록 보기](https://docs.toast.com/ko/Compute/Instance/ko/public-api/#_13)를 참고하세요.
 
 ### 베이스 이미지 UUID
 
