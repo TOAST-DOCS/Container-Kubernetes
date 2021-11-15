@@ -46,11 +46,11 @@ GET /v2.0/networks?router:external=True
 
 ### 키페어 UUID
 
-노드 접속에 사용할 키페어를 입력합니다. 키페어 목록 조회 API에 대한 좀 더 자세한 내용은 [키페어 목록 보기](https://docs.toast.com/ko/Compute/Instance/ko/public-api/#_13)를 참고하세요.
+노드 접속시 사용할 키페어를 입력합니다. 키페어 목록 조회 API에 대한 좀 더 자세한 내용은 [키페어 목록 보기](https://docs.toast.com/ko/Compute/Instance/ko/public-api/#_13)를 참고하세요.
 
 ### 베이스 이미지 UUID
 
-노드에 사용할 베이스 이미지 UUID를 입력합니다. 리전별 베이스 이미지 UUID는 다음과 같습니다.
+노드 생성에 사용할 베이스 이미지 UUID를 입력합니다. 리전별 베이스 이미지 UUID는 다음과 같습니다.
 
 | 리전 | 베이스 이미지 UUID |
 |---|---|
