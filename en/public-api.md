@@ -441,8 +441,8 @@ X-Auth-Token: {tokenId}
 | nodes_to_remove | Body | String List | X | UUID of the node to delete |
 
 * Caution
-  * If you are scaling down nodes (i.e., deleting some nodes), you must set **nodes_to_remove** to specify which nodes to delete. If you do not specify the nodes to delete, the nodes to be deleted are selected randomly.
-  * node_count: min 1, max 10 (however, the max value can be adjusted with quota)
+    * If you are scaling down nodes (i.e., deleting some nodes), you must set **nodes_to_remove** to specify which nodes to delete. If you do not specify the nodes to delete, the nodes to be deleted are selected randomly.
+    * node_count: min 1, max 10 (however, the max value can be adjusted with quota)
 
 <details><summary>Scale-up Example</summary>
 <p>
