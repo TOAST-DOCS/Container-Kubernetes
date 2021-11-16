@@ -1,22 +1,22 @@
-## Container > Kubernetes > API v2 가이드
+## Container > Kubernetes > API v2ガイド
 
-Kubernetes 클러스터를 구성하기 위한 API를 기술합니다.
-API를 사용하려면 API 엔드포인트와 토큰 등이 필요합니다. [API 사용 준비](/Compute/Compute/ko/identity-api/)를 참고하여 API 사용에 필요한 정보를 준비합니다.
+Kubernetesクラスタを構成するためのAPIを記述します。
+APIを使用するにはAPIエンドポイントとトークンなどが必要です。 [API使用準備](/Compute/Compute/ko/identity-api/)を参照してAPIの使用に必要な情報を準備します。
 
-모든 API는 `kubernetes` 타입 엔드포인트를 이용해 호출합니다.
+すべてのAPIは`kubernetes`タイプエンドポイントを利用して呼び出します。
 
-| 타입 | 리전 | 엔드포인트 |
+| タイプ | リージョン | エンドポイント |
 |---|---|---|
-| kubernetes | 한국(판교) 리전<br>한국(평촌) 리전 | https://kr1-api-kubernetes.infrastructure.cloud.toast.com <br>https://kr2-api-kubernetes.infrastructure.cloud.toast.com |
+| kubernetes | 韓国(パンギョ)リージョン<br>韓国(坪村)リージョン | https://kr1-api-kubernetes.infrastructure.cloud.toast.com <br>https://kr2-api-kubernetes.infrastructure.cloud.toast.com |
 
 
-API 응답에 가이드에 명시되지 않은 필드가 나타날 수 있습니다. 이런 필드는 NHN Cloud 내부 용도로 사용되며 사전 공지 없이 변경될 수 있으므로 사용하지 않습니다.
+APIレスポンスにガイドに明示されていないフィールドが表示されることがあります。これらのフィールドはNHN Cloud内部用途で使用され、予告なしに変更されることがあるため使用しません。
 
-## 클러스터
+## クラスタ
 
-### 클러스터 목록 보기
+### クラスタリスト表示
 
-클러스터 목록을 조회합니다.
+クラスタリストを照会します。
 
 ```
 GET /v1/clusters
@@ -26,46 +26,46 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
-#### 요청
+#### リクエスト
 
-이 API는 요청 본문을 요구하지 않습니다.
+このAPIはリクエスト本文を要求しません。
 
-| 이름 | 종류 | 형식 | 필수 | 설명 |
+| 名前 | 種類 | 形式 | 必須 | 説明 |
 |---|---|---|---|---|
-| tokenId | Header | String | O | 토큰 ID |
+| tokenId | Header | String | O | トークンID |
 
-#### 응답
+#### レスポンス
 
-| 이름 | 종류 | 형식 | 설명 |
+| 名前 | 種類 | 形式 | 説明 |
 |---|---|---|---|
-| clusters | Body | Array | 클러스터 정보 객체 목록 |
-| clusters.uuid | Body | UUID | 클러스터 UUID |
-| clusters.name | Body | String | 클러스터 이름 |
-| clusters.flavor_id | Body | UUID | 기본 워커 노드의 인스턴스 타입 UUID|
-| clusters.keypair | Body | UUID | 기본 워커 노드 그룹에 적용된 키 페어 UUID |
-| clusters.node_count | Body | Integer| 전체 워커 노드 수 |
-| clusters.stack_id | Body | UUID | 마스터 노드 그룹과 연결된 heat stack UUID |
-| clusters.status | Body | String | 클러스터 상태 |
-| clusters.labels | Body | Object | 클러스터 레이블 |
-| clusters.labels.kube_tag | Body |String | 마스터 노드 그룹 Kubernetes 버전 |
-| clusters.labels.availability_zone | Body | String | 기본 워커 노드 그룹 적용 : 가용성 영역 |
-| clusters.labels.node_image | Body | UUID | 기본 워커 노드 그룹 적용 : 베이스 이미지 uuid |
-| clusters.labels.boot_volume_type | Body | String | 기본 워커 노드 그룹 적용 : 블록 스토리지 종류|
-| clusters.labels.boot_volume_size | Body | String | 기본 워커 노드 그룹 적용 : 블록 스토리지 사이즈(GB) |
-| clusters.labels.external_network_id | Body | String | 인터넷 게이트웨이에 연결된 VPC network UUID |
-| clusters.labels.external_subnet_id_list | Body | String | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분) |
-| clusters.labels.cert_manager_api | Body | String | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
-| clusters.labels.ca_enable | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 기능 활성화 여부 ("True" / "False") |
-| clusters.labels.ca_max_node_count | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최대 노드 수 |
-| clusters.labels.ca_min_node_count | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최소 노드 수 |
-| clusters.labels.ca_scale_down_enable | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 감축 활성 여부 ("True" / "False") |
-| clusters.labels.ca_scale_down_unneeded_time | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 임계 영역 유지 시간 |
-| clusters.labels.ca_scale_down_util_thresh | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 리소스 사용량 임계치  |
-| clusters.labels.ca_scale_down_delay_after_add | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 증설 후 감축 지연 시간 |
-| clusters.labels.user_script | Body | String | 예약 스크립트 |
+| clusters | Body | Array | クラスタ情報オブジェクトリスト |
+| clusters.uuid | Body | UUID | クラスタUUID |
+| clusters.name | Body | String | クラスタ名 |
+| clusters.flavor_id | Body | UUID | 基本ワーカーノードのインスタンスタイプUUID|
+| clusters.keypair | Body | UUID | 基本ワーカーノードグループに適用されたキーペアUUID |
+| clusters.node_count | Body | Integer| ワーカーノードの総数 |
+| clusters.stack_id | Body | UUID | マスターノードグループと接続されたheat stack UUID |
+| clusters.status | Body | String | クラスタの状態 |
+| clusters.labels | Body | Object | クラスタのラベル |
+| clusters.labels.kube_tag | Body |String | マスターノードグループのKubernetesバージョン |
+| clusters.labels.availability_zone | Body | String | 基本ワーカーノードグループ適用：アベイラビリティゾーン |
+| clusters.labels.node_image | Body | UUID | 基本ワーカーノードグループ適用：ベースイメージuuid |
+| clusters.labels.boot_volume_type | Body | String | 基本ワーカーノードグループ適用：ブロックストレージの種類|
+| clusters.labels.boot_volume_size | Body | String | 基本ワーカーノードグループ適用：ブロックストレージサイズ(GB) |
+| clusters.labels.external_network_id | Body | String | インターネットゲートウェイに接続されたVPC network UUID |
+| clusters.labels.external_subnet_id_list | Body | String | インターネットゲートウェイに接続されたサブネットUUIDリスト(コロンで区切る) |
+| clusters.labels.cert_manager_api | Body | String | CSR(Certificate Signing Request)機能を有効にするかどうか。必ず"True"に設定 |
+| clusters.labels.ca_enable | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：機能を有効にするかどうか("True" / "False") |
+| clusters.labels.ca_max_node_count | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：最大ノード数 |
+| clusters.labels.ca_min_node_count | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：最小ノード数 |
+| clusters.labels.ca_scale_down_enable | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：縮小が有効かどうか("True" / "False") |
+| clusters.labels.ca_scale_down_unneeded_time | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：しきい値領域維持時間 |
+| clusters.labels.ca_scale_down_util_thresh | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：リソース使用量しきい値 |
+| clusters.labels.ca_scale_down_delay_after_add | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：増設後の縮小遅延時間 |
+| clusters.labels.user_script | Body | String | 予約スクリプト |
 
 
-<details><summary>예시</summary>
+<details><summary>例</summary>
 <p>
 
 ```json
@@ -136,9 +136,9 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 클러스터 보기
+### クラスタ表示
 
-개별 클러스터 정보를 조회합니다.
+個別クラスタ情報を照会します。
 
 ```
 GET /v1/clusters/{CLUSTER_ID_OR_NAME}
@@ -148,55 +148,55 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
-#### 요청
+#### リクエスト
 
-이 API는 요청 본문을 요구하지 않습니다.
+このAPIはリクエスト本文を要求しません。
 
-| 이름 | 종류 | 형식 | 필수 | 설명 |
+| 名前 | 種類 | 形式 | 必須 | 説明 |
 |---|---|---|---|---|
-| tokenId | Header | String | O | 토큰 ID |
-| CLUSTER_ID_OR_NAME| URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 |
+| tokenId | Header | String | O | トークンID |
+| CLUSTER_ID_OR_NAME| URL | UUID or String | O | クラスタUUIDまたはクラスタ名 |
 
-#### 응답
+#### レスポンス
 
-| 이름 | 종류 | 형식 | 설명 |
+| 名前 | 種類 | 形式 | 説明 |
 |---|---|---|---|
-| uuid | Body | UUID | 클러스터 UUID |
-| name | Body | String | 클러스터 이름 |
-| flavor_id | Body | UUID | 기본 워커 노드의 인스턴스 타입 UUID|
-| keypair | Body | UUID | 기본 워커 노드 그룹에 적용된 키 페어 UUID |
-| node_count | Body | Integer| 전체 워커 노드 수 |
-| stack_id | Body | UUID | 마스터 노드 그룹과 연결된 heat stack UUID |
-| status | Body | String | 클러스터 상태 |
-| status_reason | Body | String | 클러스터 상태 이유(null 가능) |
-| discovery_url | Body | String | ETCD discovery 시 사용 가능한 URL |
-| api_address | Body | String | Kubernetes API 엔드포인트 |
-| project_id | Body | String | 프로젝트(테넌트) ID |
+| uuid | Body | UUID | クラスタUUID |
+| name | Body | String | クラスタ名 |
+| flavor_id | Body | UUID | 基本ワーカーノードのインスタンスタイプUUID|
+| keypair | Body | UUID | 基本ワーカーノードグループに適用されたキーペアUUID |
+| node_count | Body | Integer| ワーカーノードの総数 |
+| stack_id | Body | UUID | マスターノードグループと接続されたheat stack UUID |
+| status | Body | String | クラスタの状態 |
+| status_reason | Body | String | クラスタ状態理由(null可能) |
+| discovery_url | Body | String | ETCD discovery時に使用可能なURL |
+| api_address | Body | String | Kubernetes APIエンドポイント |
+| project_id | Body | String | プロジェクト(テナント) ID |
 | fixed_network | Body | UUID | VPC UUID|
 | fixed_subnet | Body | UUID | VPC Subnet UUID |
-| node_addresses | Body | String List | 워커 노드 IP 주소 목록 |
-| master_addresses | Body | String List | 마스터 노드 IP 주소 목록 |
-| created_at | Body | String | 생성 시간(UTC) |
-| updated_at | Body | String | 최근 업데이트 시간(UTC) |
-| labels | Body | Object | 클러스터 레이블 |
-| labels.kube_tag | Body |String | 마스터 노드 그룹 Kubernetes 버전 |
-| labels.availability_zone | Body | String | 기본 워커 노드 그룹 적용 : 가용성 영역 |
-| labels.node_image | Body | UUID | 기본 워커 노드 그룹 적용 : 베이스 이미지 UUID |
-| labels.boot_volume_type | Body | String | 기본 워커 노드 그룹 적용 : 블록 스토리지 종류|
-| labels.boot_volume_size | Body | String | 기본 워커 노드 그룹 적용 : 블록 스토리지 사이즈(GB) |
-| labels.external_network_id | Body | String | 인터넷 게이트웨이에 연결된 VPC network UUID |
-| labels.external_subnet_id_list | Body | String | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분) |
-| labels.cert_manager_api | Body | String | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
-| labels.ca_enable | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 기능 활성화 여부 ("True" / "False") |
-| labels.ca_max_node_count | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최대 노드 수 |
-| labels.ca_min_node_count | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최소 노드 수 |
-| labels.ca_scale_down_enable | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 감축 활성 여부 ("True" / "False") |
-| labels.ca_scale_down_unneeded_time | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 임계 영역 유지 시간 |
-| labels.ca_scale_down_util_thresh | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 리소스 사용량 임계치  |
-| labels.ca_scale_down_delay_after_add | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 증설 후 감축 지연 시간 |
-| labels.user_script | Body | String | 예약 스크립트 |
+| node_addresses | Body | String List | ワーカーノードIPアドレスリスト |
+| master_addresses | Body | String List | マスターノードIPアドレスリスト |
+| created_at | Body | String | 作成時間(UTC) |
+| updated_at | Body | String | 最終更新日(UTC) |
+| labels | Body | Object | クラスタラベル |
+| labels.kube_tag | Body |String | マスターノードグループKubernetesバージョン |
+| labels.availability_zone | Body | String | 基本ワーカーノードグループ適用：アベイラビリティゾーン |
+| labels.node_image | Body | UUID | 基本ワーカーノードグループ適用：ベースイメージUUID |
+| labels.boot_volume_type | Body | String | 基本ワーカーノードグループ適用：ブロックストレージの種類|
+| labels.boot_volume_size | Body | String | 基本ワーカーノードグループ適用：ブロックストレージサイズ(GB) |
+| labels.external_network_id | Body | String | インターネットゲートウェイに接続されたVPC network UUID |
+| labels.external_subnet_id_list | Body | String | インターネットゲートウェイに接続されたサブネットUUIDリスト(コロンで区切る) |
+| labels.cert_manager_api | Body | String | CSR(Certificate Signing Request)機能を有効にするかどうか。必ず"True"に設定 |
+| labels.ca_enable | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：機能を有効にするかどうか("True" / "False") |
+| labels.ca_max_node_count | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：最大ノード数 |
+| labels.ca_min_node_count | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：最小ノード数 |
+| labels.ca_scale_down_enable | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：縮小が有効かどうか("True" / "False") |
+| labels.ca_scale_down_unneeded_time | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：しきい値領域維持時間 |
+| labels.ca_scale_down_util_thresh | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：リソース使用量しきい値 |
+| labels.ca_scale_down_delay_after_add | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：増設後の縮小遅延時間 |
+| labels.user_script | Body | String | 予約スクリプト |
 
-<details><summary>예시</summary>
+<details><summary>例</summary>
 <p>
 
 ```json
@@ -286,9 +286,9 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 클러스터 생성하기
+### クラスタ作成
 
-클러스터를 생성합니다.
+クラスタを作成します。
 
 ```
 POST /v1/clusters
@@ -298,38 +298,38 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
-#### 요청
+#### リクエスト
 
-| 이름 | 종류 | 형식 | 필수 | 설명 |
+| 名前 | 種類 | 形式 | 必須 | 説明 |
 |---|---|---|---|---|
-| tokenId | Header | String | O | 토큰 ID |
-| keypair | Body | String | O | 기본 워커 노드 그룹에 적용할 키 페어 |
-| name | Body | String | O | 클러스터 이름 |
-| cluster_template_id | Body | String | O | 클러스터 템플릿 ID. 반드시 "iaas_console"로 설정 |
-| node_count | Body | String | O | 기본 워커 노드 그룹에 적용할 노드 수 |
-| labels | Body | Object | O | 클러스터 생성 정보 개체 |
-| labels.availability_zone | Body | String | O | 기본 워커 노드 그룹 적용 : 가용성 영역 |
-| labels.node_image | Body | UUID | O | 기본 워커 노드 그룹 적용 : 베이스 이미지 UUID |
-| labels.boot_volume_type | Body | String | O | 기본 워커 노드 그룹 적용 : 블록 스토리지 종류|
-| labels.boot_volume_size | Body | String | O | 기본 워커 노드 그룹 적용 : 블록 스토리지 사이즈(GB) |
-| labels.external_network_id | Body | String | X | 인터넷 게이트웨이에 연결된 VPC network UUID |
-| labels.external_subnet_id_list | Body | String | X | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분) |
-| labels.cert_manager_api | Body | String | O | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
-| labels.ca_enable | Body | String | O | 기본 워커 노드 그룹 적용 : 오토 스케일러: 기능 활성화 여부 ("True" / "False") |
-| labels.ca_max_node_count | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최대 노드 수 |
-| labels.ca_min_node_count | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최소 노드 수 |
-| labels.ca_scale_down_enable | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 감축 활성 여부 ("True" / "False") |
-| labels.ca_scale_down_unneeded_time | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 임계 영역 유지 시간 |
-| labels.ca_scale_down_util_thresh | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 리소스 사용량 임계치  |
-| labels.ca_scale_down_delay_after_add | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 증설 후 감축 지연 시간 |
-| labels.kube_tag | Body | String | O | Kubernetes 버전 |
-| labels.user_script | Body | String | X | 예약 스크립트 |
-| flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
+| tokenId | Header | String | O | トークンID |
+| keypair | Body | String | O | 基本ワーカーノードグループに適用するキーペア |
+| name | Body | String | O | クラスタ名 |
+| cluster_template_id | Body | String | O | クラスタテンプレートID。必ず"iaas_console"に設定 |
+| node_count | Body | String | O | 基本ワーカーノードグループに適用するノード数 |
+| labels | Body | Object | O | クラスタ作成情報オブジェクト |
+| labels.availability_zone | Body | String | O | 基本ワーカーノードグループ適用：アベイラビリティゾーン |
+| labels.node_image | Body | UUID | O | 基本ワーカーノードグループ適用：ベースイメージUUID |
+| labels.boot_volume_type | Body | String | O | 基本ワーカーノードグループ適用：ブロックストレージの種類|
+| labels.boot_volume_size | Body | String | O | 基本ワーカーノードグループ適用：ブロックストレージサイズ(GB) |
+| labels.external_network_id | Body | String | X | インターネットゲートウェイに接続されたVPC network UUID |
+| labels.external_subnet_id_list | Body | String | X | インターネットゲートウェイに接続されたサブネットUUIDリスト(コロンで区切る) |
+| labels.cert_manager_api | Body | String | O | CSR(Certificate Signing Request)機能を有効にするかどうか。必ず"True"に設定 |
+| labels.ca_enable | Body | String | O | 基本ワーカーノードグループ適用：オートスケーラー：機能を有効にするかどうか("True" / "False") |
+| labels.ca_max_node_count | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：最大ノード数 |
+| labels.ca_min_node_count | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：最小ノード数 |
+| labels.ca_scale_down_enable | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：縮小が有効かどうか("True" / "False") |
+| labels.ca_scale_down_unneeded_time | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：しきい値領域維持時間 |
+| labels.ca_scale_down_util_thresh | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：リソース使用量しきい値 |
+| labels.ca_scale_down_delay_after_add | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：増設後の縮小遅延時間 |
+| labels.kube_tag | Body | String | O | Kubernetesバージョン |
+| labels.user_script | Body | String | X | 予約スクリプト |
+| flavor_id | Body | UUID | O | 基本ワーカーノードグループ適用：ノードインスタンスタイプUUID |
 | fixed_network | Body | UUID | O | VPC Network UUID |
 | fixed_subnet | Body | UUID | O | VPC Subnet UUID |
 
 
-<details><summary>예시</summary>
+<details><summary>例</summary>
 <p>
 
 ```json
@@ -370,13 +370,13 @@ X-Auth-Token: {tokenId}
 </p>
 </details>
 
-#### 응답
+#### レスポンス
 
-| 이름 | 종류 | 형식 | 설명 |
+| 名前 | 種類 | 形式 | 説明 |
 |---|---|---|---|
-| uuid | Body | UUID | 클러스터 UUID |
+| uuid | Body | UUID | クラスタUUID |
 
-<details><summary>예시</summary>
+<details><summary>例</summary>
 <p>
 
 ```json
@@ -390,9 +390,9 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 클러스터 삭제하기
+### クラスタ削除
 
-클러스터를 삭제합니다.
+クラスタを削除します。
 
 ```
 DELETE /v1/clusters/{CLUSTER_ID_OR_NAME}
@@ -402,25 +402,25 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
-#### 요청
+#### リクエスト
 
-이 API는 요청 본문을 요구하지 않습니다.
+このAPIはリクエスト本文を要求しません。
 
-| 이름 | 종류 | 형식 | 필수 | 설명 |
+| 名前 | 種類 | 形式 | 必須 | 説明 |
 |---|---|---|---|---|
-| tokenId | Header | String | O | 토큰 ID |
-| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
+| tokenId | Header | String | O | トークンID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
 
 
-#### 응답
+#### レスポンス
 
-이 API는 응답 본문을 반환하지 않습니다.
+このAPIはレスポンス本文を返しません。
 
 ---
 
-### 리사이즈
+### リサイズ
 
-클러스터의 노드 수를 조정합니다.
+クラスタのノード数を調整します。
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/actions/resize
@@ -430,21 +430,21 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
-#### 요청
+#### リクエスト
 
-| 이름 | 종류 | 형식 | 필수 | 설명 |
+| 名前 | 種類 | 形式 | 必須 | 説明 |
 |---|---|---|---|---|
-| tokenId | Header | String | O | 토큰 ID |
-| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
-| nodegroup | Body | UUID | O | 대상 워커 노드 그룹 이름 / UUID |
-| node_count | Body | Integer | O | 변경하고자 하는 워커 노드 수 |
-| nodes_to_remove | Body | String List | X | 삭제하고자 하는 노드 UUID |
+| tokenId | Header | String | O | トークンID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
+| nodegroup | Body | UUID | O | 対象ワーカーノードグループ名 / UUID |
+| node_count | Body | Integer | O | 変更したいワーカーノード数 |
+| nodes_to_remove | Body | String List | X | 削除したいノードUUID |
 
-* 주의 사항
-  * 노드를 감축하는 경우(즉, 일부 노드 삭제) 삭제할 노드를 지정하려면 **nodes_to_remove**를 설정해야 합니다. 삭제할 노드를 지정하지 않으면 삭제 대상 노드는 무작위로 선택됩니다.
-  * node_count 최소 1, 최대 10(단, 최대값은 quota로 조정 가능)
+* 注意事項
+  * ノードを縮小する場合(すなわち一部ノード削除)削除するノードを指定するには**nodes_to_remove**を設定する必要があります。削除するノードを指定しなかった場合、削除対象ノードはランダムに選択されます。
+  * node_count最小1、最大10(ただし最大値はquotaで調整可能)
 
-<details><summary>증설 예시</summary>
+<details><summary>増設例</summary>
 <p>
 
 ```json
@@ -457,7 +457,7 @@ X-Auth-Token: {tokenId}
 </p>
 </details>
 
-<details><summary>감축 예시</summary>
+<details><summary>縮小例</summary>
 <p>
 
 ```json
@@ -476,13 +476,13 @@ X-Auth-Token: {tokenId}
 
 
 
-#### 응답
+#### レスポンス
 
-| 이름 | 종류 | 형식 | 설명 |
+| 名前 | 種類 | 形式 | 説明 |
 |---|---|---|---|
-| uuid | Body | String | 대상 클러스터 UUID|
+| uuid | Body | String | 対象クラスタUUID|
 
-<details><summary>예시</summary>
+<details><summary>例</summary>
 <p>
 
 ```json
@@ -497,9 +497,9 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 클러스터 kubeconfig 조회
+### クラスタkubeconfig照会
 
-클러스터 설정 파일(kubeconfig)을 조회합니다.
+クラスタ設定ファイル(kubeconfig)を照会します。
 
 ```
 GET /v1/clusters/{CLUSTER_ID_OR_NAME}/config
@@ -509,24 +509,24 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
-#### 요청
+#### リクエスト
 
-이 API는 요청 본문을 요구하지 않습니다.
+このAPIはリクエスト本文を要求しません。
 
-| 이름 | 종류 | 형식 | 필수 | 설명 |
+| 名前 | 種類 | 形式 | 必須 | 説明 |
 |---|---|---|---|---|
-| tokenId | Header | String | O | 토큰 ID |
-| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
+| tokenId | Header | String | O | トークンID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
 
 
-#### 응답
+#### レスポンス
 
-| 이름 | 종류 | 형식 | 설명 |
+| 名前 | 種類 | 形式 | 説明 |
 |---|---|---|---|
-| config | Body | String | kubeconfig 파일 본문 |
+| config | Body | String | kubeconfigファイル本文 |
 
 
-<details><summary>예시</summary>
+<details><summary>例</summary>
 <p>
 
 ```json
@@ -540,11 +540,11 @@ X-Auth-Token: {tokenId}
 
 ---
 
-## 노드 그룹
+## ノードグループ
 
-### 노드 그룹 목록 보기
+### ノードグループリスト表示
 
-노드 그룹 목록을 조회합니다.
+ノードグループリストを照会します。
 
 ```
 GET /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups
@@ -554,33 +554,33 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
-#### 요청
+#### リクエスト
 
-이 API는 요청 본문을 요구하지 않습니다.
+このAPIはリクエスト本文を要求しません。
 
-| 이름 | 종류 | 형식 | 필수 | 설명 |
+| 名前 | 種類 | 形式 | 必須 | 説明 |
 |---|---|---|---|---|
-| tokenId | Header | String | O | 토큰 ID |
-| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
+| tokenId | Header | String | O | トークンID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
 
 
-#### 응답
+#### レスポンス
 
-| 이름 | 종류 | 형식 | 설명 |
+| 名前 | 種類 | 形式 | 説明 |
 |---|---|---|---|
-| nodegroups | Body | Array | 노드 그룹 정보 객체 목록 |
-| nodegroups.uuid | Body | UUID | 노드 그룹 UUID |
-| nodegroups.flavor_id | Body | UUID | 노드 그룹 인스턴스 타입 UUID |
-| nodegroups.image_id | Body | UUID | 노드 그룹 베이스 이미지 UUID |
-| nodegroups.max_node_count | Body | Integer | 노드 그룹 최대 노드 수 |
-| nodegroups.min_node_count | Body | Integer | 노드 그룹 최소 노드 수 |
-| nodegroups.name | Body | String | 노드 그룹 이름 |
-| nodegroups.node_count | Body | Integer | 노드 그룹 노드 수 |
-| nodegroups.role | Body | String | 노드 그룹 역할 |
-| nodegroups.stack_id | Body | UUID | 노드 그룹에 연결된 heat stack UUID |
-| nodegroups.status | Body | String | 노드 그룹 상태 |
+| nodegroups | Body | Array | ノードグループ情報オブジェクトリスト |
+| nodegroups.uuid | Body | UUID | ノードグループUUID |
+| nodegroups.flavor_id | Body | UUID | ノードグループインスタンスタイプUUID |
+| nodegroups.image_id | Body | UUID | ノードグループベースイメージUUID |
+| nodegroups.max_node_count | Body | Integer | ノードグループ最大ノード数 |
+| nodegroups.min_node_count | Body | Integer | ノードグループ最小ノード数 |
+| nodegroups.name | Body | String | ノードグループ名 |
+| nodegroups.node_count | Body | Integer | ノードグループのノード数 |
+| nodegroups.role | Body | String | ノードグループの役割 |
+| nodegroups.stack_id | Body | UUID | ノードグループに接続されたheat stack UUID |
+| nodegroups.status | Body | String | ノードグループの状態 |
 
-<details><summary>예시</summary>
+<details><summary>例</summary>
 <p>
 
 ```json
@@ -621,9 +621,9 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 노드 그룹 보기
+### ノードグループ表示
 
-개별 노드 그룹 정보를 조회합니다.
+個別ノードグループ情報を照会します。
 
 ```
 GET /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}
@@ -633,55 +633,55 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
-#### 요청
+#### リクエスト
 
-이 API는 요청 본문을 요구하지 않습니다.
+このAPIはリクエスト本文を要求しません。
 
-| 이름 | 종류 | 형식 | 필수 | 설명 |
+| 名前 | 種類 | 形式 | 必須 | 説明 |
 |---|---|---|---|---|
-| tokenId | Header | String | O | 토큰 ID |
-| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
-| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | 노드 그룹 UUID 또는 노드 그룹 이름 | 
+| tokenId | Header | String | O | トークンID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | ノードグループUUIDまたはノードグループ名 | 
 
-#### 응답
+#### レスポンス
 
-| 이름 | 종류 | 형식 | 설명 |
+| 名前 | 種類 | 形式 | 説明 |
 |---|---|---|---|
-| uuid | Body | UUID | 노드 그룹 UUID |
-| name | Body | String | 노드 그룹 이름 |
-| cluster_id | Body  | UUID | 노드 그룹이 속한 클러스터 UUID |
-| flavor_id | Body | UUID | 노드에서 사용하는 인스턴스 타입 UUID |
-| image_id | Body | UUID | 노드에서 사용하는 베이스 이미지 UUID |
-| labels | Body | Object | 노드 그룹 생성 정보 개체 |
-| labels.availability_zone | Body | String | 워커 노드 그룹 적용 : 가용성 영역 |
-| labels.node_image | Body | UUID | 워커 노드 그룹 적용 : 베이스 이미지 UUID |
-| labels.boot_volume_type | Body | String | 워커 노드 그룹 적용 : 블록 스토리지 종류|
-| labels.boot_volume_size | Body | String | 워커 노드 그룹 적용 : 블록 스토리지 사이즈(GB) |
-| labels.external_network_id | Body | String | 인터넷 게이트웨이에 연결된 VPC network UUID |
-| labels.external_subnet_id_list | Body | String | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분) |
-| labels.cert_manager_api | Body | String | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
-| labels.ca_enable | Body | String | 워커 노드 그룹 적용 : 오토 스케일러: 기능 활성화 여부 ("True" / "False") |
-| labels.ca_max_node_count | Body | String | 워커 노드 그룹 적용 : 오토 스케일러: 최대 노드 수 |
-| labels.ca_min_node_count | Body | String | 워커 노드 그룹 적용 : 오토 스케일러: 최소 노드 수 |
-| labels.ca_scale_down_enable | Body | String | 워커 노드 그룹 적용 : 오토 스케일러: 감축 활성 여부 ("True" / "False") |
-| labels.ca_scale_down_unneeded_time | Body | String | 워커 노드 그룹 적용 : 오토 스케일러: 임계 영역 유지 시간 |
-| labels.ca_scale_down_util_thresh | Body | String | 워커 노드 그룹 적용 : 오토 스케일러: 리소스 사용량 임계치  |
-| labels.ca_scale_down_delay_after_add | Body | String | 워커 노드 그룹 적용 : 오토 스케일러: 증설 후 감축 지연 시간 |
-| labels.kube_tag | Body | String | 워커 노드 그룹 Kubernetes 버전 |
-| labels.user_script | Body | String | 예약 스크립트 |
-| max_node_count | Body | Integer | 최대 노드 수 |
-| min_node_count | Body | Integer | 최소 노드 수 |
-| node_addresses | Body | String list | 노드 IP 주소 목록 |
-| node_count | Body | Integer | 노드 수 |
-| project_id | Body | String | 프로젝트(테넌트) ID |
-| role | Body | String | 노드 그룹 역할 |
-| stack_id | Body | UUID | 노드 그룹에 연결된 heat stack UUID |
-| status | Body | String | 노드 그룹 상태 |
-| status_reason | Body | String | 노드 그룹 상태 이유(null 가능) |
-| created_at | Body | String | 생성 시간(UTC) |
-| updated_at | Body | String | 최근 업데이트 시간(UTC) |
+| uuid | Body | UUID | ノードグループUUID |
+| name | Body | String | ノードグループ名 |
+| cluster_id | Body  | UUID | ノードグループが属すクラスタUUID |
+| flavor_id | Body | UUID | ノードで使用するインスタンスタイプUUID |
+| image_id | Body | UUID | ノードで使用するベースイメージUUID |
+| labels | Body | Object | ノードグループ作成情報オブジェクト |
+| labels.availability_zone | Body | String | ワーカーノードグループ適用：アベイラビリティゾーン |
+| labels.node_image | Body | UUID | ワーカーノードグループ適用：ベースイメージUUID |
+| labels.boot_volume_type | Body | String | ワーカーノードグループ適用：ブロックストレージの種類|
+| labels.boot_volume_size | Body | String | ワーカーノードグループ適用：ブロックストレージサイズ(GB) |
+| labels.external_network_id | Body | String | インターネットゲートウェイに接続されたVPC network UUID |
+| labels.external_subnet_id_list | Body | String | インターネットゲートウェイに接続されたサブネットUUIDリスト(コロンで区切る) |
+| labels.cert_manager_api | Body | String | CSR(Certificate Signing Request)機能を有効にするかどうか。必ず"True"に設定 |
+| labels.ca_enable | Body | String | ワーカーノードグループ適用：オートスケーラー：機能を有効にするかどうか("True" / "False") |
+| labels.ca_max_node_count | Body | String | ワーカーノードグループ適用：オートスケーラー：最大ノード数 |
+| labels.ca_min_node_count | Body | String | ワーカーノードグループ適用：オートスケーラー：最小ノード数 |
+| labels.ca_scale_down_enable | Body | String | ワーカーノードグループ適用：オートスケーラー：縮小が有効かどうか("True" / "False") |
+| labels.ca_scale_down_unneeded_time | Body | String | ワーカーノードグループ適用：オートスケーラー：しきい値領域維持時間 |
+| labels.ca_scale_down_util_thresh | Body | String | ワーカーノードグループ適用：オートスケーラー：リソース使用量しきい値 |
+| labels.ca_scale_down_delay_after_add | Body | String | ワーカーノードグループ適用：オートスケーラー：増設後の縮小遅延時間 |
+| labels.kube_tag | Body | String | ワーカーノードグループKubernetesバージョン |
+| labels.user_script | Body | String | 予約スクリプト |
+| max_node_count | Body | Integer | 最大ノード数 |
+| min_node_count | Body | Integer | 最小ノード数 |
+| node_addresses | Body | String list | ノードIPアドレスリスト |
+| node_count | Body | Integer | ノード数 |
+| project_id | Body | String | プロジェクト(テナント) ID |
+| role | Body | String | ノードグループの役割 |
+| stack_id | Body | UUID | ノードグループに接続されたheat stack UUID |
+| status | Body | String | ノードグループの状態 |
+| status_reason | Body | String | ノードグループの状態理由(null可能) |
+| created_at | Body | String | 作成時間(UTC) |
+| updated_at | Body | String | 最終更新日(UTC) |
 
-<details><summary>예시</summary>
+<details><summary>例</summary>
 <p>
 
 ```json
@@ -757,9 +757,9 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 노드 그룹 생성하기
+### ノードグループ作成
 
-노드 그룹을 생성합니다.
+ノードグループを作成します。
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups
@@ -769,37 +769,37 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
-#### 요청
+#### リクエスト
 
-| 이름 | 종류 | 형식 | 필수 | 설명 |
+| 名前 | 種類 | 形式 | 必須 | 説明 |
 |---|---|---|---|---|
-| tokenId | Header | String | O | 토큰 ID |
-| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
+| tokenId | Header | String | O | トークンID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
 
 
-| 이름 | 종류 | 형식 | 필수 | 설명 |
+| 名前 | 種類 | 形式 | 必須 | 説明 |
 |---|---|---|---|---|
-| flavor_id | Body | UUID | O |  노드에서 사용하는 인스턴스 타입 UUID |
-| image_id | Body | UUID | O | 노드에서 사용하는 베이스 이미지 UUID |
-| labels | Body | Object | O | 노드 그룹 생성 정보 개체 |
-| labels.availability_zone | Body | String | O | 기본 워커 노드 그룹 적용 : 가용성 영역 |
-| labels.boot_volume_type | Body | String | O | 기본 워커 노드 그룹 적용 : 블록 스토리지 종류|
-| labels.boot_volume_size | Body | String | O | 기본 워커 노드 그룹 적용 : 블록 스토리지 사이즈(GB) |
-| labels.ca_enable | Body | String | O | 기본 워커 노드 그룹 적용 : 오토 스케일러: 기능 활성화 여부 ("True" / "False") |
-| labels.ca_max_node_count | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최대 노드 수 |
-| labels.ca_min_node_count | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최소 노드 수 |
-| labels.ca_scale_down_enable | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 감축 활성 여부 ("True" / "False") |
-| labels.ca_scale_down_unneeded_time | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 임계 영역 유지 시간 |
-| labels.ca_scale_down_util_thresh | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 리소스 사용량 임계치  |
-| labels.ca_scale_down_delay_after_add | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 증설 후 감축 지연 시간 |
-| labels.user_script | Body | String | X | 예약 스크립트 |
-| max_node_count | Body | Integer | X | 최대 노드 수 |
-| min_node_count | Body | Integer | X | 최소 노드 수 |
-| name | BODY | String | O | 노드 그룹 이름 |
-| node_count | Body | Integer | X | 노드 수(기본값: 1) |
+| flavor_id | Body | UUID | O | ノードで使用するインスタンスタイプUUID |
+| image_id | Body | UUID | O | ノードで使用するベースイメージUUID |
+| labels | Body | Object | O | ノードグループ作成情報オブジェクト |
+| labels.availability_zone | Body | String | O | 基本ワーカーノードグループ適用：アベイラビリティゾーン |
+| labels.boot_volume_type | Body | String | O | 基本ワーカーノードグループ適用：ブロックストレージの種類|
+| labels.boot_volume_size | Body | String | O | 基本ワーカーノードグループ適用：ブロックストレージサイズ(GB) |
+| labels.ca_enable | Body | String | O | 基本ワーカーノードグループ適用：オートスケーラー：機能を有効にするかどうか("True" / "False") |
+| labels.ca_max_node_count | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：最大ノード数 |
+| labels.ca_min_node_count | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：最小ノード数 |
+| labels.ca_scale_down_enable | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：縮小が有効かどうか("True" / "False") |
+| labels.ca_scale_down_unneeded_time | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：しきい値領域維持時間 |
+| labels.ca_scale_down_util_thresh | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：リソース使用量しきい値 |
+| labels.ca_scale_down_delay_after_add | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：増設後の縮小遅延時間 |
+| labels.user_script | Body | String | X | 予約スクリプト |
+| max_node_count | Body | Integer | X | 最大ノード数 |
+| min_node_count | Body | Integer | X | 最小ノード数 |
+| name | BODY | String | O | ノードグループ名 |
+| node_count | Body | Integer | X | ノード数(デフォルト値: 1) |
 
 
-<details><summary>예시</summary>
+<details><summary>例</summary>
 <p>
 
 ```json
@@ -820,34 +820,34 @@ X-Auth-Token: {tokenId}
 </p>
 </details>
 
-#### 응답
+#### レスポンス
 
-| 이름 | 종류 | 형식 | 설명 |
+| 名前 | 種類 | 形式 | 説明 |
 |---|---|---|---|
-| uuid | Body | UUID | 노드 그룹 UUID |
-| cluster_id | Body  | UUID | 노드 그룹이 속한 클러스터 UUID |
-| flavor_id | Body | UUID |  노드에서 사용하는 인스턴스 타입 UUID |
-| image_id | Body | UUID | 노드에서 사용하는 베이스 이미지 UUID |
-| labels | Body | Object | 노드 그룹 생성 정보 개체 |
-| labels.availability_zone | Body | String | 기본 워커 노드 그룹 적용 : 가용성 영역 |
-| labels.boot_volume_type | Body | String | 기본 워커 노드 그룹 적용 : 블록 스토리지 종류|
-| labels.boot_volume_size | Body | String | 기본 워커 노드 그룹 적용 : 블록 스토리지 사이즈(GB) |
-| labels.ca_enable | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 기능 활성화 여부 ("True" / "False") |
-| labels.ca_max_node_count | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최대 노드 수 |
-| labels.ca_min_node_count | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최소 노드 수 |
-| labels.ca_scale_down_enable | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 감축 활성 여부 ("True" / "False") |
-| labels.ca_scale_down_unneeded_time | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 임계 영역 유지 시간 |
-| labels.ca_scale_down_util_thresh | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 리소스 사용량 임계치  |
-| labels.ca_scale_down_delay_after_add | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 증설 후 감축 지연 시간 |
-| labels.user_script | Body | String | 예약 스크립트 |
-| max_node_count | Body | Integer | 최대 노드 수 |
-| min_node_count | Body | Integer | 최소 노드 수 |
-| name | BODY | String | 노드 그룹 이름 |
-| node_count | Body | Integer | 노드 수(기본값: 1) |
-| project_id | Body | String | 프로젝트(테넌트) ID |
-| role | Body | String | 노드 그룹 역할 |
+| uuid | Body | UUID | ノードグループUUID |
+| cluster_id | Body  | UUID | ノードグループが属すクラスタUUID |
+| flavor_id | Body | UUID | ノードで使用するインスタンスタイプUUID |
+| image_id | Body | UUID | ノードで使用するベースイメージUUID |
+| labels | Body | Object | ノードグループ作成情報オブジェクト |
+| labels.availability_zone | Body | String | 基本ワーカーノードグループ適用：アベイラビリティゾーン |
+| labels.boot_volume_type | Body | String | 基本ワーカーノードグループ適用：ブロックストレージの種類|
+| labels.boot_volume_size | Body | String | 基本ワーカーノードグループ適用：ブロックストレージサイズ(GB) |
+| labels.ca_enable | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：機能を有効にするかどうか("True" / "False") |
+| labels.ca_max_node_count | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：最大ノード数 |
+| labels.ca_min_node_count | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：最小ノード数 |
+| labels.ca_scale_down_enable | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：縮小が有効かどうか("True" / "False") |
+| labels.ca_scale_down_unneeded_time | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：しきい値領域維持時間 |
+| labels.ca_scale_down_util_thresh | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：リソース使用量しきい値 |
+| labels.ca_scale_down_delay_after_add | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：増設後の縮小遅延時間 |
+| labels.user_script | Body | String | 予約スクリプト |
+| max_node_count | Body | Integer | 最大ノード数 |
+| min_node_count | Body | Integer | 最小ノード数 |
+| name | BODY | String | ノードグループ名 |
+| node_count | Body | Integer | ノード数(デフォルト値: 1) |
+| project_id | Body | String | プロジェクト(テナント) ID |
+| role | Body | String | ノードグループの役割 |
 
-<details><summary>예시</summary>
+<details><summary>例</summary>
 <p>
 
 ```json
@@ -893,9 +893,9 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 노드 그룹 삭제하기
+### ノードグループ削除
 
-지정한 노드 그룹를 삭제합니다.
+指定したノードグループを削除します。
 ```
 DELETE /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}
 Accept: application/json
@@ -904,25 +904,25 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
-#### 요청
+#### リクエスト
 
-이 API는 요청 본문을 요구하지 않습니다.
+このAPIはリクエスト本文を要求しません。
 
-| 이름 | 종류 | 형식 | 필수 | 설명 |
+| 名前 | 種類 | 形式 | 必須 | 説明 |
 |---|---|---|---|---|
-| tokenId | Header | String | O | 토큰 ID |
-| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
-| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | 노드 그룹 UUID 또는 노드 그룹 이름 | 
+| tokenId | Header | String | O | トークンID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | ノードグループUUIDまたはノードグループ名 | 
 
-#### 응답
+#### レスポンス
 
-이 API는 응답 본문을 반환하지 않습니다.
+このAPIはレスポンス本文を返しません。
 
 ---
 
-### 노드 그룹의 오토 스케일러 설정 보기
+### ノードグループのオートスケーラー設定表示
 
-노드 그룹의 오토 스케일러 설정을 조회합니다.
+ノードグループのオートスケーラー設定を照会します。
 
 ```
 GET /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}/autoscale
@@ -932,30 +932,30 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
-#### 요청
+#### リクエスト
 
-이 API는 요청 본문을 요구하지 않습니다.
+このAPIはリクエスト本文を要求しません。
 
-| 이름 | 종류 | 형식 | 필수 | 설명 |
+| 名前 | 種類 | 形式 | 必須 | 説明 |
 |---|---|---|---|---|
-| tokenId | Header | String | O | 토큰 ID |
-| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
-| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | 노드 그룹 UUID 또는 노드 그룹 이름 | 
+| tokenId | Header | String | O | トークンID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | ノードグループUUIDまたはノードグループ名 | 
 
 
-#### 응답
+#### レスポンス
 
-| 이름 | 종류 | 형식 | 설명 |
+| 名前 | 種類 | 形式 | 説明 |
 |---|---|---|---|
-| ca_enable | Body | String | 기능 활성화 여부 ("True" / "False") |
-| ca_max_node_count | Body | String | 최대 노드 수 |
-| ca_min_node_count | Body | String | 최소 노드 수 |
-| ca_scale_down_enable | Body | String | 감축 활성 여부 ("True" / "False") |
-| ca_scale_down_unneeded_time | Body | String | 임계 영역 유지 시간 |
-| ca_scale_down_util_thresh | Body | String | 리소스 사용량 임계치  |
-| ca_scale_down_delay_after_add | Body | String | 증설 후 감축 지연 시간 |
+| ca_enable | Body | String | 機能を有効にするかどうか("True" / "False") |
+| ca_max_node_count | Body | String | 最大ノード数 |
+| ca_min_node_count | Body | String | 最小ノード数 |
+| ca_scale_down_enable | Body | String | 縮小が有効かどうか("True" / "False") |
+| ca_scale_down_unneeded_time | Body | String | しきい値領域維持時間 |
+| ca_scale_down_util_thresh | Body | String | リソース使用量しきい値 |
+| ca_scale_down_delay_after_add | Body | String | 増設後の縮小遅延時間 |
 
-<details><summary>예시</summary>
+<details><summary>例</summary>
 <p>
 
 ```json
@@ -977,9 +977,9 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 노드 그룹의 오토 스케일러 설정 변경하기
+### ノードグループのオートスケーラー設定変更
 
-노드 그룹의 오토 스케일러 설정을 변경합니다.
+ノードグループのオートスケーラー設定を変更します。
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}/autoscale
@@ -989,22 +989,22 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
-#### 요청
+#### リクエスト
 
-| 이름 | 종류 | 형식 | 필수 | 설명 |
+| 名前 | 種類 | 形式 | 必須 | 説明 |
 |---|---|---|---|---|
-| tokenId | Header | String | O | 토큰 ID |
-| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
-| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | 노드 그룹 UUID 또는 노드 그룹 이름 | 
-| ca_enable | Body | String | O | 기능 활성화 여부 ("True" / "False") |
-| ca_max_node_count | Body | X |String | 최대 노드 수 |
-| ca_min_node_count | Body | X |String | 최소 노드 수 |
-| ca_scale_down_enable | Body | X |String | 감축 활성 여부 ("True" / "False") |
-| ca_scale_down_unneeded_time | Body | X |String | 임계 영역 유지 시간 |
-| ca_scale_down_util_thresh | Body | String | X |리소스 사용량 임계치  |
-| ca_scale_down_delay_after_add | Body | String | X |증설 후 감축 지연 시간 |
+| tokenId | Header | String | O | トークンID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | ノードグループUUIDまたはノードグループ名 | 
+| ca_enable | Body | String | O | 機能を有効にするかどうか("True" / "False") |
+| ca_max_node_count | Body | X |String | 最大ノード数 |
+| ca_min_node_count | Body | X |String | 最小ノード数 |
+| ca_scale_down_enable | Body | X |String | 縮小が有効かどうか("True" / "False") |
+| ca_scale_down_unneeded_time | Body | X |String | しきい値領域維持時間 |
+| ca_scale_down_util_thresh | Body | String | X |リソース使用量しきい値 |
+| ca_scale_down_delay_after_add | Body | String | X |増設後の縮小遅延時間 |
 
-<details><summary>예시</summary>
+<details><summary>例</summary>
 <p>
 
 ```json
@@ -1024,13 +1024,13 @@ X-Auth-Token: {tokenId}
 
 
 
-#### 응답
+#### レスポンス
 
-| 이름 | 종류 | 형식 | 설명 |
+| 名前 | 種類 | 形式 | 説明 |
 |---|---|---|---|
-| uuid | Body | UUID | 노드 그룹 UUID |
+| uuid | Body | UUID | ノードグループUUID |
 
-<details><summary>예시</summary>
+<details><summary>例</summary>
 <p>
 
 ```json
@@ -1044,9 +1044,9 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 노드 그룹 업그레이드
+### ノードグループのアップグレード
 
-노드 그룹을 업그레이드합니다.
+ノードグループをアップグレードします。
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}/upgrade
@@ -1056,16 +1056,16 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
-#### 요청
+#### リクエスト
 
-| 이름 | 종류 | 형식 | 필수 | 설명 |
+| 名前 | 種類 | 形式 | 必須 | 説明 |
 |---|---|---|---|---|
-| tokenId | Header | String | O | 토큰 ID |
-| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
-| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | 노드 그룹 UUID 또는 노드 그룹 이름 | 
-| version | Body | String | O | Kubernetes 버전 |
+| tokenId | Header | String | O | トークンID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | ノードグループUUIDまたはノードグループ名 | 
+| version | Body | String | O | Kubernetesバージョン |
 
-<details><summary>예시</summary>
+<details><summary>例</summary>
 <p>
 
 ```json
@@ -1078,13 +1078,13 @@ X-Auth-Token: {tokenId}
 </details>
 
 
-#### 응답
+#### レスポンス
 
-| 이름 | 종류 | 형식 | 설명 |
+| 名前 | 種類 | 形式 | 説明 |
 |---|---|---|---|
-| uuid | Body | UUID | 노드 그룹 UUID |
+| uuid | Body | UUID | ノードグループUUID |
 
-<details><summary>예시</summary>
+<details><summary>例</summary>
 <p>
 
 ```json
@@ -1098,11 +1098,11 @@ X-Auth-Token: {tokenId}
 
 ---
 
-## 기타 기능
+## その他機能
 
-### 지원되는 Kubernetes 버전 보기
+### サポートされるKubernetesバージョン表示
 
-NHN Cloud Kubernetes 서비스에서 지원하는 Kubernetes 버전을 조회합니다.
+NHN Cloud KubernetesサービスでサポートするKubernetesバージョンを照会します。
 
 ```
 GET /v1/supports
@@ -1112,23 +1112,23 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
-#### 요청
+#### リクエスト
 
-이 API는 요청 본문을 요구하지 않습니다.
+このAPIはリクエスト本文を要求しません。
 
-| 이름 | 종류 | 형식 | 필수 | 설명 |
+| 名前 | 種類 | 形式 | 必須 | 説明 |
 |---|---|---|---|---|
-| tokenId | Header | String | O | 토큰 ID |
+| tokenId | Header | String | O | トークンID |
 
 
-#### 응답
+#### レスポンス
 
-| 이름 | 종류 | 형식 | 설명 |
+| 名前 | 種類 | 形式 | 説明 |
 |---|---|---|---|
-| supported_k8s | Body | Object | 지원되는 Kubernetes 버전 객체 |
-| supported_k8s."버전 이름" | Body | String | Kubernetes 버전의 유효성 여부(True/False) |
+| supported_k8s | Body | Object | サポートされるKubernetesバージョンオブジェクト |
+| supported_k8s."バージョン名" | Body | String | Kubernetesバージョンの有効性(True/False) |
 
-<details><summary>예시</summary>
+<details><summary>例</summary>
 <p>
 
 ```json
@@ -1143,4 +1143,3 @@ X-Auth-Token: {tokenId}
 
 </p>
 </details>
-
