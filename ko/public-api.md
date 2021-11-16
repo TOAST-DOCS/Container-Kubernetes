@@ -118,6 +118,7 @@ X-Auth-Token: {tokenId}
 | clusters.labels.ca_scale_down_util_thresh | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 리소스 사용량 임계치  |
 | clusters.labels.ca_scale_down_delay_after_add | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 증설 후 감축 지연 시간 |
 | clusters.labels.user_script | Body | String | 예약 스크립트 |
+| clusters.labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
 
 
 <details><summary>예시</summary>
