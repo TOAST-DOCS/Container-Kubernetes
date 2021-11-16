@@ -357,8 +357,8 @@ X-Auth-Token: {tokenId}
 | labels.node_image | Body | UUID | O | 기본 워커 노드 그룹 적용 : 베이스 이미지 UUID |
 | labels.boot_volume_type | Body | String | O | 기본 워커 노드 그룹 적용 : 블록 스토리지 종류|
 | labels.boot_volume_size | Body | String | O | 기본 워커 노드 그룹 적용 : 블록 스토리지 사이즈(GB) |
-| labels.external_network_id | Body | String | X | 인터넷 게이트웨이에 연결된 VPC 네트워크 UUID |
-| labels.external_subnet_id_list | Body | String | X | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분) |
+| labels.external_network_id | Body | String | X | 인터넷 게이트웨이에 연결된 VPC 네트워크 UUID<br>VPC 서브넷이 연동된 라우터가 인터넷 게이트웨이에 연결된 경우 반드시 설정 |
+| labels.external_subnet_id_list | Body | String | X | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분)<br>VPC 서브넷이 연동된 라우터가 인터넷 게이트웨이에 연결된 경우 반드시 설정 |
 | labels.cert_manager_api | Body | String | O | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
 | labels.ca_enable | Body | String | O | 기본 워커 노드 그룹 적용 : 오토 스케일러: 기능 활성화 여부 ("True" / "False") |
 | labels.ca_max_node_count | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최대 노드 수 |
@@ -369,7 +369,7 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_delay_after_add | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 증설 후 감축 지연 시간 |
 | labels.kube_tag | Body | String | O | Kubernetes 버전 |
 | labels.user_script | Body | String | X | 예약 스크립트 |
-| labels.master_lb_floating_ip_enabled | Body | String | X | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
+| labels.master_lb_floating_ip_enabled | Body | String | X | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False")<br>labels.external_network_id/external_subnet_id_list가 설정된 경우에만 "True"로 설정 가능 |
 | flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
 | fixed_network | Body | UUID | O | VPC 네트워크 UUID |
 | fixed_subnet | Body | UUID | O | VPC 서브넷 UUID |
