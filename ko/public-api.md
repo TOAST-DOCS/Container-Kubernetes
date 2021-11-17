@@ -18,7 +18,7 @@ Kubernetes 서비스 API는 클러스터 및 노드 그룹 구성을 위해 여�
 
 ### 인터넷 게이트웨이에 연결된 VPC 네트워크 UUID
 
-인터넷 게이트웨이에 연결된 VPC 네트워크는 VPC 네트워크 목록 조회 API에 **router:external=True**  쿼리 파라미터를 이용해 조회할 수 있습니다.
+인터넷 게이트웨이에 연결된 VPC 네트워크는 VPC 네트워크 목록 조회 API에 **router:external=True** 쿼리 파라미터를 이용해 조회할 수 있습니다.
 
 ```
 GET /v2.0/networks?router:external=True
@@ -46,7 +46,7 @@ GET /v2.0/networks?router:external=True
 
 ### 키페어 UUID
 
-노드 접속시 사용할 키페어를 입력합니다. 키페어 목록 조회 API에 대한 좀 더 자세한 내용은 [키페어 목록 보기](https://docs.toast.com/ko/Compute/Instance/ko/public-api/#_13)를 참고하세요.
+노드 접속 시 사용할 키페어를 입력합니다. 키페어 목록 조회 API에 대한 좀 더 자세한 내용은 [키페어 목록 보기](https://docs.toast.com/ko/Compute/Instance/ko/public-api/#_13)를 참고하세요.
 
 ### 베이스 이미지 UUID
 
@@ -369,7 +369,7 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_delay_after_add | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 증설 후 감축 지연 시간 |
 | labels.kube_tag | Body | String | O | Kubernetes 버전 |
 | labels.user_script | Body | String | X | 예약 스크립트 |
-| labels.master_lb_floating_ip_enabled | Body | String | O | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False")<br>labels.external_network_id/external_subnet_id_list가 설정된 경우에만 "True"로 설정 가능 |
+| labels.master_lb_floating_ip_enabled | Body | String | O | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False")<br>labels.external_network_id와 external_subnet_id_list가 설정된 경우에만 "True"로 설정 가능 |
 | flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
 | fixed_network | Body | UUID | O | VPC 네트워크 UUID |
 | fixed_subnet | Body | UUID | O | VPC 서브넷 UUID |
@@ -1097,7 +1097,7 @@ X-Auth-Token: {tokenId}
     * 노드 그룹 이름을 **default-master**로 지정합니다.
 
 * 워커 구성 요소 업그레이드
-    * 업그레이드 할 노드 그룹 이름을 지정합니다.
+    * 업그레이드할 노드 그룹 이름을 지정합니다.
 
 
 <details><summary>예시</summary>
