@@ -819,8 +819,6 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_util_thresh | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 리소스 사용량 임계치  |
 | labels.ca_scale_down_delay_after_add | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 증설 후 감축 지연 시간 |
 | labels.user_script | Body | String | X | 예약 스크립트 |
-| max_node_count | Body | Integer | X | 최대 노드 수 |
-| min_node_count | Body | Integer | X | 최소 노드 수 |
 | name | BODY | String | O | 노드 그룹 이름 |
 | node_count | Body | Integer | X | 노드 수(기본값: 1) |
 
