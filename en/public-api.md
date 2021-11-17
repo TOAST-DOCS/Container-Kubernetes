@@ -357,8 +357,8 @@ X-Auth-Token: {tokenId}
 | labels.node_image | Body | UUID | O | Applied to the default worker node group: Base image UUID |
 | labels.boot_volume_type | Body | String | O | Applied to the default worker node group: Block storage type|
 | labels.boot_volume_size | Body | String | O | Applied to the default worker node group: Block storage size (GB) |
-| labels.external_network_id | Body | String | X | UUID of the VPC network attached to internet gateway<br>Must be set when a router associated with a VPC subnet is attached to an internet gateway |
-| labels.external_subnet_id_list | Body | String | X | List of UUIDs of subnets attached to the internet gateway (separated by colon)<br>Must be set when a router associated with a VPC subnet is attached to an internet gateway |
+| labels.external_network_id | Body | String | X | UUID of the VPC network attached to the internet gateway<br>Must be set when a router associated with a VPC subnet is attached to the internet gateway |
+| labels.external_subnet_id_list | Body | String | X | List of UUIDs of subnets attached to the internet gateway (separated by colon)<br>Must be set when a router associated with a VPC subnet is attached to the internet gateway |
 | labels.cert_manager_api | Body | String | O | Whether to enable the certificate signing request (CSR) feature. Must be set to "True" |
 | labels.ca_enable | Body | String | O | Applied to the default worker node group: Autoscaler: Whether to enable the feature ("True" / "False") |
 | labels.ca_max_node_count | Body | String | X | Applied to the default worker node group: Autoscaler: Maximum number of nodes |
