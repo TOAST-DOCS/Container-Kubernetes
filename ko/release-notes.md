@@ -1,5 +1,11 @@
 ## Container > Kubernetes > 릴리스 노트
 
+### 2021. 11. 23.
+
+#### 기능 추가
+* Kubernetes 서비스를 위한 Public API가 공개되었습니다.
+    * Public API에 대한 내용은 [API 가이드](/Container/Kubernetes/ko/public-api)를 참고하세요.
+
 ### 2021. 10. 26.
 
 #### 기능 추가
