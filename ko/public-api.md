@@ -12,6 +12,61 @@ API를 사용하려면 API 엔드포인트와 토큰 등이 필요합니다. [AP
 
 API 응답에 가이드에 명시되지 않은 필드가 나타날 수 있습니다. 이런 필드는 NHN Cloud 내부 용도로 사용되며 사전 공지 없이 변경될 수 있으므로 사용하지 않습니다.
 
+## API에 사용되는 리소스 정보 확인
+
+Kubernetes 서비스 API는 클러스터 및 노드 그룹 구성을 위해 여러 가지 리소스를 사용합니다. 리소스별 정보 확인 방법은 다음과 같습니다.
+
+### 인터넷 게이트웨이에 연결된 VPC 네트워크 UUID
+
+인터넷 게이트웨이에 연결된 VPC 네트워크는 VPC 네트워크 목록 조회 API에 **router:external=True** 쿼리 파라미터를 이용해 조회할 수 있습니다.
+
+```
+GET /v2.0/networks?router:external=True
+```
+
+네트워크 목록 조회 API에 대한 좀 더 자세한 내용은 [네트워크 목록 보기](https://docs.toast.com/ko/Network/VPC/ko/public-api/#_2)를 참고하세요.
+
+
+### 인터넷 게이트웨이에 연결된 서브넷 UUID 목록
+
+인터넷 게이트웨이에 연결된 VPC 네트워크와 연결된 서브넷 UUID를 입력합니다. 여러 서브넷이 조회됐다면 콜론(`:`)으로 연결해 입력합니다. 서브넷 목록 조회 API에 대한 좀 더 자세한 내용은 [서브넷 목록 보기](https://docs.toast.com/ko/Network/VPC/ko/public-api/#_6)를 참고하세요.
+
+
+### VPC 네트워크 UUID
+
+노드와 연결할 내부 VPC 네트워크 UUID를 입력합니다. 네트워크 목록 조회 API에 대한 좀 더 자세한 내용은 [네트워크 목록 보기](https://docs.toast.com/ko/Network/VPC/ko/public-api/#_2)를 참고하세요.
+
+### VPC 서브넷 UUID
+
+노드와 연결할 내부 VPC 네트워크와 연결된 서브넷 UUID를 입력합니다. 서브넷 목록 조회 API에 대한 좀 더 자세한 내용은 [서브넷 목록 보기](https://docs.toast.com/ko/Network/VPC/ko/public-api/#_6)를 참고하세요.
+
+### 가용성 영역 UUID
+
+노드를 생성할 가용성 영역 UUID를 입력합니다. 가용성 영역 목록 조회 API에 대한 좀 더 자세한 내용은 [가용성 목록 보기](https://docs.toast.com/ko/Compute/Instance/ko/public-api/#_9)를 참고하세요.
+
+### 키페어 UUID
+
+노드 접속 시 사용할 키페어를 입력합니다. 키페어 목록 조회 API에 대한 좀 더 자세한 내용은 [키페어 목록 보기](https://docs.toast.com/ko/Compute/Instance/ko/public-api/#_13)를 참고하세요.
+
+### 베이스 이미지 UUID
+
+노드 생성에 사용할 베이스 이미지 UUID를 입력합니다. 리전별 베이스 이미지 UUID는 다음과 같습니다.
+
+| 리전 | 베이스 이미지 UUID |
+|---|---|
+| 한국(판교) 리전 | 2b03f75e-c583-4198-8821-6eba31ab621e |
+| 한국(평촌) 리전 | a3c175ce-6477-4de0-b8d1-168dc9235fef |
+
+### 블록 스토리지 종류
+
+노드에 사용할 블록 스토리지 UUID를 입력합니다. 블록 스토리지 타입 목록 조회 API에 대한 좀 더 자세한 내용은 [볼륨 타입 목록 보기](https://docs.toast.com/ko/Storage/Block%20Storage/ko/public-api/#_2)를 참고하세요.
+
+### 인스턴스 타입 UUID
+
+생성할 노드의 인스턴스 타입 UUID를 입력합니다. 인스턴스 타입 목록 조회 API에 대한 좀 더 자세한 내용은 [인스턴스 타입 목록 보기](https://docs.toast.com/ko/Compute/Instance/ko/public-api/#_2)를 참고하세요.
+
+
+
 ## 클러스터
 
 ### 클러스터 목록 보기
@@ -42,7 +97,7 @@ X-Auth-Token: {tokenId}
 | clusters.uuid | Body | UUID | 클러스터 UUID |
 | clusters.name | Body | String | 클러스터 이름 |
 | clusters.flavor_id | Body | UUID | 기본 워커 노드의 인스턴스 타입 UUID|
-| clusters.keypair | Body | UUID | 기본 워커 노드 그룹에 적용된 키 페어 UUID |
+| clusters.keypair | Body | UUID | 기본 워커 노드 그룹에 적용된 키페어 UUID |
 | clusters.node_count | Body | Integer| 전체 워커 노드 수 |
 | clusters.stack_id | Body | UUID | 마스터 노드 그룹과 연결된 heat stack UUID |
 | clusters.status | Body | String | 클러스터 상태 |
@@ -63,6 +118,7 @@ X-Auth-Token: {tokenId}
 | clusters.labels.ca_scale_down_util_thresh | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 리소스 사용량 임계치  |
 | clusters.labels.ca_scale_down_delay_after_add | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 증설 후 감축 지연 시간 |
 | clusters.labels.user_script | Body | String | 예약 스크립트 |
+| clusters.labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
 
 
 <details><summary>예시</summary>
@@ -76,8 +132,8 @@ X-Auth-Token: {tokenId}
             "create_timeout": 60,
             "docker_volume_size": null,
             "flavor_id": "6ef27f21-c774-4c0e-84ff-7dd4a762571f",
-            "health_status": null,
-            "keypair": "tw-kr2-alpha",
+            "health_status": "HEALTHY",
+            "keypair": "testkeypair",
             "labels": {
                 "availability_zone": "kr2-pub-b",
                 "boot_volume_size": "20",
@@ -107,21 +163,19 @@ X-Auth-Token: {tokenId}
                 "os_version": "7.8",
                 "project_domain": "NORMAL",
                 "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575",
-                "user_script": "#!/bin/python3\n\nimport os\n\nprint(\"haha this is python. cwd is {}\".format(os.getcwd()))"
+                "user_script": ""
             },
             "links": [
                 {
-                    "href": "http://10.162.148.141:9511/v1/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
+                    "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/v1/clusters/f0af4484-0a16-433a-a15c-295d9ba6537d",
                     "rel": "self"
                 },
                 {
-                    "href": "http://10.162.148.141:9511/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
+                    "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/clusters/f0af4484-0a16-433a-a15c-295d9ba6537d",
                     "rel": "bookmark"
                 }
             ],
-            "master_count": 3,
-            "master_flavor_id": null,
-            "name": "tw-cli",
+            "name": "k8s-test",
             "node_count": 1,
             "stack_id": "7f497472-9729-4b89-9124-1c097335b856",
             "status": "CREATE_COMPLETE",
@@ -164,18 +218,16 @@ X-Auth-Token: {tokenId}
 | uuid | Body | UUID | 클러스터 UUID |
 | name | Body | String | 클러스터 이름 |
 | flavor_id | Body | UUID | 기본 워커 노드의 인스턴스 타입 UUID|
-| keypair | Body | UUID | 기본 워커 노드 그룹에 적용된 키 페어 UUID |
+| keypair | Body | UUID | 기본 워커 노드 그룹에 적용된 키페어 UUID |
 | node_count | Body | Integer| 전체 워커 노드 수 |
 | stack_id | Body | UUID | 마스터 노드 그룹과 연결된 heat stack UUID |
 | status | Body | String | 클러스터 상태 |
 | status_reason | Body | String | 클러스터 상태 이유(null 가능) |
-| discovery_url | Body | String | ETCD discovery 시 사용 가능한 URL |
 | api_address | Body | String | Kubernetes API 엔드포인트 |
 | project_id | Body | String | 프로젝트(테넌트) ID |
 | fixed_network | Body | UUID | VPC UUID|
 | fixed_subnet | Body | UUID | VPC 서브넷 UUID |
 | node_addresses | Body | String List | 워커 노드 IP 주소 목록 |
-| master_addresses | Body | String List | 마스터 노드 IP 주소 목록 |
 | created_at | Body | String | 생성 시간(UTC) |
 | updated_at | Body | String | 최근 업데이트 시간(UTC) |
 | labels | Body | Object | 클러스터 레이블 |
@@ -195,29 +247,29 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_util_thresh | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 리소스 사용량 임계치  |
 | labels.ca_scale_down_delay_after_add | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 증설 후 감축 지연 시간 |
 | labels.user_script | Body | String | 예약 스크립트 |
+| labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
 
 <details><summary>예시</summary>
 <p>
 
 ```json
 {
-    "api_address": "https://2b778d83-alp-kr2-k8s.container.cloud.toast.com:6443",
+    "api_address": "https://2b778d83-kr2-k8s.container.cloud.toast.com:6443",
     "cluster_template_id": "b4503d97-6012-499d-a31a-5200f94a7890",
     "coe_version": "v1.17.6",
     "container_version": "1.12.6",
     "create_timeout": 60,
     "created_at": "2021-08-05T01:48:39+00:00",
-    "discovery_url": "http://169.254.169.248/1b3a4e306aa9ec896aef230c799d14c1",
     "docker_volume_size": null,
     "fixed_network": "eb212079-b6ec-430c-ba57-14280a457bcb",
     "fixed_subnet": "4fdf5b80-3d35-43f5-a5c1-010a3b6c8e90",
     "flavor_id": "6ef27f21-c774-4c0e-84ff-7dd4a762571f",
     "floating_ip_enabled": false,
-    "health_status": null,
+    "health_status": "HEALTHY",
     "health_status_reason": {
-        "api": "Networking Error...Check network reachability from magnum-conductor host to the cluster api server with 'telnet 2b778d83-alp-kr2-k8s.container.cloud.toast.com 6443'"
+        {"test-k8s-default-w-bnga636xulqk-node-0.Ready": "True", "api": "ok"}
     },
-    "keypair": "tw-kr2-alpha",
+    "keypair": "test-keypair",
     "labels": {
         "availability_zone": "kr2-pub-b",
         "boot_volume_size": "20",
@@ -247,26 +299,19 @@ X-Auth-Token: {tokenId}
         "os_version": "7.8",
         "project_domain": "NORMAL",
         "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575",
-        "user_script": "#!/bin/python3\n\nimport os\n\nprint(\"haha this is python. cwd is {}\".format(os.getcwd()))"
+        "user_script": ""
     },
     "links": [
         {
-            "href": "http://10.162.148.141:9511/v1/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
+            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/v1/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
             "rel": "self"
         },
         {
-            "href": "http://10.162.148.141:9511/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
+            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
             "rel": "bookmark"
         }
     ],
-    "master_addresses": [
-        "192.168.0.22",
-        "192.168.0.12",
-        "192.168.0.10"
-    ],
-    "master_count": 3,
-    "master_flavor_id": null,
-    "name": "tw-cli",
+    "name": "test-k8s",
     "node_addresses": [
         "192.168.0.5"
     ],
@@ -303,7 +348,7 @@ X-Auth-Token: {tokenId}
 | 이름 | 종류 | 형식 | 필수 | 설명 |
 |---|---|---|---|---|
 | tokenId | Header | String | O | 토큰 ID |
-| keypair | Body | String | O | 기본 워커 노드 그룹에 적용할 키 페어 |
+| keypair | Body | String | O | 기본 워커 노드 그룹에 적용할 키페어 UUID |
 | name | Body | String | O | 클러스터 이름 |
 | cluster_template_id | Body | String | O | 클러스터 템플릿 ID. 반드시 "iaas_console"로 설정 |
 | node_count | Body | String | O | 기본 워커 노드 그룹에 적용할 노드 수 |
@@ -312,8 +357,8 @@ X-Auth-Token: {tokenId}
 | labels.node_image | Body | UUID | O | 기본 워커 노드 그룹 적용 : 베이스 이미지 UUID |
 | labels.boot_volume_type | Body | String | O | 기본 워커 노드 그룹 적용 : 블록 스토리지 종류|
 | labels.boot_volume_size | Body | String | O | 기본 워커 노드 그룹 적용 : 블록 스토리지 사이즈(GB) |
-| labels.external_network_id | Body | String | X | 인터넷 게이트웨이에 연결된 VPC 네트워크 UUID |
-| labels.external_subnet_id_list | Body | String | X | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분) |
+| labels.external_network_id | Body | String | X | 인터넷 게이트웨이에 연결된 VPC 네트워크 UUID<br>VPC 서브넷이 연동된 라우터가 인터넷 게이트웨이에 연결된 경우 반드시 설정 |
+| labels.external_subnet_id_list | Body | String | X | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분)<br>VPC 서브넷이 연동된 라우터가 인터넷 게이트웨이에 연결된 경우 반드시 설정 |
 | labels.cert_manager_api | Body | String | O | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
 | labels.ca_enable | Body | String | O | 기본 워커 노드 그룹 적용 : 오토 스케일러: 기능 활성화 여부 ("True" / "False") |
 | labels.ca_max_node_count | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최대 노드 수 |
@@ -324,10 +369,10 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_delay_after_add | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 증설 후 감축 지연 시간 |
 | labels.kube_tag | Body | String | O | Kubernetes 버전 |
 | labels.user_script | Body | String | X | 예약 스크립트 |
+| labels.master_lb_floating_ip_enabled | Body | String | O | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False")<br>labels.external_network_id와 external_subnet_id_list가 설정된 경우에만 "True"로 설정 가능 |
 | flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
 | fixed_network | Body | UUID | O | VPC 네트워크 UUID |
 | fixed_subnet | Body | UUID | O | VPC 서브넷 UUID |
-
 
 <details><summary>예시</summary>
 <p>
@@ -336,11 +381,10 @@ X-Auth-Token: {tokenId}
 {
     "cluster_template_id": "iaas_console",
     "create_timeout": 60,
-    "discovery_url": null,
     "fixed_network": "eb212079-b6ec-430c-ba57-14280a457bcb",
     "fixed_subnet": "4fdf5b80-3d35-43f5-a5c1-010a3b6c8e90",
     "flavor_id": "6ef27f21-c774-4c0e-84ff-7dd4a762571f",
-    "keypair": "tw-kr2-alpha",
+    "keypair": "test-keypair",
     "labels": {
         "availability_zone": "kr2-pub-b",
         "boot_volume_size": "20",
@@ -359,10 +403,9 @@ X-Auth-Token: {tokenId}
         "kube_tag": "v1.17.6",
         "master_lb_floating_ip_enabled": "true",
         "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
-        "user_script": "#!/bin/python3\n\nimport os\n\nprint(\"haha this is python. cwd is {}\".format(os.getcwd()))"
+        "user_script": ""
     },
-    "master_count": 1,
-    "name": "tw-cli-test",
+    "name": "test-k8s",
     "node_count": 1
 }
 ```
@@ -531,7 +574,7 @@ X-Auth-Token: {tokenId}
 
 ```json
 {
-    "config": "apiVersion: v1\nclusters:\n- cluster:\n    certificate-authority-data: LS0tLS1CRU... \n    server: https://96742ac4-alp-kr2-k8s.container.cloud.toast.com:6443\n  name: \"toast-robot-e2e-1-18\"\ncontexts:\n- context:\n    cluster: \"toast-robot-e2e-1-18\"\n    user: admin\n  name: default\ncurrent-context: default\nkind: Config\npreferences: {}\nusers:\n- name: admin\n  user:\n    client-certificate-data: LS0tLS1CRU...\n    client-key-data: LS0tLS1CRU...\n"
+    "config": "apiVersion: v1\nclusters:\n- cluster:\n    certificate-authority-data: LS0tLS1CRU... \n    server: https://96742ac4-kr2-k8s.container.cloud.toast.com:6443\n  name: \"toast-robot-e2e-1-18\"\ncontexts:\n- context:\n    cluster: \"toast-robot-e2e-1-18\"\n    user: admin\n  name: default\ncurrent-context: default\nkind: Config\npreferences: {}\nusers:\n- name: admin\n  user:\n    client-certificate-data: LS0tLS1CRU...\n    client-key-data: LS0tLS1CRU...\n"
 }
 ```
 
@@ -587,23 +630,10 @@ X-Auth-Token: {tokenId}
 {
     "nodegroups": [
         {
-            "flavor_id": "22c1ae2c-55b2-44a9-8160-7acfffddd153",
-            "image_id": "7925ed30-3907-4c49-a7ae-c6bc679e9435",
-            "is_default": true,
-            "max_node_count": null,
-            "min_node_count": 1,
-            "name": "default-master",
-            "node_count": 3,
-            "role": "master",
-            "stack_id": "9edf6874-6b4f-40af-a165-8390c7fb19c0",
-            "status": "UPDATE_COMPLETE",
-            "uuid": "24a861b9-e572-433e-a79d-edec0269c881"
-        },
-        {
             "flavor_id": "069bdcff-e9b6-42c8-83ce-4c743ea30394",
             "image_id": "96aff4ab-d221-4688-8364-2fcf02d50547",
             "is_default": false,
-            "max_node_count": null,
+            "max_node_count": 10,
             "min_node_count": 1,
             "name": "default-worker",
             "node_count": 2,
@@ -725,11 +755,11 @@ X-Auth-Token: {tokenId}
     },
     "links": [
         {
-            "href": "http://10.162.148.141:9511/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
+            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
             "rel": "self"
         },
         {
-            "href": "http://10.162.148.141:9511/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
+            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
             "rel": "bookmark"
         }
     ],
@@ -775,10 +805,6 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|---|
 | tokenId | Header | String | O | 토큰 ID |
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
-
-
-| 이름 | 종류 | 형식 | 필수 | 설명 |
-|---|---|---|---|---|
 | flavor_id | Body | UUID | O |  노드에서 사용하는 인스턴스 타입 UUID |
 | image_id | Body | UUID | O | 노드에서 사용하는 베이스 이미지 UUID |
 | labels | Body | Object | O | 노드 그룹 생성 정보 개체 |
@@ -793,8 +819,6 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_util_thresh | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 리소스 사용량 임계치  |
 | labels.ca_scale_down_delay_after_add | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 증설 후 감축 지연 시간 |
 | labels.user_script | Body | String | X | 예약 스크립트 |
-| max_node_count | Body | Integer | X | 최대 노드 수 |
-| min_node_count | Body | Integer | X | 최소 노드 수 |
 | name | BODY | String | O | 노드 그룹 이름 |
 | node_count | Body | Integer | X | 노드 수(기본값: 1) |
 
@@ -804,7 +828,7 @@ X-Auth-Token: {tokenId}
 
 ```json
 {
-    "name": "aaaaaa",
+    "name": "added-nodegroup",
     "node_count": 1,
     "flavor_id": "6ef27f21-c774-4c0e-84ff-7dd4a762571f",
     "image_id": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
@@ -870,17 +894,17 @@ X-Auth-Token: {tokenId}
     },
     "links": [
         {
-            "href": "http://10.162.148.141:9511/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
+            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
             "rel": "self"
         },
         {
-            "href": "http://10.162.148.141:9511/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
+            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
             "rel": "bookmark"
         }
     ],
     "max_node_count": null,
     "min_node_count": 1,
-    "name": "aaaaaa",
+    "name": "added-nodegroup",
     "node_count": 1,
     "project_id": "1ffeaca9bbf94ab1aa9cffdec29a258a",
     "role": "worker",
@@ -997,10 +1021,10 @@ X-Auth-Token: {tokenId}
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
 | NODEGROUP_ID_OR_NAME | URL | UUID or String | O | 노드 그룹 UUID 또는 노드 그룹 이름 | 
 | ca_enable | Body | String | O | 기능 활성화 여부 ("True" / "False") |
-| ca_max_node_count | Body | X |String | 최대 노드 수 |
-| ca_min_node_count | Body | X |String | 최소 노드 수 |
-| ca_scale_down_enable | Body | X |String | 감축 활성 여부 ("True" / "False") |
-| ca_scale_down_unneeded_time | Body | X |String | 임계 영역 유지 시간 |
+| ca_max_node_count | Body | String |X| 최대 노드 수 |
+| ca_min_node_count | Body | String |X| 최소 노드 수 |
+| ca_scale_down_enable | Body | String |X| 감축 활성 여부 ("True" / "False") |
+| ca_scale_down_unneeded_time | Body | String |X| 임계 영역 유지 시간 |
 | ca_scale_down_util_thresh | Body | String | X |리소스 사용량 임계치  |
 | ca_scale_down_delay_after_add | Body | String | X |증설 후 감축 지연 시간 |
 
@@ -1044,9 +1068,9 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 노드 그룹 업그레이드
+### 클러스터 업그레이드
 
-노드 그룹을 업그레이드합니다.
+클러스터를 업그레이드합니다.
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}/upgrade
@@ -1062,8 +1086,17 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|---|
 | tokenId | Header | String | O | 토큰 ID |
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
-| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | 노드 그룹 UUID 또는 노드 그룹 이름 | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | 노드 그룹 UUID 또는 노드 그룹 이름<br>마스터 구성 요소 업그레이드 시에는 **default-master**로 지정 | 
 | version | Body | String | O | Kubernetes 버전 |
+
+클러스터를 업그레이드하기 위해서는 마스터 구성 요소를 업그레이드한 후 워커 구성 요소를 업그레이드해야 합니다. 마스터와 워커 구성 요소 업그레이드는 노드 그룹 단위로 이루어집니다. 
+
+* 마스터 구성 요소 업그레이드
+    * 노드 그룹 이름을 **default-master**로 지정합니다.
+
+* 워커 구성 요소 업그레이드
+    * 업그레이드할 노드 그룹 이름을 지정합니다.
+
 
 <details><summary>예시</summary>
 <p>
