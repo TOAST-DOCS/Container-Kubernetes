@@ -263,9 +263,9 @@ Activating the autoscaler enables the following options:
 | Minimum Node Count            | Minimum number of nodes that can be scaled down                | 1-10           | 1       | unit    |
 | Maximum Node Count            | Maximum number of nodes that can be scaled up                  | 1-10           | 10      | unit   |
 | Scaling Down               | Enable/Disable Node Scale-down                               | Enable/Disable | Enable  | -       |
-| Resource Usage Threshold | Reference value to determine resource usage threshold range for scale-down | 1-100          | 50      | %       |
-| Threshold Duration       | The duration for retaining resource usage of target nodes to scale down below the threshold  | 1-1440         | 10      | minutes |
-| Scale-down Delay After Scale-up      | Delay before starting to monitor for scale-down targets after scaling up | 10-1440         | 10      | minutes |
+| Scale Down Utilization Threshold | Reference value to determine resource usage threshold range for scale-down | 1-100          | 50      | %       |
+| Scale Down Unneeded Time       | The duration for retaining resource usage of target nodes to scale down below the threshold  | 1-1440         | 10      | minutes |
+| Scale Down Delay After Add      | Delay before starting to monitor for scale-down targets after scaling up | 10-1440         | 10      | minutes |
 
 > [Caution]
 > Nodes cannot be manually added to or deleted from node groups on which autoscaler is enabled.
@@ -305,9 +305,9 @@ Enables autoscaling on the default node group of the cluster you want. For this 
 | Minimum Node Count            | 1      |
 | Maximum Node Count            | 5      |
 | Scaling Down               | Enable |
-| Resource Usage Threshold | 50     |
-| Threshold Duration       | 3      |
-| Scale-down Delay After Scale-up      | 5      |
+| Scale Down Utilization Threshold | 50     |
+| Scale Down Unneeded Time       | 3      |
+| Scale Down Delay After Add      | 5      |
 
 ##### 2. Deploying Pods
 
@@ -707,17 +707,17 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.17.6
 ```
 
 
-### Reservation script
-User can register reservation script when creating clusters and additional node groups. Below are the features of the reservation script.
+### Scheduled script
+User can register a scheduled script when creating clusters and additional node groups. Below are the features of the scheduled script.
 
 * Feature setting
     * This feature can be set by worker node group.
-    * The reservation script entered when creating clusters are applied to the default worker node group.
-    * The reservation script entered when creating additional node groups are applied to the corresponding worker node group.
-    * The contents of the reservation script cannot be changed once the worker node group has been created.
+    * The scheduled script entered when creating clusters are applied to the default worker node group.
+    * The scheduled script entered when creating additional node groups are applied to the corresponding worker node group.
+    * The contents of the scheduled script cannot be changed once the worker node group has been created.
 * Script execution time
-    * Reservation script is executed during the instance initialization process while initializing the worker node.
-    * After the reservation script has been executed, it sets and registers the instance as the worker node of the 'worker node group'.
+    * The scheduled script is executed during the instance initialization process while initializing the worker node.
+    * After the scheduled script has been executed, it sets and registers the instance as the worker node of the 'worker node group'.
 * Script detail
     * The first line of a scheduled script must start with  #!.
     * The maximum size of script is 64KB.
@@ -908,13 +908,8 @@ The type of plugin applied to the admission controller varies depending on the t
 * MutatingAdmissionWebhook
 * NamespaceLifecycle
 * NodeRestriction
-* PersistentVolumeClaimResize
-* Priority
 * ResourceQuota
-* RuntimeClass
 * ServiceAccount
-* StorageObjectInUseProtection
-* TaintNodesByCondition
 * ValidatingAdmissionWebhook
 
 #### Clusters created on February 23, 2021 or later for the Pangyo region; clusters created on February 18, 2021 or later for the Pyeongchon region
@@ -925,14 +920,9 @@ The type of plugin applied to the admission controller varies depending on the t
 * MutatingAdmissionWebhook
 * NamespaceLifecycle
 * NodeRestriction
-* PersistentVolumeClaimResize
 * PodSecurityPolicy (newly added)
-* Priority
 * ResourceQuota
-* RuntimeClass
 * ServiceAccount
-* StorageObjectInUseProtection
-* TaintNodesByCondition
 * ValidatingAdmissionWebhook
 
 ### Cluster upgrade
@@ -1211,6 +1201,11 @@ When defining service objects in Kubernetes, you can set several options for the
 > The features without additional version information are only applicable to clusters of Kubernetes v1.19.13 or later.
 >
 
+> [Caution]
+> All setting values for the features below must be entered in string format. In the YAML file input format, to enter in string format regardless of the input value, enclose the input value in double quotation marks ("). For more information about the YAML file format, see [Yaml Cookbook](https://yaml.org/YAML_for_ruby.html).
+>
+
+
 #### Set the session affinity
 You can set the session affinity for the load balancer.
 
@@ -1231,6 +1226,9 @@ The load balancer has a floating IP associated with it. You can set whether to d
 * It can be set to one of the following:
     * true: Keep the floating IP.
     * false: Delete the floating IP. The default when not set.
+
+> [Caution]
+> v1.18.19 clusters created before October 26, 2021 have an issue where floating IPs are not deleted when the load balancer is deleted. If you contact us through 1:1 inquiry of the Customer Center, we will provide detailed information on the procedure to solve this issue.
 
 #### Set the listener connection limit
 You can set the connection limit for a listener.
