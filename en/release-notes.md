@@ -19,7 +19,7 @@
 
 #### Added Features
 
-* Reservation script feature is available when creating node groups.
+* Scheduled script feature is available when creating node groups.
 * Added container log rotation setting to the worker nodes.
     * Image update
         * CentOS 7.8 - Container (2021.07.27)
