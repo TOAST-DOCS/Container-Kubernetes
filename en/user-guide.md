@@ -707,17 +707,17 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.17.6
 ```
 
 
-### Reservation script
-User can register reservation script when creating clusters and additional node groups. Below are the features of the reservation script.
+### Scheduled script
+User can register a scheduled script when creating clusters and additional node groups. Below are the features of the scheduled script.
 
 * Feature setting
     * This feature can be set by worker node group.
-    * The reservation script entered when creating clusters are applied to the default worker node group.
-    * The reservation script entered when creating additional node groups are applied to the corresponding worker node group.
-    * The contents of the reservation script cannot be changed once the worker node group has been created.
+    * The scheduled script entered when creating clusters are applied to the default worker node group.
+    * The scheduled script entered when creating additional node groups are applied to the corresponding worker node group.
+    * The contents of the scheduled script cannot be changed once the worker node group has been created.
 * Script execution time
-    * Reservation script is executed during the instance initialization process while initializing the worker node.
-    * After the reservation script has been executed, it sets and registers the instance as the worker node of the 'worker node group'.
+    * The scheduled script is executed during the instance initialization process while initializing the worker node.
+    * After the scheduled script has been executed, it sets and registers the instance as the worker node of the 'worker node group'.
 * Script detail
     * The first line of a scheduled script must start with  #!.
     * The maximum size of script is 64KB.

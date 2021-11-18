@@ -12,6 +12,61 @@ APIを使用するにはAPIエンドポイントとトークンなどが必要�
 
 APIレスポンスにガイドに明示されていないフィールドが表示されることがあります。これらのフィールドはNHN Cloud内部用途で使用され、予告なしに変更されることがあるため使用しません。
 
+## APIに使用されるリソース情報の確認
+
+KubernetesサービスAPIは、クラスタおよびノードグループを構成するために複数のリソースを使用します。各リソースの情報確認方法は次のとおりです。
+
+### インターネットゲートウェイに接続されたVPCネットワークUUID
+
+インターネットゲートウェイに接続されたVPCネットワークは、VPCネットワークリスト照会APIに**router:external=True**クエリパラメータを利用して照会できます。
+
+```
+GET /v2.0/networks?router:external=True
+```
+
+ネットワークリスト照会APIの詳細については、[ネットワークリスト表示](https://docs.toast.com/ko/Network/VPC/ko/public-api/#_2)を参照してください。
+
+
+### インターネットゲートウェイに接続されたサブネットUUIDリスト
+
+インターネットゲートウェイに接続されたVPCネットワークに接続されたサブネットUUIDを入力します。複数のサブネットが検索された場合はコロン(`:`)でつなげて力します。サブネットリスト照会APIの詳細については、[サブネットリスト表示](https://docs.toast.com/ko/Network/VPC/ko/public-api/#_6)を参照してください。
+
+
+### VPCネットワークUUID
+
+ノードと接続する内部VPCネットワークUUIDを入力します。ネットワークリスト照会APIの詳細については[ネットワークリスト表示](https://docs.toast.com/ko/Network/VPC/ko/public-api/#_2)を参照してください。
+
+### VPCサブネットUUID
+
+ノードと接続する内部VPCネットワークに接続されたサブネットUUIDを入力します。サブネットリスト照会APIの詳細については[サブネットリスト表示](https://docs.toast.com/ko/Network/VPC/ko/public-api/#_6)を参照してください。
+
+### アベイラビリティゾーンUUID
+
+ノードを作成するアベイラビリティゾーンUUIDを入力します。アベイラビリティゾーンリスト照会APIの詳細については[可用性リスト表示](https://docs.toast.com/ko/Compute/Instance/ko/public-api/#_9)を参照してください。
+
+### キーペアUUID
+
+ノード接続時に使用するキーペアを入力します。キーペアリスト照会APIの詳細については[キーペアリスト表示](https://docs.toast.com/ko/Compute/Instance/ko/public-api/#_13)を参照してください。
+
+### ベースイメージUUID
+
+ノードの作成に使用するベースイメージUUIDを入力します。各リージョンのベースイメージUUIDは次のとおりです。
+
+| リージョン | ベースイメージUUID |
+|---|---|
+| 韓国(パンギョ)リージョン | 2b03f75e-c583-4198-8821-6eba31ab621e |
+| 韓国(坪村)リージョン | a3c175ce-6477-4de0-b8d1-168dc9235fef |
+
+### ブロックストレージの種類
+
+ノードに使用するブロックストレージUUIDを入力します。ブロックストレージタイプリスト照会APIの詳細については[ボリュームタイプリスト表示](https://docs.toast.com/ko/Storage/Block%20Storage/ko/public-api/#_2)を参照してください。
+
+### インスタンスタイプUUID
+
+作成するノードのインスタンスタイプUUIDを入力します。インスタンスタイプリスト照会APIの詳細については[インスタンスタイプリスト表示](https://docs.toast.com/ko/Compute/Instance/ko/public-api/#_2)を参照してください。
+
+
+
 ## クラスタ
 
 ### クラスタリスト表示
@@ -63,6 +118,7 @@ X-Auth-Token: {tokenId}
 | clusters.labels.ca_scale_down_util_thresh | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：リソース使用量しきい値 |
 | clusters.labels.ca_scale_down_delay_after_add | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：増設後の縮小遅延時間 |
 | clusters.labels.user_script | Body | String | 予約スクリプト |
+| clusters.labels.master_lb_floating_ip_enabled | Body | String | Kubernetes APIエンドポイントに公認ドメインアドレスを作成するかどうか("True" / "False") |
 
 
 <details><summary>例</summary>
@@ -76,8 +132,8 @@ X-Auth-Token: {tokenId}
             "create_timeout": 60,
             "docker_volume_size": null,
             "flavor_id": "6ef27f21-c774-4c0e-84ff-7dd4a762571f",
-            "health_status": null,
-            "keypair": "tw-kr2-alpha",
+            "health_status": "HEALTHY",
+            "keypair": "testkeypair",
             "labels": {
                 "availability_zone": "kr2-pub-b",
                 "boot_volume_size": "20",
@@ -107,11 +163,11 @@ X-Auth-Token: {tokenId}
                 "os_version": "7.8",
                 "project_domain": "NORMAL",
                 "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575",
-                "user_script": "#!/bin/python3\n\nimport os\n\nprint(\"haha this is python. cwd is {}\".format(os.getcwd()))"
+                "user_script": ""
             },
             "links": [
                 {
-                    "href": "http://10.162.148.141:9511/v1/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
+                    "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/clusters/f0af4484-0a16-433a-a15c-295d9ba6537d",
                     "rel": "self"
                 },
                 {
@@ -119,9 +175,7 @@ X-Auth-Token: {tokenId}
                     "rel": "bookmark"
                 }
             ],
-            "master_count": 3,
-            "master_flavor_id": null,
-            "name": "tw-cli",
+            "name": "k8s-test",
             "node_count": 1,
             "stack_id": "7f497472-9729-4b89-9124-1c097335b856",
             "status": "CREATE_COMPLETE",
@@ -169,13 +223,11 @@ X-Auth-Token: {tokenId}
 | stack_id | Body | UUID | マスターノードグループと接続されたheat stack UUID |
 | status | Body | String | クラスタの状態 |
 | status_reason | Body | String | クラスタ状態理由(null可能) |
-| discovery_url | Body | String | ETCD discovery時に使用可能なURL |
 | api_address | Body | String | Kubernetes APIエンドポイント |
 | project_id | Body | String | プロジェクト(テナント) ID |
 | fixed_network | Body | UUID | VPC UUID|
 | fixed_subnet | Body | UUID | VPC Subnet UUID |
 | node_addresses | Body | String List | ワーカーノードIPアドレスリスト |
-| master_addresses | Body | String List | マスターノードIPアドレスリスト |
 | created_at | Body | String | 作成時間(UTC) |
 | updated_at | Body | String | 最終更新日(UTC) |
 | labels | Body | Object | クラスタラベル |
@@ -195,6 +247,7 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_util_thresh | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：リソース使用量しきい値 |
 | labels.ca_scale_down_delay_after_add | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：増設後の縮小遅延時間 |
 | labels.user_script | Body | String | 予約スクリプト |
+| labels.master_lb_floating_ip_enabled | Body | String | Kubernetes APIエンドポイントに公認ドメインアドレスを作成するかどうか("True" / "False") |
 
 <details><summary>例</summary>
 <p>
@@ -207,17 +260,16 @@ X-Auth-Token: {tokenId}
     "container_version": "1.12.6",
     "create_timeout": 60,
     "created_at": "2021-08-05T01:48:39+00:00",
-    "discovery_url": "http://169.254.169.248/1b3a4e306aa9ec896aef230c799d14c1",
     "docker_volume_size": null,
     "fixed_network": "eb212079-b6ec-430c-ba57-14280a457bcb",
     "fixed_subnet": "4fdf5b80-3d35-43f5-a5c1-010a3b6c8e90",
     "flavor_id": "6ef27f21-c774-4c0e-84ff-7dd4a762571f",
     "floating_ip_enabled": false,
-    "health_status": null,
+    "health_status": "HEALTHY",
     "health_status_reason": {
-        "api": "Networking Error...Check network reachability from magnum-conductor host to the cluster api server with 'telnet 2b778d83-alp-kr2-k8s.container.cloud.toast.com 6443'"
+        {"test-k8s-default-w-bnga636xulqk-node-0.Ready": "True", "api": "ok"}
     },
-    "keypair": "tw-kr2-alpha",
+    "keypair": "test-keypair",
     "labels": {
         "availability_zone": "kr2-pub-b",
         "boot_volume_size": "20",
@@ -247,26 +299,19 @@ X-Auth-Token: {tokenId}
         "os_version": "7.8",
         "project_domain": "NORMAL",
         "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575",
-        "user_script": "#!/bin/python3\n\nimport os\n\nprint(\"haha this is python. cwd is {}\".format(os.getcwd()))"
+        "user_script": ""
     },
     "links": [
         {
-            "href": "http://10.162.148.141:9511/v1/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
+            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/v1/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
             "rel": "self"
         },
         {
-            "href": "http://10.162.148.141:9511/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
+            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
             "rel": "bookmark"
         }
     ],
-    "master_addresses": [
-        "192.168.0.22",
-        "192.168.0.12",
-        "192.168.0.10"
-    ],
-    "master_count": 3,
-    "master_flavor_id": null,
-    "name": "tw-cli",
+    "name": "test-k8s",
     "node_addresses": [
         "192.168.0.5"
     ],
@@ -303,7 +348,7 @@ X-Auth-Token: {tokenId}
 | 名前 | 種類 | 形式 | 必須 | 説明 |
 |---|---|---|---|---|
 | tokenId | Header | String | O | トークンID |
-| keypair | Body | String | O | 基本ワーカーノードグループに適用するキーペア |
+| keypair | Body | String | O | 基本ワーカーノードグループに適用するキーペアUUID |
 | name | Body | String | O | クラスタ名 |
 | cluster_template_id | Body | String | O | クラスタテンプレートID。必ず"iaas_console"に設定 |
 | node_count | Body | String | O | 基本ワーカーノードグループに適用するノード数 |
@@ -312,8 +357,8 @@ X-Auth-Token: {tokenId}
 | labels.node_image | Body | UUID | O | 基本ワーカーノードグループ適用：ベースイメージUUID |
 | labels.boot_volume_type | Body | String | O | 基本ワーカーノードグループ適用：ブロックストレージの種類|
 | labels.boot_volume_size | Body | String | O | 基本ワーカーノードグループ適用：ブロックストレージサイズ(GB) |
-| labels.external_network_id | Body | String | X | インターネットゲートウェイに接続されたVPC network UUID |
-| labels.external_subnet_id_list | Body | String | X | インターネットゲートウェイに接続されたサブネットUUIDリスト(コロンで区切る) |
+| labels.external_network_id | Body | String | X | インターネットゲートウェイに接続されたVPCネットワークUUID<br>VPCサブネットが接続されているルーターがインターネットゲートウェイに接続されている場合は必ず設定 |
+| labels.external_subnet_id_list | Body | String | X | インターネットゲートウェイに接続されたサブネットUUIDリスト(コロンで区切る)<br>VPCサブネットが接続されているルーターがインターネットゲートウェイに接続されている場合は必ず設定 |
 | labels.cert_manager_api | Body | String | O | CSR(Certificate Signing Request)機能を有効にするかどうか。必ず"True"に設定 |
 | labels.ca_enable | Body | String | O | 基本ワーカーノードグループ適用：オートスケーラー：機能を有効にするかどうか("True" / "False") |
 | labels.ca_max_node_count | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：最大ノード数 |
@@ -324,10 +369,10 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_delay_after_add | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：増設後の縮小遅延時間 |
 | labels.kube_tag | Body | String | O | Kubernetesバージョン |
 | labels.user_script | Body | String | X | 予約スクリプト |
+| labels.master_lb_floating_ip_enabled | Body | String | O | Kubernetes APIエンドポイントに公認ドメインアドレスを作成するかどうか("True" / "False")<br>labels.external_network_idとexternal_subnet_id_listが設定されている場合にのみ"True"に設定可能 |
 | flavor_id | Body | UUID | O | 基本ワーカーノードグループ適用：ノードインスタンスタイプUUID |
 | fixed_network | Body | UUID | O | VPC Network UUID |
 | fixed_subnet | Body | UUID | O | VPC Subnet UUID |
-
 
 <details><summary>例</summary>
 <p>
@@ -336,11 +381,10 @@ X-Auth-Token: {tokenId}
 {
     "cluster_template_id": "iaas_console",
     "create_timeout": 60,
-    "discovery_url": null,
     "fixed_network": "eb212079-b6ec-430c-ba57-14280a457bcb",
     "fixed_subnet": "4fdf5b80-3d35-43f5-a5c1-010a3b6c8e90",
     "flavor_id": "6ef27f21-c774-4c0e-84ff-7dd4a762571f",
-    "keypair": "tw-kr2-alpha",
+    "keypair": "test-keypair",
     "labels": {
         "availability_zone": "kr2-pub-b",
         "boot_volume_size": "20",
@@ -359,10 +403,9 @@ X-Auth-Token: {tokenId}
         "kube_tag": "v1.17.6",
         "master_lb_floating_ip_enabled": "true",
         "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
-        "user_script": "#!/bin/python3\n\nimport os\n\nprint(\"haha this is python. cwd is {}\".format(os.getcwd()))"
+        "user_script": ""
     },
-    "master_count": 1,
-    "name": "tw-cli-test",
+    "name": "test-k8s",
     "node_count": 1
 }
 ```
@@ -531,7 +574,7 @@ X-Auth-Token: {tokenId}
 
 ```json
 {
-    "config": "apiVersion: v1\nclusters:\n- cluster:\n    certificate-authority-data: LS0tLS1CRU... \n    server: https://96742ac4-alp-kr2-k8s.container.cloud.toast.com:6443\n  name: \"toast-robot-e2e-1-18\"\ncontexts:\n- context:\n    cluster: \"toast-robot-e2e-1-18\"\n    user: admin\n  name: default\ncurrent-context: default\nkind: Config\npreferences: {}\nusers:\n- name: admin\n  user:\n    client-certificate-data: LS0tLS1CRU...\n    client-key-data: LS0tLS1CRU...\n"
+    "config": "apiVersion: v1\nclusters:\n- cluster:\n    certificate-authority-data: LS0tLS1CRU... \n    server: https://96742ac4-kr2-k8s.container.cloud.toast.com:6443\n  name: \"toast-robot-e2e-1-18\"\ncontexts:\n- context:\n    cluster: \"toast-robot-e2e-1-18\"\n    user: admin\n  name: default\ncurrent-context: default\nkind: Config\npreferences: {}\nusers:\n- name: admin\n  user:\n    client-certificate-data: LS0tLS1CRU...\n    client-key-data: LS0tLS1CRU...\n"
 }
 ```
 
@@ -587,23 +630,10 @@ X-Auth-Token: {tokenId}
 {
     "nodegroups": [
         {
-            "flavor_id": "22c1ae2c-55b2-44a9-8160-7acfffddd153",
-            "image_id": "7925ed30-3907-4c49-a7ae-c6bc679e9435",
-            "is_default": true,
-            "max_node_count": null,
-            "min_node_count": 1,
-            "name": "default-master",
-            "node_count": 3,
-            "role": "master",
-            "stack_id": "9edf6874-6b4f-40af-a165-8390c7fb19c0",
-            "status": "UPDATE_COMPLETE",
-            "uuid": "24a861b9-e572-433e-a79d-edec0269c881"
-        },
-        {
             "flavor_id": "069bdcff-e9b6-42c8-83ce-4c743ea30394",
             "image_id": "96aff4ab-d221-4688-8364-2fcf02d50547",
             "is_default": false,
-            "max_node_count": null,
+            "max_node_count": 10,
             "min_node_count": 1,
             "name": "default-worker",
             "node_count": 2,
@@ -725,11 +755,11 @@ X-Auth-Token: {tokenId}
     },
     "links": [
         {
-            "href": "http://10.162.148.141:9511/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
+            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
             "rel": "self"
         },
         {
-            "href": "http://10.162.148.141:9511/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
+            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
             "rel": "bookmark"
         }
     ],
@@ -775,10 +805,6 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|---|
 | tokenId | Header | String | O | トークンID |
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
-
-
-| 名前 | 種類 | 形式 | 必須 | 説明 |
-|---|---|---|---|---|
 | flavor_id | Body | UUID | O | ノードで使用するインスタンスタイプUUID |
 | image_id | Body | UUID | O | ノードで使用するベースイメージUUID |
 | labels | Body | Object | O | ノードグループ作成情報オブジェクト |
@@ -793,8 +819,6 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_util_thresh | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：リソース使用量しきい値 |
 | labels.ca_scale_down_delay_after_add | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：増設後の縮小遅延時間 |
 | labels.user_script | Body | String | X | 予約スクリプト |
-| max_node_count | Body | Integer | X | 最大ノード数 |
-| min_node_count | Body | Integer | X | 最小ノード数 |
 | name | BODY | String | O | ノードグループ名 |
 | node_count | Body | Integer | X | ノード数(デフォルト値: 1) |
 
@@ -804,7 +828,7 @@ X-Auth-Token: {tokenId}
 
 ```json
 {
-    "name": "aaaaaa",
+    "name": "added-nodegroup",
     "node_count": 1,
     "flavor_id": "6ef27f21-c774-4c0e-84ff-7dd4a762571f",
     "image_id": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
@@ -870,17 +894,17 @@ X-Auth-Token: {tokenId}
     },
     "links": [
         {
-            "href": "http://10.162.148.141:9511/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
+            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
             "rel": "self"
         },
         {
-            "href": "http://10.162.148.141:9511/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
+            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
             "rel": "bookmark"
         }
     ],
     "max_node_count": null,
     "min_node_count": 1,
-    "name": "aaaaaa",
+    "name": "added-nodegroup",
     "node_count": 1,
     "project_id": "1ffeaca9bbf94ab1aa9cffdec29a258a",
     "role": "worker",
@@ -997,10 +1021,10 @@ X-Auth-Token: {tokenId}
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
 | NODEGROUP_ID_OR_NAME | URL | UUID or String | O | ノードグループUUIDまたはノードグループ名 | 
 | ca_enable | Body | String | O | 機能を有効にするかどうか("True" / "False") |
-| ca_max_node_count | Body | X |String | 最大ノード数 |
-| ca_min_node_count | Body | X |String | 最小ノード数 |
-| ca_scale_down_enable | Body | X |String | 縮小が有効かどうか("True" / "False") |
-| ca_scale_down_unneeded_time | Body | X |String | しきい値領域維持時間 |
+| ca_max_node_count | Body |X|String | 最大ノード数 |
+| ca_min_node_count | Body |X|String | 最小ノード数 |
+| ca_scale_down_enable | Body |X|String | 縮小が有効かどうか("True" / "False") |
+| ca_scale_down_unneeded_time | Body |X|String | しきい値領域維持時間 |
 | ca_scale_down_util_thresh | Body | String | X |リソース使用量しきい値 |
 | ca_scale_down_delay_after_add | Body | String | X |増設後の縮小遅延時間 |
 
@@ -1044,7 +1068,7 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### ノードグループのアップグレード
+### クラスタのアップグレード
 
 ノードグループをアップグレードします。
 
@@ -1062,8 +1086,17 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|---|
 | tokenId | Header | String | O | トークンID |
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
-| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | ノードグループUUIDまたはノードグループ名 | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | ノードグループUUIDまたはノードグループ名<br>マスターコンポーネントのアップグレード時には**default-master**と指定 |  | 
 | version | Body | String | O | Kubernetesバージョン |
+
+クラスタをアップグレードするには、マスターコンポーネントをアップグレードした後、ワーカーコンポーネントをアップグレードする必要があります。マスターとワーカーコンポーネントのアップグレードはノードグループ単位で行われます。
+
+* マスターコンポーネントのアップグレード
+    * ノードグループ名を**default-master**と指定します。
+
+* ワーカーコンポーネントのアップグレード
+    * アップグレードするノードグループ名を指定します。
+
 
 <details><summary>例</summary>
 <p>
