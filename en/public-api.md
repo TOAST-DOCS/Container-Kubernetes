@@ -12,6 +12,61 @@ All API calls are made using the `kubernetes` type endpoint.
 
 Fields not specified in the guide may appear in API responses. These fields are used for internal use by NHN Cloud and are subject to change without prior notice, so please do not use them.
 
+## Check the Information of Resources Used in API
+
+The Kubernetes service API uses several resources for configuring clusters and node groups. You can check the information of each resource as follows.
+
+### UUID of the VPC network attached to the internet gateway
+
+You can query the VPC network attached to the internet gateway by using the **router:external=True** query parameter in the VPC network list query API.
+
+```
+GET /v2.0/networks?router:external=True
+```
+
+For more information about the network list query API, refer to [List Networks](https://docs.toast.com/en/Network/VPC/en/public-api/#list-networks).
+
+
+### List of UUIDs of Subnets Attached to the Internet Gateway
+
+Enter the UUID of subnet associated with the VPC network attached to the internet gateway. If multiple subnets are found, enter them by concatenating them with a colon (`:`). For more information about the subnet list query API, refer to [List Subnets](https://docs.toast.com/en/Network/VPC/en/public-api/#list-subnets).
+
+
+### VPC Network UUID
+
+Enter the UUID of internal VPC network to associate with the node. For more information about the network list query API, refer to [List Networks](https://docs.toast.com/en/Network/VPC/en/public-api/#list-networks).
+
+### VPC Subnet UUID
+
+Enter the UUID of subnet associated with the internal VPC network to associate with the node. For more information about the subnet list query API, refer to [List Subnets](https://docs.toast.com/en/Network/VPC/en/public-api/#list-subnets).
+
+### Availability Zone UUID
+
+Enter the UUID of availability zone in which to create the node. For more information about the availability zone list query API, see [List Availability Zones](https://docs.toast.com/en/Compute/Instance/en/public-api/#list-availability-zones).
+
+### Key Pair UUID
+
+Enter the key pair to use when connecting to the node. For more information about the key pair list query API, refer to [List Key Pairs](https://docs.toast.com/en/Compute/Instance/en/public-api/#list-key-pairs).
+
+### Base Image UUID
+
+Enter the base image UUID to use for creating a node. The base image UUID for each region is as follows:
+
+| Region | Base Image UUID |
+|---|---|
+| Korea (Pangyo) Region | 2b03f75e-c583-4198-8821-6eba31ab621e |
+| Korea (Pyeongchon) Region | a3c175ce-6477-4de0-b8d1-168dc9235fef |
+
+### Block Storage Type
+
+Enter the block storage UUID to use for the node. For more information about the block storage type list query API, refer to [List Volume Types](https://docs.toast.com/en/Storage/Block%20Storage/en/public-api/#list-volume-types) .
+
+### Flavor UUID
+
+Enter the UUID of flavor for the node to be created. For more information about the flavor list query API, refer to [List Flavors](https://docs.toast.com/en/Compute/Instance/en/public-api/#list-flavors).
+
+
+
 ## Cluster
 
 ### View a Cluster List
@@ -63,6 +118,7 @@ This API does not require a request body.
 | clusters.labels.ca_scale_down_util_thresh | Body | String | Applied to the default worker node group: Autoscaler: Scale down utilization threshold  |
 | clusters.labels.ca_scale_down_delay_after_add | Body | String | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
 | clusters.labels.user_script | Body | String | Scheduled script |
+| clusters.labels.master_lb_floating_ip_enabled | Body | String | Whether to create a public domain address for Kubernetes API endpoint ("True" / "False") |
 
 
 <details><summary>Example</summary>
@@ -76,8 +132,8 @@ This API does not require a request body.
             "create_timeout": 60,
             "docker_volume_size": null,
             "flavor_id": "6ef27f21-c774-4c0e-84ff-7dd4a762571f",
-            "health_status": null,
-            "keypair": "tw-kr2-alpha",
+            "health_status": "HEALTHY",
+            "keypair": "testkeypair",
             "labels": {
                 "availability_zone": "kr2-pub-b",
                 "boot_volume_size": "20",
@@ -107,21 +163,19 @@ This API does not require a request body.
                 "os_version": "7.8",
                 "project_domain": "NORMAL",
                 "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575",
-                "user_script": "#!/bin/python3\n\nimport os\n\nprint(\"haha this is python. cwd is {}\".format(os.getcwd()))"
+                "user_script": ""
             },
             "links": [
                 {
-                    "href": "http://10.162.148.141:9511/v1/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
+                    "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/v1/clusters/f0af4484-0a16-433a-a15c-295d9ba6537d",
                     "rel": "self"
                 },
                 {
-                    "href": "http://10.162.148.141:9511/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
+                    "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/clusters/f0af4484-0a16-433a-a15c-295d9ba6537d",
                     "rel": "bookmark"
                 }
             ],
-            "master_count": 3,
-            "master_flavor_id": null,
-            "name": "tw-cli",
+            "name": "k8s-test",
             "node_count": 1,
             "stack_id": "7f497472-9729-4b89-9124-1c097335b856",
             "status": "CREATE_COMPLETE",
@@ -169,13 +223,11 @@ This API does not require a request body.
 | stack_id | Body | UUID | UUID of the heat stack associated with the master node group |
 | status | Body | String | Cluster status |
 | status_reason | Body | String | Reason for the node group status (can be null) |
-| discovery_url | Body | String | URL that can be used for ETCD discovery |
 | api_address | Body | String | Kubernetes API endpoint |
 | project_id | Body | String | Project (tenant) ID |
 | fixed_network | Body | UUID | VPC UUID|
 | fixed_subnet | Body | UUID | VPC Subnet UUID |
 | node_addresses | Body | String List | Worker node IP address list |
-| master_addresses | Body | String List | Master node IP address list |
 | created_at | Body | String | Created time (UTC) |
 | updated_at | Body | String | Last updated time (UTC) |
 | labels | Body | Object | Cluster label |
@@ -195,29 +247,29 @@ This API does not require a request body.
 | labels.ca_scale_down_util_thresh | Body | String | Applied to the default worker node group: Autoscaler: Scale down utilization threshold  |
 | labels.ca_scale_down_delay_after_add | Body | String | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
 | labels.user_script | Body | String | Scheduled script |
+| labels.master_lb_floating_ip_enabled | Body | String | Whether to create a public domain address for Kubernetes API endpoint ("True" / "False") |
 
 <details><summary>Example</summary>
 <p>
 
 ```json
 {
-    "api_address": "https://2b778d83-alp-kr2-k8s.container.cloud.toast.com:6443",
+    "api_address": "https://2b778d83-kr2-k8s.container.cloud.toast.com:6443",
     "cluster_template_id": "b4503d97-6012-499d-a31a-5200f94a7890",
     "coe_version": "v1.17.6",
     "container_version": "1.12.6",
     "create_timeout": 60,
     "created_at": "2021-08-05T01:48:39+00:00",
-    "discovery_url": "http://169.254.169.248/1b3a4e306aa9ec896aef230c799d14c1",
     "docker_volume_size": null,
     "fixed_network": "eb212079-b6ec-430c-ba57-14280a457bcb",
     "fixed_subnet": "4fdf5b80-3d35-43f5-a5c1-010a3b6c8e90",
     "flavor_id": "6ef27f21-c774-4c0e-84ff-7dd4a762571f",
     "floating_ip_enabled": false,
-    "health_status": null,
+    "health_status": "HEALTHY",
     "health_status_reason": {
-        "api": "Networking Error...Check network reachability from magnum-conductor host to the cluster api server with 'telnet 2b778d83-alp-kr2-k8s.container.cloud.toast.com 6443'"
+        {"test-k8s-default-w-bnga636xulqk-node-0.Ready": "True", "api": "ok"}
     },
-    "keypair": "tw-kr2-alpha",
+    "keypair": "test-keypair",
     "labels": {
         "availability_zone": "kr2-pub-b",
         "boot_volume_size": "20",
@@ -247,26 +299,19 @@ This API does not require a request body.
         "os_version": "7.8",
         "project_domain": "NORMAL",
         "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575",
-        "user_script": "#!/bin/python3\n\nimport os\n\nprint(\"haha this is python. cwd is {}\".format(os.getcwd()))"
+        "user_script": ""
     },
     "links": [
         {
-            "href": "http://10.162.148.141:9511/v1/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
+            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/v1/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
             "rel": "self"
         },
         {
-            "href": "http://10.162.148.141:9511/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
+            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
             "rel": "bookmark"
         }
     ],
-    "master_addresses": [
-        "192.168.0.22",
-        "192.168.0.12",
-        "192.168.0.10"
-    ],
-    "master_count": 3,
-    "master_flavor_id": null,
-    "name": "tw-cli",
+    "name": "test-k8s",
     "node_addresses": [
         "192.168.0.5"
     ],
@@ -303,7 +348,7 @@ X-Auth-Token: {tokenId}
 | Name | Type | Format | Required | Description |
 |---|---|---|---|---|
 | tokenId | Header | String | O | Token ID |
-| keypair | Body | String | O | Key pair to apply to the default worker node group |
+| keypair | Body | String | O | UUID of the key pair applied to the default worker node group |
 | name | Body | String | O | Cluster name |
 | cluster_template_id | Body | String | O | Cluster template ID. Must be set to "iaas_console" |
 | node_count | Body | String | O | Number of nodes to apply to the default worker node group |
@@ -312,8 +357,8 @@ X-Auth-Token: {tokenId}
 | labels.node_image | Body | UUID | O | Applied to the default worker node group: Base image UUID |
 | labels.boot_volume_type | Body | String | O | Applied to the default worker node group: Block storage type|
 | labels.boot_volume_size | Body | String | O | Applied to the default worker node group: Block storage size (GB) |
-| labels.external_network_id | Body | String | X | UUID of the VPC network attached to the internet gateway |
-| labels.external_subnet_id_list | Body | String | X | List of UUIDs of subnets attached to the internet gateway (separated by colons) |
+| labels.external_network_id | Body | String | X | UUID of the VPC network attached to the internet gateway<br>Must be set when a router associated with a VPC subnet is attached to the internet gateway |
+| labels.external_subnet_id_list | Body | String | X | List of UUIDs of subnets attached to the internet gateway (separated by colon)<br>Must be set when a router associated with a VPC subnet is attached to the internet gateway |
 | labels.cert_manager_api | Body | String | O | Whether to enable the certificate signing request (CSR) feature. Must be set to "True" |
 | labels.ca_enable | Body | String | O | Applied to the default worker node group: Autoscaler: Whether to enable the feature ("True" / "False") |
 | labels.ca_max_node_count | Body | String | X | Applied to the default worker node group: Autoscaler: Maximum number of nodes |
@@ -324,10 +369,10 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_delay_after_add | Body | String | X | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
 | labels.kube_tag | Body | String | O | Kubernetes Version |
 | labels.user_script | Body | String | X | Scheduled script |
+| labels.master_lb_floating_ip_enabled | Body | String | O | Whether to create a public domain address for Kubernetes API endpoint ("True" / "False")<br>Can be set to "True" only when labels.external_network_id and labels.external_subnet_id_list are set |
 | flavor_id | Body | UUID | O | Applied to the default worker node group: Node flavor UUID |
 | fixed_network | Body | UUID | O | VPC Network UUID |
 | fixed_subnet | Body | UUID | O | VPC Subnet UUID |
-
 
 <details><summary>Example</summary>
 <p>
@@ -336,11 +381,10 @@ X-Auth-Token: {tokenId}
 {
     "cluster_template_id": "iaas_console",
     "create_timeout": 60,
-    "discovery_url": null,
     "fixed_network": "eb212079-b6ec-430c-ba57-14280a457bcb",
     "fixed_subnet": "4fdf5b80-3d35-43f5-a5c1-010a3b6c8e90",
     "flavor_id": "6ef27f21-c774-4c0e-84ff-7dd4a762571f",
-    "keypair": "tw-kr2-alpha",
+    "keypair": "test-keypair",
     "labels": {
         "availability_zone": "kr2-pub-b",
         "boot_volume_size": "20",
@@ -359,10 +403,9 @@ X-Auth-Token: {tokenId}
         "kube_tag": "v1.17.6",
         "master_lb_floating_ip_enabled": "true",
         "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
-        "user_script": "#!/bin/python3\n\nimport os\n\nprint(\"haha this is python. cwd is {}\".format(os.getcwd()))"
+        "user_script": ""
     },
-    "master_count": 1,
-    "name": "tw-cli-test",
+    "name": "test-k8s",
     "node_count": 1
 }
 ```
@@ -531,7 +574,7 @@ This API does not require a request body.
 
 ```json
 {
-    "config": "apiVersion: v1\nclusters:\n- cluster:\n    certificate-authority-data: LS0tLS1CRU... \n    server: https://96742ac4-alp-kr2-k8s.container.cloud.toast.com:6443\n  name: \"toast-robot-e2e-1-18\"\ncontexts:\n- context:\n    cluster: \"toast-robot-e2e-1-18\"\n    user: admin\n  name: default\ncurrent-context: default\nkind: Config\npreferences: {}\nusers:\n- name: admin\n  user:\n    client-certificate-data: LS0tLS1CRU...\n    client-key-data: LS0tLS1CRU...\n"
+    "config": "apiVersion: v1\nclusters:\n- cluster:\n    certificate-authority-data: LS0tLS1CRU... \n    server: https://96742ac4-kr2-k8s.container.cloud.toast.com:6443\n  name: \"toast-robot-e2e-1-18\"\ncontexts:\n- context:\n    cluster: \"toast-robot-e2e-1-18\"\n    user: admin\n  name: default\ncurrent-context: default\nkind: Config\npreferences: {}\nusers:\n- name: admin\n  user:\n    client-certificate-data: LS0tLS1CRU...\n    client-key-data: LS0tLS1CRU...\n"
 }
 ```
 
@@ -572,7 +615,7 @@ This API does not require a request body.
 | nodegroups.uuid | Body | UUID | Node group UUID |
 | nodegroups.flavor_id | Body | UUID | Node group flavor UUID |
 | nodegroups.image_id | Body | UUID | Node group base image UUID |
-| nodegroups.max_node_count | Body | Integer | Maximum number of nodes in a node group  |
+| nodegroups.max_node_count | Body | Integer | Maximum number of nodes in a node group |
 | nodegroups.min_node_count | Body | Integer | Minimum number of nodes in a node group |
 | nodegroups.name | Body | String | Node Group Name |
 | nodegroups.node_count | Body | Integer | Number of nodes in a node group |
@@ -587,23 +630,10 @@ This API does not require a request body.
 {
     "nodegroups": [
         {
-            "flavor_id": "22c1ae2c-55b2-44a9-8160-7acfffddd153",
-            "image_id": "7925ed30-3907-4c49-a7ae-c6bc679e9435",
-            "is_default": true,
-            "max_node_count": null,
-            "min_node_count": 1,
-            "name": "default-master",
-            "node_count": 3,
-            "role": "master",
-            "stack_id": "9edf6874-6b4f-40af-a165-8390c7fb19c0",
-            "status": "UPDATE_COMPLETE",
-            "uuid": "24a861b9-e572-433e-a79d-edec0269c881"
-        },
-        {
             "flavor_id": "069bdcff-e9b6-42c8-83ce-4c743ea30394",
             "image_id": "96aff4ab-d221-4688-8364-2fcf02d50547",
             "is_default": false,
-            "max_node_count": null,
+            "max_node_count": 10,
             "min_node_count": 1,
             "name": "default-worker",
             "node_count": 2,
@@ -667,7 +697,7 @@ This API does not require a request body.
 | labels.ca_scale_down_unneeded_time | Body | String | Applied to the worker node group: Autoscaler: Scale down unneeded time |
 | labels.ca_scale_down_util_thresh | Body | String | Applied to the worker node group: Autoscaler: Scale down utilization threshold  |
 | labels.ca_scale_down_delay_after_add | Body | String | Applied to the worker node group: Auto Scaler: Scale down delay after add |
-| labels.kube_tag | Body | String | Kubernetes version of the worker node group  |
+| labels.kube_tag | Body | String | Kubernetes version of the worker node group |
 | labels.user_script | Body | String | Scheduled script |
 | max_node_count | Body | Integer | Maximum Node Count |
 | min_node_count | Body | Integer | Minimum Node Count |
@@ -725,11 +755,11 @@ This API does not require a request body.
     },
     "links": [
         {
-            "href": "http://10.162.148.141:9511/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
+            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
             "rel": "self"
         },
         {
-            "href": "http://10.162.148.141:9511/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
+            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
             "rel": "bookmark"
         }
     ],
@@ -775,10 +805,6 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|---|
 | tokenId | Header | String | O | Token ID |
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
-
-
-| Name | Type | Format | Required | Description |
-|---|---|---|---|---|
 | flavor_id | Body | UUID | O |  UUID of the flavor used by the node |
 | image_id | Body | UUID | O | UUID of the base image used by the node |
 | labels | Body | Object | O | Node group creation information object |
@@ -793,8 +819,6 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_util_thresh | Body | String | X | Applied to the default worker node group: Autoscaler: Scale down utilization threshold  |
 | labels.ca_scale_down_delay_after_add | Body | String | X | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
 | labels.user_script | Body | String | X | Scheduled script |
-| max_node_count | Body | Integer | X | Maximum Node Count |
-| min_node_count | Body | Integer | X | Minimum Node Count |
 | name | Body | String | O | Node Group Name |
 | node_count | Body | Integer | X | Number of nodes (Default: 1) |
 
@@ -804,7 +828,7 @@ X-Auth-Token: {tokenId}
 
 ```json
 {
-    "name": "aaaaaa",
+    "name": "added-nodegroup",
     "node_count": 1,
     "flavor_id": "6ef27f21-c774-4c0e-84ff-7dd4a762571f",
     "image_id": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
@@ -870,17 +894,17 @@ X-Auth-Token: {tokenId}
     },
     "links": [
         {
-            "href": "http://10.162.148.141:9511/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
+            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
             "rel": "self"
         },
         {
-            "href": "http://10.162.148.141:9511/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
+            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
             "rel": "bookmark"
         }
     ],
     "max_node_count": null,
     "min_node_count": 1,
-    "name": "aaaaaa",
+    "name": "added-nodegroup",
     "node_count": 1,
     "project_id": "1ffeaca9bbf94ab1aa9cffdec29a258a",
     "role": "worker",
@@ -951,9 +975,9 @@ This API does not require a request body.
 | ca_max_node_count | Body | String | Maximum Node Count |
 | ca_min_node_count | Body | String | Minimum Node Count |
 | ca_scale_down_enable | Body | String | Whether to enable scale-down ("True" / "False") |
-| ca_scale_down_unneeded_time | Body | String | Threshold Duration |
-| ca_scale_down_util_thresh | Body | String | Resource Usage Threshold  |
-| ca_scale_down_delay_after_add | Body | String | Scale-down Delay After Scale-up |
+| ca_scale_down_unneeded_time | Body | String | Scale Down Unneeded Time |
+| ca_scale_down_util_thresh | Body | String | Scale Down Utilization Threshold  |
+| ca_scale_down_delay_after_add | Body | String | Scale Down Delay After Add |
 
 <details><summary>Example</summary>
 <p>
@@ -997,12 +1021,12 @@ X-Auth-Token: {tokenId}
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
 | NODEGROUP_ID_OR_NAME | URL | UUID or String | O | Node group UUID or node group name | 
 | ca_enable | Body | String | O | Whether to enable the feature ("True" / "False") |
-| ca_max_node_count | Body | X |String | Maximum Node Count |
-| ca_min_node_count | Body | X |String | Minimum Node Count |
-| ca_scale_down_enable | Body | X |String | Whether to enable scale-down ("True" / "False") |
-| ca_scale_down_unneeded_time | Body | X |String | Threshold Duration |
-| ca_scale_down_util_thresh | Body | String | X |Resource Usage Threshold  |
-| ca_scale_down_delay_after_add | Body | String | X |Scale-down Delay After Scale-up |
+| ca_max_node_count | Body | String |X| Maximum Node Count |
+| ca_min_node_count | Body | String |X| Minimum Node Count |
+| ca_scale_down_enable | Body | String |X| Whether to enable scale-down ("True" / "False") |
+| ca_scale_down_unneeded_time | Body | String |X| Scale Down Unneeded Time |
+| ca_scale_down_util_thresh | Body | String | X |Scale Down Utilization Threshold  |
+| ca_scale_down_delay_after_add | Body | String | X |Scale Down Delay After Add |
 
 <details><summary>Example</summary>
 <p>
@@ -1044,9 +1068,9 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### Upgrade a Node Group
+### Upgrade a Cluster
 
-Upgrade a node group.
+Upgrade a cluster.
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}/upgrade
@@ -1062,8 +1086,17 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|---|
 | tokenId | Header | String | O | Token ID |
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
-| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | Node group UUID or node group name | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | Node group UUID or node group name<br>Set to **default-master** when upgrading the master components | 
 | version | Body | String | O | Kubernetes Version |
+
+To upgrade a cluster, you must upgrade the master components and then upgrade the worker components. Master and worker component upgrades are performed on a per node group basis.
+
+* Upgrading master components
+    * Set the node group name to **default-master**.
+
+* Upgrading worker components
+    * Set the name of node group to upgrade.
+
 
 <details><summary>Example</summary>
 <p>
