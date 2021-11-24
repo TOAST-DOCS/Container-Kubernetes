@@ -4,7 +4,7 @@
 
 #### Added Features
 * Released the public API for the Kubernetes service.
-     * For details on the public API, refer to [API Guide](/Container/Kubernetes/en/public-api).
+     * For details on the public API, refer to [API Guide](/Container/Kubernetes/zh/public-api).
 
 ### October 26, 2021
 
@@ -23,7 +23,7 @@
 * Added container log rotation setting to the worker nodes.
     * Image update
         * CentOS 7.8 - Container (2021.07.27)
-    * Refer to [Troubleshooting Guide](/Container/Kubernetes/en/troubleshooting-guide) for details on container log management.
+    * Refer to [Troubleshooting Guide](/Container/Kubernetes/zh/troubleshooting-guide) for details on container log management.
 
 ### June 29, 2021
 

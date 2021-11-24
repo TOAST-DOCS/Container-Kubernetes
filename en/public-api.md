@@ -24,29 +24,29 @@ You can query the VPC network attached to the internet gateway by using the **ro
 GET /v2.0/networks?router:external=True
 ```
 
-For more information about the network list query API, refer to [List Networks](https://docs.toast.com/en/Network/VPC/en/public-api/#list-networks).
+For more information about the network list query API, refer to [List Networks](/Network/VPC/en/public-api/#list-networks).
 
 
 ### List of UUIDs of Subnets Attached to the Internet Gateway
 
-Enter the UUID of subnet associated with the VPC network attached to the internet gateway. If multiple subnets are found, enter them by concatenating them with a colon (`:`). For more information about the subnet list query API, refer to [List Subnets](https://docs.toast.com/en/Network/VPC/en/public-api/#list-subnets).
+Enter the UUID of subnet associated with the VPC network attached to the internet gateway. If multiple subnets are found, enter them by concatenating them with a colon (`:`). For more information about the subnet list query API, refer to [List Subnets](/Network/VPC/en/public-api/#list-subnets).
 
 
 ### VPC Network UUID
 
-Enter the UUID of internal VPC network to associate with the node. For more information about the network list query API, refer to [List Networks](https://docs.toast.com/en/Network/VPC/en/public-api/#list-networks).
+Enter the UUID of internal VPC network to associate with the node. For more information about the network list query API, refer to [List Networks](/Network/VPC/en/public-api/#list-networks).
 
 ### VPC Subnet UUID
 
-Enter the UUID of subnet associated with the internal VPC network to associate with the node. For more information about the subnet list query API, refer to [List Subnets](https://docs.toast.com/en/Network/VPC/en/public-api/#list-subnets).
+Enter the UUID of subnet associated with the internal VPC network to associate with the node. For more information about the subnet list query API, refer to [List Subnets](/Network/VPC/en/public-api/#list-subnets).
 
 ### Availability Zone UUID
 
-Enter the UUID of availability zone in which to create the node. For more information about the availability zone list query API, see [List Availability Zones](https://docs.toast.com/en/Compute/Instance/en/public-api/#list-availability-zones).
+Enter the UUID of availability zone in which to create the node. For more information about the availability zone list query API, see [List Availability Zones](/Compute/Instance/en/public-api/#list-availability-zones).
 
 ### Key Pair UUID
 
-Enter the key pair to use when connecting to the node. For more information about the key pair list query API, refer to [List Key Pairs](https://docs.toast.com/en/Compute/Instance/en/public-api/#list-key-pairs).
+Enter the key pair to use when connecting to the node. For more information about the key pair list query API, refer to [List Key Pairs](/Compute/Instance/en/public-api/#list-key-pairs).
 
 ### Base Image UUID
 
@@ -59,11 +59,11 @@ Enter the base image UUID to use for creating a node. The base image UUID for ea
 
 ### Block Storage Type
 
-Enter the block storage UUID to use for the node. For more information about the block storage type list query API, refer to [List Volume Types](https://docs.toast.com/en/Storage/Block%20Storage/en/public-api/#list-volume-types) .
+Enter the block storage UUID to use for the node. For more information about the block storage type list query API, refer to [List Volume Types](/Storage/Block%20Storage/en/public-api/#list-volume-types) .
 
 ### Flavor UUID
 
-Enter the UUID of flavor for the node to be created. For more information about the flavor list query API, refer to [List Flavors](https://docs.toast.com/en/Compute/Instance/en/public-api/#list-flavors).
+Enter the UUID of flavor for the node to be created. For more information about the flavor list query API, refer to [List Flavors](/Compute/Instance/en/public-api/#list-flavors).
 
 
 
