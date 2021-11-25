@@ -106,7 +106,7 @@ Nodes can be deleted from operating node groups. The current list of nodes will 
 Node groups composed of GPU instances can be created with Kubernetes when you need to run workload based on GPU. Select `g2` type when selecting a flavor during the process of generating the clusters or node groups to make a GPU node group.
 
 > [Note]
-> GPU provided by NHN Cloud GPU instance is affiliated with NVIDIA. ([Identify available GPU specifications that can be used](https://docs.toast.com/en/Compute/GPU%20Instance/en/overview/#gpu-specifications))
+> GPU provided by NHN Cloud GPU instance is affiliated with NVIDIA. ([Identify available GPU specifications that can be used](/Compute/GPU%20Instance/en/overview/#gpu-specifications))
 > nvidia-device-plugin necessary for Kubernetes for NVIDIA GPU usage will be installed automatically when creating a GPU node group.
 
 To check the default setting and run a simple operation test for the created GPU node, use the following method:
