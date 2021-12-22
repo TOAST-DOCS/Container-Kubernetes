@@ -16,7 +16,7 @@ Fields not specified in the guide may appear in API responses. These fields are 
 
 The Kubernetes service API uses several resources for configuring clusters and node groups. You can check the information of each resource as follows.
 
-### UUID of the VPC network attached to the internet gateway
+### UUID of the VPC Network Attached to the Internet Gateway
 
 You can query the VPC network attached to the internet gateway by using the **router:external=True** query parameter in the VPC network list query API.
 
@@ -69,9 +69,9 @@ Enter the UUID of flavor for the node to be created. For more information about 
 
 ## Cluster
 
-### View a Cluster List
+### List Clusters
 
-Query a list of clusters.
+Retrieves a list of clusters.
 
 ```
 GET /v1/clusters
@@ -190,9 +190,9 @@ This API does not require a request body.
 
 ---
 
-### View a Cluster
+### Get a Cluster
 
-Query information of an individual cluster.
+Retrieves information of an individual cluster.
 
 ```
 GET /v1/clusters/{CLUSTER_ID_OR_NAME}
@@ -333,7 +333,7 @@ This API does not require a request body.
 
 ### Create a Cluster
 
-Create a cluster.
+Creates a cluster.
 
 ```
 POST /v1/clusters
@@ -435,7 +435,7 @@ X-Auth-Token: {tokenId}
 
 ### Delete a Cluster
 
-Delete a Cluster.
+Deletes a Cluster.
 
 ```
 DELETE /v1/clusters/{CLUSTER_ID_OR_NAME}
@@ -463,7 +463,7 @@ This API does not return a response body.
 
 ### Resize
 
-Adjust the number of nodes in the cluster.
+Adjusts the number of nodes in the cluster.
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/actions/resize
@@ -540,9 +540,9 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### Query kubeconfig of a Cluster
+### Get kubeconfig of a Cluster
 
-Query the cluster configuration file (kubeconfig).
+Retrieves the cluster configuration file (kubeconfig).
 
 ```
 GET /v1/clusters/{CLUSTER_ID_OR_NAME}/config
@@ -585,9 +585,9 @@ This API does not require a request body.
 
 ## Node Group
 
-### View a Node Group List
+### List Node Groups
 
-Query a list of node groups.
+Retrieves a list of node groups.
 
 ```
 GET /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups
@@ -651,9 +651,9 @@ This API does not require a request body.
 
 ---
 
-### View a Node Group
+### Get a Node Group
 
-Query information of an individual node group.
+Retrieves information of an individual node group.
 
 ```
 GET /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}
@@ -789,7 +789,7 @@ This API does not require a request body.
 
 ### Create a Node Group
 
-Create a node group.
+Creates a node group.
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups
@@ -919,7 +919,7 @@ X-Auth-Token: {tokenId}
 
 ### Delete a Node Group
 
-Delete the specified node group.
+Deletes the specified node group.
 ```
 DELETE /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}
 Accept: application/json
@@ -944,9 +944,9 @@ This API does not return a response body.
 
 ---
 
-### View Autoscaler Configuration of a Node Group
+### Get Autoscaler Configuration of a Node Group
 
-Query the autoscaler configuration of a node group.
+Retrieves the autoscaler configuration of a node group.
 
 ```
 GET /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}/autoscale
@@ -1003,7 +1003,7 @@ This API does not require a request body.
 
 ### Change Autoscaler Configuration of a Node Group
 
-Change the autoscaler configuration of a node group.
+Changes the autoscaler configuration of a node group.
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}/autoscale
@@ -1070,7 +1070,7 @@ X-Auth-Token: {tokenId}
 
 ### Upgrade a Cluster
 
-Upgrade a cluster.
+Upgrades a cluster.
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}/upgrade
@@ -1133,9 +1133,9 @@ To upgrade a cluster, you must upgrade the master components and then upgrade th
 
 ## Other Features
 
-### View the Supported Kubernetes Versions
+### Get the Supported Kubernetes Versions
 
-Query the Kubernetes versions supported by the NHN Cloud Kubernetes service.
+Retrieves the Kubernetes versions supported by the NHN Cloud Kubernetes service.
 
 ```
 GET /v1/supports
