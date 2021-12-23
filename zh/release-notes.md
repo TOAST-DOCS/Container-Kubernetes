@@ -1,5 +1,16 @@
 ## Container > Kubernetes > Release Notes
 
+### December 28, 2021
+
+#### Feature Updates
+
+* Updated the NVIDIA driver used in the GPU worker nodes.
+    * Previous version: 450.119.04
+    * Changed version: 450.156.00
+* Changed so that Prometheus compatible exporter is not automatically installed when creating an instance.
+* Image update
+    * CentOS 7.8 - Container (2021.12.21)
+
 ### November 23, 2021
 
 #### Added Features
@@ -12,7 +23,7 @@
 
 * Supports Kubernetes v1.19.13.
 * When creating a LoadBalancer type service object, various options for the load balancer can be set.
-* The minimum value of the autoscaler's 'Scale-down Delay After Scale-up' setting has been changed to 10 minutes.
+* The minimum value of the autoscaler's 'Scale Down Delay After Add' setting has been changed to 10 minutes.
 * In new clusters, the default worker node group can be deleted if there are two or more worker node groups.
 
 ### July 27, 2021
@@ -47,13 +58,13 @@
 * The PodSecurityPolicy plugin has been added to Kubernetes admission controller.
 * Changed the distribution version of the images used at the time of generating clusters or node groups.
     * Image update
-        * CentOS 7.8 - Container (2021.02.23)	
+        * CentOS 7.8 - Container (2021.02.23)
 
 ### January 26, 2021
 #### Bug Fixes
 * Fixed an issue where autoscaler does not work in an environment with no internet gateway connection.
     * Image update
-        * CentOS 7.5 - Container (2021.01.26)	
+        * CentOS 7.5 - Container (2021.01.26)
 
 ### December 29, 2020
 #### Feature Updates
