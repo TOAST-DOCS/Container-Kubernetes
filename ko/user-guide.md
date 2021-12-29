@@ -1234,7 +1234,7 @@ spec:
 ```
 
 이 매니페스트를 적용했을 때 리스너별 설정은 다음 표와 같이 설정됩니다.
-| 항목 | TCP-80에 연결된 리스너 | TCP-433에 연결된 리스너| 설명 |
+| 항목 | TCP-80 리스너 | TCP-433 리스너| 설명 |
 | --- | --- | --- | --- |
 | 로드 밸런싱 방식 | SOURCE_IP | LEAST_CONNECTIONS | TCP-80 리스너는 전역 설정에 따라 SOURCE_IP로 설정<br>TCP-443 리스너는 리스너별 설정에 따라 LEAST_CONNECTIONS로 설정  |
 | 세션 지속성 | SOURCE_IP | None | TCP-80 리스너는 리스너별 설정에 따라 SOURCE_IP로 설정<br>TCP-443 리스너는 기본값에 따라 None으로 설정 |
