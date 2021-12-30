@@ -1,10 +1,10 @@
-## Container > Kubernetes > 사용 가이드
+## Container > NHN Kubernetes Service > 사용 가이드
 
 ## 클러스터
 클러스터는 사용자의 Kubernetes를 구성하는 인스턴스들의 그룹입니다.
 
 ### 클러스터 생성
-Kubernetes 서비스를 사용하려면 먼저 클러스터를 생성해야 합니다. **Container > Kubernetes** 서비스 페이지에서 **클러스터 생성** 버튼을 클릭하면 클러스터 생성 페이지가 나타납니다. 클러스터 생성에 필요한 항목은 다음과 같습니다.
+NHN Kubernetes Service(이하 NKS)를 사용하려면 먼저 클러스터를 생성해야 합니다. **Container > NHN Kubernetes Service** 페이지에서 **클러스터 생성** 버튼을 클릭하면 클러스터 생성 페이지가 나타납니다. 클러스터 생성에 필요한 항목은 다음과 같습니다.
 
 | 항목 | 설명 |
 | --- | --- |
@@ -20,7 +20,7 @@ Kubernetes 서비스를 사용하려면 먼저 클러스터를 생성해야 합�
 | 블록 스토리지 타입 | 기본 노드 그룹 인스턴스의 블록 스토리지 종류 |
 | 블록 스토리지 크기 | 기본 노드 그룹 인스턴스의 블록 스토리지 크기 |
 
-Kubernetes 서비스는 여러 가지 버전을 지원합니다. 버전에 따라 일부 기능에 제약이 있을 수 있습니다.
+NKS는 여러 가지 버전을 지원합니다. 버전에 따라 일부 기능에 제약이 있을 수 있습니다.
 
 | 버전 | 클러스터 신규 생성 | 생성된 클러스터 사용|
 | :-: | :-: | :-: |
@@ -36,7 +36,7 @@ Kubernetes 서비스는 여러 가지 버전을 지원합니다. 버전에 따�
 
 
 ### 클러스터 조회
-생성한 클러스터는 **Container > Kubernetes** 서비스 페이지에서 확인할 수 있습니다. 클러스터를 선택하면 하단에 클러스터 정보가 나타납니다.
+생성한 클러스터는 **Container > NHN Kubernetes Service** 페이지에서 확인할 수 있습니다. 클러스터를 선택하면 하단에 클러스터 정보가 나타납니다.
 
 | 항목 | 설명 |
 | --- | --- |
@@ -233,7 +233,7 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 오토 스케일러는 노드 그룹의 가용 리소스가 부족해 파드(pod)를 스케줄링할 수 없거나 노드의 사용률이 일정 수준 이하로 유지되는 경우 노드의 수를 자동으로 조정하는 기능입니다. 이 기능은 노드 그룹별로 설정할 수 있고, 서로 독립적으로 동작합니다. 이 기능은 Kubernetes 프로젝트의 공식 지원 기능인 cluster-autoscaler 기능을 기반으로 합니다. 자세한 사항은 [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler)를 참고하세요.
 
 > [참고]
-> Kubernetes 서비스에 적용된 `cluster-autoscaler`의 버전은 `1.19.0`입니다.
+> NKS에 적용된 `cluster-autoscaler`의 버전은 `1.19.0`입니다.
 
 #### 용어 정리
 오토 스케일러 기능에서 사용하는 용어와 그 의미는 다음과 같습니다.
@@ -761,7 +761,7 @@ $ export PATH=$PATH:$(pwd)
 ```
 
 ### 설정
-kubectl로 Kubernetes 클러스터에 접근하려면 클러스터 설정 파일(kubeconfig)이 필요합니다. NHN Cloud 웹 콘솔에서 **Container > Kubernetes** 서비스 페이지를 열고 접근할 클러스터를 선택합니다. 하단 **기본 정보** 탭에서 **설정 파일** 항목의 **다운로드** 버튼을 클릭해 설정 파일을 다운로드합니다. 다운로드한 설정 파일은 원하는 위치로 옮겨 kubectl 실행 시 참조할 수 있도록 준비합니다.
+kubectl로 Kubernetes 클러스터에 접근하려면 클러스터 설정 파일(kubeconfig)이 필요합니다. NHN Cloud 웹 콘솔에서 **Container > NHN Kubernetes Service** 페이지를 열고 접근할 클러스터를 선택합니다. 하단 **기본 정보** 탭에서 **설정 파일** 항목의 **다운로드** 버튼을 클릭해 설정 파일을 다운로드합니다. 다운로드한 설정 파일은 원하는 위치로 옮겨 kubectl 실행 시 참조할 수 있도록 준비합니다.
 
 > [주의]
 > NHN Cloud 웹 콘솔에서 다운로드한 설정 파일은 클러스터 정보와 인증을 위한 토큰 등이 포함되어 있습니다. 설정 파일이 있으면 해당 Kubernetes 클러스터에 접근할 수 있는 권한을 갖게 됩니다. 설정 파일을 절대로 분실하지 않도록 주의하시기 바랍니다.
@@ -927,7 +927,7 @@ Kubernetes 버전 별 기본 활성 승인 컨트롤러는 모두 활성화됩�
 
 
 ### 클러스터 업그레이드
-NHN Cloud Kubernetes 서비스는 동작 중인 Kubernetes 클러스터의 Kubernetes 구성 요소 업그레이드를 지원합니다. 
+NKS는 동작 중인 Kubernetes 클러스터의 Kubernetes 구성 요소 업그레이드를 지원합니다. 
 
 #### Kubernetes 버전 차이 지원 정책
 Kubernetes 버전은 `x.y.z`로 표현됩니다. `x`는 메이저 버전, `y`는 마이너 버전, `z`는 패치 버전입니다. 기능이 추가되면 메이저 버전 혹은 마이너 버전을 올리고, 버그 수정과 같이 이전 버전과 호환되는 기능을 제공하면 패치 버전을 올립니다. 좀 더 자세한 내용은 [Semantic Versioning 2.0.0](https://semver.org/)을 참고하세요.
@@ -1767,7 +1767,7 @@ $ curl --resolve test.example.com:80:123.123.123.44 http://test.example.com/
 ```
 
 ## Kubernetes 대시보드
-NHN Cloud Kubernetes 서비스는 기본 웹 UI 대시보드(dashboard)를 제공합니다. Kubernetes 대시보드에 대한 자세한 내용은 [웹 UI (대시보드)](https://kubernetes.io/ko/docs/tasks/access-application-cluster/web-ui-dashboard/) 문서를 참고하세요.
+NKS는 기본 웹 UI 대시보드(dashboard)를 제공합니다. Kubernetes 대시보드에 대한 자세한 내용은 [웹 UI (대시보드)](https://kubernetes.io/ko/docs/tasks/access-application-cluster/web-ui-dashboard/) 문서를 참고하세요.
 
 ### 대시보드 서비스 공개
 사용자 Kubernetes에는 대시보드를 공개하기 위한 `kubernetes-dashboard` 서비스 객체가 미리 생성되어 있습니다.

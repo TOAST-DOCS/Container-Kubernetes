@@ -2,6 +2,9 @@
 
 ### 2022. 01. 25
 
+#### 기능 개선
+* Kubernetes 서비스의 이름이 NHN Kubernetes Service(NKS)로 변경되었습니다.
+
 #### 기능 추가
 
 * 아래 Kubernetes 버전을 지원합니다.
