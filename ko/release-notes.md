@@ -1,4 +1,4 @@
-## Container > Kubernetes > 릴리스 노트
+## Container > NHN Kubernetes Service(NKS) > 릴리스 노트
 
 ### 2022. 01. 25
 
@@ -20,8 +20,7 @@
 
 * 클러스터 생성 및 노드 그룹 생성 시 우분투(Ubuntu) 워커 이미지를 사용할 수 있습니다.
     * 이미지 추가
-        * Ubuntu Server 18.04.6 LTS - Container (2022.01)  
-
+        * Ubuntu Server 18.04.6 LTS - Container (2022.01)
 
 ### 2021. 12. 28.
 

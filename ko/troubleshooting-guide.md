@@ -1,6 +1,6 @@
-## Container > Kubernetes > 문제 해결 가이드
+## Container > NHN Kubernetes Service(NKS) > 문제 해결 가이드
 
-Kubernetes 서비스를 사용하면서 겪을 수 있는 다양한 문제들에 대한 해결 방법을 설명합니다.
+NHN Kubernetes Service(NKS)를 사용하면서 겪을 수 있는 다양한 문제들에 대한 해결 방법을 설명합니다.
 
 ### > 워커 노드의 컨테이너 로그 파일 크기가 커지면서 디스크 공간이 줄어듭니다.
 

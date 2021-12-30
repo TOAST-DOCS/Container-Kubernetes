@@ -1,4 +1,4 @@
-## Container > Kubernetes > 개요
+## Container > NHN Kubernetes Service(NKS) > 개요
 여기에서는 Kubernetes(쿠버네티스)가 무엇인지 간략히 알아보고, NHN Cloud에서 제공하는 NHN Kubernetes Service(NKS)를 살펴봅니다.
 
 ## Kubernetes
