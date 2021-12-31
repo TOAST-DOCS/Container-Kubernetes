@@ -29,9 +29,9 @@ Kubernetes 클러스터는 마스터와 노드로 구성됩니다.
 
 
 ## NHN Kubernetes Service(NKS)
-NKS는 클라우드에서 Kubernetes를 올바르고 안전하게 구동할 수 있게 Kubernetes 클러스터를 생성하고 관리할 수 있는 서비스입니다. 사용자는 웹 콘솔을 이용해 NHN Cloud에 꼭 맞는 Kubernetes 클러스터를 만들고 관리할 수 있습니다. 안전하고 효율적으로 운영할 수 있게 마스터는 NHN Cloud에서 관리하고, 사용자는 노드와 서비스, Pod(파드) 등을 관리합니다.
+NHN Kubernetes Service(NKS)는 클라우드에서 Kubernetes를 올바르고 안전하게 구동할 수 있게 Kubernetes 클러스터를 생성하고 관리할 수 있는 서비스입니다. 사용자는 웹 콘솔을 이용해 NHN Cloud에 꼭 맞는 Kubernetes 클러스터를 만들고 관리할 수 있습니다. 안전하고 효율적으로 운영할 수 있게 마스터는 NHN Cloud에서 관리하고, 사용자는 노드와 서비스, Pod(파드) 등을 관리합니다.
 
-NKS의 주요 기능은 다음과 같습니다.
+NHN Kubernetes Service(NKS)의 주요 기능은 다음과 같습니다.
 
 * NHN Cloud에 꼭맞는 Kubernetes 클러스터 생성과 관리
     * NHN Cloud의 기반 서비스와 연동

@@ -1135,7 +1135,7 @@ X-Auth-Token: {tokenId}
 
 ### 지원되는 Kubernetes 버전 보기
 
-NHN Cloud Kubernetes 서비스에서 지원하는 Kubernetes 버전을 조회합니다.
+NHN Kubernetes Service(NKS)에서 지원하는 Kubernetes 버전을 조회합니다.
 
 ```
 GET /v1/supports
