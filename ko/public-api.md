@@ -1167,9 +1167,12 @@ X-Auth-Token: {tokenId}
 ```json
 {
     "supported_k8s": {
-        "v1.17.6": true,
-        "v1.18.19": true,
-        "v1.19.13": true
+        "v1.17.6": false,
+        "v1.18.19": false,
+        "v1.19.13": true,
+        "v1.20.12": true,
+        "v1.21.6": true,
+        "v1.22.3": true
     }
 }
 ```
