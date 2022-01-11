@@ -1,4 +1,4 @@
-## Container > Kubernetes > API v2 가이드
+## Container > NHN Kubernetes Service(NKS) > API v2 가이드
 
 Kubernetes 클러스터를 구성하기 위한 API를 기술합니다.
 API를 사용하려면 API 엔드포인트와 토큰 등이 필요합니다. [API 사용 준비](/Compute/Compute/ko/identity-api/)를 참고하여 API 사용에 필요한 정보를 준비합니다.
@@ -14,7 +14,7 @@ API 응답에 가이드에 명시되지 않은 필드가 나타날 수 있습니
 
 ## API에 사용되는 리소스 정보 확인
 
-Kubernetes 서비스 API는 클러스터 및 노드 그룹 구성을 위해 여러 가지 리소스를 사용합니다. 리소스별 정보 확인 방법은 다음과 같습니다.
+NHN Kubernetes Service(NKS) API는 클러스터 및 노드 그룹 구성을 위해 여러 가지 리소스를 사용합니다. 리소스별 정보 확인 방법은 다음과 같습니다.
 
 ### 인터넷 게이트웨이에 연결된 VPC 네트워크 UUID
 
@@ -1135,7 +1135,7 @@ X-Auth-Token: {tokenId}
 
 ### 지원되는 Kubernetes 버전 보기
 
-NHN Cloud Kubernetes 서비스에서 지원하는 Kubernetes 버전을 조회합니다.
+NHN Kubernetes Service(NKS)에서 지원하는 Kubernetes 버전을 조회합니다.
 
 ```
 GET /v1/supports
@@ -1167,9 +1167,12 @@ X-Auth-Token: {tokenId}
 ```json
 {
     "supported_k8s": {
-        "v1.17.6": true,
-        "v1.18.19": true,
-        "v1.19.13": true
+        "v1.17.6": false,
+        "v1.18.19": false,
+        "v1.19.13": true,
+        "v1.20.12": true,
+        "v1.21.6": true,
+        "v1.22.3": true
     }
 }
 ```

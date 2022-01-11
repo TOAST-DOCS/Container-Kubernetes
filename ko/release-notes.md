@@ -1,4 +1,26 @@
-## Container > Kubernetes > 릴리스 노트
+## Container > NHN Kubernetes Service(NKS) > 릴리스 노트
+
+### 2022. 01. 25.
+
+#### 기능 개선
+* Kubernetes 서비스의 이름이 NHN Kubernetes Service(NKS)로 변경되었습니다.
+
+#### 기능 추가
+
+* 아래 Kubernetes 버전을 지원합니다.
+    * v1.20.12
+    * v1.21.6
+    * v1.22.3
+
+* 아래 Kubneretes 버전은 클러스터 생성을 지원하지 않습니다(단, 사용 중인 클러스터에는 영향이 없습니다).
+    * v1.17.6
+    * v1.18.19
+
+* LoadBalancer 타입의 서비스 객체 생성 시 리스너별 설정을 지원합니다.
+
+* 클러스터 생성 및 노드 그룹 생성 시 Ubuntu 워커 이미지를 사용할 수 있습니다.
+    * 이미지 추가
+        * Ubuntu Server 18.04.6 LTS - Container (2022.01)
 
 ### 2021. 12. 28.
 
