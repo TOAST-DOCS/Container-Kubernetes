@@ -1,10 +1,10 @@
-## Container > Kubernetes > User Guide 
+## Container > NHN Kubernetes Service (NKS) > User Guide 
 
 ## Cluster
 Cluster refers to a group of instances that comprise user's Kubernetes. 
 
 ### Creating Clusters
-To enable Kubernetes, a cluster must be created. Go to **Container > Kubernetes** and click **Create Cluster** and a page of creating clusters opens. The following items are required to create a cluster: 
+To enable NHN Kubernetes Service (NKS), a cluster must be created. Go to **Container > NHN Kubernetes Service (NKS)** and click **Create Cluster**, and a page for creating clusters shows up. The following items are required to create a cluster: 
 
 | Item | Description |
 | --- | --- |
@@ -20,11 +20,22 @@ To enable Kubernetes, a cluster must be created. Go to **Container > Kubernetes*
 | Block Storage Type | Type of block storage for a default node group instance |
 | Block Storage Size | Size of block storage for a default node group instance |
 
-Enter information as required and click **Create Cluster**, and a cluster begins to be created. You may check status from the list of clusters. It takes about 10 minutes to create; more time may be required depending on the cluster setting.  
+NHN Kubernetes Service (NKS) supports several versions of Kubernetes. Some features may be restricted depending on the version.
+
+| Version | Creating a new cluster | Using the created cluster |
+| :-: | :-: | :-: |
+| v1.17.6 | Unavailable | Available |
+| v1.18.19 | Unavailable | Available |
+| v1.19.13 | Available | Available |
+| v1.20.12 | Available | Available |
+| v1.21.6 | Available | Available |
+| v1.22.3 | Available | Available |
+
+Enter information as required and click **Create Cluster**, and a cluster begins to be created. You can check the status from the list of clusters. It takes about 10 minutes to create; more time may be required depending on the cluster configuration.  
 
 
 ### Querying Clusters 
-A newly created cluster can be found on **Container > Kubernetes**. Select a cluster and the information shows at the bottom. 
+A newly created cluster can be found in the **Container > NHN Kubernetes Service (NKS)** page. Select a cluster and the information is displayed at the bottom. 
 
 | Item | Description |
 | --- | --- |
@@ -224,10 +235,10 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 
 ### Autoscaler
 
-Autoscaler is a feature that automatically adjusts the number of nodes when a node group does not have enough resources available to schedule pods or when the node's utilization remains below a certain level. Autoscaler can be set for each node group and operates independently of each other. This feature is based on the cluster-autoscaler feature, an officially supported feature of the Kubernetes project. For more information, please visit [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler).
+Autoscaler is a feature that automatically adjusts the number of nodes when a node group does not have enough resources available to schedule pods or when the node's utilization remains below a certain level. Autoscaler can be set for each node group and operates independently of each other. This feature is based on the cluster-autoscaler feature, an officially supported feature of the Kubernetes project. For more information, refer to [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler).
 
 > [Note]
-> The version of the `cluster-autoscaler` applied to Kubernetes service is `1.19.0.`
+> The version of the `cluster-autoscaler` applied to NHN Kubernetes Service (NKS) is `1.19.0.`
 
 #### Glossary
 
@@ -718,8 +729,8 @@ User can register a scheduled script when creating clusters and additional node 
 * Script execution time
     * The scheduled script is executed during the instance initialization process while initializing the worker node.
     * After the scheduled script has been executed, it sets and registers the instance as the worker node of the 'worker node group'.
-* Script detail
-    * The first line of a scheduled script must start with  #!.
+* Script details
+    * The first line of a scheduled script must start with #!.
     * The maximum size of script is 64KB.
     * The script is executed by root authority.
     * The script execution records are saved to the below location.
@@ -728,10 +739,10 @@ User can register a scheduled script when creating clusters and additional node 
 
 
 ## Cluster Management
-To run and manage clusters from a remote host, 'kubectl', which is the command line tool (CLI) as provided by Kubernetes, is required.
+To run and manage clusters from a remote host, `kubectl` is required, which is the command-line tool (CLI) provided by Kubernetes.
 
 ### Installing kubectl
-For kubectl, execution files can be downloaded and enabled, with no need of special installation procedure. Each operating system provides the following download path: 
+You can use kubectl by downloading an executable file without any special installation process. The download path for each operating system is as follows.
 
 | OS | Download Command |
 | --- | --- |
@@ -739,34 +750,34 @@ For kubectl, execution files can be downloaded and enabled, with no need of spec
 | MacOS | curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.15.7/bin/darwin/amd64/kubectl |
 | Windows | curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.15.7/bin/windows/amd64/kubectl.exe |
 
-For more details on installation and optional items, see documents of [Install and Set Up kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/).
+For more details on installation and options, see [Install and Set Up kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/).
 
-#### Change Roles
-By default, downloaded files are not allowed to execute. The execution role must be added. 
+#### Change Permission
+The downloaded file does not have the execute permission by default. You need to add the execute permission.
 
 ```
 $ chmod +x kubectl
 ```
 
-#### Change Location or Specify Paths 
-Change location to the path specified for an environment variable so as to execute kubectl on any path, or add the path including kubectl to an environment variable.  
+#### Change the Location or Set the Path 
+Move the file to the path set in the environment variable so that kubectl can be executed on any path, or add the path including kubectl to the environment variable.  
 
-* Change Location to Path Specified for Environment Variable 
+* Change the location to a path set in the environment variable 
 ```
 $ sudo mv kubectl /usr/local/bin/
 ```
 
-* Add Path to Environment Variable 
+* Add the path to the environment variable 
 ```
 // Executed on the path including kubectl
 $ export PATH=$PATH:$(pwd)
 ```
 
 ### Configuration 
-To access Kubernetes cluster with kubectl, cluster configuration file (kubeconfig) is required. On NHN Cloud web console, open **Container > Kubernetes** and select a cluster to access. From **Basic Information**, click **Download** of **Configuration Files** to download a configuration file. Change the downloaded configuration file to a location of choice to serve as reference for kubectl execution. 
+To access Kubernetes cluster with kubectl, cluster configuration file (kubeconfig) is required. On the NHN Cloud web console, open the **Container > NHN Kubernetes Service (NKS)** page and select a cluster to access. From **Basic Information**, click **Download** of **Configuration Files** to download a configuration file. Move the downloaded configuration file to a location of your choice to serve it as a reference for kubectl execution. 
 
 > [Caution]
-> A configuration file downloaded from NHN Cloud web console includes cluster information and token for authentication. With the file, you're authorized to access corresponding Kubernetes clusters. Take cautions for not losing configuration files.   
+> A configuration file downloaded from the NHN Cloud web console includes cluster information and token for authentication. With the file, you're authorized to access corresponding Kubernetes clusters. Take cautions for not losing configuration files.   
 
 kubectl requires a cluster configuration file every time it is executed, so a cluster configuration file must be specified by using the `--kubeconfig` option. However, if the environment variable includes specific path for a cluster configuration file, there is no need to specify each option. 
 
@@ -898,9 +909,10 @@ status:
 
 The admission controller can intercept a Kubernetes API server request and change objects or deny the request. See [Admission Controller]( https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/) for more information about the admission controller. For usage examples of the admission controller, see [Admission Controller Guide](https://kubernetes.io/blog/2019/03/21/a-guide-to-kubernetes-admission-controllers/).
 
-The type of plugin applied to the admission controller varies depending on the time of the cluster creation. For more information, see the list of plugins available in each region.
+The type of plugin applied to the admission controller varies depending on the cluster version and the time of cluster creation. For more information, see the list of plugins available depending on the time of cluster creation by region.
 
-#### Clusters created before February 22, 2021 for the Pangyo region; clusters created before February 17, 2021 for the Pyeongchon region
+#### v1.19.13 or earlier
+The following applies to clusters created on February 22, 2021 or earlier for the Pangyo region and clusters created on February 17, 2021 or earlier for the Pyeongchon region.
 
 * DefaultStorageClass
 * DefaultTolerationSeconds
@@ -912,7 +924,7 @@ The type of plugin applied to the admission controller varies depending on the t
 * ServiceAccount
 * ValidatingAdmissionWebhook
 
-#### Clusters created on February 23, 2021 or later for the Pangyo region; clusters created on February 18, 2021 or later for the Pyeongchon region
+The following applies to clusters created on February 23, 2021 or later for the Pangyo region and clusters created on February 18, 2021 or later for the Pyeongchon region.
 
 * DefaultStorageClass
 * DefaultTolerationSeconds
@@ -925,8 +937,13 @@ The type of plugin applied to the admission controller varies depending on the t
 * ServiceAccount
 * ValidatingAdmissionWebhook
 
+#### v1.20.12 or later
+All default active admission controllers per Kubernetes version are enabled. The following controllers are activated in addition to the default active admission controllers.
+* NodeRestriction
+* PodSecurityPolicy
+
 ### Cluster upgrade
-NHN Cloud Kubernetes service supports the Kubernetes component upgrade for the currently operating Kubernetes clusters.  
+NHN Kubernetes Service (NKS) supports the Kubernetes component upgrade for the currently operating Kubernetes clusters.  
 
 #### Policy of supporting different Kubernetes versions
 Kubernetes version is represented as `x.y.z`. `x` is the major, `y` is the minor, and `z` is the patch version. If features are added, it is a major or minor version upgrade. If it provides features compatible with previous versions such as bug fixes, it is a patch version. For more information about this, please see [Semantic Versioning 2.0.0](https://semver.org/).
@@ -940,7 +957,7 @@ Explains how the Kubernetes cluster upgrade feature supported by NHN Cloud works
 NHN Cloud's Kubernetes cluster controls the Kubernetes versions per cluster master and worker node group. Master's Kubernetes version can be checked in the cluster view screen, and the Kubernetes version of the worker node group can be checked in the screen view of each worker node group. 
 
 ##### Upgrade Rules
-When upgrading, NHN Cloud's Kubernetes Cluster version control and Kubernetes versioning support policy must be followed to keep the proper sequence.  The following rules are applied to NHN Cloud's Kubernetes cluster upgrade features.
+When upgrading, NHN Cloud's Kubernetes Cluster version control and Kubernetes versioning support policy must be followed to keep the proper sequence. The following rules are applied to NHN Cloud's Kubernetes cluster upgrade features.
 
 * Upgrade commands must be given to each master and worker node group. 
 * In order to upgrade, the Kubernetes version of the master and all worker node groups must match.
@@ -1019,13 +1036,6 @@ If the versions match after upgrading the versions of the master and all worker 
 
 > [Caution]
 > If you do not upgrade the worker node group after upgrading the master, some pods might not work properly.
-
-#### Supported Versions
-NHN Cloud Kubernetes service supports the following versions: 
-
-* v1.17.6
-* v1.18.19
-* v1.19.13
 
 
 ## LoadBalancer Service
@@ -1158,8 +1168,8 @@ nginx-svc    LoadBalancer   10.254.134.18   123.123.123.30   8080:30013/TCP   3m
 ```
 
 > [Note]
-> To find a load balancer that is created, visit **Network > Load Balancer**.
-> Load balancer IP is a floating IP allowing external access. Check out from **Network > Floating IP**.
+> You can view the created load balancer on the **Network > Load Balancer** page.
+> Load balancer IP is a floating IP allowing external access. You can check it on the **Network > Floating IP** page.
 
 
 ### Testing Service on Internet 
@@ -1197,8 +1207,57 @@ Commercial support is available at
 ### Setting Detailed Options for Load Balancer
 When defining service objects in Kubernetes, you can set several options for the load balancer.
 
+#### Global Setting and Per-Listener Setting
+For each setting item, global setting or per-listener setting is supported. If neither global nor per-listener setting is available, the default value for each setting is used.
+* Per-listener setting: A setting that applies only to the target listener.
+* Global setting: If the target listener doesn't have a per-listener setting, this setting is applied.
+
+#### Format of Per-Listener Setting
+Per-listener settings can be set by appending a prefix representing the listener to the global settings key. The prefix representing the listener is the service object's port protocol (`spec.ports[].protocol`) and port number (`spec.ports[].port`) concatenated with a dash (`-`). For example, if the protocol is TCP and the port number is 80, the prefix is ​​`TCP-80`. If you want to set session affinity for the listener associated with this port, you can set it in TCP-80.loadbalancer.nhncloud/pool-session-persistence under .metadata.annotations.
+
+The manifest below is an example of mixing the global setting and per-listener settings.
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: echosvr-svc
+  labels:
+    app: echosvr
+  annotations:
+    # Global setting
+    loadbalancer.nhncloud/pool-lb-method: SOURCE_IP
+    
+    # Per-listener settings
+    TCP-80.loadbalancer.nhncloud/pool-session-persistence: "SOURCE_IP"
+    TCP-80.loadbalancer.nhncloud/listener-protocol: "HTTP"
+    TCP-443.loadbalancer.nhncloud/pool-lb-method: LEAST_CONNECTIONS
+    TCP-443.loadbalancer.nhncloud/listener-protocol: "TCP"
+spec:
+  ports:
+  - name: tcp-80
+    port: 80
+    targetPort: 8080
+    protocol: TCP
+  - name: tcp-443
+    port: 443
+    targetPort: 8443
+    protocol: TCP
+  selector:
+    app: echosvr
+  type: LoadBalancer
+```
+
+When this manifest is applied, the per-listener settings are set as shown in the following table.
+| Item | TCP-80 listener | TCP-433 listener| Description |
+| --- | --- | --- | --- |
+| Load Balancing Method | SOURCE_IP | LEAST_CONNECTIONS | TCP-80 listener is set to SOURCE_IP according to the global setting<br>TCP-443 listener is set to LEAST_CONNECTIONS according to the per-listener setting |
+| Session Affininty | SOURCE_IP | None | TCP-80 listener is set to SOURCE_IP according to the per-listener setting<br>TCP-443 listener is set to None by the default value |
+| Listener Protocol | HTTP | TCP | Both the TCP-80 listener and the TCP-443 listener are set according to the per-listener settings |
+
 > [Note]
 > The features without additional version information are only applicable to clusters of Kubernetes v1.19.13 or later.
+> For clusters of Kubernetes v1.19.13 version, per-listener settings apply only to clusters created on January 25, 2022 or after.
 >
 
 > [Caution]
@@ -1209,10 +1268,11 @@ When defining service objects in Kubernetes, you can set several options for the
 #### Set the session affinity
 You can set the session affinity for the load balancer.
 
-* The setting location is .spec.sessionAffinity.
+* The setting location is loadbalancer.nhncloud/pool-session-persistence under .metadata.annotations.
+* Per-listener settings can be applied.
 * It can be set to one of the following:
-    * None: Set session affinity to None. The default when not set.
-    * ClientIP: Set session affinity to SOURCE_IP.
+    * Empty string (""): Set session affinity to 'None'. The default when not set.
+    * SOURCE_IP: Set session affinity to SOURCE_IP.
 * If the load balancing method is SOURCE_IP, the session affinity setting is ignored, and the session affinity setting is set to None.
 * Clusters of v1.17.6, v1.18.19
     * Changes cannot be made after the load balancer is created.
@@ -1223,6 +1283,7 @@ You can set the session affinity for the load balancer.
 The load balancer has a floating IP associated with it. You can set whether to delete or keep the floating IP associated with the load balancer when deleting the load balancer.
 
 * The setting location is loadbalancer.openstack.org/keep-floatingip under .metadata.annotations.
+* **Per-listener settings cannot be applied.**
 * It can be set to one of the following:
     * true: Keep the floating IP.
     * false: Delete the floating IP. The default when not set.
@@ -1233,7 +1294,8 @@ The load balancer has a floating IP associated with it. You can set whether to d
 #### Set the listener connection limit
 You can set the connection limit for a listener.
 
-* The setting location is loadbalancer.openstack.org/connection-limit under .metadata.annotations.
+* The setting location is loadbalancer.nhncloud/connection-limit under .metadata.annotations.
+* Per-listener settings can be applied.
 * Clusters of v1.17.6, v1.18.19
     * Minimum value of 1, maximum value of 60000.
     * It you do not set it, it is set to -1, and the value applied to the actual load balancer is 2000.
@@ -1246,6 +1308,7 @@ You can set the connection limit for a listener.
 You can set the protocol of the listener.
 
 * The setting location is loadbalancer.nhncloud/listener-protocol under .metadata.annotations.
+* Per-listener settings can be applied.
 * It can be set to one of the following:
     * TCP: The default when not set.
     * HTTP
@@ -1261,6 +1324,7 @@ You can set the protocol of the listener.
 The SSL version can be set as follows:
 
 * The setting location is loadbalancer.nhncloud/listener-terminated-https-tls-version under .metadata.annotations.
+* Per-listener settings can be applied.
 * It can be set to one of the following:
     * TLSv1.2: The default when not set.
     * TLSv1.1
@@ -1271,11 +1335,13 @@ The SSL version can be set as follows:
 Certificate information can be set as follows:
 
 * The setting location is loadbalancer.nhncloud/listener-terminated-https-cert under .metadata.annotations.
+* Per-listener settings can be applied.
 * It must include start and end lines.
 
 Private key information can be set as follows:
 
 * The setting location is loadbalancer.nhncloud/listener-terminated-https-key under .metadata.annotations.
+* Per-listener settings can be applied.
 * It must include start and end lines.
 
 The following is an example of manifest for setting the listener protocol to `TERMINATED_HTTPS`. Certificate information and private key information are partially omitted.
@@ -1305,6 +1371,7 @@ metadata:
 You can set the load balancing method.
 
 * The setting location is loadbalancer.nhncloud/pool-lb-method under .metadata.annotations.
+* Per-listener settings can be applied.
 * It can be set to one of the following:
     * ROUND_ROBIN: The default when not set.
     * LEAST_CONNECTIONS
@@ -1315,6 +1382,7 @@ You can set the load balancing method.
 You can set the health check protocol.
 
 * The setting location is loadbalancer.nhncloud/healthmonitor-type under .metadata.annotations.
+* Per-listener settings can be applied.
 * It can be set to one of the following:
     * HTTP: You must additionally set HTTP URL, HTTP method, and HTTP status code.
     * HTTPS: You must additionally set HTTP URL, HTTP method, and HTTP status code.
@@ -1323,17 +1391,20 @@ You can set the health check protocol.
 The HTTP URL can be set as follows:
 
 * The setting location is loadbalancer.nhncloud/healthmonitor-http-url under .metadata.annotations.
+* Per-listener settings can be applied.
 * The setting value must start with /.
 * If not set or a value that does not match the rule is entered, it is set to the default value of /.
 
 The HTTP method can be set as follows:
 
 * The setting location is loadbalancer.nhncloud/healthmonitor-http-method under .metadata.annotations.
+* Per-listener settings can be applied.
 * Currently, only GET is supported. If not set or another value is entered, it will be set to GET, which is the default value.
 
 The HTTP status code can be set as follows:
 
 * The setting location is loadbalancer.nhncloud/healthmonitor-http-expected-code under .metadata.annotations.
+* Per-listener settings can be applied.
 * You can enter the value in the form of a single value (e.g. 200), a list (e.g. 200,202), or a range (e.g. 200-204).
 * If not set or a value that does not match the rule is entered, it is set to the default value of 200.
 
@@ -1341,6 +1412,7 @@ The HTTP status code can be set as follows:
 You can set the health check interval.
 
 * The setting location is loadbalancer.nhncloud/healthmonitor-delay under .metadata.annotations.
+* Per-listener settings can be applied.
 * Set the value in seconds.
 * Minimum value of 1, maximum value of 5000.
 * If not set or a value out of range is entered, it is set to the default value of 60.
@@ -1349,6 +1421,7 @@ You can set the health check interval.
 You can set the maximum response time for health checks.
 
 * The setting location is loadbalancer.nhncloud/healthmonitor-timeout under .metadata.annotations.
+* Per-listener settings can be applied.
 * Set the value in seconds.
 * Minimum value of 1, maximum value of 5000.
 * This setting must be smaller than the Health check interval setting setting value.
@@ -1359,6 +1432,7 @@ You can set the maximum response time for health checks.
 You can set the maximum number of retries for a health check.
 
 * The setting location is loadbalancer.nhncloud/healthmonitor-max-retries under .metadata.annotations.
+* Per-listener settings can be applied.
 * Minimum value of 1, maximum value of 10.
 * If not set or a value out of range is entered, it is set to the default value of 3.
 
@@ -1368,24 +1442,7 @@ Ingress Controller routes HTTP and HTTPS requests from cluster externals to inte
 
 
 ### Installing NGINX Ingress Controller 
-NGINX Ingress Controller is one of the most frequently used ingress controllers. For more details, see [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/) and [NGINX Ingress Controller for Kubernetes](https://www.nginx.com/products/nginx-ingress-controller/).
-
-NGINX Ingress Controller provides pre-defined manifest files to readily create resources in need. With this manifest, resources can be easily created when required. 
-
-```
-$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/mandatory.yaml
-namespace/ingress-nginx created
-configmap/nginx-configuration created
-configmap/tcp-services created
-configmap/udp-services created
-serviceaccount/nginx-ingress-serviceaccount created
-clusterrole.rbac.authorization.k8s.io/nginx-ingress-clusterrole created
-role.rbac.authorization.k8s.io/nginx-ingress-role created
-rolebinding.rbac.authorization.k8s.io/nginx-ingress-role-nisa-binding created
-clusterrolebinding.rbac.authorization.k8s.io/nginx-ingress-clusterrole-nisa-binding created
-deployment.apps/nginx-ingress-controller created
-limitrange/ingress-nginx created
-```
+NGINX Ingress Controller is one of the most frequently used ingress controllers. For more details, see [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/) and [NGINX Ingress Controller for Kubernetes](https://www.nginx.com/products/nginx-ingress-controller/). For installation of NGINX Ingress Controller, see [Installation Guide](https://kubernetes.github.io/ingress-nginx/deploy/).
 
 ### Creating LoadBalancer Service
 Since ingress controller is also created as a pod, a LoadBalancer or NodePort service must be created to be made public. Define a LoadBalancer service manifest that can process HTTP and HTTPS like below: 
@@ -1725,7 +1782,7 @@ $ curl --resolve test.example.com:80:123.123.123.44 http://test.example.com/
 ```
 
 ## Kubernetes Dashboard 
-NHN Cloud Kubernetes service provides default web UI dashboard. For more details on Kubernetes Dashboard, see documents at [Web UI (Dashboard)](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/). 
+NHN Kubernetes Service (NKS) provides the default web UI dashboard. For more details on Kubernetes Dashboard, see [Web UI (Dashboard)](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/). 
 
 ### Opening Dashboard Services
 User Kubernetes has the `kubernetes-dashboard` service object which has been already created to publicly open dashboard. 
@@ -1857,7 +1914,7 @@ With PV and PVC, user can define the attributes of a volume of choice, while the
 PV and PVC support the four-phase life cycle. 
 
 * Provisioning
-User can secure volume on his own to provision PV (static provisioning), or apply [Storage Class](https://kubernetes.io/docs/concepts/storage/storage-classes/) to dynamically provision PV (dynamic provisioning). 
+Using [storage classes](https://kubernetes.io/docs/concepts/storage/storage-classes/), users can manually secure a volume and create a PV (static provisioning) or dynamically create a PV (dynamic provisioning).
 
 * Binding
 Bind PV to PVC 1:1. With dynamic provisioning, binding is also automatically executed along with PV provisioning. 
@@ -1874,39 +1931,90 @@ Volume is reclaimed after it is used up, in three methods: Delete, Retain, or Re
 | Retain | PV is deleted but its attached volumes are not: volumes can be deleted or reused by user. |
 | Recycle | PV is deleted and its attached volumes are made to be reused without being deleted. This method has been deprecated. |
 
+### Storage Class (StorageClass)
+A storage class must be defined before provisioning. Storage classes provide a way to classify storages by certain characteristics. You can set the information such as media type and availability zone by including information about the storage provider (provisioner).
 
-### Static Provisioning 
+#### Storage Provider (provisioner)
+Set the provider information of storage. Depending on the Kubernetes version, the supported storage provider information is as follows:
+* v1.19.13 or earlier: The provisioner field must be set to `kubernetes.io/cinder`.
+* v1.20.12 or later: You can use the provisioner field by setting it to `cinder.csi.openstack.org`.
 
-To enable static provisioning, user must have the block storage prepared. Go to **Storage > Block Storage** on NHN Cloud web console, and click **Create Block Storages** to create block storages to be attached to PV. See Block Stroage Guide for [Creating Block Storages](/Storage/Block%20Storage/en/console-guide/#_2).  
+#### Parameters (parameter)
+The storage class allows you to set the following parameters:
+* Storage type (type): Enter the type of storage. (If not entered, General HDD is set.)
+    * **General HDD**: The storage type is set to HDD.
+    * **General SSD**: The storage type is set to SSD.
+* Availability zone (availability): Set the availability zone. (If not entered, it will be set randomly.)
+    * Pangyo Region: **kr-pub-a** or **kr-pub-b**
+    * Pyeongchon region: **kr2-pub-a** or **kr2-pub-b**
 
-To provision PV, ID of a block storage is required. Select a block storage from the list of block storages on **Storage > Block Storage**. Check ID on the **Information** tab at the bottom of the block storage name. 
+#### Volume Binding Mode (VolumeBindingMode)
+A volume binding mode controls the time when volume binding and dynamic provisioning start. This setting is configurable only if the storage provider is cinder.csi.openstack.org.
 
-> [Caution]
-> Block storage must be on the same availability zone with the node group instance to run pods; otherwise, attachement is unavailable. 
+* **Immediate**: Volume binding and dynamic provisioning start as soon as a persistent volume claim is created. At the time when the persistent volume claim is created, there is no prior knowledge of the Pods to which the volume will be attached. Therefore, if the availability zone of the volume and the availability zone of the node on which the Pod is scheduled are different, the Pod will not work properly.
+* **WaitForFirstConsumer**: Volume binding and dynamic provisioning are not performed when a persistent volume claim is created. When this persistent volume claim is attached to a Pod for the first time, volume binding and dynamic provisioning are performed based on the availability zone information of the node on which the Pod is scheduled. Therefore, there is no case where the Pod does not operate normally due to the difference of the availability zone of the volume and the availability zone of the instance, such as in Immediate mode.
 
-Create manifest for storage class. To enable NHN Cloud Block Storage, **provisioner** must be configured with `kubernetes.io/cinder`. 
+#### Example 1
+The storage class manifest below can be used for Kubernetes clusters using v1.19.13 or earlier. You can use parameters to specify the availability zone and volume type.
 
 ```yaml
 # storage_class.yaml
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: sc-default
+  name: sc-ssd
 provisioner: kubernetes.io/cinder
+parameters:
+  type: General SSD
+  availability: kr-pub-a
 ```
 
-Create storage class and confirm.  
+Create the storage class and confirm.  
 
 ```
 $ kubectl apply -f storage_class.yaml
-storageclass.storage.k8s.io/sc-default created
+storageclass.storage.k8s.io/sc-ssd created
 
-$ kubectl get sc
-NAME         PROVISIONER            AGE
-sc-default   kubernetes.io/cinder   8s
+$ # kubectl get sc
+NAME     PROVISIONER            RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
+sc-ssd   kubernetes.io/cinder   Delete          Immediate           false                  3s
 ```
 
-Write PV manifest to be attached to block storage. Enter storage class name for **spec.storageClassName**. To enable NHN Cloud Block Storage, **spec.accessModes** must be configured with 'ReadWriteOnce'. Choose 'Delete' or 'Retain' for **spec.presistentVolumeReclaimPolicy**.
+#### Example 2
+The storage class manifest below can be used for Kubernetes clusters using v1.20.12 or later. Set the volume binding mode to WaitForFirstConsumer to initiate volume binding and dynamic provisioning when a persistent volume claim is attached to a Pod.
+
+```yaml
+# storage_class_csi.yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: csi-storageclass
+provisioner: cinder.csi.openstack.org
+volumeBindingMode: WaitForFirstConsumer
+```
+
+Create the storage class and confirm.
+
+```
+$ kubectl apply -f storage_class_csi.yaml
+storageclass.storage.k8s.io/csi-storageclass created
+
+$ kubectl get sc
+NAME               PROVISIONER                RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
+csi-storageclass   cinder.csi.openstack.org   Delete          WaitForFirstConsumer   false                  7s
+```
+
+
+### Static Provisioning
+
+Static provisioning requires the user to prepare a block storage manually. On the **Storage > Block Storage** service page of the NHN Cloud web console, click the **Create Block Storage** button to create a block storage to attach to the PV. See [Create Block Storage](/Storage/Block%20Storage/en/console-guide/#_0) in the Block Storage guide.
+
+To create a PV, you need the ID of the block storage. On the **Storage > Block Storage** service page, select the block storage you want to use from the block storage list. You can find the ID under the block storage name section in the **Information** tab at the bottom.
+
+Write a manifest for the PV to be attached to the block storage. Enter the storage class name in **spec.storageClassName**. To use NHN Cloud Block Storage, **spec.accessModes** must be set to `ReadWriteOnce`. **spec.presistentVolumeReclaimPolicy** can be set to `Delete` or `Retain`.
+
+> [Caution]
+> You must set a storage class in which the storage provider suitable for your Kubernetes version has been defined.
 
 ```yaml
 # pv-static.yaml
@@ -1927,7 +2035,7 @@ spec:
     volumeID: "e6f95191-d58b-40c3-a191-9984ce7532e5"
 ```
 
-Create PV and confirm. 
+Create the PV and confirm. 
 
 ```
 $ kubectl apply -f pv-static.yaml
@@ -1938,7 +2046,7 @@ NAME            CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   S
 pv-static-001   10Gi       RWO            Delete           Available           sc-default              7s    Filesystem
 ```
 
-Write PVC manifest to use created PV. PV name must be specified for **spec.volumeName**.  Set other items same as pv manifest. 
+Write a PVC manifest to use the created PV. The PV name must be specified in **spec.volumeName**. Set other items the same as PV manifest. 
 
 ```yaml
 # pvc-static.yaml
@@ -1957,7 +2065,7 @@ spec:
   storageClassName: sc-default
 ```
 
-Create PVC and confirm. 
+Create the PVC and confirm. 
 
 ```
 $ kubectl apply -f pvc-static.yaml
@@ -1968,7 +2076,7 @@ NAME         STATUS   VOLUME          CAPACITY   ACCESS MODES   STORAGECLASS   A
 pvc-static   Bound    pv-static-001   10Gi       RWO            sc-default     7s    Filesystem
 ```
 
-After PVC is created, query PV status, and you can find PVC name specified for **CLAIM** and **STATUS** changed into 'Bound'. 
+After the PVC is created, query PV status, and you can find PVC name specified for **CLAIM** and **STATUS** changed into 'Bound'. 
 
 ```
 $ kubectl get pv -o wide
@@ -1979,31 +2087,7 @@ pv-static-001   10Gi       RWO            Delete           Bound    default/pvc-
 
 ### Dynamic Provisioning 
 
-With Dynamic Provisioning, block storage is automatically created in reference of attributes defined at storage class. You may speify the type of NHN Cloud Block Storages for **parameters.type** of the storage class manifest. If not specified, it is configured with HDD type.  
-
-| Type | Configured Value |
-| --- | --- |
-| HDD | General HDD |
-| SSD | General SSD |
-
-Block storage must be on the same availability zone of the node group to be allowed for attachment. You may specify the availability zone to create a block storage for **parameters.availability** of the storage class manifest. Check the availability zone of a node group to be attached from the list of node groups.  
-
-> [Caution]
-> Without availability zone specified for the storage class manifest, a block storage is created at a random availability zone. It is a must to specify availability zone, becuase, if a block storage is located at a different availability zone from its node group, it may not be properly attached.  
-
-```yaml
-# storage_class.yaml
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: sc-ssd
-provisioner: kubernetes.io/cinder
-parameters:
-  type: General SSD
-  availability: kr-pub-a
-```
-
-There is no need to create PV for dynamic provisioning; therefore, pvc manifest does not require the setting of **spec.volumeName**. 
+With Dynamic Provisioning, block storage is automatically created in reference of attributes defined at storage class. There is no need to create PV for dynamic provisioning; therefore, PVC manifest does not require the setting of **spec.volumeName**. 
 
 ```yaml
 # pvc-dynamic.yaml
@@ -2021,7 +2105,7 @@ spec:
   storageClassName: sc-ssd
 ```
 
-With PVC provisioning, PV is automatically created. At the same time, block storage attached to the PV is also automatically created, and you can check it from the list of block storages on the **Storage > Block Storage** page of NHN Cloud web console. 
+If you do not set the volume binding mode or set it to **Immediate** and create a PVC, the PV will be created automatically. At the same time, block storage attached to the PV is also automatically created, and you can check it from the list of block storages on the **Storage > Block Storage** page of the NHN Cloud web console. 
 
 ```
 $ kubectl apply -f pvc-dynamic.yaml
@@ -2039,14 +2123,14 @@ persistentvolumeclaim/pvc-dynamic   Bound    pvc-c63da3f9-dfcb-4cae-a9a9-6713799
 ```
 
 > [Caution]
-> A block storage created by dynamic provisioning cannot be deleted from the web console. It is not automatically deleted along with a cluster being deleted. Therefore, before a cluster is deleted, PVC must be deleted first; otherwise, you may be charged for pvc usage. The reclaimPolicy of PVC created by dynamic provisioning is configured with 'Delete' by default, by which deleting PVC only causes the deletion of PV and block storage as well.  
+> A block storage created by dynamic provisioning cannot be deleted from the web console. It is not automatically deleted along with a cluster being deleted. Therefore, before a cluster is deleted, all PVCs must be deleted first; otherwise, you may be charged for PVC usage. The reclaimPolicy of PVC created by dynamic provisioning is set to `Delete` by default, so deleting only the PVC will also delete the PV and block storage.  
 
 
 ### Mounting PVC to Pods 
 
-To mount PVC to a pod, mount information must be defined at the pod manifest. Enter pvc name to use for `spec.volumes.persistenVolumeClaim.claimName`; enter paths to mount for `spec.containers.volumeMounts.mountPath`.
+To mount PVC to a pod, mount information must be defined at the pod manifest. Enter the PVC name to use in `spec.volumes.persistenVolumeClaim.claimName`; enter paths to mount in `spec.containers.volumeMounts.mountPath`.
 
-In the example as blow, pvc created with dynamic provisioning is mounted to `/usr/share/nginx/html` of the pod. 
+In the following example, a PVC created with static provisioning is mounted to `/usr/share/nginx/html` of the pod. 
 
 ```yaml
 # pod-pvc.yaml
@@ -2072,7 +2156,7 @@ spec:
         claimName: pvc-static
 ```
 
-Create a pod and see if block storage is mounted. 
+Create the pod and see if the block storage has been mounted. 
 
 ```
 $ kubectl apply -f pod-static-pvc.yaml
@@ -2089,4 +2173,4 @@ Filesystem      Size  Used Avail Use% Mounted on
 ...
 ```
 
-You can also check block storage attachement from **Storage > Block Storage** on NHN Cloud web console. 
+You can also check block storage attachment information in the  **Storage > Block Storage** service page of the NHN Cloud web console. 
