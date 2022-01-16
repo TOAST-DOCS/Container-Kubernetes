@@ -1951,8 +1951,8 @@ The storage class allows you to set the following parameters:
 #### Volume Binding Mode (VolumeBindingMode)
 A volume binding mode controls the time when volume binding and dynamic provisioning start. This setting is configurable only if the storage provider is cinder.csi.openstack.org.
 
-* **Immediate**: Volume binding and dynamic provisioning start as soon as a persistent volume claim is created. At the time when the persistent volume claim is created, there is no prior knowledge of the Pods to which the volume will be attached. Therefore, if the availability zone of the volume and the availability zone of the node on which the Pod is scheduled are different, the Pod will not work properly.
-* **WaitForFirstConsumer**: Volume binding and dynamic provisioning are not performed when a persistent volume claim is created. When this persistent volume claim is attached to a Pod for the first time, volume binding and dynamic provisioning are performed based on the availability zone information of the node on which the Pod is scheduled. Therefore, there is no case where the Pod does not operate normally due to the difference of the availability zone of the volume and the availability zone of the instance, such as in Immediate mode.
+* **Immediate**: Volume binding and dynamic provisioning start as soon as a persistent volume claim is created. When the persistent volume claim is created, there is no prior knowledge of the pods to which the volume will be attached. Therefore, if the availability zone of the volume and the availability zone of the node on which the pod will be scheduled are different, the pod will not work properly.
+* **WaitForFirstConsumer**: Volume binding and dynamic provisioning are not performed when a persistent volume claim is created. When this persistent volume claim is attached to a pod for the first time, volume binding and dynamic provisioning are performed based on the availability zone information of the node on which the pod is scheduled. Therefore, there is no case where the pod does not work properly because the availability zone of the volume and the availability zone of the instance are different, such as in Immediate mode.
 
 #### Example 1
 The storage class manifest below can be used for Kubernetes clusters using v1.19.13 or earlier. You can use parameters to specify the availability zone and volume type.
@@ -1969,7 +1969,7 @@ parameters:
   availability: kr-pub-a
 ```
 
-Create the storage class and confirm.  
+Create the storage class and check that it has been created.
 
 ```
 $ kubectl apply -f storage_class.yaml
@@ -1981,7 +1981,7 @@ sc-ssd   kubernetes.io/cinder   Delete          Immediate           false       
 ```
 
 #### Example 2
-The storage class manifest below can be used for Kubernetes clusters using v1.20.12 or later. Set the volume binding mode to WaitForFirstConsumer to initiate volume binding and dynamic provisioning when a persistent volume claim is attached to a Pod.
+The storage class manifest below can be used for Kubernetes clusters using v1.20.12 or later. Set the volume binding mode to WaitForFirstConsumer to initiate volume binding and dynamic provisioning when a persistent volume claim is attached to a pod.
 
 ```yaml
 # storage_class_csi.yaml
@@ -1993,7 +1993,7 @@ provisioner: cinder.csi.openstack.org
 volumeBindingMode: WaitForFirstConsumer
 ```
 
-Create the storage class and confirm.
+Create the storage class and check that it has been created.
 
 ```
 $ kubectl apply -f storage_class_csi.yaml
@@ -2035,7 +2035,7 @@ spec:
     volumeID: "e6f95191-d58b-40c3-a191-9984ce7532e5"
 ```
 
-Create the PV and confirm. 
+Create the PV and check that it has been created.
 
 ```
 $ kubectl apply -f pv-static.yaml
@@ -2065,7 +2065,7 @@ spec:
   storageClassName: sc-default
 ```
 
-Create the PVC and confirm. 
+Create the PVC and check that it has been created.
 
 ```
 $ kubectl apply -f pvc-static.yaml
