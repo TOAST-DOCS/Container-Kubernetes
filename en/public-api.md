@@ -1,4 +1,4 @@
-## Container > Kubernetes > API v2 Guide
+## Container > NHN Kubernetes Service (NKS) > API v2 Guide
 
 This guide describes the API for configuring Kubernetes clusters.
 To use the API, you need an API endpoint, token, etc. Refer to [API Preparations](/Compute/Compute/en/identity-api/) to prepare the necessary information to use the API.
@@ -14,7 +14,7 @@ Fields not specified in the guide may appear in API responses. These fields are 
 
 ## Check the Information of Resources Used in API
 
-The Kubernetes service API uses several resources for configuring clusters and node groups. You can check the information of each resource as follows.
+The NHN Kubernetes Service (NKS) API uses several resources for configuring clusters and node groups. You can check the information of each resource as follows.
 
 ### UUID of the VPC Network Attached to the Internet Gateway
 
@@ -1135,7 +1135,7 @@ To upgrade a cluster, you must upgrade the master components and then upgrade th
 
 ### Get the Supported Kubernetes Versions
 
-Retrieves the Kubernetes versions supported by the NHN Cloud Kubernetes service.
+Retrieves the Kubernetes versions supported by NHN Kubernetes Service (NKS).
 
 ```
 GET /v1/supports
@@ -1167,9 +1167,12 @@ This API does not require a request body.
 ```json
 {
     "supported_k8s": {
-        "v1.17.6": true,
-        "v1.18.19": true,
-        "v1.19.13": true
+        "v1.17.6": false,
+        "v1.18.19": false,
+        "v1.19.13": true,
+        "v1.20.12": true,
+        "v1.21.6": true,
+        "v1.22.3": true
     }
 }
 ```
