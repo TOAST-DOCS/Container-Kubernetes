@@ -18,9 +18,10 @@
 
 * LoadBalancer 타입의 서비스 객체 생성 시 리스너별 설정을 지원합니다.
 
-* 클러스터 생성 및 노드 그룹 생성 시 Ubuntu 워커 이미지를 사용할 수 있습니다.
-    * 이미지 추가
-        * Ubuntu Server 18.04.6 LTS - Container (2022.01)
+* 이미지 추가
+    * CentOS 7.8 - Container (2022.01.20)
+    * Ubuntu Server 18.04.6 LTS - Container (2022.01.20)
+        * 클러스터 생성 및 노드 그룹 생성 시 Ubuntu 워커 이미지를 사용할 수 있습니다.
 
 ### 2021. 12. 28.
 

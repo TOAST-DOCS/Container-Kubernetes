@@ -18,9 +18,10 @@
 
 * Added support for per-listener settings when creating a LoadBalancer type service object.
 
-* You can use an Ubuntu worker image for cluster creation and node group creation.
-    * Image added
-        * Ubuntu Server 18.04.6 LTS - Container (2022.01)
+* Image added
+    * CentOS 7.8 - Container (2022.01.20)
+    * Ubuntu Server 18.04.6 LTS - Container (2022.01.20)
+        * You can use an Ubuntu worker image for cluster creation and node group creation.
 
 ### December 28, 2021
 
