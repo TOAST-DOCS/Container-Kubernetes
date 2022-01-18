@@ -1,5 +1,5 @@
-## Container > Kubernetes > 개요
-여기에서는 Kubernetes(쿠버네티스)가 무엇인지 간략히 알아보고, NHN Cloud에서 제공하는 Kubernetes 서비스를 살펴봅니다.
+## Container > NHN Kubernetes Service(NKS) > 개요
+여기에서는 Kubernetes(쿠버네티스)가 무엇인지 간략히 알아보고, NHN Cloud에서 제공하는 NHN Kubernetes Service(NKS)를 살펴봅니다.
 
 ## Kubernetes
 Kubernetes는 컨테이너화된 워크로드와 서비스를 관리할 수 있는 오픈소스 플랫폼입니다. Kubernetes는 다음과 같은 기능을 제공합니다.
@@ -28,10 +28,10 @@ Kubernetes 클러스터는 마스터와 노드로 구성됩니다.
 노드는 사용자의 애플리케이션이 구동되는 워커 머신입니다. 하나의 클러스터에는 다수의 노드가 존재할 수 있습니다. 노드는 마스터와 연결해야 동작됩니다. 마스터의 애플리케이션 구동, 정지 등의 명령에 따라 그대로 수행합니다.
 
 
-## NHN Cloud Kubernetes
-NHN Cloud Kubernetes 서비스는 클라우드에서 Kubernetes를 올바르고 안전하게 구동할 수 있게 Kubernetes 클러스터를 생성하고 관리할 수 있는 서비스입니다. 사용자는 웹 콘솔을 이용해 NHN Cloud에 꼭 맞는 Kubernetes 클러스터를 만들고 관리할 수 있습니다. 안전하고 효율적으로 운영할 수 있게 마스터는 NHN Cloud에서 관리하고, 사용자는 노드와 서비스, Pod(파드) 등을 관리합니다.
+## NHN Kubernetes Service(NKS)
+NHN Kubernetes Service(NKS)는 클라우드에서 Kubernetes를 올바르고 안전하게 구동할 수 있게 Kubernetes 클러스터를 생성하고 관리할 수 있는 서비스입니다. 사용자는 웹 콘솔을 이용해 NHN Cloud에 꼭 맞는 Kubernetes 클러스터를 만들고 관리할 수 있습니다. 안전하고 효율적으로 운영할 수 있게 마스터는 NHN Cloud에서 관리하고, 사용자는 노드와 서비스, Pod(파드) 등을 관리합니다.
 
-NHN Cloud Kubernetes 서비스의 주요 기능은 다음과 같습니다.
+NHN Kubernetes Service(NKS)의 주요 기능은 다음과 같습니다.
 
 * NHN Cloud에 꼭맞는 Kubernetes 클러스터 생성과 관리
     * NHN Cloud의 기반 서비스와 연동

@@ -1,6 +1,6 @@
-## Container > Kubernetes > Troubleshooting Guide
+## Container > NHN Kubernetes Service (NKS) > Troubleshooting Guide
 
-This guide explains how to solve various problems that you might encounter while using the Kubernetes service.
+This guide explains how to solve various problems that you might encounter while using NHN Kubernetes Service (NKS).
 
 ### > Disk space is reduced as the size of the worker node's container log file increases.
 

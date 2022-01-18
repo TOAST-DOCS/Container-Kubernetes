@@ -1,4 +1,27 @@
-## Container > Kubernetes > Release Notes
+## Container > NHN Kubernetes Service (NKS) > Release Notes
+
+### January 25, 2022
+
+#### Feature Updates
+* The name of the Kubernetes service has been changed to NHN Kubernetes Service (NKS).
+
+#### Added Features
+
+* Added support for the following Kubernetes versions:
+    * v1.20.12
+    * v1.21.6
+    * v1.22.3
+
+* The following Kubernetes versions do not support cluster creation (however, the clusters you are using are not affected).
+    * v1.17.6
+    * v1.18.19
+
+* Added support for per-listener settings when creating a LoadBalancer type service object.
+
+* Image added
+    * CentOS 7.8 - Container (2022.01.20)
+    * Ubuntu Server 18.04.6 LTS - Container (2022.01.20)
+        * You can use an Ubuntu worker image for cluster creation and node group creation.
 
 ### December 28, 2021
 
