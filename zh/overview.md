@@ -1,5 +1,5 @@
-## Container > Kubernetes > Overview
-This document briefly describes what Kubernetes is, and outlines the Kubernetes service provided by NHN Cloud. 
+## Container > NHN Kubernetes Service (NKS) > Overview
+This document briefly describes what Kubernetes is, and outlines NHN Kubernetes Service (NKS) provided by NHN Cloud. 
 
 ## Kubernetes
 Kubernetes is an open-source platform which manages containerized workload and services. Kubernetes provides the following features: 
@@ -28,10 +28,10 @@ A master is in charge of cluster management. A master manages all activities of 
 A node is a worker machine where user's application runs. One cluster may contain many nodes. The nodes can run when connected to the master. Nodes follow the commands of a master and perform the operations, such as running or suspending applications.
 
 
-## NHN Cloud Kubernetes
-NHN Cloud Kubernetes service creates and manages Kubernetes clusters to properly and safely run Kubernetes in the cloud. Users can use the web console to create and manage Kubernetes clusters that are suitable for NHN Cloud. For safe and efficient operations, masters are managed by NHN Cloud, while nodes, services, and pods are managed by users.
+## NHN Kubernetes Service (NKS)
+NHN Kubernetes Service (NKS) is a service that allows users to create and manage Kubernetes clusters to run Kubernetes in the cloud properly and safely. Users can use the web console to create and manage Kubernetes clusters that are suitable for NHN Cloud. For safe and efficient operations, masters are managed by NHN Cloud, while nodes, services, and pods are managed by users.
 
-The main features of NHN Cloud Kubernetes service are as follows: 
+The main features of NKS are as follows: 
 
 * Creating and managing Kubernetes clusters suitable for NHN Cloud
     * Integrate with NHN Cloud infrastructure services
