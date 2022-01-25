@@ -1,4 +1,4 @@
-## Container > Kubernetes > API v2ガイド
+## Container > NHN Kubernetes Service(NKS) > API v2ガイド
 
 Kubernetesクラスタを構成するためのAPIを記述します。
 APIを使用するにはAPIエンドポイントとトークンなどが必要です。 [API使用準備](/Compute/Compute/ko/identity-api/)を参照してAPIの使用に必要な情報を準備します。
@@ -14,7 +14,7 @@ APIレスポンスにガイドに明示されていないフィールドが表�
 
 ## APIに使用されるリソース情報の確認
 
-KubernetesサービスAPIは、クラスタおよびノードグループを構成するために複数のリソースを使用します。各リソースの情報確認方法は次のとおりです。
+NHN Kubernetes Service(NKS)APIは、クラスタおよびノードグループを構成するために複数のリソースを使用します。各リソースの情報確認方法は次のとおりです。
 
 ### インターネットゲートウェイに接続されたVPCネットワークUUID
 
@@ -1135,7 +1135,7 @@ X-Auth-Token: {tokenId}
 
 ### サポートされるKubernetesバージョン表示
 
-NHN Cloud KubernetesサービスでサポートするKubernetesバージョンを照会します。
+NHN Cloud NHN Kubernetes Service(NKS)でサポートするKubernetesバージョンを照会します。
 
 ```
 GET /v1/supports
@@ -1167,9 +1167,12 @@ X-Auth-Token: {tokenId}
 ```json
 {
     "supported_k8s": {
-        "v1.17.6": true,
-        "v1.18.19": true,
-        "v1.19.13": true
+        "v1.17.6": false,
+        "v1.18.19": false,
+        "v1.19.13": true,
+        "v1.20.12": true,
+        "v1.21.6": true,
+        "v1.22.3": true
     }
 }
 ```

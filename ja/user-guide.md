@@ -1,10 +1,10 @@
-## Container > Kubernetes > 使用ガイド
+## Container > NHN Kubernetes Service(NKS) > 使用ガイド
 
 ## クラスター
 クラスターは、ユーザーのKubernetesを構成するインスタンスのグループです。
 
 ### クラスター作成
-Kubernetesサービスを使用するには、まずクラスターを作成する必要があります。**Container > Kubernetes**サービスページで**クラスター作成**ボタンを押すと、クラスター作成ページが表示されます。クラスターの作成に必要な項目は次のとおりです。
+NHN Kubernetes Service(NKS)を使用するには、まずクラスターを作成する必要があります。**Container > NHN Kubernetes Service(NKS)**サービスページで**クラスター作成**ボタンを押すと、クラスター作成ページが表示されます。クラスターの作成に必要な項目は次のとおりです。
 
 | 項目 | 説明 |
 | --- | --- |
@@ -20,11 +20,23 @@ Kubernetesサービスを使用するには、まずクラスターを作成す�
 | ブロックストレージタイプ | 基本ノードグループインスタンスのブロックストレージの種類 |
 | ブロックストレージサイズ | 基本ノードグループインスタンスのブロックストレージサイズ |
 
+NHN Kubernetes Service(NKS)は複数のバージョンをサポートしています。バージョンによっては一部機能に制約がある場合があります。
+
+| バージョン | クラスタ新規作成 | 作成されたクラスタの使用|
+| :-: | :-: | :-: |
+| v1.17.6 | 不可 | 可能 |
+| v1.18.19 | 不可 | 可能 |
+| v1.19.13 | 可能 | 可能 |
+| v1.20.12 | 可能 | 可能 |
+| v1.21.6 | 可能 | 可能 |
+| v1.22.3 | 可能 | 可能 |
+
+
 必要な情報を入力し、**クラスター作成**ボタンを押すと、クラスターの作成が始まります。クラスターリストで状態を確認できます。作成には約10分かかります。クラスターの設定によっては、さらに時間がかかる場合もあります。
 
 
 ### クラスター照会
-作成したクラスターは**Container > Kubernetes**サービスページで確認できます。クラスターを選択すると、下部にクラスター情報が表示されます。
+作成したクラスターは**Container > NHN Kubernetes Service(NKS)**サービスページで確認できます。クラスターを選択すると、下部にクラスター情報が表示されます。
 
 | 項目 | 説明 |
 | --- | --- |
@@ -221,7 +233,7 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 オートスケーラーはノードグループの可用リソースが足りなくてPodをスケジューリングできなかったり、ノードの使用率が一定水準以下で維持する時、ノードの数を自動的に調整する機能です。この機能はノードグループごとに設定することができ、独立して動作します。この機能はKubernetesプロジェクトの公式サポート機能であるcluster-autoscaler機能をベースにします。詳細な事項は[Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler)を参照してください。
 
 > [参考]
-> Kubernetesサービスに適用された`cluster-autoscaler`のバージョンは`1.19.0`です。
+> NHN Kubernetes Service(NKS)に適用された`cluster-autoscaler`のバージョンは`1.19.0`です。
 #### 用語整理
 オートスケーラー機能で使用する用語とその意味は次のとおりです。
 
@@ -743,7 +755,7 @@ $ export PATH=$PATH:$(pwd)
 ```
 
 ### 設定
-kubectlでKubernetesクラスターにアクセスするには、クラスター設定ファイル(kubeconfig)が必要です。NHN Cloud Webコンソールで**Container > Kubernetes**サービスページを開き、アクセスするクラスターを選択します。下部、**基本情報**タブで**設定ファイル**項目の**ダウンロード**ボタンを押して設定ファイルをダウンロードします。ダウンロードした設定ファイルは、任意の位置へ移動させ、kubectl実行時に参照できるように準備します。
+kubectlでKubernetesクラスターにアクセスするには、クラスター設定ファイル(kubeconfig)が必要です。NHN Cloud Webコンソールで**Container > NHN Kubernetes Service(NKS)**サービスページを開き、アクセスするクラスターを選択します。下部、**基本情報**タブで**設定ファイル**項目の**ダウンロード**ボタンを押して設定ファイルをダウンロードします。ダウンロードした設定ファイルは、任意の位置へ移動させ、kubectl実行時に参照できるように準備します。
 
 > [注意]
 > NHN Cloud Webコンソールからダウンロードした設定ファイルは、クラスター情報と認証のためのトークンなどが含まれています。設定ファイルがある場合は該当Kubernetesクラスターにアクセスできる権限を持ちます。設定ファイルを絶対に紛失しないように注意してください。
@@ -874,9 +886,10 @@ status:
 ### 承認コントローラー(admission controller)プラグイン
 承認コントローラーはKubernetes APIサーバーリクエストを奪ってオブジェクトを変更したり、リクエストを拒否できます。承認コントローラーの詳細は[承認コントローラー](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/)を参照してください。また承認コントローラーの使用例は[承認コントローラーガイド](https://kubernetes.io/blog/2019/03/21/a-guide-to-kubernetes-admission-controllers/)を参照してください。
 
-クラスター作成時点によって承認コントローラーに適用されるプラグインの種類が異なります。詳細な内容はリージョン別作成時点に応じたプラグインリストを参照してください。
+クラスタバージョンとクラスタ作成時点によって、承認コントローラーに適用されるプラグインの種類が異なります。詳細についてはリージョン別の作成時点によるプラグインリストを参照してください。
 
-#### パンギョリージョン2021年2月22日以前に作成したクラスターおよび坪村リージョン2021年2月17日以前に作成したクラスター
+#### v1.19.13以前のバージョン
+パンギョリージョン2021年2月22日以前に作成したクラスタおよび坪村リージョン2021年2月17日以前に作成したクラスタは次のように適用されます。
 
 * DefaultStorageClass
 * DefaultTolerationSeconds
@@ -888,7 +901,7 @@ status:
 * ServiceAccount
 * ValidatingAdmissionWebhook
 
-#### パンギョリージョン2021年2月23日以降に作成したクラスターおよび坪村リージョン2021年2月18日以降に作成したクラスター
+パンギョリージョン2021年2月23日以降に作成したクラスタおよび坪村リージョン2021年2月18日以降に作成したクラスタは次のように適用されます。
 
 * DefaultStorageClass
 * DefaultTolerationSeconds
@@ -901,8 +914,14 @@ status:
 * ServiceAccount
 * ValidatingAdmissionWebhook
 
+#### v1.20.12以降のバージョン
+Kubernetesバージョン別の基本アクティブ承認コントローラーはすべて有効になります。基本アクティブ承認コントローラーに以下のコントローラーが有効になります。
+* NodeRestriction
+* PodSecurityPolicy
+
+
 ### クラスタアップグレード
-NHN Cloud Kubernetesサービスは動作中のKubernetesクラスタのKubernetesコンポーネントのアップグレードをサポートします。 
+NHN Kubernetes Service(NKS)は動作中のKubernetesクラスタのKubernetesコンポーネントのアップグレードをサポートします。 
 
 #### Kubernetesバージョン違いサポートポリシー
 Kubernetesのバージョンは`x.y.z`で表現されます。 `x`はメジャーバージョン、`y`はマイナーバージョン、`z`はパッチバージョンです。機能が追加される場合、メジャーバージョンまたはマイナーバージョンをアップロードし、バグ修正など以前のバージョンと互換性のある機能を提供する場合はパッチバージョンをアップロードします。詳しい内容は[こちら](https://semver.org/)を参照してください。
@@ -991,14 +1010,6 @@ NHN CloudのKubernetesクラスタマスターは高可用性を保障するた�
 
 > [注意]
 > マスターアップグレード後にワーカーノードグループをアップグレードしなかった場合、一部Podが正常に動作しない可能性があります。
-
-#### サポートバージョン
-NHN Cloud Kubernetesサービスは、以下のバージョンをサポートします。 
-
-* v1.17.6
-* v1.18.19
-* v1.19.13
-
 
 ## LoadBalancerサービス
 Kubernetesアプリケーションの基本実行単位Podは、CNI(Container Network Interface)でクラスターネットワークに接続されます。基本的にクラスターの外部からPodにはアクセスできません。Podのサービスをクラスターの外部に公開するにはKubernetesの`LoadBalancer`サービス(Service)オブジェクト(object)を利用して外部に公開するパスを作成する必要があります。LoadBalancerサービスオブジェクトを作成すると、クラスターの外部にNHN Cloud Load Balancerが作成され、サービスオブジェクトと接続されます。
@@ -1169,8 +1180,57 @@ Commercial support is available at
 ### ロードバランサー詳細オプション設定
 Kubernetesのサービスオブジェクトを定義する時、ロードバランサーの複数のオプションを設定できます。
 
+#### グローバル設定とリスナー別設定
+設定項目ごとにグローバル設定とリスナー別設定が可能です。グローバル設定とリスナー別設定がどちらもない場合、設定別デフォルト値を使用します。
+* リスナー別設定：対象リスナーにのみ適用される設定です。
+* グローバル設定：対象リスナーにリスナー別設定がない場合にこの設定を適用します。
+
+#### リスナー別設定形式
+リスナー別設定は、グローバル設定キーにリスナーを表すprefixをつけて設定できます。リスナーを表すprefixはサービスオブジェクトのポートプロトコル(`spec.ports[].protocol`)とポート番号(`spec.ports[].port`)をダッシュ(`-`)でつなげたものです。例えばプロトコルがTCPで、ポート番号が80の場合、prefixは`TCP-80`です。このポートに接続しているリスナーにセッション持続性設定を行いたい場合は.metadata.annotations下のTCP-80.loadbalancer.nhncloud/pool-session-persistenceに設定できます。
+
+以下のマニフェストは、グローバル設定とリスナー別設定を組み合わせた例です。 
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: echosvr-svc
+  labels:
+    app: echosvr
+  annotations:
+    # グローバル設定
+    loadbalancer.nhncloud/pool-lb-method: SOURCE_IP
+    
+    # リスナー別設定
+    TCP-80.loadbalancer.nhncloud/pool-session-persistence: "SOURCE_IP"
+    TCP-80.loadbalancer.nhncloud/listener-protocol: "HTTP"
+    TCP-443.loadbalancer.nhncloud/pool-lb-method: LEAST_CONNECTIONS
+    TCP-443.loadbalancer.nhncloud/listener-protocol: "TCP"
+spec:
+  ports:
+  - name: tcp-80
+    port: 80
+    targetPort: 8080
+    protocol: TCP
+  - name: tcp-443
+    port: 443
+    targetPort: 8443
+    protocol: TCP
+  selector:
+    app: echosvr
+  type: LoadBalancer
+```
+
+このマニフェストを適用すると、リスナー別設定は次の表のように設定されます。
+| 項目 | TCP-80リスナー | TCP-433リスナー| 説明 |
+| --- | --- | --- | --- |
+| ロードバランシング方式 | SOURCE_IP | LEAST_CONNECTIONS | TCP-80リスナーはグローバル設定に基づいてSOURCE_IPに設定<br>TCP-443リスナーはリスナー別設定に基づいてLEAST_CONNECTIONSに設定 |
+| セッション持続性 | SOURCE_IP | None | TCP-80リスナーはリスナー別設定に基づいてSOURCE_IPに設定<br>TCP-443リスナーはデフォルト値に基づいてNoneに設定 |
+| リスナープロトコル | HTTP | TCP | TCP-80リスナーとTCP-443リスナーはどちらもリスナー別設定に基づいて設定 |
+
 > [参考]
 > 別途表示されていない機能はKubernetes v1.19.13以降のバージョンのクラスタにのみ適用可能です。
+> Kubernetes v1.19.13バージョンのクラスタは2022年1月25日以降に作成されたクラスタにのみリスナー別設定が適用されます。
 >
 
 > [注意]
@@ -1181,10 +1241,11 @@ Kubernetesのサービスオブジェクトを定義する時、ロードバラ�
 #### セッション持続性設定
 ロードバランサーのセッション持続性を設定できます。
 
-* 設定位置は.spec.sessionAffinityです。
+* 設定位置は .metadata.annotations下のloadbalancer.nhncloud/pool-session-persistenceです。
+* リスナー別設定を適用できます。
 * 次の中から1つを設定できます。
-    * None：セッション持続性を'なし'に設定します。未設定時のデフォルト値です。
-    * ClientIP：セッション持続性をSOURCE_IPに設定します。
+    * 空の文字列("")：セッション持続性を「なし」に設定します。未設定時のデフォルト値です。
+    * SOURCE_IP：セッション持続性をSOURCE_IPに設定します。
 * ロードバランシング方式がSOURCE_IPの場合、セッション持続性設定は無視され、セッション持続性設定は'なし'に設定されます。
 * v1.17.6, v1.18.19クラスタ
     * ロードバランサーの作成後は変更できません。
@@ -1195,9 +1256,894 @@ Kubernetesのサービスオブジェクトを定義する時、ロードバラ�
 ロードバランサーにはFloating IPが接続されています。ロードバランサーの削除時にロードバランサーに接続されたFloating IPを削除あるいは保存するかどうかを設定できます。
 
 * 設定位置は.metadata.annotations下のloadbalancer.openstack.org/keep-floatingipです。
+* **リスナー別設定を適用できません。**
 * 次の中から1つを設定できます。
     * true：Floating IPを保存します。
     * false：Floating IPを削除します。未設定時のデフォルト値です。
 
 > [注意]
 > 2021年10月26日以前に作成されたv1.18.19クラスタは、ロードバランサーが削除される時、Floating IPが削除されない問題があります。サポートの1:1お問い合わせを通してお問い合わせください。この問題を解決するための手順を詳しくお伝えします。
+
+#### リスナー接続制限設定
+リスナーの接続制限を設定できます。
+
+* 設定位置は .metadata.annotations下のloadbalancer.nhncloud/connection-limitです。
+* リスナー別設定を適用できます。
+* v1.17.6, v1.18.19クラスタ
+    * 最小値1、最大値60000です。
+    * 設定しない場合は-1に設定され、実際のロードバランサーに適用される値は2000です。
+* v1.19.13以降のクラスタ
+    * 最小値1、最大値60000です。
+    * 設定しない場合や範囲外の値を入力した場合はデフォルト値の60000に設定されます。
+
+
+#### リスナープロトコル設定
+リスナーのプロトコルを設定できます。
+
+* 設定位置は .metadata.annotations下のloadbalancer.nhncloud/listener-protocolです。
+* リスナー別設定を適用できます。
+* 次のいずれかに設定できます。
+    * TCP：未設定時のデフォルト値です。
+    * HTTP
+    * HTTPS
+    * TERMINATED_HTTPS: TERMINATED_HTTPSに設定します。 SSLバージョン、証明書、秘密鍵情報を追加設定する必要があります。
+
+> [注意]
+> リスナープロトコル設定はサービスオブジェクトを変更してもロードバランサーに適用されません。 
+> リスナープロトコル設定を変更するにはサービスオブジェクトを削除した後、再度作成する必要があります。
+> この場合、ロードバランサーが削除された後、再び作成されますのでご注意ください。
+
+
+SSLバージョンは次のように設定できます。
+
+* 設定位置は .metadata.annotations下のloadbalancer.nhncloud/listener-terminated-https-tls-versionです。
+* リスナー別設定を適用できます。
+* 次のいずれかに設定できます。
+    * TLSv1.2：未設定時のデフォルト値です。
+    * TLSv1.1
+    * TLSv1.0_2016
+    * TLSv1.0
+    * SSLv3
+
+証明書情報は次のように設定できます。
+
+* 設定位置は .metadata.annotations下のloadbalancer.nhncloud/listener-terminated-https-certです。
+* リスナー別設定を適用できます。
+* 開始行と終了行を含める必要があります。
+
+秘密鍵情報は次のように設定できます。
+
+* 設定位置は .metadata.annotations下のloadbalancer.nhncloud/listener-terminated-https-keyです。
+* リスナー別設定を適用できます。
+* 開始行と終了行を含める必要があります。
+
+次はリスナープロトコルをTERMINATED_HTTPSに設定したときのマニフェスト例です。証明書情報と秘密鍵情報は一部省略されています。
+```yaml
+metadata:
+  name: echosvr-svc
+  labels:
+    app: echosvr
+  annotations:
+    loadbalancer.nhncloud/listener-protocol: TERMINATED_HTTPS
+    loadbalancer.nhncloud/listener-terminated-https-tls-version: TLSv1.2
+    loadbalancer.nhncloud/listener-terminated-https-cert: |
+      -----BEGIN CERTIFICATE-----
+      MIIDZTCCAk0CCQDVfXIZ2uxcCTANBgkqhkiG9w0BAQUFADBvMQswCQYDVQQGEwJL
+      ...
+      fnsAY7JvmAUg
+      -----END CERTIFICATE-----
+    loadbalancer.nhncloud/listener-terminated-https-key: |
+      -----BEGIN RSA PRIVATE KEY-----
+      MIIEowIBAAKCAQEAz+U5VNZ8jTPs2Y4NVAdUWLhsNaNjRWQm4tqVPTxIrnY0SF8U
+      ...
+      u6X+8zlOYDOoS2BuG8d2brfKBLu3As5VAcAPLcJhE//3IVaZHxod
+      -----END RSA PRIVATE KEY-----
+```
+
+#### ロードバランシング方式設定
+ロードバランシング方式を設定できます。
+
+* 設定位置は .metadata.annotations下のloadbalancer.nhncloud/pool-lb-methodです。
+* リスナー別設定を適用できます。
+* 次のいずれかに設定できます。
+    * ROUND_ROBIN：未設定時のデフォルト値です。
+    * LEAST_CONNECTIONS
+    * SOURCE_IP
+
+
+#### ヘルスチェックプロトコル設定
+ヘルスチェックプロトコルを設定できます。
+
+* 設定位置は .metadata.annotations下のloadbalancer.nhncloud/healthmonitor-typeです。
+* リスナー別設定を適用できます。
+* 次のいずれかに設定できます。
+    * HTTP：HTTP URL、HTTPメソッド、 HTTPステータスコードを追加設定する必要があります。
+    * HTTPS：HTTP URL、HTTPメソッド、 HTTPステータスコードを追加設定する必要があります。
+    * TCP：未設定時のデフォルト値です。
+
+HTTP URLは次のように設定できます。
+
+* 設定位置は .metadata.annotations下のloadbalancer.nhncloud/healthmonitor-http-urlです。
+* リスナー別設定を適用できます。
+* 設定値は /で始まる必要があります。
+* 設定しない場合やルールに合わない値を入力した場合はデフォルト値である /に設定されます。
+
+HTTPメソッドは次のように設定できます。
+
+* 設定位置は .metadata.annotations下のloadbalancer.nhncloud/healthmonitor-http-methodです。
+* リスナー別設定を適用できます。
+* 現在GETのみサポートしており、設定していない場合や他の値を入力した場合はデフォルト値であるGETに設定されます。
+
+HTTPステータスコードは次のように設定できます。
+
+* 設定位置は .metadata.annotations下のloadbalancer.nhncloud/healthmonitor-http-expected-codeです。
+* リスナー別設定を適用できます。
+* 単一値(例：200)、リスト(例：200,202)、範囲(例：200-204)形式で入力できます。
+* 設定しない場合やルールに合わない値を入力するとデフォルト値の200に設定されます。
+
+#### ヘルスチェックサイクルの設定
+ヘルスチェック周期を設定できます。
+
+* 設定位置は.metadata.annotations下のloadbalancer.nhncloud/healthmonitor-delayです。
+* リスナー別設定を適用できます。
+* 秒単位で設定します。
+* 最小値1、最大値5000です。
+* 設定しない場合や範囲外の値を入力するとデフォルト値の60に設定されます。
+
+#### ヘルスチェック最大レスポンス時間設定
+ヘルスチェック最大レスポンス時間を設定できます。
+
+* 設定位置は .metadata.annotations下のloadbalancer.nhncloud/healthmonitor-timeoutです。
+* リスナー別設定を適用できます。
+* 秒単位で設定します。
+* 最小値1、最大値5000です。
+* この設定は必ずヘルスチェックサイクル設定値より小さくする必要があります。
+* 設定しない場合や範囲外の値を入力するとデフォルト値の30に設定されます。
+* ただし、入力値または設定値がヘルスチェックサイクル設定より大きい場合は、ヘルスチェックサイクル設定の1/2に設定されます。
+
+#### ヘルスチェック最大再試行回数設定
+ヘルスチェック最大再試行回数を設定できます。
+
+* 設定位置は .metadata.annotations下のloadbalancer.nhncloud/healthmonitor-max-retriesです。
+* リスナー別設定を適用できます。
+* 最小値1、最大値10です。
+* 設定しない場合や範囲外の値を入力するとデフォルト値の3に設定されます。
+
+
+## イングレスコントローラー
+イングレスコントローラー(Ingress Controller)は、イングレスオブジェクトに定義されているルールを参照してクラスタ外部から内部サービスにHTTPとHTTPSリクエストをルーティングし、SSL/TSL終了、仮想ホスティングなどを提供します。イングレスコントローラーとイングレスの詳細については[イングレスコントローラー](https://kubernetes.io/ko/docs/concepts/services-networking/ingress-controllers/)、[イングレス](https://kubernetes.io/ko/docs/concepts/services-networking/ingress/)文書を参照してください。
+
+
+### NGINX Ingress Controllerのインストール
+NGINX Ingress Controllerは、よく使われるイングレスコントローラーの1つです。詳細については[NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/)と[NGINX Ingress Controller for Kubernetes](https://www.nginx.com/products/nginx-ingress-controller/)文書を参照してください。 NGINX Ingress Controllerのインストールは[Installation Guide](https://kubernetes.github.io/ingress-nginx/deploy/)文書を参照してください。
+
+### LoadBalancerサービスの作成
+イングレスコントローラーもPodで作成されるため、外部に公開するためにはLoadBalancerサービスまたはNodePortサービスを作成する必要があります。次のようにHTTPとHTTPSを処理することができるLoadBalancerサービスマニフェストを定義します。
+
+```yaml
+# ingress-nginx-lb.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: ingress-nginx
+  namespace: ingress-nginx
+  labels:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+spec:
+  type: LoadBalancer
+  selector:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      protocol: TCP
+    - name: https
+      port: 443
+      targetPort: 443
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+```
+
+サービスオブジェクトを作成し、外部ロードバランサーが接続されていることを確認します。**EXTERNAL-IP**フィールドにはFloating IPアドレスが設定されている必要があります。
+
+```
+$ kubectl apply -f ingress-nginx-lb.yaml
+service/ingress-nginx created
+
+$ kubectl get svc -n ingress-nginx
+NAME            TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)                      AGE
+ingress-nginx   LoadBalancer   10.254.2.128   123.123.123.41   80:30820/TCP,443:30269/TCP   39s
+```
+
+### URIベースのサービス分岐
+イングレスコントローラーはURIに基づいてサービスを分岐できます。次の図はURIに基づいてサービスを分岐する簡単な例の構造を表しています。
+
+![ingress-01.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/ingress-01.png)
+
+#### サービスとPod作成
+次のようにサービスとPodを作成するためのマニフェストを作成します。 `tea-svc`サービスには`tea` Podを接続し、`coffee-svc`サービスには`coffee` Podを接続します。
+
+```yaml
+# cafe.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coffee
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: coffee
+  template:
+    metadata:
+      labels:
+        app: coffee
+    spec:
+      containers:
+      - name: coffee
+        image: nginxdemos/nginx-hello:plain-text
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: coffee-svc
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app: coffee
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tea
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: tea
+  template:
+    metadata:
+      labels:
+        app: tea
+    spec:
+      containers:
+      - name: tea
+        image: nginxdemos/nginx-hello:plain-text
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tea-svc
+  labels:
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app: tea
+```
+
+マニフェストを適用し、デプロイメント、サービス、 Podが作成されたことを確認します。Podは**Running**状態でなければなりません。
+
+```
+$ kubectl apply -f cafe.yaml
+deployment.apps/coffee created
+service/coffee-svc created
+deployment.apps/tea created
+service/tea-svc created
+
+$ kubectl get deploy,svc,pods
+NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.extensions/coffee   3/3     3            3           18s
+deployment.extensions/tea      2/2     2            2           18s
+
+NAME                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
+service/coffee-svc   ClusterIP   10.254.51.117    <none>        80/TCP    18s
+service/tea-svc      ClusterIP   10.254.210.170   <none>        80/TCP    18s
+
+NAME                          READY   STATUS    RESTARTS   AGE
+pod/coffee-67c6f7c5fd-98vh5   1/1     Running   0          18s
+pod/coffee-67c6f7c5fd-c58l2   1/1     Running   0          18s
+pod/coffee-67c6f7c5fd-dmxf6   1/1     Running   0          18s
+pod/tea-7df475c6-gtlx5        1/1     Running   0          18s
+pod/tea-7df475c6-lxqsx        1/1     Running   0          18s
+```
+
+#### イングレス(Ingress)作成
+リクエストパスに基づいてサービスに接続するイングレスマニフェストを作成します。エンドポイントが`/tea`のリクエストは`tea-svc`サービスに接続し、`/coffee`のリクエストは`coffee-svc`サービスに接続します。
+
+```yaml
+# cafe-ingress-uri.yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: cafe-ingress-uri
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /tea
+        backend:
+          serviceName: tea-svc
+          servicePort: 80
+      - path: /coffee
+        backend:
+          serviceName: coffee-svc
+          servicePort: 80
+```
+
+イングレスを作成し、しばらくしてから確認したときに**ADDRESS**フィールドにIPが設定されている必要があります。
+
+```
+$ kubectl apply -f cafe-ingress-uri.yaml
+ingress.extensions/cafe-ingress-uri created
+
+$ kubectl get ingress cafe-ingress-uri
+NAME               HOSTS   ADDRESS          PORTS   AGE
+cafe-ingress-uri   *       123.123.123.44   80      88s
+```
+
+#### HTTPリクエストの送信
+外部ホストからingressの**ADDRESS**フィールドに設定されたIPアドレスにHTTPリクエストを送信してイングレスが正しく設定されていることを確認します。
+
+エンドポイント`/coffee`に対するリクエストは`coffee-svc`サービスに渡され、`coffee` Podがレスポンスします。レスポンスの**Server name**項目を見ると`coffee` Podがラウンドロビン方式で交互にレスポンスすることを確認できます。
+
+```
+$ curl http://123.123.123.44/coffee
+Server address: 10.100.3.48:8080
+Server name: coffee-67c6f7c5fd-c58l2
+Dat#e: 07/Apr/2020:08:24:27 +0000
+URI: /coffee
+Request ID: e831901e441303ad59fb02214c49d84a
+
+$ curl http://123.123.123.44/coffee
+Server address: 10.100.2.23:8080
+Server name: coffee-67c6f7c5fd-98vh5
+Date: 07/Apr/2020:08:24:28 +0000
+URI: /coffee
+Request ID: e78427e68a1cd61ec633b9328359874e
+```
+
+同様に、エンドポイント`/tea`に対するリクエストは`tea-svc`サービスに渡され、`tea` Podがレスポンスします。
+
+```
+$ curl http://123.123.123.44/tea
+Server address: 10.100.2.24:8080
+Server name: tea-7df475c6-lxqsx
+Date: 07/Apr/2020:08:25:03 +0000
+URI: /tea
+Request ID: 59303a5a5baa60802b463b1856c8ce8d
+```
+
+定義されていないURIにリクエストを送信すると、イングレスコントローラーが`404 Not Found`をレスポンスします。
+
+```
+$ curl http://123.123.123.44/
+<html>
+<head><title>404 Not Found</title></head>
+<body>
+<center><h1>404 Not Found</h1></center>
+<hr><center>nginx/1.17.8</center>
+</body>
+</html>
+```
+
+#### リソース削除
+テストに使用したリソースは作成するときに使用したマニフェストを利用して削除できます。
+
+```
+$ kubectl delete -f cafe-ingress-uri.yaml
+ingress.extensions "cafe-ingress-uri" deleted
+
+$ kubectl delete -f cafe.yaml
+deployment.apps "coffee" deleted
+service "coffee-svc" deleted
+deployment.apps "tea" deleted
+service "tea-svc" deleted
+```
+
+### ホストベースのサービス分岐
+イングレスコントローラーはホスト名に基づいてサービスを分岐できます。次の図はホスト名に基づいてサービスを分岐する簡単な例の構造を表しています。
+
+![ingress-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/ingress-02.png)
+
+#### サービスとPod作成
+[URIベースのサービス分岐](/Container/Kubernetes/ko/user-guide/#uri)と同じマニフェストを利用してサービスとPodを作成します。
+
+#### イングレス作成
+ホスト名に基づいてサービスに接続するイングレスマニフェストを作成します。 `tea.cafe.example.com`ホストに入ったリクエストは`tea-svc`サービスに接続し、`coffee.cafe.example.com`ホストに入ったリクエストは`coffee-svc`サービスに接続します。
+
+```yaml
+# cafe-ingress-host.yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: cafe-ingress-host
+spec:
+  rules:
+  - host: tea.cafe.example.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: tea-svc
+          servicePort: 80
+  - host: coffee.cafe.example.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: coffee-svc
+          servicePort: 80
+```
+
+イングレスを作成し、しばらくしてから確認したときに**ADDRESS**フィールドにIPが設定されている必要があります。
+
+```
+$ kubectl apply -f cafe-ingress-host.yaml
+ingress.extensions/cafe-ingress-host created
+
+$ kubectl get ingress
+NAME                HOSTS                                          ADDRESS          PORTS   AGE
+cafe-ingress-host   tea.cafe.example.com,coffee.cafe.example.com   123.123.123.44   80      4m29s
+```
+
+#### HTTP Request送信
+外部ホストからイングレスのADDRESSに設定されたIPにHTTPリクエストを送信します。ただしホスト名を利用してサービスを分岐するようにイングレスを構成したため、ホスト名を利用してリクエストを送信する必要があります。
+
+> [参考]
+> 任意のホスト名を使用してテストするにはcurlの --resolveオプションを使用します。 --resolveオプションは`{ホスト名}:{ポート番号}:{IP}`の形式で入力します。これは{ホスト名}に送る{ポート番号}のリクエストを{IP}で解析(resolve)しろという意味です。
+> `/etc/host`ファイルを開き`{IP} {ホスト名}`形式で追加することもできます。
+
+ホスト`coffee.cafe.example.com`にリクエストを送信すると`coffee-svc`サービスに渡されて`coffee` Podがレスポンスします。
+
+```
+$ curl --resolve coffee.cafe.example.com:80:123.123.123.44 http://coffee.cafe.example.com/
+Server address: 10.100.2.25:8080
+Server name: coffee-67c6f7c5fd-2bbzf
+Date: 07/Apr/2020:08:45:39 +0000
+URI: /
+Request ID: 29fd8a244b9f0a5ff5f35d1dc35edccf
+```
+
+ホスト`tea.cafe.example.com`にリクエストを送信すると`tea-svc`サービスに渡されて`tea` Podがレスポンスします。
+
+```
+$ curl --resolve tea.cafe.example.com:80:123.123.123.44 http://tea.cafe.example.com/
+Server address: 10.100.3.52:8080
+Server name: tea-7df475c6-q8mdx
+Date: 07/Apr/2020:08:53:44 +0000
+URI: /
+Request ID: fe61c1589d3ab8ef4ca4507245251ef3
+```
+
+不明なホストにリクエストを送るとイングレスコントローラーが`404 Not Found`を返します。
+
+```
+$ curl http://123.123.123.44
+<html>
+<head><title>404 Not Found</title></head>
+<body>
+<center><h1>404 Not Found</h1></center>
+<hr><center>nginx/1.17.8</center>
+</body>
+</html>
+
+$ curl --resolve test.example.com:80:123.123.123.44 http://test.example.com/
+<html>
+<head><title>404 Not Found</title></head>
+<body>
+<center><h1>404 Not Found</h1></center>
+<hr><center>nginx/1.17.8</center>
+</body>
+</html>
+```
+
+## Kubernetesダッシュボード
+NHN Kubernetes Service(NKS)は基本Web UIダッシュボード(dashboard)を提供します。 Kubernetesダッシュボードの詳細については[Web UI (ダッシュボード)](https://kubernetes.io/ko/docs/tasks/access-application-cluster/web-ui-dashboard/)文書を参照してください。
+
+### ダッシュボードサービス公開
+ユーザーKubernetesにはダッシュボードを公開するための`kubernetes-dashboard`サービスオブジェクトがあらかじめ作成されています。
+
+```
+$ kubectl get svc kubernetes-dashboard -n kube-system
+NAME                   TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+kubernetes-dashboard   ClusterIP   10.254.95.176   <none>        443/TCP   2d4h
+
+$ kubectl describe svc kubernetes-dashboard -n kube-system
+Name:              kubernetes-dashboard
+Namespace:         kube-system
+Labels:            k8s-app=kubernetes-dashboard
+Annotations:       kubectl.kubernetes.io/last-applied-configuration:
+                     {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"k8s-app":"kubernetes-dashboard"},"name":"kubernetes-dashboard"...
+Selector:          k8s-app=kubernetes-dashboard
+Type:              ClusterIP
+IP:                10.254.95.176
+Port:              <unset>  443/TCP
+TargetPort:        8443/TCP
+Endpoints:         10.100.2.3:8443
+Session Affinity:  None
+Events:
+...
+```
+
+しかし`kubernetes-dashboard`サービスオブジェクトはClusterIPタイプのため、まだクラスタ外部に公開されていません。ダッシュボードを外部公開するにはサービスオブジェクトをLoadBalancerタイプに変更するか、イングレスコントローラーとイングレスオブジェクトを作成する必要があります。
+
+#### LoadBalancerサービスオブジェクトに変更
+
+`LoadBalancer`タイプにサービスオブジェクトを変更すると、クラスタ外部にNHN Cloud Load Balancerが作成され、ロードバランサーとサービスオブジェクトに接続されます。ロードバランサーに接続したサービスオブジェクトを照会すると**EXTERNAL-IP**フィールドにロードバランサーのIPが表示されます。 `LoadBalancer`タイプのサービスオブジェクトについては[LoadBalancerサービス](/Container/Kubernetes/ko/user-guide/#loadbalancer)を参照してください。次の図は`LoadBalancer`タイプのサービスを利用してダッシュボードを外部に公開する構造を表しています。
+
+![dashboard-01.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-01.png)
+
+次のように`kubernetes-dashboard`サービスオブジェクトのタイプを`LoadBalancer`に変更します。
+
+```
+$ kubectl -n kube-system patch svc/kubernetes-dashboard -p '{"spec":{"type":"LoadBalancer"}}'
+service/kubernetes-dashboard patched
+```
+
+`kubernetes-dashboard`サービスオブジェクトが`LoadBalancer`タイプに変更されると、しばらくした後**EXTERNAL-IP**フィールドでロードバランサーIPを確認できます。
+
+```
+$ kubectl get svc -n kube-system
+NAME                   TYPE           CLUSTER-IP      EXTERNAL-IP      PORT(S)                  AGE
+...
+kubernetes-dashboard   LoadBalancer   10.254.95.176   123.123.123.81   443:30963/TCP            2d23h
+```
+
+> [参考]
+> 作成されたロードバランサーは **Network > Load Balancer**ページで確認できます。
+> ロードバランサーのIPは外部からアクセスできるFloating IPです。 **Network > Floating IP**ページで確認できます。
+
+Webブラウザで`https://{EXTERNAL-IP}`に接続するとKubernetesダッシュボードページがローディングされます。ログインのために必要なトークンは[ダッシュボードアクセストークン](/Container/Kubernetes/ko/user-guide/#_23)を参照してください。
+
+> [参考]
+> Kubernetesダッシュボードは自動作成されるプライベート証明書を使用するため、Webブラウザの種類とセキュリティ設定によっては安全ではないページと表示されることがあります。
+
+#### イングレス(Ingress)を利用したサービス公開
+
+イングレスは、クラスタ内部の複数のサービスにアクセスするためのルーティングを提供するネットワークオブジェクトです。イングレスオブジェクトの設定は、イングレスコントローラーで動作します。 `kubernetes-dashboard`サービスオブジェクトをイングレスを介して公開できます。イングレスとイングレスコントローラーの詳細については[イングレスコントローラー](/Container/Kubernetes/ko/user-guide/#_16)を参照してください。次の図はイングレスを介してダッシュボードを外部に公開する構造を表しています。
+
+![dashboard-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-02.png)
+
+[NGINX Ingress Controllerインストール](/Container/Kubernetes/ko/user-guide/#nginx-ingress-controller)を参照して`NGINX Ingress Controller`をインストールして`LoadBalancer`タイプのサービスを作成します。そして次のようにイングレスオブジェクトを作成するためのマニフェストを作成します。
+
+```yaml
+# kubernetes-dashboard-ingress-tls-passthrough.yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: k8s-dashboard-ingress
+  namespace: kube-system
+  annotations:
+    ingress.kubernetes.io/ssl-passthrough: "true"
+    kubernetes.io/ingress.allow-http: "false"
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    nginx.ingress.kubernetes.io/proxy-body-size: 100M
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.org/ssl-backend: kubernetes-dashboard
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: kubernetes-dashboard
+          servicePort: 443
+        path: /
+  tls:
+  - secretName: kubernetes-dashboard-certs
+```
+
+マニフェストを適用してイングレスを作成し、`ingress-nginx`サービスオブジェクトの**EXTERNAL-IP**フィールドを確認します。
+
+```
+$ kubectl apply -f kubernetes-dashboard-ingress-tls-passthrough.yaml
+ingress.extensions/k8s-dashboard-ingress created
+
+$ kubectl get service/ingress-nginx -n ingress-nginx
+NAME            TYPE           CLUSTER-IP       EXTERNAL-IP      PORT(S)                      AGE
+ingress-nginx   LoadBalancer   10.254.211.113   123.123.123.29   80:32680/TCP,443:31631/TCP   19h
+```
+
+Webブラウザで`https://{EXTERNAL-IP}`に接続するとKubernetesダッシュボードページがローディングされます。ログインのために必要なトークンは[ダッシュボードアクセストークン](/Container/Kubernetes/ko/user-guide/#_23)を参照してください。
+
+### ダッシュボードアクセストークン
+Kubernetesダッシュボードにログインするにはトークンが必要です。トークンは次のコマンドで取得できます。
+
+```
+# SECRET_NAME=$(kubectl -n kube-system get secrets | grep "kubernetes-dashboard-token" | cut -f1 -d ' ')
+
+$ kubectl describe secret $SECRET_NAME -n kube-system | grep -E '^token' | cut -f2 -d':' | tr -d " "
+eyJhbGc...-QmXA
+```
+
+出力されたトークンをブラウザのトークン入力ウィンドウに入力すると、クラスタ管理者権限を付与されたユーザーとしてログインできます。
+
+
+## パシステントボリューム
+パシステントボリューム(Persistent Volume, PV)は物理記憶装置(volume)を表すKubernetesのリソースです。1つのPVは1つのNHN Cloud Block Storageに接続されます。詳細については[パシステントボリューム](https://kubernetes.io/ko/docs/concepts/storage/persistent-volumes/)文書を参照してください。
+
+PVをPodに接続して使用するにはパシステントボリュームクレーム(Persistent Volume Claims, PVC)オブジェクトが必要です。 PVCは容量、読み取り/書き込みモードなど必要なボリュームの要求事項を定義します。
+
+PVとPVCでユーザーは使用したいボリュームのプロパティを定義し、システムはユーザーの要求事項に合ったボリュームリソースを割り当てる方式でリソースの使用と管理を分離します。
+
+### PV/PVCのライフサイクル
+PVとPVCは4段階のライフサイクル(life cycle)に従います。
+
+* プロビジョニング(provisioning)
+[ストレージクラス](https://kubernetes.io/ko/docs/concepts/storage/storage-classes/)を使用してユーザーが直接ボリュームを確保し、PVを作成(static provisioning)したり、動的に作成(dynamic provisioning)できます。
+
+* バインディング(binding)
+PVとPVCを1：1でバインディングします。動的プロビジョニングでPVを作成した場合はバインディングも自動的に行われます。
+
+* 使用(using)
+PVをPodにマウントして使用します。
+
+* 変換(reclaiming)
+使用を終えたボリュームを回収します。回収方法は削除(Delete)、保存(Retain)、再使用(Recycle)があります。
+
+| 方法 | 説明 |
+| --- | --- |
+| 削除(Delete) | PVを削除するとき、接続しているボリュームを一緒に削除します。 |
+| 保存(Retain) | PVを削除するとき、接続しているボリュームを削除しません。ボリュームはユーザーが直接削除するか再利用できます。 |
+| 再利用(Recycle) | PVを削除するとき、接続しているボリュームを削除せず、再利用できる状態にします。この方法は停止(deprecated)しています。 |
+
+### ストレージクラス(StorageClass)
+プロビジョニングを行うには、まずストレージクラスが定義されている必要があります。ストレージクラスは特定の特性でストレージを分類できる方法を提供します。ストレージ提供者(provisioner)の情報を含め、メディアの種類やアベイラビリティゾーンなどを設定できます。 
+
+#### ストレージ提供者(provisioner)
+ストレージの提供者情報を設定します。 Kubernetesバージョンに応じてサポートされているストレージ情報提供者情報は次のとおりです。
+* v1.19.13以前のバージョン：provisionerフィールドを必ず`kubernetes.io/cinder`に設定する必要があります。
+* v1.20.12以降のバージョン：provisionerフィールドを`cinder.csi.openstack.org`に設定して使用できます。
+
+#### パラメータ(parameter)
+ストレージクラスを介して次のパラメータを設定できます。
+* ストレージ種類(type)：ストレージの種類を入力します。(未入力の場合はGeneral HDDが設定されます)
+    * **General HDD**：ストレージ種類がHDDに設定されます。
+    * **General SSD**：ストレージ種類がSSDに設定されます。
+* アベイラビリティゾーン(availability)：アベイラビリティゾーンを設定します。(未入力の場合はランダムに設定されます)
+    * パンギョリージョン：**kr-pub-a**または**kr-pub-b**
+    * 坪村リージョン：**kr2-pub-a**または**kr2-pub-b**
+
+#### ボリュームバインディングモード(VolumeBindingMode)
+ボリュームバインディングモードは、ボリュームバインディングと動的プロビジョニングの開始時点を制御します。この設定はストレージ提供者がcinder.csi.openstack.orgの場合にのみ設定できます。
+
+* **Immediate**：パシステントボリュームクレームが作成されるとすぐにボリュームバインディングと動的プロビジョニングが始まります。パシステントボリュームクレームが作成される時点ではボリュームを接続するPodの事前知識がない状態です。そのためボリュームのアベイラビリティゾーンとPodがスケジューリングされるノードのアベイラビリティゾーンが異なる場合はPodが正常に動作しません。 
+* **WaitForFirstConsumer**：パシステントボリュームクレームが作成されるときはボリュームバインディングと動的プロビジョニングを行いません。このパシステントボリュームクレームが初めてPodに接続すると、 Podがスケジューリングされたノードのアベイラビリティゾーン情報をもとにボリュームバインディングと動的プロビジョニングを行います。したがってImmediateモードなど、ボリュームのアベイラビリティゾーンとインスタンスのアベイラビリティゾーンが異なりPodが正常に動作しない場合が発生しません。
+
+#### 例1
+以下のストレージクラスマニフェストはv1.19.13以前のバージョンを使用するKubernetesクラスタで使用できます。パラメータを介してアベイラビリティゾーンとボリュームタイプを指定できます。
+
+```yaml
+# storage_class.yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: sc-ssd
+provisioner: kubernetes.io/cinder
+parameters:
+  type: General SSD
+  availability: kr-pub-a
+```
+
+ストレージクラスを作成して確認します。
+
+```
+$ kubectl apply -f storage_class.yaml
+storageclass.storage.k8s.io/sc-ssd created
+
+$ # kubectl get sc
+NAME     PROVISIONER            RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
+sc-ssd   kubernetes.io/cinder   Delete          Immediate           false                  3s
+```
+
+#### 例2
+次のストレージクラスマニフェストは、v1.20.12以降のバージョンを使用するKubernetesクラスタで使用できます。ボリュームバインディングモードをWaitForFirstConsumerに設定してパシステントボリュームクレームがPodに接続されるときにボリュームバインディングと動的プロビジョニングを開始します。
+
+```yaml
+# storage_class_csi.yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: csi-storageclass
+provisioner: cinder.csi.openstack.org
+volumeBindingMode: WaitForFirstConsumer
+```
+
+ストレージクラスを作成して確認します。
+
+```
+$ kubectl apply -f storage_class_csi.yaml
+storageclass.storage.k8s.io/csi-storageclass created
+
+$ kubectl get sc
+NAME               PROVISIONER                RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
+csi-storageclass   cinder.csi.openstack.org   Delete          WaitForFirstConsumer   false                  7s
+```
+
+
+### 静的プロビジョニング
+
+静的プロビジョニング(static provisioning)は、ユーザーが直接ブロックストレージを準備する必要があります。 NHN Cloud Webコンソールの**Storage > Block Storage**サービスページで**ブロックストレージ作成**ボタンをクリックしてPVに接続するブロックストレージを作成します。ブロックストレージガイドの[ブロックストレージ作成](/Storage/Block%20Storage/ko/console-guide/#_0)を参照してください。
+
+PVを作成するにはブロックストレージのIDが必要です。**Storage > Block Storage**サービスページのブロックストレージリストから使用するブロックストレージを選択します。下の**情報**タブのブロックストレージ名項目でIDを確認できます。
+
+ブロックストレージと接続するPVマニフェストを作成します。**spec.storageClassName**にはストレージクラス名を入力します。 NHN Cloud Block Storageを使用するには**spec.accessModes**は必ず`ReadWriteOnce`に設定する必要があります。**spec.presistentVolumeReclaimPolicy**は`Delete`または`Retain`に設定できます。
+
+> [注意]
+> Kubernetesバージョンに合ったストレージ提供者が定義されているストレージクラスを設定する必要があります。
+
+```yaml
+# pv-static.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-static-001
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: sc-default
+  cinder:
+    fsType: "ext3"
+    volumeID: "e6f95191-d58b-40c3-a191-9984ce7532e5"
+```
+
+PVを作成して確認します。
+
+```
+$ kubectl apply -f pv-static.yaml
+persistentvolume/pv-static-001 created
+
+$ kubectl get pv -o wide
+NAME            CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS   REASON   AGE   VOLUMEMODE
+pv-static-001   10Gi       RWO            Delete           Available           sc-default              7s    Filesystem
+```
+
+作成したPVを使用するためのPVCマニフェストを作成します。**spec.volumeName**にはPVの名前を指定する必要があります。他の項目はPVマニフェストの内容と同じように設定します。
+
+```yaml
+# pvc-static.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-static
+  namespace: default
+spec:
+  volumeName: pv-static-001
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: sc-default
+```
+
+PVCを作成して確認します。
+
+```
+$ kubectl apply -f pvc-static.yaml
+persistentvolumeclaim/pvc-static created
+
+$ kubectl get pvc -o wide
+NAME         STATUS   VOLUME          CAPACITY   ACCESS MODES   STORAGECLASS   AGE   VOLUMEMODE
+pvc-static   Bound    pv-static-001   10Gi       RWO            sc-default     7s    Filesystem
+```
+
+PVCを作成した後、PVの状態を照会してみると**CLAIM**項目にPVC名が指定され、**STATUS**項目が`Bound`に変更されていることを確認できます。
+
+```
+$ kubectl get pv -o wide
+NAME            CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                STORAGECLASS   REASON   AGE   VOLUMEMODE
+pv-static-001   10Gi       RWO            Delete           Bound    default/pvc-static   sc-default              79s   Filesystem
+```
+
+
+### 動的プロビジョニング
+
+動的プロビジョニング(dynamic provisioning)はストレージクラスに定義されているプロパティを参照して自動的にブロックストレージを作成します。動的プロビジョニングはPVを作成する必要がありません。したがってPVCマニフェストには**spec.volumeName**を設定しません。
+
+```yaml
+# pvc-dynamic.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-dynamic
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: sc-ssd
+```
+
+ボリュームバインディングモードを設定しない場合や**Immediate**に設定してPVCを作成する場合はPVが自動的に作成されます。 PVに接続されたブロックストレージも自動的に作成され、NHN Cloud Webコンソール**Storage > Block Storage**サービスページのブロックストレージリストで確認できます。
+
+```
+$ kubectl apply -f pvc-dynamic.yaml
+persistentvolumeclaim/pvc-dynamic created
+
+$ kubectl get sc,pv,pvc
+NAME                                     PROVISIONER            AGE
+storageclass.storage.k8s.io/sc-default   kubernetes.io/cinder   10m
+
+NAME                                                        CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                 STORAGECLASS   REASON   AGE
+persistentvolume/pvc-c63da3f9-dfcb-4cae-a9a9-67137994febc   10Gi       RWO            Delete           Bound    default/pvc-dynamic   sc-default              16s
+
+NAME                                STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+persistentvolumeclaim/pvc-dynamic   Bound    pvc-c63da3f9-dfcb-4cae-a9a9-67137994febc   10Gi       RWO            sc-default     17s
+```
+
+> [注意]
+> 動的プロビジョニングで作成されたブロックストレージはWebコンソールから削除できません。またクラスタを削除するとき、自動的に削除されません。したがってクラスタを削除する前にPVCをすべて削除する必要があります。PVCを削除せずにクラスタを削除すると課金されることがあります。動的プロビジョニングを作成されたPVCのreclaimPolicyは基本的に`Delete`に設定されるため、PVCを削除するだけでPVとブロックストレージが削除されます。
+
+
+### PodにPVCマウント
+
+PodにPVCをマウントするにはPodマニフェストにマウント情報を定義する必要があります。 `spec.volumes.persistenVolumeClaim.claimName`に使用するPVC名を入力します。そして`spec.containers.volumeMounts.mountPath`にマウントするパスを入力します。
+
+次の例は静的プロビジョニングで作成したPVCをPodの`/usr/share/nginx/html`にマウントします。
+
+```yaml
+# pod-pvc.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-with-static-pv
+spec:
+  containers:
+    - name: web
+      image: nginx
+      ports:
+        - name: web
+          containerPort: 80
+          hostPort: 8082
+          protocol: TCP
+      volumeMounts:
+        - name: html-volume
+          mountPath: "/usr/share/nginx/html"
+  volumes:
+    - name: html-volume
+      persistentVolumeClaim:
+        claimName: pvc-static
+```
+
+Podを作成し、ブロックストレージがマウントされていることを確認します。
+
+```
+$ kubectl apply -f pod-static-pvc.yaml
+pod/nginx-with-static-pv created
+
+$ kubectl get pods
+NAME                   READY   STATUS    RESTARTS   AGE
+nginx-with-static-pv   1/1     Running   0          50s
+
+$ kubectl exec -ti nginx-with-static-pv -- df -h
+Filesystem      Size  Used Avail Use% Mounted on
+...
+/dev/vdc        9.8G   23M  9.7G   1% /usr/share/nginx/html
+...
+```
+
+NHN Cloud Webコンソール**Storage > Block Storage**サービスページでもブロックストレージの接続情報を確認できます。
