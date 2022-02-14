@@ -37,7 +37,7 @@
 
 #### 機能追加
 * KubernetesサービスのためのPublic APIが公開されました。
-    * Public APIの詳しい内容は[APIガイド](/Container/Kubernetes/ko/public-api)を参照してください。
+    * Public APIの詳しい内容は[APIガイド](/Container/NKS/ja/public-api)を参照してください。
 
 ### 2021. 10. 26.
 
@@ -56,7 +56,7 @@
 * ワーカーノードにコンテナログローテーションの設定が追加されました。
     * イメージアップデート
         * CentOS 7.8 - Container (2021.07.27)
-    * コンテナログ管理については[問題解決ガイド](/Container/Kubernetes/ja/troubleshooting-guide)を参照してください。
+    * コンテナログ管理については[問題解決ガイド](/Container/NKS/ja/troubleshooting-guide)を参照してください。
 
 ### 2021. 06. 29.
 

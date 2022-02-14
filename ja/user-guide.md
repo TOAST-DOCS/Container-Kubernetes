@@ -1663,7 +1663,7 @@ service "tea-svc" deleted
 ![ingress-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/ingress-02.png)
 
 #### サービスとPod作成
-[URIベースのサービス分岐](/Container/Kubernetes/ko/user-guide/#uri)と同じマニフェストを利用してサービスとPodを作成します。
+[URIベースのサービス分岐](/Container/NKS/ja/user-guide/#uri)と同じマニフェストを利用してサービスとPodを作成します。
 
 #### イングレス作成
 ホスト名に基づいてサービスに接続するイングレスマニフェストを作成します。 `tea.cafe.example.com`ホストに入ったリクエストは`tea-svc`サービスに接続し、`coffee.cafe.example.com`ホストに入ったリクエストは`coffee-svc`サービスに接続します。
@@ -1786,7 +1786,7 @@ Events:
 
 #### LoadBalancerサービスオブジェクトに変更
 
-`LoadBalancer`タイプにサービスオブジェクトを変更すると、クラスタ外部にNHN Cloud Load Balancerが作成され、ロードバランサーとサービスオブジェクトに接続されます。ロードバランサーに接続したサービスオブジェクトを照会すると**EXTERNAL-IP**フィールドにロードバランサーのIPが表示されます。 `LoadBalancer`タイプのサービスオブジェクトについては[LoadBalancerサービス](/Container/Kubernetes/ko/user-guide/#loadbalancer)を参照してください。次の図は`LoadBalancer`タイプのサービスを利用してダッシュボードを外部に公開する構造を表しています。
+`LoadBalancer`タイプにサービスオブジェクトを変更すると、クラスタ外部にNHN Cloud Load Balancerが作成され、ロードバランサーとサービスオブジェクトに接続されます。ロードバランサーに接続したサービスオブジェクトを照会すると**EXTERNAL-IP**フィールドにロードバランサーのIPが表示されます。 `LoadBalancer`タイプのサービスオブジェクトについては[LoadBalancerサービス](/Container/NKS/ja/user-guide/#loadbalancer)を参照してください。次の図は`LoadBalancer`タイプのサービスを利用してダッシュボードを外部に公開する構造を表しています。
 
 ![dashboard-01.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-01.png)
 
@@ -1810,18 +1810,18 @@ kubernetes-dashboard   LoadBalancer   10.254.95.176   123.123.123.81   443:30963
 > 作成されたロードバランサーは **Network > Load Balancer**ページで確認できます。
 > ロードバランサーのIPは外部からアクセスできるFloating IPです。 **Network > Floating IP**ページで確認できます。
 
-Webブラウザで`https://{EXTERNAL-IP}`に接続するとKubernetesダッシュボードページがローディングされます。ログインのために必要なトークンは[ダッシュボードアクセストークン](/Container/Kubernetes/ko/user-guide/#_23)を参照してください。
+Webブラウザで`https://{EXTERNAL-IP}`に接続するとKubernetesダッシュボードページがローディングされます。ログインのために必要なトークンは[ダッシュボードアクセストークン](/Container/NKS/ja/user-guide/#_23)を参照してください。
 
 > [参考]
 > Kubernetesダッシュボードは自動作成されるプライベート証明書を使用するため、Webブラウザの種類とセキュリティ設定によっては安全ではないページと表示されることがあります。
 
 #### イングレス(Ingress)を利用したサービス公開
 
-イングレスは、クラスタ内部の複数のサービスにアクセスするためのルーティングを提供するネットワークオブジェクトです。イングレスオブジェクトの設定は、イングレスコントローラーで動作します。 `kubernetes-dashboard`サービスオブジェクトをイングレスを介して公開できます。イングレスとイングレスコントローラーの詳細については[イングレスコントローラー](/Container/Kubernetes/ko/user-guide/#_16)を参照してください。次の図はイングレスを介してダッシュボードを外部に公開する構造を表しています。
+イングレスは、クラスタ内部の複数のサービスにアクセスするためのルーティングを提供するネットワークオブジェクトです。イングレスオブジェクトの設定は、イングレスコントローラーで動作します。 `kubernetes-dashboard`サービスオブジェクトをイングレスを介して公開できます。イングレスとイングレスコントローラーの詳細については[イングレスコントローラー](/Container/NKS/ja/user-guide/#_16)を参照してください。次の図はイングレスを介してダッシュボードを外部に公開する構造を表しています。
 
 ![dashboard-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-02.png)
 
-[NGINX Ingress Controllerインストール](/Container/Kubernetes/ko/user-guide/#nginx-ingress-controller)を参照して`NGINX Ingress Controller`をインストールして`LoadBalancer`タイプのサービスを作成します。そして次のようにイングレスオブジェクトを作成するためのマニフェストを作成します。
+[NGINX Ingress Controllerインストール](/Container/NKS/ja/user-guide/#nginx-ingress-controller)を参照して`NGINX Ingress Controller`をインストールして`LoadBalancer`タイプのサービスを作成します。そして次のようにイングレスオブジェクトを作成するためのマニフェストを作成します。
 
 ```yaml
 # kubernetes-dashboard-ingress-tls-passthrough.yaml
@@ -1861,7 +1861,7 @@ NAME            TYPE           CLUSTER-IP       EXTERNAL-IP      PORT(S)        
 ingress-nginx   LoadBalancer   10.254.211.113   123.123.123.29   80:32680/TCP,443:31631/TCP   19h
 ```
 
-Webブラウザで`https://{EXTERNAL-IP}`に接続するとKubernetesダッシュボードページがローディングされます。ログインのために必要なトークンは[ダッシュボードアクセストークン](/Container/Kubernetes/ko/user-guide/#_23)を参照してください。
+Webブラウザで`https://{EXTERNAL-IP}`に接続するとKubernetesダッシュボードページがローディングされます。ログインのために必要なトークンは[ダッシュボードアクセストークン](/Container/NKS/ja/user-guide/#_23)を参照してください。
 
 ### ダッシュボードアクセストークン
 Kubernetesダッシュボードにログインするにはトークンが必要です。トークンは次のコマンドで取得できます。
