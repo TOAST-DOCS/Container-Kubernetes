@@ -26,10 +26,11 @@ NHN Kubernetes Service(NKS)は複数のバージョンをサポートしてい�
 | :-: | :-: | :-: |
 | v1.17.6 | 不可 | 可能 |
 | v1.18.19 | 不可 | 可能 |
-| v1.19.13 | 可能 | 可能 |
+| v1.19.13 | 不可 | 可能 |
 | v1.20.12 | 可能 | 可能 |
 | v1.21.6 | 可能 | 可能 |
 | v1.22.3 | 可能 | 可能 |
+| v1.23.3 | 可能 | 可能 |
 
 
 必要な情報を入力し、**クラスター作成**ボタンを押すと、クラスターの作成が始まります。クラスターリストで状態を確認できます。作成には約10分かかります。クラスターの設定によっては、さらに時間がかかる場合もあります。
@@ -370,7 +371,7 @@ nginx-deployment-756fd4cdf-x7ns5   0/1     Pending   0          34s
 ```
 # kubectl get nodes
 NAME                                            STATUS   ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   45m   v1.17.6
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   45m   v1.23.3
 ```
 
 約5～10分後、以下のようにノードが増設されたことを確認できます。
@@ -378,9 +379,9 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   45m   v1.17.6
 ```
 # kubectl get nodes
 NAME                                            STATUS   ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   48m   v1.17.6
-autoscaler-test-default-w-ohw5ab5wpzug-node-1   Ready    <none>   77s   v1.17.6
-autoscaler-test-default-w-ohw5ab5wpzug-node-2   Ready    <none>   78s   v1.17.6
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   48m   v1.23.3
+autoscaler-test-default-w-ohw5ab5wpzug-node-1   Ready    <none>   77s   v1.23.3
+autoscaler-test-default-w-ohw5ab5wpzug-node-2   Ready    <none>   78s   v1.23.3
 ```
 
 `Pending`状態だったPodがノード増設後に正常スケジューリングされたことを確認できます。
@@ -448,7 +449,7 @@ No resources found in default namespace.
 ```
 # kubectl get nodes
 NAME                                            STATUS   ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   71m   v1.17.6
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   71m   v1.23.3
 ```
 
 ノード削除イベントは、下記のコマンドで確認できます。
@@ -664,8 +665,8 @@ data:
 ```
 # kubectl get nodes
 NAME                                            STATUS     ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready      <none>   22d   v1.17.6
-autoscaler-test-default-w-ohw5ab5wpzug-node-8   Ready      <none>   90s   v1.17.6
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready      <none>   22d   v1.23.3
+autoscaler-test-default-w-ohw5ab5wpzug-node-8   Ready      <none>   90s   v1.23.3
 ```
 
 Pending状態だったPodが全て正常スケジューリングされてRunning状態になったことを確認できます。
@@ -695,7 +696,7 @@ Podの数が減ってノードのリソース使用量が減るとノードが�
 ```
 # kubectl get nodes
 NAME                                            STATUS   ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.17.6
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 ```
 
 
@@ -946,16 +947,16 @@ NHN CloudのKubernetesクラスタバージョン管理方式とKubernetesバー
 
 次の例はKubernetesバージョンのアップグレード可否を表にしたものです。例に使用された条件は次のとおりです。 
 
-* NHN CloudがサポートするKubernetesバージョンリスト：v1.17.6, v1.18.19, v1.19.10
-* クラスタはv1.17.6で作成
+* NHN CloudがサポートするKubernetesバージョンリスト：v1.21.6, v1.22.3, v1.23.3
+* クラスタはv1.21.6で作成
 
 |状態 | マスターバージョン | マスターアップグレード可否 | ワーカーノードグループバージョン | ワーカーノードグループアップグレード可否
  | --- | :-: | :-: | :-: | :-: |
- | 初期状態| v1.17.6 | 可能(注1) | v1.17.6 | 不可能(注2) | 
- | マスターアップグレード後の状態 | v1.18.19 | 不可(注3) | v1.17.6 | 可能(注4) | 
-| ワーカーノードグループアップグレード後の状態 | v1.18.19 | 可能(注1) | v1.18.19 | 不可(注2) |
- | マスターアップグレード後の状態 | v1.19.10 | 不可(注3) | v1.18.19 | 可能(注4) | 
-| ワーカーノードグループアップグレード後の状態 | v1.19.10 | 不可(注5) | v1.19.10 | 不可(注2)| 
+ | 初期状態| v1.21.6 | 可能(注1) | v1.21.6 | 不可能(注2) | 
+ | マスターアップグレード後の状態 | v1.22.3 | 不可(注3) | v1.21.6 | 可能(注4) | 
+| ワーカーノードグループアップグレード後の状態 | v1.22.3 | 可能(注1) | v1.22.3 | 不可(注2) |
+ | マスターアップグレード後の状態 | v1.23.3 | 不可(注3) | v1.22.3 | 可能(注4) | 
+| ワーカーノードグループアップグレード後の状態 | v1.23.3 | 不可(注5) | v1.23.3 | 不可(注2)| 
 
 (注1)マスターとすべてのワーカーノードグループのバージョンが一致する状態のためアップグレード可能
 (注2)ワーカーノードグループはマスターがアップグレードされた後にアップグレード可能

@@ -26,10 +26,11 @@ NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전�
 | :-: | :-: | :-: |
 | v1.17.6 | 불가능 | 가능 |
 | v1.18.19 | 불가능 | 가능 |
-| v1.19.13 | 가능 | 가능 |
+| v1.19.13 | 불가능 | 가능 |
 | v1.20.12 | 가능 | 가능 |
 | v1.21.6 | 가능 | 가능 |
 | v1.22.3 | 가능 | 가능 |
+| v1.23.3 | 가능 | 가능 |
 
 
 필요한 정보를 입력하고 **클러스터 생성** 버튼을 클릭하면 클러스터 생성이 시작됩니다. 클러스터 목록에서 상태를 확인할 수 있습니다. 생성하는 데는 약 10분 정도 걸립니다. 클러스터 설정에 따라 더 오래 걸릴 수도 있습니다.
@@ -374,7 +375,7 @@ nginx-deployment-756fd4cdf-x7ns5   0/1     Pending   0          34s
 ```
 # kubectl get nodes
 NAME                                            STATUS   ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   45m   v1.17.6
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   45m   v1.23.3
 ```
 
 약5~10분 후 아래와 같이 노드가 증설된 것을 확인할 수 있습니다.
@@ -382,9 +383,9 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   45m   v1.17.6
 ```
 # kubectl get nodes
 NAME                                            STATUS   ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   48m   v1.17.6
-autoscaler-test-default-w-ohw5ab5wpzug-node-1   Ready    <none>   77s   v1.17.6
-autoscaler-test-default-w-ohw5ab5wpzug-node-2   Ready    <none>   78s   v1.17.6
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   48m   v1.23.3
+autoscaler-test-default-w-ohw5ab5wpzug-node-1   Ready    <none>   77s   v1.23.3
+autoscaler-test-default-w-ohw5ab5wpzug-node-2   Ready    <none>   78s   v1.23.3
 ```
 
 `Pending` 상태였던 파드가 노드 증설 이후 정상 스케줄링된 것을 확인할 수 있습니다.
@@ -452,7 +453,7 @@ No resources found in default namespace.
 ```
 # kubectl get nodes
 NAME                                            STATUS   ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   71m   v1.17.6
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   71m   v1.23.3
 ```
 
 노드 감축에 대한 이벤트는 아래 명령어로 확인할 수 있습니다.
@@ -670,8 +671,8 @@ data:
 ```
 # kubectl get nodes
 NAME                                            STATUS     ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready      <none>   22d   v1.17.6
-autoscaler-test-default-w-ohw5ab5wpzug-node-8   Ready      <none>   90s   v1.17.6
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready      <none>   22d   v1.23.3
+autoscaler-test-default-w-ohw5ab5wpzug-node-8   Ready      <none>   90s   v1.23.3
 ```
 
 Pending 상태였던 파드 모두 정상 스케줄링되어 Running 상태가 된 것을 확인할 수 있습니다.
@@ -701,7 +702,7 @@ php-apache   Deployment/php-apache   0%/50%    1         30        1          31
 ```
 # kubectl get nodes
 NAME                                            STATUS   ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.17.6
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 ```
 
 
@@ -952,16 +953,16 @@ NHN Cloud의 Kubernetes 클러스터 버전 관리 방식과 Kubernetes 버전 �
 
 다음 예시는 Kubernetes 버전을 업그레이드 과정에서 업그레이드 가능 여부를 표로 나타낸 것입니다. 예시에 사용된 조건은 다음과 같습니다. 
 
-* NHN Cloud가 지원하는 Kubernetes 버전 목록: v1.17.6, v1.18.19, v1.19.10
-* 클러스터는 v1.17.6으로 생성
+* NHN Cloud가 지원하는 Kubernetes 버전 목록: v1.21.6, v1.22.3, v1.23.3
+* 클러스터는 v1.21.6으로 생성
 
 | 상태 | 마스터 버전 | 마스터 업그레이드 가능 여부 | 워커 노드 그룹 버전 | 워커 노드 그룹 업그레이드 가능 여부
 | --- | :-: | :-: | :-: | :-: |
-| 초기 상태| v1.17.6 | 가능① | v1.17.6 | 불가능 ② | 
-| 마스터 업그레이드 후 상태 | v1.18.19 | 불가능 ③ | v1.17.6 | 가능 ④ | 
-| 워커 노드 그룹 업그레이드 후 상태 | v1.18.19 | 가능 ① | v1.18.19 | 불가능 ② |
-| 마스터 업그레이드 후 상태 | v1.19.10 | 불가능 ③ | v1.18.19 | 가능 ④ | 
-| 워커 노드 그룹 업그레이드 후 상태 | v1.19.10 | 불가능 ⑤ | v1.19.10 | 불가능 ② |
+| 초기 상태| v1.21.6 | 가능① | v1.21.6 | 불가능 ② | 
+| 마스터 업그레이드 후 상태 | v1.22.3 | 불가능 ③ | v1.21.6 | 가능 ④ | 
+| 워커 노드 그룹 업그레이드 후 상태 | v1.22.3 | 가능 ① | v1.22.3 | 불가능 ② |
+| 마스터 업그레이드 후 상태 | v1.23.3 | 불가능 ③ | v1.22.3 | 가능 ④ | 
+| 워커 노드 그룹 업그레이드 후 상태 | v1.23.3 | 불가능 ⑤ | v1.23.3 | 불가능 ② |
 
 주석
 
@@ -1312,6 +1313,7 @@ SSL 버전은 다음과 같이 설정할 수 있습니다.
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/listener-terminated-https-tls-version입니다.
 * 리스너별 설정을 적용할 수 있습니다.
 * 다음 중 하나로 설정할 수 있습니다.
+    * TLSv1.3: Kubernetes v1.23.3부터 설정 가능합니다.
     * TLSv1.2: 미설정 시 기본값입니다.
     * TLSv1.1
     * TLSv1.0_2016
