@@ -1312,11 +1312,15 @@ SSL 버전은 다음과 같이 설정할 수 있습니다.
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/listener-terminated-https-tls-version입니다.
 * 리스너별 설정을 적용할 수 있습니다.
 * 다음 중 하나로 설정할 수 있습니다.
-    * TLSv1.2: 미설정 시 기본값입니다.
+    * TLSv1.3: 미설정 시 기본값입니다.
+    * TLSv1.2
     * TLSv1.1
     * TLSv1.0_2016
     * TLSv1.0
     * SSLv3
+
+> [주의]
+> TLSv1.3은 2022년 3월 29일 이후 생성된 클러스터에서 설정 가능합니다.
 
 인증서 정보는 다음과 같이 설정할 수 있습니다.
 
