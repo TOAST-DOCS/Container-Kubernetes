@@ -140,4 +140,4 @@ NKS의 워커 노드에서 dockerhub로부터 컨테이너 이미지를 내려�
 
 해결 방안은 다음과 같습니다.
 * dockerhub에 로그인하면 이미지를 받을 수 있는 갯수가 늘어나게 되고, 퍼블릭 IP에 의한 제한이 아닌 계정 등급별 제한을 받게 됩니다. dockerhub 계정을 만들어 원하는 pull 갯수를 제공하는 Tier에 가입하고 NKS 를 이용합니다. [Kubernetes에서 Private Registry 사용 방법](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/) 을 참고하세요.
-* dockerhub에 로그인하지 않은 상황에서 다른 인스턴스와 공유되지 않는 독립적인 퍼블릭 IP에 의한 제약을 받고 싶은 경우, 워커 노드에 플로팅 IP를 할당합니다. 
+* dockerhub에 로그인하지 않은 상황에서 독립적인 퍼블릭 IP에 의한 제약을 받고 싶은 경우, 워커 노드에 플로팅 IP를 할당합니다. 
