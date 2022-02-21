@@ -20,16 +20,16 @@ NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해�
 | 블록 스토리지 타입 | 기본 노드 그룹 인스턴스의 블록 스토리지 종류 |
 | 블록 스토리지 크기 | 기본 노드 그룹 인스턴스의 블록 스토리지 크기 |
 
+> [주의]
+> 클러스터 생성 시 VPC를 VPN Private Network으로 지정할 수 없습니다. 
+
 NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전에 따라 일부 기능에 제약이 있을 수 있습니다.
 
 | 버전 | 클러스터 신규 생성 | 생성된 클러스터 사용|
 | :-: | :-: | :-: |
-| v1.17.6 | 불가능 | 가능 |
-| v1.18.19 | 불가능 | 가능 |
+| v1.17.6 | 가능 | 가능 |
+| v1.18.19 | 가능 | 가능 |
 | v1.19.13 | 가능 | 가능 |
-| v1.20.12 | 가능 | 가능 |
-| v1.21.6 | 가능 | 가능 |
-| v1.22.3 | 가능 | 가능 |
 
 
 필요한 정보를 입력하고 **클러스터 생성** 버튼을 클릭하면 클러스터 생성이 시작됩니다. 클러스터 목록에서 상태를 확인할 수 있습니다. 생성하는 데는 약 10분 정도 걸립니다. 클러스터 설정에 따라 더 오래 걸릴 수도 있습니다.
@@ -242,16 +242,6 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 | --- | --- |
 | 증설 | 노드의 수를 증가시키는 것을 말합니다 |
 | 감축 | 노드의 수를 감소시키는 것을 말합니다 |
-
-> [주의]
-> 워커 노드가 인터넷 연결이 불가능한 환경에서 동작하고 있다면 오토 스케일러 컨테이너 이미지를 워커 노드에 직접 설치해야 합니다. 이 작업이 필요한 대상은 다음과 같습니다.
-> 
-> * 판교 리전: 2020년 11월 24일 이전에 생성한 노드 그룹
-> * 평촌 리전: 2020년 11월 19일 이전에 생성한 노드 그룹
-> 
-> 오토 스케일러의 컨테이너 이미지 경로는 다음과 같습니다.
->
-> * k8s.gcr.io/autoscaling/cluster-autoscaler:v1.19.0
 
 #### 오토 스케일러 설정
 오토 스케일러 기능은 노드 그룹별로 설정하고 동작합니다. 오토 스케일러 기능은 아래 경로로 설정할 수 있습니다.
@@ -883,31 +873,10 @@ status:
     type: Approved
 ```
 
-> [주의]
-> 이 기능은 클러스터 생성 시점이 아래 기간에 해당하는 경우에만 제공됩니다.
-> 
-> * 판교 리전: 2020년 12월 29일 이후에 생성한 클러스터
-> * 평촌 리전: 2020년 12월 24일 이후에 생성한 클러스터
-
 ### 승인 컨트롤러(admission controller) 플러그인
 승인 컨트롤러는 Kubernetes API 서버 요청을 가로채 객체를 변경하거나 요청을 거부할 수 있습니다. 승인 컨트롤러에 대한 자세한 설명은 [승인 컨트롤러](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/)를 참고하세요. 그리고 승인 컨트롤러의 사용 예제는 [승인 컨트롤러 가이드](https://kubernetes.io/blog/2019/03/21/a-guide-to-kubernetes-admission-controllers/)를 참고하세요.
 
 클러스터 버전과 클러스터 생성 시점에 따라 승인 컨트롤러에 적용되는 플러그인의 종류가 다릅니다. 자세한 내용은 리전별 생성 시점에 따른 플러그인 목록을 참고하세요.
-
-#### v1.19.13 이전 버전
-판교 리전 2021년 2월 22일 이전에 생성한 클러스터 및 평촌 리전 2021년 2월 17일 이전에 생성한 클러스터는 다음과 같이 적용됩니다.
-
-* DefaultStorageClass
-* DefaultTolerationSeconds
-* LimitRanger
-* MutatingAdmissionWebhook
-* NamespaceLifecycle
-* NodeRestriction
-* ResourceQuota
-* ServiceAccount
-* ValidatingAdmissionWebhook
-
-판교 리전 2021년 2월 23일 이후에 생성한 클러스터 및 평촌 리전 2021년 2월 18일 이후에 생성한 클러스터는 다음과 같이 적용됩니다.
 
 * DefaultStorageClass
 * DefaultTolerationSeconds
@@ -919,11 +888,6 @@ status:
 * ResourceQuota
 * ServiceAccount
 * ValidatingAdmissionWebhook
-
-#### v1.20.12 이후 버전
-Kubernetes 버전 별 기본 활성 승인 컨트롤러는 모두 활성화됩니다. 기본 활성 승인 컨트롤러에 아래의 컨트롤러가 추가 활성화됩니다.
-* NodeRestriction
-* PodSecurityPolicy
 
 
 ### 클러스터 업그레이드
@@ -1192,58 +1156,8 @@ Commercial support is available at
 ### 로드 밸런서 상세 옵션 설정
 Kubernetes의 서비스 객체를 정의할 때 로드 밸런서의 여러 가지 옵션을 설정할 수 있습니다.
 
-#### 전역 설정과 리스너별 설정
-설정 항목별로 전역 설정과 리스너별 설정이 가능합니다. 전역 설정과 리스너별 설정 모두 없는 경우 설정별 기본값을 사용합니다.
-* 리스너별 설정: 대상 리스너에만 적용되는 설정입니다.
-* 전역 설정: 대상 리스너에 리스너별 설정이 없는 경우 이 설정을 적용합니다.
-
-#### 리스너별 설정 형식
-리스너별 설정은 전역 설정 키에 리스너를 나타내는 접두어(prefix)를 붙여 설정할 수 있습니다. 리스너를 나타내는 접두어는 서비스 객체의 포트 프로토콜(`spec.ports[].protocol`)과 포트 번호(`spec.ports[].port`)를 대시(`-`)로 연결한 것입니다. 예를 들어 프로토콜이 TCP이고, 포트 번호가 80인 경우 접두어는 `TCP-80`입니다. 이 포트와 연결되는 리스너에 세션 지속성 설정을 하고 싶다면 .metadata.annotations 하위의 TCP-80.loadbalancer.nhncloud/pool-session-persistence에 설정할 수 있습니다.
-
-아래 매니페스트는 전역 설정과 리스너별 설정을 혼용한 예제입니다. 
-
-```yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: echosvr-svc
-  labels:
-    app: echosvr
-  annotations:
-    # 전역 설정
-    loadbalancer.nhncloud/pool-lb-method: SOURCE_IP
-    
-    # 리스너별 설정
-    TCP-80.loadbalancer.nhncloud/pool-session-persistence: "SOURCE_IP"
-    TCP-80.loadbalancer.nhncloud/listener-protocol: "HTTP"
-    TCP-443.loadbalancer.nhncloud/pool-lb-method: LEAST_CONNECTIONS
-    TCP-443.loadbalancer.nhncloud/listener-protocol: "TCP"
-spec:
-  ports:
-  - name: tcp-80
-    port: 80
-    targetPort: 8080
-    protocol: TCP
-  - name: tcp-443
-    port: 443
-    targetPort: 8443
-    protocol: TCP
-  selector:
-    app: echosvr
-  type: LoadBalancer
-```
-
-이 매니페스트를 적용했을 때 리스너별 설정은 다음 표와 같이 설정됩니다.
-
-| 항목 | TCP-80 리스너 | TCP-433 리스너| 설명 |
-| --- | --- | --- | --- |
-| 로드 밸런싱 방식 | SOURCE_IP | LEAST_CONNECTIONS | TCP-80 리스너는 전역 설정에 따라 SOURCE_IP로 설정<br>TCP-443 리스너는 리스너별 설정에 따라 LEAST_CONNECTIONS로 설정  |
-| 세션 지속성 | SOURCE_IP | None | TCP-80 리스너는 리스너별 설정에 따라 SOURCE_IP로 설정<br>TCP-443 리스너는 기본값에 따라 None으로 설정 |
-| 리스너 프로토콜 | HTTP | TCP | TCP-80 리스너와 TCP-443 리스너 모두 리스너별 설정에 따라 설정   |
-
 > [참고]
 > 별도로 표시되어 있지 않은 기능은 Kubernetes v1.19.13 이후 버전의 클러스터에만 적용 가능합니다.
-> Kubernetes v1.19.13 버전의 클러스터는 2022년 1월 25일 이후 생성된 클러스터에 한해 리스너별 설정이 적용됩니다.
 >
 
 > [주의]
@@ -1254,8 +1168,7 @@ spec:
 #### 세션 지속성 설정
 로드 밸런서의 세션 지속성을 설정할 수 있습니다.
 
-* 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/pool-session-persistence입니다.
-* 리스너별 설정을 적용할 수 있습니다.
+* 설정 위치는 .spec.sessionAffinity입니다.
 * 다음 중 하나로 설정할 수 있습니다.
     * 빈 문자열(""): 세션 지속성을 '없음'으로 설정합니다. 미설정 시 기본값입니다.
     * SOURCE_IP: 세션 지속성을 SOURCE_IP로 설정합니다.
@@ -1269,19 +1182,14 @@ spec:
 로드 밸런서에는 플로팅 IP가 연결되어 있습니다. 로드 밸런서 삭제 시 로드 밸런서에 연결된 플로팅 IP의 삭제 혹은 보존 여부를 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.openstack.org/keep-floatingip입니다.
-* **리스너별 설정을 적용할 수 없습니다.**
 * 다음 중 하나로 설정할 수 있습니다.
     * true: 플로팅 IP를 보존합니다.
     * false: 플로팅 IP를 삭제합니다. 미설정 시 기본값입니다.
 
-> [주의]
-> 2021년 10월 26일 이전에 생성된 v1.18.19 클러스터는 로드 밸런서가 삭제될 때 플로팅 IP가 삭제되지 않는 문제가 있습니다. 고객 센터의 1:1 문의를 통해 문의주시면 이 문제를 해결하기 위한 절차에 대해 상세히 알려드리겠습니다.
-
 #### 리스너 연결 제한 설정
 리스너의 연결 제한을 설정할 수 있습니다.
 
-* 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/connection-limit입니다.
-* 리스너별 설정을 적용할 수 있습니다.
+* 설정 위치는 .metadata.annotations 하위의 loadbalancer.openstack.org/connection-limit입니다.
 * v1.17.6, v1.18.19 클러스터
     * 최소값 1, 최대값 60000입니다. 
     * 설정하지 않으면 -1로 설정되며, 실제 로드 밸런서에 적용되는 값은 2000입니다.
@@ -1294,7 +1202,6 @@ spec:
 리스너의 프로토콜을 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/listener-protocol입니다.
-* 리스너별 설정을 적용할 수 있습니다.
 * 다음 중 하나로 설정할 수 있습니다.
     * TCP: 미설정 시 기본값입니다.
     * HTTP
@@ -1310,7 +1217,6 @@ spec:
 SSL 버전은 다음과 같이 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/listener-terminated-https-tls-version입니다.
-* 리스너별 설정을 적용할 수 있습니다.
 * 다음 중 하나로 설정할 수 있습니다.
     * TLSv1.2: 미설정 시 기본값입니다.
     * TLSv1.1
@@ -1321,13 +1227,11 @@ SSL 버전은 다음과 같이 설정할 수 있습니다.
 인증서 정보는 다음과 같이 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/listener-terminated-https-cert입니다.
-* 리스너별 설정을 적용할 수 있습니다.
 * 시작줄 및 끝줄을 포함해야 합니다.
 
 개인키 정보는 다음과 같이 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/listener-terminated-https-key입니다.
-* 리스너별 설정을 적용할 수 있습니다.
 * 시작줄 및 끝줄을 포함해야 합니다.
 
 다음은 리스너 프로토콜을 TERMINATED_HTTPS로 설정할 때의 매니페스트 예제입니다. 인증서 정보와 개인키 정보는 일부 생략되어 있습니다.
@@ -1357,7 +1261,6 @@ metadata:
 로드 밸런싱 방식을 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/pool-lb-method입니다.
-* 리스너별 설정을 적용할 수 있습니다.
 * 다음 중 하나로 설정할 수 있습니다.
     * ROUND_ROBIN: 미설정 시 기본값입니다.
     * LEAST_CONNECTIONS
@@ -1368,7 +1271,6 @@ metadata:
 상태 확인 프로토콜을 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/healthmonitor-type입니다.
-* 리스너별 설정을 적용할 수 있습니다.
 * 다음 중 하나로 설정할 수 있습니다.
     * HTTP: HTTP URL, HTTP 메서드, HTTP 상태 코드를 추가 설정해야 합니다.
     * HTTPS: HTTP URL, HTTP 메서드, HTTP 상태 코드를 추가 설정해야 합니다.
@@ -1377,20 +1279,17 @@ metadata:
 HTTP URL은 다음과 같이 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/healthmonitor-http-url입니다.
-* 리스너별 설정을 적용할 수 있습니다.
 * 설정값은 /으로 시작해야 합니다.
 * 설정하지 않거나 규칙에 맞지 않는 값을 입력하면 기본값인 /로 설정됩니다.
 
 HTTP 메서드는 다음과 같이 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/healthmonitor-http-method입니다.
-* 리스너별 설정을 적용할 수 있습니다.
 * 현재 GET만 지원하고 있으며, 설정하지 않거나 다른 값을 입력하면 기본값인 GET으로 설정됩니다.
 
 HTTP 상태 코드는 다음과 같이 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/healthmonitor-http-expected-code입니다.
-* 리스너별 설정을 적용할 수 있습니다.
 * 단일값(예: 200), 목록(예: 200,202), 범위(예: 200-204) 형태로 입력할 수 있습니다.
 * 설정하지 않거나 규칙에 맞지 않는 값을 입력하면 기본값인 200으로 설정됩니다.
 
@@ -1398,7 +1297,6 @@ HTTP 상태 코드는 다음과 같이 설정할 수 있습니다.
 상태 확인 주기를 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/healthmonitor-delay입니다.
-* 리스너별 설정을 적용할 수 있습니다.
 * 초 단위로 설정합니다.
 * 최소값 1, 최대값 5000입니다.
 * 설정하지 않거나 범위에서 벗어나는 값을 입력하면 기본값인 60으로 설정됩니다.
@@ -1407,7 +1305,6 @@ HTTP 상태 코드는 다음과 같이 설정할 수 있습니다.
 상태 확인 최대 응답 시간을 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/healthmonitor-timeout입니다.
-* 리스너별 설정을 적용할 수 있습니다.
 * 초 단위로 설정합니다.
 * 최소값 1, 최대값 5000입니다.
 * 이 설정은 반드시 상태 확인 주기 설정 설정값보다 작아야 합니다.
@@ -1418,7 +1315,6 @@ HTTP 상태 코드는 다음과 같이 설정할 수 있습니다.
 상태 확인 최대 재시도 횟수를 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/healthmonitor-max-retries입니다.
-* 리스너별 설정을 적용할 수 있습니다.
 * 최소값 1, 최대값 10입니다.
 * 설정하지 않거나 범위에서 벗어나는 값을 입력하면 기본값인 3으로 설정됩니다.
 
@@ -1900,7 +1796,7 @@ PV와 PVC로 사용자는 사용하고 싶은 볼륨의 속성을 정의하고, 
 PV와 PVC는 4단계의 생명 주기(life cycle)를 따릅니다.
 
 * 프로비저닝(provisioning)
-[스토리지 클래스](https://kubernetes.io/ko/docs/concepts/storage/storage-classes/)를 사용해 사용자가 직접 볼륨을 확보하고 PV를 생성(static provisioning)하거나 동적으로 생성(dynamic provisioning)할 수 있습니다.
+사용자가 직접 볼륨을 확보하고 PV를 생성(static provisioning)하거나 [스토리지 클래스](https://kubernetes.io/ko/docs/concepts/storage/storage-classes/)를 사용해 동적으로 생성(dynamic provisioning)할 수 있습니다.
 
 * 바인딩(binding)
 PV와 PVC를 1:1로 바인딩합니다. 동적 프로비저닝으로 PV를 생성했다면 바인딩도 자동으로 수행됩니다.
@@ -1917,90 +1813,38 @@ PV를 파드에 마운트해 사용합니다.
 | 보존(Retain) | PV를 삭제할 때 연결된 볼륨을 삭제하지 않습니다. 볼륨은 사용자가 직접 삭제하거나 재사용 할 수 있습니다. |
 | 재사용(Recycle) | PV를 삭제할 때 연결된 볼륨을 삭제하지 않고 재사용할 수 있는 상태로 만듭니다. 이 방법은 사용 중단(deprecated) 되었습니다. |
 
-### 스토리지 클래스(StorageClass)
-프로비저닝을 하기 위해서는 먼저 스토리지 클래스가 정의되어 있어야 합니다. 스토리지 클래스는 어떤 특성으로 스토리지들을 분류할 수 있는 방법을 제공합니다. 스토리지 제공자(provisioner)에 대한 정보를 포함해 미디어의 종류나 가용성 영역 등을 설정할 수 있습니다. 
+### 정적 프로비저닝
+정적 프로비저닝(static provisioning)은 사용자가 직접 블록 스토리지를 준비해야 합니다. NHN Cloud 웹 콘솔의 **Storage > Block Storage** 서비스 페이지에서 **블록 스토리지 생성** 버튼을 클릭해 PV와 연결할 블록 스토리지를 생성합니다. 블록 스토리지 가이드의 [블록 스토리지 생성](/Storage/Block%20Storage/ko/console-guide/#_0)을 참고하세요.
+PV를 생성하려면 블록 스토리지의 ID가 필요합니다. **Storage > Block Storage** 서비스 페이지의 블록 스토리지 목록에서 사용할 블록 스토리지를 선택합니다. 하단 **정보** 탭의 블록 스토리지 이름 항목에서 ID를 확인할 수 있습니다.
 
-#### 스토리지 제공자(provisioner)
-스토리지의 제공자 정보를 설정합니다. Kubernetes 버전에 따라 지원되는 스트로지 정보 제공자 정보는 다음과 같습니다.
-* v1.19.13 이전 버전: provisioner 필드를 반드시 `kubernetes.io/cinder`로 설정해야 합니다.
-* v1.20.12 이후 버전: provisioner 필드를 `cinder.csi.openstack.org`로 설정해 사용할 수 있습니다.
+> [주의]
+> 블록 스토리지와 파드를 구동할 노드 그룹 인스턴스의 가용성 영역이 같아야 합니다. 가용성 영역이 다르면 연결할 수 없습니다.
+>
 
-#### 파라미터(parameter)
-스토리지 클래스를 통해 다음의 파라미터를 설정할 수 있습니다.
-* 스토리지 종류(type): 스토리지의 종류를 입력합니다.(미입력시 General HDD가 설정됩니다)
-    * **General HDD**: 스토리지 종류가 HDD로 설정됩니다.
-    * **General SSD**: 스토리지 종류가 SSD로 설정됩니다.
-* 가용성 영역(availability): 가용성 영역을 설정합니다.(미입력시 무작위로 설정됩니다)
-    * 판교 리전: **kr-pub-a** 혹은 **kr-pub-b**
-    * 평촌 리전: **kr2-pub-a** 혹은 **kr2-pub-b**
+스토리지 클래스 매니페스트를 작성합니다. NHN Cloud Block Storage를 사용하려면 **provisioner**를 반드시 `kubernetes.io/cinder`로 설정해야 합니다.
 
-#### 볼륨 바인딩 모드(VolumeBindingMode)
-볼륨 바인딩 모드는 볼륨 바인딩과 동적 프로비저닝의 시작 시점을 제어합니다. 이 설정은 스토리지 제공자가 cinder.csi.openstack.org인 경우에만 설정 가능합니다. 
-
-* **Immediate**: 퍼시스턴트 볼륨 클레임이 생성되는 즉시 볼륨 바인딩과 동적 프로비저닝이 시작됩니다. 퍼시스턴트 볼륨 클레임이 생성되는 시점에는 볼륨을 연결할 파드에 대한 사전 지식이 없는 상태입니다. 그래서 볼륨의 가용성 영역과 파드가 스케쥴링될 노드의 가용성 영역이 서로 다르게 되면 경우 파드가 정상 동작하지 않습니다. 
-* **WaitForFirstConsumer**: 퍼시스턴트 볼륨 클레임이 생성될 때는 볼륨 바인딩과 동적 프로비저닝을 하지 않습니다. 이 퍼시스턴트 볼륨 클레임이 처음으로 파드에 연결되면, 파드가 스케쥴링된 노드의 가용성 영역 정보를 기반으로 볼륨 바인딩과 동적 프로비저닝을 수행합니다. 따라서 Immediate 모드와 같은 볼륨의 가용성 영역과 인스턴스의 가용성 영역이 서로 달라 파드가 정상 동작하지 않는 경우가 발생하지 않습니다.
-
-#### 예시1
-아래 스토리지 클래스 매니페스트는 v1.19.13 이전 버전을 사용하는 Kubernetes 클러스터에서 사용할 수 있습니다. 파라미터를 통해 가용성 영역과 볼륨 타입을 지정할 수 있습니다.
 
 ```yaml
 # storage_class.yaml
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: sc-ssd
+  name: sc-default
 provisioner: kubernetes.io/cinder
-parameters:
-  type: General SSD
-  availability: kr-pub-a
 ```
 
 스토리지 클래스를 생성하고 확인합니다.
 
 ```
 $ kubectl apply -f storage_class.yaml
-storageclass.storage.k8s.io/sc-ssd created
+storageclass.storage.k8s.io/sc-default created
 
 $ # kubectl get sc
-NAME     PROVISIONER            RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
-sc-ssd   kubernetes.io/cinder   Delete          Immediate           false                  3s
+NAME         PROVISIONER            AGE
+sc-default   kubernetes.io/cinder   8s
 ```
-
-#### 예시2
-아래 스토리지 클래스 매니페시트는 v1.20.12 이후 버전을 사용하는 Kubernetes 클러스터에서 사용할 수 있습니다. 볼륨 바인딩 모드를 WaitForFirstConsumer로 설정해 퍼시스턴트 볼륨 클레임이 파드에 연결될 때 볼륨 바인딩과 동적 프로비저닝을 시작합니다.
-
-```yaml
-# storage_class_csi.yaml
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: csi-storageclass
-provisioner: cinder.csi.openstack.org
-volumeBindingMode: WaitForFirstConsumer
-```
-
-스토리지 클래스를 생성하고 확인합니다.
-
-```
-$ kubectl apply -f storage_class_csi.yaml
-storageclass.storage.k8s.io/csi-storageclass created
-
-$ kubectl get sc
-NAME               PROVISIONER                RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
-csi-storageclass   cinder.csi.openstack.org   Delete          WaitForFirstConsumer   false                  7s
-```
-
-
-### 정적 프로비저닝
-
-정적 프로비저닝(static provisioning)은 사용자가 직접 블록 스토리지를 준비해야 합니다. NHN Cloud 웹 콘솔의 **Storage > Block Storage** 서비스 페이지에서 **블록 스토리지 생성** 버튼을 클릭해 PV와 연결할 블록 스토리지를 생성합니다. 블록 스토리지 가이드의 [블록 스토리지 생성](/Storage/Block%20Storage/ko/console-guide/#_0)을 참고하세요.
-
-PV를 생성하려면 블록 스토리지의 ID가 필요합니다. **Storage > Block Storage** 서비스 페이지의 블록 스토리지 목록에서 사용할 블록 스토리지를 선택합니다. 하단 **정보** 탭의 블록 스토리지 이름 항목에서 ID를 확인할 수 있습니다.
 
 블록 스토리지와 연결할 PV 매니페스트를 작성합니다. **spec.storageClassName**에는 스토리지 클래스 이름을 입력합니다. NHN Cloud Block Storage를 사용하려면 **spec.accessModes**는 반드시 `ReadWriteOnce`로 설정해야 합니다. **spec.presistentVolumeReclaimPolicy**는 `Delete` 또는 `Retain`으로 설정할 수 있습니다.
-
-> [주의]
-> Kubernetes 버전에 맞는 스토리지 제공자가 정의된 스토리지 클래스를 설정해야 합니다.
 
 ```yaml
 # pv-static.yaml
@@ -2073,7 +1917,33 @@ pv-static-001   10Gi       RWO            Delete           Bound    default/pvc-
 
 ### 동적 프로비저닝
 
-동적 프로비저닝(dynamic provisioning)은 스토리지 클래스에 정의된 속성을 참조하여 자동으로 블록 스토리지를 생성합니다. 동적 프로비저닝은 PV를 생성할 필요가 없습니다. 따라서 PVC 매니페스트에는 **spec.volumeName**를 설정하지 않습니다.
+동적 프로비저닝(dynamic provisioning)은 스토리지 클래스에 정의된 속성을 참조하여 자동으로 블록 스토리지를 생성합니다. 스토리지 클래스 매니페스트의 **parameters.type**에 NHN Cloud Block Storage 유형을 지정할 수 있습니다. 지정하지 않으면 HDD 유형으로 설정됩니다.
+
+| 타입 | 설정값 |
+| --- | --- |
+| HDD | General HDD |
+| SSD | General SSD |
+
+블록 스토리지는 노드 그룹과 같은 가용성 영역(availability zone)에 만들어야 연결할 수 있습니다. 스토리지 클래스 매니페스트의 **parameters.availability**에 블록 스토리지를 생성할 가용성 영역을 지정할 수 있습니다. 연결할 노드 그룹의 가용성 영역은 노드 그룹 목록에서 확인할 수 있습니다.
+
+> [주의]
+> 스토리지 클래스 매니페스트에 가용성 영역을 지정하지 않으면 임의의 가용성 영역에 블록 스토리지를 만듭니다. 블록 스토리지가 노드 그룹과 다른 가용성 영역에 생성되면 연결하지 못할 수 있으니 반드시 가용성 영역을 지정해야 합니다.
+
+```yaml
+# storage_class.yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: sc-ssd
+provisioner: kubernetes.io/cinder
+parameters:
+  type: General SSD
+  availability: kr-pub-a
+```
+
+동적 프로비저닝은 PV를 생성할 필요가 없습니다. 따라서 PVC 매니페스트에는 **spec.volumeName**를 설정하지 않습니다.
+
+
 
 ```yaml
 # pvc-dynamic.yaml
@@ -2090,8 +1960,7 @@ spec:
       storage: 10Gi
   storageClassName: sc-ssd
 ```
-
-볼륨 바인딩 모드를 설정하지 않거나 **Immediate**로 설정하고 PVC를 생성하면 PV가 자동으로 생성됩니다. PV에 연결된 블록 스토리지도 자동으로 생성되며 NHN Cloud 웹 콘솔 **Storage > Block Storage** 서비스 페이지의 블록 스토리지 목록에서 확인할 수 있습니다.
+PVC를 생성하면 PV가 자동으로 생성됩니다. PV에 연결된 블록 스토리지도 자동으로 생성되며 NHN Cloud 웹 콘솔 **Storage > Block Storage** 서비스 페이지의 블록 스토리지 목록에서 확인할 수 있습니다.
 
 ```
 $ kubectl apply -f pvc-dynamic.yaml
