@@ -34,7 +34,7 @@ GET /v2.0/networks?router:external=True
 
 ### VPC 네트워크 UUID
 
-노드와 연결할 내부 VPC 네트워크 UUID를 입력합니다. 네트워크 목록 조회 API에 대한 좀 더 자세한 내용은 [네트워크 목록 보기](](/Network/VPC/ko/public-api-gov/#_2)를 참고하세요.
+노드와 연결할 내부 VPC 네트워크 UUID를 입력합니다. 네트워크 목록 조회 API에 대한 좀 더 자세한 내용은 [네트워크 목록 보기](/Network/VPC/ko/public-api-gov/#_2)를 참고하세요.
 
 ### VPC 서브넷 UUID
 
