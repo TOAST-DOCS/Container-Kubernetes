@@ -1,7 +1,7 @@
 ## Container > NHN Kubernetes Service(NKS) > API v2 가이드
 
 Kubernetes 클러스터를 구성하기 위한 API를 기술합니다.
-API를 사용하려면 API 엔드포인트와 토큰 등이 필요합니다. [API 사용 준비](/Compute/Compute/ko/identity-api/)를 참고하여 API 사용에 필요한 정보를 준비합니다.
+API를 사용하려면 API 엔드포인트와 토큰 등이 필요합니다. [API 사용 준비](/Compute/Compute/ko/identity-api-gov/)를 참고하여 API 사용에 필요한 정보를 준비합니다.
 
 모든 API는 `kubernetes` 타입 엔드포인트를 이용해 호출합니다.
 
@@ -24,29 +24,29 @@ NHN Kubernetes Service(NKS) API는 클러스터 및 노드 그룹 구성을 위�
 GET /v2.0/networks?router:external=True
 ```
 
-네트워크 목록 조회 API에 대한 좀 더 자세한 내용은 [네트워크 목록 보기](https://docs.toast.com/ko/Network/VPC/ko/public-api/#_2)를 참고하세요.
+네트워크 목록 조회 API에 대한 좀 더 자세한 내용은 [네트워크 목록 보기](/Network/VPC/ko/public-api-gov/#_2)를 참고하세요.
 
 
 ### 인터넷 게이트웨이에 연결된 서브넷 UUID 목록
 
-인터넷 게이트웨이에 연결된 VPC 네트워크와 연결된 서브넷 UUID를 입력합니다. 여러 서브넷이 조회됐다면 콜론(`:`)으로 연결해 입력합니다. 서브넷 목록 조회 API에 대한 좀 더 자세한 내용은 [서브넷 목록 보기](https://docs.toast.com/ko/Network/VPC/ko/public-api/#_6)를 참고하세요.
+인터넷 게이트웨이에 연결된 VPC 네트워크와 연결된 서브넷 UUID를 입력합니다. 여러 서브넷이 조회됐다면 콜론(`:`)으로 연결해 입력합니다. 서브넷 목록 조회 API에 대한 좀 더 자세한 내용은 [서브넷 목록 보기](/Network/VPC/ko/public-api-gov/#_6)를 참고하세요.
 
 
 ### VPC 네트워크 UUID
 
-노드와 연결할 내부 VPC 네트워크 UUID를 입력합니다. 네트워크 목록 조회 API에 대한 좀 더 자세한 내용은 [네트워크 목록 보기](https://docs.toast.com/ko/Network/VPC/ko/public-api/#_2)를 참고하세요.
+노드와 연결할 내부 VPC 네트워크 UUID를 입력합니다. 네트워크 목록 조회 API에 대한 좀 더 자세한 내용은 [네트워크 목록 보기](](/Network/VPC/ko/public-api-gov/#_2)를 참고하세요.
 
 ### VPC 서브넷 UUID
 
-노드와 연결할 내부 VPC 네트워크와 연결된 서브넷 UUID를 입력합니다. 서브넷 목록 조회 API에 대한 좀 더 자세한 내용은 [서브넷 목록 보기](https://docs.toast.com/ko/Network/VPC/ko/public-api/#_6)를 참고하세요.
+노드와 연결할 내부 VPC 네트워크와 연결된 서브넷 UUID를 입력합니다. 서브넷 목록 조회 API에 대한 좀 더 자세한 내용은 [서브넷 목록 보기](/Network/VPC/ko/public-api-gov/#_6)를 참고하세요.
 
 ### 가용성 영역 UUID
 
-노드를 생성할 가용성 영역 UUID를 입력합니다. 가용성 영역 목록 조회 API에 대한 좀 더 자세한 내용은 [가용성 목록 보기](https://docs.toast.com/ko/Compute/Instance/ko/public-api/#_9)를 참고하세요.
+노드를 생성할 가용성 영역 UUID를 입력합니다. 가용성 영역 목록 조회 API에 대한 좀 더 자세한 내용은 [가용성 목록 보기](/Compute/Instance/ko/public-api-gov/#_9)를 참고하세요.
 
 ### 키페어 UUID
 
-노드 접속 시 사용할 키페어를 입력합니다. 키페어 목록 조회 API에 대한 좀 더 자세한 내용은 [키페어 목록 보기](https://docs.toast.com/ko/Compute/Instance/ko/public-api/#_13)를 참고하세요.
+노드 접속 시 사용할 키페어를 입력합니다. 키페어 목록 조회 API에 대한 좀 더 자세한 내용은 [키페어 목록 보기](/Compute/Instance/ko/public-api-gov/#_13)를 참고하세요.
 
 ### 베이스 이미지 UUID
 
@@ -58,11 +58,11 @@ GET /v2.0/networks?router:external=True
 
 ### 블록 스토리지 종류
 
-노드에 사용할 블록 스토리지 UUID를 입력합니다. 블록 스토리지 타입 목록 조회 API에 대한 좀 더 자세한 내용은 [볼륨 타입 목록 보기](https://docs.toast.com/ko/Storage/Block%20Storage/ko/public-api/#_2)를 참고하세요.
+노드에 사용할 블록 스토리지 UUID를 입력합니다. 블록 스토리지 타입 목록 조회 API에 대한 좀 더 자세한 내용은 [볼륨 타입 목록 보기](/Storage/Block%20Storage/ko/public-api-gov/#_2)를 참고하세요.
 
 ### 인스턴스 타입 UUID
 
-생성할 노드의 인스턴스 타입 UUID를 입력합니다. 인스턴스 타입 목록 조회 API에 대한 좀 더 자세한 내용은 [인스턴스 타입 목록 보기](https://docs.toast.com/ko/Compute/Instance/ko/public-api/#_2)를 참고하세요.
+생성할 노드의 인스턴스 타입 UUID를 입력합니다. 인스턴스 타입 목록 조회 API에 대한 좀 더 자세한 내용은 [인스턴스 타입 목록 보기](/Compute/Instance/ko/public-api-gov/#_2)를 참고하세요.
 
 
 
