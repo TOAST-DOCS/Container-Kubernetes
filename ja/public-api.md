@@ -24,29 +24,29 @@ NHN Kubernetes Service(NKS)APIは、クラスタおよびノードグループ�
 GET /v2.0/networks?router:external=True
 ```
 
-ネットワークリスト照会APIの詳細については、[ネットワークリスト表示](https://docs.toast.com/ko/Network/VPC/ko/public-api/#_2)を参照してください。
+ネットワークリスト照会APIの詳細については、[ネットワークリスト表示](/Network/VPC/ko/public-api/#_2)を参照してください。
 
 
 ### インターネットゲートウェイに接続されたサブネットUUIDリスト
 
-インターネットゲートウェイに接続されたVPCネットワークに接続されたサブネットUUIDを入力します。複数のサブネットが検索された場合はコロン(`:`)でつなげて力します。サブネットリスト照会APIの詳細については、[サブネットリスト表示](https://docs.toast.com/ko/Network/VPC/ko/public-api/#_6)を参照してください。
+インターネットゲートウェイに接続されたVPCネットワークに接続されたサブネットUUIDを入力します。複数のサブネットが検索された場合はコロン(`:`)でつなげて力します。サブネットリスト照会APIの詳細については、[サブネットリスト表示](/Network/VPC/ko/public-api/#_6)を参照してください。
 
 
 ### VPCネットワークUUID
 
-ノードと接続する内部VPCネットワークUUIDを入力します。ネットワークリスト照会APIの詳細については[ネットワークリスト表示](https://docs.toast.com/ko/Network/VPC/ko/public-api/#_2)を参照してください。
+ノードと接続する内部VPCネットワークUUIDを入力します。ネットワークリスト照会APIの詳細については[ネットワークリスト表示](/Network/VPC/ko/public-api/#_2)を参照してください。
 
 ### VPCサブネットUUID
 
-ノードと接続する内部VPCネットワークに接続されたサブネットUUIDを入力します。サブネットリスト照会APIの詳細については[サブネットリスト表示](https://docs.toast.com/ko/Network/VPC/ko/public-api/#_6)を参照してください。
+ノードと接続する内部VPCネットワークに接続されたサブネットUUIDを入力します。サブネットリスト照会APIの詳細については[サブネットリスト表示](/Network/VPC/ko/public-api/#_6)を参照してください。
 
 ### アベイラビリティゾーンUUID
 
-ノードを作成するアベイラビリティゾーンUUIDを入力します。アベイラビリティゾーンリスト照会APIの詳細については[可用性リスト表示](https://docs.toast.com/ko/Compute/Instance/ko/public-api/#_9)を参照してください。
+ノードを作成するアベイラビリティゾーンUUIDを入力します。アベイラビリティゾーンリスト照会APIの詳細については[可用性リスト表示](/Compute/Instance/ko/public-api/#_9)を参照してください。
 
 ### キーペアUUID
 
-ノード接続時に使用するキーペアを入力します。キーペアリスト照会APIの詳細については[キーペアリスト表示](https://docs.toast.com/ko/Compute/Instance/ko/public-api/#_13)を参照してください。
+ノード接続時に使用するキーペアを入力します。キーペアリスト照会APIの詳細については[キーペアリスト表示](/Compute/Instance/ko/public-api/#_13)を参照してください。
 
 ### ベースイメージUUID
 
@@ -59,11 +59,11 @@ GET /v2.0/networks?router:external=True
 
 ### ブロックストレージの種類
 
-ノードに使用するブロックストレージUUIDを入力します。ブロックストレージタイプリスト照会APIの詳細については[ボリュームタイプリスト表示](https://docs.toast.com/ko/Storage/Block%20Storage/ko/public-api/#_2)を参照してください。
+ノードに使用するブロックストレージUUIDを入力します。ブロックストレージタイプリスト照会APIの詳細については[ボリュームタイプリスト表示](/Storage/Block%20Storage/ko/public-api/#_2)を参照してください。
 
 ### インスタンスタイプUUID
 
-作成するノードのインスタンスタイプUUIDを入力します。インスタンスタイプリスト照会APIの詳細については[インスタンスタイプリスト表示](https://docs.toast.com/ko/Compute/Instance/ko/public-api/#_2)を参照してください。
+作成するノードのインスタンスタイプUUIDを入力します。インスタンスタイプリスト照会APIの詳細については[インスタンスタイプリスト表示](/Compute/Instance/ko/public-api/#_2)を参照してください。
 
 
 
