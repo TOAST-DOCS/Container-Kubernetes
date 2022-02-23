@@ -1922,11 +1922,13 @@ PV를 파드에 마운트해 사용합니다.
 
 #### 스토리지 제공자(provisioner)
 스토리지의 제공자 정보를 설정합니다. Kubernetes 버전에 따라 지원되는 스트로지 정보 제공자 정보는 다음과 같습니다.
+
 * v1.19.13 이전 버전: provisioner 필드를 반드시 `kubernetes.io/cinder`로 설정해야 합니다.
 * v1.20.12 이후 버전: provisioner 필드를 `cinder.csi.openstack.org`로 설정해 사용할 수 있습니다.
 
 #### 파라미터(parameter)
 스토리지 클래스를 통해 다음의 파라미터를 설정할 수 있습니다.
+
 * 스토리지 종류(type): 스토리지의 종류를 입력합니다.(미입력시 General HDD가 설정됩니다)
     * **General HDD**: 스토리지 종류가 HDD로 설정됩니다.
     * **General SSD**: 스토리지 종류가 SSD로 설정됩니다.

@@ -1936,11 +1936,13 @@ A storage class must be defined before provisioning. Storage classes provide a w
 
 #### Storage Provider (provisioner)
 Set the provider information of storage. Depending on the Kubernetes version, the supported storage provider information is as follows:
+
 * v1.19.13 or earlier: The provisioner field must be set to `kubernetes.io/cinder`.
 * v1.20.12 or later: You can use the provisioner field by setting it to `cinder.csi.openstack.org`.
 
 #### Parameters (parameter)
 The storage class allows you to set the following parameters:
+
 * Storage type (type): Enter the type of storage. (If not entered, General HDD is set.)
     * **General HDD**: The storage type is set to HDD.
     * **General SSD**: The storage type is set to SSD.

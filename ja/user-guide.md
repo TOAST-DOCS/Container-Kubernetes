@@ -1909,11 +1909,13 @@ PVをPodにマウントして使用します。
 
 #### ストレージ提供者(provisioner)
 ストレージの提供者情報を設定します。 Kubernetesバージョンに応じてサポートされているストレージ情報提供者情報は次のとおりです。
+
 * v1.19.13以前のバージョン：provisionerフィールドを必ず`kubernetes.io/cinder`に設定する必要があります。
 * v1.20.12以降のバージョン：provisionerフィールドを`cinder.csi.openstack.org`に設定して使用できます。
 
 #### パラメータ(parameter)
 ストレージクラスを介して次のパラメータを設定できます。
+
 * ストレージ種類(type)：ストレージの種類を入力します。(未入力の場合はGeneral HDDが設定されます)
     * **General HDD**：ストレージ種類がHDDに設定されます。
     * **General SSD**：ストレージ種類がSSDに設定されます。
