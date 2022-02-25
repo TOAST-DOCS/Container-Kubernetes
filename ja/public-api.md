@@ -152,7 +152,7 @@ X-Auth-Token: {tokenId}
                 "external_subnet_id_list": "59ddc195-76b1-431d-9693-f09880747dc6",
                 "flavor_type": "core",
                 "hypervisor_type": "qemu",
-                "kube_tag": "v1.17.6",
+                "kube_tag": "v1.23.3",
                 "kube_version_status": "NEED_UPGRADE",
                 "login_username": "centos",
                 "master_lb_floating_ip_enabled": "true",
@@ -256,7 +256,7 @@ X-Auth-Token: {tokenId}
 {
     "api_address": "https://2b778d83-alp-kr2-k8s.container.cloud.toast.com:6443",
     "cluster_template_id": "b4503d97-6012-499d-a31a-5200f94a7890",
-    "coe_version": "v1.17.6",
+    "coe_version": "v1.23.3",
     "container_version": "1.12.6",
     "create_timeout": 60,
     "created_at": "2021-08-05T01:48:39+00:00",
@@ -288,7 +288,7 @@ X-Auth-Token: {tokenId}
         "external_subnet_id_list": "59ddc195-76b1-431d-9693-f09880747dc6",
         "flavor_type": "core",
         "hypervisor_type": "qemu",
-        "kube_tag": "v1.17.6",
+        "kube_tag": "v1.23.3",
         "kube_version_status": "NEED_UPGRADE",
         "login_username": "centos",
         "master_lb_floating_ip_enabled": "true",
@@ -400,7 +400,7 @@ X-Auth-Token: {tokenId}
         "clusterautoscale": "nodegroupfeature",
         "external_network_id": "751b8227-7b45-440a-9349-dbf829d0aba5",
         "external_subnet_id_list": "59ddc195-76b1-431d-9693-f09880747dc6",
-        "kube_tag": "v1.17.6",
+        "kube_tag": "v1.23.3",
         "master_lb_floating_ip_enabled": "true",
         "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
         "user_script": ""
@@ -1169,10 +1169,11 @@ X-Auth-Token: {tokenId}
     "supported_k8s": {
         "v1.17.6": false,
         "v1.18.19": false,
-        "v1.19.13": true,
+        "v1.19.13": false,
         "v1.20.12": true,
         "v1.21.6": true,
-        "v1.22.3": true
+        "v1.22.3": true,
+        "v1.23.3": true
     }
 }
 ```
