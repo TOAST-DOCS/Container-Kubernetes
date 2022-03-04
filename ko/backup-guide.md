@@ -207,7 +207,7 @@ $ kubectl get pod --all-namespaces
 
 #### 주기적 백업 설정 예시
 
-`velero schedule create` 명령어로 주기적 백업을 설정할 수 있습니다. 자세한 내용은 [schedule-a-backup](https://velero.io/docs/v1.7/backup-reference/#schedule-a-backup) 참고하세요.
+`velero schedule create` 명령어로 주기적 백업을 설정할 수 있습니다. 자세한 내용은 [schedule-a-backup](https://velero.io/docs/v1.7/backup-reference/#schedule-a-backup)을 참고하세요.
 
 * `백업 클러스터`에서 `velero schedule create`명령어를 사용하여 주기적 백업을 설정합니다. (예시는 10분 간격)
 
