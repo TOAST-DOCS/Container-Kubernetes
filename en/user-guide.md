@@ -26,10 +26,11 @@ NHN Kubernetes Service (NKS) supports several versions of Kubernetes. Some featu
 | :-: | :-: | :-: |
 | v1.17.6 | Unavailable | Available |
 | v1.18.19 | Unavailable | Available |
-| v1.19.13 | Available | Available |
+| v1.19.13 | Unavailable | Available |
 | v1.20.12 | Available | Available |
 | v1.21.6 | Available | Available |
 | v1.22.3 | Available | Available |
+| v1.23.3 | Available | Available |
 
 Enter information as required and click **Create Cluster**, and a cluster begins to be created. You can check the status from the list of clusters. It takes about 10 minutes to create; more time may be required depending on the cluster configuration.  
 
@@ -383,7 +384,7 @@ The following is the node list before scale-up:
 ```
 # kubectl get nodes
 NAME                                            STATUS   ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   45m   v1.17.6
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   45m   v1.23.3
 ```
 
 After 5-10 minutes, the nodes should be scaled up as shown below:
@@ -391,9 +392,9 @@ After 5-10 minutes, the nodes should be scaled up as shown below:
 ```
 # kubectl get nodes
 NAME                                            STATUS   ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   48m   v1.17.6
-autoscaler-test-default-w-ohw5ab5wpzug-node-1   Ready    <none>   77s   v1.17.6
-autoscaler-test-default-w-ohw5ab5wpzug-node-2   Ready    <none>   78s   v1.17.6
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   48m   v1.23.3
+autoscaler-test-default-w-ohw5ab5wpzug-node-1   Ready    <none>   77s   v1.23.3
+autoscaler-test-default-w-ohw5ab5wpzug-node-2   Ready    <none>   78s   v1.23.3
 ```
 
 The pods that were in "pending" status are now normally scheduled after the scale-up.
@@ -460,7 +461,7 @@ After a while, you can see nodes are scaled down to 1. The time it takes to scal
 ```
 # kubectl get nodes
 NAME                                            STATUS   ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   71m   v1.17.6
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   71m   v1.23.3
 ```
 
 You can check scale-down events with the following command:
@@ -683,8 +684,8 @@ After a while, you can see another node (node-8) has been added.
 ```
 # kubectl get nodes
 NAME                                            STATUS     ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready      <none>   22d   v1.17.6
-autoscaler-test-default-w-ohw5ab5wpzug-node-8   Ready      <none>   90s   v1.17.6
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready      <none>   22d   v1.23.3
+autoscaler-test-default-w-ohw5ab5wpzug-node-8   Ready      <none>   90s   v1.23.3
 ```
 
 You can see all pods that were in Pending state are properly scheduled and now in the Running state.
@@ -714,7 +715,7 @@ As the number of pods decreases, the resource usage of the node also decreases, 
 ```
 # kubectl get nodes
 NAME                                            STATUS   ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.17.6
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 ```
 
 
@@ -968,16 +969,16 @@ When upgrading, NHN Cloud's Kubernetes Cluster version control and Kubernetes ve
 
 The following table shows whether upgrade is possible while upgrading the Kubernetes version. The following conditions are used for the example: 
 
-* List of Kubernetes versions supported by NHN Cloud: v1.17.6, v1.18.19, v1.19.10
-* Clusters are created as v1.17.6
+* List of Kubernetes versions supported by NHN Cloud: v1.21.6, v1.22.3, v1.23.3
+* Clusters are created as v1.21.6
 
 |Status | Master version | Whether master can be upgraded | Worker node group version | Whether worker node group can be upgraded
 | --- | :-: | :-: | :-: | :-: |
-| Initial state| v1.17.6 | Possible (Note 1) | v1.17.6 | Not possible (Note 2) | 
-| State after master upgrade | v1.18.19 | Not possible (Note 3) | v1.17.6 | Possible (Note 4) | 
-| State after worker node group upgrade | v1.18.19 | Possible (Note 1) | v1.18.19 | Not possible (Note 2) |
-| State after master upgrade | v1.19.10 | Not possible (Note 3) | v1.18.19 | Possible (Note 4) | 
-| State after worker node group upgrade | v1.19.10 | Not possible (Note 5) | v1.19.10 | Not possible (Note 2)| 
+| Initial state| v1.21.6 | Possible (Note 1) | v1.21.6 | Not possible (Note 2) | 
+| State after master upgrade | v1.22.3 | Not possible (Note 3) | v1.21.6 | Possible (Note 4) | 
+| State after worker node group upgrade | v1.22.3 | Possible (Note 1) | v1.22.3 | Not possible (Note 2) |
+| State after master upgrade | v1.23.3 | Not possible (Note 3) | v1.22.3 | Possible (Note 4) | 
+| State after worker node group upgrade | v1.23.3 | Not possible (Note 5) | v1.23.3 | Not possible (Note 2)| 
 
 Notes
 

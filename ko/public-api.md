@@ -117,7 +117,7 @@ X-Auth-Token: {tokenId}
 | clusters.labels.ca_scale_down_unneeded_time | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 임계 영역 유지 시간 |
 | clusters.labels.ca_scale_down_util_thresh | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 리소스 사용량 임계치  |
 | clusters.labels.ca_scale_down_delay_after_add | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 증설 후 감축 지연 시간 |
-| clusters.labels.user_script | Body | String | 예약 스크립트 |
+| clusters.labels.user_script | Body | String | 사용자 스크립트 |
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
 
 
@@ -152,7 +152,7 @@ X-Auth-Token: {tokenId}
                 "external_subnet_id_list": "59ddc195-76b1-431d-9693-f09880747dc6",
                 "flavor_type": "core",
                 "hypervisor_type": "qemu",
-                "kube_tag": "v1.17.6",
+                "kube_tag": "v1.23.3",
                 "kube_version_status": "NEED_UPGRADE",
                 "login_username": "centos",
                 "master_lb_floating_ip_enabled": "true",
@@ -246,7 +246,7 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_unneeded_time | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 임계 영역 유지 시간 |
 | labels.ca_scale_down_util_thresh | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 리소스 사용량 임계치  |
 | labels.ca_scale_down_delay_after_add | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 증설 후 감축 지연 시간 |
-| labels.user_script | Body | String | 예약 스크립트 |
+| labels.user_script | Body | String | 사용자 스크립트 |
 | labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
 
 <details><summary>예시</summary>
@@ -256,7 +256,7 @@ X-Auth-Token: {tokenId}
 {
     "api_address": "https://2b778d83-kr2-k8s.container.cloud.toast.com:6443",
     "cluster_template_id": "b4503d97-6012-499d-a31a-5200f94a7890",
-    "coe_version": "v1.17.6",
+    "coe_version": "v1.23.3",
     "container_version": "1.12.6",
     "create_timeout": 60,
     "created_at": "2021-08-05T01:48:39+00:00",
@@ -288,7 +288,7 @@ X-Auth-Token: {tokenId}
         "external_subnet_id_list": "59ddc195-76b1-431d-9693-f09880747dc6",
         "flavor_type": "core",
         "hypervisor_type": "qemu",
-        "kube_tag": "v1.17.6",
+        "kube_tag": "v1.23.3",
         "kube_version_status": "NEED_UPGRADE",
         "login_username": "centos",
         "master_lb_floating_ip_enabled": "true",
@@ -368,7 +368,7 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_util_thresh | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 리소스 사용량 임계치  |
 | labels.ca_scale_down_delay_after_add | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 증설 후 감축 지연 시간 |
 | labels.kube_tag | Body | String | O | Kubernetes 버전 |
-| labels.user_script | Body | String | X | 예약 스크립트 |
+| labels.user_script | Body | String | X | 사용자 스크립트 |
 | labels.master_lb_floating_ip_enabled | Body | String | O | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False")<br>labels.external_network_id와 external_subnet_id_list가 설정된 경우에만 "True"로 설정 가능 |
 | flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
 | fixed_network | Body | UUID | O | VPC 네트워크 UUID |
@@ -400,7 +400,7 @@ X-Auth-Token: {tokenId}
         "clusterautoscale": "nodegroupfeature",
         "external_network_id": "751b8227-7b45-440a-9349-dbf829d0aba5",
         "external_subnet_id_list": "59ddc195-76b1-431d-9693-f09880747dc6",
-        "kube_tag": "v1.17.6",
+        "kube_tag": "v1.23.3",
         "master_lb_floating_ip_enabled": "true",
         "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
         "user_script": ""
@@ -698,7 +698,7 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_util_thresh | Body | String | 워커 노드 그룹 적용 : 오토 스케일러: 리소스 사용량 임계치  |
 | labels.ca_scale_down_delay_after_add | Body | String | 워커 노드 그룹 적용 : 오토 스케일러: 증설 후 감축 지연 시간 |
 | labels.kube_tag | Body | String | 워커 노드 그룹 Kubernetes 버전 |
-| labels.user_script | Body | String | 예약 스크립트 |
+| labels.user_script | Body | String | 사용자 스크립트 |
 | max_node_count | Body | Integer | 최대 노드 수 |
 | min_node_count | Body | Integer | 최소 노드 수 |
 | node_addresses | Body | String list | 노드 IP 주소 목록 |
@@ -818,7 +818,7 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_unneeded_time | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 임계 영역 유지 시간 |
 | labels.ca_scale_down_util_thresh | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 리소스 사용량 임계치  |
 | labels.ca_scale_down_delay_after_add | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 증설 후 감축 지연 시간 |
-| labels.user_script | Body | String | X | 예약 스크립트 |
+| labels.user_script | Body | String | X | 사용자 스크립트 |
 | name | BODY | String | O | 노드 그룹 이름 |
 | node_count | Body | Integer | X | 노드 수(기본값: 1) |
 
@@ -863,7 +863,7 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_unneeded_time | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 임계 영역 유지 시간 |
 | labels.ca_scale_down_util_thresh | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 리소스 사용량 임계치  |
 | labels.ca_scale_down_delay_after_add | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 증설 후 감축 지연 시간 |
-| labels.user_script | Body | String | 예약 스크립트 |
+| labels.user_script | Body | String | 사용자 스크립트 |
 | max_node_count | Body | Integer | 최대 노드 수 |
 | min_node_count | Body | Integer | 최소 노드 수 |
 | name | BODY | String | 노드 그룹 이름 |
@@ -1169,10 +1169,11 @@ X-Auth-Token: {tokenId}
     "supported_k8s": {
         "v1.17.6": false,
         "v1.18.19": false,
-        "v1.19.13": true,
+        "v1.19.13": false,
         "v1.20.12": true,
         "v1.21.6": true,
-        "v1.22.3": true
+        "v1.22.3": true,
+        "v1.23.3": true
     }
 }
 ```

@@ -124,3 +124,21 @@ $
 
 
 > [참고] 상기 내용은 동기화를 위한 하나의 방법일 뿐이며, 사용자 환경에 더 적절한 방법이 있다면 그것을 통해 동기화 작업이 수행되도록 하면 됩니다.
+
+
+#### > Pod의 상태가 ImagePullBackOff로 나타납니다.
+
+2020년 11월 20일부터 dockerhub는 컨테이너 이미지 pull 요청 횟수에 다음과 같은 제한을 두는 정책을 시행하였습니다. 제한과 관련된 자세한 사항은 [Understanding Docker Hub Rate Limiting](https://www.docker.com/increase-rate-limits)과 [Pricing & Subscriptions](https://www.docker.com/pricing)을 참고하세요.
+
+
+| 계정 등급 | 2020년 11월 20일 이전 | 2020년 11월 20일 이후 |
+| --- | --- | --- |
+| 미인증 사용자 | 2,500req/6H | 100req/6H |
+| Free Tier | 2,500 req/6H | 200 req/6H |
+| Pro/Team/Large Tier | Unlimit | Unlimit |
+
+NKS의 워커 노드에서 dockerhub로부터 컨테이너 이미지를 내려받는(pull) 경우, dockerhub에 로그인 없이 6시간 이내에 100건 이상을 내려받으면 더 이상 이미지를 받아오지 못하게 됩니다. 특히 플로팅 IP가 연결되지 않은 워커는 공용 퍼블릭 IP를 이용하기 때문에 이와 같은 제약이 더 빨리 걸리게 될 수 있습니다.
+
+해결 방안은 다음과 같습니다.
+* dockerhub에 로그인하면 이미지를 받을 수 있는 개수가 늘어나게 되고, 퍼블릭 IP에 의한 제한이 아닌 계정 등급별 제한을 받게 됩니다. dockerhub 계정을 만들어 원하는 pull 개수를 제공하는 Tier에 가입하고 NKS 를 이용합니다. [Kubernetes에서 Private Registry 사용 방법](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/) 을 참고하세요.
+* dockerhub에 로그인하지 않은 상황에서 독립적인 퍼블릭 IP에 의한 제약을 받고 싶은 경우, 워커 노드에 플로팅 IP를 할당합니다. 
