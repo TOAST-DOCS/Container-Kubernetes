@@ -126,7 +126,7 @@ $
 > [참고] 상기 내용은 동기화를 위한 하나의 방법일 뿐이며, 사용자 환경에 더 적절한 방법이 있다면 그것을 통해 동기화 작업이 수행되도록 하면 됩니다.
 
 
-#### > Pod의 상태가 ImagePullBackOff로 나타납니다.
+### > Pod의 상태가 ImagePullBackOff로 나타납니다.
 
 2020년 11월 20일부터 dockerhub는 컨테이너 이미지 pull 요청 횟수에 다음과 같은 제한을 두는 정책을 시행하였습니다. 제한과 관련된 자세한 사항은 [Understanding Docker Hub Rate Limiting](https://www.docker.com/increase-rate-limits)과 [Pricing & Subscriptions](https://www.docker.com/pricing)을 참고하세요.
 
