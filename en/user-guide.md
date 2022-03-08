@@ -1,28 +1,28 @@
-## Container > NHN Kubernetes Service (NKS) > User Guide 
+## Container > NHN Kubernetes Service (NKS) > User Guide
 
 ## Cluster
-Cluster refers to a group of instances that comprise user's Kubernetes. 
+Cluster refers to a group of instances that comprise user's Kubernetes.
 
 ### Creating Clusters
-To enable NHN Kubernetes Service (NKS), a cluster must be created. Go to **Container > NHN Kubernetes Service (NKS)** and click **Create Cluster**, and a page for creating clusters shows up. The following items are required to create a cluster: 
+To use NHN Kubernetes Service (NKS), you must first create a cluster. Go to **Container > NHN Kubernetes Service (NKS)** and click **Create Cluster**, and a page for creating clusters shows up. The following items are required to create a cluster:
 
 | Item | Description |
 | --- | --- |
-| Cluster Name | Name of a Kubernetes cluster, to be comprised of less than 20 characters, including alphabets, numbers, '-', and '.'|
+| Cluster Name | Name of a Kubernetes cluster. It is limited to 20 characters, and only lowercase English letters, numbers, and '-' can be entered. It must start with a lowercase letter and end with a lowercase letter or number. |
 | Kubernetes Version | Kubernetes version to use |
 | VPC | VPC network to be attached to clusters |
-| Subnet | subnet, among those defined for VPC, to be associated with instances that comprise a cluster VPC |
+| Subnet | Subnet to be associated with instances that comprise a cluster, among those defined in VPC |
 | Image | Images for instances comprising a cluster |
 | Availability Zone | Area to create a default node group instance |
 | Flavor | Instance specifications for a default node group |
 | Node Count | Number of instances for a default node group |
-| Key pair | Key pair to access default node group |
+| Key Pair | Key pair to access default node group |
 | Block Storage Type | Type of block storage for a default node group instance |
 | Block Storage Size | Size of block storage for a default node group instance |
 
 NHN Kubernetes Service (NKS) supports several versions of Kubernetes. Some features may be restricted depending on the version.
 
-| Version | Creating a new cluster | Using the created cluster |
+| Version | Creating a new cluster | Using the created cluster|
 | :-: | :-: | :-: |
 | v1.17.6 | Unavailable | Available |
 | v1.18.19 | Unavailable | Available |
@@ -32,11 +32,12 @@ NHN Kubernetes Service (NKS) supports several versions of Kubernetes. Some featu
 | v1.22.3 | Available | Available |
 | v1.23.3 | Available | Available |
 
-Enter information as required and click **Create Cluster**, and a cluster begins to be created. You can check the status from the list of clusters. It takes about 10 minutes to create; more time may be required depending on the cluster configuration.  
+
+Enter information as required and click **Create Cluster**, and a cluster begins to be created. You can check the status from the list of clusters. It takes about 10 minutes to create; more time may be required depending on the cluster configuration.
 
 
-### Querying Clusters 
-A newly created cluster can be found in the **Container > NHN Kubernetes Service (NKS)** page. Select a cluster and the information is displayed at the bottom. 
+### Querying Clusters
+A newly created cluster can be found in the **Container > NHN Kubernetes Service (NKS)** page. Select a cluster and the information is displayed at the bottom.
 
 | Item | Description |
 | --- | --- |
@@ -48,21 +49,21 @@ A newly created cluster can be found in the **Container > NHN Kubernetes Service
 | API Endpoint | URI of API endpoint to access cluster for operation |
 | Configuration File | Download button of configuration file required to access cluster for operation |
 
-### Deleting Clusters 
-Select a cluster to delete, and click **Delete Clusters** and it is deleted. It takes about 5 minutes to delete; more time may be required depending on the cluster status. 
+### Deleting Clusters
+Select a cluster to delete, and click **Delete Clusters** and it is deleted. It takes about 5 minutes to delete; more time may be required depending on the cluster status.
 
 ## Node Group
-A node group is comprised of worker node instances that comprise a Kubernetes. 
+A node group is comprised of worker node instances that comprise a Kubernetes.
 
-### Querying Node Groups 
-Click a cluster name on the list to find the list of node groups. Select a node group and the information shows at the bottom.  
+### Querying Node Groups
+Click a cluster name on the list to find the list of node groups. Select a node group and the information shows at the bottom.
 
 * Basic Information
-On the **Basic Information** tab, check the following: 
+On the **Basic Information** tab, you can check the following:
 
-| Item |Description |
+| Item | Description |
 | --- | --- |
-| Node Group Name | Name and ID of a node group|
+| Node Group Name | Name and ID of a node group |
 | Cluster Name | Name and ID of a cluster to which a node group is included |
 | Kubernetes Version | Kubernetes version in service |
 | Availability Zone | Area in which a node group instance is created |
@@ -72,59 +73,59 @@ On the **Basic Information** tab, check the following:
 | Created Date | Time when node group was created |
 | Modified Date | Last time when node group was modified |
 
-* List of Nodes 
-Find the list of instances comprising a node group from the **List of Nodes** tab. 
+* List of Nodes
+Find the list of instances comprising a node group from the **List of Nodes** tab.
 
-### Creating Node Groups 
-Along with a new cluster, a default node group is created, but more node groups can be created depending on the needs. If higher specifications are required to run a container, or more worker node instances are required to scale out, node groups may be additionally created. Click **Create Node Groups** from the page of node group list, and the page of creating a node group shows up. The following items are required to create a node group:  
+### Creating Node Groups
+Along with a new cluster, a default node group is created, but more node groups can be created depending on the needs. If higher specifications are required to run a container, or more worker node instances are required to scale out, node groups may be additionally created. Click **Create Node Groups** from the page of node group list, and the page of creating a node group shows up. The following items are required to create a node group:
 
 | Item | Description |
 | --- | --- |
 | Availability Zone | Area to create instances comprising a cluster |
-| Node Group Name | Name of additional node group, comprised of alphabets, numbers, '-', and '.' |
+| Node Group Name | Name of an additional node group. It is limited to 20 characters, and only lowercase English letters, numbers, and '-' can be entered. It must start with a lowercase letter and end with a lowercase letter or number. |
 | Flavor | Specifications of an instance for additional node group |
 | Node Count | Number of instances for additional node group |
-| Key pair | Key pair to access additional node group |
+| Key Pair | Key pair to access additional node group |
 | Block Storage Type | Type of block storage of instance for additional node group |
 | Block Storage Size | Size of block storage of instance for additional node group |
 
-Enter information as required and click **Create Node Groups**, and a node group begins to be created. You may check status from the list of node groups. It takes about 5 minutes to create; more time may be required depending on the node group setting.  
+Enter information as required and click **Create Node Groups**, and a node group begins to be created. You may check status from the list of node groups. It takes about 5 minutes to create; more time may be required depending on the node group setting.
 
-### Deleting Node Groups 
-Select a node group to delete from the list of node groups, and click **Delete Node Groups** and it is deleted. It takes about 5 minutes to delete a node group; more time may be required depending on the node group status. 
+>[Caution]
+>Only the user who created the cluster can create node groups.
+
+### Deleting Node Groups
+Select a node group to delete from the list of node groups, and click **Delete Node Groups** and it is deleted. It takes about 5 minutes to delete a node group; more time may be required depending on the node group status.
 
 ### Adding node to node group
-
 Nodes can be added to operating node groups. The current list of nodes will appear upon clicking the node list tab on the node group information query page. Nodes can be added by selecting the Add Node button and entering the number of nodes you want.
 
-> [Caution]
-> Nodes cannot be manually added to node groups on which autoscaler is enabled.
+>[Caution]
+>Nodes cannot be manually added to node groups on which autoscaler is enabled.
 
 ### Deleting node from node group
-
 Nodes can be deleted from operating node groups. The current list of nodes will appear upon clicking the node list tab on the node group information query page. A confirmation dialog box will appear when a user selects nodes for deletion and clicks the Delete Node button. When the user confirms the node name and selects the OK button, the node will be deleted.
 
-> [Caution]
-> Pods that were operating in the deleted node will go through force shutdown. To safely transfer pods from the currently operating nodes to be deleted to other nodes, you must run the "drain" command. New pods can be scheduled on nodes even after they are drained. To prevent new pods from being scheduled in nodes that are to be deleted, you must run the "cordon" command. For more information on safe node management, see the document below.
+>[Caution]
+>Pods that were operating in the deleted node will go through force shutdown. To safely transfer pods from the currently operating nodes to be deleted to other nodes, you must run the "drain" command. New pods can be scheduled on nodes even after they are drained. To prevent new pods from being scheduled in nodes that are to be deleted, you must run the "cordon" command. For more information on safe node management, see the document below.
 
-> [Caution]
-> Nodes cannot be manually deleted from node groups on which autoscaler is enabled.
+>[Caution]
+>Nodes cannot be manually deleted from node groups on which autoscaler is enabled.
 
 * [Safe node drain](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)
 * [Manual node management](https://kubernetes.io/docs/concepts/architecture/nodes/#manual-node-administration)
 
-### Using a GPU node group
-
-Node groups composed of GPU instances can be created with Kubernetes when you need to run workload based on GPU. Select `g2` type when selecting a flavor during the process of generating the clusters or node groups to make a GPU node group.
+### Using a GPU node group 
+When you need to run GPU-based workloads through Kubernetes, you can create a node group composed of GPU instances.
+Select the `g2` type when selecting a flavor while creating the clusters or node groups to create a GPU node group.
 
 > [Note]
 > GPU provided by NHN Cloud GPU instance is affiliated with NVIDIA. ([Identify available GPU specifications that can be used](/Compute/GPU%20Instance/en/overview/#gpu-specifications))
-> nvidia-device-plugin necessary for Kubernetes for NVIDIA GPU usage will be installed automatically when creating a GPU node group.
+> nvidia-device-plugin required for Kubernetes to use an NVIDIA GPU will be installed automatically when creating a GPU node group.
 
 To check the default setting and run a simple operation test for the created GPU node, use the following method:
 
 #### Node level status check
-
 Access the GPU node and run the `nvidia-smi` command.
 The GPU driver is working normally if the output shows the following:
 
@@ -150,7 +151,6 @@ Mon Jul 27 14:38:07 2020
 ```
 
 #### Kubernetes level status check
-
 Use the `kubectl` command to view information about available GPU resources at the cluster level.
 Below are commands and execution results that displays the number of GPU cores available for each node.
 
@@ -161,7 +161,6 @@ my-cluster-default-w-vdqxpwisjjsk-node-1   1                 1
 ```
 
 #### Sample workload execution for GPU testing
-
 GPU nodes that belong to Kubernetes clusters provide resources such as `nvidia.com/gpu` in addition to CPU and memory.
 To use GPU, enter as shown in the sample file below to be allocated with the `nvidia.com/gpu` resource.
 
@@ -232,22 +231,20 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 ```
 
 > [Note]
-> To prevent workloads that do not require GPU from being allocated to GPU nodes, please see [Taints and Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/).
+> To prevent workloads that do not require GPU from being allocated to GPU nodes, see [Taints and Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/).
 
 ### Autoscaler
-
 Autoscaler is a feature that automatically adjusts the number of nodes when a node group does not have enough resources available to schedule pods or when the node's utilization remains below a certain level. Autoscaler can be set for each node group and operates independently of each other. This feature is based on the cluster-autoscaler feature, an officially supported feature of the Kubernetes project. For more information, refer to [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler).
 
 > [Note]
 > The version of the `cluster-autoscaler` applied to NHN Kubernetes Service (NKS) is `1.19.0.`
 
 #### Glossary
-
 Terms used in relation to the autoscaler and their meanings are as follows:
 
-| Term       | Meaning                     |
-| ---------- | --------------------------- |
-| Scale Up   | Increase a number of nodes. |
+| Term | Meaning |
+| --- | --- |
+| Scale Up | Increase a number of nodes. |
 | Scale Down | Decrease a number of nodes. |
 
 > [Caution]
@@ -255,13 +252,12 @@ Terms used in relation to the autoscaler and their meanings are as follows:
 >
 > * Pangyo Region: Node groups created before November 24, 2020
 > * Pyeongchon Region: Node groups created before November 19, 2020
->
+> 
 > The container image path of autoscaler is as follows:
 >
 > * k8s.gcr.io/autoscaling/cluster-autoscaler:v1.19.0
 
 #### Autoscaler Settings
-
 Autoscaler is set and operated for each node group. Autoscaler can be set up in various ways, as listed below:
 
 * Set up on the default node groups when creating a cluster.
@@ -270,20 +266,19 @@ Autoscaler is set and operated for each node group. Autoscaler can be set up in 
 
 Activating the autoscaler enables the following options:
 
-| Settings Item                | Meaning                                                      | Valid Range    | Default | Unit    |
-| ------------------------ | ------------------------------------------------------------ | -------------- | ------- | ------- |
-| Minimum Node Count            | Minimum number of nodes that can be scaled down                | 1-10           | 1       | unit    |
-| Maximum Node Count            | Maximum number of nodes that can be scaled up                  | 1-10           | 10      | unit   |
-| Scaling Down               | Enable/Disable Node Scale-down                               | Enable/Disable | Enable  | -       |
-| Scale Down Utilization Threshold | Reference value to determine resource usage threshold range for scale-down | 1-100          | 50      | %       |
-| Scale Down Unneeded Time       | The duration for retaining resource usage of target nodes to scale down below the threshold  | 1-1440         | 10      | minutes |
-| Scale Down Delay After Add      | Delay before starting to monitor for scale-down targets after scaling up | 10-1440         | 10      | minutes |
+| Settings Item | Meaning | Valid Range | Default | Unit |
+| --- | --- | --- | --- | --- |
+| Minimum Node Count | Minimum number of nodes that can be scaled down| 1-10 | 1 | unit|
+| Maximum Node Count | Maximum number of nodes that can be scaled up| 1-10 | 10 | unit|
+| Scaling Down | Enable/Disable Node Scale-down | Enable/Disable | Enable | - |
+| Scale Down Utilization Threshold | Reference value to determine resource usage threshold range for scale-down | 1-100 | 50 | % |
+| Scale Down Unneeded Time| The duration for retaining resource usage of target nodes to scale down below the threshold| 1-1440 | 10 | minutes |
+| Scale Down Delay After Add | Delay before starting to monitor for scale-down targets after scaling up| 10-1440 | 10 | minutes |
 
 > [Caution]
 > Nodes cannot be manually added to or deleted from node groups on which autoscaler is enabled.
 
 #### Scale-up/down Conditions
-
 Scales up if all of the following conditions are met:
 
 * There are no more available nodes to schedule pods.
@@ -305,21 +300,20 @@ If some nodes contain at least one pod that meets the following conditions, then
 For more information on the conditions for scale-up/down, see [Cluster Autoscaler FAQ](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md).
 
 #### Operation Example
-
 Let's check how the autoscaler work through the following example:
 
 ##### 1. Enabling Autoscaler
 
 Enables autoscaling on the default node group of the cluster you want. For this example, the number of nodes for the default group has been set to 1 and autoscaler settings are configured as follows:
 
-| Settings                 | Value  |
-| ------------------------ | ------ |
-| Minimum Node Count            | 1      |
-| Maximum Node Count            | 5      |
-| Scaling Down               | Enable |
-| Scale Down Utilization Threshold | 50     |
-| Scale Down Unneeded Time       | 3      |
-| Scale Down Delay After Add      | 5      |
+| Configuration Item | Value |
+| --- | --- |
+| Minimum Node Count | 1 |
+| Maximum Node Count | 5 |
+| Scaling Down | Enable |
+| Scale Down Utilization Threshold | 50 |
+| Scale Down Unneeded Time| 3 |
+| Scale Down Delay After Add | 10 |
 
 ##### 2. Deploying Pods
 
@@ -328,7 +322,7 @@ Deploy pods using the following manifest:
 > [Caution]
 > Just like this manifest, all manifests must have a container resource request defined on them.
 
-```
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -355,7 +349,7 @@ spec:
             cpu: "100m"
 ```
 
-Because the total amount of CPU resources for the requested pods is bigger than the resources that a single node can handle, some of the pods are left behind in the "pending" status, as shown below. In this case, the nodes will scale up.
+Because the total amount of CPU resources for the requested pods is bigger than the resources that a single node can handle, some of the pods are left behind in the `Pending` status, as shown below. In this case, the nodes will scale up.
 
 ```
 # kubectl get pods
@@ -397,7 +391,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-1   Ready    <none>   77s   v1.23.3
 autoscaler-test-default-w-ohw5ab5wpzug-node-2   Ready    <none>   78s   v1.23.3
 ```
 
-The pods that were in "pending" status are now normally scheduled after the scale-up.
+The pods that were in `Pending` status are now normally scheduled after the scale-up.
 
 ```
 # kubectl get pods -o wide
@@ -428,6 +422,7 @@ LAST SEEN   TYPE     REASON             OBJECT                                 M
 4m          Normal   TriggeredScaleUp   pod/nginx-deployment-756fd4cdf-7bsst   pod triggered scale-up: [{default-worker-bf5999ab 1->3 (max: 5)}]
 ...
 ```
+
 
 ##### 4. Checking Node Scale-down after Deleting Pods
 
@@ -473,7 +468,7 @@ LAST SEEN   TYPE     REASON      OBJECT                                         
 13m         Normal   ScaleDown   node/autoscaler-test-default-w-ohw5ab5wpzug-node-2   node removed by cluster autoscaler
 ```
 
-You can check the status of each node group's autoscaler through "configmap/cluster-autoscaler-status." Configmaps are created ind different namespaces for different node groups. The following is the naming convention for each node group namespace created by the autoscaler:
+You can check the status of each node group's autoscaler through `configmap/cluster-autoscaler-status`. Configmaps are created in different namespaces per node group. The following is the naming convention for namespace per node group created by the autoscaler:
 
 * Format: nhn-ng-{node group name}
 * Enter a node group name in {node group name}.
@@ -527,15 +522,12 @@ metadata:
 > As for the status information, the `Cluster-wide` area has the same information as `NodeGroups.`
 
 #### Example of an action working with HPA (HorizontalPodAutoscale)
-
-Horizontal Pod Autoscaler (HPA) observes resource usage, such as CPU usage, to auto-scale the number of pods of ReplicationController, Deployment, ReplicaSet, and StatefulSet. As the number of pods is adjusted, there could be too many or too few resources available in the node. At this moment, utilize the Autoscaler feature to increase or decrease the number of nodes. In this example, we will see how HPA and Autoscaler can work together to deal with this issue. For more information on HPA, see [Horizontal Pod Autoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/).
+Horizontal Pod Autoscaler (HPA) observes resource usage, such as CPU usage, to auto-scale the number of pods of ReplicationController, Deployment, ReplicaSet, and StatefulSet. As the number of pods is adjusted, there could be too many or too few resources available in the node. At this moment, utilize the Autoscaler feature to increase or decrease the number of nodes. In this example, we will see how HPA and Autoscaler can work together to deal with this issue. For more information on HPA, see [Horizontal Pod Autoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/). 
 
 ##### 1. Enabling Autoscaler
-
 Enable Autoscaler as shown in the above example.
 
 ##### 2. Configuring HPA
-
 Deploy a container that creates CPU load for a certain amount of time after receiving a web request. The, expose the service. The following is taken from the `php-apache.yaml` file.
 
 ```yaml
@@ -599,8 +591,7 @@ php-apache   Deployment/php-apache   0%/50%    1         30        1          80
 ```
 
 ##### 3. Authorizing Load
-
-Now run the pod that triggers load in the new terminal. This pod sends web requests without stopping. You can stop this requesting action with 'Ctrl+C.'
+Now run the pod that triggers load in the new terminal. This pod sends web requests without stopping. You can stop this requesting action with `Ctrl+C`.
 
 ```
 # kubectl run -i --tty load-generator --rm --image=busybox --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://php-apache; done"
@@ -631,7 +622,6 @@ php-apache   Deployment/php-apache   250%/50%   1         30        5          2
 ```
 
 ##### 4. Checking the operation of Autoscaler
-
 If you look up pods, due to the increase in the number of pods, you can see some pods are running as they are scheduled to `node-0`, but some are still pending
 
 ```
@@ -719,24 +709,24 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 ```
 
 
-### Scheduled script
-User can register a scheduled script when creating clusters and additional node groups. Below are the features of the scheduled script.
+### User Script
+You can register a user script when creating clusters and additional node groups. A user script has the following features.
 
 * Feature setting
     * This feature can be set by worker node group.
-    * The scheduled script entered when creating clusters are applied to the default worker node group.
-    * The scheduled script entered when creating additional node groups are applied to the corresponding worker node group.
-    * The contents of the scheduled script cannot be changed once the worker node group has been created.
+    * A user script entered when creating clusters is applied to the default worker node group.
+    * A user script entered when creating additional node groups is applied to the corresponding worker node group.
+    * The content of a user script cannot be changed after the worker node group is created.
 * Script execution time
-    * The scheduled script is executed during the instance initialization process while initializing the worker node.
-    * After the scheduled script has been executed, it sets and registers the instance as the worker node of the 'worker node group'.
-* Script details
-    * The first line of a scheduled script must start with #!.
+    * A user script is executed during the instance initialization process while initializing the worker node.
+    * After the user script has been executed, it sets and registers the instance as the worker node of the 'worker node group'.
+* Script content
+    * The first line of a user script must start with #!.
     * The maximum size of script is 64KB.
-    * The script is executed by root authority.
-    * The script execution records are saved to the below location.
+    * The script is run with the root permission.
+    * The script execution records are stored in the following location.
         * Script exit code: `/var/log/userscript.exitcode`
-        * Standard output and error stream of script: `/var/log/userscript.output`
+        * Standard output and standard error streams of script: `/var/log/userscript.output`
 
 
 ## Cluster Management
@@ -760,36 +750,36 @@ The downloaded file does not have the execute permission by default. You need to
 $ chmod +x kubectl
 ```
 
-#### Change the Location or Set the Path 
-Move the file to the path set in the environment variable so that kubectl can be executed on any path, or add the path including kubectl to the environment variable.  
+#### Change the Location or Set the Path
+Move the file to the path set in the environment variable so that kubectl can be executed on any path, or add the path including kubectl to the environment variable.
 
-* Change the location to a path set in the environment variable 
+* Change the location to a path set in the environment variable
 ```
 $ sudo mv kubectl /usr/local/bin/
 ```
 
-* Add the path to the environment variable 
+* Add the path to the environment variable
 ```
 // Executed on the path including kubectl
 $ export PATH=$PATH:$(pwd)
 ```
 
-### Configuration 
-To access Kubernetes cluster with kubectl, cluster configuration file (kubeconfig) is required. On the NHN Cloud web console, open the **Container > NHN Kubernetes Service (NKS)** page and select a cluster to access. From **Basic Information**, click **Download** of **Configuration Files** to download a configuration file. Move the downloaded configuration file to a location of your choice to serve it as a reference for kubectl execution. 
+### Configuration
+To access Kubernetes cluster with kubectl, cluster configuration file (kubeconfig) is required. On the NHN Cloud web console, open the **Container > NHN Kubernetes Service (NKS)** page and select a cluster to access. From **Basic Information**, click **Download** of **Configuration Files** to download a configuration file. Move the downloaded configuration file to a location of your choice to serve it as a reference for kubectl execution.
 
 > [Caution]
 > A configuration file downloaded from the NHN Cloud web console includes cluster information and token for authentication. With the file, you're authorized to access corresponding Kubernetes clusters. Take cautions for not losing configuration files.   
 
-kubectl requires a cluster configuration file every time it is executed, so a cluster configuration file must be specified by using the `--kubeconfig` option. However, if the environment variable includes specific path for a cluster configuration file, there is no need to specify each option. 
+kubectl requires a cluster configuration file every time it is executed, so a cluster configuration file must be specified by using the `--kubeconfig` option. However, if the environment variable includes specific path for a cluster configuration file, there is no need to specify each option.
 
 ```
 $ export KUBECONFIG={Path of cluster configuration file}
 ```
 
-You may copy cluster configuration file path to `$HOME/.kube/config`, which is the default configuration file of kubectl, if you don't want to save it to an environment variable. However, when there are many clusters, it is easier to change environment variables. 
+You may copy cluster configuration file path to `$HOME/.kube/config`, which is the default configuration file of kubectl, if you don't want to save it to an environment variable. However, when there are many clusters, it is easier to change environment variables.
 
-### Confirming Connection 
-See if it is well set by the `kubectl version` command. If there's no problem, `Server Version` is printed.  
+### Confirming Connection
+See if it is well set by the `kubectl version` command. If there's no problem, `Server Version` is printed.
 
 ```
 $ kubectl version
@@ -797,15 +787,13 @@ Client Version: version.Info{Major:"1", Minor:"15", GitVersion:"v1.15.7", GitCom
 Server Version: version.Info{Major:"1", Minor:"15", GitVersion:"v1.15.7", GitCommit:"6c143d35bb11d74970e7bc0b6c45b6bfdffc0bd4", GitTreeState:"clean", BuildDate:"2019-12-11T12:34:17Z", GoVersion:"go1.12.12", Compiler:"gc", Platform:"linux/amd64"}
 ```
 
-* Client Version: Version information of executed kubectl file 
-* Server Version: Kubernetes version information comprising a cluster 
+* Client Version: Version information of executed kubectl file
+* Server Version: Kubernetes version information comprising a cluster
 
 ### CSR (CertificateSigningRequest)
-
 Using Certificate API of Kubernetes, you can request and issue the X.509 certificate for a Kubernetes API client . CSR resource lets you request certificate and decide to accept/reject the request. For more information, see the [Certificate Signing Requests](https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/) document.
 
 #### CSR Request and Issue Approval Example
-
 First of all, create a private key. For more information on certificate creation, see the [Certificates](https://kubernetes.io/docs/concepts/cluster-administration/certificates/) document.
 
 ```
@@ -858,7 +846,6 @@ certificatesigningrequest.certificates.k8s.io/dev-user1 approved
 ```
 
 If you check the CSR again, you can see that it has been changed to the `Approved,Issued` state.
-
 ```
 # kubectl get csr
 NAME        AGE    REQUESTOR          CONDITION
@@ -900,14 +887,13 @@ status:
     type: Approved
 ```
 
-> [Caution] 
+> [Caution]
 > This feature is provided only when the time of cluster creation falls within the following period:
->
+> 
 > * Pangyo region: Cluster created as of December 29, 2020
 > * Pyeongchon region: Cluster created as of December 24, 2020
 
 ### Admission Controller plugin
-
 The admission controller can intercept a Kubernetes API server request and change objects or deny the request. See [Admission Controller]( https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/) for more information about the admission controller. For usage examples of the admission controller, see [Admission Controller Guide](https://kubernetes.io/blog/2019/03/21/a-guide-to-kubernetes-admission-controllers/).
 
 The type of plugin applied to the admission controller varies depending on the cluster version and the time of cluster creation. For more information, see the list of plugins available depending on the time of cluster creation by region.
@@ -943,13 +929,14 @@ All default active admission controllers per Kubernetes version are enabled. The
 * NodeRestriction
 * PodSecurityPolicy
 
+
 ### Cluster upgrade
-NHN Kubernetes Service (NKS) supports the Kubernetes component upgrade for the currently operating Kubernetes clusters.  
+NHN Kubernetes Service (NKS) supports the Kubernetes component upgrade for the currently operating Kubernetes clusters. 
 
 #### Policy of supporting different Kubernetes versions
-Kubernetes version is represented as `x.y.z`. `x` is the major, `y` is the minor, and `z` is the patch version. If features are added, it is a major or minor version upgrade. If it provides features compatible with previous versions such as bug fixes, it is a patch version. For more information about this, please see [Semantic Versioning 2.0.0](https://semver.org/).
+Kubernetes version is represented as `x.y.z`. `x` is the major, `y` is the minor, and `z` is the patch version. If features are added, it is a major or minor version upgrade. If it provides features compatible with previous versions such as bug fixes, it is a patch version. For more information about this, see [Semantic Versioning 2.0.0](https://semver.org/).
 
-Kubernetes clusters can upgrade the Kubernetes components while in operation. To this end, each Kubernetes component defines whether to support the features based on the Kubernetes version difference. In minor version, for example, the difference of one version supports the Kubernetes component upgrade for the operating clusters by supporting the mutual feature compatibility. It also defines the upgrade sequence for each type of the components. For more information please see [Version Skew Policy](https://kubernetes.io/releases/version-skew-policy/).
+Kubernetes clusters can upgrade the Kubernetes components while in operation. To this end, each Kubernetes component defines whether to support the features based on the Kubernetes version difference. In minor version, for example, the difference of one version supports the Kubernetes component upgrade for the operating clusters by supporting the mutual feature compatibility. It also defines the upgrade sequence for each type of the components. For more information, see [Version Skew Policy](https://kubernetes.io/releases/version-skew-policy/).
 
 #### Feature Behavior
 Explains how the Kubernetes cluster upgrade feature supported by NHN Cloud works. 
@@ -965,20 +952,20 @@ When upgrading, NHN Cloud's Kubernetes Cluster version control and Kubernetes ve
 * Master must be upgraded first in order to upgrade the worker node group. 
 * Can be upgraded to the next version of the current version (minor version+1). 
 * Downgrade is not supported. 
-* If the cluster is being updated due to the operation of other features, upgrade cannot be proceeded.
+* If the cluster is being updated due to the operation of other features, upgrade cannot be proceeded. 
 
 The following table shows whether upgrade is possible while upgrading the Kubernetes version. The following conditions are used for the example: 
 
 * List of Kubernetes versions supported by NHN Cloud: v1.21.6, v1.22.3, v1.23.3
 * Clusters are created as v1.21.6
 
-|Status | Master version | Whether master can be upgraded | Worker node group version | Whether worker node group can be upgraded
+| Status | Master version | Whether master can be upgraded | Worker node group version | Whether worker node group can be upgraded
 | --- | :-: | :-: | :-: | :-: |
 | Initial state| v1.21.6 | Possible (Note 1) | v1.21.6 | Not possible (Note 2) | 
 | State after master upgrade | v1.22.3 | Not possible (Note 3) | v1.21.6 | Possible (Note 4) | 
 | State after worker node group upgrade | v1.22.3 | Possible (Note 1) | v1.22.3 | Not possible (Note 2) |
 | State after master upgrade | v1.23.3 | Not possible (Note 3) | v1.22.3 | Possible (Note 4) | 
-| State after worker node group upgrade | v1.23.3 | Not possible (Note 5) | v1.23.3 | Not possible (Note 2)| 
+| State after worker node group upgrade | v1.23.3 | Not possible (Note 5) | v1.23.3 | Not possible (Note 2) |
 
 Notes
 
@@ -990,7 +977,7 @@ Notes
 
 
 ##### Upgrading master components
-NHN Cloud's Kubernetes cluster master consists of a number of masters to ensure high availability. Since upgrade is carried out by taking the rolling update method for the master, the availability of the clusters is guaranteed.  
+NHN Cloud's Kubernetes cluster master consists of a number of masters to ensure high availability. Since upgrade is carried out by taking the rolling update method for the master, the availability of the clusters is guaranteed. 
 
 In this process, the following might happen:
 
@@ -1009,6 +996,7 @@ Worker components can be upgraded for each worker node group. Worker components 
 4. Evict working pods from the buffer node, and delete the buffer node.
 5. Reactivate the cluster auto scaler feature. (Note 1)
 
+
 Notes
 
 * (Note 1) This step is valid only if the cluster autoscaler feature is enabled before starting the upgrade feature.
@@ -1016,7 +1004,7 @@ Notes
 
 In this process, the following might happen:
 
-* Pods in service will be evicted and scheduled to another node. (To find out more about pod eviction, please refer to the notes in the below.)
+* Pods in service will be evicted and scheduled to another node. (To find out more about pod eviction, refer to the notes below.)
 * Autoscaler feature does not work. 
 
 
@@ -1028,9 +1016,10 @@ In this process, the following might happen:
 > 3. Pods that cannot be copied to another node will not be relocated to another node.
 > If the pods run by controllers such as (ReplicationController), (ReplicaSet), (Job), (Daemonset), and (StatefulSet) are evicted, they will be rescheduled to another node by the controller. However, the pods not run by these controllers will not be scheduled to another node after being evicted.
 > 4. Eviction can fail or slow down due to the PodDisruptionBudgets (PDB) setting.
-> You can define the number of pods to maintain with the PodDisruptionBudgets(PDB) setting. Depending on how this setting is set, it may not be possible to evict pods or evicting pods can take longer than normal during upgrade. If pod eviction fails, upgrade fails as well. So if the PDB is enabled, appropriate PDB setting will ensure proper pod eviction. To find out more about PDB setting, please see [here](https://kubernetes.io/docs/tasks/run-application/configure-pdb/).
+> You can define the number of pods to maintain with the PodDisruptionBudgets(PDB) setting. Depending on how this setting is set, it may not be possible to evict pods or evicting pods can take longer than normal during upgrade. If pod eviction fails, upgrade fails as well. So if the PDB is enabled, appropriate PDB setting will ensure proper pod eviction. To find out more about PDB setting, see [here](https://kubernetes.io/docs/tasks/run-application/configure-pdb/).
 
-To find out more about safely evicting pods, please see [Safely Drain a Node](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/).
+
+To find out more about safely evicting pods, see [Safely Drain a Node](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/).
 
 ##### System Pod Upgrade
 If the versions match after upgrading the versions of the master and all worker node groups, the system pod which runs for Kubernetes cluster configuration will be upgraded.
@@ -1038,12 +1027,11 @@ If the versions match after upgrading the versions of the master and all worker 
 > [Caution]
 > If you do not upgrade the worker node group after upgrading the master, some pods might not work properly.
 
-
 ## LoadBalancer Service
-Pod is a basic execution unit of a Kubernetes application and it is connected to a cluster network via CNI (Container Network Interface). Basically, access to pod is unavailble from cluster externals. To open up pod services outside of a cluster, a path to be made public must be created by using Kubernetes' `LoadBalancer` service object. 
+Pod is a basic execution unit of a Kubernetes application and it is connected to a cluster network via CNI (Container Network Interface). By default, pods are not accessible from outside the cluster. To expose a pod's services to the outside of the cluster, you need to create a path to expose to the outside using the Kubernetes `LoadBalancer` Service object. Creating a LoadBalancer service object creates an NHN Cloud Load Balancer outside the cluster and associates it with the service object.
 
-### Creating Web Server Pods 
-Write deployment object manifest file to execute the following two nginx pods and create an object. 
+### Creating Web Server Pods
+Write a deployment object manifest file that executes two nginx pods as follows and create an object.
 
 ```yaml
 # nginx.yaml
@@ -1070,7 +1058,7 @@ spec:
         - containerPort: 80
 ```
 
-With deployment object created, pods defined at manifest are automatically created. 
+With deployment object created, pods defined at manifest are automatically created.
 
 ```
 $ kubectl apply -f nginx.yaml
@@ -1082,7 +1070,7 @@ nginx-deployment-7fd6966748-pvrzs   1/1     Running   0          4m13s
 nginx-deployment-7fd6966748-wv7rd   1/1     Running   0          4m13s
 ```
 
-To use images saved at NHN Cloud Container Registry, first create a secret to login to user registry. 
+To use images saved at NHN Cloud Container Registry, first create a secret to login to user registry.
 
 ```
 $ kubectl create secret docker-registry registry-credential --docker-server={user registry address} --docker-username={email address for NHN Cloud account} --docker-password={service Appkey or integrated Appkey}
@@ -1093,7 +1081,7 @@ NAME                  TYPE                             DATA   AGE
 registry-credential   kubernetes.io/dockerconfigjson   1      30m
 ```
 
-By adding secret information to the deployment manifest file and changing the name of image, pods can be created by using images saved at user registry. 
+By adding secret information to the deployment manifest file and changing the name of image, pods can be created by using images saved at user registry.
 
 ```yaml
 # nginx.yaml
@@ -1115,8 +1103,8 @@ spec:
 > [Note]
 > Regarding how to use NHN Cloud Container Registry, see [User Guide for Container Registry](/Container/Container%20Registry/en/user-guide).
 
-### Creating LoadBalancer 
-To define service object of Kubernetes, a manifest comprised of the following items is required: 
+### Creating LoadBalancer
+To define service object of Kubernetes, a manifest comprised of the following items is required:
 
 | Item | Description |
 | --- | --- |
@@ -1129,7 +1117,7 @@ To define service object of Kubernetes, a manifest comprised of the following it
 | spec.ports.targetPort | Port number of a pod to be associated with service object |
 | spec.type | Type of service object |
 
-Service manifest is written like below. The LoadBalancer service object is associated with a pod labelled as `app: nginx`, following the defined name at **spec.selector**. And as **spec.ports** defines, traffic inflow via TCP/8080 is delivered to the TCP/80 port of the pod.  
+Service manifest is written like below. The LoadBalancer service object is associated with a pod labelled as `app: nginx`, following the defined name at **spec.selector**. And as **spec.ports** defines, traffic inflow via TCP/8080 is delivered to the TCP/80 port of the pod.
 
 ```yaml
 # service.yaml
@@ -1149,7 +1137,7 @@ spec:
   type: LoadBalancer
 ```
 
-When the LoadBalancer service object is created, it takes some time to create and associate a load balancer externally. Before associated with external load balancer, **EXTERNAL-IP** shows `<pending>`. 
+When the LoadBalancer service object is created, it takes some time to create and associate a load balancer externally. Before associated with external load balancer, **EXTERNAL-IP** shows `<pending>`.
 
 ```
 $ kubectl apply -f service.yaml
@@ -1160,7 +1148,7 @@ NAME         TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
 nginx-svc    LoadBalancer   10.254.134.18   <pending>     8080:30013/TCP   11s
 ```
 
-When it is associated with external load balancer, **EXTERNAL-IP** shows IP, which refers to floating IP of external load balancer. 
+When it is associated with external load balancer, **EXTERNAL-IP** shows IP, which refers to floating IP of external load balancer.
 
 ```
 $ kubectl get service
@@ -1173,8 +1161,8 @@ nginx-svc    LoadBalancer   10.254.134.18   123.123.123.30   8080:30013/TCP   3m
 > Load balancer IP is a floating IP allowing external access. You can check it on the **Network > Floating IP** page.
 
 
-### Testing Service on Internet 
-Send an HTTP request via floating IP associated with load balancer to see if the web server pod of a Kubernetes cluster responds. Since the TcP/8080 port of a service object is attached to TCP/80 port of a pod, request must be sent to the TCP/8080 port. If external load balancer, service object, and pod are well associated, the web server shall respond to nginx default page. 
+### Testing Service on Internet
+Send an HTTP request via floating IP associated with load balancer to see if the web server pod of a Kubernetes cluster responds. Since the TcP/8080 port of a service object is attached to TCP/80 port of a pod, request must be sent to the TCP/8080 port. If external load balancer, service object, and pod are well associated, the web server shall respond to nginx default page.
 
 ```
 $ curl http://123.123.123.30:8080
@@ -1216,7 +1204,7 @@ For each setting item, global setting or per-listener setting is supported. If n
 #### Format of Per-Listener Setting
 Per-listener settings can be set by appending a prefix representing the listener to the global settings key. The prefix representing the listener is the service object's port protocol (`spec.ports[].protocol`) and port number (`spec.ports[].port`) concatenated with a dash (`-`). For example, if the protocol is TCP and the port number is 80, the prefix is ​​`TCP-80`. If you want to set session affinity for the listener associated with this port, you can set it in TCP-80.loadbalancer.nhncloud/pool-session-persistence under .metadata.annotations.
 
-The manifest below is an example of mixing the global setting and per-listener settings.
+The manifest below is an example of mixing the global setting and per-listener settings. 
 
 ```yaml
 apiVersion: v1
@@ -1250,11 +1238,12 @@ spec:
 ```
 
 When this manifest is applied, the per-listener settings are set as shown in the following table.
+
 | Item | TCP-80 listener | TCP-433 listener| Description |
 | --- | --- | --- | --- |
-| Load Balancing Method | SOURCE_IP | LEAST_CONNECTIONS | TCP-80 listener is set to SOURCE_IP according to the global setting<br>TCP-443 listener is set to LEAST_CONNECTIONS according to the per-listener setting |
-| Session Affininty | SOURCE_IP | None | TCP-80 listener is set to SOURCE_IP according to the per-listener setting<br>TCP-443 listener is set to None by the default value |
-| Listener Protocol | HTTP | TCP | Both the TCP-80 listener and the TCP-443 listener are set according to the per-listener settings |
+| Load Balancing Method | SOURCE_IP | LEAST_CONNECTIONS | TCP-80 listener is set to SOURCE_IP according to the global setting<br>TCP-443 listener is set to LEAST_CONNECTIONS according to the per-listener setting  |
+| Session Affinity | SOURCE_IP | None | TCP-80 listener is set to SOURCE_IP according to the per-listener setting<br>TCP-443 listener is set to None by the default value |
+| Listener Protocol | HTTP | TCP | Both the TCP-80 listener and the TCP-443 listener are set according to the per-listener settings   |
 
 > [Note]
 > The features without additional version information are only applicable to clusters of Kubernetes v1.19.13 or later.
@@ -1298,10 +1287,10 @@ You can set the connection limit for a listener.
 * The setting location is loadbalancer.nhncloud/connection-limit under .metadata.annotations.
 * Per-listener settings can be applied.
 * Clusters of v1.17.6, v1.18.19
-    * Minimum value of 1, maximum value of 60000.
+    * Minimum value of 1, maximum value of 60000. 
     * It you do not set it, it is set to -1, and the value applied to the actual load balancer is 2000.
 * Clusters of v1.19.13 or later
-    * Minimum value of 1, maximum value of 60000.
+    * Minimum value of 1, maximum value of 60000. 
     * If not set or a value out of range is entered, it is set to the default value of 60000.
 
 
@@ -1319,7 +1308,7 @@ You can set the protocol of the listener.
 > [Caution]
 > The listener protocol setting is not applied to the load balancer even if you change the service object.
 > To change the listener protocol setting, you must delete the service object and then create it again.
-> Please note that in this case, the load balancer is deleted and then re-created.
+> Note that the load balancer is deleted and then re-created in this case.
 
 
 The SSL version can be set as follows:
@@ -1327,11 +1316,15 @@ The SSL version can be set as follows:
 * The setting location is loadbalancer.nhncloud/listener-terminated-https-tls-version under .metadata.annotations.
 * Per-listener settings can be applied.
 * It can be set to one of the following:
-    * TLSv1.2: The default when not set.
+    * TLSv1.3: The default when not set.
+    * TLSv1.2
     * TLSv1.1
     * TLSv1.0_2016
     * TLSv1.0
     * SSLv3
+
+> [Caution]
+> TLSv1.3 can be set in clusters created after March 29, 2022.
 
 Certificate information can be set as follows:
 
@@ -1345,7 +1338,7 @@ Private key information can be set as follows:
 * Per-listener settings can be applied.
 * It must include start and end lines.
 
-The following is an example of manifest for setting the listener protocol to `TERMINATED_HTTPS`. Certificate information and private key information are partially omitted.
+The following is an example of manifest for setting the listener protocol to TERMINATED_HTTPS. Certificate information and private key information are partially omitted.
 ```yaml
 metadata:
   name: echosvr-svc
@@ -1438,15 +1431,15 @@ You can set the maximum number of retries for a health check.
 * If not set or a value out of range is entered, it is set to the default value of 3.
 
 
-## Ingress Controller 
+## Ingress Controller
 Ingress Controller routes HTTP and HTTPS requests from cluster externals to internal services, in reference of the rules that are defined at ingress object so as to provide SSL/TSL closure and virtual hosting. For more details on Ingress Controller and Ingress, see [Ingress Controller](https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/), [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/).
 
 
-### Installing NGINX Ingress Controller 
+### Installing NGINX Ingress Controller
 NGINX Ingress Controller is one of the most frequently used ingress controllers. For more details, see [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/) and [NGINX Ingress Controller for Kubernetes](https://www.nginx.com/products/nginx-ingress-controller/). For installation of NGINX Ingress Controller, see [Installation Guide](https://kubernetes.github.io/ingress-nginx/deploy/).
 
 ### Creating LoadBalancer Service
-Since ingress controller is also created as a pod, a LoadBalancer or NodePort service must be created to be made public. Define a LoadBalancer service manifest that can process HTTP and HTTPS like below: 
+Since ingress controller is also created as a pod, a LoadBalancer or NodePort service must be created to be made public. Define a LoadBalancer service manifest that can process HTTP and HTTPS like below:
 
 ```yaml
 # ingress-nginx-lb.yaml
@@ -1477,7 +1470,7 @@ spec:
     app.kubernetes.io/part-of: ingress-nginx
 ```
 
-After a service object is created, check if it is associated with an external load balancer. The **EXTERNAL-IP** field must include floating IP address. 
+After a service object is created, check if it is associated with an external load balancer. The **EXTERNAL-IP** field must include floating IP address.
 
 ```
 $ kubectl apply -f ingress-nginx-lb.yaml
@@ -1488,12 +1481,12 @@ NAME            TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)          
 ingress-nginx   LoadBalancer   10.254.2.128   123.123.123.41   80:30820/TCP,443:30269/TCP   39s
 ```
 
-### Diverging Service on URI 
-Ingress controller can diverge services based on URI. The following figure shows the structure of a simple example of service divergence based on URI. 
+### Diverging Service on URI
+Ingress controller can diverge services based on URI. The following figure shows the structure of a simple example of service divergence based on URI.
 
 ![ingress-01.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/ingress-01.png)
 
-#### Create Services and Pods 
+#### Create Services and Pods
 Manifest is created to create services and pods like below: Associate the `tea` pod to `tea-svc`, and the `coffee` pod to `coffee-svc`.
 
 ```yaml
@@ -1566,7 +1559,7 @@ spec:
     app: tea
 ```
 
-Apply manifest, and see if deployment, service, and pod is created. The pod must be **Running**. 
+Apply manifest, and see if deployment, service, and pod is created. The pod must be **Running**.
 
 ```
 $ kubectl apply -f cafe.yaml
@@ -1593,7 +1586,7 @@ pod/tea-7df475c6-lxqsx        1/1     Running   0          18s
 ```
 
 #### Create Ingress
-According to the request path, ingress manifest is created for service connection. A request with `/tea` as endpoint is connected to the `tea-svc` service, while `/coffee` is connected to the the `coffee-svc` service. 
+According to the request path, ingress manifest is created for service connection. A request with `/tea` as endpoint is connected to the `tea-svc` service, while `/coffee` is connected to the `coffee-svc` service.
 
 ```yaml
 # cafe-ingress-uri.yaml
@@ -1615,7 +1608,7 @@ spec:
           servicePort: 80
 ```
 
-In a while after ingress is created, IP must be configured at the **ADDRESS** field.  
+In a while after ingress is created, IP must be configured at the **ADDRESS** field.
 
 ```
 $ kubectl apply -f cafe-ingress-uri.yaml
@@ -1626,10 +1619,10 @@ NAME               HOSTS   ADDRESS          PORTS   AGE
 cafe-ingress-uri   *       123.123.123.44   80      88s
 ```
 
-#### Send HTTP Requests 
-Send HTTP request to the IP address set for **ADDRESS** of ingress for an external host, to check if the ingress has been properly set. 
+#### Send HTTP Requests
+Send HTTP request to the IP address set for **ADDRESS** of ingress for an external host, to check if the ingress has been properly set.
 
-Request for `/coffee` as endpoint is sent to the `coffee-svc` service so as the `coffee` pod can respond. From the **Server Name**, you can see that `coffee` pods take turns to respond in the round-robin technique. 
+Request for `/coffee` as endpoint is sent to the `coffee-svc` service so as the `coffee` pod can respond. From the **Server Name**, you can see that `coffee` pods take turns to respond in the round-robin technique.
 
 ```
 $ curl http://123.123.123.44/coffee
@@ -1647,7 +1640,7 @@ URI: /coffee
 Request ID: e78427e68a1cd61ec633b9328359874e
 ```
 
-Likewise, request for `/tea` as endpoint is delivered to the `tea-svc` service so as the `tea` can respond.   
+Likewise, request for `/tea` as endpoint is delivered to the `tea-svc` service so as the `tea` can respond.
 
 ```
 $ curl http://123.123.123.44/tea
@@ -1658,7 +1651,7 @@ URI: /tea
 Request ID: 59303a5a5baa60802b463b1856c8ce8d
 ```
 
-When a request is sent to undefined URI, the ingress controller sends `404 Not Found` as response.  
+When a request is sent to undefined URI, the ingress controller sends `404 Not Found` as response.
 
 ```
 $ curl http://123.123.123.44/
@@ -1672,7 +1665,7 @@ $ curl http://123.123.123.44/
 ```
 
 #### Delete Resources
-Resources for testing can be deleted with used manifest.  
+Resources for testing can be deleted with used manifest.
 
 ```
 $ kubectl delete -f cafe-ingress-uri.yaml
@@ -1685,16 +1678,16 @@ deployment.apps "tea" deleted
 service "tea-svc" deleted
 ```
 
-### Service Divergence on Host 
-Ingress controller can diverge services based on the host name. The following figure shows the structure of a simple example of service divergence based on the host name. 
+### Service Divergence on Host
+Ingress controller can diverge services based on the host name. The following figure shows the structure of a simple example of service divergence based on the host name.
 
 ![ingress-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/ingress-02.png)
 
-#### Create Services and Pods 
-Create services and pods by using the same manifest as [URI-based Service Divergence](/Container/Kubernetes/en/user-guide/#uri). 
+#### Create Services and Pods
+Create services and pods by using the same manifest as [URI-based Service Divergence](/Container/Kubernetes/en/user-guide/#uri).
 
-#### Create Ingress 
-Write the ingress manifest connecting services based on the host name. Incoming request via the `tea.cafe.example.com` host is connected to the `tea-svc` service, while request via the `coffee.cafe.example.com` host is connected to the `coffee-svc` service.      
+#### Create Ingress
+Write the ingress manifest connecting services based on the host name. Incoming request via the `tea.cafe.example.com` host is connected to the `tea-svc` service, while request via the `coffee.cafe.example.com` host is connected to the `coffee-svc` service.
 
 ```yaml
 # cafe-ingress-host.yaml
@@ -1720,7 +1713,7 @@ spec:
           servicePort: 80
 ```
 
-In a while after ingress is created, IP must be configured at the **ADDRESS** field. 
+In a while after ingress is created, IP must be configured at the **ADDRESS** field.
 
 ```
 $ kubectl apply -f cafe-ingress-host.yaml
@@ -1731,7 +1724,7 @@ NAME                HOSTS                                          ADDRESS      
 cafe-ingress-host   tea.cafe.example.com,coffee.cafe.example.com   123.123.123.44   80      4m29s
 ```
 
-#### Send HTTP Requests 
+#### Send HTTP Requests
 HTTP request is sent from external host to IP configured at the ADDRESS of the ingress controller. Nevertheless, such request must be sent by using host name, since service divergence is based on the host name by configuration.
 
 > [Note]
@@ -1749,7 +1742,7 @@ URI: /
 Request ID: 29fd8a244b9f0a5ff5f35d1dc35edccf
 ```
 
-When a request is sent to the `tea.cafe.example.com` host, it is delivered to `tea-svc` so that the `tea` pod can respond. 
+When a request is sent to the `tea.cafe.example.com` host, it is delivered to `tea-svc` so that the `tea` pod can respond.
 
 ```
 $ curl --resolve tea.cafe.example.com:80:123.123.123.44 http://tea.cafe.example.com/
@@ -1760,7 +1753,7 @@ URI: /
 Request ID: fe61c1589d3ab8ef4ca4507245251ef3
 ```
 
-When it is requested to an unknown host, the ingress controller sends `404 Not Found` as response.  
+When it is requested to an unknown host, the ingress controller sends `404 Not Found` as response.
 
 ```
 $ curl http://123.123.123.44
@@ -1782,11 +1775,11 @@ $ curl --resolve test.example.com:80:123.123.123.44 http://test.example.com/
 </html>
 ```
 
-## Kubernetes Dashboard 
-NHN Kubernetes Service (NKS) provides the default web UI dashboard. For more details on Kubernetes Dashboard, see [Web UI (Dashboard)](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/). 
+## Kubernetes Dashboard
+NHN Kubernetes Service (NKS) provides the default web UI dashboard. For more details on Kubernetes Dashboard, see [Web UI (Dashboard)](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/).
 
 ### Opening Dashboard Services
-User Kubernetes has the `kubernetes-dashboard` service object which has been already created to publicly open dashboard. 
+User Kubernetes has the `kubernetes-dashboard` service object which has been already created to publicly open dashboard.
 
 ```
 $ kubectl get svc kubernetes-dashboard -n kube-system
@@ -1810,22 +1803,22 @@ Events:
 ...
 ```
 
-However, the `kubernetes-dashboard` object belongs to ClusterIP type and is not open out of the cluster. To open up dashboard externally, the service object type must be changed into LoadBalancer, or ingress controller and ingress object must be created.  
+However, the `kubernetes-dashboard` object belongs to ClusterIP type and is not open out of the cluster. To open up dashboard externally, the service object type must be changed into LoadBalancer, or ingress controller and ingress object must be created.
 
-#### Change into LoadBalancer 
+#### Change into LoadBalancer
 
-Once the type of service object is changed into `LoadBalancer`, NHN Cloud Load Balancer is created out of the cluster, which is associated with load balancer and service object. By querying service object associated with the load balanacer, IP of the load balancer is displayed in the **EXTERNAL-IP** field. See [LoadBalancer Service](/Container/Kubernetes/en/user-guide/#loadbalancer) for the description of service objects of the `LoadBalancer` type. The following figure shows the structure of making dashboard public using the `LoadBalancer` type service.
+Once the type of service object is changed into `LoadBalancer`, NHN Cloud Load Balancer is created out of the cluster, which is associated with load balancer and service object. By querying service object associated with the load balancer, IP of the load balancer is displayed in the **EXTERNAL-IP** field. See [LoadBalancer Service](/Container/Kubernetes/en/user-guide/#loadbalancer) for the description of service objects of the `LoadBalancer` type. The following figure shows the structure of making dashboard public using the `LoadBalancer` type service.
 
 ![dashboard-01.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-01.png)
 
-Change the type of the `kubernetes-dashboard` service object to `LoadBalancer`, like below:  
+Change the type of the `kubernetes-dashboard` service object to `LoadBalancer`, like below:
 
 ```
 $ kubectl -n kube-system patch svc/kubernetes-dashboard -p '{"spec":{"type":"LoadBalancer"}}'
 service/kubernetes-dashboard patched
 ```
 
-After the type of service object `kubernetes-dashboard` is changed to `LoadBalancer`, you can check load balancer IP from the **EXTERNAL-IP** field.  
+After the type of service object `kubernetes-dashboard` is changed to `LoadBalancer`, you can check load balancer IP from the **EXTERNAL-IP** field.
 
 ```
 $ kubectl get svc -n kube-system
@@ -1835,21 +1828,21 @@ kubernetes-dashboard   LoadBalancer   10.254.95.176   123.123.123.81   443:30963
 ```
 
 > [Note]
-> Find newly created load balancer on the **Network > Load Balancer** page. 
-> Load balancer IP is a floating IP which is externally accessible. Find it on **Network > Floating IP**.
+> You can view the created load balancer on the **Network > Load Balancer** page.
+> Load balancer IP is a floating IP which is externally accessible. You can check it on the **Network > Floating IP** page.
 
 Access `https://{EXTERNAL-IP}` on the web browser to load the Kubernetes dashboard page. Tokens required for login are available at [Dashboard Access Token](/Container/Kubernetes/en/user-guide/#dashboard-access-token).
 
 > [Note]
-> Since Kubernetes dashboard is based on a private certificate that is automatically created, the page may be displayed as unsafe, depending on the web browser or security setting.  
+> Since Kubernetes dashboard is based on a private certificate that is automatically created, the page may be displayed as unsafe, depending on the web browser or security setting.
 
-#### Open Services with Ingress 
+#### Open Services with Ingress
 
 Ingress refers to the network object providing routing to access many services within a cluster. The setting of an ingress object runs by ingress controller. The `kubernetes-dashboard` service object can go public through ingress. See [Ingress Controller](/Container/Kubernetes/en/user-guide/#ingress-controller) regarding description on ingress and ingress controller. The following figure shows the structure of making dashboard public through ingress.
 
 ![dashboard-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-02.png)
 
-Install `NGINX Ingress Controller` in reference of the [Install NGINX Ingress Controller](/Container/Kubernetes/en/user-guide/#nginx-ingress-controller) and create service of the `LoadBalancer` type. Write manifest to create an ingress object, like below: 
+Install `NGINX Ingress Controller` in reference of the [Install NGINX Ingress Controller](/Container/Kubernetes/en/user-guide/#nginx-ingress-controller) and create service of the `LoadBalancer` type. Write manifest to create an ingress object, like below:
 
 ```yaml
 # kubernetes-dashboard-ingress-tls-passthrough.yaml
@@ -1878,7 +1871,7 @@ spec:
   - secretName: kubernetes-dashboard-certs
 ```
 
-Apply manifest to create ingress, and check **EXTERNAL-IP** of the `ingress-nginx` service object. 
+Apply manifest to create ingress, and check **EXTERNAL-IP** of the `ingress-nginx` service object.
 
 ```
 $ kubectl apply -f kubernetes-dashboard-ingress-tls-passthrough.yaml
@@ -1889,10 +1882,10 @@ NAME            TYPE           CLUSTER-IP       EXTERNAL-IP      PORT(S)        
 ingress-nginx   LoadBalancer   10.254.211.113   123.123.123.29   80:32680/TCP,443:31631/TCP   19h
 ```
 
-Access `https://{EXTERNAL-IP}` on the web browser, and the Kubernetes dashboard page is loaded. See [Dashboard Access Token](/Container/Kubernetes/en/user-guide/#dashboard-access-token) for tokens required for login. 
+Access `https://{EXTERNAL-IP}` on the web browser to load the Kubernetes dashboard page. Tokens required for login are available at [Dashboard Access Token](/Container/Kubernetes/en/user-guide/#dashboard-access-token).
 
-### Dashboard Access Token 
-Token is required to login Kubernetes dashboard. Get tokens with the following command: 
+### Dashboard Access Token
+Token is required to login Kubernetes dashboard. Get tokens with the following command:
 
 ```
 # SECRET_NAME=$(kubectl -n kube-system get secrets | grep "kubernetes-dashboard-token" | cut -f1 -d ' ')
@@ -1901,30 +1894,30 @@ $ kubectl describe secret $SECRET_NAME -n kube-system | grep -E '^token' | cut -
 eyJhbGc...-QmXA
 ```
 
-Enter printed token on the browser, and you can login as user with the administrator role. 
+Enter printed token on the browser, and you can login as user with the administrator role.
 
 
-## Persistent Volume 
-Persistent Volume or PV is a Kubernetes resource representing physical storage volume. One PV is attached to one NHN Cloud Block Storage. For more details, see [Persistent Volume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/). 
+## Persistent Volume
+Persistent Volume or PV is a Kubernetes resource representing physical storage volume. One PV is attached to one NHN Cloud Block Storage. For more details, see [Persistent Volume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/).
 
-Persistent Volume Claims, or PVC is required to attach PV to pods. PVC defines necessary volume requirements, including volume and read/write modes. 
+Persistent Volume Claims, or PVC is required to attach PV to pods. PVC defines necessary volume requirements, including volume and read/write modes.
 
-With PV and PVC, user can define the attributes of a volume of choice, while the system seperates the use of resources from management by assigning volume resources for each user requirement.  
+With PV and PVC, user can define the attributes of a volume of choice, while the system seperates the use of resources from management by assigning volume resources for each user requirement.
 
-### Life Cycle of PV/PVC 
-PV and PVC support the four-phase life cycle. 
+### Life Cycle of PV/PVC
+PV and PVC support the four-phase life cycle.
 
 * Provisioning
 Using [storage classes](https://kubernetes.io/docs/concepts/storage/storage-classes/), users can manually secure a volume and create a PV (static provisioning) or dynamically create a PV (dynamic provisioning).
 
 * Binding
-Bind PV to PVC 1:1. With dynamic provisioning, binding is also automatically executed along with PV provisioning. 
+Bind PV to PVC 1:1. With dynamic provisioning, binding is also automatically executed along with PV provisioning.
 
 * Using
-Mount PV to a pod to make it enabled.  
+Mount PV to a pod to make it enabled.
 
 * Reclaiming
-Volume is reclaimed after it is used up, in three methods: Delete, Retain, or Recycle. 
+Volume is reclaimed after it is used up, in three methods: Delete, Retain, or Recycle.
 
 | Method | Description |
 | --- | --- |
@@ -1933,7 +1926,7 @@ Volume is reclaimed after it is used up, in three methods: Delete, Retain, or Re
 | Recycle | PV is deleted and its attached volumes are made to be reused without being deleted. This method has been deprecated. |
 
 ### Storage Class (StorageClass)
-A storage class must be defined before provisioning. Storage classes provide a way to classify storages by certain characteristics. You can set the information such as media type and availability zone by including information about the storage provider (provisioner).
+A storage class must be defined before provisioning. Storage classes provide a way to classify storages by certain characteristics. You can set the information such as media type and availability zone by including information about the storage provider (provisioner). 
 
 #### Storage Provider (provisioner)
 Set the provider information of storage. Depending on the Kubernetes version, the supported storage provider information is as follows:
@@ -1952,9 +1945,9 @@ The storage class allows you to set the following parameters:
     * Pyeongchon region: **kr2-pub-a** or **kr2-pub-b**
 
 #### Volume Binding Mode (VolumeBindingMode)
-A volume binding mode controls the time when volume binding and dynamic provisioning start. This setting is configurable only if the storage provider is cinder.csi.openstack.org.
+A volume binding mode controls the time when volume binding and dynamic provisioning start. This setting is configurable only if the storage provider is cinder.csi.openstack.org. 
 
-* **Immediate**: Volume binding and dynamic provisioning start as soon as a persistent volume claim is created. When the persistent volume claim is created, there is no prior knowledge of the pods to which the volume will be attached. Therefore, if the availability zone of the volume and the availability zone of the node on which the pod will be scheduled are different, the pod will not work properly.
+* **Immediate**: Volume binding and dynamic provisioning start as soon as a persistent volume claim is created. When the persistent volume claim is created, there is no prior knowledge of the pods to which the volume will be attached. Therefore, if the availability zone of the volume and the availability zone of the node on which the pod will be scheduled are different, the pod will not work properly. 
 * **WaitForFirstConsumer**: Volume binding and dynamic provisioning are not performed when a persistent volume claim is created. When this persistent volume claim is attached to a pod for the first time, volume binding and dynamic provisioning are performed based on the availability zone information of the node on which the pod is scheduled. Therefore, there is no case where the pod does not work properly because the availability zone of the volume and the availability zone of the instance are different, such as in Immediate mode.
 
 #### Example 1
@@ -2049,7 +2042,7 @@ NAME            CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   S
 pv-static-001   10Gi       RWO            Delete           Available           sc-default              7s    Filesystem
 ```
 
-Write a PVC manifest to use the created PV. The PV name must be specified in **spec.volumeName**. Set other items the same as PV manifest. 
+Write a PVC manifest to use the created PV. The PV name must be specified in **spec.volumeName**. Set other items the same as PV manifest.
 
 ```yaml
 # pvc-static.yaml
@@ -2079,7 +2072,7 @@ NAME         STATUS   VOLUME          CAPACITY   ACCESS MODES   STORAGECLASS   A
 pvc-static   Bound    pv-static-001   10Gi       RWO            sc-default     7s    Filesystem
 ```
 
-After the PVC is created, query PV status, and you can find PVC name specified for **CLAIM** and **STATUS** changed into 'Bound'. 
+After the PVC is created, query PV status, and you can find PVC name specified for **CLAIM** and **STATUS** changed into `Bound`.
 
 ```
 $ kubectl get pv -o wide
@@ -2088,9 +2081,9 @@ pv-static-001   10Gi       RWO            Delete           Bound    default/pvc-
 ```
 
 
-### Dynamic Provisioning 
+### Dynamic Provisioning
 
-With Dynamic Provisioning, block storage is automatically created in reference of attributes defined at storage class. There is no need to create PV for dynamic provisioning; therefore, PVC manifest does not require the setting of **spec.volumeName**. 
+With Dynamic Provisioning, block storage is automatically created in reference of attributes defined at storage class. There is no need to create PV for dynamic provisioning; therefore, PVC manifest does not require the setting of **spec.volumeName**.
 
 ```yaml
 # pvc-dynamic.yaml
@@ -2108,7 +2101,7 @@ spec:
   storageClassName: sc-ssd
 ```
 
-If you do not set the volume binding mode or set it to **Immediate** and create a PVC, the PV will be created automatically. At the same time, block storage attached to the PV is also automatically created, and you can check it from the list of block storages on the **Storage > Block Storage** page of the NHN Cloud web console. 
+If you do not set the volume binding mode or set it to **Immediate** and create a PVC, the PV will be created automatically. At the same time, block storage attached to the PV is also automatically created, and you can check it from the list of block storages on the **Storage > Block Storage** page of the NHN Cloud web console.
 
 ```
 $ kubectl apply -f pvc-dynamic.yaml
@@ -2126,14 +2119,14 @@ persistentvolumeclaim/pvc-dynamic   Bound    pvc-c63da3f9-dfcb-4cae-a9a9-6713799
 ```
 
 > [Caution]
-> A block storage created by dynamic provisioning cannot be deleted from the web console. It is not automatically deleted along with a cluster being deleted. Therefore, before a cluster is deleted, all PVCs must be deleted first; otherwise, you may be charged for PVC usage. The reclaimPolicy of PVC created by dynamic provisioning is set to `Delete` by default, so deleting only the PVC will also delete the PV and block storage.  
+> A block storage created by dynamic provisioning cannot be deleted from the web console. It is not automatically deleted along with a cluster being deleted. Therefore, before a cluster is deleted, all PVCs must be deleted first; otherwise, you may be charged for PVC usage. The reclaimPolicy of PVC created by dynamic provisioning is set to `Delete` by default, so deleting only the PVC will also delete the PV and block storage.
 
 
-### Mounting PVC to Pods 
+### Mounting PVC to Pods
 
 To mount PVC to a pod, mount information must be defined at the pod manifest. Enter the PVC name to use in `spec.volumes.persistenVolumeClaim.claimName`; enter paths to mount in `spec.containers.volumeMounts.mountPath`.
 
-In the following example, a PVC created with static provisioning is mounted to `/usr/share/nginx/html` of the pod. 
+In the following example, a PVC created with static provisioning is mounted to `/usr/share/nginx/html` of the pod.
 
 ```yaml
 # pod-pvc.yaml
@@ -2159,7 +2152,7 @@ spec:
         claimName: pvc-static
 ```
 
-Create the pod and see if the block storage has been mounted. 
+Create the pod and see if the block storage has been mounted.
 
 ```
 $ kubectl apply -f pod-static-pvc.yaml
@@ -2176,4 +2169,4 @@ Filesystem      Size  Used Avail Use% Mounted on
 ...
 ```
 
-You can also check block storage attachment information in the  **Storage > Block Storage** service page of the NHN Cloud web console. 
+You can also check block storage attachment information in the **Storage > Block Storage** service page of the NHN Cloud web console.
