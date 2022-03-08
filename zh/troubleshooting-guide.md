@@ -126,7 +126,7 @@ $
 > [Note] The description above is only one of the methods for synchronization. If there is a better way for your environment, you can use it to perform synchronization.
 
 
-#### > The status of the Pod appears as ImagePullBackOff.
+### > The status of the Pod appears as ImagePullBackOff.
 
 Since November 20, 2020, dockerhub has implemented a policy that places the following limits on the number of pull requests for container image. For more information on limits, see [Understanding Docker Hub Rate Limiting](https://www.docker.com/increase-rate-limits) and [Pricing & Subscriptions](https://www.docker.com/pricing).
 
