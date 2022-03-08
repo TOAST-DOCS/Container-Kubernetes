@@ -11,7 +11,7 @@
 #### Feature Updates
 
 * Changed a feature name:
-    * Before change: Reservation script
+    * Before change: Scheduled script
     * After change: User script
 
 ### January 25, 2022
