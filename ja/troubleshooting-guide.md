@@ -124,3 +124,21 @@ $
 
 
 > [参考]上記の内容は同期を行うための1つの方法にすぎません。ユーザーの環境に、より適切な方法があれば、その方法で同期処理を行ってください。
+
+
+#### > Podの状態がImagePullBackOffと表示されます。
+
+2020年11月20日からdockerhubはコンテナイメージpullリクエスト回数に次のような制限を設けるポリシーを実施しました。制限の詳細については、[Understanding Docker Hub Rate Limiting](https://www.docker.com/increase-rate-limits)と[Pricing & Subscriptions](https://www.docker.com/pricing)を参照してください。
+
+
+| アカウント等級 | 2020年11月20日以前 | 2020年11月20日以降 |
+| --- | --- | --- |
+| 未認証ユーザー | 2,500req/6H | 100req/6H |
+| Free Tier | 2,500 req/6H | 200 req/6H |
+| Pro/Team/Large Tier | Unlimit | Unlimit |
+
+NKSのワーカーノードでdockerhubからコンテナイメージをダウンロードする(pull)場合、dockerhubにログインせずに6時間以内に100件以上をダウンロードすると、それ以上イメージを受け取ることができなくなります。特にFloating IPが接続されていないワーカーは共用パブリックIPを利用するため、このような制約がより早くかかることがあります。
+
+解決策は次のとおりです。
+* dockerhubにログインすると、イメージを受け取ることができる数が増え、パブリックIPによる制限ではなくアカウント等級に基づいて制限を受けます。dockerhubアカウントを作成し、必要なpull数を提供するTierに加入してNKSを利用します。 [KubernetesでPrivate Registryを使用する方法](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)を参照してください。
+* dockerhubにログインしていない状況で独立したパブリックIPによる制約を受けたい場合は、ワーカーノードにFloating IPを割り当てます。
