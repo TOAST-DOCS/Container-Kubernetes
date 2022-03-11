@@ -117,7 +117,7 @@ X-Auth-Token: {tokenId}
 | clusters.labels.ca_scale_down_unneeded_time | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：しきい値領域維持時間 |
 | clusters.labels.ca_scale_down_util_thresh | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：リソース使用量しきい値 |
 | clusters.labels.ca_scale_down_delay_after_add | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：増設後の縮小遅延時間 |
-| clusters.labels.user_script | Body | String | 予約スクリプト |
+| clusters.labels.user_script | Body | String | ユーザースクリプト |
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Kubernetes APIエンドポイントに公認ドメインアドレスを作成するかどうか("True" / "False") |
 
 
@@ -152,7 +152,7 @@ X-Auth-Token: {tokenId}
                 "external_subnet_id_list": "59ddc195-76b1-431d-9693-f09880747dc6",
                 "flavor_type": "core",
                 "hypervisor_type": "qemu",
-                "kube_tag": "v1.17.6",
+                "kube_tag": "v1.23.3",
                 "kube_version_status": "NEED_UPGRADE",
                 "login_username": "centos",
                 "master_lb_floating_ip_enabled": "true",
@@ -246,7 +246,7 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_unneeded_time | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：しきい値領域維持時間 |
 | labels.ca_scale_down_util_thresh | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：リソース使用量しきい値 |
 | labels.ca_scale_down_delay_after_add | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：増設後の縮小遅延時間 |
-| labels.user_script | Body | String | 予約スクリプト |
+| labels.user_script | Body | String | ユーザースクリプト |
 | labels.master_lb_floating_ip_enabled | Body | String | Kubernetes APIエンドポイントに公認ドメインアドレスを作成するかどうか("True" / "False") |
 
 <details><summary>例</summary>
@@ -256,7 +256,7 @@ X-Auth-Token: {tokenId}
 {
     "api_address": "https://2b778d83-alp-kr2-k8s.container.cloud.toast.com:6443",
     "cluster_template_id": "b4503d97-6012-499d-a31a-5200f94a7890",
-    "coe_version": "v1.17.6",
+    "coe_version": "v1.23.3",
     "container_version": "1.12.6",
     "create_timeout": 60,
     "created_at": "2021-08-05T01:48:39+00:00",
@@ -288,7 +288,7 @@ X-Auth-Token: {tokenId}
         "external_subnet_id_list": "59ddc195-76b1-431d-9693-f09880747dc6",
         "flavor_type": "core",
         "hypervisor_type": "qemu",
-        "kube_tag": "v1.17.6",
+        "kube_tag": "v1.23.3",
         "kube_version_status": "NEED_UPGRADE",
         "login_username": "centos",
         "master_lb_floating_ip_enabled": "true",
@@ -368,7 +368,7 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_util_thresh | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：リソース使用量しきい値 |
 | labels.ca_scale_down_delay_after_add | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：増設後の縮小遅延時間 |
 | labels.kube_tag | Body | String | O | Kubernetesバージョン |
-| labels.user_script | Body | String | X | 予約スクリプト |
+| labels.user_script | Body | String | X | ユーザースクリプト |
 | labels.master_lb_floating_ip_enabled | Body | String | O | Kubernetes APIエンドポイントに公認ドメインアドレスを作成するかどうか("True" / "False")<br>labels.external_network_idとexternal_subnet_id_listが設定されている場合にのみ"True"に設定可能 |
 | flavor_id | Body | UUID | O | 基本ワーカーノードグループ適用：ノードインスタンスタイプUUID |
 | fixed_network | Body | UUID | O | VPC Network UUID |
@@ -400,7 +400,7 @@ X-Auth-Token: {tokenId}
         "clusterautoscale": "nodegroupfeature",
         "external_network_id": "751b8227-7b45-440a-9349-dbf829d0aba5",
         "external_subnet_id_list": "59ddc195-76b1-431d-9693-f09880747dc6",
-        "kube_tag": "v1.17.6",
+        "kube_tag": "v1.23.3",
         "master_lb_floating_ip_enabled": "true",
         "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
         "user_script": ""
@@ -698,7 +698,7 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_util_thresh | Body | String | ワーカーノードグループ適用：オートスケーラー：リソース使用量しきい値 |
 | labels.ca_scale_down_delay_after_add | Body | String | ワーカーノードグループ適用：オートスケーラー：増設後の縮小遅延時間 |
 | labels.kube_tag | Body | String | ワーカーノードグループKubernetesバージョン |
-| labels.user_script | Body | String | 予約スクリプト |
+| labels.user_script | Body | String | ユーザースクリプト |
 | max_node_count | Body | Integer | 最大ノード数 |
 | min_node_count | Body | Integer | 最小ノード数 |
 | node_addresses | Body | String list | ノードIPアドレスリスト |
@@ -818,7 +818,7 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_unneeded_time | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：しきい値領域維持時間 |
 | labels.ca_scale_down_util_thresh | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：リソース使用量しきい値 |
 | labels.ca_scale_down_delay_after_add | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：増設後の縮小遅延時間 |
-| labels.user_script | Body | String | X | 予約スクリプト |
+| labels.user_script | Body | String | X | ユーザースクリプト |
 | name | BODY | String | O | ノードグループ名 |
 | node_count | Body | Integer | X | ノード数(デフォルト値: 1) |
 
@@ -863,7 +863,7 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_unneeded_time | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：しきい値領域維持時間 |
 | labels.ca_scale_down_util_thresh | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：リソース使用量しきい値 |
 | labels.ca_scale_down_delay_after_add | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：増設後の縮小遅延時間 |
-| labels.user_script | Body | String | 予約スクリプト |
+| labels.user_script | Body | String | ユーザースクリプト |
 | max_node_count | Body | Integer | 最大ノード数 |
 | min_node_count | Body | Integer | 最小ノード数 |
 | name | BODY | String | ノードグループ名 |
@@ -1169,10 +1169,11 @@ X-Auth-Token: {tokenId}
     "supported_k8s": {
         "v1.17.6": false,
         "v1.18.19": false,
-        "v1.19.13": true,
+        "v1.19.13": false,
         "v1.20.12": true,
         "v1.21.6": true,
-        "v1.22.3": true
+        "v1.22.3": true,
+        "v1.23.3": true
     }
 }
 ```

@@ -1,5 +1,19 @@
 ## Container > NHN Kubernetes Service (NKS) > Release Notes
 
+### March 29, 2022
+
+#### Added Features
+
+* Added support for Kubernetes v1.23.3.
+* Kubernetes v1.19.13 is no longer supported for cluster creation. However, the clusters in use are not affected.
+* When you set the load balancer's listener protocol to TERMINATED_HTTPS, the SSL version can be set to TLSv1.3.
+
+#### Feature Updates
+
+* Changed a feature name:
+    * Before change: Scheduled script
+    * After change: User script
+
 ### January 25, 2022
 
 #### Feature Updates
@@ -12,7 +26,7 @@
     * v1.21.6
     * v1.22.3
 
-* The following Kubernetes versions do not support cluster creation (however, the clusters you are using are not affected).
+* Cluster creation is not supported for the following Kubernetes versions. However, the clusters in use are not affected.
     * v1.17.6
     * v1.18.19
 
@@ -38,7 +52,7 @@
 
 #### Added Features
 * Released the public API for the Kubernetes service.
-     * For details on the public API, refer to [API Guide](/Container/Kubernetes/zh/public-api).
+     * For details on the public API, refer to [API Guide](/Container/NKS/zh/public-api).
 
 ### October 26, 2021
 
@@ -53,11 +67,11 @@
 
 #### Added Features
 
-* Scheduled script feature is available when creating node groups.
+* A user script feature is available when creating node groups.
 * Added container log rotation setting to the worker nodes.
     * Image update
         * CentOS 7.8 - Container (2021.07.27)
-    * Refer to [Troubleshooting Guide](/Container/Kubernetes/zh/troubleshooting-guide) for details on container log management.
+    * Refer to [Troubleshooting Guide](/Container/NKS/zh/troubleshooting-guide) for details on container log management.
 
 ### June 29, 2021
 

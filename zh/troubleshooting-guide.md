@@ -124,3 +124,21 @@ $
 
 
 > [Note] The description above is only one of the methods for synchronization. If there is a better way for your environment, you can use it to perform synchronization.
+
+
+### > The status of the Pod appears as ImagePullBackOff.
+
+Since November 20, 2020, dockerhub has implemented a policy that places the following limits on the number of pull requests for container image. For more information on limits, see [Understanding Docker Hub Rate Limiting](https://www.docker.com/increase-rate-limits) and [Pricing & Subscriptions](https://www.docker.com/pricing).
+
+
+| Account level | Before November 20, 2020 | Since November 20, 2020 |
+| --- | --- | --- |
+| Unauthenticated user | 2,500req/6H | 100req/6H |
+| Free Tier | 2,500 req/6H | 200 req/6H |
+| Pro/Team/Large Tier | Unlimited | Unlimited |
+
+In the case of pulling container images from dockerhub on the worker node of NKS, if you download more than 100 images within 6 hours without logging in to dockerhub, you will no longer be able to download images. In particular, workers that do not have floating IPs associated can reach the limit faster because they use public IPs.
+
+The solutions are as follows:
+* If you log in to dockerhub, the number of images you can download increases, and you are limited by account level, not by public IP. Create a dockerhub account, sign up for a tier that provides the desired number of pulls, and use NKS. See [How to use a Private Registry with Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/).
+* If you want to be limited by an independent public IP without logging in to dockerhub, assign a floating IP to the worker node. 

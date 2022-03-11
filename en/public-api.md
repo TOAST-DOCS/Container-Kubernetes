@@ -10,7 +10,7 @@ All API calls are made using the `kubernetes` type endpoint.
 | kubernetes | Korea (Pangyo) Region <br> Korea (Pyeongchon) Region | https://kr1-api-kubernetes.infrastructure.cloud.toast.com <br>https://kr2-api-kubernetes.infrastructure.cloud.toast.com |
 
 
-Fields not specified in the guide may appear in API responses. These fields are used for internal use by NHN Cloud and are subject to change without prior notice, so please do not use them.
+Fields not specified in the guide may appear in API responses. These fields are used for internal use by NHN Cloud and are subject to change without prior notice, so we advise you not to use them.
 
 ## Check the Information of Resources Used in API
 
@@ -117,7 +117,7 @@ This API does not require a request body.
 | clusters.labels.ca_scale_down_unneeded_time | Body | String | Applied to the default worker node group: Autoscaler: Scale down unneeded time |
 | clusters.labels.ca_scale_down_util_thresh | Body | String | Applied to the default worker node group: Autoscaler: Scale down utilization threshold  |
 | clusters.labels.ca_scale_down_delay_after_add | Body | String | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
-| clusters.labels.user_script | Body | String | Scheduled script |
+| clusters.labels.user_script | Body | String | User script |
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Whether to create a public domain address for Kubernetes API endpoint ("True" / "False") |
 
 
@@ -152,7 +152,7 @@ This API does not require a request body.
                 "external_subnet_id_list": "59ddc195-76b1-431d-9693-f09880747dc6",
                 "flavor_type": "core",
                 "hypervisor_type": "qemu",
-                "kube_tag": "v1.17.6",
+                "kube_tag": "v1.23.3",
                 "kube_version_status": "NEED_UPGRADE",
                 "login_username": "centos",
                 "master_lb_floating_ip_enabled": "true",
@@ -246,7 +246,7 @@ This API does not require a request body.
 | labels.ca_scale_down_unneeded_time | Body | String | Applied to the default worker node group: Autoscaler: Scale down unneeded time |
 | labels.ca_scale_down_util_thresh | Body | String | Applied to the default worker node group: Autoscaler: Scale down utilization threshold  |
 | labels.ca_scale_down_delay_after_add | Body | String | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
-| labels.user_script | Body | String | Scheduled script |
+| labels.user_script | Body | String | User script |
 | labels.master_lb_floating_ip_enabled | Body | String | Whether to create a public domain address for Kubernetes API endpoint ("True" / "False") |
 
 <details><summary>Example</summary>
@@ -256,7 +256,7 @@ This API does not require a request body.
 {
     "api_address": "https://2b778d83-kr2-k8s.container.cloud.toast.com:6443",
     "cluster_template_id": "b4503d97-6012-499d-a31a-5200f94a7890",
-    "coe_version": "v1.17.6",
+    "coe_version": "v1.23.3",
     "container_version": "1.12.6",
     "create_timeout": 60,
     "created_at": "2021-08-05T01:48:39+00:00",
@@ -288,7 +288,7 @@ This API does not require a request body.
         "external_subnet_id_list": "59ddc195-76b1-431d-9693-f09880747dc6",
         "flavor_type": "core",
         "hypervisor_type": "qemu",
-        "kube_tag": "v1.17.6",
+        "kube_tag": "v1.23.3",
         "kube_version_status": "NEED_UPGRADE",
         "login_username": "centos",
         "master_lb_floating_ip_enabled": "true",
@@ -368,7 +368,7 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_util_thresh | Body | String | X | Applied to the default worker node group: Autoscaler: Scale down utilization threshold  |
 | labels.ca_scale_down_delay_after_add | Body | String | X | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
 | labels.kube_tag | Body | String | O | Kubernetes Version |
-| labels.user_script | Body | String | X | Scheduled script |
+| labels.user_script | Body | String | X | User script |
 | labels.master_lb_floating_ip_enabled | Body | String | O | Whether to create a public domain address for Kubernetes API endpoint ("True" / "False")<br>Can be set to "True" only when labels.external_network_id and labels.external_subnet_id_list are set |
 | flavor_id | Body | UUID | O | Applied to the default worker node group: Node flavor UUID |
 | fixed_network | Body | UUID | O | VPC Network UUID |
@@ -400,7 +400,7 @@ X-Auth-Token: {tokenId}
         "clusterautoscale": "nodegroupfeature",
         "external_network_id": "751b8227-7b45-440a-9349-dbf829d0aba5",
         "external_subnet_id_list": "59ddc195-76b1-431d-9693-f09880747dc6",
-        "kube_tag": "v1.17.6",
+        "kube_tag": "v1.23.3",
         "master_lb_floating_ip_enabled": "true",
         "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
         "user_script": ""
@@ -698,7 +698,7 @@ This API does not require a request body.
 | labels.ca_scale_down_util_thresh | Body | String | Applied to the worker node group: Autoscaler: Scale down utilization threshold  |
 | labels.ca_scale_down_delay_after_add | Body | String | Applied to the worker node group: Auto Scaler: Scale down delay after add |
 | labels.kube_tag | Body | String | Kubernetes version of the worker node group |
-| labels.user_script | Body | String | Scheduled script |
+| labels.user_script | Body | String | User script |
 | max_node_count | Body | Integer | Maximum Node Count |
 | min_node_count | Body | Integer | Minimum Node Count |
 | node_addresses | Body | String list | List of node IP addresses |
@@ -818,7 +818,7 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_unneeded_time | Body | String | X | Applied to the default worker node group: Autoscaler: Scale down unneeded time |
 | labels.ca_scale_down_util_thresh | Body | String | X | Applied to the default worker node group: Autoscaler: Scale down utilization threshold  |
 | labels.ca_scale_down_delay_after_add | Body | String | X | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
-| labels.user_script | Body | String | X | Scheduled script |
+| labels.user_script | Body | String | X | User script |
 | name | Body | String | O | Node Group Name |
 | node_count | Body | Integer | X | Number of nodes (Default: 1) |
 
@@ -863,7 +863,7 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_unneeded_time | Body | String | Applied to the default worker node group: Autoscaler: Scale down unneeded time |
 | labels.ca_scale_down_util_thresh | Body | String | Applied to the default worker node group: Autoscaler: Scale down utilization threshold  |
 | labels.ca_scale_down_delay_after_add | Body | String | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
-| labels.user_script | Body | String | Scheduled script |
+| labels.user_script | Body | String | User script |
 | max_node_count | Body | Integer | Maximum Node Count |
 | min_node_count | Body | Integer | Minimum Node Count |
 | name | Body | String | Node Group Name |
@@ -1169,10 +1169,11 @@ This API does not require a request body.
     "supported_k8s": {
         "v1.17.6": false,
         "v1.18.19": false,
-        "v1.19.13": true,
+        "v1.19.13": false,
         "v1.20.12": true,
         "v1.21.6": true,
-        "v1.22.3": true
+        "v1.22.3": true,
+        "v1.23.3": true
     }
 }
 ```

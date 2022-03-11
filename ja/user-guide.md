@@ -30,6 +30,7 @@ NHN Kubernetes Service(NKS)は複数のバージョンをサポートしてい�
 | v1.20.12 | 可能 | 可能 |
 | v1.21.6 | 可能 | 可能 |
 | v1.22.3 | 可能 | 可能 |
+| v1.23.3 | 可能 | 可能 |
 
 
 必要な情報を入力し、**クラスター作成**ボタンを押すと、クラスターの作成が始まります。クラスターリストで状態を確認できます。作成には約10分かかります。クラスターの設定によっては、さらに時間がかかる場合もあります。
@@ -89,6 +90,9 @@ NHN Kubernetes Service(NKS)は複数のバージョンをサポートしてい�
 | ブロックストレージサイズ | 追加ノードグループインスタンスのブロックストレージサイズ |
 
 必要な情報を入力し、**ノードグループ作成**ボタンを押すと、ノードグループの作成が始まります。ノードグループリストで状態を確認できます。ノードグループの作成には約5分かかります。ノードグループの設定によっては、さらに時間がかかる場合もあります。
+
+>[注意]
+>該当クラスタを作成したユーザーのみノードグループを作成できます。
 
 ### ノードグループ削除
 ノードグループリストから削除するノードグループを選択し、**ノードグループ削除**ボタンを押すと、削除が行われます。ノードグループの削除には約5分かかります。ノードグループの状態によっては、さらに時間がかかる場合もあります。
@@ -370,7 +374,7 @@ nginx-deployment-756fd4cdf-x7ns5   0/1     Pending   0          34s
 ```
 # kubectl get nodes
 NAME                                            STATUS   ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   45m   v1.17.6
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   45m   v1.23.3
 ```
 
 約5～10分後、以下のようにノードが増設されたことを確認できます。
@@ -378,9 +382,9 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   45m   v1.17.6
 ```
 # kubectl get nodes
 NAME                                            STATUS   ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   48m   v1.17.6
-autoscaler-test-default-w-ohw5ab5wpzug-node-1   Ready    <none>   77s   v1.17.6
-autoscaler-test-default-w-ohw5ab5wpzug-node-2   Ready    <none>   78s   v1.17.6
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   48m   v1.23.3
+autoscaler-test-default-w-ohw5ab5wpzug-node-1   Ready    <none>   77s   v1.23.3
+autoscaler-test-default-w-ohw5ab5wpzug-node-2   Ready    <none>   78s   v1.23.3
 ```
 
 `Pending`状態だったPodがノード増設後に正常スケジューリングされたことを確認できます。
@@ -448,7 +452,7 @@ No resources found in default namespace.
 ```
 # kubectl get nodes
 NAME                                            STATUS   ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   71m   v1.17.6
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   71m   v1.23.3
 ```
 
 ノード削除イベントは、下記のコマンドで確認できます。
@@ -664,8 +668,8 @@ data:
 ```
 # kubectl get nodes
 NAME                                            STATUS     ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready      <none>   22d   v1.17.6
-autoscaler-test-default-w-ohw5ab5wpzug-node-8   Ready      <none>   90s   v1.17.6
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready      <none>   22d   v1.23.3
+autoscaler-test-default-w-ohw5ab5wpzug-node-8   Ready      <none>   90s   v1.23.3
 ```
 
 Pending状態だったPodが全て正常スケジューリングされてRunning状態になったことを確認できます。
@@ -695,23 +699,23 @@ Podの数が減ってノードのリソース使用量が減るとノードが�
 ```
 # kubectl get nodes
 NAME                                            STATUS   ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.17.6
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 ```
 
 
-### 予約スクリプト
-クラスタを作成する時と追加ノードグループを作成する時、予約スクリプトを登録できます。予約スクリプト機能には次のような特徴があります。
+### ユーザースクリプト
+クラスタを作成する時と追加ノードグループを作成する時、ユーザースクリプトを登録できます。ユーザースクリプト機能には次のような特徴があります。
 
 * 機能設定
     * この機能はワーカーノードグループごとに設定できます。
-    * クラスタ作成時に入力した予約スクリプトは基本ワーカーノードグループに適用されます。
-    * 追加ノードグループの作成時に入力した予約スクリプトは該当ワーカーノードグループに適用されます。
-    * ワーカーノードグループが作成された後は予約スクリプトの内容を変更できません。
+    * クラスタ作成時に入力したユーザースクリプトは基本ワーカーノードグループに適用されます。
+    * 追加ノードグループの作成時に入力したユーザースクリプトは該当ワーカーノードグループに適用されます。
+    * ワーカーノードグループが作成された後はユーザースクリプトの内容を変更できません。
 * スクリプト実行タイミング
-    * 予約スクリプトはワーカーノード初期化プロセスのうち、インスタンス初期化プロセスで実行されます。
-    * 予約スクリプトが実行された後、そのインスタンスを「ワーカーノードグループ」のワーカーノードに設定して登録します。
+    * ユーザースクリプトはワーカーノード初期化プロセスのうち、インスタンス初期化プロセスで実行されます。
+    * ユーザースクリプトが実行された後、そのインスタンスを「ワーカーノードグループ」のワーカーノードに設定して登録します。
 * スクリプト内容
-    * 予約スクリプトの最初の行は必ず#!で始まる必要があります。
+    * ユーザースクリプトの最初の行は必ず#!で始まる必要があります。
     * スクリプトの最大サイズは64KBです。
     * スクリプトはroot権限で実行されます。
     * スクリプトの実行記録は以下の位置に保存されます。
@@ -946,16 +950,16 @@ NHN CloudのKubernetesクラスタバージョン管理方式とKubernetesバー
 
 次の例はKubernetesバージョンのアップグレード可否を表にしたものです。例に使用された条件は次のとおりです。 
 
-* NHN CloudがサポートするKubernetesバージョンリスト：v1.17.6, v1.18.19, v1.19.10
-* クラスタはv1.17.6で作成
+* NHN CloudがサポートするKubernetesバージョンリスト：v1.21.6, v1.22.3, v1.23.3
+* クラスタはv1.21.6で作成
 
 |状態 | マスターバージョン | マスターアップグレード可否 | ワーカーノードグループバージョン | ワーカーノードグループアップグレード可否
  | --- | :-: | :-: | :-: | :-: |
- | 初期状態| v1.17.6 | 可能(注1) | v1.17.6 | 不可能(注2) | 
- | マスターアップグレード後の状態 | v1.18.19 | 不可(注3) | v1.17.6 | 可能(注4) | 
-| ワーカーノードグループアップグレード後の状態 | v1.18.19 | 可能(注1) | v1.18.19 | 不可(注2) |
- | マスターアップグレード後の状態 | v1.19.10 | 不可(注3) | v1.18.19 | 可能(注4) | 
-| ワーカーノードグループアップグレード後の状態 | v1.19.10 | 不可(注5) | v1.19.10 | 不可(注2)| 
+ | 初期状態| v1.21.6 | 可能(注1) | v1.21.6 | 不可(注2) | 
+ | マスターアップグレード後の状態 | v1.22.3 | 不可(注3) | v1.21.6 | 可能(注4) | 
+| ワーカーノードグループアップグレード後の状態 | v1.22.3 | 可能(注1) | v1.22.3 | 不可(注2) |
+ | マスターアップグレード後の状態 | v1.23.3 | 不可(注3) | v1.22.3 | 可能(注4) | 
+| ワーカーノードグループアップグレード後の状態 | v1.23.3 | 不可(注5) | v1.23.3 | 不可(注2)| 
 
 (注1)マスターとすべてのワーカーノードグループのバージョンが一致する状態のためアップグレード可能
 (注2)ワーカーノードグループはマスターがアップグレードされた後にアップグレード可能
@@ -1299,11 +1303,16 @@ SSLバージョンは次のように設定できます。
 * 設定位置は .metadata.annotations下のloadbalancer.nhncloud/listener-terminated-https-tls-versionです。
 * リスナー別設定を適用できます。
 * 次のいずれかに設定できます。
-    * TLSv1.2：未設定時のデフォルト値です。
+    * TLSv1.3：未設定時のデフォルト値です。
+    * TLSv1.2
     * TLSv1.1
     * TLSv1.0_2016
     * TLSv1.0
     * SSLv3
+
+> [注意]
+> TLSv1.3は2022年3月29日以降に作成されたクラスタで設定可能です。
+
 
 証明書情報は次のように設定できます。
 
@@ -1663,7 +1672,7 @@ service "tea-svc" deleted
 ![ingress-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/ingress-02.png)
 
 #### サービスとPod作成
-[URIベースのサービス分岐](/Container/Kubernetes/ja/user-guide/#uri)と同じマニフェストを利用してサービスとPodを作成します。
+[URIベースのサービス分岐](/Container/NKS/ja/user-guide/#uri)と同じマニフェストを利用してサービスとPodを作成します。
 
 #### イングレス作成
 ホスト名に基づいてサービスに接続するイングレスマニフェストを作成します。 `tea.cafe.example.com`ホストに入ったリクエストは`tea-svc`サービスに接続し、`coffee.cafe.example.com`ホストに入ったリクエストは`coffee-svc`サービスに接続します。
@@ -1786,7 +1795,7 @@ Events:
 
 #### LoadBalancerサービスオブジェクトに変更
 
-`LoadBalancer`タイプにサービスオブジェクトを変更すると、クラスタ外部にNHN Cloud Load Balancerが作成され、ロードバランサーとサービスオブジェクトに接続されます。ロードバランサーに接続したサービスオブジェクトを照会すると**EXTERNAL-IP**フィールドにロードバランサーのIPが表示されます。 `LoadBalancer`タイプのサービスオブジェクトについては[LoadBalancerサービス](/Container/Kubernetes/ja/user-guide/#loadbalancer)を参照してください。次の図は`LoadBalancer`タイプのサービスを利用してダッシュボードを外部に公開する構造を表しています。
+`LoadBalancer`タイプにサービスオブジェクトを変更すると、クラスタ外部にNHN Cloud Load Balancerが作成され、ロードバランサーとサービスオブジェクトに接続されます。ロードバランサーに接続したサービスオブジェクトを照会すると**EXTERNAL-IP**フィールドにロードバランサーのIPが表示されます。 `LoadBalancer`タイプのサービスオブジェクトについては[LoadBalancerサービス](/Container/NKS/ja/user-guide/#loadbalancer)を参照してください。次の図は`LoadBalancer`タイプのサービスを利用してダッシュボードを外部に公開する構造を表しています。
 
 ![dashboard-01.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-01.png)
 
@@ -1810,18 +1819,18 @@ kubernetes-dashboard   LoadBalancer   10.254.95.176   123.123.123.81   443:30963
 > 作成されたロードバランサーは **Network > Load Balancer**ページで確認できます。
 > ロードバランサーのIPは外部からアクセスできるFloating IPです。 **Network > Floating IP**ページで確認できます。
 
-Webブラウザで`https://{EXTERNAL-IP}`に接続するとKubernetesダッシュボードページがローディングされます。ログインのために必要なトークンは[ダッシュボードアクセストークン](/Container/Kubernetes/ja/user-guide/#_49)を参照してください。
+Webブラウザで`https://{EXTERNAL-IP}`に接続するとKubernetesダッシュボードページがローディングされます。ログインのために必要なトークンは[ダッシュボードアクセストークン](/Container/NKS/ja/user-guide/#_49)を参照してください。
 
 > [参考]
 > Kubernetesダッシュボードは自動作成されるプライベート証明書を使用するため、Webブラウザの種類とセキュリティ設定によっては安全ではないページと表示されることがあります。
 
 #### イングレス(Ingress)を利用したサービス公開
 
-イングレスは、クラスタ内部の複数のサービスにアクセスするためのルーティングを提供するネットワークオブジェクトです。イングレスオブジェクトの設定は、イングレスコントローラーで動作します。 `kubernetes-dashboard`サービスオブジェクトをイングレスを介して公開できます。イングレスとイングレスコントローラーの詳細については[イングレスコントローラー](/Container/Kubernetes/ja/user-guide/#_42)を参照してください。次の図はイングレスを介してダッシュボードを外部に公開する構造を表しています。
+イングレスは、クラスタ内部の複数のサービスにアクセスするためのルーティングを提供するネットワークオブジェクトです。イングレスオブジェクトの設定は、イングレスコントローラーで動作します。 `kubernetes-dashboard`サービスオブジェクトをイングレスを介して公開できます。イングレスとイングレスコントローラーの詳細については[イングレスコントローラー](/Container/NKS/ja/user-guide/#_42)を参照してください。次の図はイングレスを介してダッシュボードを外部に公開する構造を表しています。
 
 ![dashboard-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-02.png)
 
-[NGINX Ingress Controllerインストール](/Container/Kubernetes/ja/user-guide/#nginx-ingress-controller)を参照して`NGINX Ingress Controller`をインストールして`LoadBalancer`タイプのサービスを作成します。そして次のようにイングレスオブジェクトを作成するためのマニフェストを作成します。
+[NGINX Ingress Controllerインストール](/Container/NKS/ja/user-guide/#nginx-ingress-controller)を参照して`NGINX Ingress Controller`をインストールして`LoadBalancer`タイプのサービスを作成します。そして次のようにイングレスオブジェクトを作成するためのマニフェストを作成します。
 
 ```yaml
 # kubernetes-dashboard-ingress-tls-passthrough.yaml
@@ -1861,7 +1870,7 @@ NAME            TYPE           CLUSTER-IP       EXTERNAL-IP      PORT(S)        
 ingress-nginx   LoadBalancer   10.254.211.113   123.123.123.29   80:32680/TCP,443:31631/TCP   19h
 ```
 
-Webブラウザで`https://{EXTERNAL-IP}`に接続するとKubernetesダッシュボードページがローディングされます。ログインのために必要なトークンは[ダッシュボードアクセストークン](/Container/Kubernetes/ja/user-guide/#_49)を参照してください。
+Webブラウザで`https://{EXTERNAL-IP}`に接続するとKubernetesダッシュボードページがローディングされます。ログインのために必要なトークンは[ダッシュボードアクセストークン](/Container/NKS/ja/user-guide/#_49)を参照してください。
 
 ### ダッシュボードアクセストークン
 Kubernetesダッシュボードにログインするにはトークンが必要です。トークンは次のコマンドで取得できます。
