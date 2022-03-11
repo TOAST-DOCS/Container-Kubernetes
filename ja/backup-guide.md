@@ -40,7 +40,7 @@ Object Storage APIの詳細については[Object Storage APIガイド](https://
 
 Veleroクライアントはクラスタのバックアップおよび復元コマンドを入力するプログラムです。
 Velero GithubリポジトリからVeleroクライアントをダウンロードして、クラスタのバックアップおよび復元に活用できます。ダウンロードしたVeleroクライアントコマンドを実行する前にバックアップおよび復元クラスタのkubeconfigファイルをWebコンソールからダウンロードし、KUBECONFIG環境変数を設定してバックアップおよび復元対象クラスタを正確に指定する必要があります。
-kubeconfig設定の詳細については[kubectlインストール](https://docs.toast.com/ko/Container/Kubernetes/ko/user-guide/#kubectl)を参照してください。
+kubeconfig設定の詳細については[kubectlインストール](/Container/NKS/ja/user-guide/#kubectl)を参照してください。
 
 #### Veleroクライアントのダウンロード
 

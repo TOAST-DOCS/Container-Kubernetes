@@ -1684,7 +1684,7 @@ Ingress controller can diverge services based on the host name. The following fi
 ![ingress-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/ingress-02.png)
 
 #### Create Services and Pods
-Create services and pods by using the same manifest as [URI-based Service Divergence](/Container/Kubernetes/zh/user-guide/#uri).
+Create services and pods by using the same manifest as [URI-based Service Divergence](/Container/NKS/zh/user-guide/#uri).
 
 #### Create Ingress
 Write the ingress manifest connecting services based on the host name. Incoming request via the `tea.cafe.example.com` host is connected to the `tea-svc` service, while request via the `coffee.cafe.example.com` host is connected to the `coffee-svc` service.
@@ -1807,7 +1807,7 @@ However, the `kubernetes-dashboard` object belongs to ClusterIP type and is not 
 
 #### Change into LoadBalancer
 
-Once the type of service object is changed into `LoadBalancer`, NHN Cloud Load Balancer is created out of the cluster, which is associated with load balancer and service object. By querying service object associated with the load balancer, IP of the load balancer is displayed in the **EXTERNAL-IP** field. See [LoadBalancer Service](/Container/Kubernetes/zh/user-guide/#loadbalancer) for the description of service objects of the `LoadBalancer` type. The following figure shows the structure of making dashboard public using the `LoadBalancer` type service.
+Once the type of service object is changed into `LoadBalancer`, NHN Cloud Load Balancer is created out of the cluster, which is associated with load balancer and service object. By querying service object associated with the load balancer, IP of the load balancer is displayed in the **EXTERNAL-IP** field. See [LoadBalancer Service](/Container/NKS/zh/user-guide/#loadbalancer) for the description of service objects of the `LoadBalancer` type. The following figure shows the structure of making dashboard public using the `LoadBalancer` type service.
 
 ![dashboard-01.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-01.png)
 
@@ -1831,18 +1831,18 @@ kubernetes-dashboard   LoadBalancer   10.254.95.176   123.123.123.81   443:30963
 > You can view the created load balancer on the **Network > Load Balancer** page.
 > Load balancer IP is a floating IP which is externally accessible. You can check it on the **Network > Floating IP** page.
 
-Access `https://{EXTERNAL-IP}` on the web browser to load the Kubernetes dashboard page. Tokens required for login are available at [Dashboard Access Token](/Container/Kubernetes/zh/user-guide/#dashboard-access-token).
+Access `https://{EXTERNAL-IP}` on the web browser to load the Kubernetes dashboard page. Tokens required for login are available at [Dashboard Access Token](/Container/NKS/zh/user-guide/#dashboard-access-token).
 
 > [Note]
 > Since Kubernetes dashboard is based on a private certificate that is automatically created, the page may be displayed as unsafe, depending on the web browser or security setting.
 
 #### Open Services with Ingress
 
-Ingress refers to the network object providing routing to access many services within a cluster. The setting of an ingress object runs by ingress controller. The `kubernetes-dashboard` service object can go public through ingress. See [Ingress Controller](/Container/Kubernetes/zh/user-guide/#ingress-controller) regarding description on ingress and ingress controller. The following figure shows the structure of making dashboard public through ingress.
+Ingress refers to the network object providing routing to access many services within a cluster. The setting of an ingress object runs by ingress controller. The `kubernetes-dashboard` service object can go public through ingress. See [Ingress Controller](/Container/NKS/zh/user-guide/#ingress-controller) regarding description on ingress and ingress controller. The following figure shows the structure of making dashboard public through ingress.
 
 ![dashboard-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-02.png)
 
-Install `NGINX Ingress Controller` in reference of the [Install NGINX Ingress Controller](/Container/Kubernetes/zh/user-guide/#nginx-ingress-controller) and create service of the `LoadBalancer` type. Write manifest to create an ingress object, like below:
+Install `NGINX Ingress Controller` in reference of the [Install NGINX Ingress Controller](/Container/NKS/zh/user-guide/#nginx-ingress-controller) and create service of the `LoadBalancer` type. Write manifest to create an ingress object, like below:
 
 ```yaml
 # kubernetes-dashboard-ingress-tls-passthrough.yaml
@@ -1882,7 +1882,7 @@ NAME            TYPE           CLUSTER-IP       EXTERNAL-IP      PORT(S)        
 ingress-nginx   LoadBalancer   10.254.211.113   123.123.123.29   80:32680/TCP,443:31631/TCP   19h
 ```
 
-Access `https://{EXTERNAL-IP}` on the web browser to load the Kubernetes dashboard page. Tokens required for login are available at [Dashboard Access Token](/Container/Kubernetes/zh/user-guide/#dashboard-access-token).
+Access `https://{EXTERNAL-IP}` on the web browser to load the Kubernetes dashboard page. Tokens required for login are available at [Dashboard Access Token](/Container/NKS/zh/user-guide/#dashboard-access-token).
 
 ### Dashboard Access Token
 Token is required to login Kubernetes dashboard. Get tokens with the following command:

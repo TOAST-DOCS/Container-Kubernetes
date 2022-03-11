@@ -40,7 +40,7 @@ Object Storage API에 대한 자세한 내용은 [Object Storage API 가이드](
 
 Velero 클라이언트는 클러스터의 백업 및 복구 명령을 입력하는 프로그램입니다.
 Velero Github 저장소에서 Velero 클라이언트를 다운로드하여 클러스터 백업 및 복구 시 활용할 수 있습니다. 다운로드한 Velero 클라이언트 명령을 실행하기 전에 백업 및 복구 클러스터의 kubeconfig 파일을 웹 콘솔에서 다운로드해야 하고, KUBECONFIG 환경 변수를 설정하여 백업 및 복구 대상 클러스터를 정확하게 지정해야 합니다.
-kubeconfig 설정에 대한 자세한 내용은 [kubectl 설치](https://docs.toast.com/ko/Container/Kubernetes/ko/user-guide/#kubectl)를 참고하세요.
+kubeconfig 설정에 대한 자세한 내용은 [kubectl 설치](/Container/NKS/ko/user-guide/#kubectl)를 참고하세요.
 
 #### Velero 클라이언트 다운로드
 

@@ -40,7 +40,7 @@ For more information about the Object Storage API, see the [Object Storage API G
 
 The Velero client is a program where you can enter the cluster's backup and restore commands.
 You can download the Velero client from the Velero Github repository and use it for cluster backup and restoration. Before running the downloaded Velero client command, you must download the kubeconfig file of the backup and restore clusters from the web console, and set the KUBECONFIG environment variable to specify the target clusters for backup and restoration exactly.
-See [Installing kubectl](https://docs.toast.com/ko/Container/Kubernetes/ko/user-guide/#kubectl) for more information on kubeconfig settings.
+See [Installing kubectl](/Container/NKS/zh/user-guide/#kubectl) for more information on kubeconfig settings.
 
 #### Download the Velero Client
 
