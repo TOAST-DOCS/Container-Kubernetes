@@ -1071,6 +1071,7 @@ nginx-deployment-7fd6966748-wv7rd   1/1     Running   0          4m13s
 ```
 
 만약 NHN Cloud Container Registry에 저장한 이미지를 사용하고 싶다면 먼저 사용자 레지스트리에 로그인하기 위한 시크릿(secret)을 만들어야 합니다.
+NHN Cloud (Old) Container Registry를 사용하려면 다음과 같이 시크릿을 생성할 수 있습니다.
 
 ```
 $ kubectl create secret docker-registry registry-credential --docker-server={사용자 레지스트리 주소} --docker-username={NHN Cloud 계정 email 주소} --docker-password={서비스 Appkey 또는 통합 Appkey}
@@ -1080,6 +1081,19 @@ $ kubectl get secrets
 NAME                  TYPE                             DATA   AGE
 registry-credential   kubernetes.io/dockerconfigjson   1      30m
 ```
+
+
+NHN Cloud Container Registry를 사용하려면 다음과 같이 시크릿을 생성할 수 있습니다.
+
+```
+$ kubectl create secret docker-registry registry-credential --docker-server={사용자 레지스트리 주소} --docker-username={User Access Key ID} --docker-password={Secret Access Key}
+secret/registry-credential created
+
+$ kubectl get secrets
+NAME                  TYPE                             DATA   AGE
+registry-credential   kubernetes.io/dockerconfigjson   1      30m
+```
+
 
 디플로이먼트 매니페스트 파일에 시크릿 정보를 추가하고, 이미지 이름을 변경하면 사용자 레지스트리에 저장된 이미지를 이용해 파드를 만들 수 있습니다.
 
@@ -1096,7 +1110,7 @@ spec:
         image: {사용자 레지스트리 주소}/nginx:1.14.2
         ...
       imagePullSecrets:
-      - name: regcred
+      - name: registry-credential
 
 ```
 
@@ -1438,48 +1452,6 @@ HTTP 상태 코드는 다음과 같이 설정할 수 있습니다.
 ### NGINX Ingress Controller 설치
 NGINX Ingress Controller는 많이 사용되는 인그레스 컨트롤러 중 하나입니다. 자세한 내용은 [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/)와 [NGINX Ingress Controller for Kubernetes](https://www.nginx.com/products/nginx-ingress-controller/) 문서를 참고하세요. NGINX Ingress Controller의 설치는 [Installation Guide](https://kubernetes.github.io/ingress-nginx/deploy/) 문서를 참고하세요.
 
-### LoadBalancer 서비스 생성
-인그레스 컨트롤러 역시 파드로 생성되기 때문에 외부에 공개하기 위해서는 LoadBalancer 서비스 또는 NodePort 서비스를 만들어야 합니다. 다음과 같이 HTTP와 HTTPS를 처리할 수 있는 LoadBalancer 서비스 매니페스트를 정의합니다.
-
-```yaml
-# ingress-nginx-lb.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: ingress-nginx
-  namespace: ingress-nginx
-  labels:
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/part-of: ingress-nginx
-spec:
-  type: LoadBalancer
-  selector:
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/part-of: ingress-nginx
-  ports:
-    - name: http
-      port: 80
-      targetPort: 80
-      protocol: TCP
-    - name: https
-      port: 443
-      targetPort: 443
-      protocol: TCP
-  selector:
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/part-of: ingress-nginx
-```
-
-서비스 객체를 생성하고 외부 로드 밸런서가 연결되어 있는지 확인합니다. **EXTERNAL-IP** 필드에는 플로팅 IP 주소가 설정되어 있어야 합니다.
-
-```
-$ kubectl apply -f ingress-nginx-lb.yaml
-service/ingress-nginx created
-
-$ kubectl get svc -n ingress-nginx
-NAME            TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)                      AGE
-ingress-nginx   LoadBalancer   10.254.2.128   123.123.123.41   80:30820/TCP,443:30269/TCP   39s
-```
 
 ### URI 기반 서비스 분기
 인그레스 컨트롤러는 URI를 기반으로 서비스를 분기할 수 있습니다. 아래 그림은 URI를 기반으로 서비스를 분기하는 간단한 예제의 구조를 나타냅니다.
@@ -1568,21 +1540,22 @@ service/coffee-svc created
 deployment.apps/tea created
 service/tea-svc created
 
-$ kubectl get deploy,svc,pods
-NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.extensions/coffee   3/3     3            3           18s
-deployment.extensions/tea      2/2     2            2           18s
+# kubectl get deploy,svc,pods
+NAME                     READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/coffee   3/3     3            3           27m
+deployment.apps/tea      2/2     2            2           27m
 
 NAME                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
-service/coffee-svc   ClusterIP   10.254.51.117    <none>        80/TCP    18s
-service/tea-svc      ClusterIP   10.254.210.170   <none>        80/TCP    18s
+service/coffee-svc   ClusterIP   10.254.171.198   <none>        80/TCP    27m
+service/kubernetes   ClusterIP   10.254.0.1       <none>        443/TCP   5h51m
+service/tea-svc      ClusterIP   10.254.184.190   <none>        80/TCP    27m
 
 NAME                          READY   STATUS    RESTARTS   AGE
-pod/coffee-67c6f7c5fd-98vh5   1/1     Running   0          18s
-pod/coffee-67c6f7c5fd-c58l2   1/1     Running   0          18s
-pod/coffee-67c6f7c5fd-dmxf6   1/1     Running   0          18s
-pod/tea-7df475c6-gtlx5        1/1     Running   0          18s
-pod/tea-7df475c6-lxqsx        1/1     Running   0          18s
+pod/coffee-7c86d7d67c-pr6kw   1/1     Running   0          27m
+pod/coffee-7c86d7d67c-sgspn   1/1     Running   0          27m
+pod/coffee-7c86d7d67c-tqtd6   1/1     Running   0          27m
+pod/tea-5c457db9-fdkxl        1/1     Running   0          27m
+pod/tea-5c457db9-z6hl5        1/1     Running   0          27m
 ```
 
 #### 인그레스(Ingress) 생성
@@ -1590,33 +1563,40 @@ pod/tea-7df475c6-lxqsx        1/1     Running   0          18s
 
 ```yaml
 # cafe-ingress-uri.yaml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: cafe-ingress-uri
 spec:
+  ingressClassName: nginx
   rules:
   - http:
       paths:
       - path: /tea
+        pathType: Prefix
         backend:
-          serviceName: tea-svc
-          servicePort: 80
+          service:
+            name: tea-svc
+            port:
+              number: 80
       - path: /coffee
+        pathType: Prefix
         backend:
-          serviceName: coffee-svc
-          servicePort: 80
+          service:
+            name: coffee-svc
+            port:
+              number: 80
 ```
 
 인그레스를 생성하고 잠시 후 확인했을 때 **ADDRESS** 필드에 IP가 설정되어 있어야 합니다.
 
 ```
 $ kubectl apply -f cafe-ingress-uri.yaml
-ingress.extensions/cafe-ingress-uri created
+ingress.networking.k8s.io/cafe-ingress-uri created
 
-$ kubectl get ingress cafe-ingress-uri
-NAME               HOSTS   ADDRESS          PORTS   AGE
-cafe-ingress-uri   *       123.123.123.44   80      88s
+$ # kubectl get ingress cafe-ingress-uri
+NAME               CLASS   HOSTS   ADDRESS          PORTS   AGE
+cafe-ingress-uri   nginx   *       123.123.123.44   80      23s
 ```
 
 #### HTTP 요청 전송
@@ -1625,41 +1605,54 @@ cafe-ingress-uri   *       123.123.123.44   80      88s
 엔드포인트 `/coffee`에 대한 요청은 `coffee-svc` 서비스에 전달되어 `coffee` 파드가 응답합니다. 응답의 **Server name** 항목을 보면 `coffee` 파드들이 라운드-로빈 방식으로 번갈아 응답하는 것을 확인할 수 있습니다.
 
 ```
-$ curl http://123.123.123.44/coffee
-Server address: 10.100.3.48:8080
-Server name: coffee-67c6f7c5fd-c58l2
-Dat#e: 07/Apr/2020:08:24:27 +0000
+$ curl 123.123.123.44/coffee
+Server address: 10.100.24.21:8080
+Server name: coffee-7c86d7d67c-sgspn
+Date: 11/Mar/2022:06:28:18 +0000
 URI: /coffee
-Request ID: e831901e441303ad59fb02214c49d84a
+Request ID: 3811d20501dbf948259f4b209c00f2f1
 
-$ curl http://123.123.123.44/coffee
-Server address: 10.100.2.23:8080
-Server name: coffee-67c6f7c5fd-98vh5
-Date: 07/Apr/2020:08:24:28 +0000
+$ curl 123.123.123.44/coffee
+Server address: 10.100.24.19:8080
+Server name: coffee-7c86d7d67c-tqtd6
+Date: 11/Mar/2022:06:28:27 +0000
 URI: /coffee
-Request ID: e78427e68a1cd61ec633b9328359874e
+Request ID: ec82f6ab31d622895374df972aed1acd
+
+$ curl 123.123.123.44/coffee
+Server address: 10.100.24.20:8080
+Server name: coffee-7c86d7d67c-pr6kw
+Date: 11/Mar/2022:06:28:31 +0000
+URI: /coffee
+Request ID: fec4a6111bcc27b9cba52629e9420076
 ```
 
 마찬가지로 엔드포인트 `/tea`에 대한 요청은 `tea-svc` 서비스에  전달되어 `tea` 파드가 응답합니다.
 
 ```
-$ curl http://123.123.123.44/tea
-Server address: 10.100.2.24:8080
-Server name: tea-7df475c6-lxqsx
-Date: 07/Apr/2020:08:25:03 +0000
+$ curl 123.123.123.44/tea
+Server address: 10.100.24.23:8080
+Server name: tea-5c457db9-fdkxl
+Date: 11/Mar/2022:06:28:36 +0000
 URI: /tea
-Request ID: 59303a5a5baa60802b463b1856c8ce8d
+Request ID: 11be1b7634a371a26e6bf2d3e72ab8aa
+$ curl 123.123.123.44/tea
+Server address: 10.100.24.22:8080
+Server name: tea-5c457db9-z6hl5
+Date: 11/Mar/2022:06:28:37 +0000
+URI: /tea
+Request ID: 21106246517263d726931e0f85ea2887
 ```
 
 정의되지 않은 URI로 요청을 보내면 인그레스 컨트롤러가 `404 Not Found`를 응답합니다.
 
 ```
-$ curl http://123.123.123.44/
+$ curl 123.123.123.44/unknown
 <html>
 <head><title>404 Not Found</title></head>
 <body>
 <center><h1>404 Not Found</h1></center>
-<hr><center>nginx/1.17.8</center>
+<hr><center>nginx</center>
 </body>
 </html>
 ```
@@ -1669,7 +1662,7 @@ $ curl http://123.123.123.44/
 
 ```
 $ kubectl delete -f cafe-ingress-uri.yaml
-ingress.extensions "cafe-ingress-uri" deleted
+ingress.networking.k8s.io "cafe-ingress-uri" deleted
 
 $ kubectl delete -f cafe.yaml
 deployment.apps "coffee" deleted
@@ -1691,37 +1684,44 @@ service "tea-svc" deleted
 
 ```yaml
 # cafe-ingress-host.yaml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: cafe-ingress-host
 spec:
+  ingressClassName: nginx
   rules:
   - host: tea.cafe.example.com
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: tea-svc
-          servicePort: 80
+          service:
+            name: tea-svc
+            port:
+              number: 80
   - host: coffee.cafe.example.com
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: coffee-svc
-          servicePort: 80
+          service:
+            name: coffee-svc
+            port:
+              number: 80
 ```
 
 인그레스를 생성하고 잠시 후 확인했을 때 **ADDRESS** 필드에 IP가 설정되어 있어야 합니다.
 
 ```
 $ kubectl apply -f cafe-ingress-host.yaml
-ingress.extensions/cafe-ingress-host created
+ingress.networking.k8s.io/cafe-ingress-host created
 
 $ kubectl get ingress
-NAME                HOSTS                                          ADDRESS          PORTS   AGE
-cafe-ingress-host   tea.cafe.example.com,coffee.cafe.example.com   123.123.123.44   80      4m29s
+NAME                CLASS   HOSTS                                          ADDRESS          PORTS   AGE
+cafe-ingress-host   nginx   tea.cafe.example.com,coffee.cafe.example.com   123.123.123.44   80      36s
 ```
 
 #### HTTP Request 전송
@@ -1735,42 +1735,33 @@ cafe-ingress-host   tea.cafe.example.com,coffee.cafe.example.com   123.123.123.4
 
 ```
 $ curl --resolve coffee.cafe.example.com:80:123.123.123.44 http://coffee.cafe.example.com/
-Server address: 10.100.2.25:8080
-Server name: coffee-67c6f7c5fd-2bbzf
-Date: 07/Apr/2020:08:45:39 +0000
+Server address: 10.100.24.27:8080
+Server name: coffee-7c86d7d67c-fqn6n
+Date: 11/Mar/2022:06:40:59 +0000
 URI: /
-Request ID: 29fd8a244b9f0a5ff5f35d1dc35edccf
+Request ID: 1efb60d29891d6d48b5dcd9f5e1ba66d
 ```
 
 호스트 `tea.cafe.example.com`로 요청을 전송하면 `tea-svc` 서비스에 전달되어 `tea` 파드가 응답합니다.
 
 ```
 $ curl --resolve tea.cafe.example.com:80:123.123.123.44 http://tea.cafe.example.com/
-Server address: 10.100.3.52:8080
-Server name: tea-7df475c6-q8mdx
-Date: 07/Apr/2020:08:53:44 +0000
+Server address: 10.100.24.28:8080
+Server name: tea-5c457db9-ngrxq
+Date: 11/Mar/2022:06:41:39 +0000
 URI: /
-Request ID: fe61c1589d3ab8ef4ca4507245251ef3
+Request ID: 5a6cc490893636029766b02d2aab9e39
 ```
 
 알려지지 않은 호스트로 요청을 보내면 인그레스 컨트롤러가 `404 Not Found`를 응답합니다.
 
 ```
-$ curl http://123.123.123.44
+$ curl 123.123.123.44/unknown
 <html>
 <head><title>404 Not Found</title></head>
 <body>
 <center><h1>404 Not Found</h1></center>
-<hr><center>nginx/1.17.8</center>
-</body>
-</html>
-
-$ curl --resolve test.example.com:80:123.123.123.44 http://test.example.com/
-<html>
-<head><title>404 Not Found</title></head>
-<body>
-<center><h1>404 Not Found</h1></center>
-<hr><center>nginx/1.17.8</center>
+<hr><center>nginx</center>
 </body>
 </html>
 ```
@@ -1783,24 +1774,25 @@ NHN Kubernetes Service(NKS)는 기본 웹 UI 대시보드(dashboard)를 제공�
 
 ```
 $ kubectl get svc kubernetes-dashboard -n kube-system
-NAME                   TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
-kubernetes-dashboard   ClusterIP   10.254.95.176   <none>        443/TCP   2d4h
+NAME                   TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)   AGE
+kubernetes-dashboard   ClusterIP   10.254.85.2   <none>        443/TCP   6h
 
 $ kubectl describe svc kubernetes-dashboard -n kube-system
 Name:              kubernetes-dashboard
 Namespace:         kube-system
 Labels:            k8s-app=kubernetes-dashboard
-Annotations:       kubectl.kubernetes.io/last-applied-configuration:
-                     {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"k8s-app":"kubernetes-dashboard"},"name":"kubernetes-dashboard"...
+Annotations:       <none>
 Selector:          k8s-app=kubernetes-dashboard
 Type:              ClusterIP
-IP:                10.254.95.176
+IP Family Policy:  SingleStack
+IP Families:       IPv4
+IP:                10.254.85.2
+IPs:               10.254.85.2
 Port:              <unset>  443/TCP
 TargetPort:        8443/TCP
-Endpoints:         10.100.2.3:8443
+Endpoints:         10.100.24.7:8443
 Session Affinity:  None
-Events:
-...
+Events:            <none>
 ```
 
 그러나 `kubernetes-dashboard` 서비스 객체는 ClusterIP 유형이기 때문에 아직 클러스터 외부에 공개되어 있지 않습니다. 대시보드를 외부 공개하려면 서비스 객체를 LoadBalancer 유형으로 변경하거나 인그레스 컨트롤러와 인그레스 객체를 생성해야 합니다.
@@ -1842,11 +1834,11 @@ kubernetes-dashboard   LoadBalancer   10.254.95.176   123.123.123.81   443:30963
 
 ![dashboard-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-02.png)
 
-[NGINX Ingress Controller 설치](/Container/NKS/ko/user-guide/#nginx-ingress-controller)를 참고해 `NGINX Ingress Controller`를 설치하고 `LoadBalancer` 유형의 서비스를 생성합니다. 그리고 다음과 같이 인그레스 객체 생성을 위한 매니페스트를 작성합니다.
+[NGINX Ingress Controller 설치](/Container/NKS/ko/user-guide/#nginx-ingress-controller)를 참고해 `NGINX Ingress Controller`를 설치하고 다음과 같이 인그레스 객체 생성을 위한 매니페스트를 작성합니다.
 
 ```yaml
 # kubernetes-dashboard-ingress-tls-passthrough.yaml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: k8s-dashboard-ingress
@@ -1854,35 +1846,38 @@ metadata:
   annotations:
     ingress.kubernetes.io/ssl-passthrough: "true"
     kubernetes.io/ingress.allow-http: "false"
-    kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/backend-protocol: HTTPS
     nginx.ingress.kubernetes.io/proxy-body-size: 100M
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.org/ssl-backend: kubernetes-dashboard
 spec:
+  ingressClassName: nginx
   rules:
   - http:
       paths:
-      - backend:
-          serviceName: kubernetes-dashboard
-          servicePort: 443
-        path: /
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: kubernetes-dashboard
+            port:
+              number: 443
   tls:
   - secretName: kubernetes-dashboard-certs
 ```
 
-매니페스트를 적용해 인그레스를 생성하고 `ingress-nginx` 서비스 객체의 **EXTERNAL-IP** 필드를 확인합니다.
+매니페스트를 적용해 인그레스를 생성하고 인그레스 객체의 **ADDRESS** 필드를 확인합니다.
 
 ```
 $ kubectl apply -f kubernetes-dashboard-ingress-tls-passthrough.yaml
-ingress.extensions/k8s-dashboard-ingress created
+ingress.networking.k8s.io/k8s-dashboard-ingress created
 
-$ kubectl get service/ingress-nginx -n ingress-nginx
-NAME            TYPE           CLUSTER-IP       EXTERNAL-IP      PORT(S)                      AGE
-ingress-nginx   LoadBalancer   10.254.211.113   123.123.123.29   80:32680/TCP,443:31631/TCP   19h
+$ kubectl get ingress -n kube-system
+NAME                    CLASS   HOSTS   ADDRESS          PORTS     AGE
+k8s-dashboard-ingress   nginx   *       123.123.123.44   80, 443   34s
 ```
 
-웹 브라우저에서 `https://{EXTERNAL-IP}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 엑세스 토큰](/Container/NKS/ko/user-guide/#_49)을 참고하세요.
+웹 브라우저에서 `https://{ADDRESS}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 엑세스 토큰](/Container/NKS/ko/user-guide/#_49)을 참고하세요.
 
 ### 대시보드 엑세스 토큰
 Kubernetes 대시보드에 로그인하려면 토큰이 필요합니다. 토큰은 다음 명령으로 얻을 수 있습니다.
