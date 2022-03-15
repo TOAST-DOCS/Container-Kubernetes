@@ -1059,6 +1059,7 @@ nginx-deployment-7fd6966748-wv7rd   1/1     Running   0          4m13s
 ```
 
 NHN Cloud Container Registryに保存したイメージを使用したい場合は、先にユーザーレジストリにログインするためのシークレット(secret)を作成する必要があります。
+NHN Cloud (Old) Container Registryを使用するには次のようにシークレットを作成できます。
 
 ```
 $ kubectl create secret docker-registry registry-credential --docker-server={ユーザーレジストリアドレス} --docker-username={NHN Cloudアカウントemailアドレス} --docker-password={サービスAppkeyまたは統合Appkey}
@@ -1068,6 +1069,17 @@ $ kubectl get secrets
 NAME                  TYPE                             DATA   AGE
 registry-credential   kubernetes.io/dockerconfigjson   1      30m
 ```
+
+
+NHN Cloud Container Registryを使用するには次のようにシークレットを作成できます。
+
+```
+$ kubectl create secret docker-registry registry-credential --docker-server={ユーザーレジストリアドレス} --docker-username={User Access Key ID} --docker-password={Secret Access Key}
+secret/registry-credential created
+$ kubectl get secrets
+NAME                  TYPE                             DATA   AGE
+registry-credential   kubernetes.io/dockerconfigjson   1      30m
+
 
 デプロイメントマニフェストファイルにシークレット情報を追加し、イメージ名を変更すると、ユーザーレジストリに保存されたイメージを利用してPodを作成できます。
 
@@ -1084,7 +1096,7 @@ spec:
         image: {ユーザーレジストリアドレス}/nginx:1.14.2
         ...
       imagePullSecrets:
-      - name: regcred
+      - name: registry-credential
 
 ```
 
@@ -1426,49 +1438,6 @@ HTTPステータスコードは次のように設定できます。
 ### NGINX Ingress Controllerのインストール
 NGINX Ingress Controllerは、よく使われるイングレスコントローラーの1つです。詳細については[NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/)と[NGINX Ingress Controller for Kubernetes](https://www.nginx.com/products/nginx-ingress-controller/)文書を参照してください。 NGINX Ingress Controllerのインストールは[Installation Guide](https://kubernetes.github.io/ingress-nginx/deploy/)文書を参照してください。
 
-### LoadBalancerサービスの作成
-イングレスコントローラーもPodで作成されるため、外部に公開するためにはLoadBalancerサービスまたはNodePortサービスを作成する必要があります。次のようにHTTPとHTTPSを処理することができるLoadBalancerサービスマニフェストを定義します。
-
-```yaml
-# ingress-nginx-lb.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: ingress-nginx
-  namespace: ingress-nginx
-  labels:
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/part-of: ingress-nginx
-spec:
-  type: LoadBalancer
-  selector:
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/part-of: ingress-nginx
-  ports:
-    - name: http
-      port: 80
-      targetPort: 80
-      protocol: TCP
-    - name: https
-      port: 443
-      targetPort: 443
-      protocol: TCP
-  selector:
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/part-of: ingress-nginx
-```
-
-サービスオブジェクトを作成し、外部ロードバランサーが接続されていることを確認します。**EXTERNAL-IP**フィールドにはFloating IPアドレスが設定されている必要があります。
-
-```
-$ kubectl apply -f ingress-nginx-lb.yaml
-service/ingress-nginx created
-
-$ kubectl get svc -n ingress-nginx
-NAME            TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)                      AGE
-ingress-nginx   LoadBalancer   10.254.2.128   123.123.123.41   80:30820/TCP,443:30269/TCP   39s
-```
-
 ### URIベースのサービス分岐
 イングレスコントローラーはURIに基づいてサービスを分岐できます。次の図はURIに基づいてサービスを分岐する簡単な例の構造を表しています。
 
@@ -1556,21 +1525,22 @@ service/coffee-svc created
 deployment.apps/tea created
 service/tea-svc created
 
-$ kubectl get deploy,svc,pods
-NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.extensions/coffee   3/3     3            3           18s
-deployment.extensions/tea      2/2     2            2           18s
+# kubectl get deploy,svc,pods
+NAME                     READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/coffee   3/3     3            3           27m
+deployment.apps/tea      2/2     2            2           27m
 
 NAME                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
-service/coffee-svc   ClusterIP   10.254.51.117    <none>        80/TCP    18s
-service/tea-svc      ClusterIP   10.254.210.170   <none>        80/TCP    18s
+service/coffee-svc   ClusterIP   10.254.171.198   <none>        80/TCP    27m
+service/kubernetes   ClusterIP   10.254.0.1       <none>        443/TCP   5h51m
+service/tea-svc      ClusterIP   10.254.184.190   <none>        80/TCP    27m
 
 NAME                          READY   STATUS    RESTARTS   AGE
-pod/coffee-67c6f7c5fd-98vh5   1/1     Running   0          18s
-pod/coffee-67c6f7c5fd-c58l2   1/1     Running   0          18s
-pod/coffee-67c6f7c5fd-dmxf6   1/1     Running   0          18s
-pod/tea-7df475c6-gtlx5        1/1     Running   0          18s
-pod/tea-7df475c6-lxqsx        1/1     Running   0          18s
+pod/coffee-7c86d7d67c-pr6kw   1/1     Running   0          27m
+pod/coffee-7c86d7d67c-sgspn   1/1     Running   0          27m
+pod/coffee-7c86d7d67c-tqtd6   1/1     Running   0          27m
+pod/tea-5c457db9-fdkxl        1/1     Running   0          27m
+pod/tea-5c457db9-z6hl5        1/1     Running   0          27m
 ```
 
 #### イングレス(Ingress)作成
@@ -1578,33 +1548,40 @@ pod/tea-7df475c6-lxqsx        1/1     Running   0          18s
 
 ```yaml
 # cafe-ingress-uri.yaml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: cafe-ingress-uri
 spec:
+  ingressClassName: nginx
   rules:
   - http:
       paths:
       - path: /tea
+        pathType: Prefix
         backend:
-          serviceName: tea-svc
-          servicePort: 80
+          service:
+            name: tea-svc
+            port:
+              number: 80
       - path: /coffee
+        pathType: Prefix
         backend:
-          serviceName: coffee-svc
-          servicePort: 80
+          service:
+            name: coffee-svc
+            port:
+              number: 80
 ```
 
 イングレスを作成し、しばらくしてから確認したときに**ADDRESS**フィールドにIPが設定されている必要があります。
 
 ```
 $ kubectl apply -f cafe-ingress-uri.yaml
-ingress.extensions/cafe-ingress-uri created
+ingress.networking.k8s.io/cafe-ingress-uri created
 
-$ kubectl get ingress cafe-ingress-uri
-NAME               HOSTS   ADDRESS          PORTS   AGE
-cafe-ingress-uri   *       123.123.123.44   80      88s
+$ # kubectl get ingress cafe-ingress-uri
+NAME               CLASS   HOSTS   ADDRESS          PORTS   AGE
+cafe-ingress-uri   nginx   *       123.123.123.44   80      23s
 ```
 
 #### HTTPリクエストの送信
@@ -1613,41 +1590,54 @@ cafe-ingress-uri   *       123.123.123.44   80      88s
 エンドポイント`/coffee`に対するリクエストは`coffee-svc`サービスに渡され、`coffee` Podがレスポンスします。レスポンスの**Server name**項目を見ると`coffee` Podがラウンドロビン方式で交互にレスポンスすることを確認できます。
 
 ```
-$ curl http://123.123.123.44/coffee
-Server address: 10.100.3.48:8080
-Server name: coffee-67c6f7c5fd-c58l2
-Dat#e: 07/Apr/2020:08:24:27 +0000
+$ curl 123.123.123.44/coffee
+Server address: 10.100.24.21:8080
+Server name: coffee-7c86d7d67c-sgspn
+Date: 11/Mar/2022:06:28:18 +0000
 URI: /coffee
-Request ID: e831901e441303ad59fb02214c49d84a
+Request ID: 3811d20501dbf948259f4b209c00f2f1
 
-$ curl http://123.123.123.44/coffee
-Server address: 10.100.2.23:8080
-Server name: coffee-67c6f7c5fd-98vh5
-Date: 07/Apr/2020:08:24:28 +0000
+$ curl 123.123.123.44/coffee
+Server address: 10.100.24.19:8080
+Server name: coffee-7c86d7d67c-tqtd6
+Date: 11/Mar/2022:06:28:27 +0000
 URI: /coffee
-Request ID: e78427e68a1cd61ec633b9328359874e
+Request ID: ec82f6ab31d622895374df972aed1acd
+
+$ curl 123.123.123.44/coffee
+Server address: 10.100.24.20:8080
+Server name: coffee-7c86d7d67c-pr6kw
+Date: 11/Mar/2022:06:28:31 +0000
+URI: /coffee
+Request ID: fec4a6111bcc27b9cba52629e9420076
 ```
 
 同様に、エンドポイント`/tea`に対するリクエストは`tea-svc`サービスに渡され、`tea` Podがレスポンスします。
 
 ```
-$ curl http://123.123.123.44/tea
-Server address: 10.100.2.24:8080
-Server name: tea-7df475c6-lxqsx
-Date: 07/Apr/2020:08:25:03 +0000
+$ curl 123.123.123.44/tea
+Server address: 10.100.24.23:8080
+Server name: tea-5c457db9-fdkxl
+Date: 11/Mar/2022:06:28:36 +0000
 URI: /tea
-Request ID: 59303a5a5baa60802b463b1856c8ce8d
+Request ID: 11be1b7634a371a26e6bf2d3e72ab8aa
+$ curl 123.123.123.44/tea
+Server address: 10.100.24.22:8080
+Server name: tea-5c457db9-z6hl5
+Date: 11/Mar/2022:06:28:37 +0000
+URI: /tea
+Request ID: 21106246517263d726931e0f85ea2887
 ```
 
 定義されていないURIにリクエストを送信すると、イングレスコントローラーが`404 Not Found`をレスポンスします。
 
 ```
-$ curl http://123.123.123.44/
+$ curl 123.123.123.44/unknown
 <html>
 <head><title>404 Not Found</title></head>
 <body>
 <center><h1>404 Not Found</h1></center>
-<hr><center>nginx/1.17.8</center>
+<hr><center>nginx</center>
 </body>
 </html>
 ```
@@ -1657,7 +1647,7 @@ $ curl http://123.123.123.44/
 
 ```
 $ kubectl delete -f cafe-ingress-uri.yaml
-ingress.extensions "cafe-ingress-uri" deleted
+ingress.networking.k8s.io "cafe-ingress-uri" deleted
 
 $ kubectl delete -f cafe.yaml
 deployment.apps "coffee" deleted
@@ -1679,37 +1669,44 @@ service "tea-svc" deleted
 
 ```yaml
 # cafe-ingress-host.yaml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: cafe-ingress-host
 spec:
+  ingressClassName: nginx
   rules:
   - host: tea.cafe.example.com
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: tea-svc
-          servicePort: 80
+          service:
+            name: tea-svc
+            port:
+              number: 80
   - host: coffee.cafe.example.com
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: coffee-svc
-          servicePort: 80
+          service:
+            name: coffee-svc
+            port:
+              number: 80
 ```
 
 イングレスを作成し、しばらくしてから確認したときに**ADDRESS**フィールドにIPが設定されている必要があります。
 
 ```
 $ kubectl apply -f cafe-ingress-host.yaml
-ingress.extensions/cafe-ingress-host created
+ingress.networking.k8s.io/cafe-ingress-host created
 
 $ kubectl get ingress
-NAME                HOSTS                                          ADDRESS          PORTS   AGE
-cafe-ingress-host   tea.cafe.example.com,coffee.cafe.example.com   123.123.123.44   80      4m29s
+NAME                CLASS   HOSTS                                          ADDRESS          PORTS   AGE
+cafe-ingress-host   nginx   tea.cafe.example.com,coffee.cafe.example.com   123.123.123.44   80      36s
 ```
 
 #### HTTP Request送信
@@ -1723,42 +1720,33 @@ cafe-ingress-host   tea.cafe.example.com,coffee.cafe.example.com   123.123.123.4
 
 ```
 $ curl --resolve coffee.cafe.example.com:80:123.123.123.44 http://coffee.cafe.example.com/
-Server address: 10.100.2.25:8080
-Server name: coffee-67c6f7c5fd-2bbzf
-Date: 07/Apr/2020:08:45:39 +0000
+Server address: 10.100.24.27:8080
+Server name: coffee-7c86d7d67c-fqn6n
+Date: 11/Mar/2022:06:40:59 +0000
 URI: /
-Request ID: 29fd8a244b9f0a5ff5f35d1dc35edccf
+Request ID: 1efb60d29891d6d48b5dcd9f5e1ba66d
 ```
 
 ホスト`tea.cafe.example.com`にリクエストを送信すると`tea-svc`サービスに渡されて`tea` Podがレスポンスします。
 
 ```
 $ curl --resolve tea.cafe.example.com:80:123.123.123.44 http://tea.cafe.example.com/
-Server address: 10.100.3.52:8080
-Server name: tea-7df475c6-q8mdx
-Date: 07/Apr/2020:08:53:44 +0000
+Server address: 10.100.24.28:8080
+Server name: tea-5c457db9-ngrxq
+Date: 11/Mar/2022:06:41:39 +0000
 URI: /
-Request ID: fe61c1589d3ab8ef4ca4507245251ef3
+Request ID: 5a6cc490893636029766b02d2aab9e39
 ```
 
 不明なホストにリクエストを送るとイングレスコントローラーが`404 Not Found`を返します。
 
 ```
-$ curl http://123.123.123.44
+$ curl 123.123.123.44/unknown
 <html>
 <head><title>404 Not Found</title></head>
 <body>
 <center><h1>404 Not Found</h1></center>
-<hr><center>nginx/1.17.8</center>
-</body>
-</html>
-
-$ curl --resolve test.example.com:80:123.123.123.44 http://test.example.com/
-<html>
-<head><title>404 Not Found</title></head>
-<body>
-<center><h1>404 Not Found</h1></center>
-<hr><center>nginx/1.17.8</center>
+<hr><center>nginx</center>
 </body>
 </html>
 ```
@@ -1771,24 +1759,25 @@ NHN Kubernetes Service(NKS)は基本Web UIダッシュボード(dashboard)を提
 
 ```
 $ kubectl get svc kubernetes-dashboard -n kube-system
-NAME                   TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
-kubernetes-dashboard   ClusterIP   10.254.95.176   <none>        443/TCP   2d4h
+NAME                   TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)   AGE
+kubernetes-dashboard   ClusterIP   10.254.85.2   <none>        443/TCP   6h
 
 $ kubectl describe svc kubernetes-dashboard -n kube-system
 Name:              kubernetes-dashboard
 Namespace:         kube-system
 Labels:            k8s-app=kubernetes-dashboard
-Annotations:       kubectl.kubernetes.io/last-applied-configuration:
-                     {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"k8s-app":"kubernetes-dashboard"},"name":"kubernetes-dashboard"...
+Annotations:       <none>
 Selector:          k8s-app=kubernetes-dashboard
 Type:              ClusterIP
-IP:                10.254.95.176
+IP Family Policy:  SingleStack
+IP Families:       IPv4
+IP:                10.254.85.2
+IPs:               10.254.85.2
 Port:              <unset>  443/TCP
 TargetPort:        8443/TCP
-Endpoints:         10.100.2.3:8443
+Endpoints:         10.100.24.7:8443
 Session Affinity:  None
-Events:
-...
+Events:            <none>
 ```
 
 しかし`kubernetes-dashboard`サービスオブジェクトはClusterIPタイプのため、まだクラスタ外部に公開されていません。ダッシュボードを外部公開するにはサービスオブジェクトをLoadBalancerタイプに変更するか、イングレスコントローラーとイングレスオブジェクトを作成する必要があります。
@@ -1830,11 +1819,11 @@ Webブラウザで`https://{EXTERNAL-IP}`に接続するとKubernetesダッシ�
 
 ![dashboard-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-02.png)
 
-[NGINX Ingress Controllerインストール](/Container/NKS/ja/user-guide/#nginx-ingress-controller)を参照して`NGINX Ingress Controller`をインストールして`LoadBalancer`タイプのサービスを作成します。そして次のようにイングレスオブジェクトを作成するためのマニフェストを作成します。
+[NGINX Ingress Controllerインストール](/Container/NKS/ja/user-guide/#nginx-ingress-controller)を参照して`NGINX Ingress Controller`をインストールして次のようにイングレスオブジェクトを作成するためのマニフェストを作成します。
 
 ```yaml
 # kubernetes-dashboard-ingress-tls-passthrough.yaml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: k8s-dashboard-ingress
@@ -1842,35 +1831,38 @@ metadata:
   annotations:
     ingress.kubernetes.io/ssl-passthrough: "true"
     kubernetes.io/ingress.allow-http: "false"
-    kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/backend-protocol: HTTPS
     nginx.ingress.kubernetes.io/proxy-body-size: 100M
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.org/ssl-backend: kubernetes-dashboard
 spec:
+  ingressClassName: nginx
   rules:
   - http:
       paths:
-      - backend:
-          serviceName: kubernetes-dashboard
-          servicePort: 443
-        path: /
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: kubernetes-dashboard
+            port:
+              number: 443
   tls:
   - secretName: kubernetes-dashboard-certs
 ```
 
-マニフェストを適用してイングレスを作成し、`ingress-nginx`サービスオブジェクトの**EXTERNAL-IP**フィールドを確認します。
+マニフェストを適用してイングレスを作成し、イングレスオブジェクトの**ADDRESS**フィールドを確認します。
 
 ```
 $ kubectl apply -f kubernetes-dashboard-ingress-tls-passthrough.yaml
-ingress.extensions/k8s-dashboard-ingress created
+ingress.networking.k8s.io/k8s-dashboard-ingress created
 
-$ kubectl get service/ingress-nginx -n ingress-nginx
-NAME            TYPE           CLUSTER-IP       EXTERNAL-IP      PORT(S)                      AGE
-ingress-nginx   LoadBalancer   10.254.211.113   123.123.123.29   80:32680/TCP,443:31631/TCP   19h
+$ kubectl get ingress -n kube-system
+NAME                    CLASS   HOSTS   ADDRESS          PORTS     AGE
+k8s-dashboard-ingress   nginx   *       123.123.123.44   80, 443   34s
 ```
 
-Webブラウザで`https://{EXTERNAL-IP}`に接続するとKubernetesダッシュボードページがローディングされます。ログインのために必要なトークンは[ダッシュボードアクセストークン](/Container/NKS/ja/user-guide/#_49)を参照してください。
+Webブラウザで`https://{ADDRESS}`に接続するとKubernetesダッシュボードページがローディングされます。ログインのために必要なトークンは[ダッシュボードアクセストークン](/Container/NKS/ja/user-guide/#_49)を参照してください。
 
 ### ダッシュボードアクセストークン
 Kubernetesダッシュボードにログインするにはトークンが必要です。トークンは次のコマンドで取得できます。
