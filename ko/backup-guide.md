@@ -23,7 +23,7 @@ Object Storage API를 사용하려면 테넌트 아이디(tenant ID) 및 API 엔
 
 | 항목 | API Endpoint | 용도 |
 | --- | --- | --- |
-| Identity | [https://api-identity.infrastructure.cloud.toast.com/v2.0](https://api-identity.infrastructure.cloud.toast.com/v2.0) | 인증 토큰 발급 |
+| Identity | https://api-identity.infrastructure.cloud.toast.com/v2.0 | 인증 토큰 발급 |
 | Tenant ID | 숫자 + 영문자로 구성된 32자 길이의 문자열 | 인증 토큰 발급 |
 
 #### API 비밀번호 설정
@@ -34,7 +34,7 @@ API 비밀번호는 Object Storage 서비스 페이지의 **API Endpoint 설정*
 2. **API Endpoint 설정** 아래 **API 비밀번호 설정** 입력 상자에 토큰 발급 시 사용할 비밀번호를 입력합니다.
 3. **저장** 버튼을 클릭합니다.
 
-Object Storage API에 대한 자세한 내용은 [Object Storage API 가이드](https://docs.toast.com/ko/Storage/Object%20Storage/ko/api-guide/)를 참고해 주세요.
+Object Storage API에 대한 자세한 내용은 [Object Storage API 가이드](/Storage/Object%20Storage/ko/api-guide/)를 참고해 주세요.
 
 ### Velero 클라이언트 설치
 
@@ -179,13 +179,13 @@ $ velero restore create --from-backup {name}
 
 #### 클러스터 백업/복구 예시
 
-* `백업 클러스터`에서 `velero backup create` 명령어를 사용하여 백업합니다.
+* 백업 클러스터에서 velero backup create 명령어를 사용하여 백업합니다.
 
 ```
 $ velero backup create my-backup --exclude-namespaces kube-system,velero
 ```
 
-* `velero backup get` 명령어를 이용하여 백업 상태를 확인합니다.
+* velero backup get 명령어를 이용하여 백업 상태를 확인합니다.
 
 ```
 $ velero backup get
@@ -193,7 +193,7 @@ NAME         STATUS      ERRORS   WARNINGS   CREATED                         EXP
 my-backup    Completed   0        0          2022-02-09 13:23:13 +0900 KST   29d       default            <none>
 ```
 
-* `복구 클러스터`에서 `velero restore create`명령어를 사용하여 복구합니다.
+* 복구 클러스터에서 velero restore create 명령어를 사용하여 복구합니다.
 
 ```
 $ velero restore create --from-backup my-backup
@@ -209,13 +209,13 @@ $ kubectl get pod --all-namespaces
 
 `velero schedule create` 명령어로 주기적 백업을 설정할 수 있습니다. 자세한 내용은 [schedule-a-backup](https://velero.io/docs/v1.7/backup-reference/#schedule-a-backup)을 참고하세요.
 
-* `백업 클러스터`에서 `velero schedule create`명령어를 사용하여 주기적 백업을 설정합니다. (예시는 10분 간격)
+* 백업 클러스터에서 velero schedule create 명령어를 사용하여 주기적 백업을 설정합니다. (예시는 10분 간격)
 
 ```
 $ velero schedule create my-schedule --schedule="*/10 * * * *" --exclude-namespaces kube-system,velero
 ```
 
-* `velero backup get` 명령어를 사용하여 설정한 시간 간격으로 백업되는 것을 확인할 수 있습니다.
+* velero backup get 명령어를 사용하여 설정한 시간 간격으로 백업되는 것을 확인할 수 있습니다.
 
 ```
 $ velero backup get
