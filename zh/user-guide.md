@@ -249,7 +249,7 @@ Terms used in relation to the autoscaler and their meanings are as follows:
 
 > [Caution]
 > If worker nodes are working in an environment with no Internet connection, autoscaler container images must be manually installed on the worker nodes. This task is required for the following targets:
->
+> 
 > * Pangyo Region: Node groups created before November 24, 2020
 > * Pyeongchon Region: Node groups created before November 19, 2020
 > 
@@ -306,7 +306,7 @@ Let's check how the autoscaler work through the following example:
 
 Enables autoscaling on the default node group of the cluster you want. For this example, the number of nodes for the default group has been set to 1 and autoscaler settings are configured as follows:
 
-| Configuration Item | Value |
+| Settings Item | Value |
 | --- | --- |
 | Minimum Node Count | 1 |
 | Maximum Node Count | 5 |
@@ -768,7 +768,7 @@ $ export PATH=$PATH:$(pwd)
 To access Kubernetes cluster with kubectl, cluster configuration file (kubeconfig) is required. On the NHN Cloud web console, open the **Container > NHN Kubernetes Service (NKS)** page and select a cluster to access. From **Basic Information**, click **Download** of **Configuration Files** to download a configuration file. Move the downloaded configuration file to a location of your choice to serve it as a reference for kubectl execution.
 
 > [Caution]
-> A configuration file downloaded from the NHN Cloud web console includes cluster information and token for authentication. With the file, you're authorized to access corresponding Kubernetes clusters. Take cautions for not losing configuration files.   
+> A configuration file downloaded from the NHN Cloud web console includes cluster information and token for authentication. With the file, you're authorized to access corresponding Kubernetes clusters. Take cautions for not losing configuration files.
 
 kubectl requires a cluster configuration file every time it is executed, so a cluster configuration file must be specified by using the `--kubeconfig` option. However, if the environment variable includes specific path for a cluster configuration file, there is no need to specify each option.
 
@@ -890,8 +890,8 @@ status:
 > [Caution]
 > This feature is provided only when the time of cluster creation falls within the following period:
 > 
-> * Pangyo region: Cluster created as of December 29, 2020
-> * Pyeongchon region: Cluster created as of December 24, 2020
+> * Pangyo region: Cluster created on December 29, 2020 or later
+> * Pyeongchon region: Cluster created on December 24, 2020 or later
 
 ### Admission Controller plugin
 The admission controller can intercept a Kubernetes API server request and change objects or deny the request. See [Admission Controller]( https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/) for more information about the admission controller. For usage examples of the admission controller, see [Admission Controller Guide](https://kubernetes.io/blog/2019/03/21/a-guide-to-kubernetes-admission-controllers/).
@@ -1014,7 +1014,7 @@ In this process, the following might happen:
 > 2. Pods that use the local storage will lose the previous data as they are evicted.
 > Pods that use the local storage of the node by using `emptyDir` will lose the previous data when being evicted. This is because the storage space in the local node cannot be relocated to another node. 
 > 3. Pods that cannot be copied to another node will not be relocated to another node.
-> If the pods run by controllers such as (ReplicationController), (ReplicaSet), (Job), (Daemonset), and (StatefulSet) are evicted, they will be rescheduled to another node by the controller. However, the pods not run by these controllers will not be scheduled to another node after being evicted.
+> If the pods run by controllers such as (ReplicationController), (ReplicaSet), (Job), (Daemonset), and (StatefulSet) are evicted, they will be rescheduled to another node by the controller. However, the pods not run by these controllers will not be scheduled to another node after being evicted. 
 > 4. Eviction can fail or slow down due to the PodDisruptionBudgets (PDB) setting.
 > You can define the number of pods to maintain with the PodDisruptionBudgets(PDB) setting. Depending on how this setting is set, it may not be possible to evict pods or evicting pods can take longer than normal during upgrade. If pod eviction fails, upgrade fails as well. So if the PDB is enabled, appropriate PDB setting will ensure proper pod eviction. To find out more about PDB setting, see [here](https://kubernetes.io/docs/tasks/run-application/configure-pdb/).
 
@@ -1070,7 +1070,8 @@ nginx-deployment-7fd6966748-pvrzs   1/1     Running   0          4m13s
 nginx-deployment-7fd6966748-wv7rd   1/1     Running   0          4m13s
 ```
 
-To use images saved at NHN Cloud Container Registry, first create a secret to login to user registry.
+To use images stored in NHN Cloud Container Registry, you must first create a secret to log in to the user registry.
+To use NHN Cloud (Old) Container Registry, you need to create a secret as follows:
 
 ```
 $ kubectl create secret docker-registry registry-credential --docker-server={user registry address} --docker-username={email address for NHN Cloud account} --docker-password={service Appkey or integrated Appkey}
@@ -1080,6 +1081,19 @@ $ kubectl get secrets
 NAME                  TYPE                             DATA   AGE
 registry-credential   kubernetes.io/dockerconfigjson   1      30m
 ```
+
+
+To use NHN Cloud Container Registry, you need to create a secret as follows:
+
+```
+$ kubectl create secret docker-registry registry-credential --docker-server={User registry address} --docker-username={User Access Key ID} --docker-password={Secret Access Key}
+secret/registry-credential created
+
+$ kubectl get secrets
+NAME                  TYPE                             DATA   AGE
+registry-credential   kubernetes.io/dockerconfigjson   1      30m
+```
+
 
 By adding secret information to the deployment manifest file and changing the name of image, pods can be created by using images saved at user registry.
 
@@ -1093,10 +1107,10 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: {user registry address}/nginx:1.14.2
+        image: {User registry address}/nginx:1.14.2
         ...
       imagePullSecrets:
-      - name: regcred
+      - name: registry-credential
 
 ```
 
@@ -1438,48 +1452,6 @@ Ingress Controller routes HTTP and HTTPS requests from cluster externals to inte
 ### Installing NGINX Ingress Controller
 NGINX Ingress Controller is one of the most frequently used ingress controllers. For more details, see [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/) and [NGINX Ingress Controller for Kubernetes](https://www.nginx.com/products/nginx-ingress-controller/). For installation of NGINX Ingress Controller, see [Installation Guide](https://kubernetes.github.io/ingress-nginx/deploy/).
 
-### Creating LoadBalancer Service
-Since ingress controller is also created as a pod, a LoadBalancer or NodePort service must be created to be made public. Define a LoadBalancer service manifest that can process HTTP and HTTPS like below:
-
-```yaml
-# ingress-nginx-lb.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: ingress-nginx
-  namespace: ingress-nginx
-  labels:
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/part-of: ingress-nginx
-spec:
-  type: LoadBalancer
-  selector:
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/part-of: ingress-nginx
-  ports:
-    - name: http
-      port: 80
-      targetPort: 80
-      protocol: TCP
-    - name: https
-      port: 443
-      targetPort: 443
-      protocol: TCP
-  selector:
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/part-of: ingress-nginx
-```
-
-After a service object is created, check if it is associated with an external load balancer. The **EXTERNAL-IP** field must include floating IP address.
-
-```
-$ kubectl apply -f ingress-nginx-lb.yaml
-service/ingress-nginx created
-
-$ kubectl get svc -n ingress-nginx
-NAME            TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)                      AGE
-ingress-nginx   LoadBalancer   10.254.2.128   123.123.123.41   80:30820/TCP,443:30269/TCP   39s
-```
 
 ### Diverging Service on URI
 Ingress controller can diverge services based on URI. The following figure shows the structure of a simple example of service divergence based on URI.
@@ -1568,21 +1540,22 @@ service/coffee-svc created
 deployment.apps/tea created
 service/tea-svc created
 
-$ kubectl get deploy,svc,pods
-NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.extensions/coffee   3/3     3            3           18s
-deployment.extensions/tea      2/2     2            2           18s
+# kubectl get deploy,svc,pods
+NAME                     READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/coffee   3/3     3            3           27m
+deployment.apps/tea      2/2     2            2           27m
 
 NAME                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
-service/coffee-svc   ClusterIP   10.254.51.117    <none>        80/TCP    18s
-service/tea-svc      ClusterIP   10.254.210.170   <none>        80/TCP    18s
+service/coffee-svc   ClusterIP   10.254.171.198   <none>        80/TCP    27m
+service/kubernetes   ClusterIP   10.254.0.1       <none>        443/TCP   5h51m
+service/tea-svc      ClusterIP   10.254.184.190   <none>        80/TCP    27m
 
 NAME                          READY   STATUS    RESTARTS   AGE
-pod/coffee-67c6f7c5fd-98vh5   1/1     Running   0          18s
-pod/coffee-67c6f7c5fd-c58l2   1/1     Running   0          18s
-pod/coffee-67c6f7c5fd-dmxf6   1/1     Running   0          18s
-pod/tea-7df475c6-gtlx5        1/1     Running   0          18s
-pod/tea-7df475c6-lxqsx        1/1     Running   0          18s
+pod/coffee-7c86d7d67c-pr6kw   1/1     Running   0          27m
+pod/coffee-7c86d7d67c-sgspn   1/1     Running   0          27m
+pod/coffee-7c86d7d67c-tqtd6   1/1     Running   0          27m
+pod/tea-5c457db9-fdkxl        1/1     Running   0          27m
+pod/tea-5c457db9-z6hl5        1/1     Running   0          27m
 ```
 
 #### Create Ingress
@@ -1590,33 +1563,40 @@ According to the request path, ingress manifest is created for service connectio
 
 ```yaml
 # cafe-ingress-uri.yaml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: cafe-ingress-uri
 spec:
+  ingressClassName: nginx
   rules:
   - http:
       paths:
       - path: /tea
+        pathType: Prefix
         backend:
-          serviceName: tea-svc
-          servicePort: 80
+          service:
+            name: tea-svc
+            port:
+              number: 80
       - path: /coffee
+        pathType: Prefix
         backend:
-          serviceName: coffee-svc
-          servicePort: 80
+          service:
+            name: coffee-svc
+            port:
+              number: 80
 ```
 
 In a while after ingress is created, IP must be configured at the **ADDRESS** field.
 
 ```
 $ kubectl apply -f cafe-ingress-uri.yaml
-ingress.extensions/cafe-ingress-uri created
+ingress.networking.k8s.io/cafe-ingress-uri created
 
-$ kubectl get ingress cafe-ingress-uri
-NAME               HOSTS   ADDRESS          PORTS   AGE
-cafe-ingress-uri   *       123.123.123.44   80      88s
+$ # kubectl get ingress cafe-ingress-uri
+NAME               CLASS   HOSTS   ADDRESS          PORTS   AGE
+cafe-ingress-uri   nginx   *       123.123.123.44   80      23s
 ```
 
 #### Send HTTP Requests
@@ -1625,41 +1605,54 @@ Send HTTP request to the IP address set for **ADDRESS** of ingress for an extern
 Request for `/coffee` as endpoint is sent to the `coffee-svc` service so as the `coffee` pod can respond. From the **Server Name**, you can see that `coffee` pods take turns to respond in the round-robin technique.
 
 ```
-$ curl http://123.123.123.44/coffee
-Server address: 10.100.3.48:8080
-Server name: coffee-67c6f7c5fd-c58l2
-Dat#e: 07/Apr/2020:08:24:27 +0000
+$ curl 123.123.123.44/coffee
+Server address: 10.100.24.21:8080
+Server name: coffee-7c86d7d67c-sgspn
+Date: 11/Mar/2022:06:28:18 +0000
 URI: /coffee
-Request ID: e831901e441303ad59fb02214c49d84a
+Request ID: 3811d20501dbf948259f4b209c00f2f1
 
-$ curl http://123.123.123.44/coffee
-Server address: 10.100.2.23:8080
-Server name: coffee-67c6f7c5fd-98vh5
-Date: 07/Apr/2020:08:24:28 +0000
+$ curl 123.123.123.44/coffee
+Server address: 10.100.24.19:8080
+Server name: coffee-7c86d7d67c-tqtd6
+Date: 11/Mar/2022:06:28:27 +0000
 URI: /coffee
-Request ID: e78427e68a1cd61ec633b9328359874e
+Request ID: ec82f6ab31d622895374df972aed1acd
+
+$ curl 123.123.123.44/coffee
+Server address: 10.100.24.20:8080
+Server name: coffee-7c86d7d67c-pr6kw
+Date: 11/Mar/2022:06:28:31 +0000
+URI: /coffee
+Request ID: fec4a6111bcc27b9cba52629e9420076
 ```
 
 Likewise, request for `/tea` as endpoint is delivered to the `tea-svc` service so as the `tea` can respond.
 
 ```
-$ curl http://123.123.123.44/tea
-Server address: 10.100.2.24:8080
-Server name: tea-7df475c6-lxqsx
-Date: 07/Apr/2020:08:25:03 +0000
+$ curl 123.123.123.44/tea
+Server address: 10.100.24.23:8080
+Server name: tea-5c457db9-fdkxl
+Date: 11/Mar/2022:06:28:36 +0000
 URI: /tea
-Request ID: 59303a5a5baa60802b463b1856c8ce8d
+Request ID: 11be1b7634a371a26e6bf2d3e72ab8aa
+$ curl 123.123.123.44/tea
+Server address: 10.100.24.22:8080
+Server name: tea-5c457db9-z6hl5
+Date: 11/Mar/2022:06:28:37 +0000
+URI: /tea
+Request ID: 21106246517263d726931e0f85ea2887
 ```
 
 When a request is sent to undefined URI, the ingress controller sends `404 Not Found` as response.
 
 ```
-$ curl http://123.123.123.44/
+$ curl 123.123.123.44/unknown
 <html>
 <head><title>404 Not Found</title></head>
 <body>
 <center><h1>404 Not Found</h1></center>
-<hr><center>nginx/1.17.8</center>
+<hr><center>nginx</center>
 </body>
 </html>
 ```
@@ -1669,7 +1662,7 @@ Resources for testing can be deleted with used manifest.
 
 ```
 $ kubectl delete -f cafe-ingress-uri.yaml
-ingress.extensions "cafe-ingress-uri" deleted
+ingress.networking.k8s.io "cafe-ingress-uri" deleted
 
 $ kubectl delete -f cafe.yaml
 deployment.apps "coffee" deleted
@@ -1691,86 +1684,84 @@ Write the ingress manifest connecting services based on the host name. Incoming 
 
 ```yaml
 # cafe-ingress-host.yaml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: cafe-ingress-host
 spec:
+  ingressClassName: nginx
   rules:
   - host: tea.cafe.example.com
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: tea-svc
-          servicePort: 80
+          service:
+            name: tea-svc
+            port:
+              number: 80
   - host: coffee.cafe.example.com
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: coffee-svc
-          servicePort: 80
+          service:
+            name: coffee-svc
+            port:
+              number: 80
 ```
 
 In a while after ingress is created, IP must be configured at the **ADDRESS** field.
 
 ```
 $ kubectl apply -f cafe-ingress-host.yaml
-ingress.extensions/cafe-ingress-host created
+ingress.networking.k8s.io/cafe-ingress-host created
 
 $ kubectl get ingress
-NAME                HOSTS                                          ADDRESS          PORTS   AGE
-cafe-ingress-host   tea.cafe.example.com,coffee.cafe.example.com   123.123.123.44   80      4m29s
+NAME                CLASS   HOSTS                                          ADDRESS          PORTS   AGE
+cafe-ingress-host   nginx   tea.cafe.example.com,coffee.cafe.example.com   123.123.123.44   80      36s
 ```
 
 #### Send HTTP Requests
 HTTP request is sent from external host to IP configured at the ADDRESS of the ingress controller. Nevertheless, such request must be sent by using host name, since service divergence is based on the host name by configuration.
 
 > [Note]
-> To test with a random host name, use the --resolve option of curl: enter the --resolve option in the `{Host Name}:{Port Number}:{IP}`format. This means to resolve a request for {Port Number} to be sent to {Host Name} as {IP}. 
-> You may open up the `/etc/host` file and add `{IP} {Host Name}`. 
+> To test with a random host name, use the --resolve option of curl: enter the --resolve option in the `{Host Name}:{Port Number}:{IP}`format. This means to resolve a request for {Port Number} to be sent to {Host Name} as {IP}.
+> You may open up the `/etc/host` file and add `{IP} {Host Name}`.
 
 When a request is sent to the `coffee.cafe.example.com` host, it is delivered to`coffee-svc` so that the `coffee` pod can respond.
 
 ```
 $ curl --resolve coffee.cafe.example.com:80:123.123.123.44 http://coffee.cafe.example.com/
-Server address: 10.100.2.25:8080
-Server name: coffee-67c6f7c5fd-2bbzf
-Date: 07/Apr/2020:08:45:39 +0000
+Server address: 10.100.24.27:8080
+Server name: coffee-7c86d7d67c-fqn6n
+Date: 11/Mar/2022:06:40:59 +0000
 URI: /
-Request ID: 29fd8a244b9f0a5ff5f35d1dc35edccf
+Request ID: 1efb60d29891d6d48b5dcd9f5e1ba66d
 ```
 
 When a request is sent to the `tea.cafe.example.com` host, it is delivered to `tea-svc` so that the `tea` pod can respond.
 
 ```
 $ curl --resolve tea.cafe.example.com:80:123.123.123.44 http://tea.cafe.example.com/
-Server address: 10.100.3.52:8080
-Server name: tea-7df475c6-q8mdx
-Date: 07/Apr/2020:08:53:44 +0000
+Server address: 10.100.24.28:8080
+Server name: tea-5c457db9-ngrxq
+Date: 11/Mar/2022:06:41:39 +0000
 URI: /
-Request ID: fe61c1589d3ab8ef4ca4507245251ef3
+Request ID: 5a6cc490893636029766b02d2aab9e39
 ```
 
 When it is requested to an unknown host, the ingress controller sends `404 Not Found` as response.
 
 ```
-$ curl http://123.123.123.44
+$ curl 123.123.123.44/unknown
 <html>
 <head><title>404 Not Found</title></head>
 <body>
 <center><h1>404 Not Found</h1></center>
-<hr><center>nginx/1.17.8</center>
-</body>
-</html>
-
-$ curl --resolve test.example.com:80:123.123.123.44 http://test.example.com/
-<html>
-<head><title>404 Not Found</title></head>
-<body>
-<center><h1>404 Not Found</h1></center>
-<hr><center>nginx/1.17.8</center>
+<hr><center>nginx</center>
 </body>
 </html>
 ```
@@ -1783,24 +1774,25 @@ User Kubernetes has the `kubernetes-dashboard` service object which has been alr
 
 ```
 $ kubectl get svc kubernetes-dashboard -n kube-system
-NAME                   TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
-kubernetes-dashboard   ClusterIP   10.254.95.176   <none>        443/TCP   2d4h
+NAME                   TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)   AGE
+kubernetes-dashboard   ClusterIP   10.254.85.2   <none>        443/TCP   6h
 
 $ kubectl describe svc kubernetes-dashboard -n kube-system
 Name:              kubernetes-dashboard
 Namespace:         kube-system
 Labels:            k8s-app=kubernetes-dashboard
-Annotations:       kubectl.kubernetes.io/last-applied-configuration:
-                     {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"k8s-app":"kubernetes-dashboard"},"name":"kubernetes-dashboard"...
+Annotations:       <none>
 Selector:          k8s-app=kubernetes-dashboard
 Type:              ClusterIP
-IP:                10.254.95.176
+IP Family Policy:  SingleStack
+IP Families:       IPv4
+IP:                10.254.85.2
+IPs:               10.254.85.2
 Port:              <unset>  443/TCP
 TargetPort:        8443/TCP
-Endpoints:         10.100.2.3:8443
+Endpoints:         10.100.24.7:8443
 Session Affinity:  None
-Events:
-...
+Events:            <none>
 ```
 
 However, the `kubernetes-dashboard` object belongs to ClusterIP type and is not open out of the cluster. To open up dashboard externally, the service object type must be changed into LoadBalancer, or ingress controller and ingress object must be created.
@@ -1829,9 +1821,9 @@ kubernetes-dashboard   LoadBalancer   10.254.95.176   123.123.123.81   443:30963
 
 > [Note]
 > You can view the created load balancer on the **Network > Load Balancer** page.
-> Load balancer IP is a floating IP which is externally accessible. You can check it on the **Network > Floating IP** page.
+> Load balancer IP is a floating IP allowing external access. You can check it on the **Network > Floating IP** page.
 
-Access `https://{EXTERNAL-IP}` on the web browser to load the Kubernetes dashboard page. Tokens required for login are available at [Dashboard Access Token](/Container/NKS/zh/user-guide/#dashboard-access-token).
+If you access `https://{EXTERNAL-IP}` in a web browser, the Kubernetes dashboard page is loaded. See [Dashboard Access Token](/Container/NKS/zh/user-guide/#dashboard-access-token) for the token required for login.
 
 > [Note]
 > Since Kubernetes dashboard is based on a private certificate that is automatically created, the page may be displayed as unsafe, depending on the web browser or security setting.
@@ -1842,11 +1834,11 @@ Ingress refers to the network object providing routing to access many services w
 
 ![dashboard-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-02.png)
 
-Install `NGINX Ingress Controller` in reference of the [Install NGINX Ingress Controller](/Container/NKS/zh/user-guide/#nginx-ingress-controller) and create service of the `LoadBalancer` type. Write manifest to create an ingress object, like below:
+Install `NGINX Ingress Controller` by referring to [Install NGINX Ingress Controller](/Container/NKS/zh/user-guide/#nginx-ingress-controller) and write the manifest for creating an ingress object as follows.
 
 ```yaml
 # kubernetes-dashboard-ingress-tls-passthrough.yaml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: k8s-dashboard-ingress
@@ -1854,38 +1846,41 @@ metadata:
   annotations:
     ingress.kubernetes.io/ssl-passthrough: "true"
     kubernetes.io/ingress.allow-http: "false"
-    kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/backend-protocol: HTTPS
     nginx.ingress.kubernetes.io/proxy-body-size: 100M
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.org/ssl-backend: kubernetes-dashboard
 spec:
+  ingressClassName: nginx
   rules:
   - http:
       paths:
-      - backend:
-          serviceName: kubernetes-dashboard
-          servicePort: 443
-        path: /
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: kubernetes-dashboard
+            port:
+              number: 443
   tls:
   - secretName: kubernetes-dashboard-certs
 ```
 
-Apply manifest to create ingress, and check **EXTERNAL-IP** of the `ingress-nginx` service object.
+Apply the manifest to create an ingress and check the **ADDRESS** field of the ingress object.
 
 ```
 $ kubectl apply -f kubernetes-dashboard-ingress-tls-passthrough.yaml
-ingress.extensions/k8s-dashboard-ingress created
+ingress.networking.k8s.io/k8s-dashboard-ingress created
 
-$ kubectl get service/ingress-nginx -n ingress-nginx
-NAME            TYPE           CLUSTER-IP       EXTERNAL-IP      PORT(S)                      AGE
-ingress-nginx   LoadBalancer   10.254.211.113   123.123.123.29   80:32680/TCP,443:31631/TCP   19h
+$ kubectl get ingress -n kube-system
+NAME                    CLASS   HOSTS   ADDRESS          PORTS     AGE
+k8s-dashboard-ingress   nginx   *       123.123.123.44   80, 443   34s
 ```
 
-Access `https://{EXTERNAL-IP}` on the web browser to load the Kubernetes dashboard page. Tokens required for login are available at [Dashboard Access Token](/Container/NKS/zh/user-guide/#dashboard-access-token).
+If you access `https://{ADDRESS}` in a web browser, the Kubernetes dashboard page is loaded. See [Dashboard Access Token](/Container/NKS/zh/user-guide/#dashboard-access-token) for the token required for login.
 
 ### Dashboard Access Token
-Token is required to login Kubernetes dashboard. Get tokens with the following command:
+A token is required to log in to the Kubernetes dashboard. You can get the token with the following command:
 
 ```
 # SECRET_NAME=$(kubectl -n kube-system get secrets | grep "kubernetes-dashboard-token" | cut -f1 -d ' ')
@@ -1894,7 +1889,7 @@ $ kubectl describe secret $SECRET_NAME -n kube-system | grep -E '^token' | cut -
 eyJhbGc...-QmXA
 ```
 
-Enter printed token on the browser, and you can login as user with the administrator role.
+Enter the printed token in the token input window on the browser, and you can log in as a user that has been granted the cluster admin privileges.
 
 
 ## Persistent Volume
