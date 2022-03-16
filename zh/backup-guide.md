@@ -23,7 +23,7 @@ You can check the tenant ID and API endpoint by clicking the **Set API Endpoint*
 
 | Item | API Endpoint | Usage |
 | --- | --- | --- |
-| Identity | [https://api-identity.infrastructure.cloud.toast.com/v2.0](https://api-identity.infrastructure.cloud.toast.com/v2.0) | Issue an authentication token |
+| Identity | https://api-identity.infrastructure.cloud.toast.com/v2.0 | Issue an authentication token |
 | Tenant ID | 32 character string consisting of numbers and alphabets | Issue an authentication token |
 
 #### Set an API password
@@ -34,7 +34,7 @@ You can set the API password by clicking the **Set API Endpoint** button on the 
 2. In the **Set API Password** input box under **API Endpoint Settings**, enter the password to be used when issuing tokens.
 3. Click **Save**.
 
-For more information about the Object Storage API, see the [Object Storage API Guide](https://docs.toast.com/ko/Storage/Object%20Storage/ko/api-guide/).
+For more information about the Object Storage API, see the [Object Storage API Guide](/Storage/Object%20Storage/zh/api-guide/).
 
 ### Installing the Velero Client
 
@@ -179,13 +179,13 @@ $ velero restore create --from-backup {name}
 
 #### Cluster Backup/Restoration Example
 
-* Perform backup using the `velero backup create` command on the `backup cluster`.
+* Perform backup using the velero backup create command on the backup cluster.
 
 ```
 $ velero backup create my-backup --exclude-namespaces kube-system,velero
 ```
 
-* Check the backup status using the `velero backup get` command.
+* Check the backup status using the velero backup get command.
 
 ```
 $ velero backup get
@@ -193,7 +193,7 @@ NAME         STATUS      ERRORS   WARNINGS   CREATED                         EXP
 my-backup    Completed   0        0          2022-02-09 13:23:13 +0900 KST   29d       default            <none>
 ```
 
-* Perform restoration using the `velero restore create` command on the `restore cluster`.
+* Perform restoration using the velero restore create command on the restore cluster.
 
 ```
 $ velero restore create --from-backup my-backup
@@ -209,13 +209,13 @@ $ kubectl get pod --all-namespaces
 
 You can configure periodic backups with the `velero schedule create` command. See [schedule-a-backup](https://velero.io/docs/v1.7/backup-reference/#schedule-a-backup) for details.
 
-* In the `backup cluster`, use the `velero schedule create` command to configure periodic backups. (Example is every 10 minutes)
+* In the backup cluster, use the velero schedule create command to configure periodic backups. (Example is every 10 minutes)
 
 ```
 $ velero schedule create my-schedule --schedule="*/10 * * * *" --exclude-namespaces kube-system,velero
 ```
 
-* You can use the `velero backup get` command to check that the backup is performed at the set time interval.
+* You can use the velero backup get command to check that the backup is performed at the set time interval.
 
 ```
 $ velero backup get

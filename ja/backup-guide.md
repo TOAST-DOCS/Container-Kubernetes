@@ -23,7 +23,7 @@ Object Storage APIを使用するにはテナントID(tenant ID)およびAPIエ�
 
 | 項目 | API Endpoint | 用途 |
 | --- | --- | --- |
-| Identity | [https://api-identity.infrastructure.cloud.toast.com/v2.0](https://api-identity.infrastructure.cloud.toast.com/v2.0) | 認証トークン発行 |
+| Identity | https://api-identity.infrastructure.cloud.toast.com/v2.0 | 認証トークン発行 |
 | Tenant ID | 数字 + 英字で構成された32文字の文字列 | 認証トークン発行 |
 
 #### APIパスワード設定
@@ -34,7 +34,7 @@ APIパスワードはObject Storageサービスページの**API Endpoint設定*
 2. **API Endpoint設定**下の**APIパスワード設定**入力ダイアログボックスに、トークン発行時に使用するパスワードを入力します。
 3. **保存**ボタンをクリックします。
 
-Object Storage APIの詳細については[Object Storage APIガイド](https://docs.toast.com/ko/Storage/Object%20Storage/ko/api-guide/)を参照してください。
+Object Storage APIの詳細については[Object Storage APIガイド](/Storage/Object%20Storage/ja/api-guide/)を参照してください。
 
 ### Veleroクライアントのインストール
 
@@ -179,13 +179,13 @@ $ velero restore create --from-backup {name}
 
 #### クラスタバックアップ/復元例
 
-* `バックアップクラスタ`で`velero backup create`コマンドを使用してバックアップします。
+* バックアップクラスタでvelero backup createコマンドを使用してバックアップします。
 
 ```
 $ velero backup create my-backup --exclude-namespaces kube-system,velero
 ```
 
-* `velero backup get`コマンドを利用してバックアップ状態を確認します。
+* velero backup getコマンドを利用してバックアップ状態を確認します。
 
 ```
 $ velero backup get
@@ -193,7 +193,7 @@ NAME         STATUS      ERRORS   WARNINGS   CREATED                         EXP
 my-backup    Completed   0        0          2022-02-09 13:23:13 +0900 KST   29d       default            <none>
 ```
 
-* `復元クラスタ`で`velero restore create`コマンドを使用して復元します。
+* 復元クラスタでvelero restore createコマンドを使用して復元します。
 
 ```
 $ velero restore create --from-backup my-backup
@@ -209,13 +209,13 @@ $ kubectl get pod --all-namespaces
 
 `velero schedule create`コマンドで定期的なバックアップを設定できます。詳細については[schedule-a-backup](https://velero.io/docs/v1.7/backup-reference/#schedule-a-backup)を参照してください。
 
-* `バックアップクラスタ`で`velero schedule create`コマンドを使用して定期的なバックアップを設定します。 (例は10分間隔)
+* バックアップクラスタでvelero schedule createコマンドを使用して定期的なバックアップを設定します。 (例は10分間隔)
 
 ```
 $ velero schedule create my-schedule --schedule="*/10 * * * *" --exclude-namespaces kube-system,velero
 ```
 
-* `velero backup get`コマンドを使用して、設定した時間間隔でバックアップされることを確認できます。
+* velero backup getコマンドを使用して、設定した時間間隔でバックアップされることを確認できます。
 
 ```
 $ velero backup get
