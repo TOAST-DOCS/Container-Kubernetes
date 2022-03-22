@@ -1594,7 +1594,7 @@ In a while after ingress is created, IP must be configured at the **ADDRESS** fi
 $ kubectl apply -f cafe-ingress-uri.yaml
 ingress.networking.k8s.io/cafe-ingress-uri created
 
-$ # kubectl get ingress cafe-ingress-uri
+$ kubectl get ingress cafe-ingress-uri
 NAME               CLASS   HOSTS   ADDRESS          PORTS   AGE
 cafe-ingress-uri   nginx   *       123.123.123.44   80      23s
 ```
@@ -1966,7 +1966,7 @@ Create the storage class and check that it has been created.
 $ kubectl apply -f storage_class.yaml
 storageclass.storage.k8s.io/sc-ssd created
 
-$ # kubectl get sc
+$ kubectl get sc
 NAME     PROVISIONER            RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
 sc-ssd   kubernetes.io/cinder   Delete          Immediate           false                  3s
 ```
