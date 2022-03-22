@@ -39,7 +39,7 @@ Object Storage API에 대한 자세한 내용은 [Object Storage API 가이드](
 ### Velero 클라이언트 설치
 
 Velero 클라이언트는 클러스터의 백업 및 복구 명령을 입력하는 프로그램입니다.
-Velero Github 저장소에서 Velero 클라이언트를 다운로드하여 클러스터 백업 및 복구 시 활용할 수 있습니다. 다운로드한 Velero 클라이언트 명령을 실행하기 전에 백업 및 복구 클러스터의 kubeconfig 파일을 웹 콘솔에서 다운로드해야 하고, KUBECONFIG 환경 변수를 설정하여 백업 및 복구 대상 클러스터를 정확하게 지정해야 합니다.
+Velero Github 저장소에서 Velero 클라이언트를 다운로드하여 클러스터 백업 및 복구 시 활용할 수 있습니다. 다운로드한 Velero 클라이언트 명령을 실행하기 전에 백업 및 복구 클러스터의 kubeconfig 파일을 웹 콘솔에서 다운로드해야 하고, **KUBECONFIG 환경 변수를 설정하여 백업 및 복구 대상 클러스터를 정확하게 지정**해야 합니다.
 kubeconfig 설정에 대한 자세한 내용은 [kubectl 설치](/Container/NKS/ko/user-guide/#kubectl)를 참고하세요.
 
 #### Velero 클라이언트 다운로드
@@ -138,6 +138,9 @@ $ helm install velero vmware-tanzu/velero \
 | NHN Cloud 아이디 | NHN Cloud 아이디 |
 | API 비밀번호 | API Endpoint 설정에 입력한 API 비밀번호 |
 
+#### Velero 서버 삭제
+Velero 서버 삭제는 `velero uninstall` 명령어로 삭제할 수 있습니다.
+
 ### 클러스터 백업
 
 클러스터 백업은 `velero backup create` 명령어로 설정할 수 있습니다.
@@ -174,6 +177,12 @@ $ velero restore create --from-backup {name}
 ```
 
 * name에 백업 이름을 지정하면 그 백업의 내용대로 클러스터가 복구됩니다.
+
+> [주의]
+> 스토리지 클래스(StorageClass) 자원은 백업 및 복구되지 않으므로, 복구 전에 `백업 클러스터`에 존재하는 것과 동일한 이름의 스토리지 클래스를 `복구 클러스터`에 미리 생성해두어야 합니다.
+
+> [주의]
+> `백업 클러스터`와 `복구 클러스터`의 버전이 다른 경우 복구시 문제가 발생할 수 있습니다.
 
 ### 예시
 
@@ -222,4 +231,24 @@ $ velero backup get
 NAME                          STATUS      ERRORS   WARNINGS   CREATED                         EXPIRES   STORAGE LOCATION   SELECTOR
 my-schedule-20220209044049    Completed   0        0          2022-02-09 13:40:49 +0900 KST   29d       default            <none>
 my-schedule-20220209043115    Completed   0        0          2022-02-09 13:31:15 +0900 KST   29d       default            <none>
+```
+
+#### 주기적 백업 설정 해제 예시
+`velero schedule delete` 명령어로 주기적 백업을 해제할 수 있습니다.
+
+* 백업 클러스터에서 velero schedule get 명령어를 사용하여 설정 정보를 확인합니다.
+
+```
+$ velero schedule get
+NAME          STATUS    CREATED                         SCHEDULE       BACKUP TTL   LAST BACKUP   SELECTOR
+my-schedule   Enabled   2022-03-17 13:48:53 +0900 KST   */10 * * * *   720h0m0s     4s ago        <none>
+```
+
+
+* velero schedule delete 명령어를 사용하여 주기적 백업 설정을 해제합니다.
+
+```
+$ velero schedule delete my-schedule
+Are you sure you want to continue (Y/N)? y
+Schedule deleted: my-schedule
 ```
