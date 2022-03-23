@@ -39,7 +39,7 @@ Object Storage APIの詳細については[Object Storage APIガイド](/Storage
 ### Veleroクライアントのインストール
 
 Veleroクライアントはクラスタのバックアップおよび復元コマンドを入力するプログラムです。
-Velero GithubリポジトリからVeleroクライアントをダウンロードして、クラスタのバックアップおよび復元に活用できます。ダウンロードしたVeleroクライアントコマンドを実行する前にバックアップおよび復元クラスタのkubeconfigファイルをWebコンソールからダウンロードし、KUBECONFIG環境変数を設定してバックアップおよび復元対象クラスタを正確に指定する必要があります。
+Velero GithubリポジトリからVeleroクライアントをダウンロードして、クラスタのバックアップおよび復元に活用できます。ダウンロードしたVeleroクライアントコマンドを実行する前にバックアップおよび復元クラスタのkubeconfigファイルをWebコンソールからダウンロードし、**KUBECONFIG環境変数を設定してバックアップおよび復元対象クラスタを正確に指定**する必要があります。
 kubeconfig設定の詳細については[kubectlインストール](/Container/NKS/ja/user-guide/#kubectl)を参照してください。
 
 #### Veleroクライアントのダウンロード
@@ -138,6 +138,9 @@ $ helm install velero vmware-tanzu/velero \
 | NHN Cloud ID | NHN Cloud ID |
 | APIパスワード | API Endpoint設定に入力したAPIパスワード |
 
+#### Veleroサーバー削除
+Veleroサーバーは`velero uninstall`コマンドで削除できます。
+
 ### クラスタのバックアップ
 
 クラスタのバックアップは`velero backup create`コマンドで設定できます。
@@ -174,6 +177,11 @@ $ velero restore create --from-backup {name}
 ```
 
 * nameにバックアップ名を指定すると、そのバックアップの内容どおりにクラスタが復元されます。
+
+> [注意]
+> ストレージクラス(StorageClass)のリソースは、バックアップおよび復元されないため、復元前に`バックアップクラスタ`に存在するものと同じ名前のストレージクラスを`復元クラスタ`にあらかじめ作成しておく必要があります。
+> [注意]
+> `バックアップクラスタ`と`復元クラスタ`のバージョンが異なる場合、復元時に問題が発生する可能性があります。
 
 ### 例
 
@@ -222,4 +230,24 @@ $ velero backup get
 NAME                          STATUS      ERRORS   WARNINGS   CREATED                         EXPIRES   STORAGE LOCATION   SELECTOR
 my-schedule-20220209044049    Completed   0        0          2022-02-09 13:40:49 +0900 KST   29d       default            <none>
 my-schedule-20220209043115    Completed   0        0          2022-02-09 13:31:15 +0900 KST   29d       default            <none>
+```
+
+#### 定期的バックアップ設定の解除例
+`velero schedule delete`コマンドで定期的なバックアップを解除できます。
+
+* バックアップクラスタでvelero schedule getコマンドを使用して設定情報を確認します。
+
+```
+$ velero schedule get
+NAME          STATUS    CREATED                         SCHEDULE       BACKUP TTL   LAST BACKUP   SELECTOR
+my-schedule   Enabled   2022-03-17 13:48:53 +0900 KST   */10 * * * *   720h0m0s     4s ago        <none>
+```
+
+
+* velero schedule deleteコマンドを使用して定期的なバックアップ設定を解除します。
+
+```
+$ velero schedule delete my-schedule
+Are you sure you want to continue (Y/N)? y
+Schedule deleted: my-schedule
 ```
