@@ -36,11 +36,11 @@ You can set the API password by clicking the **Set API Endpoint** button on the 
 
 For more information about the Object Storage API, see the [Object Storage API Guide](/Storage/Object%20Storage/en/api-guide/).
 
-### Installing the Velero Client
+### Install the Velero Client
 
 The Velero client is a program where you can enter the cluster's backup and restore commands.
-You can download the Velero client from the Velero Github repository and use it for cluster backup and restoration. Before running the downloaded Velero client command, you must download the kubeconfig file of the backup and restore clusters from the web console, and set the KUBECONFIG environment variable to specify the target clusters for backup and restoration exactly.
-See [Installing kubectl](/Container/NKS/en/user-guide/#kubectl) for more information on kubeconfig settings.
+You can download the Velero client from the Velero Github repository and use it for cluster backup and restoration. Before running the downloaded Velero client command, you must download the kubeconfig file of the backup and restore clusters from the web console, and **set the KUBECONFIG environment variable to specify the target clusters for backup and restoration exactly**.
+For more information on kubeconfig settings, see [Installing kubectl](/Container/NKS/en/user-guide/#kubectl).
 
 #### Download the Velero Client
 
@@ -70,7 +70,7 @@ $ sudo mv velero-v1.7.1-linux-amd64/velero /usr/local/bin
 $ export PATH=$PATH:$(pwd)
 ```
 
-### Installing the Velero Server
+### Install the Velero Server
 
 Install the Velero server using Helm.
 
@@ -94,7 +94,7 @@ $ chmod 700 get_helm.sh
 $ ./get_helm.sh
 ```
 
-#### Add Helm Repository
+#### Add the Helm Repository
 
 To install the Velero server, you need to add the Helm repository.
 
@@ -102,7 +102,7 @@ To install the Velero server, you need to add the Helm repository.
 $ helm repo add vmware-tanzu https://vmware-tanzu.github.io/helm-charts
 ```
 
-#### Installing the Velero Server
+#### Install the Velero Server
 
 The Velero server must be installed on a `backup cluster` and a `restore cluster` respectively. We recommend that you install using `the same helm command on both clusters` to use the same Object Storage.
 
@@ -138,6 +138,9 @@ $ helm install velero vmware-tanzu/velero \
 | NHN Cloud ID | NHN Cloud ID |
 | API password | API password entered in API Endpoint settings |
 
+#### Delete the Velero Server
+You can uninstall the Velero server with the `velero uninstall` command.
+
 ### Back up a Cluster
 
 You can configure a cluster backup with the `velero backup create` command.
@@ -150,7 +153,7 @@ $ velero backup create {name} --exclude-namespaces kube-system,velero
 * Specify the name as the name of the backup you want.
 * You can set up resource filtering when backing up a cluster. See [resource-filtering](https://velero.io/docs/v1.7/resource-filtering/) for details.
 
-> \[Caution]
+> [Caution]
 > You must exclude the namespaces that do not require backup such as `kube-system` and `velero`.
 > If such namespaces are included in a backup, a problem might occur while performing restoration.
 
@@ -175,9 +178,15 @@ $ velero restore create --from-backup {name}
 
 * If you specify a backup name in the name, the cluster is restored according to the content of the backup.
 
+> [Caution]
+> Since StorageClass resources are not backed up and restored, you must create a storage class with the same name as the one existing in the `backup cluster` in the `restore cluster` before restoration.
+
+> [Caution]
+> If the versions of the `backup cluster` and the `restore cluster` are different, problems may occur during restoration.
+
 ### Examples
 
-#### Cluster Backup/Restoration Example
+#### Example of Cluster Backup and Restoration
 
 * Perform backup using the velero backup create command on the backup cluster.
 
@@ -205,7 +214,7 @@ $ velero restore create --from-backup my-backup
 $ kubectl get pod --all-namespaces
 ```
 
-#### Periodic Backup Configuration Example
+#### Example of Setting Periodic Backups
 
 You can configure periodic backups with the `velero schedule create` command. See [schedule-a-backup](https://velero.io/docs/v1.7/backup-reference/#schedule-a-backup) for details.
 
@@ -222,4 +231,24 @@ $ velero backup get
 NAME                          STATUS      ERRORS   WARNINGS   CREATED                         EXPIRES   STORAGE LOCATION   SELECTOR
 my-schedule-20220209044049    Completed   0        0          2022-02-09 13:40:49 +0900 KST   29d       default            <none>
 my-schedule-20220209043115    Completed   0        0          2022-02-09 13:31:15 +0900 KST   29d       default            <none>
+```
+
+#### Example of Clearing Periodic Backups
+Periodic backups can be cleared with the `velero schedule delete` command.
+
+* Check the configuration information using the velero schedule get command on the backup cluster.
+
+```
+$ velero schedule get
+NAME          STATUS    CREATED                         SCHEDULE       BACKUP TTL   LAST BACKUP   SELECTOR
+my-schedule   Enabled   2022-03-17 13:48:53 +0900 KST   */10 * * * *   720h0m0s     4s ago        <none>
+```
+
+
+* Clear the periodic backup setting using the velero schedule delete command.
+
+```
+$ velero schedule delete my-schedule
+Are you sure you want to continue (Y/N)? y
+Schedule deleted: my-schedule
 ```
