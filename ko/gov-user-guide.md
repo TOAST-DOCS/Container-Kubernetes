@@ -27,9 +27,13 @@ NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전�
 
 | 버전 | 클러스터 신규 생성 | 생성된 클러스터 사용|
 | :-: | :-: | :-: |
-| v1.17.6 | 가능 | 가능 |
-| v1.18.19 | 가능 | 가능 |
-| v1.19.13 | 가능 | 가능 |
+| v1.17.6 | 불가능 | 가능 |
+| v1.18.19 | 불가능 | 가능 |
+| v1.19.13 | 불가능 | 가능 |
+| v1.20.12 | 가능 | 가능 |
+| v1.21.6 | 가능 | 가능 |
+| v1.22.3 | 가능 | 가능 |
+| v1.23.3 | 가능 | 가능 |
 
 
 필요한 정보를 입력하고 **클러스터 생성** 버튼을 클릭하면 클러스터 생성이 시작됩니다. 클러스터 목록에서 상태를 확인할 수 있습니다. 생성하는 데는 약 10분 정도 걸립니다. 클러스터 설정에 따라 더 오래 걸릴 수도 있습니다.
@@ -89,6 +93,9 @@ NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전�
 | 블록 스토리지 크기 | 추가 노드 그룹 인스턴스의 블록 스토리지 크기 |
 
 필요한 정보를 입력하고 **노드 그룹 생성** 버튼을 클릭하면 노드 그룹 생성이 시작됩니다. 노드 그룹 목록에서 상태를 확인할 수 있습니다. 노드 그룹 생성하는 데는 약 5분 정도 걸립니다. 노드 그룹 설정에 따라 더 오래 걸릴 수도 있습니다.
+
+>[주의]
+>해당 클러스터를 생성한 사용자만 노드 그룹 생성이 가능합니다.
 
 ### 노드 그룹 삭제
 노드 그룹 목록에서 삭제하려는 노드 그룹을 선택하고 **노드 그룹 삭제** 버튼을 클릭하면 삭제가 진행됩니다. 노드 그룹 삭제하는 데는 약 5분 정도 걸립니다. 노드 그룹의 상태에 따라 더 오래 걸릴 수도 있습니다.
@@ -364,7 +371,7 @@ nginx-deployment-756fd4cdf-x7ns5   0/1     Pending   0          34s
 ```
 # kubectl get nodes
 NAME                                            STATUS   ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   45m   v1.17.6
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   45m   v1.23.3
 ```
 
 약5~10분 후 아래와 같이 노드가 증설된 것을 확인할 수 있습니다.
@@ -372,9 +379,9 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   45m   v1.17.6
 ```
 # kubectl get nodes
 NAME                                            STATUS   ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   48m   v1.17.6
-autoscaler-test-default-w-ohw5ab5wpzug-node-1   Ready    <none>   77s   v1.17.6
-autoscaler-test-default-w-ohw5ab5wpzug-node-2   Ready    <none>   78s   v1.17.6
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   48m   v1.23.3
+autoscaler-test-default-w-ohw5ab5wpzug-node-1   Ready    <none>   77s   v1.23.3
+autoscaler-test-default-w-ohw5ab5wpzug-node-2   Ready    <none>   78s   v1.23.3
 ```
 
 `Pending` 상태였던 파드가 노드 증설 이후 정상 스케줄링된 것을 확인할 수 있습니다.
@@ -442,7 +449,7 @@ No resources found in default namespace.
 ```
 # kubectl get nodes
 NAME                                            STATUS   ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   71m   v1.17.6
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   71m   v1.23.3
 ```
 
 노드 감축에 대한 이벤트는 아래 명령어로 확인할 수 있습니다.
@@ -660,8 +667,8 @@ data:
 ```
 # kubectl get nodes
 NAME                                            STATUS     ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready      <none>   22d   v1.17.6
-autoscaler-test-default-w-ohw5ab5wpzug-node-8   Ready      <none>   90s   v1.17.6
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready      <none>   22d   v1.23.3
+autoscaler-test-default-w-ohw5ab5wpzug-node-8   Ready      <none>   90s   v1.23.3
 ```
 
 Pending 상태였던 파드 모두 정상 스케줄링되어 Running 상태가 된 것을 확인할 수 있습니다.
@@ -691,23 +698,23 @@ php-apache   Deployment/php-apache   0%/50%    1         30        1          31
 ```
 # kubectl get nodes
 NAME                                            STATUS   ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.17.6
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 ```
 
 
-### 예약 스크립트
-클러스터를 생성할 때와 추가 노드 그룹을 생성할 때, 예약 스크립트를 등록할 수 있습니다. 예약 스크립트 기능에는 다음과 같은 특징이 있습니다.
+### 사용자 스크립트
+클러스터를 생성할 때와 추가 노드 그룹을 생성할 때, 사용자 스크립트를 등록할 수 있습니다. 사용자 스크립트 기능에는 다음과 같은 특징이 있습니다.
 
 * 기능 설정
     * 이 기능은 워커 노드 그룹별로 설정할 수 있습니다.
-    * 클러스터 생성 시 입력한 예약 스크립트는 기본 워커 노드 그룹에 적용됩니다.
-    * 추가 노드 그룹 생성 시 입력한 예약 스크립트는 해당 워커 노드 그룹에 적용됩니다.
-    * 워커 노드 그룹이 생성된 후에는 예약 스크립트의 내용을 변경할 수 없습니다.
+    * 클러스터 생성 시 입력한 사용자 스크립트는 기본 워커 노드 그룹에 적용됩니다.
+    * 추가 노드 그룹 생성 시 입력한 사용자 스크립트는 해당 워커 노드 그룹에 적용됩니다.
+    * 워커 노드 그룹이 생성된 후에는 사용자 스크립트의 내용을 변경할 수 없습니다.
 * 스크립트 실행 시점
-    * 예약 스크립트는 워커 노드 초기화 과정 중 인스턴스 초기화 과정에서 실행됩니다.
-    * 예약 스크립트가 실행된 후, 해당 인스턴스를 '워커 노드 그룹'의 워커 노드로 설정하고 등록합니다.
+    * 사용자 스크립트는 워커 노드 초기화 과정 중 인스턴스 초기화 과정에서 실행됩니다.
+    * 사용자 스크립트가 실행된 후, 해당 인스턴스를 '워커 노드 그룹'의 워커 노드로 설정하고 등록합니다.
 * 스크립트 내용
-    * 예약 스크립트의 첫번째 줄은 반드시 #! 으로 시작해야 합니다.
+    * 사용자 스크립트의 첫번째 줄은 반드시 #! 으로 시작해야 합니다.
     * 스크립트 최대 크기는 64KB입니다.
     * 스크립트는 root 권한으로 실행됩니다.
     * 스크립트 실행 기록은 아래 위치에 저장됩니다.
@@ -889,6 +896,11 @@ status:
 * ServiceAccount
 * ValidatingAdmissionWebhook
 
+#### v1.20.12 이후 버전
+Kubernetes 버전 별 기본 활성 승인 컨트롤러는 모두 활성화됩니다. 기본 활성 승인 컨트롤러에 아래의 컨트롤러가 추가 활성화됩니다.
+* NodeRestriction
+* PodSecurityPolicy
+
 
 ### 클러스터 업그레이드
 NHN Kubernetes Service(NKS)는 동작 중인 Kubernetes 클러스터의 Kubernetes 구성 요소 업그레이드를 지원합니다. 
@@ -916,16 +928,16 @@ NHN Cloud의 Kubernetes 클러스터 버전 관리 방식과 Kubernetes 버전 �
 
 다음 예시는 Kubernetes 버전을 업그레이드 과정에서 업그레이드 가능 여부를 표로 나타낸 것입니다. 예시에 사용된 조건은 다음과 같습니다. 
 
-* NHN Cloud가 지원하는 Kubernetes 버전 목록: v1.17.6, v1.18.19, v1.19.10
-* 클러스터는 v1.17.6으로 생성
+* NHN Cloud가 지원하는 Kubernetes 버전 목록: v1.21.6, v1.22.3, v1.23.3
+* 클러스터는 v1.21.6으로 생성
 
 | 상태 | 마스터 버전 | 마스터 업그레이드 가능 여부 | 워커 노드 그룹 버전 | 워커 노드 그룹 업그레이드 가능 여부
 | --- | :-: | :-: | :-: | :-: |
-| 초기 상태| v1.17.6 | 가능① | v1.17.6 | 불가능 ② | 
-| 마스터 업그레이드 후 상태 | v1.18.19 | 불가능 ③ | v1.17.6 | 가능 ④ | 
-| 워커 노드 그룹 업그레이드 후 상태 | v1.18.19 | 가능 ① | v1.18.19 | 불가능 ② |
-| 마스터 업그레이드 후 상태 | v1.19.10 | 불가능 ③ | v1.18.19 | 가능 ④ | 
-| 워커 노드 그룹 업그레이드 후 상태 | v1.19.10 | 불가능 ⑤ | v1.19.10 | 불가능 ② |
+| 초기 상태| v1.21.6 | 가능① | v1.21.6 | 불가능 ② | 
+| 마스터 업그레이드 후 상태 | v1.22.3 | 불가능 ③ | v1.21.6 | 가능 ④ | 
+| 워커 노드 그룹 업그레이드 후 상태 | v1.22.3 | 가능 ① | v1.22.3 | 불가능 ② |
+| 마스터 업그레이드 후 상태 | v1.23.3 | 불가능 ③ | v1.22.3 | 가능 ④ | 
+| 워커 노드 그룹 업그레이드 후 상태 | v1.23.3 | 불가능 ⑤ | v1.23.3 | 불가능 ② |
 
 주석
 
@@ -1030,39 +1042,6 @@ nginx-deployment-7fd6966748-pvrzs   1/1     Running   0          4m13s
 nginx-deployment-7fd6966748-wv7rd   1/1     Running   0          4m13s
 ```
 
-만약 NHN Cloud Container Registry에 저장한 이미지를 사용하고 싶다면 먼저 사용자 레지스트리에 로그인하기 위한 시크릿(secret)을 만들어야 합니다.
-
-```
-$ kubectl create secret docker-registry registry-credential --docker-server={사용자 레지스트리 주소} --docker-username={NHN Cloud 계정 email 주소} --docker-password={서비스 Appkey 또는 통합 Appkey}
-secret/registry-credential created
-
-$ kubectl get secrets
-NAME                  TYPE                             DATA   AGE
-registry-credential   kubernetes.io/dockerconfigjson   1      30m
-```
-
-디플로이먼트 매니페스트 파일에 시크릿 정보를 추가하고, 이미지 이름을 변경하면 사용자 레지스트리에 저장된 이미지를 이용해 파드를 만들 수 있습니다.
-
-```yaml
-# nginx.yaml
-...
-spec:
-  ...
-  template:
-    ...
-    spec:
-      containers:
-      - name: nginx
-        image: {사용자 레지스트리 주소}/nginx:1.14.2
-        ...
-      imagePullSecrets:
-      - name: regcred
-
-```
-
-> [참고]
-> NHN Cloud Container Registry 사용 방법은 [Container Registry 사용 가이드](/Container/Container%20Registry/ko/gov-user-guide/) 문서를 참고하세요.
-
 ### LoadBalancer 서비스 생성
 Kubernetes의 서비스 객체를 정의하려면 다음과 같은 항목으로 구성된 매니페스트가 필요합니다.
 
@@ -1156,6 +1135,55 @@ Commercial support is available at
 ### 로드 밸런서 상세 옵션 설정
 Kubernetes의 서비스 객체를 정의할 때 로드 밸런서의 여러 가지 옵션을 설정할 수 있습니다.
 
+#### 전역 설정과 리스너별 설정
+설정 항목별로 전역 설정과 리스너별 설정이 가능합니다. 전역 설정과 리스너별 설정 모두 없는 경우 설정별 기본값을 사용합니다.
+* 리스너별 설정: 대상 리스너에만 적용되는 설정입니다.
+* 전역 설정: 대상 리스너에 리스너별 설정이 없는 경우 이 설정을 적용합니다.
+
+#### 리스너별 설정 형식
+리스너별 설정은 전역 설정 키에 리스너를 나타내는 접두어(prefix)를 붙여 설정할 수 있습니다. 리스너를 나타내는 접두어는 서비스 객체의 포트 프로토콜(`spec.ports[].protocol`)과 포트 번호(`spec.ports[].port`)를 대시(`-`)로 연결한 것입니다. 예를 들어 프로토콜이 TCP이고, 포트 번호가 80인 경우 접두어는 `TCP-80`입니다. 이 포트와 연결되는 리스너에 세션 지속성 설정을 하고 싶다면 .metadata.annotations 하위의 TCP-80.loadbalancer.nhncloud/pool-session-persistence에 설정할 수 있습니다.
+
+아래 매니페스트는 전역 설정과 리스너별 설정을 혼용한 예제입니다. 
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: echosvr-svc
+  labels:
+    app: echosvr
+  annotations:
+    # 전역 설정
+    loadbalancer.nhncloud/pool-lb-method: SOURCE_IP
+    
+    # 리스너별 설정
+    TCP-80.loadbalancer.nhncloud/pool-session-persistence: "SOURCE_IP"
+    TCP-80.loadbalancer.nhncloud/listener-protocol: "HTTP"
+    TCP-443.loadbalancer.nhncloud/pool-lb-method: LEAST_CONNECTIONS
+    TCP-443.loadbalancer.nhncloud/listener-protocol: "TCP"
+spec:
+  ports:
+  - name: tcp-80
+    port: 80
+    targetPort: 8080
+    protocol: TCP
+  - name: tcp-443
+    port: 443
+    targetPort: 8443
+    protocol: TCP
+  selector:
+    app: echosvr
+  type: LoadBalancer
+```
+
+이 매니페스트를 적용했을 때 리스너별 설정은 다음 표와 같이 설정됩니다.
+
+| 항목 | TCP-80 리스너 | TCP-433 리스너| 설명 |
+| --- | --- | --- | --- |
+| 로드 밸런싱 방식 | SOURCE_IP | LEAST_CONNECTIONS | TCP-80 리스너는 전역 설정에 따라 SOURCE_IP로 설정<br>TCP-443 리스너는 리스너별 설정에 따라 LEAST_CONNECTIONS로 설정  |
+| 세션 지속성 | SOURCE_IP | None | TCP-80 리스너는 리스너별 설정에 따라 SOURCE_IP로 설정<br>TCP-443 리스너는 기본값에 따라 None으로 설정 |
+| 리스너 프로토콜 | HTTP | TCP | TCP-80 리스너와 TCP-443 리스너 모두 리스너별 설정에 따라 설정   |
+
 > [참고]
 > 별도로 표시되어 있지 않은 기능은 Kubernetes v1.19.13 이후 버전의 클러스터에만 적용 가능합니다.
 >
@@ -1168,7 +1196,8 @@ Kubernetes의 서비스 객체를 정의할 때 로드 밸런서의 여러 가�
 #### 세션 지속성 설정
 로드 밸런서의 세션 지속성을 설정할 수 있습니다.
 
-* 설정 위치는 .spec.sessionAffinity입니다.
+* 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/pool-session-persistence입니다.
+* 리스너별 설정을 적용할 수 있습니다.
 * 다음 중 하나로 설정할 수 있습니다.
     * 빈 문자열(""): 세션 지속성을 '없음'으로 설정합니다. 미설정 시 기본값입니다.
     * SOURCE_IP: 세션 지속성을 SOURCE_IP로 설정합니다.
@@ -1182,6 +1211,7 @@ Kubernetes의 서비스 객체를 정의할 때 로드 밸런서의 여러 가�
 로드 밸런서에는 플로팅 IP가 연결되어 있습니다. 로드 밸런서 삭제 시 로드 밸런서에 연결된 플로팅 IP의 삭제 혹은 보존 여부를 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.openstack.org/keep-floatingip입니다.
+* **리스너별 설정을 적용할 수 없습니다.**
 * 다음 중 하나로 설정할 수 있습니다.
     * true: 플로팅 IP를 보존합니다.
     * false: 플로팅 IP를 삭제합니다. 미설정 시 기본값입니다.
@@ -1189,7 +1219,8 @@ Kubernetes의 서비스 객체를 정의할 때 로드 밸런서의 여러 가�
 #### 리스너 연결 제한 설정
 리스너의 연결 제한을 설정할 수 있습니다.
 
-* 설정 위치는 .metadata.annotations 하위의 loadbalancer.openstack.org/connection-limit입니다.
+* 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/connection-limit입니다.
+* 리스너별 설정을 적용할 수 있습니다.
 * v1.17.6, v1.18.19 클러스터
     * 최소값 1, 최대값 60000입니다. 
     * 설정하지 않으면 -1로 설정되며, 실제 로드 밸런서에 적용되는 값은 2000입니다.
@@ -1202,6 +1233,7 @@ Kubernetes의 서비스 객체를 정의할 때 로드 밸런서의 여러 가�
 리스너의 프로토콜을 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/listener-protocol입니다.
+* 리스너별 설정을 적용할 수 있습니다.
 * 다음 중 하나로 설정할 수 있습니다.
     * TCP: 미설정 시 기본값입니다.
     * HTTP
@@ -1217,21 +1249,28 @@ Kubernetes의 서비스 객체를 정의할 때 로드 밸런서의 여러 가�
 SSL 버전은 다음과 같이 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/listener-terminated-https-tls-version입니다.
+* 리스너별 설정을 적용할 수 있습니다.
 * 다음 중 하나로 설정할 수 있습니다.
-    * TLSv1.2: 미설정 시 기본값입니다.
+    * TLSv1.3: 미설정 시 기본값입니다.
+    * TLSv1.2
     * TLSv1.1
     * TLSv1.0_2016
     * TLSv1.0
     * SSLv3
 
+> [주의]
+> TLSv1.3은 2022년 3월 29일 이후 생성된 클러스터에서 설정 가능합니다.
+
 인증서 정보는 다음과 같이 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/listener-terminated-https-cert입니다.
+* 리스너별 설정을 적용할 수 있습니다.
 * 시작줄 및 끝줄을 포함해야 합니다.
 
 개인키 정보는 다음과 같이 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/listener-terminated-https-key입니다.
+* 리스너별 설정을 적용할 수 있습니다.
 * 시작줄 및 끝줄을 포함해야 합니다.
 
 다음은 리스너 프로토콜을 TERMINATED_HTTPS로 설정할 때의 매니페스트 예제입니다. 인증서 정보와 개인키 정보는 일부 생략되어 있습니다.
@@ -1261,6 +1300,7 @@ metadata:
 로드 밸런싱 방식을 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/pool-lb-method입니다.
+* 리스너별 설정을 적용할 수 있습니다.
 * 다음 중 하나로 설정할 수 있습니다.
     * ROUND_ROBIN: 미설정 시 기본값입니다.
     * LEAST_CONNECTIONS
@@ -1271,6 +1311,7 @@ metadata:
 상태 확인 프로토콜을 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/healthmonitor-type입니다.
+* 리스너별 설정을 적용할 수 있습니다.
 * 다음 중 하나로 설정할 수 있습니다.
     * HTTP: HTTP URL, HTTP 메서드, HTTP 상태 코드를 추가 설정해야 합니다.
     * HTTPS: HTTP URL, HTTP 메서드, HTTP 상태 코드를 추가 설정해야 합니다.
@@ -1279,17 +1320,20 @@ metadata:
 HTTP URL은 다음과 같이 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/healthmonitor-http-url입니다.
+* 리스너별 설정을 적용할 수 있습니다.
 * 설정값은 /으로 시작해야 합니다.
 * 설정하지 않거나 규칙에 맞지 않는 값을 입력하면 기본값인 /로 설정됩니다.
 
 HTTP 메서드는 다음과 같이 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/healthmonitor-http-method입니다.
+* 리스너별 설정을 적용할 수 있습니다.
 * 현재 GET만 지원하고 있으며, 설정하지 않거나 다른 값을 입력하면 기본값인 GET으로 설정됩니다.
 
 HTTP 상태 코드는 다음과 같이 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/healthmonitor-http-expected-code입니다.
+* 리스너별 설정을 적용할 수 있습니다.
 * 단일값(예: 200), 목록(예: 200,202), 범위(예: 200-204) 형태로 입력할 수 있습니다.
 * 설정하지 않거나 규칙에 맞지 않는 값을 입력하면 기본값인 200으로 설정됩니다.
 
@@ -1297,6 +1341,7 @@ HTTP 상태 코드는 다음과 같이 설정할 수 있습니다.
 상태 확인 주기를 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/healthmonitor-delay입니다.
+* 리스너별 설정을 적용할 수 있습니다.
 * 초 단위로 설정합니다.
 * 최소값 1, 최대값 5000입니다.
 * 설정하지 않거나 범위에서 벗어나는 값을 입력하면 기본값인 60으로 설정됩니다.
@@ -1305,6 +1350,7 @@ HTTP 상태 코드는 다음과 같이 설정할 수 있습니다.
 상태 확인 최대 응답 시간을 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/healthmonitor-timeout입니다.
+* 리스너별 설정을 적용할 수 있습니다.
 * 초 단위로 설정합니다.
 * 최소값 1, 최대값 5000입니다.
 * 이 설정은 반드시 상태 확인 주기 설정 설정값보다 작아야 합니다.
@@ -1315,6 +1361,7 @@ HTTP 상태 코드는 다음과 같이 설정할 수 있습니다.
 상태 확인 최대 재시도 횟수를 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/healthmonitor-max-retries입니다.
+* 리스너별 설정을 적용할 수 있습니다.
 * 최소값 1, 최대값 10입니다.
 * 설정하지 않거나 범위에서 벗어나는 값을 입력하면 기본값인 3으로 설정됩니다.
 
@@ -1456,21 +1503,22 @@ service/coffee-svc created
 deployment.apps/tea created
 service/tea-svc created
 
-$ kubectl get deploy,svc,pods
-NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.extensions/coffee   3/3     3            3           18s
-deployment.extensions/tea      2/2     2            2           18s
+# kubectl get deploy,svc,pods
+NAME                     READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/coffee   3/3     3            3           27m
+deployment.apps/tea      2/2     2            2           27m
 
 NAME                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
-service/coffee-svc   ClusterIP   10.254.51.117    <none>        80/TCP    18s
-service/tea-svc      ClusterIP   10.254.210.170   <none>        80/TCP    18s
+service/coffee-svc   ClusterIP   10.254.171.198   <none>        80/TCP    27m
+service/kubernetes   ClusterIP   10.254.0.1       <none>        443/TCP   5h51m
+service/tea-svc      ClusterIP   10.254.184.190   <none>        80/TCP    27m
 
 NAME                          READY   STATUS    RESTARTS   AGE
-pod/coffee-67c6f7c5fd-98vh5   1/1     Running   0          18s
-pod/coffee-67c6f7c5fd-c58l2   1/1     Running   0          18s
-pod/coffee-67c6f7c5fd-dmxf6   1/1     Running   0          18s
-pod/tea-7df475c6-gtlx5        1/1     Running   0          18s
-pod/tea-7df475c6-lxqsx        1/1     Running   0          18s
+pod/coffee-7c86d7d67c-pr6kw   1/1     Running   0          27m
+pod/coffee-7c86d7d67c-sgspn   1/1     Running   0          27m
+pod/coffee-7c86d7d67c-tqtd6   1/1     Running   0          27m
+pod/tea-5c457db9-fdkxl        1/1     Running   0          27m
+pod/tea-5c457db9-z6hl5        1/1     Running   0          27m
 ```
 
 #### 인그레스(Ingress) 생성
@@ -1478,33 +1526,40 @@ pod/tea-7df475c6-lxqsx        1/1     Running   0          18s
 
 ```yaml
 # cafe-ingress-uri.yaml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: cafe-ingress-uri
 spec:
+  ingressClassName: nginx
   rules:
   - http:
       paths:
       - path: /tea
+        pathType: Prefix
         backend:
-          serviceName: tea-svc
-          servicePort: 80
+          service:
+            name: tea-svc
+            port:
+              number: 80
       - path: /coffee
+        pathType: Prefix
         backend:
-          serviceName: coffee-svc
-          servicePort: 80
+          service:
+            name: coffee-svc
+            port:
+              number: 80
 ```
 
 인그레스를 생성하고 잠시 후 확인했을 때 **ADDRESS** 필드에 IP가 설정되어 있어야 합니다.
 
 ```
 $ kubectl apply -f cafe-ingress-uri.yaml
-ingress.extensions/cafe-ingress-uri created
+ingress.networking.k8s.io/cafe-ingress-uri created
 
 $ kubectl get ingress cafe-ingress-uri
-NAME               HOSTS   ADDRESS          PORTS   AGE
-cafe-ingress-uri   *       123.123.123.44   80      88s
+NAME               CLASS   HOSTS   ADDRESS          PORTS   AGE
+cafe-ingress-uri   nginx   *       123.123.123.44   80      23s
 ```
 
 #### HTTP 요청 전송
@@ -1513,41 +1568,54 @@ cafe-ingress-uri   *       123.123.123.44   80      88s
 엔드포인트 `/coffee`에 대한 요청은 `coffee-svc` 서비스에 전달되어 `coffee` 파드가 응답합니다. 응답의 **Server name** 항목을 보면 `coffee` 파드들이 라운드-로빈 방식으로 번갈아 응답하는 것을 확인할 수 있습니다.
 
 ```
-$ curl http://123.123.123.44/coffee
-Server address: 10.100.3.48:8080
-Server name: coffee-67c6f7c5fd-c58l2
-Dat#e: 07/Apr/2020:08:24:27 +0000
+$ curl 123.123.123.44/coffee
+Server address: 10.100.24.21:8080
+Server name: coffee-7c86d7d67c-sgspn
+Date: 11/Mar/2022:06:28:18 +0000
 URI: /coffee
-Request ID: e831901e441303ad59fb02214c49d84a
+Request ID: 3811d20501dbf948259f4b209c00f2f1
 
-$ curl http://123.123.123.44/coffee
-Server address: 10.100.2.23:8080
-Server name: coffee-67c6f7c5fd-98vh5
-Date: 07/Apr/2020:08:24:28 +0000
+$ curl 123.123.123.44/coffee
+Server address: 10.100.24.19:8080
+Server name: coffee-7c86d7d67c-tqtd6
+Date: 11/Mar/2022:06:28:27 +0000
 URI: /coffee
-Request ID: e78427e68a1cd61ec633b9328359874e
+Request ID: ec82f6ab31d622895374df972aed1acd
+
+$ curl 123.123.123.44/coffee
+Server address: 10.100.24.20:8080
+Server name: coffee-7c86d7d67c-pr6kw
+Date: 11/Mar/2022:06:28:31 +0000
+URI: /coffee
+Request ID: fec4a6111bcc27b9cba52629e9420076
 ```
 
 마찬가지로 엔드포인트 `/tea`에 대한 요청은 `tea-svc` 서비스에  전달되어 `tea` 파드가 응답합니다.
 
 ```
-$ curl http://123.123.123.44/tea
-Server address: 10.100.2.24:8080
-Server name: tea-7df475c6-lxqsx
-Date: 07/Apr/2020:08:25:03 +0000
+$ curl 123.123.123.44/tea
+Server address: 10.100.24.23:8080
+Server name: tea-5c457db9-fdkxl
+Date: 11/Mar/2022:06:28:36 +0000
 URI: /tea
-Request ID: 59303a5a5baa60802b463b1856c8ce8d
+Request ID: 11be1b7634a371a26e6bf2d3e72ab8aa
+$ curl 123.123.123.44/tea
+Server address: 10.100.24.22:8080
+Server name: tea-5c457db9-z6hl5
+Date: 11/Mar/2022:06:28:37 +0000
+URI: /tea
+Request ID: 21106246517263d726931e0f85ea2887
 ```
 
 정의되지 않은 URI로 요청을 보내면 인그레스 컨트롤러가 `404 Not Found`를 응답합니다.
 
 ```
-$ curl http://123.123.123.44/
+$ curl 123.123.123.44/unknown
 <html>
 <head><title>404 Not Found</title></head>
 <body>
 <center><h1>404 Not Found</h1></center>
-<hr><center>nginx/1.17.8</center>
+<hr><center>nginx</center>
 </body>
 </html>
 ```
@@ -1557,7 +1625,7 @@ $ curl http://123.123.123.44/
 
 ```
 $ kubectl delete -f cafe-ingress-uri.yaml
-ingress.extensions "cafe-ingress-uri" deleted
+ingress.networking.k8s.io "cafe-ingress-uri" deleted
 
 $ kubectl delete -f cafe.yaml
 deployment.apps "coffee" deleted
@@ -1579,37 +1647,44 @@ service "tea-svc" deleted
 
 ```yaml
 # cafe-ingress-host.yaml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: cafe-ingress-host
 spec:
+  ingressClassName: nginx
   rules:
   - host: tea.cafe.example.com
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: tea-svc
-          servicePort: 80
+          service:
+            name: tea-svc
+            port:
+              number: 80
   - host: coffee.cafe.example.com
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: coffee-svc
-          servicePort: 80
+          service:
+            name: coffee-svc
+            port:
+              number: 80
 ```
 
 인그레스를 생성하고 잠시 후 확인했을 때 **ADDRESS** 필드에 IP가 설정되어 있어야 합니다.
 
 ```
 $ kubectl apply -f cafe-ingress-host.yaml
-ingress.extensions/cafe-ingress-host created
+ingress.networking.k8s.io/cafe-ingress-host created
 
 $ kubectl get ingress
-NAME                HOSTS                                          ADDRESS          PORTS   AGE
-cafe-ingress-host   tea.cafe.example.com,coffee.cafe.example.com   123.123.123.44   80      4m29s
+NAME                CLASS   HOSTS                                          ADDRESS          PORTS   AGE
+cafe-ingress-host   nginx   tea.cafe.example.com,coffee.cafe.example.com   123.123.123.44   80      36s
 ```
 
 #### HTTP Request 전송
@@ -1623,42 +1698,33 @@ cafe-ingress-host   tea.cafe.example.com,coffee.cafe.example.com   123.123.123.4
 
 ```
 $ curl --resolve coffee.cafe.example.com:80:123.123.123.44 http://coffee.cafe.example.com/
-Server address: 10.100.2.25:8080
-Server name: coffee-67c6f7c5fd-2bbzf
-Date: 07/Apr/2020:08:45:39 +0000
+Server address: 10.100.24.27:8080
+Server name: coffee-7c86d7d67c-fqn6n
+Date: 11/Mar/2022:06:40:59 +0000
 URI: /
-Request ID: 29fd8a244b9f0a5ff5f35d1dc35edccf
+Request ID: 1efb60d29891d6d48b5dcd9f5e1ba66d
 ```
 
 호스트 `tea.cafe.example.com`로 요청을 전송하면 `tea-svc` 서비스에 전달되어 `tea` 파드가 응답합니다.
 
 ```
 $ curl --resolve tea.cafe.example.com:80:123.123.123.44 http://tea.cafe.example.com/
-Server address: 10.100.3.52:8080
-Server name: tea-7df475c6-q8mdx
-Date: 07/Apr/2020:08:53:44 +0000
+Server address: 10.100.24.28:8080
+Server name: tea-5c457db9-ngrxq
+Date: 11/Mar/2022:06:41:39 +0000
 URI: /
-Request ID: fe61c1589d3ab8ef4ca4507245251ef3
+Request ID: 5a6cc490893636029766b02d2aab9e39
 ```
 
 알려지지 않은 호스트로 요청을 보내면 인그레스 컨트롤러가 `404 Not Found`를 응답합니다.
 
 ```
-$ curl http://123.123.123.44
+$ curl 123.123.123.44/unknown
 <html>
 <head><title>404 Not Found</title></head>
 <body>
 <center><h1>404 Not Found</h1></center>
-<hr><center>nginx/1.17.8</center>
-</body>
-</html>
-
-$ curl --resolve test.example.com:80:123.123.123.44 http://test.example.com/
-<html>
-<head><title>404 Not Found</title></head>
-<body>
-<center><h1>404 Not Found</h1></center>
-<hr><center>nginx/1.17.8</center>
+<hr><center>nginx</center>
 </body>
 </html>
 ```
@@ -1671,24 +1737,25 @@ NHN Kubernetes Service(NKS)는 기본 웹 UI 대시보드(dashboard)를 제공�
 
 ```
 $ kubectl get svc kubernetes-dashboard -n kube-system
-NAME                   TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
-kubernetes-dashboard   ClusterIP   10.254.95.176   <none>        443/TCP   2d4h
+NAME                   TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)   AGE
+kubernetes-dashboard   ClusterIP   10.254.85.2   <none>        443/TCP   6h
 
 $ kubectl describe svc kubernetes-dashboard -n kube-system
 Name:              kubernetes-dashboard
 Namespace:         kube-system
 Labels:            k8s-app=kubernetes-dashboard
-Annotations:       kubectl.kubernetes.io/last-applied-configuration:
-                     {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"k8s-app":"kubernetes-dashboard"},"name":"kubernetes-dashboard"...
+Annotations:       <none>
 Selector:          k8s-app=kubernetes-dashboard
 Type:              ClusterIP
-IP:                10.254.95.176
+IP Family Policy:  SingleStack
+IP Families:       IPv4
+IP:                10.254.85.2
+IPs:               10.254.85.2
 Port:              <unset>  443/TCP
 TargetPort:        8443/TCP
-Endpoints:         10.100.2.3:8443
+Endpoints:         10.100.24.7:8443
 Session Affinity:  None
-Events:
-...
+Events:            <none>
 ```
 
 그러나 `kubernetes-dashboard` 서비스 객체는 ClusterIP 유형이기 때문에 아직 클러스터 외부에 공개되어 있지 않습니다. 대시보드를 외부 공개하려면 서비스 객체를 LoadBalancer 유형으로 변경하거나 인그레스 컨트롤러와 인그레스 객체를 생성해야 합니다.
@@ -1734,7 +1801,7 @@ kubernetes-dashboard   LoadBalancer   10.254.95.176   123.123.123.81   443:30963
 
 ```yaml
 # kubernetes-dashboard-ingress-tls-passthrough.yaml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: k8s-dashboard-ingress
@@ -1742,35 +1809,38 @@ metadata:
   annotations:
     ingress.kubernetes.io/ssl-passthrough: "true"
     kubernetes.io/ingress.allow-http: "false"
-    kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/backend-protocol: HTTPS
     nginx.ingress.kubernetes.io/proxy-body-size: 100M
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.org/ssl-backend: kubernetes-dashboard
 spec:
+  ingressClassName: nginx
   rules:
   - http:
       paths:
-      - backend:
-          serviceName: kubernetes-dashboard
-          servicePort: 443
-        path: /
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: kubernetes-dashboard
+            port:
+              number: 443
   tls:
   - secretName: kubernetes-dashboard-certs
 ```
 
-매니페스트를 적용해 인그레스를 생성하고 `ingress-nginx` 서비스 객체의 **EXTERNAL-IP** 필드를 확인합니다.
+매니페스트를 적용해 인그레스를 생성하고 인그레스 객체의 **ADDRESS** 필드를 확인합니다.
 
 ```
 $ kubectl apply -f kubernetes-dashboard-ingress-tls-passthrough.yaml
-ingress.extensions/k8s-dashboard-ingress created
+ingress.networking.k8s.io/k8s-dashboard-ingress created
 
-$ kubectl get service/ingress-nginx -n ingress-nginx
-NAME            TYPE           CLUSTER-IP       EXTERNAL-IP      PORT(S)                      AGE
-ingress-nginx   LoadBalancer   10.254.211.113   123.123.123.29   80:32680/TCP,443:31631/TCP   19h
+$ kubectl get ingress -n kube-system
+NAME                    CLASS   HOSTS   ADDRESS          PORTS     AGE
+k8s-dashboard-ingress   nginx   *       123.123.123.44   80, 443   34s
 ```
 
-웹 브라우저에서 `https://{EXTERNAL-IP}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 엑세스 토큰](/Container/NKS/ko/gov-user-guide/#_47)을 참고하세요.
+웹 브라우저에서 `https://{ADDRESS}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 엑세스 토큰](/Container/NKS/ko/gov-user-guide/#_47)을 참고하세요.
 
 ### 대시보드 엑세스 토큰
 Kubernetes 대시보드에 로그인하려면 토큰이 필요합니다. 토큰은 다음 명령으로 얻을 수 있습니다.
@@ -1796,7 +1866,7 @@ PV와 PVC로 사용자는 사용하고 싶은 볼륨의 속성을 정의하고, 
 PV와 PVC는 4단계의 생명 주기(life cycle)를 따릅니다.
 
 * 프로비저닝(provisioning)
-사용자가 직접 볼륨을 확보하고 PV를 생성(static provisioning)하거나 [스토리지 클래스](https://kubernetes.io/ko/docs/concepts/storage/storage-classes/)를 사용해 동적으로 생성(dynamic provisioning)할 수 있습니다.
+[스토리지 클래스](https://kubernetes.io/ko/docs/concepts/storage/storage-classes/)를 사용해 사용자가 직접 볼륨을 확보하고 PV를 생성(static provisioning)하거나 동적으로 생성(dynamic provisioning)할 수 있습니다.
 
 * 바인딩(binding)
 PV와 PVC를 1:1로 바인딩합니다. 동적 프로비저닝으로 PV를 생성했다면 바인딩도 자동으로 수행됩니다.
@@ -1813,38 +1883,92 @@ PV를 파드에 마운트해 사용합니다.
 | 보존(Retain) | PV를 삭제할 때 연결된 볼륨을 삭제하지 않습니다. 볼륨은 사용자가 직접 삭제하거나 재사용 할 수 있습니다. |
 | 재사용(Recycle) | PV를 삭제할 때 연결된 볼륨을 삭제하지 않고 재사용할 수 있는 상태로 만듭니다. 이 방법은 사용 중단(deprecated) 되었습니다. |
 
-### 정적 프로비저닝
-정적 프로비저닝(static provisioning)은 사용자가 직접 블록 스토리지를 준비해야 합니다. NHN Cloud 웹 콘솔의 **Storage > Block Storage** 서비스 페이지에서 **블록 스토리지 생성** 버튼을 클릭해 PV와 연결할 블록 스토리지를 생성합니다. 블록 스토리지 가이드의 [블록 스토리지 생성](/Storage/Block%20Storage/ko/console-guide/#_2)을 참고하세요.
-PV를 생성하려면 블록 스토리지의 ID가 필요합니다. **Storage > Block Storage** 서비스 페이지의 블록 스토리지 목록에서 사용할 블록 스토리지를 선택합니다. 하단 **정보** 탭의 블록 스토리지 이름 항목에서 ID를 확인할 수 있습니다.
+### 스토리지 클래스(StorageClass)
+프로비저닝을 하기 위해서는 먼저 스토리지 클래스가 정의되어 있어야 합니다. 스토리지 클래스는 어떤 특성으로 스토리지들을 분류할 수 있는 방법을 제공합니다. 스토리지 제공자(provisioner)에 대한 정보를 포함해 미디어의 종류나 가용성 영역 등을 설정할 수 있습니다. 
 
-> [주의]
-> 블록 스토리지와 파드를 구동할 노드 그룹 인스턴스의 가용성 영역이 같아야 합니다. 가용성 영역이 다르면 연결할 수 없습니다.
->
+#### 스토리지 제공자(provisioner)
+스토리지의 제공자 정보를 설정합니다. Kubernetes 버전에 따라 지원되는 스트로지 정보 제공자 정보는 다음과 같습니다.
 
-스토리지 클래스 매니페스트를 작성합니다. NHN Cloud Block Storage를 사용하려면 **provisioner**를 반드시 `kubernetes.io/cinder`로 설정해야 합니다.
+* v1.19.13 이전 버전: provisioner 필드를 반드시 `kubernetes.io/cinder`로 설정해야 합니다.
+* v1.20.12 이후 버전: provisioner 필드를 `cinder.csi.openstack.org`로 설정해 사용할 수 있습니다.
 
+#### 파라미터(parameter)
+스토리지 클래스를 통해 다음의 파라미터를 설정할 수 있습니다.
+
+* 스토리지 종류(type): 스토리지의 종류를 입력합니다.(미입력시 General HDD가 설정됩니다)
+    * **General HDD**: 스토리지 종류가 HDD로 설정됩니다.
+    * **General SSD**: 스토리지 종류가 SSD로 설정됩니다.
+* 가용성 영역(availability): 가용성 영역을 설정합니다.(미입력시 무작위로 설정됩니다)
+    * 판교 리전: **kr-pub-a** 혹은 **kr-pub-b**
+    * 평촌 리전: **kr2-pub-a** 혹은 **kr2-pub-b**
+
+#### 볼륨 바인딩 모드(VolumeBindingMode)
+볼륨 바인딩 모드는 볼륨 바인딩과 동적 프로비저닝의 시작 시점을 제어합니다. 이 설정은 스토리지 제공자가 cinder.csi.openstack.org인 경우에만 설정 가능합니다. 
+
+* **Immediate**: 퍼시스턴트 볼륨 클레임이 생성되는 즉시 볼륨 바인딩과 동적 프로비저닝이 시작됩니다. 퍼시스턴트 볼륨 클레임이 생성되는 시점에는 볼륨을 연결할 파드에 대한 사전 지식이 없는 상태입니다. 그래서 볼륨의 가용성 영역과 파드가 스케쥴링될 노드의 가용성 영역이 서로 다르게 되면 경우 파드가 정상 동작하지 않습니다. 
+* **WaitForFirstConsumer**: 퍼시스턴트 볼륨 클레임이 생성될 때는 볼륨 바인딩과 동적 프로비저닝을 하지 않습니다. 이 퍼시스턴트 볼륨 클레임이 처음으로 파드에 연결되면, 파드가 스케쥴링된 노드의 가용성 영역 정보를 기반으로 볼륨 바인딩과 동적 프로비저닝을 수행합니다. 따라서 Immediate 모드와 같은 볼륨의 가용성 영역과 인스턴스의 가용성 영역이 서로 달라 파드가 정상 동작하지 않는 경우가 발생하지 않습니다.
+
+#### 예시1
+아래 스토리지 클래스 매니페스트는 v1.19.13 이전 버전을 사용하는 Kubernetes 클러스터에서 사용할 수 있습니다. 파라미터를 통해 가용성 영역과 볼륨 타입을 지정할 수 있습니다.
 
 ```yaml
 # storage_class.yaml
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: sc-default
+  name: sc-ssd
 provisioner: kubernetes.io/cinder
+parameters:
+  type: General SSD
+  availability: kr-pub-a
 ```
 
 스토리지 클래스를 생성하고 확인합니다.
 
 ```
 $ kubectl apply -f storage_class.yaml
-storageclass.storage.k8s.io/sc-default created
+storageclass.storage.k8s.io/sc-ssd created
 
-$ # kubectl get sc
-NAME         PROVISIONER            AGE
-sc-default   kubernetes.io/cinder   8s
+$ kubectl get sc
+NAME     PROVISIONER            RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
+sc-ssd   kubernetes.io/cinder   Delete          Immediate           false                  3s
 ```
 
+#### 예시2
+아래 스토리지 클래스 매니페시트는 v1.20.12 이후 버전을 사용하는 Kubernetes 클러스터에서 사용할 수 있습니다. 볼륨 바인딩 모드를 WaitForFirstConsumer로 설정해 퍼시스턴트 볼륨 클레임이 파드에 연결될 때 볼륨 바인딩과 동적 프로비저닝을 시작합니다.
+
+```yaml
+# storage_class_csi.yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: csi-storageclass
+provisioner: cinder.csi.openstack.org
+volumeBindingMode: WaitForFirstConsumer
+```
+
+스토리지 클래스를 생성하고 확인합니다.
+
+```
+$ kubectl apply -f storage_class_csi.yaml
+storageclass.storage.k8s.io/csi-storageclass created
+
+$ kubectl get sc
+NAME               PROVISIONER                RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
+csi-storageclass   cinder.csi.openstack.org   Delete          WaitForFirstConsumer   false                  7s
+```
+
+
+### 정적 프로비저닝
+
+정적 프로비저닝(static provisioning)은 사용자가 직접 블록 스토리지를 준비해야 합니다. NHN Cloud 웹 콘솔의 **Storage > Block Storage** 서비스 페이지에서 **블록 스토리지 생성** 버튼을 클릭해 PV와 연결할 블록 스토리지를 생성합니다. 블록 스토리지 가이드의 [블록 스토리지 생성](/Storage/Block%20Storage/ko/console-guide/#_2)을 참고하세요.
+
+PV를 생성하려면 블록 스토리지의 ID가 필요합니다. **Storage > Block Storage** 서비스 페이지의 블록 스토리지 목록에서 사용할 블록 스토리지를 선택합니다. 하단 **정보** 탭의 블록 스토리지 이름 항목에서 ID를 확인할 수 있습니다.
+
 블록 스토리지와 연결할 PV 매니페스트를 작성합니다. **spec.storageClassName**에는 스토리지 클래스 이름을 입력합니다. NHN Cloud Block Storage를 사용하려면 **spec.accessModes**는 반드시 `ReadWriteOnce`로 설정해야 합니다. **spec.presistentVolumeReclaimPolicy**는 `Delete` 또는 `Retain`으로 설정할 수 있습니다.
+
+> [주의]
+> Kubernetes 버전에 맞는 스토리지 제공자가 정의된 스토리지 클래스를 설정해야 합니다.
 
 ```yaml
 # pv-static.yaml
@@ -1917,33 +2041,7 @@ pv-static-001   10Gi       RWO            Delete           Bound    default/pvc-
 
 ### 동적 프로비저닝
 
-동적 프로비저닝(dynamic provisioning)은 스토리지 클래스에 정의된 속성을 참조하여 자동으로 블록 스토리지를 생성합니다. 스토리지 클래스 매니페스트의 **parameters.type**에 NHN Cloud Block Storage 유형을 지정할 수 있습니다. 지정하지 않으면 HDD 유형으로 설정됩니다.
-
-| 타입 | 설정값 |
-| --- | --- |
-| HDD | General HDD |
-| SSD | General SSD |
-
-블록 스토리지는 노드 그룹과 같은 가용성 영역(availability zone)에 만들어야 연결할 수 있습니다. 스토리지 클래스 매니페스트의 **parameters.availability**에 블록 스토리지를 생성할 가용성 영역을 지정할 수 있습니다. 연결할 노드 그룹의 가용성 영역은 노드 그룹 목록에서 확인할 수 있습니다.
-
-> [주의]
-> 스토리지 클래스 매니페스트에 가용성 영역을 지정하지 않으면 임의의 가용성 영역에 블록 스토리지를 만듭니다. 블록 스토리지가 노드 그룹과 다른 가용성 영역에 생성되면 연결하지 못할 수 있으니 반드시 가용성 영역을 지정해야 합니다.
-
-```yaml
-# storage_class.yaml
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: sc-ssd
-provisioner: kubernetes.io/cinder
-parameters:
-  type: General SSD
-  availability: kr-pub-a
-```
-
-동적 프로비저닝은 PV를 생성할 필요가 없습니다. 따라서 PVC 매니페스트에는 **spec.volumeName**를 설정하지 않습니다.
-
-
+동적 프로비저닝(dynamic provisioning)은 스토리지 클래스에 정의된 속성을 참조하여 자동으로 블록 스토리지를 생성합니다. 동적 프로비저닝은 PV를 생성할 필요가 없습니다. 따라서 PVC 매니페스트에는 **spec.volumeName**를 설정하지 않습니다.
 
 ```yaml
 # pvc-dynamic.yaml
@@ -1960,7 +2058,8 @@ spec:
       storage: 10Gi
   storageClassName: sc-ssd
 ```
-PVC를 생성하면 PV가 자동으로 생성됩니다. PV에 연결된 블록 스토리지도 자동으로 생성되며 NHN Cloud 웹 콘솔 **Storage > Block Storage** 서비스 페이지의 블록 스토리지 목록에서 확인할 수 있습니다.
+
+볼륨 바인딩 모드를 설정하지 않거나 **Immediate**로 설정하고 PVC를 생성하면 PV가 자동으로 생성됩니다. PV에 연결된 블록 스토리지도 자동으로 생성되며 NHN Cloud 웹 콘솔 **Storage > Block Storage** 서비스 페이지의 블록 스토리지 목록에서 확인할 수 있습니다.
 
 ```
 $ kubectl apply -f pvc-dynamic.yaml
