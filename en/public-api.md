@@ -50,12 +50,14 @@ Enter the key pair to use when connecting to the node. For more information abou
 
 ### Base Image UUID
 
-Enter the base image UUID to use for creating a node. The base image UUID for each region is as follows:
+Enter the base image UUID to use for creating a node. The base image name and UUID for each region is as follows:
 
-| Region | Base Image UUID |
-|---|---|
-| Korea (Pangyo) Region | 2b03f75e-c583-4198-8821-6eba31ab621e |
-| Korea (Pyeongchon) Region | a3c175ce-6477-4de0-b8d1-168dc9235fef |
+| Region | Base Image Name | Base Image UUID |
+|---|---|---|
+| Korea (Pangyo) Region | CentOS 7.8 | 6013253a-50bf-4580-bf28-322e180a5eec |
+|  | Ubuntu Server 18.04 LTS | 2717ec03-3a4d-4728-b372-183065facdba|
+| Korea (Pyeongchon) Region | CentOS 7.8 | 5bb2452d-ee50-48e5-a9b1-ab6c2928fac3 |
+|  | Ubuntu Server 18.04 LTS | b2f577f7-9d5e-4ef8-a2e0-94991a1c2d58 |
 
 ### Block Storage Type
 
