@@ -1,5 +1,11 @@
 ## Container > NHN Kubernetes Service (NKS) > Release Notes
 
+### May 24, 2022
+
+#### Feature Updates
+* Enhanced the performance and reliability of the service by improving the internal architecture
+
+
 ### March 29, 2022
 
 #### Added Features
