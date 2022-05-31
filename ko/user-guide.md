@@ -1296,24 +1296,26 @@ spec:
 > 2021년 10월 26일 이전에 생성된 v1.18.19 클러스터는 로드 밸런서가 삭제될 때 플로팅 IP가 삭제되지 않는 문제가 있습니다. 고객 센터의 1:1 문의를 통해 문의주시면 이 문제를 해결하기 위한 절차에 대해 상세히 알려드리겠습니다.
 
 
-#### 로드밸런서 생성 시 floating IP 값을 지정하여 생성
-로드밸런서를 생성할 때 외부로 노출되는 EXTERNAL-IP의 값을 임의의 floating IP 값으로 지정하여 생성할 수 있습니다.
+#### 로드 밸런서 생성 시 Floating IP 값 지정
+로드밸런서를 생성할 때 연결되는 FlP(Floating IP)값을 지정하여 생성할 수 있습니다.
 
-* 설정 위치는 .spec.loadBalancerIP 항목입니다.
-* 리스너별 설정을 적용할 수 있습니다.
+* 설정 위치는 .spec.loadBalancerIP 입니다.
+* 다음 중 하나로 설정할 수 있습니다.
+  * 빈 문자열(""): 로드 밸런서에 자동으로 생성되는 FIP를 연결합니다. 미설정 시 기본값입니다.
+  * <EXTERNAL\_IP>: 로드 밸런서에 기존의 FIP를 연결합니다. 이미 할당 받았지만 연결되지 않은 FIP가 있을 때 사용 가능합니다.
 
-아래는 floating IP를 지정하는 매니페스트 예제입니다.
+아래는 로드 밸런서에 사용자 지정 FIP를 연결하는 매니페스트 예제입니다.
 
 ```yaml
-# service-fixed-ip.yaml
+# service-fip.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx-svc-fixedIP
+  name: nginx-svc-floatingIP
   labels:
     app: nginx
 spec:
-  loadBalancerIP: 133.186.243.57
+  loadBalancerIP: <Floating_IP>
   ports:
   - port: 8080
     targetPort: 80
@@ -1323,29 +1325,29 @@ spec:
   type: LoadBalancer
 ```
 
-#### 로드밸런서 생성 시 fixed IP 값을 지정하여 생성
-로드밸런서를 생성할 때 외부로 노출되는 EXTERNAL-IP의 값을 자동으로 생성되는 floating IP를 사용하지 않고, fixed IP를 사용하여 생성할 수 있습니다.
+#### 로드 밸런서 생성 시 Floating IP 사용 여부 설정
+로드 밸런서 생성 시 로드 밸런서에 Floating IP 대신 VIP(Virtual IP)를 연결하도록 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotaions 하위에 service.beta.kubernetes.io/openstack-internal-load-balancer입니다.
-* 리스너별 설정을 적용할 수 있습니다.
 * 다음 중 하나로 설정할 수 있습니다.
-    * true: floating IP를 사용하지 않고, fixed IP를 사용합니다.
-    * false: 자동으로 생성되는 floating IP를 사용합니다. 미설정 시 기본값입니다.
+  * true: FIP를 사용하지 않고, VIP를 사용합니다.
+  * false: FIP를 사용합니다. 미설정 시 기본값입니다.
+* VIP를 사용하는 경우 .spec.loadBalancerIP 항목을 함께 설정하여 로드 밸런서에 자동으로 생성되는 VIP를 연결하는 대신 VIP를 지정하여 연결할 수 있습니다.
 
-아래는 fixed IP를 지정하는 매니페스트 예제입니다.
+아래는 로드 밸런서에 사용자 지정 VIP를 연결하는 매니페스트 예제입니다.
 
 ```yaml
-# service-floating-ip.yaml
+# service-vip.yaml
 apiVersion: v1
 kind: Service
 metadata:
- name: nginx-svc-floatingIP
+ name: nginx-svc-fixedIP
  labels:
    app: nginx
  annotations:
    service.beta.kubernetes.io/openstack-internal-load-balancer: "true"
 spec:
- loadBalancerIP: 172.16.0.40
+ loadBalancerIP: <Virtual_IP>
  ports:
  - port: 8080
    targetPort: 80
@@ -1354,6 +1356,15 @@ spec:
    app: nginx
  type: LoadBalancer
 ```
+
+ service.beta.kubernetes.io/openstack-internal-load-balancer 설정과 loadBalancerIP 설정을 함께 사용하였을 때 다음 표와 같이 동작합니다.
+
+| service.beta.kubernetes.io/openstack-internal-load-balancer | loadBalancerIP | 설명 |
+| --- | --- | --- |
+| False | X | 로드 밸런서에 자동으로 생성되는 Floating IP를 연결합니다. |
+| False | O | 로드 밸런서에 사용자가 지정한, 기존에 생성되고 사용되지 않는 Floating IP를 연결합니다. |
+| True | X | 로드 밸런서에 자동으로 생성되는 VIP를 연결합니다. |
+| true | O | 로드 밸런서에 사용자가 지정한 VIP를 연결합니다. |
 
 
 #### 리스너 연결 제한 설정
