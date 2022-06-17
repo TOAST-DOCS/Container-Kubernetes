@@ -1301,10 +1301,10 @@ spec:
 
 * 설정 위치는 .spec.loadBalancerIP 입니다.
 * 다음 중 하나로 설정할 수 있습니다.
-  * 빈 문자열(""): 로드 밸런서에 자동으로 생성되는 FIP(Floating IP)를 연결합니다. 미설정 시 기본값입니다.
-  * <EXTERNAL\_IP>: 로드 밸런서에 기존의 FIP를 연결합니다. 이미 할당 받았지만 연결되지 않은 FIP가 있을 때 사용 가능합니다.
+  * 빈 문자열(""): 로드 밸런서에 자동으로 생성되는 플로팅 IP를 연결합니다. 미설정 시 기본값입니다.
+  * <EXTERNAL\_IP>: 로드 밸런서에 기존의 플로팅 IP를 연결합니다. 이미 할당 받았지만 연결되지 않은 플로팅 IP가 있을 때 사용 가능합니다.
 
-아래는 로드 밸런서에 사용자 지정 FIP를 연결하는 매니페스트 예제입니다.
+아래는 로드 밸런서에 사용자 지정 플로팅 IP를 연결하는 매니페스트 예제입니다.
 
 ```yaml
 # service-fip.yaml
@@ -1330,8 +1330,8 @@ spec:
 
 * 설정 위치는 .metadata.annotaions 하위에 service.beta.kubernetes.io/openstack-internal-load-balancer입니다.
 * 다음 중 하나로 설정할 수 있습니다.
-  * true: FIP를 사용하지 않고, VIP(Virtual IP)를 사용합니다.
-  * false: FIP를 사용합니다. 미설정 시 기본값입니다.
+  * true: 플로팅 IP를 사용하지 않고, VIP(Virtual IP)를 사용합니다.
+  * false: 플로팅 IP를 사용합니다. 미설정 시 기본값입니다.
 * VIP를 사용하는 경우 .spec.loadBalancerIP 항목을 함께 설정하여 로드 밸런서에 자동으로 생성되는 VIP를 연결하는 대신 VIP를 지정하여 연결할 수 있습니다.
 
 아래는 로드 밸런서에 사용자 지정 VIP를 연결하는 매니페스트 예제입니다.
@@ -1359,7 +1359,7 @@ spec:
 
 플로팅 IP 사용 여부 설정과 로드 밸런서 IP 설정의 조합에 의해 다음과 같이 동작합니다.
 
-| service.beta.kubernetes.io/openstack-internal-load-balancer | loadBalancerIP | 설명 |
+| 플로팅 IP 사용 여부 설정 | 로드 밸런서 IP 설정 | 설명 |
 | --- | --- | --- |
 | false | 미설정 | 로드 밸런서에 플로팅 IP를 생성해 연결합니다. |
 | false | 설정 | 로드 밸런서에 지정된 플로팅 IP를 연결합니다. |
