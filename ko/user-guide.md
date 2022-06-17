@@ -1325,12 +1325,12 @@ spec:
   type: LoadBalancer
 ```
 
-#### 로드 밸런서 생성 시 Floating IP 사용 여부 설정
-로드 밸런서 생성 시 로드 밸런서에 Floating IP 대신 VIP(Virtual IP)를 연결하도록 설정할 수 있습니다.
+#### 플로팅 IP 사용 여부 설정
+로드 밸런서 생성 시 플로팅 IP의 사용 여부를 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotaions 하위에 service.beta.kubernetes.io/openstack-internal-load-balancer입니다.
 * 다음 중 하나로 설정할 수 있습니다.
-  * true: FIP를 사용하지 않고, VIP를 사용합니다.
+  * true: FIP를 사용하지 않고, VIP(Virtual IP)를 사용합니다.
   * false: FIP를 사용합니다. 미설정 시 기본값입니다.
 * VIP를 사용하는 경우 .spec.loadBalancerIP 항목을 함께 설정하여 로드 밸런서에 자동으로 생성되는 VIP를 연결하는 대신 VIP를 지정하여 연결할 수 있습니다.
 
@@ -1357,14 +1357,14 @@ spec:
  type: LoadBalancer
 ```
 
- service.beta.kubernetes.io/openstack-internal-load-balancer 설정과 loadBalancerIP 설정을 함께 사용하였을 때 다음 표와 같이 동작합니다.
+플로팅 IP 사용 여부 설정과 로드 밸런서 IP 설정의 조합에 의해 다음과 같이 동작합니다.
 
 | service.beta.kubernetes.io/openstack-internal-load-balancer | loadBalancerIP | 설명 |
 | --- | --- | --- |
-| False | X | 로드 밸런서에 자동으로 생성되는 Floating IP를 연결합니다. |
-| False | O | 로드 밸런서에 사용자가 지정한, 기존에 생성되고 사용되지 않는 Floating IP를 연결합니다. |
-| True | X | 로드 밸런서에 자동으로 생성되는 VIP를 연결합니다. |
-| true | O | 로드 밸런서에 사용자가 지정한 VIP를 연결합니다. |
+| false | 미설정 | 로드 밸런서에 플로팅 IP를 생성해 연결합니다. |
+| false | 설정 | 로드 밸런서에 지정된 플로팅 IP를 연결합니다. |
+| true | 미설정 | 로드 밸런서에 연결되는 VIP를 자동으로 설정합니다. |
+| true | 설정 | 로드 밸런서에 지정된 VIP를 연결합니다. |
 
 
 #### 리스너 연결 제한 설정
