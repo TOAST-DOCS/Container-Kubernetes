@@ -1133,6 +1133,62 @@ X-Auth-Token: {tokenId}
 
 ---
 
+### 사용자 스크립트 변경하기
+
+노드 그룹의 사용자 스크립트를 변경합니다.
+
+```
+POST /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}/userscript
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | 노드 그룹 UUID 또는 노드 그룹 이름<br>마스터 구성 요소 업그레이드 시에는 **default-master**로 지정 | 
+| contents | Body | String | O | 사용자 스크립트 내용 |
+
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "contents": "user script contents here..."
+}
+```
+
+</p>
+</details>
+
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | UUID | 노드 그룹 UUID |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "018b06c5-1293-4081-8242-167a1cb9f262"
+}
+```
+
+</p>
+</details>
+
+---
+
+
 ## 기타 기능
 
 ### 지원되는 Kubernetes 버전 보기
