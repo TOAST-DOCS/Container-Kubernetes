@@ -1088,8 +1088,8 @@ X-Auth-Token: {tokenId}
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
 | NODEGROUP_ID_OR_NAME | URL | UUID or String | O | 노드 그룹 UUID 또는 노드 그룹 이름<br>마스터 구성 요소 업그레이드 시에는 **default-master**로 지정 | 
 | version | Body | String | O | Kubernetes 버전 |
-| num_buffer_nodes | Body | Integer | X | 버퍼 노드 개수. 최소값: 0, 최대값: (워커 노드 그룹 당 최대 노드 수 쿼터 - 현재 노드 수), 기본값: 1 |
-| num_max_unavailable_nodes | Body |  Integer | X | 최대 서비스 불가 노드 수 | 최소값: 1, 최대값: 현재 노드 수), 기본값: 1 |
+| num_buffer_nodes | Body | Integer | X | 버퍼 노드 개수. 최소값: 0, 최대값: (워커 노드 그룹 당 최대 노드 수 쿼터 - 해당 워커 노드 그룹의 현재 노드 수), 기본값: 1 |
+| num_max_unavailable_nodes | Body |  Integer | X | 최대 서비스 불가 노드 수 | 최소값: 1, 최대값: 해당 워커 노드 그룹의 현재 노드 수, 기본값: 1 |
 
 클러스터를 업그레이드하기 위해서는 마스터 구성 요소를 업그레이드한 후 워커 구성 요소를 업그레이드해야 합니다. 마스터와 워커 구성 요소 업그레이드는 노드 그룹 단위로 이루어집니다. 
 
