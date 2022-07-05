@@ -1135,7 +1135,7 @@ spec:
 ```
 
 > [참고]
-> NHN Cloud Container Registry 사용 방법은 [Container Registry 사용 가이드](/Container/Container%20Registry/ko/user-guide) 문서를 참고하세요.
+> NHN Cloud Container Registry 사용 방법은 [Container Registry 사용 가이드](/Container-Container-Registry-v2/ko/user-guide) 문서를 참고하세요.
 
 ### LoadBalancer 서비스 생성
 Kubernetes의 서비스 객체를 정의하려면 다음과 같은 항목으로 구성된 매니페스트가 필요합니다.
