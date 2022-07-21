@@ -717,7 +717,7 @@ You can register a user script when creating clusters and additional node groups
     * A user script entered when creating clusters is applied to the default worker node group.
     * A user script entered when creating additional node groups is applied to the corresponding worker node group.
     * **The content of a user script cannot be changed after the worker node group is created.**
-        * Note, what is changed in a user script applies to the nodes created after the change.
+        * Note, what is changed in a user script applies to the nodes created after the change of the user script.
 * Script execution time
     * A user script is executed during the instance initialization process while initializing the worker node.
     * After the user script has been executed, it sets and registers the instance as the worker node of the 'worker node group'.
@@ -730,7 +730,7 @@ You can register a user script when creating clusters and additional node groups
         * Standard output and standard error streams of script: `/var/log/userscript.output`
 
 ### User Script
-The features of a new version of a user script are included in the node groups created after July 26, 2022. The following features are found in the new version.
+The features of a new version of user script are included in the node groups created after July 26, 2022. The following features are found in the new version.
 
 * **You can change the user script content after the worker node group is created.**
 * The script execution records are stored in the following location.
@@ -739,10 +739,10 @@ The features of a new version of a user script are included in the node groups c
 
 * Correlations with the old version
     * Features of the new version replace those of the old version.
-        * The user script configured when creating node groups through the console and API is configured for the new version.
-    * For the worker node group that configured the old version of a user script, the old version and new version features work separately.
-        * You cannot change the user script content configured in the old version.
-        * You can change the user script content configured in the new version.
+        * The user script set when creating node groups through the console and API is configured for the new version.
+    * For the worker node group that set the old version of a user script, the old version and new version features work separately.
+        * You cannot change the user script content set in the old version.
+        * You can change the user script content set in the new version.
     * If user scripts are set in the old version and the new version respectively, they are executed in the following order.
         1. The old version of a user script
         2. The new version of a user script
@@ -1019,8 +1019,8 @@ Notes
 
 * (Note 1) This step is valid only if the cluster autoscaler feature is enabled before starting the upgrade feature.
 * (Note 2) Buffer node is an extra node which is created so that the pods evicted from existing worker nodes can be rescheduled during the upgrade process. It is created having the same scale as the worker node defined in that worker node group, and is automatically deleted when the upgrade process is over. This node is charged based on the instance fee policy. 
-* ③ You can define the number of buffer nodes during upgrade. The default value is 1, and buffer nodes are not added when 0 is set. Minimum value of 0, maximum value of (maximum number of nodes per node group - the current number of nodes per the worker node group).
-* ④ Task is executed by the maximum number of unavailable nodes set during upgrade. The default value of 1, minimum value of 1, and maximum value of the current number of nodes for the worker node group.
+* ③ You can define the number of buffer nodes during upgrade. The default value is 1, and buffer nodes are not added when set to 0. Minimum value of 0, maximum value of (maximum number of nodes per node group - the current number of nodes for the worker node group).
+* ④ Tasks are executed by the maximum number of unavailable nodes set during upgrade. The default value of 1, minimum value of 1, and maximum value of the current number of nodes for the worker node group.
 In this process, the following might happen:
 
 * Pods in service will be evicted and scheduled to another node. (To find out more about pod eviction, refer to the notes below.)
