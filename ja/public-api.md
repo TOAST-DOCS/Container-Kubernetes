@@ -123,7 +123,8 @@ X-Auth-Token: {tokenId}
 | clusters.labels.ca_scale_down_unneeded_time | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：しきい値領域維持時間 |
 | clusters.labels.ca_scale_down_util_thresh | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：リソース使用量しきい値 |
 | clusters.labels.ca_scale_down_delay_after_add | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：増設後の縮小遅延時間 |
-| clusters.labels.user_script | Body | String | ユーザースクリプト |
+| clusters.labels.user_script | Body | String | ユーザースクリプト(old) |
+| clusters.labels.user_script_v2 | Body | String | ユーザースクリプト |
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Kubernetes APIエンドポイントに公認ドメインアドレスを作成するかどうか("True" / "False") |
 
 
@@ -169,7 +170,7 @@ X-Auth-Token: {tokenId}
                 "os_version": "7.8",
                 "project_domain": "NORMAL",
                 "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575",
-                "user_script": ""
+                "user_script_v2": ""
             },
             "links": [
                 {
@@ -252,7 +253,8 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_unneeded_time | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：しきい値領域維持時間 |
 | labels.ca_scale_down_util_thresh | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：リソース使用量しきい値 |
 | labels.ca_scale_down_delay_after_add | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：増設後の縮小遅延時間 |
-| labels.user_script | Body | String | ユーザースクリプト |
+| labels.user_script | Body | String | ユーザースクリプト(old) |
+| labels.user_script_v2 | Body | String | ユーザースクリプト |
 | labels.master_lb_floating_ip_enabled | Body | String | Kubernetes APIエンドポイントに公認ドメインアドレスを作成するかどうか("True" / "False") |
 
 <details><summary>例</summary>
@@ -305,7 +307,7 @@ X-Auth-Token: {tokenId}
         "os_version": "7.8",
         "project_domain": "NORMAL",
         "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575",
-        "user_script": ""
+        "user_script_v2": ""
     },
     "links": [
         {
@@ -374,7 +376,8 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_util_thresh | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：リソース使用量しきい値 |
 | labels.ca_scale_down_delay_after_add | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：増設後の縮小遅延時間 |
 | labels.kube_tag | Body | String | O | Kubernetesバージョン |
-| labels.user_script | Body | String | X | ユーザースクリプト |
+| labels.user_script | Body | String | X | ユーザースクリプト(old) |
+| labels.user_script_v2 | Body | String | X | ユーザースクリプト |
 | labels.master_lb_floating_ip_enabled | Body | String | O | Kubernetes APIエンドポイントに公認ドメインアドレスを作成するかどうか("True" / "False")<br>labels.external_network_idとexternal_subnet_id_listが設定されている場合にのみ"True"に設定可能 |
 | flavor_id | Body | UUID | O | 基本ワーカーノードグループ適用：ノードインスタンスタイプUUID |
 | fixed_network | Body | UUID | O | VPC Network UUID |
@@ -409,7 +412,7 @@ X-Auth-Token: {tokenId}
         "kube_tag": "v1.23.3",
         "master_lb_floating_ip_enabled": "true",
         "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
-        "user_script": ""
+        "user_script_v2": ""
     },
     "name": "test-k8s",
     "node_count": 1
@@ -704,7 +707,8 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_util_thresh | Body | String | ワーカーノードグループ適用：オートスケーラー：リソース使用量しきい値 |
 | labels.ca_scale_down_delay_after_add | Body | String | ワーカーノードグループ適用：オートスケーラー：増設後の縮小遅延時間 |
 | labels.kube_tag | Body | String | ワーカーノードグループKubernetesバージョン |
-| labels.user_script | Body | String | ユーザースクリプト |
+| labels.user_script | Body | String | ユーザースクリプト(old) |
+| labels.user_script_v2 | Body | String | ユーザースクリプト |
 | max_node_count | Body | Integer | 最大ノード数 |
 | min_node_count | Body | Integer | 最小ノード数 |
 | node_addresses | Body | String list | ノードIPアドレスリスト |
@@ -824,7 +828,8 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_unneeded_time | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：しきい値領域維持時間 |
 | labels.ca_scale_down_util_thresh | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：リソース使用量しきい値 |
 | labels.ca_scale_down_delay_after_add | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：増設後の縮小遅延時間 |
-| labels.user_script | Body | String | X | ユーザースクリプト |
+| labels.user_script | Body | String | X | ユーザースクリプト(old) |
+| labels.user_script_v2 | Body | String | X | ユーザースクリプト |
 | name | BODY | String | O | ノードグループ名 |
 | node_count | Body | Integer | X | ノード数(デフォルト値: 1) |
 
@@ -869,7 +874,8 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_unneeded_time | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：しきい値領域維持時間 |
 | labels.ca_scale_down_util_thresh | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：リソース使用量しきい値 |
 | labels.ca_scale_down_delay_after_add | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：増設後の縮小遅延時間 |
-| labels.user_script | Body | String | ユーザースクリプト |
+| labels.user_script | Body | String | ユーザースクリプト(old) |
+| labels.user_script_v2 | Body | String | ユーザースクリプト |
 | max_node_count | Body | Integer | 最大ノード数 |
 | min_node_count | Body | Integer | 最小ノード数 |
 | name | BODY | String | ノードグループ名 |
@@ -896,7 +902,7 @@ X-Auth-Token: {tokenId}
         "ca_scale_down_unneeded_time": "10",
         "ca_scale_down_util_thresh": "50",
         "clusterautoscale": "nodegroupfeature",
-        "user_script": ""
+        "user_script_v2": ""
     },
     "links": [
         {
@@ -1094,6 +1100,8 @@ X-Auth-Token: {tokenId}
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
 | NODEGROUP_ID_OR_NAME | URL | UUID or String | O | ノードグループUUIDまたはノードグループ名<br>マスターコンポーネントのアップグレード時には**default-master**と指定 |  | 
 | version | Body | String | O | Kubernetesバージョン |
+| num_buffer_nodes | Body | Integer | X | バッファノード数。最小値：0、最大値：(ワーカーノードグループ当たりの最大ノード数クォーター - 該当ワーカーノードグループの現在のノード数)、デフォルト値: 1 |
+| num_max_unavailable_nodes | Body |  Integer | X | 最大サービス不可ノード数。最小値：1、最大値：該当ワーカーノードグループの現在ノード数、デフォルト値：1 |
 
 クラスタをアップグレードするには、マスターコンポーネントをアップグレードした後、ワーカーコンポーネントをアップグレードする必要があります。マスターとワーカーコンポーネントのアップグレードはノードグループ単位で行われます。
 
@@ -1136,6 +1144,62 @@ X-Auth-Token: {tokenId}
 </details>
 
 ---
+
+### ユーザースクリプトを変更する
+
+ノードグループのユーザースクリプトを変更します。
+
+```
+POST /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}/userscript
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### リクエスト
+
+| 名前 | 種類 | 形式 | 必須 | 説明 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | トークンID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | ノードグループUUIDまたはノードグループ名<br>マスターコンポーネントのアップグレード時には**default-master**に指定 | 
+| contents | Body | String | O | ユーザースクリプト内容 |
+
+
+<details><summary>例</summary>
+<p>
+
+```json
+{
+    "contents": "user script contents here..."
+}
+```
+
+</p>
+</details>
+
+
+#### レスポンス
+
+| 名前 | 種類 | 形式 | 説明 |
+|---|---|---|---|
+| uuid | Body | UUID | ノードグループUUID |
+
+<details><summary>例</summary>
+<p>
+
+```json
+{
+    "uuid": "018b06c5-1293-4081-8242-167a1cb9f262"
+}
+```
+
+</p>
+</details>
+
+---
+
 
 ## その他機能
 
