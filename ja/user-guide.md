@@ -703,14 +703,15 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 ```
 
 
-### ユーザースクリプト
+### ユーザースクリプト(old)
 クラスタを作成する時と追加ノードグループを作成する時、ユーザースクリプトを登録できます。ユーザースクリプト機能には次のような特徴があります。
 
 * 機能設定
     * この機能はワーカーノードグループごとに設定できます。
     * クラスタ作成時に入力したユーザースクリプトは基本ワーカーノードグループに適用されます。
     * 追加ノードグループの作成時に入力したユーザースクリプトは該当ワーカーノードグループに適用されます。
-    * ワーカーノードグループが作成された後はユーザースクリプトの内容を変更できません。
+    * **ワーカーノードグループが作成された後はユーザースクリプトの内容を変更できません。**
+        * ただし、変更された内容はユーザースクリプト変更後に作成されるノードに適用されます。 
 * スクリプト実行タイミング
     * ユーザースクリプトはワーカーノード初期化プロセスのうち、インスタンス初期化プロセスで実行されます。
     * ユーザースクリプトが実行された後、そのインスタンスを「ワーカーノードグループ」のワーカーノードに設定して登録します。
@@ -722,6 +723,23 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
         * スクリプト終了コード：`/var/log/userscript.exitcode`
         * スクリプト標準出力および標準エラーストリーム：`/var/log/userscript.output`
 
+### ユーザースクリプト
+2022年7月26日以降に作成されるノードグループには新しいバージョンのユーザースクリプト機能が搭載されます。以前のバージョンの機能と比較して次のような特徴があります。
+
+* **ワーカーノードグループが作成された後もユーザースクリプトの内容を変更できます。**
+* スクリプト実行記録は次の位置に保存されます。
+    * スクリプト終了コード： `/var/log/userscript_v2.exitcode`
+    * スクリプト標準出力および標準エラーストリーム： `/var/log/userscript_v2.output`
+
+* 以前のバージョンとの関係
+    * 新規バージョンの機能が以前のバージョンの機能を代替します。
+        * コンソール、 APIを介してノードグループを作成するとき、設定したユーザースクリプトは新規バージョンの機能に設定されます。
+    * 以前のバージョンのユーザースクリプトを設定したワーカーノードグループは、以前のバージョンの機能と新規バージョンの機能が別々に動作します。
+        * 以前のバージョンで設定したユーザースクリプトの内容は変更できません。
+        * 新規バージョンで設定したユーザースクリプトの内容は変更できます。
+    * 以前のバージョンと新規バージョンにそれぞれユーザースクリプトを設定すると、次の順序で実行されます。
+        1. 以前のバージョンのユーザースクリプト
+        2. 新規バージョンのユーザースクリプト
 
 ## クラスター管理
 遠隔のホストからクラスターを操作し、管理するには、Kubernetesが提供するコマンドラインツール(CLI)、`kubectl`が必要です。
@@ -980,8 +998,8 @@ NHN CloudのKubernetesクラスタマスターは高可用性を保障するた�
 ワーカーノードグループごとにワーカーコンポーネントをアップグレードできます。ワーカーコンポーネントアップグレードは、次の順序で行われます。
 
 1. クラスタオートスケーラ機能を無効化します。(注1)
-2. 該当ワーカーノードグループにバッファノード(注2)を追加します。
-3. ワーカーノードグループ内のすべてのワーカーノードに対して順番に以下の作業を行います。
+2. 該当ワーカーノードグループにバッファノード(注3)を追加します。
+3. ワーカーノードグループ内のすべてのワーカーノードに対して順番に以下の作業を行います。(注4)
     1. 該当ワーカーノードで動作中のPodを追放して、ノードをスケジュールできない状態に切り替えます。
     2. ワーカーコンポーネントをアップグレードします。
     3. ノードをスケジュール可能な状態に切り替えます。
@@ -990,6 +1008,8 @@ NHN CloudのKubernetesクラスタマスターは高可用性を保障するた�
 
 (注1)この段階はアップグレード機能開始前にクラスタオートスケーラ機能が有効になっている場合にのみ有効です。
 (注2)バッファノードとは、アップグレード中に既存ワーカーノードから追放されたPodがもう一度スケジューリングできるように作成しておく余裕ノードのことです。該当ワーカーノードグループで定義したワーカーノードと同じ規格のノードで作成され、アップグレードが終了する時に自動的に削除されます。このノードはInstance料金ポリシーに基づいて費用が請求されます。 
+(注3)アップグレード時のバッファノード数を設定できます。デフォルト値は1で、0に設定するとバッファノードを追加しません。最小値は0で、最大値は(ノードグループ当たりの最大ノード数クォーター - 該当のワーカーノードグループの現在ノード数)です。
+(注4)アップグレード時に設定した最大サービス不可ノード数だけ作業を実行します。デフォルト値は1です。最小値は1で、最大値は該当ワーカーノードグループの現在ノード数です。
 
 この過程で以下のようなことが発生することがあります。
 
@@ -1101,7 +1121,7 @@ spec:
 ```
 
 > [参考]
-> NHN Cloud Container Registryの使用方法は[Container Registry使用ガイド](/Container/NCR/ja/user-guide)文書を参照してください。
+> NHN Cloud Container Registryの使用方法については、[Container Registryユーザーガイド](/Container/NCR/ko/user-guide)のドキュメントを参照してください。
 
 ### LoadBalancerサービスの作成
 Kubernetesのサービスオブジェクトを定義するには、次の項目で構成されたマニフェストが必要です。
@@ -1279,6 +1299,77 @@ spec:
 
 > [注意]
 > 2021年10月26日以前に作成されたv1.18.19クラスタは、ロードバランサーが削除される時、Floating IPが削除されない問題があります。サポートの1:1お問い合わせを通してお問い合わせください。この問題を解決するための手順を詳しくお伝えします。
+
+#### ロードバランサーIP設定
+ロードバランサーを作成するときにロードバランサーのIPを設定できます。
+
+* 設定位置は .spec.loadBalancerIPです。
+* 次のいずれかに設定できます。
+  * 空の文字列("")：ロードバランサーに自動的に作成されるFloating IPを接続します。未設定時のデフォルト値です。
+  * <Floating_IP>：ロードバランサーに既存のFloating IPを接続します。すでに割り当てられているが接続されていないFloating IPがある場合に使用できます。
+
+以下はロードバランサーにユーザー指定Floating IPを接続するマニフェストの例です。
+
+```yaml
+# service-fip.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc-floatingIP
+  labels:
+    app: nginx
+spec:
+  loadBalancerIP: <Floating_IP>
+  ports:
+  - port: 8080
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: nginx
+  type: LoadBalancer
+```
+
+#### Floating IP使用設定
+ロードバランサーを作成するときにFloating IPを使用するかどうかを設定できます。
+
+* 設定位置は .metadata.annotaions下のservice.beta.kubernetes.io/openstack-internal-load-balancerです。
+* 次のいずれかに設定できます。
+  * true：Floating IPを使用せず、VIP(Virtual IP)を使用します。
+  * false：Floating IPを使用します。未設定時のデフォルト値です。
+* VIPを使用する場合は.spec.loadBalancerIP項目を一緒に設定してロードバランサーに自動的に作成されるVIPを接続する代わりにVIPを指定して接続できます。
+
+以下はロードバランサーにユーザー指定VIPを接続するマニフェストの例です。
+
+```yaml
+# service-vip.yaml
+apiVersion: v1
+kind: Service
+metadata:
+ name: nginx-svc-fixedIP
+ labels:
+   app: nginx
+ annotations:
+   service.beta.kubernetes.io/openstack-internal-load-balancer: "true"
+spec:
+ loadBalancerIP: <Virtual_IP>
+ ports:
+ - port: 8080
+   targetPort: 80
+   protocol: TCP
+ selector:
+   app: nginx
+ type: LoadBalancer
+```
+
+Floating IP使用設定とロードバランサーIP設定の組み合わせによって、次のように動作します。
+
+| Floating IP使用設定 | ロードバランサーIP設定 | 説明 |
+| --- | --- | --- |
+| false | 未設定 | ロードバランサーにFloating IPを作成して接続します。 |
+| false | 設定 | ロードバランサーに指定されたFloating IPを接続します。 |
+| true | 未設定 | ロードバランサーに接続されるVIPを自動的に設定します。 |
+| true | 設定 | ロードバランサーに指定されたVIPを接続します。 |
+
 
 #### リスナー接続制限設定
 リスナーの接続制限を設定できます。
@@ -2063,7 +2154,19 @@ pv-static-001   10Gi       RWO            Delete           Bound    default/pvc-
 
 ### 動的プロビジョニング
 
-動的プロビジョニング(dynamic provisioning)はストレージクラスに定義されているプロパティを参照して自動的にブロックストレージを作成します。動的プロビジョニングはPVを作成する必要がありません。したがってPVCマニフェストには**spec.volumeName**を設定しません。
+動的プロビジョニング(dynamic provisioning)はストレージクラスに定義されているプロパティを参照して自動的にブロックストレージを作成します。動的プロビジョニングを使用するには、ストレージクラスのボリュームバインディングモード設定を行わないか、**Immediate**に設定する必要があります。
+
+```yaml
+# storage_class_csi_dynamic.yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: csi-storageclass-dynamic
+provisioner: cinder.csi.openstack.org
+volumeBindingMode: Immediate
+```
+
+動的プロビジョニングはPVを作成する必要がありません。したがってPVCマニフェストには**spec.volumeName**を設定しません。
 
 ```yaml
 # pvc-dynamic.yaml
@@ -2078,7 +2181,7 @@ spec:
   resources:
     requests:
       storage: 10Gi
-  storageClassName: sc-ssd
+  storageClassName: csi-storageclass-dynamic
 ```
 
 ボリュームバインディングモードを設定しない場合や**Immediate**に設定してPVCを作成する場合はPVが自動的に作成されます。 PVに接続されたブロックストレージも自動的に作成され、NHN Cloud Webコンソール**Storage > Block Storage**サービスページのブロックストレージリストで確認できます。
@@ -2088,18 +2191,18 @@ $ kubectl apply -f pvc-dynamic.yaml
 persistentvolumeclaim/pvc-dynamic created
 
 $ kubectl get sc,pv,pvc
-NAME                                     PROVISIONER            AGE
-storageclass.storage.k8s.io/sc-default   kubernetes.io/cinder   10m
+NAME                                                   PROVISIONER                RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
+storageclass.storage.k8s.io/csi-storageclass-dynamic   cinder.csi.openstack.org   Delete          Immediate           false                  50s
 
-NAME                                                        CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                 STORAGECLASS   REASON   AGE
-persistentvolume/pvc-c63da3f9-dfcb-4cae-a9a9-67137994febc   10Gi       RWO            Delete           Bound    default/pvc-dynamic   sc-default              16s
+NAME                                                        CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                 STORAGECLASS               REASON   AGE
+persistentvolume/pvc-1056949c-bc67-45cc-abaa-1d1bd9e51467   10Gi       RWO            Delete           Bound    default/pvc-dynamic   csi-storageclass-dynamic            5s
 
-NAME                                STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-persistentvolumeclaim/pvc-dynamic   Bound    pvc-c63da3f9-dfcb-4cae-a9a9-67137994febc   10Gi       RWO            sc-default     17s
+NAME                                STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS               AGE
+persistentvolumeclaim/pvc-dynamic   Bound    pvc-1056949c-bc67-45cc-abaa-1d1bd9e51467   10Gi       RWO            csi-storageclass-dynamic   9s
 ```
 
 > [注意]
-> 動的プロビジョニングで作成されたブロックストレージはWebコンソールから削除できません。またクラスタを削除するとき、自動的に削除されません。したがってクラスタを削除する前にPVCをすべて削除する必要があります。PVCを削除せずにクラスタを削除すると課金されることがあります。動的プロビジョニングを作成されたPVCのreclaimPolicyは基本的に`Delete`に設定されるため、PVCを削除するだけでPVとブロックストレージが削除されます。
+> 動的プロビジョニングで作成されたブロックストレージはWebコンソールから削除できません。またクラスタを削除するとき、自動的に削除されません。したがってクラスタを削除する前にPVCをすべて削除する必要があります。PVCを削除せずにクラスタを削除すると課金されることがあります。動的プロビジョニングを作成されたPVCのreclaimPolicyは基本的に`Delete`に設定されるため、PVを削除するだけでPVとブロックストレージが削除されます。
 
 
 ### PodにPVCマウント
