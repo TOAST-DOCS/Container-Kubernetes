@@ -709,14 +709,15 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 ```
 
 
-### User Script
+### User Script (old)
 You can register a user script when creating clusters and additional node groups. A user script has the following features.
 
 * Feature setting
     * This feature can be set by worker node group.
     * A user script entered when creating clusters is applied to the default worker node group.
     * A user script entered when creating additional node groups is applied to the corresponding worker node group.
-    * The content of a user script cannot be changed after the worker node group is created.
+    * **The content of a user script cannot be changed after the worker node group is created.**
+        * Note, what is changed in a user script applies to the nodes created after the change.
 * Script execution time
     * A user script is executed during the instance initialization process while initializing the worker node.
     * After the user script has been executed, it sets and registers the instance as the worker node of the 'worker node group'.
@@ -728,6 +729,23 @@ You can register a user script when creating clusters and additional node groups
         * Script exit code: `/var/log/userscript.exitcode`
         * Standard output and standard error streams of script: `/var/log/userscript.output`
 
+### User Script
+The features of a new version of a user script are included in the node groups created after July 26, 2022. The following features are found in the new version.
+
+* **You can change the user script content after the worker node group is created.**
+* The script execution records are stored in the following location.
+    * Script exit code: `/var/log/userscript_v2.exitcode`
+    * Standard output and standard error streams of scrip: `/var/log/userscript_v2.output`
+
+* Correlations with the old version
+    * Features of the new version replace those of the old version.
+        * The user script configured when creating node groups through the console and API is configured for the new version.
+    * For the worker node group that configured the old version of a user script, the old version and new version features work separately.
+        * You cannot change the user script content configured in the old version.
+        * You can change the user script content configured in the new version.
+    * If user scripts are set in the old version and the new version respectively, they are executed in the following order.
+        1. The old version of a user script
+        2. The new version of a user script
 
 ## Cluster Management
 To run and manage clusters from a remote host, `kubectl` is required, which is the command-line tool (CLI) provided by Kubernetes.
@@ -988,8 +1006,8 @@ In this process, the following might happen:
 Worker components can be upgraded for each worker node group. Worker components are upgraded in the following steps:
 
 1. Deactivate the cluster auto scaler feature. (Note 1)
-2. Add a buffer node (Note 2) to the worker node group.
-3. Perform the following tasks for all worker nodes within the worker node group:
+2. Add a buffer node② to the worker node group.③
+3. Perform the following tasks for all worker nodes within the worker node group④ :
     1. Evict the working pods from the worker node, and make the nodes not schedulable.
     2. Upgrade worker components.
     3. Make the nodes schedulable.
@@ -1001,7 +1019,8 @@ Notes
 
 * (Note 1) This step is valid only if the cluster autoscaler feature is enabled before starting the upgrade feature.
 * (Note 2) Buffer node is an extra node which is created so that the pods evicted from existing worker nodes can be rescheduled during the upgrade process. It is created having the same scale as the worker node defined in that worker node group, and is automatically deleted when the upgrade process is over. This node is charged based on the instance fee policy. 
-
+* ③ You can define the number of buffer nodes during upgrade. The default value is 1, and buffer nodes are not added when 0 is set. Minimum value of 0, maximum value of (maximum number of nodes per node group - the current number of nodes per the worker node group).
+* ④ Task is executed by the maximum number of unavailable nodes set during upgrade. The default value of 1, minimum value of 1, and maximum value of the current number of nodes for the worker node group.
 In this process, the following might happen:
 
 * Pods in service will be evicted and scheduled to another node. (To find out more about pod eviction, refer to the notes below.)
@@ -1294,6 +1313,77 @@ The load balancer has a floating IP associated with it. You can set whether to d
 
 > [Caution]
 > v1.18.19 clusters created before October 26, 2021 have an issue where floating IPs are not deleted when the load balancer is deleted. If you contact us through 1:1 inquiry of the Customer Center, we will provide detailed information on the procedure to solve this issue.
+
+#### Set the load balancer IP
+You can set the load balancer IP when creating a load balancer.
+
+* The setting location is .spec.loadBalancerIP.
+* It can be set to one of the following.
+  * Empty string(""): Associate an automatically created floating IP with the load balancer. The default when not set.
+  * <Floating_IP>: Associate the existing floating IP with the load balancer. It can be used when there is a floating IP that is allocated and not associated. 
+
+The following is an example of manifest for associating a custom floating IP to the load balancer.
+
+```yaml
+# service-fip.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc-floatingIP
+  labels:
+    app: nginx
+spec:
+  loadBalancerIP: <Floating_IP>
+  ports:
+  - port: 8080
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: nginx
+  type: LoadBalancer
+```
+
+#### Set whether to use the floating IP
+You can set whether to use floating IPs when creating the load balancer.
+
+* The setting location is service.beta.kubernetes.io/openstack-internal-load-balancer under .metadata.annotaions.
+* It can be set to one of the following.
+  * true: Use a VIP (Virtual IP), not a floating IP.
+  * false: Use a floating IP. The default when not set.
+* If you are using a VIP, you can specify the VIP to connect to the load balancer instead of the automatically created VIP by setting the .spec.loadBalancerIP entry together.
+
+The following is an example of manifest for associating a custom VIP with the load balancer.
+
+```yaml
+# service-vip.yaml
+apiVersion: v1
+kind: Service
+metadata:
+ name: nginx-svc-fixedIP
+ labels:
+   app: nginx
+ annotations:
+   service.beta.kubernetes.io/openstack-internal-load-balancer: "true"
+spec:
+ loadBalancerIP: <Virtual_IP>
+ ports:
+ - port: 8080
+   targetPort: 80
+   protocol: TCP
+ selector:
+   app: nginx
+ type: LoadBalancer
+```
+
+Depending on the combination of floating IP usage and load balancer IP setting, it works as follows.
+
+| Floating IP Usage | Load balancer IP Setting | Description |
+| --- | --- | --- |
+| false | not set | Associate a floating IP with the load balancer. |
+| false | set | Associate a specified floating IP with the load balancer. |
+| true | not set | Automatically set a VIP associated with the load balancer. |
+| true | set | Associate a specified VIP with the load balancer. |
+
 
 #### Set the listener connection limit
 You can set the connection limit for a listener.
@@ -2078,7 +2168,20 @@ pv-static-001   10Gi       RWO            Delete           Bound    default/pvc-
 
 ### Dynamic Provisioning
 
-With Dynamic Provisioning, block storage is automatically created in reference of attributes defined at storage class. There is no need to create PV for dynamic provisioning; therefore, PVC manifest does not require the setting of **spec.volumeName**.
+With Dynamic Provisioning, block storage is automatically created in reference of attributes defined at storage class. To use Dynamic Provisioning, do not set Volume Binding Mode of storage class or set it to **Immediate**.
+
+```yaml
+# storage_class_csi_dynamic.yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: csi-storageclass-dynamic
+provisioner: cinder.csi.openstack.org
+volumeBindingMode: Immediate
+```
+
+There is no need to create PV for dynamic provisioning; therefore, PVC manifest does not require the setting of **spec.volumeName**.
+
 
 ```yaml
 # pvc-dynamic.yaml
@@ -2093,7 +2196,7 @@ spec:
   resources:
     requests:
       storage: 10Gi
-  storageClassName: sc-ssd
+  storageClassName: csi-storageclass-dynamic
 ```
 
 If you do not set the volume binding mode or set it to **Immediate** and create a PVC, the PV will be created automatically. At the same time, block storage attached to the PV is also automatically created, and you can check it from the list of block storages on the **Storage > Block Storage** page of the NHN Cloud web console.
@@ -2103,18 +2206,18 @@ $ kubectl apply -f pvc-dynamic.yaml
 persistentvolumeclaim/pvc-dynamic created
 
 $ kubectl get sc,pv,pvc
-NAME                                     PROVISIONER            AGE
-storageclass.storage.k8s.io/sc-default   kubernetes.io/cinder   10m
+NAME                                                   PROVISIONER                RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
+storageclass.storage.k8s.io/csi-storageclass-dynamic   cinder.csi.openstack.org   Delete          Immediate           false                  50s
 
-NAME                                                        CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                 STORAGECLASS   REASON   AGE
-persistentvolume/pvc-c63da3f9-dfcb-4cae-a9a9-67137994febc   10Gi       RWO            Delete           Bound    default/pvc-dynamic   sc-default              16s
+NAME                                                        CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                 STORAGECLASS               REASON   AGE
+persistentvolume/pvc-1056949c-bc67-45cc-abaa-1d1bd9e51467   10Gi       RWO            Delete           Bound    default/pvc-dynamic   csi-storageclass-dynamic            5s
 
-NAME                                STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-persistentvolumeclaim/pvc-dynamic   Bound    pvc-c63da3f9-dfcb-4cae-a9a9-67137994febc   10Gi       RWO            sc-default     17s
+NAME                                STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS               AGE
+persistentvolumeclaim/pvc-dynamic   Bound    pvc-1056949c-bc67-45cc-abaa-1d1bd9e51467   10Gi       RWO            csi-storageclass-dynamic   9s
 ```
 
 > [Caution]
-> A block storage created by dynamic provisioning cannot be deleted from the web console. It is not automatically deleted along with a cluster being deleted. Therefore, before a cluster is deleted, all PVCs must be deleted first; otherwise, you may be charged for PVC usage. The reclaimPolicy of PVC created by dynamic provisioning is set to `Delete` by default, so deleting only the PVC will also delete the PV and block storage.
+> A block storage created by dynamic provisioning cannot be deleted from the web console. It is not automatically deleted along with a cluster being deleted. Therefore, before a cluster is deleted, all PVCs must be deleted first; otherwise, you may be charged for PVC usage. The reclaimPolicy of PV created by dynamic provisioning is set to `Delete` by default, so deleting only the PVC will also delete the PV and block storage.
 
 
 ### Mounting PVC to Pods
