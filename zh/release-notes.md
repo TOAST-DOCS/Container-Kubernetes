@@ -1,5 +1,13 @@
 ## Container > NHN Kubernetes Service (NKS) > Release Notes
 
+### July 26, 2022
+
+#### Added Features
+
+* A user script can be changed after creating node groups.
+* Added Change User Script API.
+* When upgrading the worker node group, maximum number of nodes and maximum number of unavailable nodes can be specified.
+
 ### May 24, 2022
 
 #### Feature Updates

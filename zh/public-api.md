@@ -119,7 +119,8 @@ This API does not require a request body.
 | clusters.labels.ca_scale_down_unneeded_time | Body | String | Applied to the default worker node group: Autoscaler: Scale down unneeded time |
 | clusters.labels.ca_scale_down_util_thresh | Body | String | Applied to the default worker node group: Autoscaler: Scale down utilization threshold  |
 | clusters.labels.ca_scale_down_delay_after_add | Body | String | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
-| clusters.labels.user_script | Body | String | User script |
+| clusters.labels.user_script | Body | String | User Script (old) |
+| clusters.labels.user_script_v2 | Body | String | User Script |
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Whether to create a public domain address for Kubernetes API endpoint ("True" / "False") |
 
 
@@ -165,7 +166,7 @@ This API does not require a request body.
                 "os_version": "7.8",
                 "project_domain": "NORMAL",
                 "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575",
-                "user_script": ""
+                "user_script_v2": ""
             },
             "links": [
                 {
@@ -248,7 +249,8 @@ This API does not require a request body.
 | labels.ca_scale_down_unneeded_time | Body | String | Applied to the default worker node group: Autoscaler: Scale down unneeded time |
 | labels.ca_scale_down_util_thresh | Body | String | Applied to the default worker node group: Autoscaler: Scale down utilization threshold  |
 | labels.ca_scale_down_delay_after_add | Body | String | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
-| labels.user_script | Body | String | User script |
+| labels.user_script | Body | String | User Script (old) |
+| labels.user_script_v2 | Body | String | User Script |
 | labels.master_lb_floating_ip_enabled | Body | String | Whether to create a public domain address for Kubernetes API endpoint ("True" / "False") |
 
 <details><summary>Example</summary>
@@ -301,7 +303,7 @@ This API does not require a request body.
         "os_version": "7.8",
         "project_domain": "NORMAL",
         "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575",
-        "user_script": ""
+        "user_script_v2": ""
     },
     "links": [
         {
@@ -370,7 +372,8 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_util_thresh | Body | String | X | Applied to the default worker node group: Autoscaler: Scale down utilization threshold  |
 | labels.ca_scale_down_delay_after_add | Body | String | X | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
 | labels.kube_tag | Body | String | O | Kubernetes Version |
-| labels.user_script | Body | String | X | User script |
+| labels.user_script | Body | String | X | User Script (old) |
+| labels.user_script_v2 | Body | String | X | User Script |
 | labels.master_lb_floating_ip_enabled | Body | String | O | Whether to create a public domain address for Kubernetes API endpoint ("True" / "False")<br>Can be set to "True" only when labels.external_network_id and labels.external_subnet_id_list are set |
 | flavor_id | Body | UUID | O | Applied to the default worker node group: Node flavor UUID |
 | fixed_network | Body | UUID | O | VPC Network UUID |
@@ -405,7 +408,7 @@ X-Auth-Token: {tokenId}
         "kube_tag": "v1.23.3",
         "master_lb_floating_ip_enabled": "true",
         "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
-        "user_script": ""
+        "user_script_v2": ""
     },
     "name": "test-k8s",
     "node_count": 1
@@ -700,7 +703,8 @@ This API does not require a request body.
 | labels.ca_scale_down_util_thresh | Body | String | Applied to the worker node group: Autoscaler: Scale down utilization threshold  |
 | labels.ca_scale_down_delay_after_add | Body | String | Applied to the worker node group: Auto Scaler: Scale down delay after add |
 | labels.kube_tag | Body | String | Kubernetes version of the worker node group |
-| labels.user_script | Body | String | User script |
+| labels.user_script | Body | String | User Script (old) |
+| labels.user_script_v2 | Body | String | User Script |
 | max_node_count | Body | Integer | Maximum Node Count |
 | min_node_count | Body | Integer | Minimum Node Count |
 | node_addresses | Body | String list | List of node IP addresses |
@@ -820,7 +824,8 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_unneeded_time | Body | String | X | Applied to the default worker node group: Autoscaler: Scale down unneeded time |
 | labels.ca_scale_down_util_thresh | Body | String | X | Applied to the default worker node group: Autoscaler: Scale down utilization threshold  |
 | labels.ca_scale_down_delay_after_add | Body | String | X | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
-| labels.user_script | Body | String | X | User script |
+| labels.user_script | Body | String | X | User Script (old) |
+| labels.user_script_v2 | Body | String | X | User Script |
 | name | Body | String | O | Node Group Name |
 | node_count | Body | Integer | X | Number of nodes (Default: 1) |
 
@@ -865,7 +870,8 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_unneeded_time | Body | String | Applied to the default worker node group: Autoscaler: Scale down unneeded time |
 | labels.ca_scale_down_util_thresh | Body | String | Applied to the default worker node group: Autoscaler: Scale down utilization threshold  |
 | labels.ca_scale_down_delay_after_add | Body | String | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
-| labels.user_script | Body | String | User script |
+| labels.user_script | Body | String | User Script (old) |
+| labels.user_script_v2 | Body | String | User Script |
 | max_node_count | Body | Integer | Maximum Node Count |
 | min_node_count | Body | Integer | Minimum Node Count |
 | name | Body | String | Node Group Name |
@@ -892,7 +898,7 @@ X-Auth-Token: {tokenId}
         "ca_scale_down_unneeded_time": "10",
         "ca_scale_down_util_thresh": "50",
         "clusterautoscale": "nodegroupfeature",
-        "user_script": ""
+        "user_script_v2": ""
     },
     "links": [
         {
@@ -1090,6 +1096,8 @@ X-Auth-Token: {tokenId}
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
 | NODEGROUP_ID_OR_NAME | URL | UUID or String | O | Node group UUID or node group name<br>Set to **default-master** when upgrading the master components | 
 | version | Body | String | O | Kubernetes Version |
+| num_buffer_nodes | Body | Integer | X | Number of buffer nodes. Minimum value: 0, Maximum value: (Maximum number of nodes per the worker node group - the current number of nodes for the worker node group), Default value: 1 |
+| num_max_unavailable_nodes | Body |  Integer | X | Maximum number of unavailable nodes. Minimum value: 1, Maximum value: The current number of nodes for the worker node group, Default value: 1 |
 
 To upgrade a cluster, you must upgrade the master components and then upgrade the worker components. Master and worker component upgrades are performed on a per node group basis.
 
@@ -1133,9 +1141,65 @@ To upgrade a cluster, you must upgrade the master components and then upgrade th
 
 ---
 
+### Change User Script
+
+Changes the user script of the node group.
+
+```
+POST /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}/userscript
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### Request
+
+| Name | Type | Format | Required | Description |
+|---|---|---|---|---|
+| tokenId | Header | String | O | Token ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | Node group UUID or node group name<br>Set to **default-master** when upgrading master components | 
+| contents | Body | String | O | User script content |
+
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "contents": "user script contents here..."
+}
+```
+
+</p>
+</details>
+
+
+#### Response
+
+| Name | Type | Format | Description |
+|---|---|---|---|
+| uuid | Body | UUID | Node Group UUID |
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "uuid": "018b06c5-1293-4081-8242-167a1cb9f262"
+}
+```
+
+</p>
+</details>
+
+---
+
+
 ## Other Features
 
-### Get the Supported Kubernetes Versions
+### See the Supported Kubernetes Versions
 
 Retrieves the Kubernetes versions supported by NHN Kubernetes Service (NKS).
 

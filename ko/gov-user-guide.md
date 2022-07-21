@@ -702,14 +702,15 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 ```
 
 
-### 사용자 스크립트
+### 사용자 스크립트(old)
 클러스터를 생성할 때와 추가 노드 그룹을 생성할 때, 사용자 스크립트를 등록할 수 있습니다. 사용자 스크립트 기능에는 다음과 같은 특징이 있습니다.
 
 * 기능 설정
     * 이 기능은 워커 노드 그룹별로 설정할 수 있습니다.
     * 클러스터 생성 시 입력한 사용자 스크립트는 기본 워커 노드 그룹에 적용됩니다.
     * 추가 노드 그룹 생성 시 입력한 사용자 스크립트는 해당 워커 노드 그룹에 적용됩니다.
-    * 워커 노드 그룹이 생성된 후에는 사용자 스크립트의 내용을 변경할 수 없습니다.
+    * **워커 노드 그룹이 생성된 후에는 사용자 스크립트의 내용을 변경할 수 없습니다.**
+        * 단, 변경된 내용은 사용자 스크립트 변경 이후 생성되는 노드에 적용됩니다. 
 * 스크립트 실행 시점
     * 사용자 스크립트는 워커 노드 초기화 과정 중 인스턴스 초기화 과정에서 실행됩니다.
     * 사용자 스크립트가 실행된 후, 해당 인스턴스를 '워커 노드 그룹'의 워커 노드로 설정하고 등록합니다.
@@ -721,6 +722,23 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
         * 스크립트 종료 코드: `/var/log/userscript.exitcode`
         * 스크립트 표준 출력 및 표준 에러 스트림: `/var/log/userscript.output`
 
+### 사용자 스크립트
+2022년 7월 26일 이후에 생성되는 노드 그룹에는 새로운 버전의 사용자 스크립트 기능이 탑재됩니다. 이전 버전의 기능에 비해 다음과 같은 특징이 있습니다.
+
+* **워커 노드 그룹이 생성된 후에도 사용자 스크립트의 내용을 변경할 수 있습니다.**
+* 스크립트 실행 기록은 아래 위치에 저장됩니다.
+    * 스크립트 종료 코드: `/var/log/userscript_v2.exitcode`
+    * 스크립트 표준 출력 및 표준 에러 스트림: `/var/log/userscript_v2.output`
+
+* 이전 버전과의 관계
+    * 신규 버전의 기능이 이전 버전의 기능을 대체합니다.
+        * 콘솔, API를 통해 노드 그룹을 생성할 때 설정한 사용자 스크립트는 신규 버전 기능으로 설정됩니다.
+    * 이전 버전의 사용자 스크립트를 설정한 워커 노드 그룹은 이전 버전 기능과 신규 버전 기능이 개별적으로 동작합니다.
+        * 이전 버전에 설정한 사용자 스크립트의 내용은 변경할 수 없습니다.
+        * 신규 버전에 설정한 사용자 스크립트의 내용은 변경할 수 있습니다.
+    * 이전 버전과 신규 버전에 각각 사용자 스크립트를 설정하면 다음의 순서로 실행됩니다.
+        1. 이전 버전의 사용자 스크립트
+        2. 신규 버전의 사용자 스크립트
 
 ## 클러스터 관리
 원격의 호스트에서 클러스터를 조작하고 관리하려면 Kubernetes가 제공하는 명령줄 도구(CLI)인 `kubectl`이 필요합니다.
@@ -960,8 +978,8 @@ NHN Cloud의 Kubernetes 클러스터 마스터는 고가용성 보장을 위해 
 워커 노드 그룹 별로 워커 구성 요소를 업그레이드할 수 있습니다. 워커 구성 요소 업그레이드는 다음 순서로 진행됩니다.
 
 1. 클러스터 오토스케일러 기능을 비활성화 합니다.①
-2. 해당 워커 노드 그룹에 버퍼 노드② 를 추가합니다.
-3. 워커 노드 그룹 내의 모든 워커 노드에 대해 순차적으로 아래 작업을 수행합니다.
+2. 해당 워커 노드 그룹에 버퍼 노드②를 추가합니다.③ 
+3. 워커 노드 그룹 내의 모든 워커 노드에 대해 순차적으로 아래 작업을 수행합니다.④ 
     1. 해당 워커 노드에서 동작 중인 파드를 축출하고, 노드를 스케줄 불가능한 상태로 전환합니다.
     2. 워커 구성 요소를 업그레이드합니다.
     3. 노드를 스케줄 가능한 상태로 전환합니다.
@@ -973,6 +991,8 @@ NHN Cloud의 Kubernetes 클러스터 마스터는 고가용성 보장을 위해 
 
 * ① 이 단계는 업그레이드 기능 시작 전 클러스터 오토스케일러 기능이 활성화 되어 있는 경우에만 유효합니다.
 * ② 버퍼 노드란 업그레이드 과정 중 기존 워커 노드에서 축출당한 파드가 다시 스케줄링 가능하도록 생성해놓는 여유 노드를 말합니다. 해당 워커 노드 그룹에서 정의한 워커 노드와 동일한 규격의 노드로 생성되며, 업그레이드 과정이 종료될 때 자동으로 삭제됩니다. 이 노드는 Instance 요금 정책에 따라 비용이 청구됩니다. 
+* ③ 업그레이드 시 버퍼 노드 수를 설정할 수 있습니다. 기본값은 1이며, 0으로 설정하면 버퍼 노드를 추가하지 않습니다. 최솟값은 0이고, 최댓값은 (노드 그룹당 최대 노드 수 쿼터-해당 워커 노드 그룹의 현재 노드 수)입니다.
+* ④ 업그레이드 시 설정한 최대 서비스 불가 노드 수만큼씩 작업을 수행합니다. 기본값은 1입니다. 최솟값은 1이고, 최댓값은 해당 워커 노드 그룹의 현재 노드 수입니다.
 
 이 과정에서 아래와 같은 일들이 발생할 수 있습니다.
 
@@ -1215,6 +1235,76 @@ spec:
 * 다음 중 하나로 설정할 수 있습니다.
     * true: 플로팅 IP를 보존합니다.
     * false: 플로팅 IP를 삭제합니다. 미설정 시 기본값입니다.
+
+#### 로드 밸런서 IP 설정
+로드 밸런서를 생성할 때 로드 밸런서의 IP를 설정할 수 있습니다.
+
+* 설정 위치는 .spec.loadBalancerIP 입니다.
+* 다음 중 하나로 설정할 수 있습니다.
+  * 빈 문자열(""): 로드 밸런서에 자동으로 생성되는 플로팅 IP를 연결합니다. 미설정 시 기본값입니다.
+  * <Floating_IP>: 로드 밸런서에 기존의 플로팅 IP를 연결합니다. 이미 할당 받았지만 연결되지 않은 플로팅 IP가 있을 때 사용 가능합니다.
+
+아래는 로드 밸런서에 사용자 지정 플로팅 IP를 연결하는 매니페스트 예제입니다.
+
+```yaml
+# service-fip.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc-floatingIP
+  labels:
+    app: nginx
+spec:
+  loadBalancerIP: <Floating_IP>
+  ports:
+  - port: 8080
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: nginx
+  type: LoadBalancer
+```
+
+#### 플로팅 IP 사용 여부 설정
+로드 밸런서 생성 시 플로팅 IP의 사용 여부를 설정할 수 있습니다.
+
+* 설정 위치는 .metadata.annotaions 하위에 service.beta.kubernetes.io/openstack-internal-load-balancer입니다.
+* 다음 중 하나로 설정할 수 있습니다.
+  * true: 플로팅 IP를 사용하지 않고, VIP(Virtual IP)를 사용합니다.
+  * false: 플로팅 IP를 사용합니다. 미설정 시 기본값입니다.
+* VIP를 사용하는 경우 .spec.loadBalancerIP 항목을 함께 설정하여 로드 밸런서에 자동으로 생성되는 VIP를 연결하는 대신 VIP를 지정하여 연결할 수 있습니다.
+
+아래는 로드 밸런서에 사용자 지정 VIP를 연결하는 매니페스트 예제입니다.
+
+```yaml
+# service-vip.yaml
+apiVersion: v1
+kind: Service
+metadata:
+ name: nginx-svc-fixedIP
+ labels:
+   app: nginx
+ annotations:
+   service.beta.kubernetes.io/openstack-internal-load-balancer: "true"
+spec:
+ loadBalancerIP: <Virtual_IP>
+ ports:
+ - port: 8080
+   targetPort: 80
+   protocol: TCP
+ selector:
+   app: nginx
+ type: LoadBalancer
+```
+
+플로팅 IP 사용 여부 설정과 로드 밸런서 IP 설정의 조합에 의해 다음과 같이 동작합니다.
+
+| 플로팅 IP 사용 여부 설정 | 로드 밸런서 IP 설정 | 설명 |
+| --- | --- | --- |
+| false | 미설정 | 로드 밸런서에 플로팅 IP를 생성해 연결합니다. |
+| false | 설정 | 로드 밸런서에 지정된 플로팅 IP를 연결합니다. |
+| true | 미설정 | 로드 밸런서에 연결되는 VIP를 자동으로 설정합니다. |
+| true | 설정 | 로드 밸런서에 지정된 VIP를 연결합니다. |
 
 #### 리스너 연결 제한 설정
 리스너의 연결 제한을 설정할 수 있습니다.
@@ -2041,7 +2131,19 @@ pv-static-001   10Gi       RWO            Delete           Bound    default/pvc-
 
 ### 동적 프로비저닝
 
-동적 프로비저닝(dynamic provisioning)은 스토리지 클래스에 정의된 속성을 참조하여 자동으로 블록 스토리지를 생성합니다. 동적 프로비저닝은 PV를 생성할 필요가 없습니다. 따라서 PVC 매니페스트에는 **spec.volumeName**를 설정하지 않습니다.
+동적 프로비저닝(dynamic provisioning)은 스토리지 클래스에 정의된 속성을 참조하여 자동으로 블록 스토리지를 생성합니다. 동적 프로비저닝을 사용하기 위해서는 스토리지 클래스의 볼륨 바인딩 모드를 설정하지 않거나 **Immediate**로 설정해야 합니다.
+
+```yaml
+# storage_class_csi_dynamic.yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: csi-storageclass-dynamic
+provisioner: cinder.csi.openstack.org
+volumeBindingMode: Immediate
+```
+
+동적 프로비저닝은 PV를 생성할 필요가 없습니다. 따라서 PVC 매니페스트에는 **spec.volumeName**를 설정하지 않습니다.
 
 ```yaml
 # pvc-dynamic.yaml
@@ -2056,7 +2158,7 @@ spec:
   resources:
     requests:
       storage: 10Gi
-  storageClassName: sc-ssd
+  storageClassName: csi-storageclass-dynamic
 ```
 
 볼륨 바인딩 모드를 설정하지 않거나 **Immediate**로 설정하고 PVC를 생성하면 PV가 자동으로 생성됩니다. PV에 연결된 블록 스토리지도 자동으로 생성되며 NHN Cloud 웹 콘솔 **Storage > Block Storage** 서비스 페이지의 블록 스토리지 목록에서 확인할 수 있습니다.
@@ -2066,19 +2168,18 @@ $ kubectl apply -f pvc-dynamic.yaml
 persistentvolumeclaim/pvc-dynamic created
 
 $ kubectl get sc,pv,pvc
-NAME                                     PROVISIONER            AGE
-storageclass.storage.k8s.io/sc-default   kubernetes.io/cinder   10m
+NAME                                                   PROVISIONER                RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
+storageclass.storage.k8s.io/csi-storageclass-dynamic   cinder.csi.openstack.org   Delete          Immediate           false                  50s
 
-NAME                                                        CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                 STORAGECLASS   REASON   AGE
-persistentvolume/pvc-c63da3f9-dfcb-4cae-a9a9-67137994febc   10Gi       RWO            Delete           Bound    default/pvc-dynamic   sc-default              16s
+NAME                                                        CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                 STORAGECLASS               REASON   AGE
+persistentvolume/pvc-1056949c-bc67-45cc-abaa-1d1bd9e51467   10Gi       RWO            Delete           Bound    default/pvc-dynamic   csi-storageclass-dynamic            5s
 
-NAME                                STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-persistentvolumeclaim/pvc-dynamic   Bound    pvc-c63da3f9-dfcb-4cae-a9a9-67137994febc   10Gi       RWO            sc-default     17s
+NAME                                STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS               AGE
+persistentvolumeclaim/pvc-dynamic   Bound    pvc-1056949c-bc67-45cc-abaa-1d1bd9e51467   10Gi       RWO            csi-storageclass-dynamic   9s
 ```
 
 > [주의]
-> 동적 프로비저닝으로 생성된 블록 스토리지는 웹 콘솔에서 삭제할 수 없습니다. 또한 클러스터를 삭제할 때 자동으로 삭제되지 않습니다. 따라서 클러스터를 삭제하기 전에 PVC를 모두 삭제해야 합니다. PVC를 삭제하지 않고 클러스터를 삭제하면 과금이 될 수 있습니다. 동적 프로비저닝을 생성된 PVC의 reclaimPolicy는 기본적으로 `Delete`로 설정되기 때문에 PVC만 삭제해도 PV와 블록 스토리지가 삭제됩니다.
-
+> 동적 프로비저닝으로 생성된 블록 스토리지는 웹 콘솔에서 삭제할 수 없습니다. 또한 클러스터를 삭제할 때 자동으로 삭제되지 않습니다. 따라서 클러스터를 삭제하기 전에 PVC를 모두 삭제해야 합니다. PVC를 삭제하지 않고 클러스터를 삭제하면 과금될 수 있습니다. 동적 프로비저닝을 생성된 PV의 reclaimPolicy는 기본적으로 `Delete`로 설정되기 때문에 PVC만 삭제해도 PV와 블록 스토리지가 삭제됩니다.
 
 ### 파드에 PVC 마운트
 
