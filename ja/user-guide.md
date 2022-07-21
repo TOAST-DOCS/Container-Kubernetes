@@ -1101,7 +1101,7 @@ spec:
 ```
 
 > [参考]
-> NHN Cloud Container Registryの使用方法は[Container Registry使用ガイド](/Container/NCR/ja/user-guide)文書を参照してください。
+> NHN Cloud Container Registryの使用方法は[Container Registry使用ガイド](/Container/Container%20Registry/ja/user-guide)文書を参照してください。
 
 ### LoadBalancerサービスの作成
 Kubernetesのサービスオブジェクトを定義するには、次の項目で構成されたマニフェストが必要です。

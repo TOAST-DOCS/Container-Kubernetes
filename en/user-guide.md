@@ -1115,7 +1115,7 @@ spec:
 ```
 
 > [Note]
-> Regarding how to use NHN Cloud Container Registry, see [User Guide for Container Registry](/Container/NCR/en/user-guide).
+> Regarding how to use NHN Cloud Container Registry, see [User Guide for Container Registry](/Container/Container%20Registry/en/user-guide).
 
 ### Creating LoadBalancer
 To define service object of Kubernetes, a manifest comprised of the following items is required:
