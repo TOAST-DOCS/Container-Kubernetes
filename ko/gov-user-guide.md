@@ -2131,7 +2131,7 @@ pv-static-001   10Gi       RWO            Delete           Bound    default/pvc-
 
 ### 동적 프로비저닝
 
-동적 프로비저닝(dynamic provisioning)은 스토리지 클래스에 정의된 속성을 참조하여 자동으로 블록 스토리지를 생성합니다. 동적 프로비저닝을 사용하기 위해서는 스토리지 클래스의 볼륨 바인딩 모드를 설정하지 않거나 Immediate로 설정해야 합니다.
+동적 프로비저닝(dynamic provisioning)은 스토리지 클래스에 정의된 속성을 참조하여 자동으로 블록 스토리지를 생성합니다. 동적 프로비저닝을 사용하기 위해서는 스토리지 클래스의 볼륨 바인딩 모드를 설정하지 않거나 **Immediate**로 설정해야 합니다.
 
 ```yaml
 # storage_class_csi_dynamic.yaml
