@@ -27,10 +27,11 @@ NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전�
 | v1.17.6 | 불가능 | 가능 |
 | v1.18.19 | 불가능 | 가능 |
 | v1.19.13 | 불가능 | 가능 |
-| v1.20.12 | 가능 | 가능 |
+| v1.20.12 | 불가능 | 가능 |
 | v1.21.6 | 가능 | 가능 |
 | v1.22.3 | 가능 | 가능 |
 | v1.23.3 | 가능 | 가능 |
+| v1.24.3 | 가능 | 가능 |
 
 
 필요한 정보를 입력하고 **클러스터 생성** 버튼을 클릭하면 클러스터 생성이 시작됩니다. 클러스터 목록에서 상태를 확인할 수 있습니다. 생성하는 데는 약 10분 정도 걸립니다. 클러스터 설정에 따라 더 오래 걸릴 수도 있습니다.
@@ -1046,6 +1047,17 @@ NHN Cloud의 Kubernetes 클러스터 마스터는 고가용성 보장을 위해 
 
 > [주의]
 > 마스터 업그레이드 후 워커 노드 그룹을 업그레이드하지 않으면 일부 파드가 정상적으로 동작하지 않을 수 있습니다.
+
+## 워커 노드 관리
+
+### 컨테이너 관리
+
+#### Kubernetes v1.24.3 이전 버전의 클러스터
+Kubernetes v1.24.3 이전 버전의 클러스터는 Docker를 이용해 컨테이너 런타임을 구성합니다. 워커 노드에서 docker CLI를 이용해 컨테이너 상태 조회, 컨테이너 이미지 조회 등의 작업을 할 수 있습니다. docker CLI에 대한 자세한 설명과 사용법은 [Use the Docker command line](https://docs.docker.com/engine/reference/commandline/cli/)을 참고하세요.
+
+#### Kubernetes v1.24.3 이후 버전의 클러스터
+
+Kubernetes v1.24.3 이후 버전의 클러스터는 containerd를 이용해 컨테이너 런타임을 구성합니다. 워커 노드에서 docker CLI 대신 nerdctl을 이용해 컨테이너 상태 조회, 컨테이너 이미지 조회 등의 작업을 할 수 있습니다. nerdctl에 대한 자세한 설명과 사용법은 [nerdctl: Docker-compatible CLI for containerd](https://github.com/containerd/nerdctl#nerdctl-docker-compatible-cli-for-containerd)을 참고하세요.
 
 ## LoadBalancer 서비스
 Kubernetes 애플리케이션의 기본 실행 단위인 파드(pod)는 CNI(Container Network Interface)로 클러스터 네트워크에 연결됩니다. 기본적으로 클러스터 외부에서 파드로는 접근할 수 없습니다. 파드의 서비스를 클러스터 외부에 공개하려면 Kubernetes의 `LoadBalancer` 서비스(Service) 객체(object)를 이용해 외부에 공개할 경로를 만들어야 합니다. LoadBalancer 서비스 객체를 만들면 클러스터 외부에 NHN Cloud Load Balancer가 생성되어 서비스 객체와 연결됩니다.
