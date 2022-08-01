@@ -19,6 +19,7 @@ NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해�
 | 키 페어 | 기본 노드 그룹 접근에 사용할 키 페어 |
 | 블록 스토리지 타입 | 기본 노드 그룹 인스턴스의 블록 스토리지 종류 |
 | 블록 스토리지 크기 | 기본 노드 그룹 인스턴스의 블록 스토리지 크기 |
+| 추가 네트워크 | 기본 워커 노드 그룹에 생성할 추가 네트워크/서브넷 |
 
 > [주의]
 > 클러스터 생성 시 VPC를 VPN Private Network으로 지정할 수 없습니다. 
@@ -92,6 +93,7 @@ NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전�
 | 키 페어 | 추가 노드 그룹 접근에 사용할 키 페어 |
 | 블록 스토리지 타입 | 추가 노드 그룹 인스턴스의 블록 스토리지 종류 |
 | 블록 스토리지 크기 | 추가 노드 그룹 인스턴스의 블록 스토리지 크기 |
+| 추가 네트워크 | 기본 워커 노드 그룹에 생성할 추가 네트워크/서브넷 |
 
 필요한 정보를 입력하고 **노드 그룹 생성** 버튼을 클릭하면 노드 그룹 생성이 시작됩니다. 노드 그룹 목록에서 상태를 확인할 수 있습니다. 노드 그룹 생성하는 데는 약 5분 정도 걸립니다. 노드 그룹 설정에 따라 더 오래 걸릴 수도 있습니다.
 
@@ -1031,6 +1033,63 @@ Kubernetes v1.24.3 이전 버전의 클러스터는 Docker를 이용해 컨테�
 
 Kubernetes v1.24.3 이후 버전의 클러스터는 containerd를 이용해 컨테이너 런타임을 구성합니다. 워커 노드에서 docker CLI 대신 nerdctl을 이용해 컨테이너 상태 조회, 컨테이너 이미지 조회 등의 작업을 할 수 있습니다. nerdctl에 대한 자세한 설명과 사용법은 [nerdctl: Docker-compatible CLI for containerd](https://github.com/containerd/nerdctl#nerdctl-docker-compatible-cli-for-containerd)을 참고하세요.
 
+
+### 네트워크 관리
+
+#### 기본 네트워크 인터페이스
+워커 노드는 클러스터 생성 시 입력한 VPC와 서브넷에 연결되며, 이 네트워크를 통해 마스터와 연결됩니다. 이 네트워크 인터페이스의 이름은 "eth0"으로 명명됩니다. 
+
+
+#### 추가 네트워크 인터페이스
+클러스터 생성 시 혹은 워커 노드 그룹 생성 시 추가 네트워크를 설정하면 해당 워커 노드 그룹의 워커 노드에 추가 네트워크 인터페이스가 생성됩니다. 추가 네트워크 인터페이스는 추가 네트워크 설정에 입력한 순서대로 인터페이스 이름이 결정됩니다(eth1, eth2, ...).
+
+#### 기본 경로(default route) 설정
+인스턴스에 여러 네트워크 인터페이스가 존재하면 기본 경로에 대한 설정이 필요합니다. 인스턴스 내의 모든 네트워크 인터페이스에는 기본 경로가 설정되는데, 여러 개의 기본 경로가 설정된 경우 메트릭(metric) 값이 가장 낮게 설정된 경로가 기본 경로로 동작합니다. NHN Cloud의 인스턴스는 인터페이스 번호가 작을수록 낮은 메트릭이 설정되어 있습니다. 이로 인해 동작 중인 인터페이스 중 가장 작은 번호의 인터페이스가 기본 경로로 동작합니다.
+
+기본 경로를 변경하기 위해서 각 경로의 메트릭 값을 조정할 수 있습니다. 다음은 route 명령어를 이용해 메트릭 값을 조정하는 예제입니다.
+
+다음은 기본 설정 상태입니다. 인터페이스 번호가 작을수록 메트릭값이 작게 설정된 것을 확인할 수 있습니다.
+```
+# route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         192.168.0.1     0.0.0.0         UG    0      0        0 eth0
+0.0.0.0         10.0.0.1        0.0.0.0         UG    100    0        0 eth1
+0.0.0.0         172.16.0.1      0.0.0.0         UG    200    0        0 eth2
+```
+
+eth1을 기본 경로로 설정하기 위해 eth1의 메트릭을 0으로, eth0의 메트릭을 100으로 변경합니다. 메트릭 값만 변경되지는 않기 때문에 경로를 삭제하고 다시 추가해야 합니다. 먼저 eth0의 경로를 삭제하고 eth0의 메트릭을 100으로 설정합니다.
+
+```
+# route del -net 0.0.0.0/0 dev eth0
+# route add -net 0.0.0.0/0 gw 192.168.0.1 dev eth0 metric 100
+```
+
+eth0과 마찬가지로 eth1의 경로를 삭제하고, eth1의 메트릭을 0으로 설정합니다. 
+```
+# route del -net 0.0.0.0/0 dev eth1
+# route add -net 0.0.0.0/0 gw 10.0.0.1 dev eth1 metric 0
+```
+
+다시 경로를 조회해보면 메트릭 값이 변경된 것을 확인할 수 있습니다.
+```
+# route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         10.0.0.1        0.0.0.0         UG    0      0        0 eth1
+0.0.0.0         192.168.0.1     0.0.0.0         UG    100    0        0 eth0
+0.0.0.0         172.16.0.1      0.0.0.0         UG    200    0        0 eth2
+```
+
+사용자 스크립트 기능을 이용하면 노드 증설 등으로 노드가 새롭게 초기화될 때도 위와 같은 설정을 유지할 수 있습니다. 다음 사용자 스크립트는 워커 노드에서 eth0의 메트릭 값을 100으로, eth1의 메트릭 값을 0으로 설정하는 예제입니다.
+```
+#!/bin/bash
+route del -net 0.0.0.0/0 dev eth0
+route add -net 0.0.0.0/0 gw 192.168.0.1 dev eth0 metric 100
+route del -net 0.0.0.0/0 dev eth1
+route add -net 0.0.0.0/0 gw 10.0.0.1 dev eth1 metric 0
+```
+
 ## LoadBalancer 서비스
 Kubernetes 애플리케이션의 기본 실행 단위인 파드(pod)는 CNI(Container Network Interface)로 클러스터 네트워크에 연결됩니다. 기본적으로 클러스터 외부에서 파드로는 접근할 수 없습니다. 파드의 서비스를 클러스터 외부에 공개하려면 Kubernetes의 `LoadBalancer` 서비스(Service) 객체(object)를 이용해 외부에 공개할 경로를 만들어야 합니다. LoadBalancer 서비스 객체를 만들면 클러스터 외부에 NHN Cloud Load Balancer가 생성되어 서비스 객체와 연결됩니다.
 
@@ -1318,6 +1377,7 @@ spec:
 | true | 미설정 | 로드 밸런서에 연결되는 VIP를 자동으로 설정합니다. |
 | true | 설정 | 로드 밸런서에 지정된 VIP를 연결합니다. |
 
+
 #### 리스너 연결 제한 설정
 리스너의 연결 제한을 설정할 수 있습니다.
 
@@ -1475,48 +1535,6 @@ HTTP 상태 코드는 다음과 같이 설정할 수 있습니다.
 ### NGINX Ingress Controller 설치
 NGINX Ingress Controller는 많이 사용되는 인그레스 컨트롤러 중 하나입니다. 자세한 내용은 [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/)와 [NGINX Ingress Controller for Kubernetes](https://www.nginx.com/products/nginx-ingress-controller/) 문서를 참고하세요. NGINX Ingress Controller의 설치는 [Installation Guide](https://kubernetes.github.io/ingress-nginx/deploy/) 문서를 참고하세요.
 
-### LoadBalancer 서비스 생성
-인그레스 컨트롤러 역시 파드로 생성되기 때문에 외부에 공개하기 위해서는 LoadBalancer 서비스 또는 NodePort 서비스를 만들어야 합니다. 다음과 같이 HTTP와 HTTPS를 처리할 수 있는 LoadBalancer 서비스 매니페스트를 정의합니다.
-
-```yaml
-# ingress-nginx-lb.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: ingress-nginx
-  namespace: ingress-nginx
-  labels:
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/part-of: ingress-nginx
-spec:
-  type: LoadBalancer
-  selector:
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/part-of: ingress-nginx
-  ports:
-    - name: http
-      port: 80
-      targetPort: 80
-      protocol: TCP
-    - name: https
-      port: 443
-      targetPort: 443
-      protocol: TCP
-  selector:
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/part-of: ingress-nginx
-```
-
-서비스 객체를 생성하고 외부 로드 밸런서가 연결되어 있는지 확인합니다. **EXTERNAL-IP** 필드에는 플로팅 IP 주소가 설정되어 있어야 합니다.
-
-```
-$ kubectl apply -f ingress-nginx-lb.yaml
-service/ingress-nginx created
-
-$ kubectl get svc -n ingress-nginx
-NAME            TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)                      AGE
-ingress-nginx   LoadBalancer   10.254.2.128   123.123.123.41   80:30820/TCP,443:30269/TCP   39s
-```
 
 ### URI 기반 서비스 분기
 인그레스 컨트롤러는 URI를 기반으로 서비스를 분기할 수 있습니다. 아래 그림은 URI를 기반으로 서비스를 분기하는 간단한 예제의 구조를 나타냅니다.
