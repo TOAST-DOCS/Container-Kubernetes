@@ -1339,7 +1339,7 @@ spec:
 #### 플로팅 IP 사용 여부 설정
 로드 밸런서 생성 시 플로팅 IP의 사용 여부를 설정할 수 있습니다.
 
-* 설정 위치는 .metadata.annotaions 하위에 service.beta.kubernetes.io/openstack-internal-load-balancer입니다.
+* 설정 위치는 .metadata.annotaions 하위의 service.beta.kubernetes.io/openstack-internal-load-balancer입니다.
 * 다음 중 하나로 설정할 수 있습니다.
   * true: 플로팅 IP를 사용하지 않고, VIP(Virtual IP)를 사용합니다.
   * false: 플로팅 IP를 사용합니다. 미설정 시 기본값입니다.
@@ -1377,6 +1377,40 @@ spec:
 | true | 미설정 | 로드 밸런서에 연결되는 VIP를 자동으로 설정합니다. |
 | true | 설정 | 로드 밸런서에 지정된 VIP를 연결합니다. |
 
+
+#### VPC 설정
+로드 밸런서 생성 시 로드 밸런서가 연결될 VPC를 설정할 수 있습니다.
+
+* 설정 위치는 .metadata.annotaions 하위의 loadbalancer.openstack.org/network-id입니다.
+* 설정하지 않으면 클러스터 생성 시 설정한 VPC로 설정합니다.
+
+#### 서브넷 설정
+로드 밸런서 생성 시 로드 밸런서가 연결될 서브넷을 설정할 수 있습니다.
+
+* 설정 위치는 .metadata.annotaions 하위의 loadbalancer.openstack.org/subnet-id입니다.
+* 설정하지 않으면 클러스터 생성 시 설정한 서브넷으로 설정합니다.
+
+아래는 로드 밸런서에 VPC와 서브넷을 설정하능 매니페스트 예제입니다.
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc-vpc-subnet
+  labels:
+     app: nginx
+  annotations:
+    loadbalancer.openstack.org/network-id: "49a5820b-d941-41e5-bfc3-0fd31f2f6773"
+    loadbalancer.openstack.org/subnet-id: "38794fd7-fd2e-4f34-9c89-6dd3fd12f548"
+spec:
+  ports:
+  - port: 8080
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: nginx
+  type: LoadBalancer
+```
 
 #### 리스너 연결 제한 설정
 리스너의 연결 제한을 설정할 수 있습니다.
