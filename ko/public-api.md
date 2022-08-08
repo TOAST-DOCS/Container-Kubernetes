@@ -379,6 +379,11 @@ X-Auth-Token: {tokenId}
 | fixed_network | Body | UUID | O | VPC 네트워크 UUID |
 | fixed_subnet | Body | UUID | O | VPC 서브넷 UUID |
 
+> [주의]
+> fixed_subnet 대역이 아래 네트워크 대역과 겹치지 않도록 설정해야 합니다.
+>  - 10.100.0.0/16
+>  - 10.254.0.0/16
+
 <details><summary>예시</summary>
 <p>
 
