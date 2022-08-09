@@ -2252,7 +2252,7 @@ v1.19.13 이전 버전의 **kubernetes.io/cinder** 스토리지 제공자 대신
 + pv.kubernetes.io/provisioned-by:cinder.csi.openstack.org > 추가
 
 
-아래는 볼륨 확장을 위해 v1.19.13 이전 버전의 PVC를 수정한 예제입니다.
+아래는 수정된 PVC 예제입니다.
 
 ``` yaml
 apiVersion: v1
