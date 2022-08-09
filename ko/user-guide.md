@@ -2271,7 +2271,7 @@ Filesystem      Size  Used Avail Use% Mounted on
 NHN Cloud 웹 콘솔 **Storage > Block Storage** 서비스 페이지에서도 블록 스토리지의 연결 정보를 확인할 수 있습니다.
 
 ### online NAS 서비스 연동
-NHN Cloud에서 제공하는 NAS 스토리지를 PV로 활용할 수 있습니다. NHN Cloud NAS 스토리지 사용에 대한 자세한 내용은 [NAS 콘솔 사용 가이드](/Storage/NAS/ko/console-guide)를 참고하세요.
+NHN Cloud에서 제공하는 NAS 스토리지를 PV로 활용할 수 있습니다. NAS 서비스를 사용하기 위해서는 v1.20 이후 버전의 클러스터를 사용해야 합니다. NHN Cloud NAS 스토리지 사용에 대한 자세한 내용은 [NAS 콘솔 사용 가이드](/Storage/NAS/ko/console-guide)를 참고하세요.
 
 #### 워커 노드에 nfs 패키지 설치
 NAS 스토리지를 사용하기 위해서는 워커 노드에 nfs 패키지를 설치해야 합니다. 워커 노드에 접속한 후 아래 명령어를 실행하여 nfs 패키지를 설치할 수 있습니다.
@@ -2419,3 +2419,7 @@ storageclass.storage.k8s.io/onas-sc   nfs.csi.k8s.io   Retain          Immediate
 ```
 
 StorageClass 생성 이후에 PVC 생성 및 pod에 볼륨을 마운트하는 과정은 기본 동적 프로비저닝 과정과 동일합니다. 동적 프로비저닝에 대한 자세한 내용은 [동적 프로비저닝](/Container/NKS/ko/user-guide/#_52)을 참고하세요.
+
+> [참고]
+> nfs-csi-driver는 동적 프로비저닝을 통해 PV를 생성할 때 nfs 스토리지 내부에 subdirectory를 생성하는 방식으로 동작합니다.
+> pod에 PV를 마운트하는 과정에서 subdirectory만 마운트되는 것이 아니라 nfs 스토리지 전체가 마운트되기 때문에 어플리케이션이 프로비저닝된 크기만큼 볼륨을 사용하도록 강제할 수 없습니다.
