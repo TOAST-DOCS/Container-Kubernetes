@@ -2269,3 +2269,153 @@ Filesystem      Size  Used Avail Use% Mounted on
 ```
 
 NHN Cloud 웹 콘솔 **Storage > Block Storage** 서비스 페이지에서도 블록 스토리지의 연결 정보를 확인할 수 있습니다.
+
+### online NAS 서비스 연동
+NHN Cloud에서 제공하는 NAS 스토리지를 PV로 활용할 수 있습니다. NHN Cloud NAS 스토리지 사용에 대한 자세한 내용은 [NAS 콘솔 사용 가이드](/Storage/NAS/ko/console-guide)를 참고하세요.
+
+#### 워커 노드에 nfs 패키지 설치
+NAS 스토리지를 사용하기 위해서는 워커 노드에 nfs 패키지를 설치해야 합니다. 워커 노드에 접속한 후 아래 명령어를 실행하여 nfs 패키지를 설치할 수 있습니다.
+
+```
+$ apt-get install -y nfs-common (Ubuntu)
+$ yum install -y nfs-utils (CentOS)
+```
+
+#### nfs-csi-driver 쿠버네티스 구성요소 설치
+
+nfs-csi-driver가 동작하기 위해서는 아래 쿠버네티스 구성 요소들이 필요합니다. 아래 과정을 통해 쿠버네티스 구성 요소를 한번에 설치할 수 있습니다.
+* serviceaccount/csi-nfs-controller-sa
+* serviceaccount/csi-nfs-node-sa
+* clusterrole.rbac.authorization.k8s.io/nfs-external-provisioner-role
+* clusterrolebinding.rbac.authorization.k8s.io/nfs-csi-provisioner-binding
+* csidriver.storage.k8s.io/nfs.csi.k8s.io
+* deployment.apps/csi-nfs-controller
+* daemonset.apps/csi-nfs-node
+
+
+nfs-csi-driver 구성요소가 포함된 git 프로젝트를 내려받습니다.
+```
+$ git clone https://github.com/kubernetes-csi/csi-driver-nfs.git
+```
+
+csi-driver-nfs 폴더로 이동 후 **./deploy/install-driver.sh master local** 명령어를 사용하여 nfs-csi-driver 구성 요소 설치를 진행합니다. 설치를 진행할 때 **kubectl**명령어가 정상적으로 동작하는 상태에서 설치가 진행되어야 합니다.
+```
+$ cd csi-driver-nfs
+
+$ ./deploy/install-driver.sh master local
+use local deploy
+Installing NFS CSI driver, version: master ...
+serviceaccount/csi-nfs-controller-sa created
+serviceaccount/csi-nfs-node-sa created
+clusterrole.rbac.authorization.k8s.io/nfs-external-provisioner-role created
+clusterrolebinding.rbac.authorization.k8s.io/nfs-csi-provisioner-binding created
+csidriver.storage.k8s.io/nfs.csi.k8s.io created
+deployment.apps/csi-nfs-controller created
+daemonset.apps/csi-nfs-node created
+NFS CSI driver installed successfully.
+```
+
+구성 요소가 정상적으로 설치되었는지 확인합니다.
+```
+$ kubectl get pods -n kube-system
+NAMESPACE     NAME                                         READY   STATUS    RESTARTS   AGE
+kube-system   csi-nfs-controller-844d5989dc-scphc          3/3     Running   0          53s
+kube-system   csi-nfs-node-hmps6                           3/3     Running   0          52s
+
+$ kubectl get clusterrolebinding
+NAME                                                                                                ROLE                                                               AGE
+clusterrolebinding.rbac.authorization.k8s.io/nfs-csi-provisioner-binding                            ClusterRole/nfs-external-provisioner-role                          52s
+
+$ kubectl get clusterrole
+NAME                                                                                                         CREATED AT
+clusterrole.rbac.authorization.k8s.io/nfs-external-provisioner-role                                          2022-08-09T06:21:20Z
+
+$ kubectl get csidriver
+NAME                                                ATTACHREQUIRED   PODINFOONMOUNT   MODES                  AGE
+csidriver.storage.k8s.io/nfs.csi.k8s.io             false            false            Persistent,Ephemeral   47s
+
+$ kubectl get deployment -n kube-system
+NAMESPACE     NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
+kube-system   coredns                     2/2     2            2           22d
+kube-system   csi-nfs-controller          1/1     1            1           4m32s
+
+$ kubectl get daemonset -n kube-system
+NAMESPACE     NAME                    DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR                   AGE
+kube-system   csi-nfs-node            1         1         1       1            1           kubernetes.io/os=linux          4m23s
+```
+
+#### 정적 프로비저닝
+NHN Cloud NAS 스토리지를 정적 프로비저닝을 통해 PV로 활용하기 위해서 PV 매니페스트 작성 시 **csi** 정보를 정의해야 합니다. 설정 위치는 .spec 하위의 csi입니다.
+
+* driver: **nfs.csi.k8s.io**를 입력합니다.
+* readOnly: **false**를 입력합니다.
+* volumeHandle: 클러스터 내에서 중복되지 않는 unique한 id를 입력합니다.
+* volumeAttributes: NAS 스토리지의 연결정보를 입력합니다.
+  * server: NAS 스토리지의 연결정보 중 **ip** 부분의 값을 입력합니다.
+  * share: NAS 스토리지의 연결정보 중 **볼륨 이름** 부분의 값을 입력합니다.
+
+``` yaml
+# static-pv.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-onas
+spec:
+  capacity:
+    storage: 300Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  csi:
+    driver: nfs.csi.k8s.io
+    readOnly: false
+    volumeHandle: unique-volumeid
+    volumeAttributes:
+      server: 192.168.0.98
+      share: /onas_300gb
+```
+
+PV를 생성하고 확인합니다.
+```
+$ kubectl apply -f static-pv.yaml
+persistentvolume/pv-onas created
+
+$ kubectl get pv -o wide
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM                      STORAGECLASS   REASON   AGE    VOLUMEMODE
+pv-onas                                    300Gi      RWX            Retain           Available                                                      101s   Filesystem
+```
+
+PV 생성 이후에 PVC 생성 및 pod에 볼륨을 마운트하는 과정은 기본 정적 프로비저닝 과정과 동일합니다. 정적 프로비저닝에 대한 자세한 내용은 [정적 프로비저닝](/Container/NKS/ko/user-guide/#_51)을 참고하세요.
+
+#### 동적 프로비저닝
+NHN Cloud NAS 스토리지를 동적 프로비저닝을 통해 PV로 활용하기 위해서 StorageClass 매니페스트 작성 시 스토리지 제공자 정보 및 NHN Cloud NAS 스토리지 연결정보를 정의해야 합니다.
+
+* provisioner: **nfs.csi.k8s.io**를 입력합니다.
+* parameters: NAS 스토리지의 연결정보를 입력합니다.
+  * server: NAS 스토리지의 연결정보 중 **ip** 부분의 값을 입력합니다.
+  * share: NAS 스토리지의 연결정보 중 **볼륨 이름** 부분의 값을 입력합니다.
+
+``` yaml
+# storageclass.yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: onas-sc
+provisioner: nfs.csi.k8s.io
+parameters:
+  server: 192.168.0.37
+  share: /onas_300gb_dynamic
+reclaimPolicy: Retain
+volumeBindingMode: Immediate
+```
+
+StorageClass를 생성하고 확인합니다.
+```
+$ kubectl apply -f storageclass.yaml
+
+$ kubectl get sc,pvc,pv
+NAME                                  PROVISIONER      RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
+storageclass.storage.k8s.io/onas-sc   nfs.csi.k8s.io   Retain          Immediate           false                  15s
+```
+
+StorageClass 생성 이후에 PVC 생성 및 pod에 볼륨을 마운트하는 과정은 기본 동적 프로비저닝 과정과 동일합니다. 동적 프로비저닝에 대한 자세한 내용은 [동적 프로비저닝](/Container/NKS/ko/user-guide/#_52)을 참고하세요.
