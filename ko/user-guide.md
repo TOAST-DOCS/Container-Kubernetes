@@ -2269,3 +2269,96 @@ Filesystem      Size  Used Avail Use% Mounted on
 ```
 
 NHN Cloud 웹 콘솔 **Storage > Block Storage** 서비스 페이지에서도 블록 스토리지의 연결 정보를 확인할 수 있습니다.
+
+### 볼륨 확장
+PersistentVolumeClaim(PVC) 개체를 편집하여 기존 볼륨의 크기를 조정할 수 있습니다. PVC 개체의 **spec.resources.requests.storage**항목의 수정을 통해 볼륨 사이즈를 변경할 수 있습니다. 볼륨 축소는 지원되지 않습니다. 볼륨 확장 기능을 사용하기 위해서는 StorageClass의 **allowVolumeExpansion** 속성이 **True**여야 합니다.
+
+
+#### v1.19.13 이전 버전의 볼륨 확장
+v1.19.13 이전 버전의 스토리지 제공자 **kubernetes.io/cinder**는 사용중인 볼륨의 확장 기능을 제공하지 않습니다. 사용중인 볼륨의 확장 기능을 사용하기 위해서는 v1.20.12 이후 버전의 **cinder.csi.openstack.org** 스토리지 제공자를 사용해야 합니다. 클러스터 업그레이드 기능을 통해 v1.20.12 이후 버전으로 업그레이드 하여 **cinder.csi.openstack.org** 스토리지 제공자를 사용할 수 있습니다.
+
+v1.19.13 이전 버전의 스토리지 제공자 **kubernetes.io/cinder** 대신 v1.20.12 이후 버전의 스토리지 제공자를 사용하기 위하여 어노테이션을 다음과 같이 수정합니다.
++ ~~pv.kubernetes.io/bind-completed: "yes"~~ > 삭제
++ ~~pv.kubernetes.io/bound-by-controller: "yes"~~ > 삭제
++ ~~volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/cinder~~ > volume.beta.kubernetes.io/storage-provisioner:cinder.csi.openstack.org
++ ~~volume.kubernetes.io/storage-resizer: kubernetes.io/cinder~~ > volume.kubernetes.io/storage-resizer: cinder.csi.openstack.org
++ pv.kubernetes.io/provisioned-by:cinder.csi.openstack.org > 추가
+
+
+아래는 v1.19.13 이전 버전의 PVC를 수정하는 예제입니다.
+
+``` yaml
+$ kubectl edit pvc <pvc_name>
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    pv.kubernetes.io/provisioned-by: cinder.csi.openstack.org
+    volume.beta.kubernetes.io/storage-provisioner: cinder.csi.openstack.org
+    volume.kubernetes.io/storage-resizer: cinder.csi.openstack.org
+  creationTimestamp: "2022-07-18T06:13:01Z"
+  finalizers:
+  - kubernetes.io/pvc-protection
+  labels:
+    app: nginx
+  name: www-web-0
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 310Gi
+  storageClassName: sc-ssd
+  volumeMode: Filesystem
+  volumeName: pvc-0da7cd55-bf29-4597-ab84-2f3d46391e5b
+status:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 300Gi
+  phase: Bound
+```
+
+#### v1.20.12 이후 버전의 볼륨 확장
+v1.20.12 이후 버전의 스토리지 제공자 **cinder.csi.openstack.org**는 기본적으로 사용중인 볼륨의 확장 기능을 지원합니다. PVC 개체의 **spec.resources.requests.storage**항목의 수정만으로 볼륨 사이즈를 변경할 수 있습니다.
+
+아래는 v1.20.12 이후 버전의 PVC를 수정하는 예제입니다.
+
+``` yaml
+$ kubectl edit pvc <pvc_name>
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"PersistentVolumeClaim","metadata":{"annotations":{},"name":"pvc-dynamic33","namespace":"default"},"spec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"100Gi"}},"storageClassName":"csi-storageclass"}}
+    pv.kubernetes.io/bind-completed: "yes"
+    pv.kubernetes.io/bound-by-controller: "yes"
+    volume.beta.kubernetes.io/storage-provisioner: cinder.csi.openstack.org
+  creationTimestamp: "2022-08-09T04:51:09Z"
+  finalizers:
+  - kubernetes.io/pvc-protection
+  name: pvc-dynamic33
+  namespace: default
+  resourceVersion: "4991115"
+  uid: 42784ac2-33c8-49b9-9d9f-002e10f7a097
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 110Gi
+  storageClassName: csi-storageclass
+  volumeMode: Filesystem
+  volumeName: pvc-42784ac2-33c8-49b9-9d9f-002e10f7a097
+status:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 100Gi
+  phase: Bound
+
+```
