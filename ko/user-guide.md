@@ -2271,7 +2271,11 @@ Filesystem      Size  Used Avail Use% Mounted on
 NHN Cloud 웹 콘솔 **Storage > Block Storage** 서비스 페이지에서도 블록 스토리지의 연결 정보를 확인할 수 있습니다.
 
 ### NAS 서비스 연동
-NHN Cloud에서 제공하는 NAS 스토리지를 PV로 활용할 수 있습니다. NAS 서비스를 사용하기 위해서는 v1.20 이후 버전의 클러스터를 사용해야 합니다. NHN Cloud NAS 스토리지 사용에 대한 자세한 내용은 [NAS 콘솔 사용 가이드](/Storage/NAS/ko/console-guide)를 참고하세요.
+NHN Cloud에서 제공하는 NAS 스토리지를 PV로 활용할 수 있습니다. NAS 서비스를 사용하기 위해서는 v1.20 이후 버전의 클러스터를 사용해야 합니다. NHN Cloud NAS 사용에 대한 자세한 내용은 [NAS 콘솔 사용 가이드](/Storage/NAS/ko/console-guide)를 참고하세요.
+
+> [참고]
+> NHN Cloud NAS 서비스는 현재(2022.09) 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS/ko/overview)를 참고하세요.
+
 
 #### 워커 노드에 nfs 패키지 설치
 NAS 스토리지를 사용하기 위해서는 워커 노드에 nfs 패키지를 설치해야 합니다. 워커 노드에 접속한 후 아래 명령어를 실행하여 nfs 패키지를 설치합니다.
