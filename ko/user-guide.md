@@ -2270,35 +2270,40 @@ Filesystem      Size  Used Avail Use% Mounted on
 
 NHN Cloud 웹 콘솔 **Storage > Block Storage** 서비스 페이지에서도 블록 스토리지의 연결 정보를 확인할 수 있습니다.
 
-### online NAS 서비스 연동
+### NAS 서비스 연동
 NHN Cloud에서 제공하는 NAS 스토리지를 PV로 활용할 수 있습니다. NAS 서비스를 사용하기 위해서는 v1.20 이후 버전의 클러스터를 사용해야 합니다. NHN Cloud NAS 스토리지 사용에 대한 자세한 내용은 [NAS 콘솔 사용 가이드](/Storage/NAS/ko/console-guide)를 참고하세요.
 
 #### 워커 노드에 nfs 패키지 설치
-NAS 스토리지를 사용하기 위해서는 워커 노드에 nfs 패키지를 설치해야 합니다. 워커 노드에 접속한 후 아래 명령어를 실행하여 nfs 패키지를 설치할 수 있습니다.
+NAS 스토리지를 사용하기 위해서는 워커 노드에 nfs 패키지를 설치해야 합니다. 워커 노드에 접속한 후 아래 명령어를 실행하여 nfs 패키지를 설치합니다.
 
+Ubuntu의 경우 아래 명령어를 통해 nfs 패키지를 설치할 수 있습니다.
 ```
-$ apt-get install -y nfs-common (Ubuntu)
-$ yum install -y nfs-utils (CentOS)
+$ apt-get install -y nfs-common
 ```
 
-#### nfs-csi-driver 쿠버네티스 구성요소 설치
+CentOS의 경우 아래 명령어를 통해 nfs 패키지를 설치할 수 있습니다.
+```
+$ yum install -y nfs-utils
+```
 
-nfs-csi-driver가 동작하기 위해서는 아래 쿠버네티스 구성 요소들이 필요합니다. 아래 과정을 통해 쿠버네티스 구성 요소를 한번에 설치할 수 있습니다.
-* serviceaccount/csi-nfs-controller-sa
-* serviceaccount/csi-nfs-node-sa
-* clusterrole.rbac.authorization.k8s.io/nfs-external-provisioner-role
-* clusterrolebinding.rbac.authorization.k8s.io/nfs-csi-provisioner-binding
-* csidriver.storage.k8s.io/nfs.csi.k8s.io
-* deployment.apps/csi-nfs-controller
-* daemonset.apps/csi-nfs-node
+#### csi-driver-nfs
+csi-driver-nfs는 nfs 서버 아래에 새 하위 디렉토리를 생성하는 방식으로 동작하는 PV의 동적 프로비저닝을 지원하는 드라이버입니다.
+csi-driver-nfs는 스토리지 클래스에 nfs 서버 정보를 제공하는 방식으로 동작하여 사용자가 관리해야 하는 대상을 줄여줍니다.
 
+기존 방식을 사용하여 여러 개의 PV를 구성하는 경우 NFS 서버 정보를 제공하기 위해 PV마다 NFS-Provisioner pod를 구성해야 합니다.
+![nfs-csi-driver-01.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nfs-csi-driver-01.png)
 
-nfs-csi-driver 구성요소가 포함된 git 프로젝트를 내려받습니다.
+nfs-csi-driver를 사용하여 여러 개의 PV를 구성하는 경우 nfs-csi-driver가 NFS 서버 정보를 StorageClass에 등록하여 NFS-Provisoner pod를 구성할 필요가 없습니다.
+![nfs-csi-driver-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nfs-csi-driver-02.png)
+
+#### csi-driver-nfs 설치
+
+csi-driver-nfs 구성요소가 포함된 git 프로젝트를 내려받습니다.
 ```
 $ git clone https://github.com/kubernetes-csi/csi-driver-nfs.git
 ```
 
-csi-driver-nfs 폴더로 이동 후 **./deploy/install-driver.sh master local** 명령어를 사용하여 nfs-csi-driver 구성 요소 설치를 진행합니다. 설치를 진행할 때 **kubectl**명령어가 정상적으로 동작하는 상태에서 설치가 진행되어야 합니다.
+csi-driver-nfs 폴더로 이동 후 **./deploy/install-driver.sh master local** 명령어를 사용하여 csi-driver-nfs 구성 요소 설치를 진행합니다. 설치를 진행할 때 **kubectl**명령어가 정상적으로 동작하는 상태에서 설치가 진행되어야 합니다.
 ```
 $ cd csi-driver-nfs
 
