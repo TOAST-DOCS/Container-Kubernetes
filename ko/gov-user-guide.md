@@ -2067,7 +2067,7 @@ PV를 파드에 마운트해 사용합니다.
 프로비저닝을 하기 위해서는 먼저 스토리지 클래스가 정의되어 있어야 합니다. 스토리지 클래스는 어떤 특성으로 스토리지들을 분류할 수 있는 방법을 제공합니다. 스토리지 제공자(provisioner)에 대한 정보를 포함해 미디어의 종류나 가용성 영역 등을 설정할 수 있습니다. 
 
 #### 스토리지 제공자(provisioner)
-스토리지의 제공자 정보를 설정합니다. Kubernetes 버전에 따라 지원되는 스트로지 정보 제공자 정보는 다음과 같습니다.
+스토리지의 제공자 정보를 설정합니다. Kubernetes 버전에 따라 지원되는 스토리지 정보 제공자 정보는 다음과 같습니다.
 
 * v1.19.13 이전 버전: provisioner 필드를 반드시 `kubernetes.io/cinder`로 설정해야 합니다.
 * v1.20.12 이후 버전: provisioner 필드를 `cinder.csi.openstack.org`로 설정해 사용할 수 있습니다.
@@ -2087,6 +2087,12 @@ PV를 파드에 마운트해 사용합니다.
 
 * **Immediate**: 퍼시스턴트 볼륨 클레임이 생성되는 즉시 볼륨 바인딩과 동적 프로비저닝이 시작됩니다. 퍼시스턴트 볼륨 클레임이 생성되는 시점에는 볼륨을 연결할 파드에 대한 사전 지식이 없는 상태입니다. 그래서 볼륨의 가용성 영역과 파드가 스케쥴링될 노드의 가용성 영역이 서로 다르게 되면 경우 파드가 정상 동작하지 않습니다. 
 * **WaitForFirstConsumer**: 퍼시스턴트 볼륨 클레임이 생성될 때는 볼륨 바인딩과 동적 프로비저닝을 하지 않습니다. 이 퍼시스턴트 볼륨 클레임이 처음으로 파드에 연결되면, 파드가 스케쥴링된 노드의 가용성 영역 정보를 기반으로 볼륨 바인딩과 동적 프로비저닝을 수행합니다. 따라서 Immediate 모드와 같은 볼륨의 가용성 영역과 인스턴스의 가용성 영역이 서로 달라 파드가 정상 동작하지 않는 경우가 발생하지 않습니다.
+
+#### 볼륨 확장 허용(allowVolumeExpansion)
+생성된 볼륨의 확장 허용 여부를 설정합니다.(미입력시 false가 설정됩니다)
+
+* **True**: 볼륨 확장을 허용합니다.
+* **False**: 볼륨 확장을 허용하지 않습니다.
 
 #### 예시1
 아래 스토리지 클래스 매니페스트는 v1.19.13 이전 버전을 사용하는 Kubernetes 클러스터에서 사용할 수 있습니다. 파라미터를 통해 가용성 영역과 볼륨 타입을 지정할 수 있습니다.
@@ -2319,3 +2325,56 @@ Filesystem      Size  Used Avail Use% Mounted on
 ```
 
 NHN Cloud 웹 콘솔 **Storage > Block Storage** 서비스 페이지에서도 블록 스토리지의 연결 정보를 확인할 수 있습니다.
+
+
+### 볼륨 확장
+PersistentVolumeClaim(PVC) 개체를 편집하여 기존 볼륨의 크기를 조정할 수 있습니다. PVC 개체의 **spec.resources.requests.storage**항목의 수정을 통해 볼륨 사이즈를 변경할 수 있습니다. 볼륨 축소는 지원되지 않습니다. 볼륨 확장 기능을 사용하기 위해서는 StorageClass의 **allowVolumeExpansion** 속성이 **True**여야 합니다.
+
+
+#### v1.19.13 이전 버전의 볼륨 확장
+v1.19.13 이전 버전의 스토리지 제공자 **kubernetes.io/cinder**는 사용중인 볼륨의 확장 기능을 제공하지 않습니다. 사용중인 볼륨의 확장 기능을 사용하기 위해서는 v1.20.12 이후 버전의 **cinder.csi.openstack.org** 스토리지 제공자를 사용해야 합니다. 클러스터 업그레이드 기능을 통해 v1.20.12 이후 버전으로 업그레이드 하여 **cinder.csi.openstack.org** 스토리지 제공자를 사용할 수 있습니다.
+
+v1.19.13 이전 버전의 **kubernetes.io/cinder** 스토리지 제공자 대신 v1.20.12 이후 버전의 **cinder.csi.openstack.org** 스토리지 제공자를 사용하기 위하여 PVC의 어노테이션을 아래와 같이 수정해야 합니다.
++ ~~pv.kubernetes.io/bind-completed: "yes"~~ > 삭제
++ ~~pv.kubernetes.io/bound-by-controller: "yes"~~ > 삭제
++ ~~volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/cinder~~ > volume.beta.kubernetes.io/storage-provisioner:cinder.csi.openstack.org
++ ~~volume.kubernetes.io/storage-resizer: kubernetes.io/cinder~~ > volume.kubernetes.io/storage-resizer: cinder.csi.openstack.org
++ pv.kubernetes.io/provisioned-by:cinder.csi.openstack.org > 추가
+
+
+아래는 수정된 PVC 예제입니다.
+
+``` yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    pv.kubernetes.io/provisioned-by: cinder.csi.openstack.org
+    volume.beta.kubernetes.io/storage-provisioner: cinder.csi.openstack.org
+    volume.kubernetes.io/storage-resizer: cinder.csi.openstack.org
+  creationTimestamp: "2022-07-18T06:13:01Z"
+  finalizers:
+  - kubernetes.io/pvc-protection
+  labels:
+    app: nginx
+  name: www-web-0
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 310Gi
+  storageClassName: sc-ssd
+  volumeMode: Filesystem
+  volumeName: pvc-0da7cd55-bf29-4597-ab84-2f3d46391e5b
+status:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 300Gi
+  phase: Bound
+```
+
+#### v1.20.12 이후 버전의 볼륨 확장
+v1.20.12 이후 버전의 스토리지 제공자 **cinder.csi.openstack.org**는 기본적으로 사용중인 볼륨의 확장 기능을 지원합니다. PVC 개체의 **spec.resources.requests.storage**항목을 원하는 값으로 수정하여 볼륨 사이즈를 변경할 수 있습니다.
