@@ -2460,7 +2460,6 @@ status:
 
 #### v1.20.12 이후 버전의 볼륨 확장
 v1.20.12 이후 버전의 스토리지 제공자 **cinder.csi.openstack.org**는 기본적으로 사용중인 볼륨의 확장 기능을 지원합니다. PVC 개체의 **spec.resources.requests.storage**항목을 원하는 값으로 수정하여 볼륨 사이즈를 변경할 수 있습니다.
-v1.20.12 이후 버전의 스토리지 제공자 **cinder.csi.openstack.org**는 기본적으로 사용중인 볼륨의 확장 기능을 지원합니다. PVC 개체의 **spec.resources.requests.storage**항목을 원하는 값으로 수정하여 볼륨 사이즈를 변경할 수 있습니다.
 
 
 ### NAS 서비스 연동
