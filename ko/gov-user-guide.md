@@ -19,9 +19,13 @@ NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해�
 | 키 페어 | 기본 노드 그룹 접근에 사용할 키 페어 |
 | 블록 스토리지 타입 | 기본 노드 그룹 인스턴스의 블록 스토리지 종류 |
 | 블록 스토리지 크기 | 기본 노드 그룹 인스턴스의 블록 스토리지 크기 |
+| 추가 네트워크 | 기본 워커 노드 그룹에 생성할 추가 네트워크/서브넷 |
 
 > [주의]
 > 클러스터 생성 시 VPC를 VPN Private Network으로 지정할 수 없습니다. 
+> 클러스터 생성 시 서브넷 대역이 아래 네트워크 대역과 겹치지 않도록 설정해야 합니다.
+>  - 10.100.0.0/16
+>  - 10.254.0.0/16
 
 NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전에 따라 일부 기능에 제약이 있을 수 있습니다.
 
@@ -30,10 +34,11 @@ NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전�
 | v1.17.6 | 불가능 | 가능 |
 | v1.18.19 | 불가능 | 가능 |
 | v1.19.13 | 불가능 | 가능 |
-| v1.20.12 | 가능 | 가능 |
+| v1.20.12 | 불가능 | 가능 |
 | v1.21.6 | 가능 | 가능 |
 | v1.22.3 | 가능 | 가능 |
 | v1.23.3 | 가능 | 가능 |
+| v1.24.3 | 가능 | 가능 |
 
 
 필요한 정보를 입력하고 **클러스터 생성** 버튼을 클릭하면 클러스터 생성이 시작됩니다. 클러스터 목록에서 상태를 확인할 수 있습니다. 생성하는 데는 약 10분 정도 걸립니다. 클러스터 설정에 따라 더 오래 걸릴 수도 있습니다.
@@ -91,6 +96,7 @@ NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전�
 | 키 페어 | 추가 노드 그룹 접근에 사용할 키 페어 |
 | 블록 스토리지 타입 | 추가 노드 그룹 인스턴스의 블록 스토리지 종류 |
 | 블록 스토리지 크기 | 추가 노드 그룹 인스턴스의 블록 스토리지 크기 |
+| 추가 네트워크 | 기본 워커 노드 그룹에 생성할 추가 네트워크/서브넷 |
 
 필요한 정보를 입력하고 **노드 그룹 생성** 버튼을 클릭하면 노드 그룹 생성이 시작됩니다. 노드 그룹 목록에서 상태를 확인할 수 있습니다. 노드 그룹 생성하는 데는 약 5분 정도 걸립니다. 노드 그룹 설정에 따라 더 오래 걸릴 수도 있습니다.
 
@@ -710,7 +716,6 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
     * 클러스터 생성 시 입력한 사용자 스크립트는 기본 워커 노드 그룹에 적용됩니다.
     * 추가 노드 그룹 생성 시 입력한 사용자 스크립트는 해당 워커 노드 그룹에 적용됩니다.
     * **워커 노드 그룹이 생성된 후에는 사용자 스크립트의 내용을 변경할 수 없습니다.**
-        * 단, 변경된 내용은 사용자 스크립트 변경 이후 생성되는 노드에 적용됩니다. 
 * 스크립트 실행 시점
     * 사용자 스크립트는 워커 노드 초기화 과정 중 인스턴스 초기화 과정에서 실행됩니다.
     * 사용자 스크립트가 실행된 후, 해당 인스턴스를 '워커 노드 그룹'의 워커 노드로 설정하고 등록합니다.
@@ -726,6 +731,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 2022년 7월 26일 이후에 생성되는 노드 그룹에는 새로운 버전의 사용자 스크립트 기능이 탑재됩니다. 이전 버전의 기능에 비해 다음과 같은 특징이 있습니다.
 
 * **워커 노드 그룹이 생성된 후에도 사용자 스크립트의 내용을 변경할 수 있습니다.**
+    * 단, 변경된 내용은 사용자 스크립트 변경 이후 생성되는 노드에만 적용됩니다. 
 * 스크립트 실행 기록은 아래 위치에 저장됩니다.
     * 스크립트 종료 코드: `/var/log/userscript_v2.exitcode`
     * 스크립트 표준 출력 및 표준 에러 스트림: `/var/log/userscript_v2.output`
@@ -1019,6 +1025,97 @@ NHN Cloud의 Kubernetes 클러스터 마스터는 고가용성 보장을 위해 
 > [주의]
 > 마스터 업그레이드 후 워커 노드 그룹을 업그레이드하지 않으면 일부 파드가 정상적으로 동작하지 않을 수 있습니다.
 
+## 워커 노드 관리
+
+### 컨테이너 관리
+
+#### Kubernetes v1.24.3 이전 버전의 클러스터
+Kubernetes v1.24.3 이전 버전의 클러스터는 Docker를 이용해 컨테이너 런타임을 구성합니다. 워커 노드에서 docker CLI를 이용해 컨테이너 상태 조회, 컨테이너 이미지 조회 등의 작업을 할 수 있습니다. docker CLI에 대한 자세한 설명과 사용법은 [Use the Docker command line](https://docs.docker.com/engine/reference/commandline/cli/)을 참고하세요.
+
+#### Kubernetes v1.24.3 이후 버전의 클러스터
+
+Kubernetes v1.24.3 이후 버전의 클러스터는 containerd를 이용해 컨테이너 런타임을 구성합니다. 워커 노드에서 docker CLI 대신 nerdctl을 이용해 컨테이너 상태 조회, 컨테이너 이미지 조회 등의 작업을 할 수 있습니다. nerdctl에 대한 자세한 설명과 사용법은 [nerdctl: Docker-compatible CLI for containerd](https://github.com/containerd/nerdctl#nerdctl-docker-compatible-cli-for-containerd)을 참고하세요.
+
+
+### 네트워크 관리
+
+#### 기본 네트워크 인터페이스
+모든 워커 노드는 클러스터 생성 시 입력한 VPC/서브넷에 연결되는 네트워크 인터페이스를 갖고 있습니다. 이 기본 네트워크 인터페이스의 이름은 "eth0"이며, 워커 노드는 이 네트워크 인터페이스를 통해 마스터와 연결됩니다.
+
+#### 추가 네트워크 인터페이스
+클러스터 생성 시 혹은 워커 노드 그룹 생성 시 추가 네트워크를 설정하면 해당 워커 노드 그룹의 워커 노드에 추가 네트워크 인터페이스가 생성됩니다. 추가 네트워크 인터페이스는 추가 네트워크 설정에 입력한 순서대로 인터페이스 이름이 설정됩니다(eth1, eth2, ...).
+
+#### 기본 경로(default route) 설정
+워커 노드에 여러 네트워크 인터페이스가 존재하는 경우, 각 네트워크 인터페이스 별로 기본 경로가 설정됩니다. 한 시스템에 여러 기본 경로가 설정된 경우, 메트릭(metric) 값이 가장 낮은 기본 경로가 시스템 기본 경로로 동작합니다. 네트워크 인터페이스 별 기본 경로는 인터페이스 번호가 작을수록 낮은 메트릭 값이 설정되어 있습니다. 이로 인해 동작 중인 네트워크 인터페이스 중 가장 작은 번호의 네트워크 인터페이스가 시스템 기본 경로로 동작합니다.
+
+시스템 기본 경로를 추가 네트워크 인터페이스로 설정하기 위해서는 아래와 같은 작업이 필요합니다. 
+
+##### 1. 네트워크 인터페이스 별 메트릭 설정 변경
+워커 노드의 모든 네트워크 인터페이스는 DHCP 서버를 통해 IP 주소를 할당받습니다. DHCP 서버로부터 IP 주소를 할당받을 때 네트워크 인터페이스 별 기본 경로를 설정합니다. 이 때 각 기본 경로의 메트릭 값은 인터페이스 별로 미리 설정되어 있습니다. 리눅스 배포판 별 저장 위치 및 설정 항목은 다음과 같습니다.
+
+* CentOS
+    * 설정 파일 위치: /etc/sysconfig/network-scripts/ifcfg-{네트워크 인터페이스 이름}
+    * 메트릭 값 설정 항목: METRIC
+* Ubuntu
+    * 설정 파일 위치: /etc/systemd/network/toastcloud-{네트워크 인터페이스 이름}.network
+    * 메트릭 값 설정 항목: DHCP 섹션의 RouteMetric
+
+> [주의]
+> 기본 경로 별 메트릭 값은 기본 경로가 설정되는 시점에 결정됩니다.
+> 따라서 변경된 설정은 다음 기본 경로 설정 시점에 적용됩니다.
+> 현재 시스템에 적용된 경로 별 메트릭 값을 변경하기 위해서는 아래 `현재 경로의 메트릭 값 변경`을 참고하세요.
+
+##### 2. 현재 경로의 메트릭 값 변경
+
+시스템 기본 경로를 변경하기 위해서 네트워크 인터페이스 별 기본 경로의 메트릭 값을 조정할 수 있습니다. 다음은 route 명령어를 이용해 각 기본 경로의 메트릭 값을 조정하는 예제입니다.
+
+다음은 작업 실행 전의 상태입니다. 인터페이스 번호가 작을수록 메트릭 값이 작게 설정된 것을 확인할 수 있습니다.
+```
+# route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         10.0.0.1        0.0.0.0         UG    0      0        0 eth0
+0.0.0.0         192.168.0.1     0.0.0.0         UG    100    0        0 eth1
+0.0.0.0         172.16.0.1      0.0.0.0         UG    200    0        0 eth2
+...
+```
+
+eth1을 시스템 기본 경로로 설정하기 위해 eth1의 메트릭 값을 0으로, eth0의 메트릭 값을 100으로 변경합니다. 메트릭 값만 변경할 수는 없기 떄문에 경로를 삭제하고 다시 추가해야 합니다. 먼저 eth0의 경로를 삭제하고 eth0의 메트릭 값을 100으로 설정합니다.
+
+```
+# route del -net 0.0.0.0/0 dev eth0
+# route add -net 0.0.0.0/0 gw 10.0.0.1 dev eth0 metric 100
+```
+
+eth1도 먼저 기존 경로를 삭제하고, eth1의 메트릭을 0으로 설정합니다. 
+```
+# route del -net 0.0.0.0/0 dev eth1
+# route add -net 0.0.0.0/0 gw 192.168.0.1 dev eth1 metric 0
+```
+
+다시 경로를 조회해보면 메트릭 값이 변경된 것을 확인할 수 있습니다.
+```
+# route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         192.168.0.1     0.0.0.0         UG    0      0        0 eth1
+0.0.0.0         10.0.0.1        0.0.0.0         UG    100    0        0 eth0
+0.0.0.0         172.16.0.1      0.0.0.0         UG    200    0        0 eth2
+...
+```
+
+#### 사용자 스크립트 기능을 이용한 기본 경로 설정 변경
+사용자 스크립트 기능을 이용하면 노드 증설 등으로 노드가 새롭게 초기화될 때도 위와 같은 설정을 유지할 수 있습니다. 다음 사용자 스크립트는 CentOS를 사용하는 워커 노드에서 eth0의 메트릭 값을 100으로, eth1의 메트릭 값을 0으로 설정하는 예제입니다. 이렇게 하면 현재 시스템에 적용되어 있는 기본 경로 별 메트릭 값도 변경되며, 이는 워커 노드 재시작 후에도 유지됩니다.
+```
+#!/bin/bash
+sed -i -e 's|^METRIC=.*$|METRIC=100|g' /etc/sysconfig/network-scripts/ifcfg-eth0
+sed -i -e 's|^METRIC=.*$|METRIC=0|g' /etc/sysconfig/network-scripts/ifcfg-eth1
+route del -net 0.0.0.0/0 dev eth0
+route add -net 0.0.0.0/0 gw 10.0.0.1 dev eth0 metric 100
+route del -net 0.0.0.0/0 dev eth1
+route add -net 0.0.0.0/0 gw 192.168.0.1 dev eth1 metric 0
+```
+
 ## LoadBalancer 서비스
 Kubernetes 애플리케이션의 기본 실행 단위인 파드(pod)는 CNI(Container Network Interface)로 클러스터 네트워크에 연결됩니다. 기본적으로 클러스터 외부에서 파드로는 접근할 수 없습니다. 파드의 서비스를 클러스터 외부에 공개하려면 Kubernetes의 `LoadBalancer` 서비스(Service) 객체(object)를 이용해 외부에 공개할 경로를 만들어야 합니다. LoadBalancer 서비스 객체를 만들면 클러스터 외부에 NHN Cloud Load Balancer가 생성되어 서비스 객체와 연결됩니다.
 
@@ -1268,7 +1365,7 @@ spec:
 #### 플로팅 IP 사용 여부 설정
 로드 밸런서 생성 시 플로팅 IP의 사용 여부를 설정할 수 있습니다.
 
-* 설정 위치는 .metadata.annotaions 하위에 service.beta.kubernetes.io/openstack-internal-load-balancer입니다.
+* 설정 위치는 .metadata.annotaions 하위의 service.beta.kubernetes.io/openstack-internal-load-balancer입니다.
 * 다음 중 하나로 설정할 수 있습니다.
   * true: 플로팅 IP를 사용하지 않고, VIP(Virtual IP)를 사용합니다.
   * false: 플로팅 IP를 사용합니다. 미설정 시 기본값입니다.
@@ -1305,6 +1402,41 @@ spec:
 | false | 설정 | 로드 밸런서에 지정된 플로팅 IP를 연결합니다. |
 | true | 미설정 | 로드 밸런서에 연결되는 VIP를 자동으로 설정합니다. |
 | true | 설정 | 로드 밸런서에 지정된 VIP를 연결합니다. |
+
+
+#### VPC 설정
+로드 밸런서 생성 시 로드 밸런서가 연결될 VPC를 설정할 수 있습니다.
+
+* 설정 위치는 .metadata.annotaions 하위의 loadbalancer.openstack.org/network-id입니다.
+* 설정하지 않으면 클러스터 생성 시 설정한 VPC로 설정합니다.
+
+#### 서브넷 설정
+로드 밸런서 생성 시 로드 밸런서가 연결될 서브넷을 설정할 수 있습니다.
+
+* 설정 위치는 .metadata.annotaions 하위의 loadbalancer.openstack.org/subnet-id입니다.
+* 설정하지 않으면 클러스터 생성 시 설정한 서브넷으로 설정합니다.
+
+아래는 로드 밸런서에 VPC와 서브넷을 설정하능 매니페스트 예제입니다.
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc-vpc-subnet
+  labels:
+     app: nginx
+  annotations:
+    loadbalancer.openstack.org/network-id: "49a5820b-d941-41e5-bfc3-0fd31f2f6773"
+    loadbalancer.openstack.org/subnet-id: "38794fd7-fd2e-4f34-9c89-6dd3fd12f548"
+spec:
+  ports:
+  - port: 8080
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: nginx
+  type: LoadBalancer
+```
 
 #### 리스너 연결 제한 설정
 리스너의 연결 제한을 설정할 수 있습니다.
@@ -1463,48 +1595,6 @@ HTTP 상태 코드는 다음과 같이 설정할 수 있습니다.
 ### NGINX Ingress Controller 설치
 NGINX Ingress Controller는 많이 사용되는 인그레스 컨트롤러 중 하나입니다. 자세한 내용은 [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/)와 [NGINX Ingress Controller for Kubernetes](https://www.nginx.com/products/nginx-ingress-controller/) 문서를 참고하세요. NGINX Ingress Controller의 설치는 [Installation Guide](https://kubernetes.github.io/ingress-nginx/deploy/) 문서를 참고하세요.
 
-### LoadBalancer 서비스 생성
-인그레스 컨트롤러 역시 파드로 생성되기 때문에 외부에 공개하기 위해서는 LoadBalancer 서비스 또는 NodePort 서비스를 만들어야 합니다. 다음과 같이 HTTP와 HTTPS를 처리할 수 있는 LoadBalancer 서비스 매니페스트를 정의합니다.
-
-```yaml
-# ingress-nginx-lb.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: ingress-nginx
-  namespace: ingress-nginx
-  labels:
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/part-of: ingress-nginx
-spec:
-  type: LoadBalancer
-  selector:
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/part-of: ingress-nginx
-  ports:
-    - name: http
-      port: 80
-      targetPort: 80
-      protocol: TCP
-    - name: https
-      port: 443
-      targetPort: 443
-      protocol: TCP
-  selector:
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/part-of: ingress-nginx
-```
-
-서비스 객체를 생성하고 외부 로드 밸런서가 연결되어 있는지 확인합니다. **EXTERNAL-IP** 필드에는 플로팅 IP 주소가 설정되어 있어야 합니다.
-
-```
-$ kubectl apply -f ingress-nginx-lb.yaml
-service/ingress-nginx created
-
-$ kubectl get svc -n ingress-nginx
-NAME            TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)                      AGE
-ingress-nginx   LoadBalancer   10.254.2.128   123.123.123.41   80:30820/TCP,443:30269/TCP   39s
-```
 
 ### URI 기반 서비스 분기
 인그레스 컨트롤러는 URI를 기반으로 서비스를 분기할 수 있습니다. 아래 그림은 URI를 기반으로 서비스를 분기하는 간단한 예제의 구조를 나타냅니다.
@@ -1977,7 +2067,7 @@ PV를 파드에 마운트해 사용합니다.
 프로비저닝을 하기 위해서는 먼저 스토리지 클래스가 정의되어 있어야 합니다. 스토리지 클래스는 어떤 특성으로 스토리지들을 분류할 수 있는 방법을 제공합니다. 스토리지 제공자(provisioner)에 대한 정보를 포함해 미디어의 종류나 가용성 영역 등을 설정할 수 있습니다. 
 
 #### 스토리지 제공자(provisioner)
-스토리지의 제공자 정보를 설정합니다. Kubernetes 버전에 따라 지원되는 스트로지 정보 제공자 정보는 다음과 같습니다.
+스토리지의 제공자 정보를 설정합니다. Kubernetes 버전에 따라 지원되는 스토리지 정보 제공자 정보는 다음과 같습니다.
 
 * v1.19.13 이전 버전: provisioner 필드를 반드시 `kubernetes.io/cinder`로 설정해야 합니다.
 * v1.20.12 이후 버전: provisioner 필드를 `cinder.csi.openstack.org`로 설정해 사용할 수 있습니다.
@@ -1997,6 +2087,12 @@ PV를 파드에 마운트해 사용합니다.
 
 * **Immediate**: 퍼시스턴트 볼륨 클레임이 생성되는 즉시 볼륨 바인딩과 동적 프로비저닝이 시작됩니다. 퍼시스턴트 볼륨 클레임이 생성되는 시점에는 볼륨을 연결할 파드에 대한 사전 지식이 없는 상태입니다. 그래서 볼륨의 가용성 영역과 파드가 스케쥴링될 노드의 가용성 영역이 서로 다르게 되면 경우 파드가 정상 동작하지 않습니다. 
 * **WaitForFirstConsumer**: 퍼시스턴트 볼륨 클레임이 생성될 때는 볼륨 바인딩과 동적 프로비저닝을 하지 않습니다. 이 퍼시스턴트 볼륨 클레임이 처음으로 파드에 연결되면, 파드가 스케쥴링된 노드의 가용성 영역 정보를 기반으로 볼륨 바인딩과 동적 프로비저닝을 수행합니다. 따라서 Immediate 모드와 같은 볼륨의 가용성 영역과 인스턴스의 가용성 영역이 서로 달라 파드가 정상 동작하지 않는 경우가 발생하지 않습니다.
+
+#### 볼륨 확장 허용(allowVolumeExpansion)
+생성된 볼륨의 확장 허용 여부를 설정합니다.(미입력시 false가 설정됩니다)
+
+* **True**: 볼륨 확장을 허용합니다.
+* **False**: 볼륨 확장을 허용하지 않습니다.
 
 #### 예시1
 아래 스토리지 클래스 매니페스트는 v1.19.13 이전 버전을 사용하는 Kubernetes 클러스터에서 사용할 수 있습니다. 파라미터를 통해 가용성 영역과 볼륨 타입을 지정할 수 있습니다.
@@ -2229,3 +2325,56 @@ Filesystem      Size  Used Avail Use% Mounted on
 ```
 
 NHN Cloud 웹 콘솔 **Storage > Block Storage** 서비스 페이지에서도 블록 스토리지의 연결 정보를 확인할 수 있습니다.
+
+
+### 볼륨 확장
+PersistentVolumeClaim(PVC) 개체를 편집하여 기존 볼륨의 크기를 조정할 수 있습니다. PVC 개체의 **spec.resources.requests.storage**항목의 수정을 통해 볼륨 사이즈를 변경할 수 있습니다. 볼륨 축소는 지원되지 않습니다. 볼륨 확장 기능을 사용하기 위해서는 StorageClass의 **allowVolumeExpansion** 속성이 **True**여야 합니다.
+
+
+#### v1.19.13 이전 버전의 볼륨 확장
+v1.19.13 이전 버전의 스토리지 제공자 **kubernetes.io/cinder**는 사용중인 볼륨의 확장 기능을 제공하지 않습니다. 사용중인 볼륨의 확장 기능을 사용하기 위해서는 v1.20.12 이후 버전의 **cinder.csi.openstack.org** 스토리지 제공자를 사용해야 합니다. 클러스터 업그레이드 기능을 통해 v1.20.12 이후 버전으로 업그레이드 하여 **cinder.csi.openstack.org** 스토리지 제공자를 사용할 수 있습니다.
+
+v1.19.13 이전 버전의 **kubernetes.io/cinder** 스토리지 제공자 대신 v1.20.12 이후 버전의 **cinder.csi.openstack.org** 스토리지 제공자를 사용하기 위하여 PVC의 어노테이션을 아래와 같이 수정해야 합니다.
++ ~~pv.kubernetes.io/bind-completed: "yes"~~ > 삭제
++ ~~pv.kubernetes.io/bound-by-controller: "yes"~~ > 삭제
++ ~~volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/cinder~~ > volume.beta.kubernetes.io/storage-provisioner:cinder.csi.openstack.org
++ ~~volume.kubernetes.io/storage-resizer: kubernetes.io/cinder~~ > volume.kubernetes.io/storage-resizer: cinder.csi.openstack.org
++ pv.kubernetes.io/provisioned-by:cinder.csi.openstack.org > 추가
+
+
+아래는 수정된 PVC 예제입니다.
+
+``` yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    pv.kubernetes.io/provisioned-by: cinder.csi.openstack.org
+    volume.beta.kubernetes.io/storage-provisioner: cinder.csi.openstack.org
+    volume.kubernetes.io/storage-resizer: cinder.csi.openstack.org
+  creationTimestamp: "2022-07-18T06:13:01Z"
+  finalizers:
+  - kubernetes.io/pvc-protection
+  labels:
+    app: nginx
+  name: www-web-0
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 310Gi
+  storageClassName: sc-ssd
+  volumeMode: Filesystem
+  volumeName: pvc-0da7cd55-bf29-4597-ab84-2f3d46391e5b
+status:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 300Gi
+  phase: Bound
+```
+
+#### v1.20.12 이후 버전의 볼륨 확장
+v1.20.12 이후 버전의 스토리지 제공자 **cinder.csi.openstack.org**는 기본적으로 사용중인 볼륨의 확장 기능을 지원합니다. PVC 개체의 **spec.resources.requests.storage**항목을 원하는 값으로 수정하여 볼륨 사이즈를 변경할 수 있습니다.
