@@ -154,7 +154,6 @@ X-Auth-Token: {tokenId}
                 "flavor_type": "core",
                 "hypervisor_type": "qemu",
                 "kube_tag": "v1.23.3",
-                "kube_version_status": "NEED_UPGRADE",
                 "login_username": "centos",
                 "master_lb_floating_ip_enabled": "true",
                 "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
