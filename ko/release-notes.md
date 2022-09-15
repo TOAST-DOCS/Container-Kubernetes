@@ -1,6 +1,6 @@
 ## Container > NHN Kubernetes Service(NKS) > 릴리스 노트
 
-### 2022. 09. 27
+### 2022. 09. 27.
 
 #### 기능 추가
 
