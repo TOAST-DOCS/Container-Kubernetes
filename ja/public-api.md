@@ -123,9 +123,9 @@ X-Auth-Token: {tokenId}
 | clusters.labels.ca_scale_down_unneeded_time | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：しきい値領域維持時間 |
 | clusters.labels.ca_scale_down_util_thresh | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：リソース使用量しきい値 |
 | clusters.labels.ca_scale_down_delay_after_add | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：増設後の縮小遅延時間 |
-| clusters.labels.user_script | Body | String | ユーザースクリプト(old) |
-| clusters.labels.user_script_v2 | Body | String | ユーザースクリプト |
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Kubernetes APIエンドポイントに公認ドメインアドレスを作成するかどうか("True" / "False") |
+| clusters.labels.additional_network_id_list | Body | String | 基本ワーカーノードグループ適用：追加ネットワークのVPCネットワークUUIDリスト(コロン区切り) |
+| clusters.labels.additional_subnet_id_list | Body | String | 基本ワーカーノードグループ適用：追加ネットワークのVPCサブネットUUIDリスト(コロン区切り) |
 
 
 <details><summary>例</summary>
@@ -160,7 +160,6 @@ X-Auth-Token: {tokenId}
                 "flavor_type": "core",
                 "hypervisor_type": "qemu",
                 "kube_tag": "v1.23.3",
-                "kube_version_status": "NEED_UPGRADE",
                 "login_username": "centos",
                 "master_lb_floating_ip_enabled": "true",
                 "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
@@ -169,8 +168,7 @@ X-Auth-Token: {tokenId}
                 "os_type": "linux",
                 "os_version": "7.8",
                 "project_domain": "NORMAL",
-                "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575",
-                "user_script_v2": ""
+                "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575"
             },
             "links": [
                 {
@@ -253,9 +251,9 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_unneeded_time | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：しきい値領域維持時間 |
 | labels.ca_scale_down_util_thresh | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：リソース使用量しきい値 |
 | labels.ca_scale_down_delay_after_add | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：増設後の縮小遅延時間 |
-| labels.user_script | Body | String | ユーザースクリプト(old) |
-| labels.user_script_v2 | Body | String | ユーザースクリプト |
 | labels.master_lb_floating_ip_enabled | Body | String | Kubernetes APIエンドポイントに公認ドメインアドレスを作成するかどうか("True" / "False") |
+| clusters.labels.additional_network_id_list | Body | String | 基本ワーカーノードグループ適用：追加ネットワークのVPCネットワークUUIDリスト(コロン区切り) |
+| clusters.labels.additional_subnet_id_list | Body | String | 基本ワーカーノードグループ適用：追加ネットワークのVPCサブネットUUIDリスト(コロン区切り) |
 
 <details><summary>例</summary>
 <p>
@@ -306,8 +304,7 @@ X-Auth-Token: {tokenId}
         "os_type": "linux",
         "os_version": "7.8",
         "project_domain": "NORMAL",
-        "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575",
-        "user_script_v2": ""
+        "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575"
     },
     "links": [
         {
@@ -379,9 +376,16 @@ X-Auth-Token: {tokenId}
 | labels.user_script | Body | String | X | ユーザースクリプト(old) |
 | labels.user_script_v2 | Body | String | X | ユーザースクリプト |
 | labels.master_lb_floating_ip_enabled | Body | String | O | Kubernetes APIエンドポイントに公認ドメインアドレスを作成するかどうか("True" / "False")<br>labels.external_network_idとexternal_subnet_id_listが設定されている場合にのみ"True"に設定可能 |
+| labels.additional_network_id_list | Body | String | X | 基本ワーカーノードグループ適用：追加ネットワークのVPCネットワークUUIDリスト(コロン区切り) |
+| labels.additional_subnet_id_list | Body | String | X | 基本ワーカーノードグループ適用：追加ネットワークのVPCサブネットUUIDリスト(コロン区切り) |
 | flavor_id | Body | UUID | O | 基本ワーカーノードグループ適用：ノードインスタンスタイプUUID |
 | fixed_network | Body | UUID | O | VPC Network UUID |
 | fixed_subnet | Body | UUID | O | VPC Subnet UUID |
+
+> [注意]
+> fixed_subnet帯域が以下のネットワーク帯域と重ならないように設定する必要があります。
+>  - 10.100.0.0/16
+>  - 10.254.0.0/16
 
 <details><summary>例</summary>
 <p>
@@ -709,6 +713,8 @@ X-Auth-Token: {tokenId}
 | labels.kube_tag | Body | String | ワーカーノードグループKubernetesバージョン |
 | labels.user_script | Body | String | ユーザースクリプト(old) |
 | labels.user_script_v2 | Body | String | ユーザースクリプト |
+| labels.additional_network_id_list | Body | String | ワーカーノードグループ適用：追加ネットワークのVPCネットワークUUIDリスト(コロン区切り) |
+| labels.additional_subnet_id_list | Body | String | ワーカーノードグループ適用：追加ネットワークのVPCサブネットUUIDリスト(コロン区切り) |
 | max_node_count | Body | Integer | 最大ノード数 |
 | min_node_count | Body | Integer | 最小ノード数 |
 | node_addresses | Body | String list | ノードIPアドレスリスト |
@@ -830,6 +836,8 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_delay_after_add | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：増設後の縮小遅延時間 |
 | labels.user_script | Body | String | X | ユーザースクリプト(old) |
 | labels.user_script_v2 | Body | String | X | ユーザースクリプト |
+| labels.additional_network_id_list | Body | String | X | ワーカーノードグループ適用：追加ネットワークのVPCネットワークUUIDリスト(コロン区切り) |
+| labels.additional_subnet_id_list | Body | String | X | ワーカーノードグループ適用：追加ネットワークのVPCサブネットUUIDリスト(コロン区切り) |
 | name | BODY | String | O | ノードグループ名 |
 | node_count | Body | Integer | X | ノード数(デフォルト値: 1) |
 
@@ -876,6 +884,8 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_delay_after_add | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：増設後の縮小遅延時間 |
 | labels.user_script | Body | String | ユーザースクリプト(old) |
 | labels.user_script_v2 | Body | String | ユーザースクリプト |
+| labels.additional_network_id_list | Body | String | ワーカーノードグループ適用：追加ネットワークのVPCネットワークUUIDリスト(コロン区切り) |
+| labels.additional_subnet_id_list | Body | String | ワーカーノードグループ適用：追加ネットワークのVPCサブネットUUIDリスト(コロン区切り) |
 | max_node_count | Body | Integer | 最大ノード数 |
 | min_node_count | Body | Integer | 最小ノード数 |
 | name | BODY | String | ノードグループ名 |
@@ -1240,10 +1250,11 @@ X-Auth-Token: {tokenId}
         "v1.17.6": false,
         "v1.18.19": false,
         "v1.19.13": false,
-        "v1.20.12": true,
+        "v1.20.12": false,
         "v1.21.6": true,
         "v1.22.3": true,
-        "v1.23.3": true
+        "v1.23.3": true,
+        "v1.24.3": true
     }
 }
 ```
