@@ -119,10 +119,9 @@ This API does not require a request body.
 | clusters.labels.ca_scale_down_unneeded_time | Body | String | Applied to the default worker node group: Autoscaler: Scale down unneeded time |
 | clusters.labels.ca_scale_down_util_thresh | Body | String | Applied to the default worker node group: Autoscaler: Scale down utilization threshold  |
 | clusters.labels.ca_scale_down_delay_after_add | Body | String | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
-| clusters.labels.user_script | Body | String | User Script (old) |
-| clusters.labels.user_script_v2 | Body | String | User Script |
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Whether to create a public domain address for Kubernetes API endpoint ("True" / "False") |
-
+| clusters.labels.additional_network_id_list | Body | String | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
+| clusters.labels.additional_subnet_id_list | Body | String | Applied to the default worker node group: List of VPC subnet UUIDs for additional networks (separated by colons) |
 
 <details><summary>Example</summary>
 <p>
@@ -165,8 +164,7 @@ This API does not require a request body.
                 "os_type": "linux",
                 "os_version": "7.8",
                 "project_domain": "NORMAL",
-                "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575",
-                "user_script_v2": ""
+                 "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575"
             },
             "links": [
                 {
@@ -249,10 +247,9 @@ This API does not require a request body.
 | labels.ca_scale_down_unneeded_time | Body | String | Applied to the default worker node group: Autoscaler: Scale down unneeded time |
 | labels.ca_scale_down_util_thresh | Body | String | Applied to the default worker node group: Autoscaler: Scale down utilization threshold  |
 | labels.ca_scale_down_delay_after_add | Body | String | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
-| labels.user_script | Body | String | User Script (old) |
-| labels.user_script_v2 | Body | String | User Script |
 | labels.master_lb_floating_ip_enabled | Body | String | Whether to create a public domain address for Kubernetes API endpoint ("True" / "False") |
-
+| clusters.labels.additional_network_id_list | Body | String | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
+| clusters.labels.additional_subnet_id_list | Body | String | Applied to the default worker node group: List of VPC subnet UUIDs for additional networks (separated by colons) |
 <details><summary>Example</summary>
 <p>
 
@@ -302,8 +299,7 @@ This API does not require a request body.
         "os_type": "linux",
         "os_version": "7.8",
         "project_domain": "NORMAL",
-        "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575",
-        "user_script_v2": ""
+        "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575"
     },
     "links": [
         {
@@ -375,9 +371,16 @@ X-Auth-Token: {tokenId}
 | labels.user_script | Body | String | X | User Script (old) |
 | labels.user_script_v2 | Body | String | X | User Script |
 | labels.master_lb_floating_ip_enabled | Body | String | O | Whether to create a public domain address for Kubernetes API endpoint ("True" / "False")<br>Can be set to "True" only when labels.external_network_id and labels.external_subnet_id_list are set |
+| labels.additional_network_id_list | Body | String | X | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
+| labels.additional_subnet_id_list | Body | String | X |  Applied to the default worker node group: List of VPC subnet UUIDs for additional networks (separated by colons) |
 | flavor_id | Body | UUID | O | Applied to the default worker node group: Node flavor UUID |
 | fixed_network | Body | UUID | O | VPC Network UUID |
 | fixed_subnet | Body | UUID | O | VPC Subnet UUID |
+
+[Caution] 
+Make sure that the fixed_subnet range does not overlap the network range.
+>  - 10.100.0.0/16
+>  - 10.254.0.0/16
 
 <details><summary>Example</summary>
 <p>
@@ -705,6 +708,8 @@ This API does not require a request body.
 | labels.kube_tag | Body | String | Kubernetes version of the worker node group |
 | labels.user_script | Body | String | User Script (old) |
 | labels.user_script_v2 | Body | String | User Script |
+| labels.additional_network_id_list | Body | String | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
+| labels.additional_subnet_id_list | Body | String | Applied to the default worker node group: List of VPC subnet UUIDs for additional networks (separated by colons) |
 | max_node_count | Body | Integer | Maximum Node Count |
 | min_node_count | Body | Integer | Minimum Node Count |
 | node_addresses | Body | String list | List of node IP addresses |
@@ -826,6 +831,8 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_delay_after_add | Body | String | X | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
 | labels.user_script | Body | String | X | User Script (old) |
 | labels.user_script_v2 | Body | String | X | User Script |
+| labels.additional_network_id_list | Body | String | X | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
+| labels.additional_subnet_id_list | Body | String | X | Applied to the default worker node group: List of VPC subnet UUIDs for additional networks (separated by colons)) |
 | name | Body | String | O | Node Group Name |
 | node_count | Body | Integer | X | Number of nodes (Default: 1) |
 
@@ -872,6 +879,8 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_delay_after_add | Body | String | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
 | labels.user_script | Body | String | User Script (old) |
 | labels.user_script_v2 | Body | String | User Script |
+| labels.additional_network_id_list | Body | String | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
+| labels.additional_subnet_id_list | Body | String | Applied to the default worker node group: List of VPC subnet UUIDs for additional networks (separated by colons) |
 | max_node_count | Body | Integer | Maximum Node Count |
 | min_node_count | Body | Integer | Minimum Node Count |
 | name | Body | String | Node Group Name |
@@ -1236,10 +1245,12 @@ This API does not require a request body.
         "v1.17.6": false,
         "v1.18.19": false,
         "v1.19.13": false,
-        "v1.20.12": true,
+        "v1.20.12": false,
         "v1.21.6": true,
         "v1.22.3": true,
         "v1.23.3": true
+        "v1.23.3": true,
+        "v1.24.3": true
     }
 }
 ```
