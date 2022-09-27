@@ -2722,13 +2722,13 @@ csi-driver-nfsコンポーネントが含まれるgitプロジェクトをダウ
 $ git clone https://github.com/kubernetes-csi/csi-driver-nfs.git
 ```
 
-csi-driver-nfsフォルダに移動し、**./deploy/install-driver.sh master local**コマンドを使用してcsi-driver-nfsコンポーネントのインストールを行います。**kubectl**コマンドが正常に動作する状態でインストールが行われる必要があります。
+csi-driver-nfsフォルダに移動し、**./deploy/install-driver.sh v4.1.0 local**コマンドを使用してcsi-driver-nfsコンポーネントのインストールを行います。**kubectl**コマンドが正常に動作する状態でインストールが行われる必要があります。
 ```
 $ cd csi-driver-nfs
 
-$ ./deploy/install-driver.sh master local
+$ ./deploy/install-driver.sh v4.1.0 local
 use local deploy
-Installing NFS CSI driver, version: master ...
+Installing NFS CSI driver, version: v4.1.0 ...
 serviceaccount/csi-nfs-controller-sa created
 serviceaccount/csi-nfs-node-sa created
 clusterrole.rbac.authorization.k8s.io/nfs-external-provisioner-role created
