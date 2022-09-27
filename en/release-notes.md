@@ -1,5 +1,13 @@
 ## Container > NHN Kubernetes Service (NKS) > Release Notes
 
+### September 27, 2022
+
+#### Added Features
+
+* Added support for Kubernetes v1.24.3.
+* Kubernetes v1.20.12 is no longer supported for cluster creation. However, the clusters in use are not affected.
+
+
 ### July 26, 2022
 
 #### Added Features
