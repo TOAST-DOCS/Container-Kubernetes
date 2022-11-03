@@ -960,6 +960,107 @@ X-Auth-Token: {tokenId}
 
 ---
 
+### 노드 중지하기
+
+지정한 노드 목록을 중지시킵니다.
+
+```
+POST /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}/stop_node
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | 노드 그룹 UUID 또는 노드 그룹 이름 | 
+| node_list | Body | String | O | 콜론(`:`)으로 구분된 노드 인스턴스 UUID 목록 |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "node_list": "bdaa560c-7a30-4249-9438-2df27fa1e9d38:68ff49ee-4111-4212-8e9e-88835cb0ebaa"
+}
+```
+
+</p>
+</details>
+
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | UUID | 노드 그룹 UUID |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "439aa682-398f-4061-a4d1-116da6b1154e"
+}
+```
+
+---
+
+### 노드 시작하기
+
+지정한 노드 목록을 시작시킵니다.
+
+```
+POST /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}/start_node
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | 노드 그룹 UUID 또는 노드 그룹 이름 | 
+| node_list | Body | String | O | 콜론(`:`)으로 구분된 노드 인스턴스 UUID 목록 |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "node_list": "bdaa560c-7a30-4249-9438-2df27fa1e9d38"
+}
+```
+
+</p>
+</details>
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | UUID | 노드 그룹 UUID |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "439aa682-398f-4061-a4d1-116da6b1154e"
+}
+```
+
+---
+
 ### 노드 그룹의 오토 스케일러 설정 보기
 
 노드 그룹의 오토 스케일러 설정을 조회합니다.
