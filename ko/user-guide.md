@@ -2533,7 +2533,7 @@ $ yum install -y nfs-utils
 ```
 
 #### csi-driver-nfs 설치
-NHN Cloud NAS 서비스를 사용하기 위해 NHN Cloud Kubernetes 클러스터에 csi-driver-nfs 컴포넌트를 배포해야 합니다. 
+NHN Cloud NAS 서비스를 사용하기 위해 클러스터에 csi-driver-nfs 컴포넌트를 배포해야 합니다.
 
 csi-driver-nfs는 nfs 서버에 새 하위 디렉터리를 생성하는 방식으로 동작하는 PV의 동적 프로비저닝을 지원하는 드라이버입니다.
 csi-driver-nfs는 스토리지 클래스에 nfs 서버 정보를 제공하는 방식으로 동작하여 사용자가 관리해야 하는 대상을 줄여 줍니다.
