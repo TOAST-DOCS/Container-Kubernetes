@@ -2654,7 +2654,7 @@ spec:
   volumeName: pv-onas
 ```
 
-PVC를 생성한 다음 PV의 상태를 조회해보면 **CLAIM** 항목에 PVC 이름이 지정되고, STATUS 항목이 `Bound`로 변경된 것을 확인할 수 있습니다.
+PVC를 생성하고 확인합니다.
 ```
 $ kubectl apply -f static-pvc.yaml
 persistentvolumeclaim/pvc-onas-static created
@@ -2662,6 +2662,13 @@ persistentvolumeclaim/pvc-onas-static created
 $ kubectl get pvc -o wide
 NAME              STATUS   VOLUME    CAPACITY   ACCESS MODES   STORAGECLASS   AGE    VOLUMEMODE
 pvc-onas-static   Bound    pv-onas   300Gi      RWX                           2m8s   Filesystem
+```
+
+PVC를 생성한 다음 PV의 상태를 조회해보면 **CLAIM** 항목에 PVC 이름이 지정되고, STATUS 항목이 `Bound`로 변경된 것을 확인할 수 있습니다.
+```
+$ kubectl get pv -o wide
+NAME      CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                     STORAGECLASS   REASON   AGE     VOLUMEMODE
+pv-onas   300Gi      RWX            Retain           Bound    default/pvc-onas-static                           3m20s   Filesystem
 ```
 
 #### 동적 프로비저닝
