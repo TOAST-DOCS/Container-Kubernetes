@@ -8,7 +8,7 @@ NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해�
 
 | 항목 | 설명 |
 | --- | --- |
-| 클러스터 이름 | Kubernetes 클러스터의 이름, 20자 이내로 영문 소문자와 숫자, '-'만 입력 가능하며 영문 소문자로 시작해야 하고 영문 소문자 또는 숫자로 끝나야 합니다. |
+| 클러스터 이름 | Kubernetes 클러스터의 이름, 32자 이내로 영문 소문자와 숫자, '-'만 입력 가능하며 영문 소문자로 시작해야 하고 영문 소문자 또는 숫자로 끝나야 합니다. |
 | Kubernetes 버전 | 사용할 Kubernetes 버전 |
 | VPC | 클러스터에 연결할 VPC 네트워크 |
 | 서브넷 | VPC에 정의된 서브넷 중 클러스터를 구성하는 인스턴스에 연결할 서브넷 |
@@ -25,6 +25,7 @@ NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해�
 > 클러스터 생성 시 서브넷 대역이 아래 네트워크 대역과 겹치지 않도록 설정해야 합니다.
 >  - 10.100.0.0/16
 >  - 10.254.0.0/16
+>  - 198.18.0.0/19
 
 NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전에 따라 일부 기능에 제약이 있을 수 있습니다.
 
@@ -89,7 +90,7 @@ NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전�
 | 항목 | 설명 |
 | --- | --- |
 | 가용성 영역 | 클러스터를 구성하는 인스턴스를 생성할 영역 |
-| 노드 그룹 이름 | 추가 노드 그룹 이름, 20자 이내로 영문 소문자와 숫자, '-'만 입력 가능하며 영문 소문자로 시작해야 하고 영문 소문자 또는 숫자로 끝나야 합니다. |
+| 노드 그룹 이름 | 추가 노드 그룹 이름, 32자 이내로 영문 소문자와 숫자, '-'만 입력 가능하며 영문 소문자로 시작해야 하고 영문 소문자 또는 숫자로 끝나야 합니다. |
 | 인스턴스 타입 | 추가 노드 그룹 인스턴스 사양 |
 | 노드 수 | 추가 노드 그룹 인스턴스 수 |
 | 키 페어 | 추가 노드 그룹 접근에 사용할 키 페어 |
@@ -122,6 +123,42 @@ NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전�
 
 * [안전한 노드 drain](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)
 * [수동 노드 관리](https://kubernetes.io/docs/concepts/architecture/nodes/#manual-node-administration)
+
+### 노드 중지와 시작
+노드 그룹에 속한 노드 중 일부를 중지시키고, 중지된 노드를 다시 시작할 수 있습니다. 노드 그룹 정보 조회 페이지의 노드 목록 탭을 클릭하면 현재 노드 목록이 나타납니다. 중지할 노드를 선택하고 노드 중지 버튼을 클릭하면 노드가 중지됩니다. 중지된 노드를 선택하고 노드 시작 버튼을 클릭하면 노드가 다시 시작됩니다.
+
+#### 동작 과정
+
+시작 상태의 노드를 중지하면 다음의 순서로 동작합니다.
+
+* 해당 노드가 drain 됩니다.
+* 해당 노드가 Kubernetes 노드 자원에서 삭제됩니다.
+* 해당 노드를 인스턴스 수준에서 SHUTDOWN 상태로 만듭니다.
+
+중지 상태의 노드를 시작하면 다음의 순서로 동작합니다.
+* 해당 노드를 인스턴스 수준에서 ACTIVE 상태로 만듭니다.
+* 해당 노드가 Kubernetes 노드 자원에 다시 추가됩니다.
+
+
+#### 제약사항
+
+노드 중지와 시작 기능은 다음의 제약사항이 있습니다.
+
+* 시작 상태의 노드를 중지할 수 있고, 중지 상태의 노드를 시작할 수 있습니다.
+* 워커 노드 그룹 내의 모든 노드를 중지할 수는 없습니다.
+* 오토 스케일러가 활성화된 노드 그룹은 노드를 중지할 수 없습니다.
+* 중지된 노드가 존재하는 노드 그룹은 오토 스케일러를 활성화할 수 없습니다.
+* 중지된 노드가 존재하는 노드 그룹은 업그레이드를 할 수 없습니다.
+
+
+#### 상태 표시
+
+노드의 상태에 따라 노드 목록 탭의 상태 아이콘이 표시됩니다. 아이콘 색상별 상태는 다음과 같습니다.
+
+* 초록색: 시작 상태의 노드
+* 회색: 중지 상태의 노드
+* 빨간색: 비정상 상태의 노드
+
 
 ### GPU 노드 그룹 사용 
 Kubernetes를 통한 GPU 기반 워크로드 실행이 필요한 경우, GPU 인스턴스로 구성된 노드 그룹을 생성할 수 있습니다.
@@ -1387,6 +1424,21 @@ spec:
 > 아래 기능의 설정값은 모두 문자열 형식으로 입력해야 합니다. YAML 파일 입력 형식에서 입력값 형태에 관계없이 문자열 형식으로 입력하기 위해서는 입력값을 큰따옴표(")로 감싸주면 됩니다. YAML 파일 형식에 대한 더 자세한 내용은 [Yaml Cookbook](https://yaml.org/YAML_for_ruby.html) 문서를 참조하세요.
 >
 
+#### 로드 밸런서 타입 설정
+로드 밸런서의 타입을 설정할 수 있습니다. 로드 밸런서에 대한 자세한 내용은 [로드 밸런서 콘솔 사용 가이드](/Network/Load%20Balancer/ko/console-guide/)를 참고하세요
+
+* 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/loadbalancer-type입니다.
+* **리스너별 설정을 적용할 수 없습니다.**
+* 다음 중 하나로 설정할 수 있습니다.
+    * shared: '일반' 타입의 로드 밸런서를 생성합니다. 미설정 시 기본값입니다.
+    * dedicated: '전용' 타입의 로드 밸런서를 생성합니다.
+    * physical_basic: '물리 Basic' 타입의 로드 밸런서를 생성합니다.
+    * physical_premium: '물리 Premium' 타입의 로드 밸런서를 생성합니다.
+
+> [주의]
+> 물리 로드 밸런서는 한국(평촌) 리전에만 제공됩니다.
+> 물리 로드 밸런서는 플로팅 IP를 연결할 수 없습니다. 대신 물리 로드 밸런서 생성 시 자동 할당된 퍼블릭 IP 하나를 밸런싱 대상 트래픽을 수신하는 IP로 사용합니다. 이 퍼블릭 IP는 서비스 IP라는 이름으로 콘솔에 노출됩니다.
+> 이런 특성으로 인해 Kubernetes 서비스 객체를 통해 로드 밸런서의 정확한 상태(연결된 플로팅 IP 등)를 얻을 수 없습니다. 물리 로드 밸런서에 대한 상태 등은 콘솔을 통해 확인하시길 바랍니다.
 
 #### 세션 지속성 설정
 로드 밸런서의 세션 지속성을 설정할 수 있습니다.
@@ -2466,13 +2518,12 @@ v1.20.12 이후 버전의 스토리지 제공자 **cinder.csi.openstack.org**는
 NHN Cloud에서 제공하는 NAS 스토리지를 PV로 활용할 수 있습니다. NAS 서비스를 사용하기 위해서는 v1.20 이후 버전의 클러스터를 사용해야 합니다. NHN Cloud NAS 사용에 대한 자세한 내용은 [NAS 콘솔 사용 가이드](/Storage/NAS/ko/console-guide)를 참고하세요.
 
 > [참고]
-> NHN Cloud NAS 서비스는 현재(2022.09) 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS/ko/overview)를 참고하세요.
-
+> NHN Cloud NAS 서비스는 현재(2022.11) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS/ko/overview)를 참고하세요.
 
 #### 워커 노드에 nfs 패키지 설치
 NAS 스토리지를 사용하기 위해서는 워커 노드에 nfs 패키지를 설치해야 합니다. 워커 노드에 접속한 후 아래 명령어를 실행하여 nfs 패키지를 설치합니다.
 
-Ubuntu의 경우 아래 명령어로 nfs 패키지를 설치할 수 있습니다.
+Ubuntu, Debian의 경우 아래 명령어로 nfs 패키지를 설치할 수 있습니다.
 ```
 $ apt-get install -y nfs-common
 ```
@@ -2482,24 +2533,25 @@ CentOS의 경우 아래 명령어로 nfs 패키지를 설치할 수 있습니다
 $ yum install -y nfs-utils
 ```
 
-#### csi-driver-nfs
+#### csi-driver-nfs 설치
+NHN Cloud NAS 서비스를 사용하기 위해 클러스터에 csi-driver-nfs 컴포넌트를 배포해야 합니다.
+
 csi-driver-nfs는 nfs 서버에 새 하위 디렉터리를 생성하는 방식으로 동작하는 PV의 동적 프로비저닝을 지원하는 드라이버입니다.
 csi-driver-nfs는 스토리지 클래스에 nfs 서버 정보를 제공하는 방식으로 동작하여 사용자가 관리해야 하는 대상을 줄여 줍니다.
-
-기존 방식을 사용하여 여러 개의 PV를 구성하는 경우 NFS 서버 정보를 제공하기 위해 PV마다 NFS-Provisioner pod를 구성해야 합니다.
-![nfs-csi-driver-01.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nfs-csi-driver-01.png)
 
 nfs-csi-driver를 사용하여 여러 개의 PV를 구성하는 경우 nfs-csi-driver가 NFS 서버 정보를 StorageClass에 등록하여 NFS-Provisoner pod를 구성할 필요가 없습니다.
 ![nfs-csi-driver-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nfs-csi-driver-02.png)
 
-#### csi-driver-nfs 설치
-
-csi-driver-nfs 구성 요소가 포함된 git 프로젝트를 내려받습니다.
+1. csi-driver-nfs 구성 요소가 포함된 git 프로젝트를 다운로드합니다.
 ```
 $ git clone https://github.com/kubernetes-csi/csi-driver-nfs.git
 ```
 
-csi-driver-nfs 폴더로 이동 후 **./deploy/install-driver.sh v4.1.0 local** 명령어를 사용하여 csi-driver-nfs 구성 요소 설치를 진행합니다. **kubectl** 명령어가 정상적으로 동작하는 상태에서 설치가 진행되어야 합니다.
+2. csi-driver-nfs 폴더로 이동 후 **./deploy/install-driver.sh v4.1.0 local** 명령어를 사용하여 csi-driver-nfs 구성 요소를 설치합니다. 
+
+> [참고]
+> csi-driver-nfs 설치 스크립트의 내부 실행 과정에서 kubectl apply 명령이 수행됩니다. 따라서 **kubectl** 명령어가 정상적으로 동작하는 상태에서 설치가 진행되어야 합니다. KUBECONFIG 환경 변수를 사용하는 경우
+> 상대 경로가 아닌 절대 경로로 설정되어 있어야 합니다.
 ```
 $ cd csi-driver-nfs
 
@@ -2516,7 +2568,7 @@ daemonset.apps/csi-nfs-node created
 NFS CSI driver installed successfully.
 ```
 
-구성 요소가 정상적으로 설치되었는지 확인합니다.
+3. 구성 요소가 정상적으로 설치되었는지 확인합니다.
 ```
 $ kubectl get pods -n kube-system
 NAMESPACE     NAME                                         READY   STATUS    RESTARTS   AGE
@@ -2555,6 +2607,7 @@ NHN Cloud NAS 스토리지를 정적 프로비저닝을 통해 PV로 활용하�
   * server: NAS 스토리지의 연결 정보 중 **ip** 부분의 값을 입력합니다.
   * share: NAS 스토리지의 연결 정보 중 **볼륨 이름** 부분의 값을 입력합니다.
 
+아래는 NHN Cloud NAS 스토리지를 정적 프로비저닝 하는 매니페스트 예제입니다.
 ``` yaml
 # static-pv.yaml
 apiVersion: v1
@@ -2586,7 +2639,38 @@ NAME                                       CAPACITY   ACCESS MODES   RECLAIM POL
 pv-onas                                    300Gi      RWX            Retain           Available                                                      101s   Filesystem
 ```
 
-PV 생성 이후에 PVC 생성 및 pod에 볼륨을 마운트하는 과정은 기본 정적 프로비저닝 과정과 동일합니다. 정적 프로비저닝에 대한 자세한 내용은 [정적 프로비저닝](/Container/NKS/ko/user-guide/#_51)을 참고하세요.
+생성한 PV를 사용하기 위한 PVC 매니페스트를 작성합니다. **spec.volumeName**에는 PV의 이름을 지정해야 합니다. 다른 항목들은 PV 매니페스트의 내용과 동일하게 설정합니다.
+```
+# pvc-static.yaml
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc-onas-static
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 300Gi
+  volumeName: pv-onas
+```
+
+PVC를 생성하고 확인합니다.
+```
+$ kubectl apply -f static-pvc.yaml
+persistentvolumeclaim/pvc-onas-static created
+
+$ kubectl get pvc -o wide
+NAME              STATUS   VOLUME    CAPACITY   ACCESS MODES   STORAGECLASS   AGE    VOLUMEMODE
+pvc-onas-static   Bound    pv-onas   300Gi      RWX                           2m8s   Filesystem
+```
+
+PVC를 생성한 다음 PV의 상태를 조회해보면 **CLAIM** 항목에 PVC 이름이 지정되고, STATUS 항목이 `Bound`로 변경된 것을 확인할 수 있습니다.
+```
+$ kubectl get pv -o wide
+NAME      CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                     STORAGECLASS   REASON   AGE     VOLUMEMODE
+pv-onas   300Gi      RWX            Retain           Bound    default/pvc-onas-static                           3m20s   Filesystem
+```
 
 #### 동적 프로비저닝
 NHN Cloud NAS 스토리지를 동적 프로비저닝을 통해 PV로 활용하기 위해서 StorageClass 매니페스트 작성 시 스토리지 제공자 정보 및 NHN Cloud NAS 스토리지 연결 정보를 정의해야 합니다.
@@ -2596,6 +2680,7 @@ NHN Cloud NAS 스토리지를 동적 프로비저닝을 통해 PV로 활용하�
   * server: NAS 스토리지의 연결 정보 중 **ip** 부분의 값을 입력합니다.
   * share: NAS 스토리지의 연결 정보 중 **볼륨 이름** 부분의 값을 입력합니다.
 
+아래는 NHN Cloud NAS 서비스에 연동하기 위한 Storage Class 매니페스트 예제입니다.
 ``` yaml
 # storageclass.yaml
 apiVersion: storage.k8s.io/v1
@@ -2604,7 +2689,7 @@ metadata:
   name: onas-sc
 provisioner: nfs.csi.k8s.io
 parameters:
-  server: 192.168.0.37
+  server: 192.168.0.81
   share: /onas_300gb_dynamic
 reclaimPolicy: Retain
 volumeBindingMode: Immediate
@@ -2613,13 +2698,95 @@ volumeBindingMode: Immediate
 StorageClass를 생성하고 확인합니다.
 ```
 $ kubectl apply -f storageclass.yaml
+storageclass.storage.k8s.io/onas-sc created
 
-$ kubectl get sc,pvc,pv
-NAME                                  PROVISIONER      RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
-storageclass.storage.k8s.io/onas-sc   nfs.csi.k8s.io   Retain          Immediate           false                  15s
+$ kubectl get sc
+NAME      PROVISIONER      RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
+onas-sc   nfs.csi.k8s.io   Retain          Immediate           false                  3s
 ```
 
-StorageClass 생성 이후에 PVC 생성 및 pod에 볼륨을 마운트하는 과정은 기본 동적 프로비저닝 과정과 동일합니다. 동적 프로비저닝에 대한 자세한 내용은 [동적 프로비저닝](/Container/NKS/ko/user-guide/#_52)을 참고하세요.
+동적 프로비저닝은 PV를 생성할 필요가 없습니다. 따라서 PVC 매니페스트만 작성합니다. PVC 매니페스트에는 **spec.volumeName**을 설정하지 않습니다.
+```
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc-onas-dynamic
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 300Gi
+  storageClassName: onas-sc
+```
+볼륨 바인딩 모드를 설정하지 않거나 Immediate로 설정하고 PVC를 생성하면 PV가 자동으로 생성됩니다.
+
+```
+$ kubectl apply -f dynamic-pvc.yaml
+persistentvolumeclaim/pvc-onas-dynamic created
+
+$ kubectl get sc,pv,pvc
+NAME                                  PROVISIONER      RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
+storageclass.storage.k8s.io/onas-sc   nfs.csi.k8s.io   Retain          Immediate           false                  25s
+
+NAME                                                        CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                      STORAGECLASS   REASON   AGE
+persistentvolume/pvc-71392e58-5d8e-43b2-9798-5b59de34b203   300Gi      RWX            Retain           Bound    default/pvc-onas-dynamic   onas-sc                 3s
+
+NAME                                     STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+persistentvolumeclaim/pvc-onas-dynamic   Bound    pvc-71392e58-5d8e-43b2-9798-5b59de34b203   300Gi      RWX            onas-sc        4s
+```
+
+파드에 PVC를 마운트하려면 파드 매니페스트에 마운트 정보를 정의해야 합니다. spec.volumes.persistenVolumeClaim.claimName에 사용할 PVC 이름을 입력합니다. 그리고 spec.containers.volumeMounts.mountPath에 마운트 할 경로를 입력합니다.
+
+아래는 동적 프로비저닝으로 생성한 PVC를 파드의 `/tmp/nfs`에 마운트하는 매니페스트 예제입니다.
+```
+# deployment-dynamic.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx
+  name: nginx-dynamic
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - image: nginx
+        imagePullPolicy: Always
+        name: nginx
+        volumeMounts:
+          - name: onas-dynamic
+            mountPath: "/tmp/nfs"
+      volumes:
+        - name: onas-dynamic
+          persistentVolumeClaim:
+            claimName: pvc-onas-dynamic
+```
+
+파드를 생성하고 NAS 스토리지가 마운트 되어 있는지 확인합니다.
+```
+$ kubectl apply -f deployment-dynamic.yaml
+deployment.apps/nginx-dynamic created
+
+$ kubectl get pods
+NAME                             READY   STATUS    RESTARTS   AGE
+nginx-dynamic-5fbc846574-q28cf   1/1     Running   0          26s
+
+$ kubectl exec -it nginx-dynamic-5fbc846574-q28cf -- df -h
+Filesystem                                                                 Size  Used Avail Use% Mounted on
+...
+192.168.0.45:/onas_300gb_dynamic/pvc-71392e58-5d8e-43b2-9798-5b59de34b203  270G  256K  270G   1% /tmp/nfs
+...
+```
+
+NHN Cloud 콘솔 **Storage > NAS** 서비스 페이지에서도 NAS 스토리지의 연결 정보를 확인할 수 있습니다.
 
 > [참고]
 > nfs-csi-driver는 동적 프로비저닝을 통해 PV를 생성할 때 nfs 스토리지 내부에 subdirectory를 생성하는 방식으로 동작합니다.
