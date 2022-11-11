@@ -133,12 +133,12 @@ NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전�
 시작 상태의 노드를 중지하면 다음의 순서로 동작합니다.
 
 * 해당 노드가 drain 됩니다.
-* 해당 노드가 Kubernetes node 자원에서 삭제됩니다.
-* 해당 노드가 인스턴스 수준에서 SHUTDOWN 상태로 만듭니다.
+* 해당 노드가 Kubernetes 노드 자원에서 삭제됩니다.
+* 해당 노드를 인스턴스 수준에서 SHUTDOWN 상태로 만듭니다.
 
 중지 상태의 노드를 시작하면 다음의 순서로 동작합니다.
 * 해당 노드를 인스턴스 수준에서 ACTIVE 상태로 만듭니다.
-* 해당 노드가 Kubernetes node 자원에 다시 추가됩니다.
+* 해당 노드가 Kubernetes 노드 자원에 다시 추가됩니다.
 
 
 #### 제약사항
@@ -154,7 +154,7 @@ NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전�
 
 #### 상태 표시
 
-노드의 상태에 따라 노드 목록 탭의 상태 아이콘이 표시됩니다. 아이콘 색상 별 상태는 다음과 같습니다.
+노드의 상태에 따라 노드 목록 탭의 상태 아이콘이 표시됩니다. 아이콘 색상별 상태는 다음과 같습니다.
 
 * 초록색: 시작 상태의 노드
 * 회색: 중지 상태의 노드
@@ -1347,7 +1347,7 @@ spec:
 >
 
 #### 로드 밸런서 타입 설정
-로드 밸런서의 타입을 설정할 수 있습니다. 로드 밸런서에 대한 좀 더 자세한 내용은 [로드 밸런서 콘솔 사용 가이드](/Network/Load%20Balancer/ko/console-guide/)를 참고하세요
+로드 밸런서의 타입을 설정할 수 있습니다. 로드 밸런서에 대한 자세한 내용은 [로드 밸런서 콘솔 사용 가이드](/Network/Load%20Balancer/ko/console-guide/)를 참고하세요.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/loadbalancer-type입니다.
 * **리스너별 설정을 적용할 수 없습니다.**
@@ -2423,4 +2423,4 @@ status:
 ```
 
 #### v1.20.12 이후 버전의 볼륨 확장
-v1.20.12 이후 버전의 스토리지 제공자 **cinder.csi.openstack.org**는 기본적으로 사용 중인 볼륨의 확장 기능을 지원합니다. PVC 개체의 **spec.resources.requests.storage**항목을 원하는 값으로 수정하여 볼륨 사이즈를 변경할 수 있습니다.
+v1.20.12 이후 버전의 스토리지 제공자 **cinder.csi.openstack.org**는 기본적으로 사용 중인 볼륨의 확장 기능을 지원합니다. PVC 개체의 **spec.resources.requests.storage** 항목을 원하는 값으로 수정하여 볼륨 사이즈를 변경할 수 있습니다.
