@@ -4,16 +4,13 @@
 
 #### 기능 개선
 
-* GPU 워커 노드에서 사용하는 NVIDIA 드라이버가 업데이트되었습니다.
-    * 적용 이미지: Ubuntu, CentOS
-        * 기존 버전: 450.156.00
-        * 변경 버전: 450.191.01
-* Docker 엔진이 업데이트되었습니다.
-    * 적용 이미지: Ubuntu, CentOS
-        * 기존 버전: docker 19.03
-        * 변경 버전: docker 20.10
 * 이미지 업데이트
-    * CentOS 7.9 - Container (2022.11.22)
+    * 변경 사항
+        * nvidia-device-plugin 버전이 450.156.00에서 450.191.01으로 변경되었습니다.
+        * Docker 버전이 19.03에서 20.10으로 변경되었습니다.
+    * 대상 이미지
+        * Ubuntu Server 18.04.6 LTS - Container (2022.11.22)
+        * CentOS 7.9 - Container (2022.11.22)
 
 #### 기능 추가
 
