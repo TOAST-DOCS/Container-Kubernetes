@@ -1012,6 +1012,9 @@ X-Auth-Token: {tokenId}
 }
 ```
 
+</p>
+</details>
+
 ---
 
 ### 노드 시작하기
@@ -1061,6 +1064,9 @@ X-Auth-Token: {tokenId}
     "uuid": "439aa682-398f-4061-a4d1-116da6b1154e"
 }
 ```
+
+</p>
+</details>
 
 ---
 

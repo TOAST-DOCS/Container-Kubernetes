@@ -1017,6 +1017,9 @@ X-Auth-Token: {tokenId}
 }
 ```
 
+</p>
+</details>
+
 ---
 
 ### ノードを起動する
@@ -1066,6 +1069,9 @@ X-Auth-Token: {tokenId}
     "uuid": "439aa682-398f-4061-a4d1-116da6b1154e"
 }
 ```
+
+</p>
+</details>
 
 ---
 
