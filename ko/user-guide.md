@@ -2542,12 +2542,12 @@ csi-driver-nfs는 스토리지 클래스에 nfs 서버 정보를 제공하는 �
 nfs-csi-driver를 사용하여 여러 개의 PV를 구성하는 경우 nfs-csi-driver가 NFS 서버 정보를 StorageClass에 등록하여 NFS-Provisoner pod를 구성할 필요가 없습니다.
 ![nfs-csi-driver-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nfs-csi-driver-02.png)
 
-1. csi-driver-nfs 구성 요소가 포함된 git 프로젝트를 다운로드합니다.
+##### 1. csi-driver-nfs 구성 요소가 포함된 git 프로젝트를 다운로드합니다.
 ```
 $ git clone https://github.com/kubernetes-csi/csi-driver-nfs.git
 ```
 
-2. csi-driver-nfs 폴더로 이동 후 **./deploy/install-driver.sh v4.1.0 local** 명령어를 사용하여 csi-driver-nfs 구성 요소를 설치합니다. 
+##### 2. csi-driver-nfs 폴더로 이동 후 **./deploy/install-driver.sh v4.1.0 local** 명령어를 사용하여 csi-driver-nfs 구성 요소를 설치합니다. 
 
 > [참고]
 > csi-driver-nfs 설치 스크립트의 내부 실행 과정에서 kubectl apply 명령이 수행됩니다. 따라서 **kubectl** 명령어가 정상적으로 동작하는 상태에서 설치가 진행되어야 합니다. KUBECONFIG 환경 변수를 사용하는 경우
@@ -2568,7 +2568,7 @@ daemonset.apps/csi-nfs-node created
 NFS CSI driver installed successfully.
 ```
 
-3. 구성 요소가 정상적으로 설치되었는지 확인합니다.
+##### 3. 구성 요소가 정상적으로 설치되었는지 확인합니다.
 ```
 $ kubectl get pods -n kube-system
 NAMESPACE     NAME                                         READY   STATUS    RESTARTS   AGE
