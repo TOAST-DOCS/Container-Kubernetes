@@ -1,5 +1,16 @@
 ## Container > NHN Kubernetes Service (NKS) > Release Notes
 
+### November 29, 2022
+
+#### Added Features
+
+* The start node/stop node features are available.
+* Various types of load balancers can be created.
+* You can create a cluster name and node group name with up to 32 characters each.
+* Image added
+    * Debian 11.5 Bullseye - Container (2022.11.23)
+        * You can use an Debian worker image for cluster creation and node group creation.
+
 ### September 27, 2022
 
 #### Added Features

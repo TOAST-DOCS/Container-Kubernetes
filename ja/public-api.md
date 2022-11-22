@@ -54,10 +54,12 @@ GET /v2.0/networks?router:external=True
 
 | リージョン | ベースイメージ名 | ベースイメージUUID |
 |---|---|---|
-| 韓国(パンギョ)リージョン | CentOS 7.8 | 6013253a-50bf-4580-bf28-322e180a5eec |
-|  | Ubuntu Server 18.04 LTS | 2717ec03-3a4d-4728-b372-183065facdba|
-| 韓国(坪村)リージョン | CentOS 7.8 | 5bb2452d-ee50-48e5-a9b1-ab6c2928fac3 |
-|  | Ubuntu Server 18.04 LTS | b2f577f7-9d5e-4ef8-a2e0-94991a1c2d58 |
+| 韓国(パンギョ)リージョン | CentOS 7.9 | 5ceda96d-480a-491e-a69c-7a2a12344aec |
+|  | Ubuntu Server 18.04.6 LTS | f3b876c0-7c3b-4cf0-b879-91c677457f98 |
+|  | Debian 11.5 Bullseye | 9dd53786-02f2-414b-b8ad-e082825e117f |
+| 韓国(坪村)リージョン | CentOS 7.9 | 2976678f-49fe-454b-a4d6-50712822c814 |
+|  | Ubuntu Server 18.04 LTS | 276b07d2-96f2-4048-aa90-3c921d9685f7 |
+|  | Debian 11.5 Bullseye | 24f40f7c-de69-456d-8a43-17fe7e5aa2c1 |
 
 
 
@@ -386,6 +388,7 @@ X-Auth-Token: {tokenId}
 > fixed_subnet帯域が以下のネットワーク帯域と重ならないように設定する必要があります。
 >  - 10.100.0.0/16
 >  - 10.254.0.0/16
+>  - 198.18.0.0/19
 
 <details><summary>例</summary>
 <p>
@@ -963,6 +966,114 @@ X-Auth-Token: {tokenId}
 #### レスポンス
 
 このAPIはレスポンス本文を返しません。
+
+---
+
+
+### ノードを停止する
+
+指定したノードリストを停止させます。
+
+```
+POST /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}/stop_node
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### リクエスト
+
+| 名前 | 種類 | 形式 | 必須 | 説明 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | トークンID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | ノードグループUUIDまたはノードグループ名 | 
+| node_list | Body | String | O | コロン(`:`)で区切られたノードインスタンスUUIDリスト |
+
+<details><summary>例</summary>
+<p>
+
+```json
+{
+    "node_list": "bdaa560c-7a30-4249-9438-2df27fa1e9d38:68ff49ee-4111-4212-8e9e-88835cb0ebaa"
+}
+```
+
+</p>
+</details>
+
+
+#### レスポンス
+
+| 名前 | 種類 | 形式 | 説明 |
+|---|---|---|---|
+| uuid | Body | UUID | ノードグループUUID |
+
+<details><summary>例</summary>
+<p>
+
+```json
+{
+    "uuid": "439aa682-398f-4061-a4d1-116da6b1154e"
+}
+```
+
+</p>
+</details>
+
+---
+
+### ノードを起動する
+
+指定したノードリストを起動させます。
+
+```
+POST /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}/start_node
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### リクエスト
+
+| 名前 | 種類 | 形式 | 必須 | 説明 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | トークンID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | ノードグループUUIDまたはノードグループ名 | 
+| node_list | Body | String | O | コロン(`:`)で区切られたノードインスタンスUUIDリスト |
+
+<details><summary>例</summary>
+<p>
+
+```json
+{
+    "node_list": "bdaa560c-7a30-4249-9438-2df27fa1e9d38"
+}
+```
+
+</p>
+</details>
+
+#### レスポンス
+
+| 名前 | 種類 | 形式 | 説明 |
+|---|---|---|---|
+| uuid | Body | UUID | ノードグループUUID |
+
+<details><summary>例</summary>
+<p>
+
+```json
+{
+    "uuid": "439aa682-398f-4061-a4d1-116da6b1154e"
+}
+```
+
+</p>
+</details>
 
 ---
 
