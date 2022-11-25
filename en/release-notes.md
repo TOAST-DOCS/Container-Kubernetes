@@ -8,7 +8,7 @@
     * Changes
         * NVDIA device plugin version changed from 450.156.00 to 450.191.01.
         * Docker version changed from 19.03 to 20.10.
-    * Image added
+    * Target Image
         * Ubuntu Server 18.04.6 LTS - Container (2022.11.22)
         * CentOS 7.9 - Container (2022.11.22)
 
