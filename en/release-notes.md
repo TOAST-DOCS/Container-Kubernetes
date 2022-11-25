@@ -18,8 +18,6 @@
 * Various types of load balancers can be created.
 * You can create a cluster name and node group name with up to 32 characters each.
 * Image added
-    * Debian 11.5 Bullseye - Container (2022.11.23)
-        * You can use an Debian worker image for cluster creation and node group creation.
     * Debian 11.5 Bullseye - Container (2022.11.22)
 
 ### September 27, 2022
