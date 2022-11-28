@@ -8,7 +8,7 @@ NHN Kubernetes Service(NKS)を使用するには、まずクラスターを作�
 
 | 項目 | 説明 |
 | --- | --- |
-| クラスター名 | Kubernetesクラスターの名前。32文字以内で小文字と数字、(-)のみ入力可能です。小文字で始まり、小文字または数字で終わる必要があります。 |
+| クラスター名 | Kubernetesクラスターの名前。32文字以内で小文字と数字、(-)のみ入力可能です。小文字で始まり、小文字または数字で終わる必要があります。RFC 4122標準のUUID形式は使用できません。 | |
 | Kubernetesのバージョン | 使用するKubernetesのバージョン |
 | VPC | クラスターに接続するVPCネットワーク |
 | サブネット | VPCに定義されたサブネットのうち、クラスターを構成するインスタンスに接続するサブネット |
@@ -90,7 +90,7 @@ NHN Kubernetes Service(NKS)は複数のバージョンをサポートしてい�
 | 項目 | 説明 |
 | --- | --- |
 | アベイラビリティゾーン | クラスターを構成するインスタンスを作成する領域 |
-| ノードグループ名 | 追加ノードグループの名前。32文字以内で小文字と数字、(-)のみ入力可能です。小文字で始まり、小文字または数字で終わる必要があります。 |
+| ノードグループ名 | 追加ノードグループの名前。32文字以内で小文字と数字、(-)のみ入力可能です。小文字で始まり、小文字または数字で終わる必要があります。RFC 4122標準のUUID形式は使用できません。 |
 | インスタンスタイプ | 追加ノードグループのインスタンス仕様 |
 | ノード数 | 追加ノードグループインスタンス数 |
 | キーペア | 追加ノードグループアクセスに使用するキーペア |
@@ -2765,12 +2765,12 @@ csi-driver-nfsはストレージクラスにnfsサーバー情報を提供する
 nfs-csi-driverを使用して複数のPVを構成する場合、nfs-csi-driverがNFSサーバー情報をStorageClassに登録してNFS-Provisoner podを構成する必要がありません。
 ![nfs-csi-driver-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nfs-csi-driver-02.png)
 
-1. csi-driver-nfsコンポーネントを含むgitプロジェクトをダウンロードします。
+##### 1. csi-driver-nfsコンポーネントを含むgitプロジェクトをダウンロードします。
 ```
 $ git clone https://github.com/kubernetes-csi/csi-driver-nfs.git
 ```
 
-2. csi-driver-nfsフォルダに移動し、**./deploy/install-driver.sh v4.1.0 local**コマンドを使用してcsi-driver-nfsコンポーネントをインストールします。 
+##### 2. csi-driver-nfsフォルダに移動し、**./deploy/install-driver.sh v4.1.0 local**コマンドを使用してcsi-driver-nfsコンポーネントをインストールします。 
 
 > [参考]
 > csi-driver-nfsインストールスクリプトの内部実行プロセスでkubectl applyコマンドが実行されます。したがって**kubectl**コマンドが正常に動作する状態でインストールが行われる必要があります。KUBECONFIG環境変数を使用する場合
@@ -2791,7 +2791,7 @@ daemonset.apps/csi-nfs-node created
 NFS CSI driver installed successfully.
 ```
 
-3. コンポーネントが正常にインストールされていることを確認します。
+##### 3. コンポーネントが正常にインストールされていることを確認します。
 ```
 $ kubectl get pods -n kube-system
 NAMESPACE     NAME                                         READY   STATUS    RESTARTS   AGE

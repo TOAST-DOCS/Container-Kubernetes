@@ -8,7 +8,7 @@ To use NHN Kubernetes Service (NKS), you must first create a cluster. Go to **Co
 
 | Item | Description |
 | --- | --- |
-| Cluster Name | Name of a Kubernetes cluster. It is limited to 20 characters, and only lowercase English letters, numbers, and '-' can be entered. It must start with a lowercase letter and end with a lowercase letter or number. |
+| Cluster Name | Name of a Kubernetes cluster. It is limited to 20 characters, and only lowercase English letters, numbers, and '-' can be entered. It must start with a lowercase letter and end with a lowercase letter or number. RFC 4122 compliant UUID formats cannot be used. |
 | Kubernetes Version | Kubernetes version to use |
 | VPC | VPC network to be attached to clusters |
 | Subnet | Subnet to be associated with instances that comprise a cluster, among those defined in VPC |
@@ -89,7 +89,7 @@ Along with a new cluster, a default node group is created, but more node groups 
 | Item | Description |
 | --- | --- |
 | Availability Zone | Area to create instances comprising a cluster |
-| Node Group Name | Name of an additional node group. It is limited to 20 characters, and only lowercase English letters, numbers, and '-' can be entered. It must start with a lowercase letter and end with a lowercase letter or number. |
+| Node Group Name | Name of an additional node group. It is limited to 20 characters, and only lowercase English letters, numbers, and '-' can be entered. It must start with a lowercase letter and end with a lowercase letter or number. RFC 4122 compliant UUID formats cannot be used.|
 | Flavor | Specifications of an instance for additional node group |
 | Node Count | Number of instances for additional node group |
 | Key Pair | Key pair to access additional node group |
