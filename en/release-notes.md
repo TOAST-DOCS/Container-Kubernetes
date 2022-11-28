@@ -1,5 +1,25 @@
 ## Container > NHN Kubernetes Service (NKS) > Release Notes
 
+### November 29, 2022
+
+#### Feature Updates
+
+* Image update
+    * Changes
+        * NVDIA device plugin version changed from 450.156.00 to 450.191.01.
+        * Docker version changed from 19.03 to 20.10.
+    * Target Image
+        * Ubuntu Server 18.04.6 LTS - Container (2022.11.22)
+        * CentOS 7.9 - Container (2022.11.22)
+
+#### Added Features
+
+* The start node/stop node features are available.
+* Various types of load balancers can be created.
+* You can create a cluster name and node group name with up to 32 characters each.
+* Image added
+    * Debian 11.5 Bullseye - Container (2022.11.22)
+
 ### September 27, 2022
 
 #### Added Features

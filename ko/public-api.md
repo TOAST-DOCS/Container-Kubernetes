@@ -54,10 +54,12 @@ GET /v2.0/networks?router:external=True
 
 | 리전 | 베이스 이미지 이름 | 베이스 이미지 UUID |
 |---|---|---|
-| 한국(판교) 리전 | CentOS 7.8 | 6013253a-50bf-4580-bf28-322e180a5eec |
-|  | Ubuntu Server 18.04 LTS | 2717ec03-3a4d-4728-b372-183065facdba|
-| 한국(평촌) 리전 | CentOS 7.8 | 5bb2452d-ee50-48e5-a9b1-ab6c2928fac3 |
-|  | Ubuntu Server 18.04 LTS | b2f577f7-9d5e-4ef8-a2e0-94991a1c2d58 |
+| 한국(판교) 리전 | CentOS 7.9 | 5ceda96d-480a-491e-a69c-7a2a12344aec |
+|  | Ubuntu Server 18.04.6 LTS | f3b876c0-7c3b-4cf0-b879-91c677457f98 |
+|  | Debian 11.5 Bullseye | 9dd53786-02f2-414b-b8ad-e082825e117f |
+| 한국(평촌) 리전 | CentOS 7.9 | 2976678f-49fe-454b-a4d6-50712822c814 |
+|  | Ubuntu Server 18.04 LTS | 276b07d2-96f2-4048-aa90-3c921d9685f7 |
+|  | Debian 11.5 Bullseye | 24f40f7c-de69-456d-8a43-17fe7e5aa2c1 |
 
 ### 블록 스토리지 종류
 
@@ -382,6 +384,7 @@ X-Auth-Token: {tokenId}
 > fixed_subnet 대역이 아래 네트워크 대역과 겹치지 않도록 설정해야 합니다.
 >  - 10.100.0.0/16
 >  - 10.254.0.0/16
+>  - 198.18.0.0/19
 
 <details><summary>예시</summary>
 <p>
@@ -959,6 +962,113 @@ X-Auth-Token: {tokenId}
 #### 응답
 
 이 API는 응답 본문을 반환하지 않습니다.
+
+---
+
+### 노드 중지하기
+
+지정한 노드 목록을 중지시킵니다.
+
+```
+POST /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}/stop_node
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | 노드 그룹 UUID 또는 노드 그룹 이름 | 
+| node_list | Body | String | O | 콜론(`:`)으로 구분된 노드 인스턴스 UUID 목록 |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "node_list": "bdaa560c-7a30-4249-9438-2df27fa1e9d38:68ff49ee-4111-4212-8e9e-88835cb0ebaa"
+}
+```
+
+</p>
+</details>
+
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | UUID | 노드 그룹 UUID |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "439aa682-398f-4061-a4d1-116da6b1154e"
+}
+```
+
+</p>
+</details>
+
+---
+
+### 노드 시작하기
+
+지정한 노드 목록을 시작시킵니다.
+
+```
+POST /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}/start_node
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | 노드 그룹 UUID 또는 노드 그룹 이름 | 
+| node_list | Body | String | O | 콜론(`:`)으로 구분된 노드 인스턴스 UUID 목록 |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "node_list": "bdaa560c-7a30-4249-9438-2df27fa1e9d38"
+}
+```
+
+</p>
+</details>
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | UUID | 노드 그룹 UUID |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "439aa682-398f-4061-a4d1-116da6b1154e"
+}
+```
+
+</p>
+</details>
 
 ---
 
