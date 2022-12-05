@@ -1,5 +1,12 @@
 ## Container > NHN Kubernetes Service(NKS) > 릴리스 노트
 
+### 2022. 12. 27.
+
+#### 기능 추가
+
+* 이미지 추가
+    * Rocky Linux 8.6 - Container (2022.12)
+
 ### 2022. 11. 29.
 
 #### 기능 개선
