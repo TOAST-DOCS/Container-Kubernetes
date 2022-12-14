@@ -2536,7 +2536,7 @@ nfs-csi-driver를 사용하여 여러 개의 PV를 구성하는 경우 nfs-csi-d
 ![nfs-csi-driver-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nfs-csi-driver-02.png)
 
 > [참고]
-> csi-driver-nfs 설치 스크립트의 내부 실행 과정에서 kubectl apply 명령이 수행됩니다. 따라서 **kubectl** 명령어가 정상적으로 동작하는 상태에서 설치가 진행되어야 합니다.
+> csi-driver-nfs 설치 스크립트의 내부 실행 과정에서 kubectl apply 명령이 수행됩니다. 따라서 `kubectl` 명령어가 정상적으로 동작하는 상태에서 설치를 진행해야 합니다.
 
 ##### 1. 클러스터 설정 파일 절대경로를 환경 변수에 저장합니다.
 ```
