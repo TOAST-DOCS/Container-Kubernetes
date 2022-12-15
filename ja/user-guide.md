@@ -2771,8 +2771,6 @@ $ export KUBECONFIG={クラスタ設定ファイルの絶対パス}
 $ git clone https://github.com/kubernetes-csi/csi-driver-nfs.git
 ```
 
-
-
 ##### 3. csi-driver-nfsフォルダに移動し、**./deploy/install-driver.sh v4.1.0 local**コマンドを使用してcsi-driver-nfsコンポーネントをインストールします。 
 ```
 $ cd csi-driver-nfs
