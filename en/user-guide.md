@@ -2480,22 +2480,30 @@ For CentOS, you can install the nfs package with the command below.
 $ yum install -y nfs-utils
 ```
 
-#### csi-driver-nfs
+#### Install csi-driver-nfs
+To use the NHN Cloud NAS service, you must deploy the csi-driver-nfs components.
+
 csi-driver-nfs is a driver that supports dynamic provisioning of PVs, which works by creating new subdirectories on the nfs server. 
 csi-driver-nfs works by providing nfs server information to a storage class, reducing what users need to manage.
 
-If you use the existing method to configure multiple PVs, you need to configure an NFS-Provisioner pod for each PV to provide NFS server information. ![nfs-csi-driver-01.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nfs-csi-driver-01.png)
+If you configure multiple PVs using the nfs-csi-driver, the nfs-csi-driver registers the NFS server information in the StorageClass, removing the need to configure an NFS-Provisioner pod. 
+![nfs-csi-driver-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nfs-csi-driver-02.png)
 
-If you use nfs-csi-driver to configure multiple PVs, nfs-csi-driver registers NFS server information to StorageClass so you don't need to configure NFS-Provisoner pod. ![nfs-csi-driver-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nfs-csi-driver-02.png)
+> [Note]
+> During the internal execution of the csi-driver-nfs execution script, the kubectl apply command is perfomed. Therefore, the installation should proceed with the `kubectl` command operating normally.
 
-#### Install csi-driver-nfs
+##### 1. Save the absolute path of the cluster configuration file in an environment variable.
+```
+$ export KUBECONFIG={Absolute path of the cluster configruration file}
+```
 
-Download the git project containing the csi-driver-nfs components.
+##### 2. Download the git project that contains the csi-driver-nfs comnpontents.
 ```
 $ git clone https://github.com/kubernetes-csi/csi-driver-nfs.git
 ```
 
-After moving to the csi-driver-nfs folder, use the **./deploy/install-driver.sh v4.1.0 local** command to install the csi-driver-nfs component. Installation should proceed with the **kubectl** command operating normally.
+##### 3. After moving to the csi-driver-nfs folder, use the **./deploy/install-driver.sh v4.1.0 local** command to install the csi-driver-nfs component.
+
 ```
 $ cd csi-driver-nfs
 
@@ -2512,7 +2520,7 @@ daemonset.apps/csi-nfs-node created
 NFS CSI driver installed successfully.
 ```
 
-Check that the components are installed properly.
+#### 4. Check that the components are installed properly.
 ```
 $ kubectl get pods -n kube-system
 NAMESPACE     NAME                                         READY   STATUS    RESTARTS   AGE
