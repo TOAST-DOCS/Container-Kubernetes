@@ -2490,11 +2490,11 @@ If you configure multiple PVs using the nfs-csi-driver, the nfs-csi-driver regis
 ![nfs-csi-driver-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nfs-csi-driver-02.png)
 
 > [Note]
-> During the internal execution of the csi-driver-nfs execution script, the kubectl apply command is perfomed. Therefore, the installation should proceed with the `kubectl` command operating normally.
+> During the internal execution of the csi-driver-nfs execution script, the kubectl apply command is performed. Therefore, the installation should proceed with the `kubectl` command operating normally.
 
-##### 1. Save the absolute path of the cluster configuration file in an environment variable.
+##### 1. Save the absolute path of a cluster configuration file in an environment variable.
 ```
-$ export KUBECONFIG={Absolute path of the cluster configruration file}
+$ export KUBECONFIG={Absolute path of a cluster configruration file}
 ```
 
 ##### 2. Download the git project that contains the csi-driver-nfs comnpontents.
