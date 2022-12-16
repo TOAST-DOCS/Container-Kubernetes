@@ -2497,12 +2497,12 @@ If you configure multiple PVs using the nfs-csi-driver, the nfs-csi-driver regis
 $ export KUBECONFIG={Absolute path of a cluster configruration file}
 ```
 
-##### 2. Download the git project that contains the csi-driver-nfs comnpontents.
+##### 2. Download the git project containing the csi-driver-nfs components.
 ```
 $ git clone https://github.com/kubernetes-csi/csi-driver-nfs.git
 ```
 
-##### 3. After moving to the csi-driver-nfs folder, use the **./deploy/install-driver.sh v4.1.0 local** command to install the csi-driver-nfs component.
+##### 3. After moving to the csi-driver-nfs folder, use the **./deploy/install-driver.sh v4.1.0 local** command to install the csi-driver-nfs components.
 
 ```
 $ cd csi-driver-nfs
