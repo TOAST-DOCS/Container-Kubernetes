@@ -6,7 +6,7 @@
 ### 클러스터 생성
 NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해야 합니다.
 
-> [주의]
+> [주의] 클러스터 사용을 위한 권한 설정
 > 클러스터를 만들고자 하는 사용자는 대상 프로젝트에 대해 반드시 기본 인프라 서비스의 **Infrastructure ADMIN** 혹은 **Infrastructure LoadBalancer ADMIN** 권한을 가져야 합니다.
 > (Infrastructure ADMIN 혹은 Infrastructure LoadBalancer ADMIN 권한을 가진 상태에서 다른 권한을 추가로 갖는 것은 사용에 문제 없습니다.)
 > 해당 권한이 있어야 기본 인프라 서비스를 기반으로 하는 클러스터의 정상적인 생성 및 활용이 가능합니다.
