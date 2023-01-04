@@ -1706,6 +1706,15 @@ metadata:
       -----END RSA PRIVATE KEY-----
 ```
 
+#### 리스너 프록시 프로토콜(Proxy Protocol) 설정
+리스너 프로토콜이 TCP 혹은 HTTPS인 경우 리스너에 프록시 프로토콜을 설정할 수 있습니다. 프록시 프로토콜에 대한 자세한 내용은 [로드 밸런서 프록시 모드](/Network/Load%20Balancer/ko/overview/#_4)를 참고하세요.
+
+* 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/proxy-protocol 입니다.
+* 리스너별 설정을 적용할 수 있습니다.
+* 다음 중 하나로 설정할 수 있습니다.
+    * true: 프록시 프로토콜을 활성화합니다.
+    * false: 프록시 프로토콜을 비활성화합니다. 미설정 시 기본값입니다.
+
 #### 로드 밸런싱 방식 설정
 로드 밸런싱 방식을 설정할 수 있습니다.
 
