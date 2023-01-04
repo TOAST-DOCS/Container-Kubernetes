@@ -146,7 +146,7 @@ NKS의 워커 노드에서 dockerhub로부터 컨테이너 이미지를 내려�
 
 ### > 폐쇄망 환경에서 failed to pull image "k8s.gcr.io/pause:3.2" 가 발생합니다.
 
-폐쇄망 환경의 NKS는 Public registry로 부터 이미지를 받아오지 못하기 때문에 발생하는 문제입니다. "k8s.gcr.io/pause:3.2" 이미지 처럼 기본으로 배포되어있는 이미지는 워커 노드 생성 시 내부 레지스트리로 부터 pull 받습니다. 클러스터 생성 시 기본으로 배포되는 이미지 목록은 아래와 같습니다.
+폐쇄망 환경의 NKS는 Public registry로 부터 이미지를 받아오지 못하기 때문에 발생하는 문제입니다. "k8s.gcr.io/pause:3.2" 이미지 처럼 기본으로 배포되어있는 이미지는 워커 노드 생성 시 NHN Cloud 내부 레지스트리로 부터 pull 받습니다. 클러스터 생성 시 기본으로 배포되는 이미지 목록은 아래와 같습니다.
 * kubernetesui/dashboard
 * k8s.gcr.io/pause
 * k8s.gcr.io/kube-proxy
@@ -184,7 +184,7 @@ imageGCLowThresholdPercent : 80
 ```
 
 해결 방안은 다음과 같습니다.
-이미지 pull에 실패한 경우 아래 명령을 통해 내부 레지스트리에서 이미지를 pull 받을 수 있습니다. NKS 1.24.3 version 이상인 경우 docker가 아닌 nerdctl로 사용해야합니다.
+이미지 pull에 실패한 경우 아래 명령을 통해 NHN Cloud 내부 레지스트리에서 이미지를 pull 받을 수 있습니다. NKS 1.24.3 version 이상인 경우 docker가 아닌 nerdctl로 사용해야합니다.
 ```
 TARGET_IMAGE="failed to pull 발생한 image"
 INFRA_REGISTRY="harbor-kr1.cloud.toastoven.net/container_service/$(basename $TARGET_IMAGE)"
