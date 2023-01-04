@@ -143,8 +143,10 @@ NKS의 워커 노드에서 dockerhub로부터 컨테이너 이미지를 내려�
 * dockerhub에 로그인하면 이미지를 받을 수 있는 개수가 늘어나게 되고, 퍼블릭 IP에 의한 제한이 아닌 계정 등급별 제한을 받게 됩니다. dockerhub 계정을 만들어 원하는 pull 개수를 제공하는 Tier에 가입하고 NKS 를 이용합니다. [Kubernetes에서 Private Registry 사용 방법](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/) 을 참고하세요.
 * dockerhub에 로그인하지 않은 상황에서 독립적인 퍼블릭 IP에 의한 제약을 받고 싶은 경우, 워커 노드에 플로팅 IP를 할당합니다. 
 
+
 ### > 폐쇄망 환경에서 failed to pull image "k8s.gcr.io/pause:3.2" 가 발생합니다.
-폐쇄망 환경의 NKS는 Public registry로 부터 image를 받아오지 못하기 때문에 발생하는 문제입니다. "k8s.gcr.io/pause:3.2" image 처럼 default로 배포되어있는 image는 worker node 생성 시 내부 레지스트리로 부터 pull 받습니다. cluster 생성 시 default로 배포되는 image 목록은 아래와 같습니다.
+
+폐쇄망 환경의 NKS는 Public registry로 부터 이미지를 받아오지 못하기 때문에 발생하는 문제입니다. "k8s.gcr.io/pause:3.2" 이미지 처럼 기본으로 배포되어있는 이미지는 워커 노드 생성 시 내부 레지스트리로 부터 pull 받습니다. 클러스터 생성 시 기본으로 배포되는 이미지 목록은 아래와 같습니다.
 * kubernetesui/dashboard
 * k8s.gcr.io/pause
 * k8s.gcr.io/kube-proxy
@@ -173,17 +175,16 @@ NKS의 워커 노드에서 dockerhub로부터 컨테이너 이미지를 내려�
 * k8s.gcr.io/node-problem-detector/node-problem-detector
 * k8s.gcr.io/autoscaling/cluster-autoscaler
 * nvidia/k8s-device-plugin
-해당 image에 대해서 동일한 문제가 발생할 수 있습니다.
-default image는 kubelet의 Image garbage collection에 의해 삭제될 수 있습니다.
-kubelet garbage collection 관련 정보는 https://kubernetes.io/docs/concepts/architecture/garbage-collection/ 을 참고하세요.
-NKS의 경우 imageGCHighThresholdPercent, imageGCLowThresholdPercent가 default 값으로 설정되어있습니다.
+해당 이미지에 대해서 동일한 문제가 발생할 수 있습니다.
+
+기본 이미지는 kubelet의 Image garbage collection에 의해 삭제될 수 있습니다. kubelet garbage collection 관련 정보는 [Garbage Collection](https://kubernetes.io/docs/concepts/architecture/garbage-collection/)을 참고하세요. NKS의 경우 imageGCHighThresholdPercent, imageGCLowThresholdPercent가 기본값으로 설정되어있습니다.
 ```
 imageGCHighThresholdPercent : 85
 imageGCLowThresholdPercent : 80
 ```
+
 해결 방안은 다음과 같습니다.
-image pull에 실패한 경우 아래 명령을 통해 내부 레지스트리에서 image를 pull 받을 수 있습니다.
-NKS 1.24.3 version 이상인 경우 docker가 아닌 nerdctl로 사용해야합니다.
+이미지 pull에 실패한 경우 아래 명령을 통해 내부 레지스트리에서 이미지를 pull 받을 수 있습니다. NKS 1.24.3 version 이상인 경우 docker가 아닌 nerdctl로 사용해야합니다.
 ```
 TARGET_IMAGE="failed to pull 발생한 image"
 INFRA_REGISTRY="harbor-kr1.cloud.toastoven.net/container_service/$(basename $TARGET_IMAGE)"
