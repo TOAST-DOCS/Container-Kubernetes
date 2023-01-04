@@ -1357,10 +1357,11 @@ X-Auth-Token: {tokenId}
         "v1.18.19": false,
         "v1.19.13": false,
         "v1.20.12": false,
-        "v1.21.6": true,
+        "v1.21.6": false,
         "v1.22.3": true,
         "v1.23.3": true,
-        "v1.24.3": true
+        "v1.24.3": true,
+        "v1.25.4": true
     }
 }
 ```
