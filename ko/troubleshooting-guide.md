@@ -144,9 +144,9 @@ NKS의 워커 노드에서 dockerhub로부터 컨테이너 이미지를 내려�
 * dockerhub에 로그인하지 않은 상황에서 독립적인 퍼블릭 IP에 의한 제약을 받고 싶은 경우, 워커 노드에 플로팅 IP를 할당합니다. 
 
 
-### > 폐쇄망 환경에서 failed to pull image "k8s.gcr.io/pause:3.2" 가 발생합니다.
+### > 폐쇄망 환경에서 failed to pull image "k8s.gcr.io/pause:3.2"가 발생합니다.
 
-폐쇄망 환경의 NKS는 Public registry로 부터 이미지를 받아오지 못하기 때문에 발생하는 문제입니다. "k8s.gcr.io/pause:3.2" 이미지 처럼 기본으로 배포되어있는 이미지는 워커 노드 생성 시 NHN Cloud 내부 레지스트리로 부터 pull 받습니다. 클러스터 생성 시 기본으로 배포되는 이미지 목록은 아래와 같습니다.
+폐쇄망 환경의 NKS는 Public registry로부터 이미지를 받아 오지 못하기 때문에 발생하는 문제입니다. "k8s.gcr.io/pause:3.2" 이미지처럼 기본으로 배포되어 있는 이미지는 워커 노드 생성 시 NHN Cloud 내부 레지스트리로부터 pull 받습니다. 클러스터 생성 시 기본으로 배포되는 이미지 목록은 아래와 같습니다.
 * kubernetesui/dashboard
 * k8s.gcr.io/pause
 * k8s.gcr.io/kube-proxy
@@ -175,16 +175,16 @@ NKS의 워커 노드에서 dockerhub로부터 컨테이너 이미지를 내려�
 * k8s.gcr.io/node-problem-detector/node-problem-detector
 * k8s.gcr.io/autoscaling/cluster-autoscaler
 * nvidia/k8s-device-plugin
-해당 이미지에 대해서 동일한 문제가 발생할 수 있습니다.
+해당 이미지에 대해 동일한 문제가 발생할 수 있습니다.
 
-기본 이미지는 kubelet의 Image garbage collection에 의해 삭제될 수 있습니다. kubelet garbage collection 관련 정보는 [Garbage Collection](https://kubernetes.io/docs/concepts/architecture/garbage-collection/)을 참고하세요. NKS의 경우 imageGCHighThresholdPercent, imageGCLowThresholdPercent가 기본값으로 설정되어있습니다.
+기본 이미지는 kubelet의 Image garbage collection에 의해 삭제될 수 있습니다. kubelet garbage collection 관련 정보는 [Garbage Collection](https://kubernetes.io/docs/concepts/architecture/garbage-collection/)을 참고하세요. NKS의 경우 imageGCHighThresholdPercent, imageGCLowThresholdPercent가 기본값으로 설정되어 있습니다.
 ```
 imageGCHighThresholdPercent : 85
 imageGCLowThresholdPercent : 80
 ```
 
 해결 방안은 다음과 같습니다.
-이미지 pull에 실패한 경우 아래 명령을 통해 NHN Cloud 내부 레지스트리에서 이미지를 pull 받을 수 있습니다. NKS 1.24.3 version 이상인 경우 docker가 아닌 nerdctl로 사용해야합니다.
+이미지 pull에 실패한 경우 아래 명령을 통해 NHN Cloud 내부 레지스트리에서 이미지를 pull 받을 수 있습니다. NKS 1.24.3 version 이상인 경우 docker가 아닌 nerdctl로 사용해야 합니다.
 ```
 TARGET_IMAGE="failed to pull 발생한 image"
 INFRA_REGISTRY="harbor-kr1.cloud.toastoven.net/container_service/$(basename $TARGET_IMAGE)"
