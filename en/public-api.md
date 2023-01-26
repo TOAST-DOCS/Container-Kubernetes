@@ -963,9 +963,116 @@ This API does not return a response body.
 
 ---
 
-### Get Autoscaler Configuration of a Node Group
+### Stop a Node Group
 
-Retrieves the autoscaler configuration of a node group.
+Stops the specified node group.
+
+```
+POST /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}/stop_node
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### Request
+
+| Name | Type | Format | Required | Description |
+|---|---|---|---|---|
+| tokenId | Header | String | O | Token ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | Node group UUID or node group name | 
+| node_list | Body | String | O | List of UUIDs of node instances separated by colon (`:`) |
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "node_list": "bdaa560c-7a30-4249-9438-2df27fa1e9d38:68ff49ee-4111-4212-8e9e-88835cb0ebaa"
+}
+```
+
+</p>
+</details>
+
+
+#### Response
+
+| Name | Type | Format | Description |
+|---|---|---|---|
+| uuid | Body | UUID | Node Group UUID |
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "uuid": "439aa682-398f-4061-a4d1-116da6b1154e"
+}
+```
+
+</p>
+</details>
+
+---
+
+### Start a Node
+
+Start the specified node list.
+
+```
+POST /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}/start_node
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### Request
+
+| Name | Type | Format | Required | Description |
+|---|---|---|---|---|
+| tokenId | Header | String | O | Token ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | Node group UUID or node group name | 
+| node_list | Body | String | O | List of UUIDs of node instances separated by colon (`:`) |
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "node_list": "bdaa560c-7a30-4249-9438-2df27fa1e9d38"
+}
+```
+
+</p>
+</details>
+
+#### Response
+
+| Name | Type | Format | Description |
+|---|---|---|---|
+| uuid | Body | UUID | Node Group UUID |
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "uuid": "439aa682-398f-4061-a4d1-116da6b1154e"
+}
+```
+
+</p>
+</details>
+
+---
+
+### View Autoscaler Configuration of a Node Group
+
+Views the autoscaler configuration of a node group.
 
 ```
 GET /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}/autoscale
@@ -1248,11 +1355,11 @@ This API does not require a request body.
         "v1.18.19": false,
         "v1.19.13": false,
         "v1.20.12": false,
-        "v1.21.6": true,
+        "v1.21.6": false,
         "v1.22.3": true,
-        "v1.23.3": true
         "v1.23.3": true,
-        "v1.24.3": true
+        "v1.24.3": true,
+        "v1.25.4": true
     }
 }
 ```

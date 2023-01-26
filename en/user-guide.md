@@ -4,7 +4,16 @@
 Cluster refers to a group of instances that comprise user's Kubernetes.
 
 ### Creating Clusters
-To use NHN Kubernetes Service (NKS), you must first create a cluster. Go to **Container > NHN Kubernetes Service (NKS)** and click **Create Cluster**, and a page for creating clusters shows up. The following items are required to create a cluster:
+To use NHN Kubernetes Service (NKS), you must create clusters first.
+
+> [Caution] Setting up permissions to use clusters<br>
+> To create a cluster, the user must have **Infrastructure ADMIN** or **Infrastructure LoadBalancer ADMIN** permissions of basic infrastructure services for the project.
+Only with the permissions, the user can normally create and operate clusters running on basic infrastructure services. It is totally possible to add one of the two permissions when the other is already acquired.
+To learn more about setting up permissions, see [Manage Project Members](/TOAST/ko/console-guide/#_22).
+If there is some change to the permissions (permissions added or deleted) that were set up when creating a cluster, some features of the cluster may be restricted.
+For more information, see [Change Cluster OWNER](./user-guide/#_4).
+
+Go to **Container > NHN Kubernetes Service(NKS)** and click **Create Cluster** and a page for creating clusters shows up. The following items are required to create a cluster.
 
 | Item | Description |
 | --- | --- |
@@ -34,10 +43,11 @@ NHN Kubernetes Service (NKS) supports several versions of Kubernetes. Some featu
 | v1.18.19 | Unavailable | Available |
 | v1.19.13 | Unavailable | Available |
 | v1.20.12 | Unavailable | Available |
-| v1.21.6 | Available | Available |
+| v1.21.6 | Unavailable | Available |
 | v1.22.3 | Available | Available |
 | v1.23.3 | Available | Available |
 | v1.24.3 | Available | Available |
+|  | Available | Available |
 
 
 Enter information as required and click **Create Cluster**, and a cluster begins to be created. You can check the status from the list of clusters. It takes about 10 minutes to create; more time may be required depending on the cluster configuration.
@@ -57,7 +67,59 @@ A newly created cluster can be found in the **Container > NHN Kubernetes Service
 | Configuration File | Download button of configuration file required to access cluster for operation |
 
 ### Deleting Clusters
-Select a cluster to delete, and click **Delete Clusters** and it is deleted. It takes about 5 minutes to delete; more time may be required depending on the cluster status.
+Select a cluster to delete, and click **Delete Clusters** and it is deleted. It takes about 5 minutes to delete. More time may be required depending on the cluster status.
+
+### Change Cluster OWNER
+> [Notes]
+The cluster OWNER is set to the user who created the cluster, but can be changed to other user when required.
+
+The cluster operates based on the [OWNER permission](./user-guide/#_1) set when it is created.
+The permission is used in integrating with Kubernetes and NHN Cloud basic infrastructure services.
+Basic infrastructure services used by Kubernetes are as follows.
+
+| Basic Infrastructure Service | Kubernetes Integration |
+| --- | --- |
+| Compute | Use Instance service when scaling out or in worker nodes through Kubernetes Cluster Auto Scaler |
+| Network | Use Load Balancer and Floating IP services when creating Kubernetes Load Balancer service. |
+| Storage | Use Block Storage service when creating Kubernetes Persistent Volume |
+
+If any of the following situations occur during operation, basic infrastructure services cannot be used in Kubernetes.
+
+| Situation | Cause |
+| --- | --- |
+| Cluster OWNER departure from the project | Project member removal due to cluster OWNER resignation or manual project member removal  |
+| Change to cluster OWNER permissions | Permissions added or deleted after the cluster is created |
+
+When there is a problem in operating clusters and the clusters cannot be normalized through member and permission setup due to the above reasons, you can perform normalization by changing the cluster OWNER in the NKS console.
+How to change the cluster OWNER is as follows.
+
+> [Notes]
+The user who changes the cluster OWNER in the console becomes a new cluster OWNER. 
+The cluster after changing the cluster OWNER operates based on the new OWNER permission.
+
+![handover.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/handover.png)
+
+1. Click **Change Cluster Owner**.
+2. Specify an owner and cluster to change.
+    * Specify the current owner to choose the cluster to change.
+    * Select a cluster to change from the listed clusters.
+    * Specify a key pair to use when creating a new worker node.
+3. Click **Confirm** to continue to change the owner.
+4. Check the status of the cluster to be changed.
+    * Check the progress of the task for the cluster specified from the listed clusters in the NKS console.
+    * The status of cluster where changing OWNER is in progress is HANDOVER_IN_PROGRESS, and when the change completes, the status turns to HANDOVER_COMPLETE.
+        * All node groups under the cluster also turn to the HANDOVER_* status.  
+    * When there is a problem with the change, the status is converted to HANDOVER_FAILED, and it is not allowed to change cluster configuration until normalization completes.
+        * In this status, the **Retry** button is shown next to the status icon.
+        * To normalize the cluster status, click **Retry** and specifiy a key pair and click **Confirm**.
+
+> [Caution] Change cluster OWNER and key pair<br>
+> **Key pair resources** of NHN Cloud basic infrastructure services are dependent on specific users and cannot be shared with other users.
+(separate from the PEM file downloaded after generating the key pair in the NHN Cloud console)
+Therefore, the key pair resource specified when creating the cluster must also be newly designated to belong to the new OWNER when the cluster OWNER is changed.<br>
+> You can connect to the worker nodes (instances) created after changing the cluster OWNER using the newly specified key pair (PEM file).
+However, you still need the key pair (PEM file) of the existing OWNER to connect to the worker nodes created before the OWNER change.
+Therefore, even if the OWNER is changed, the existing key pair (PEM file) must be well managed at the project manager level.
 
 ## Node Group
 A node group is comprised of worker node instances that comprise a Kubernetes.
@@ -1090,7 +1152,9 @@ All network interfaces of a worker node are assigned an IP address through a DHC
     * Configuration item for metric value: RouteMetric in DHCP section
 
 > [Note] 
-The metric value for each default route is determined when the default route is set. Therefore, the changed settings will take effect at the time of setting the next default route. To change the metric value for each route currently applied to the system, refer to `Change Metric Value for the Current Route` below.
+> The metric value for each default route is determined when the default route is set. 
+> Therefore, the changed settings will take effect at the time of setting the next default route. 
+> To change the metric value for each route currently applied to the system, refer to `Change Metric Value for the Current Route` below.
 
 ##### 2. Change Metric Value for the Current Route
 
@@ -1595,6 +1659,15 @@ metadata:
       u6X+8zlOYDOoS2BuG8d2brfKBLu3As5VAcAPLcJhE//3IVaZHxod
       -----END RSA PRIVATE KEY-----
 ```
+
+#### Set the listener proxy protocol
+When the listener protocol is TCP or HTTPS, you set the proxy protocol to the listener. For more information on proxy protocol, see [Load Balancer Proxy Mode](/Network/Load%20Balancer/ko/overview/#_4)
+
+* The setting location is loadbalancer.nhncloud/listener-protocol under .metadata.annotations.
+* Per-listener settings can be applied.
+* It can be set to one of the following:
+    * true: Enable the proxy protocol.
+    * false: Disable the proxy protocol. Default when not set.
 
 #### Set the load balancing method
 You can set the load balancing method.
