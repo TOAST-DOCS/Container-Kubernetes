@@ -142,3 +142,53 @@ NKSのワーカーノードでdockerhubからコンテナイメージをダウ�
 解決策は次のとおりです。
 * dockerhubにログインすると、イメージを受け取ることができる数が増え、パブリックIPによる制限ではなくアカウント等級に基づいて制限を受けます。dockerhubアカウントを作成し、必要なpull数を提供するTierに加入してNKSを利用します。 [KubernetesでPrivate Registryを使用する方法](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)を参照してください。
 * dockerhubにログインしていない状況で独立したパブリックIPによる制約を受けたい場合は、ワーカーノードにFloating IPを割り当てます。
+
+
+### > 閉鎖ネットワーク環境でfailed to pull image "k8s.gcr.io/pause:3.2"が発生します。
+
+閉鎖ネットワーク環境のNKSはPublic registryからイメージを取得できないため発生する問題です。 "k8s.gcr.io/pause:3.2"イメージのようにデフォルトで配布されているイメージはワーカーノード作成時、NHN Cloud内部レジストリからpullします。クラスタ作成時にデフォルトで配布されるイメージリストは次のとおりです。
+* kubernetesui/dashboard
+* k8s.gcr.io/pause
+* k8s.gcr.io/kube-proxy
+* kubernetesui/dashboard
+* kubernetesui/metrics-scraper
+* quay.io/coreos/flannel
+* quay.io/coreos/flannel-cni
+* docker.io/calico/kube-controllers
+* docker.io/calico/typha
+* docker.io/calico/cni
+* docker.io/calico/node
+* coredns/coredns
+* k8s.gcr.io/metrics-server-amd64
+* k8s.gcr.io/metrics-server/metrics-server
+* gcr.io/google_containers/cluster-proportional-autoscaler-amd64
+* k8s.gcr.io/cpa/cluster-proportional-autoscaler-amd64
+* k8s.gcr.io/cpa/cluster-proportional-autoscaler-amd64
+* k8s.gcr.io/sig-storage/csi-attacher
+* k8s.gcr.io/sig-storage/csi-provisioner
+* k8s.gcr.io/sig-storage/csi-snapshotter
+* k8s.gcr.io/sig-storage/csi-resizer
+* k8s.gcr.io/sig-storage/csi-node-driver-registrar
+* k8s.gcr.io/sig-storage/snapshot-controller
+* docker.io/k8scloudprovider/cinder-csi-plugin
+* k8s.gcr.io/node-problem-detector
+* k8s.gcr.io/node-problem-detector/node-problem-detector
+* k8s.gcr.io/autoscaling/cluster-autoscaler
+* nvidia/k8s-device-plugin
+該当イメージに対して同じ問題が発生する可能性があります。
+
+基本イメージはkubeletのImage garbage collectionによって削除されることがあります。 kubelet garbage collection関連情報は[Garbage Collection](https://kubernetes.io/docs/concepts/architecture/garbage-collection/)をご覧ください。NKSの場合、imageGCHighThresholdPercent, imageGCLowThresholdPercentがデフォルト値に設定されています。
+```
+imageGCHighThresholdPercent : 85
+imageGCLowThresholdPercent : 80
+```
+
+解決策は次のとおりです。
+イメージpullに失敗した場合、次のコマンドを使用してNHN Cloud内部レジストリからイメージをpullできます。NKS 1.24.3 version以上の場合はdockerではなくnerdctlとして使用する必要があります。
+```
+TARGET_IMAGE="failed to pullが発生したimage"
+INFRA_REGISTRY="harbor-kr1.cloud.toastoven.net/container_service/$(basename $TARGET_IMAGE)"
+docker pull $INFRA_REGISTRY
+docker tag $INFRA_REGISTRY $TARGET_IMAGE
+docker rmi $INFRA_REGISTRY
+```

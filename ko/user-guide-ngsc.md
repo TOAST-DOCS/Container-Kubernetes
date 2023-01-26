@@ -4,7 +4,16 @@
 클러스터는 사용자의 Kubernetes를 구성하는 인스턴스들의 그룹입니다.
 
 ### 클러스터 생성
-NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해야 합니다. **Container > NHN Kubernetes Service(NKS)** 페이지에서 **클러스터 생성** 버튼을 클릭하면 클러스터 생성 페이지가 나타납니다. 클러스터 생성에 필요한 항목은 다음과 같습니다.
+NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해야 합니다.
+
+> [주의] 클러스터 사용을 위한 권한 설정<br>
+> 클러스터를 만들고자 하는 사용자는 대상 프로젝트에 대해 반드시 기본 인프라 서비스의 **Infrastructure ADMIN** 또는 **Infrastructure LoadBalancer ADMIN** 권한을 가져야 합니다.
+> 해당 권한이 있어야만 기본 인프라 서비스를 기반으로 하는 클러스터를 정상적으로 생성하고 활용할 수 있으며, 이 중 하나의 권한을 가진 상태에서 다른 권한이 추가되는 것은 사용에 문제가 없습니다.
+> 권한 설정에 대해서는 [프로젝트 멤버 관리](/TOAST/ko/console-guide-ngsc/#_22)를 참고하세요.
+> 클러스터 생성 시점의 권한 설정 내역이 차후 변경(임의의 권한 추가 혹은 삭제)될 경우 클러스터의 일부 기능 사용에 제한이 있을 수 있습니다.
+> 이에 대한 자세한 내용은 [클러스터 OWNER 변경](./user-guide-ngsc/#_4)을 참고하세요.
+
+**Container > NHN Kubernetes Service(NKS)** 페이지에서 **클러스터 생성**을 클릭하면 클러스터 생성 페이지가 나타납니다. 클러스터 생성에 필요한 항목은 다음과 같습니다.
 
 | 항목 | 설명 |
 | --- | --- |
@@ -33,7 +42,7 @@ NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전�
 | v1.23.3 | 가능 | 가능 |
 
 
-필요한 정보를 입력하고 **클러스터 생성** 버튼을 클릭하면 클러스터 생성이 시작됩니다. 클러스터 목록에서 상태를 확인할 수 있습니다. 생성하는 데는 약 10분 정도 걸립니다. 클러스터 설정에 따라 더 오래 걸릴 수도 있습니다.
+필요한 정보를 입력하고 **클러스터 생성**을 클릭하면 클러스터 생성이 시작됩니다. 클러스터 목록에서 상태를 확인할 수 있습니다. 생성하는 데는 약 10분 정도 걸립니다. 클러스터 설정에 따라 더 오래 걸릴 수도 있습니다.
 
 
 ### 클러스터 조회
@@ -50,7 +59,58 @@ NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전�
 | 설정 파일 | 클러스터에 접근해 조작하기 위해 필요한 설정 파일 다운로드 버튼 |
 
 ### 클러스터 삭제
-삭제할 클러스터를 선택하고 **클러스터 삭제** 버튼을 클릭하면 삭제가 진행됩니다. 삭제하는 데는 약 5분 정도 걸립니다. 클러스터의 상태에 따라 더 오래 걸릴 수도 있습니다.
+삭제할 클러스터를 선택하고 **클러스터 삭제**를 클릭하면 삭제가 진행됩니다. 삭제하는 데는 약 5분 정도 걸립니다. 클러스터의 상태에 따라 더 오래 걸릴 수도 있습니다.
+
+### 클러스터 OWNER 변경
+> [참고]
+> 기본적으로 클러스터 OWNER는 클러스터를 생성한 사용자를 의미하지만, 상황에 따라 다른 사용자로 변경 가능합니다.
+
+클러스터는 생성 시점의 [OWNER 권한](./user-guide-ngsc/#_1)을 기반으로 동작합니다.
+해당 권한은 Kubernetes와 NHN Cloud 기본 인프라 서비스의 연동 과정에서 사용됩니다.
+Kubernetes에서 사용하는 기본 인프라 서비스는 다음과 같습니다.
+
+| 기본 인프라 서비스 | Kubernetes와의 연동 |
+| --- | --- |
+| Compute | Kubernetes 클러스터 오토스케일러를 통한 워커 노드 증설 혹은 감축 시 Instance 서비스 사용 |
+| Network | Kubernetes LoadBalancer 서비스 생성 시 Load Balancer 및 Floating IP 서비스 사용 |
+| Storage | Kubernetes 퍼시스턴트 볼륨 생성 시 Block Storage 서비스 사용 |
+
+동작 중 아래와 같은 상황이 발생할 경우 Kubernetes에서 기본 인프라 서비스를 사용할 수 없게 됩니다.
+
+| 상황 | 사례 |
+| --- | --- |
+| 프로젝트에서 클러스터 OWNER 이탈 | 클러스터 OWNER의 퇴사로 인한 프로젝트 멤버 제거 혹은 인위적 프로젝트 멤버 제거  |
+| 클러스터 OWNER의 권한 변경 | 클러스터 생성 시점 이후 임의의 권한 추가 혹은 삭제 |
+
+위와 같은 이유로 클러스터 운용에 문제가 발생하고, 멤버나 권한 설정을 통해 정상화할 수 없을 경우 NKS 콘솔의 클러스터 OWNER 변경 기능을 이용해 정상화할 수 있습니다.
+클러스터 OWNER 변경 기능 사용법은 다음과 같습니다.
+
+> [참고] 콘솔에서 클러스터 OWNER 변경 작업을 수행하는 사용자가 대상 클러스터의 새로운 OWNER가 됩니다.
+> OWNER 변경 작업 완료 이후의 클러스터는 새로운 OWNER의 권한을 기반으로 동작합니다.
+
+![handover.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/handover.png)
+
+1. **클러스터 오너 변경**을 클릭합니다.
+2. 변경 대상 오너 및 클러스터를 지정합니다.
+    * 변경 대상 클러스터를 특정하기 위한 현재의 오너를 지정합니다.
+    * 노출된 클러스터 목록에서 변경 대상을 선택합니다.
+    * 신규 워커 노드 생성 시 사용할 자신의 키 페어를 지정합니다.
+3. 오너 변경을 진행하려면 **확인**을 클릭합니다.
+4. 변경 대상 클러스터의 상태를 확인합니다.
+    * NKS 콘솔의 클러스터 목록에서 지정한 클러스터들에 대한 작업 진행 상태를 확인합니다.
+    * OWNER 변경 작업 진행 중인 클러스터의 상태는 HANDOVER_IN_PROGRESS이며, 정상적으로 완료된 경우 HANDOVER_COMPLETE 상태로 전환됩니다.
+        * 해당 클러스터 하위의 모든 노드 그룹도 HANDOVER_* 상태로 전환됩니다.  
+    * 작업에 문제가 발생한 경우에는 HANDOVER_FAILED 상태로 전환되며, 정상화 전까지 클러스터 형상 변경 작업(노드 추가 등)은 허용되지 않습니다.
+        * 이와 같은 상태의 클러스터에는 상태 아이콘 옆에 **재시도** 버튼이 노출됩니다.
+        * 클러스터 상태 정상화를 위해 **재시도**를 클릭하고, 키 페어를 지정한 뒤 **확인**을 클릭합니다.
+
+> [주의] 클러스터 OWNER 변경과 키 페어<br>
+> NHN Cloud 기본 인프라 서비스의 **키 페어 리소스**는 특정 사용자에게 종속되며, 다른 사용자와 공유할 수 없습니다.
+> (NHN Cloud 콘솔에서 키 페어 생성 후 다운로드한 PEM 파일과는 별개)
+> 따라서 클러스터를 생성할 때 지정된 키 페어 리소스 또한 클러스터 OWNER 변경 시 신규 OWNER의 것으로 새롭게 지정해야 합니다.<br>
+> 클러스터 OWNER 변경 후 생성된 워커 노드(인스턴스)에는 새롭게 지정된 키 페어(PEM 파일)를 이용해 접속할 수 있습니다.
+> 하지만 OWNER 변경 전에 만들어진 워커 노드에 접속하려면 여전히 기존 OWNER의 키 페어(PEM 파일)가 필요합니다.
+> 따라서 OWNER를 변경하더라도 기존 키 페어(PEM 파일)는 프로젝트 관리자 수준에서 잘 관리해 주셔야 합니다.
 
 ## 노드 그룹
 노드 그룹은 Kubernetes를 구성하는 워커 노드 인스턴스들의 그룹입니다.
@@ -1769,7 +1829,7 @@ service "tea-svc" deleted
 ![ingress-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/ingress-02.png)
 
 #### 서비스와 파드 생성
-[URI 기반 서비스 분기](/Container/NKS/ko/user-guide/#uri)와 동일한 매니페스트를 이용해 서비스와 파드를 생성합니다.
+[URI 기반 서비스 분기](/Container/NKS/ko/user-guide-ngsc/#uri)와 동일한 매니페스트를 이용해 서비스와 파드를 생성합니다.
 
 #### 인그레스 생성
 호스트 이름에 따라 서비스를 연결하는 인그레스 매니페스트를 작성합니다. `tea.cafe.example.com` 호스트로 들어온 요청은 `tea-svc` 서비스에 연결하고 `coffee.cafe.example.com` 호스트로 들어온 요청은 `coffee-svc` 서비스에 연결합니다.
@@ -1891,7 +1951,7 @@ Events:            <none>
 
 #### LoadBalancer 서비스 객체로 변경
 
-`LoadBalancer` 유형으로 서비스 객체를 변경하면 클러스터 외부에 NHN Cloud Load Balancer가 생성되고, 로드 밸런서와 서비스 객체와 연결됩니다. 로드 밸런서와 연결된 서비스 객체를 조회하면 **EXTERNAL-IP** 필드에 로드 밸런서의 IP가 표시됩니다. `LoadBalancer` 유형의 서비스 객체에 대한 설명은 [LoadBalancer 서비스](/Container/NKS/ko/user-guide/#loadbalancer)를 참고하세요. 아래 그림은 `LoadBalancer` 유형의 서비스를 이용해 대시보드를 외부에 공개하는 구조를 나타냅니다.
+`LoadBalancer` 유형으로 서비스 객체를 변경하면 클러스터 외부에 NHN Cloud Load Balancer가 생성되고, 로드 밸런서와 서비스 객체와 연결됩니다. 로드 밸런서와 연결된 서비스 객체를 조회하면 **EXTERNAL-IP** 필드에 로드 밸런서의 IP가 표시됩니다. `LoadBalancer` 유형의 서비스 객체에 대한 설명은 [LoadBalancer 서비스](/Container/NKS/ko/user-guide-ngsc/#loadbalancer)를 참고하세요. 아래 그림은 `LoadBalancer` 유형의 서비스를 이용해 대시보드를 외부에 공개하는 구조를 나타냅니다.
 
 ![dashboard-01.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-01.png)
 
@@ -1915,18 +1975,18 @@ kubernetes-dashboard   LoadBalancer   10.254.95.176   123.123.123.81   443:30963
 > 생성된 로드 밸런서는 **Network > Load Balancer** 페이지에서 확인할 수 있습니다.
 > 로드 밸런서의 IP는 외부에서 접근할 수 있는 플로팅 IP입니다. **Network > Floating IP** 페이지에서 확인할 수 있습니다.
 
-웹 브라우저에서 `https://{EXTERNAL-IP}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 엑세스 토큰](/Container/NKS/ko/user-guide/#_49)을 참고하세요.
+웹 브라우저에서 `https://{EXTERNAL-IP}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 엑세스 토큰](/Container/NKS/ko/user-guide-ngsc/#_49)을 참고하세요.
 
 > [참고]
 > Kubernetes 대시보드는 자동 생성되는 사설 인증서를 사용하기 때문에 웹 브라우저의 종류와 보안 설정에 따라 안전하지 않은 페이지로 표시될 수 있습니다.
 
 #### 인그레스(Ingress)를 이용한 서비스 공개
 
-인그레스는 클러스터 내부의 여러 서비스들로 접근하기 위한 라우팅을 제공하는 네트워크 객체입니다. 인그레스 객체의 설정은 인그래스 컨트롤러로 구동됩니다. `kubernetes-dashboard` 서비스 객체를 인그레스를 통해 공개할 수 있습니다. 인그레스와 인그레스 컨트롤러에 대한 설명은 [인그레스 컨트롤러](/Container/NKS/ko/user-guide/#_42)를 참고하세요. 아래 그림은 인그레스를 통해 대시보드를 외부에 공개하는 구조를 나타냅니다.
+인그레스는 클러스터 내부의 여러 서비스들로 접근하기 위한 라우팅을 제공하는 네트워크 객체입니다. 인그레스 객체의 설정은 인그래스 컨트롤러로 구동됩니다. `kubernetes-dashboard` 서비스 객체를 인그레스를 통해 공개할 수 있습니다. 인그레스와 인그레스 컨트롤러에 대한 설명은 [인그레스 컨트롤러](/Container/NKS/ko/user-guide-ngsc/#_42)를 참고하세요. 아래 그림은 인그레스를 통해 대시보드를 외부에 공개하는 구조를 나타냅니다.
 
 ![dashboard-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-02.png)
 
-[NGINX Ingress Controller 설치](/Container/NKS/ko/user-guide/#nginx-ingress-controller)를 참고해 `NGINX Ingress Controller`를 설치하고 다음과 같이 인그레스 객체 생성을 위한 매니페스트를 작성합니다.
+[NGINX Ingress Controller 설치](/Container/NKS/ko/user-guide-ngsc/#nginx-ingress-controller)를 참고해 `NGINX Ingress Controller`를 설치하고 다음과 같이 인그레스 객체 생성을 위한 매니페스트를 작성합니다.
 
 ```yaml
 # kubernetes-dashboard-ingress-tls-passthrough.yaml
@@ -1969,7 +2029,7 @@ NAME                    CLASS   HOSTS   ADDRESS          PORTS     AGE
 k8s-dashboard-ingress   nginx   *       123.123.123.44   80, 443   34s
 ```
 
-웹 브라우저에서 `https://{ADDRESS}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 엑세스 토큰](/Container/NKS/ko/user-guide/#_49)을 참고하세요.
+웹 브라우저에서 `https://{ADDRESS}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 엑세스 토큰](/Container/NKS/ko/user-guide-ngsc/#_49)을 참고하세요.
 
 ### 대시보드 엑세스 토큰
 Kubernetes 대시보드에 로그인하려면 토큰이 필요합니다. 토큰은 다음 명령으로 얻을 수 있습니다.
