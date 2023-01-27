@@ -45,10 +45,11 @@ NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전�
 | v1.18.19 | 불가능 | 가능 |
 | v1.19.13 | 불가능 | 가능 |
 | v1.20.12 | 불가능 | 가능 |
-| v1.21.6 | 가능 | 가능 |
+| v1.21.6 | 불가능 | 가능 |
 | v1.22.3 | 가능 | 가능 |
 | v1.23.3 | 가능 | 가능 |
 | v1.24.3 | 가능 | 가능 |
+| v1.25.4 | 가능 | 가능 |
 
 
 필요한 정보를 입력하고 **클러스터 생성**을 클릭하면 클러스터 생성이 시작됩니다. 클러스터 목록에서 상태를 확인할 수 있습니다. 생성하는 데는 약 10분 정도 걸립니다. 클러스터 설정에 따라 더 오래 걸릴 수도 있습니다.
@@ -1415,7 +1416,6 @@ spec:
     * shared: '일반' 타입의 로드 밸런서를 생성합니다. 미설정 시 기본값입니다.
     * dedicated: '전용' 타입의 로드 밸런서를 생성합니다.
 
-
 #### 세션 지속성 설정
 로드 밸런서의 세션 지속성을 설정할 수 있습니다.
 
@@ -1623,6 +1623,15 @@ metadata:
       u6X+8zlOYDOoS2BuG8d2brfKBLu3As5VAcAPLcJhE//3IVaZHxod
       -----END RSA PRIVATE KEY-----
 ```
+
+#### 리스너 프록시 프로토콜(Proxy Protocol) 설정
+리스너 프로토콜이 TCP 혹은 HTTPS인 경우 리스너에 프록시 프로토콜을 설정할 수 있습니다. 프록시 프로토콜에 대한 자세한 내용은 [로드 밸런서 프록시 모드](/Network/Load%20Balancer/ko/overview/#_4)를 참고하세요.
+
+* 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/proxy-protocol입니다.
+* 리스너별 설정을 적용할 수 있습니다.
+* 다음 중 하나로 설정할 수 있습니다.
+    * true: 프록시 프로토콜을 활성화합니다.
+    * false: 프록시 프로토콜을 비활성화합니다. 미설정 시 기본값입니다.
 
 #### 로드 밸런싱 방식 설정
 로드 밸런싱 방식을 설정할 수 있습니다.
@@ -2383,6 +2392,7 @@ persistentvolumeclaim/pvc-dynamic   Bound    pvc-1056949c-bc67-45cc-abaa-1d1bd9e
 > [주의]
 > 동적 프로비저닝으로 생성된 블록 스토리지는 웹 콘솔에서 삭제할 수 없습니다. 또한 클러스터를 삭제할 때 자동으로 삭제되지 않습니다. 따라서 클러스터를 삭제하기 전에 PVC를 모두 삭제해야 합니다. PVC를 삭제하지 않고 클러스터를 삭제하면 과금될 수 있습니다. 동적 프로비저닝을 생성된 PV의 reclaimPolicy는 기본적으로 `Delete`로 설정되기 때문에 PVC만 삭제해도 PV와 블록 스토리지가 삭제됩니다.
 
+
 ### 파드에 PVC 마운트
 
 파드에 PVC를 마운트하려면 파드 매니페스트에 마운트 정보를 정의해야 합니다. `spec.volumes.persistenVolumeClaim.claimName`에 사용할 PVC 이름을 입력합니다. 그리고 `spec.containers.volumeMounts.mountPath`에 마운트할 경로를 입력합니다.
@@ -2431,7 +2441,6 @@ Filesystem      Size  Used Avail Use% Mounted on
 ```
 
 NHN Cloud 웹 콘솔 **Storage > Block Storage** 서비스 페이지에서도 블록 스토리지의 연결 정보를 확인할 수 있습니다.
-
 
 ### 볼륨 확장
 PersistentVolumeClaim (PVC) 개체를 편집하여 기존 볼륨의 크기를 조정할 수 있습니다. PVC 개체의 **spec.resources.requests.storage**항목의 수정을 통해 볼륨 사이즈를 변경할 수 있습니다. 볼륨 축소는 지원되지 않습니다. 볼륨 확장 기능을 사용하기 위해서는 StorageClass의 **allowVolumeExpansion** 속성이 **True**여야 합니다.
