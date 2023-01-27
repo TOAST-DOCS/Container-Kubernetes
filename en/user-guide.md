@@ -185,6 +185,41 @@ Nodes can be deleted from operating node groups. The current list of nodes will 
 * [Safe node drain](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)
 * [Manual node management](https://kubernetes.io/docs/concepts/architecture/nodes/#manual-node-administration)
 
+### Stop and start node
+Nodes can be stopped from node groups and started again. The current list of nodes will appear upon clicking the node list tab on the node group information query page. Nodes can be stopped when a user selects nodes and click the stop button. The stopped nodes can be restarted when the user select them and click the start button.
+
+#### Action process
+
+시작 상태의 노드를 중지하면 다음의 순서로 동작합니다.
+
+* 해당 노드가 drain 됩니다.
+* 해당 노드가 Kubernetes 노드 자원에서 삭제됩니다.
+* 해당 노드를 인스턴스 수준에서 SHUTDOWN 상태로 만듭니다.
+
+중지 상태의 노드를 시작하면 다음의 순서로 동작합니다.
+* 해당 노드를 인스턴스 수준에서 ACTIVE 상태로 만듭니다.
+* 해당 노드가 Kubernetes 노드 자원에 다시 추가됩니다.
+
+
+#### 제약사항
+
+노드 중지와 시작 기능은 다음의 제약사항이 있습니다.
+
+* 시작 상태의 노드를 중지할 수 있고, 중지 상태의 노드를 시작할 수 있습니다.
+* 워커 노드 그룹 내의 모든 노드를 중지할 수는 없습니다.
+* 오토 스케일러가 활성화된 노드 그룹은 노드를 중지할 수 없습니다.
+* 중지된 노드가 존재하는 노드 그룹은 오토 스케일러를 활성화할 수 없습니다.
+* 중지된 노드가 존재하는 노드 그룹은 업그레이드를 할 수 없습니다.
+
+
+#### 상태 표시
+
+노드의 상태에 따라 노드 목록 탭의 상태 아이콘이 표시됩니다. 아이콘 색상별 상태는 다음과 같습니다.
+
+* 초록색: 시작 상태의 노드
+* 회색: 중지 상태의 노드
+* 빨간색: 비정상 상태의 노드
+
 ### Using a GPU node group 
 When you need to run GPU-based workloads through Kubernetes, you can create a node group composed of GPU instances.
 Select the `g2` type when selecting a flavor while creating the clusters or node groups to create a GPU node group.
@@ -1448,6 +1483,21 @@ When this manifest is applied, the per-listener settings are set as shown in the
 > All setting values for the features below must be entered in string format. In the YAML file input format, to enter in string format regardless of the input value, enclose the input value in double quotation marks ("). For more information about the YAML file format, see [Yaml Cookbook](https://yaml.org/YAML_for_ruby.html).
 >
 
+#### Set load balancer type
+You can set the load balancer type. For more information, see [Load Balancer Console User Guide](/Network/Load%20Balancer/en/console-guide/).
+
+* The setting location is loadbalancer.nhncloud/loadbalancer-type under .metadata.annotations.
+* **Per-listener settings cannot be applied.**
+* It can be set to one of the following:
+    * shared: A load balancer in the 'regular' type is created. Default value when not set.
+    * dedicated: A load balancer in the ‘dedicated’ type is created.
+    * physical_basic: A load balancer in the 'physical basic' type is created.
+    * physical_premium: A load balancer in the 'physical premium' type is created.
+
+> [Caution]
+> Physical load balancer is only provided in Korea (Pyeongchon) region.
+> You cannot attach physical load balancers to floating IPs. Instead, a public IP that is automatically assigned when creating the physical load balancer is used as an IP to receive traffic targeted for balancing. This public IP is shown as a service IP in the console.
+> For the above characteristics, you cannot see the exact status of the load balancer (including the associated floating IP) through Kubernetes service objects. Please check the status of physical load balancers in the console.
 
 #### Set the session affinity
 You can set the session affinity for the load balancer.
