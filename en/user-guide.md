@@ -190,35 +190,34 @@ Nodes can be stopped from node groups and started again. The current list of nod
 
 #### Action process
 
-시작 상태의 노드를 중지하면 다음의 순서로 동작합니다.
+When you stop a node that is started, the node operates in the following order.
 
-* 해당 노드가 drain 됩니다.
-* 해당 노드가 Kubernetes 노드 자원에서 삭제됩니다.
-* 해당 노드를 인스턴스 수준에서 SHUTDOWN 상태로 만듭니다.
+* The node is drained
+* The node is deleted from Kubernetes node resources.
+* Turn the node into the SHUTDOWN status at the instance level.
 
-중지 상태의 노드를 시작하면 다음의 순서로 동작합니다.
-* 해당 노드를 인스턴스 수준에서 ACTIVE 상태로 만듭니다.
-* 해당 노드가 Kubernetes 노드 자원에 다시 추가됩니다.
-
-
-#### 제약사항
-
-노드 중지와 시작 기능은 다음의 제약사항이 있습니다.
-
-* 시작 상태의 노드를 중지할 수 있고, 중지 상태의 노드를 시작할 수 있습니다.
-* 워커 노드 그룹 내의 모든 노드를 중지할 수는 없습니다.
-* 오토 스케일러가 활성화된 노드 그룹은 노드를 중지할 수 없습니다.
-* 중지된 노드가 존재하는 노드 그룹은 오토 스케일러를 활성화할 수 없습니다.
-* 중지된 노드가 존재하는 노드 그룹은 업그레이드를 할 수 없습니다.
+If you start a stopped node, it operates in the following order.
+* The node becomes the ACTIVE status at the instance level.
+* The node is added to Kubernetes node resources again.
 
 
-#### 상태 표시
+#### Constraints
 
-노드의 상태에 따라 노드 목록 탭의 상태 아이콘이 표시됩니다. 아이콘 색상별 상태는 다음과 같습니다.
+Stop and start node feature has the following constraints.
 
-* 초록색: 시작 상태의 노드
-* 회색: 중지 상태의 노드
-* 빨간색: 비정상 상태의 노드
+* You can stop a node that is started, and can start a stopped node.
+* You cannot stop all nodes from the worker node group.
+* Nodes cannot be stopped from node groups on which autoscaler is enabled.
+* Autoscaler cannot be enabled when the node group contains stopped nodes.
+* You cannot upgrade node groups that contain stopped nodes.
+
+#### Display status
+
+The status icon is displayed according to the node status on the node list tab. The status colors are as follows.
+
+* Green: A node in the start status
+* Gray: A node in the stop status
+* Red: A node in the abnormal status
 
 ### Using a GPU node group 
 When you need to run GPU-based workloads through Kubernetes, you can create a node group composed of GPU instances.
