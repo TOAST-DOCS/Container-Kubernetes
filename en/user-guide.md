@@ -200,7 +200,6 @@ If you start a stopped node, it operates in the following order.
 * The node becomes the ACTIVE status at the instance level.
 * The node is added to Kubernetes node resources again.
 
-
 #### Constraints
 
 Stop and start node feature has the following constraints.
