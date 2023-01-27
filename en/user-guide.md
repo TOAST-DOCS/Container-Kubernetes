@@ -185,6 +185,39 @@ Nodes can be deleted from operating node groups. The current list of nodes will 
 * [Safe node drain](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)
 * [Manual node management](https://kubernetes.io/docs/concepts/architecture/nodes/#manual-node-administration)
 
+### Stop and start node
+Nodes can be stopped from node groups and started again. The current list of nodes will appear upon clicking the node list tab on the node group information query page. Nodes can be stopped when a user selects nodes and click the stop button. The stopped nodes can be restarted when the user select them and click the start button.
+
+#### Action process
+
+When you stop a node that is started, the node operates in the following order.
+
+* The node is drained
+* The node is deleted from Kubernetes node resources.
+* Turn the node into the SHUTDOWN status at the instance level.
+
+If you start a stopped node, it operates in the following order.
+* The node becomes the ACTIVE status at the instance level.
+* The node is added to Kubernetes node resources again.
+
+#### Constraints
+
+Stop and start node feature has the following constraints.
+
+* You can stop a node that is started, and can start a stopped node.
+* You cannot stop all nodes from the worker node group.
+* Nodes cannot be stopped from node groups on which autoscaler is enabled.
+* Autoscaler cannot be enabled when the node group contains stopped nodes.
+* You cannot upgrade node groups that contain stopped nodes.
+
+#### Display status
+
+The status icon is displayed according to the node status on the node list tab. The status colors are as follows.
+
+* Green: A node in the start status
+* Gray: A node in the stop status
+* Red: A node in the abnormal status
+
 ### Using a GPU node group 
 When you need to run GPU-based workloads through Kubernetes, you can create a node group composed of GPU instances.
 Select the `g2` type when selecting a flavor while creating the clusters or node groups to create a GPU node group.
@@ -1448,6 +1481,21 @@ When this manifest is applied, the per-listener settings are set as shown in the
 > All setting values for the features below must be entered in string format. In the YAML file input format, to enter in string format regardless of the input value, enclose the input value in double quotation marks ("). For more information about the YAML file format, see [Yaml Cookbook](https://yaml.org/YAML_for_ruby.html).
 >
 
+#### Set load balancer type
+You can set the load balancer type. For more information, see [Load Balancer Console User Guide](/Network/Load%20Balancer/en/console-guide/).
+
+* The setting location is loadbalancer.nhncloud/loadbalancer-type under .metadata.annotations.
+* **Per-listener settings cannot be applied.**
+* It can be set to one of the following:
+    * shared: A load balancer in the 'regular' type is created. Default value when not set.
+    * dedicated: A load balancer in the ‘dedicated’ type is created.
+    * physical_basic: A load balancer in the 'physical basic' type is created.
+    * physical_premium: A load balancer in the 'physical premium' type is created.
+
+> [Caution]
+> Physical load balancer is only provided in Korea (Pyeongchon) region.
+> You cannot attach physical load balancers to floating IPs. Instead, a public IP that is automatically assigned when creating the physical load balancer is used as an IP to receive traffic targeted for balancing. This public IP is shown as a service IP in the console.
+> For the above characteristics, you cannot see the exact status of the load balancer (including the associated floating IP) through Kubernetes service objects. Please check the status of physical load balancers in the console.
 
 #### Set the session affinity
 You can set the session affinity for the load balancer.
