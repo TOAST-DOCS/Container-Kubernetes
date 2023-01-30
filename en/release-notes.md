@@ -9,6 +9,7 @@
 * Kubernetes v1.25.4 is supported.
 * Kubernetes v1.21.6 is no longer supported when creating clusters. But, clusters in use are not affected.
 * Proxy protocol can be set for the listener of load balancer.
+
 * You can create physical load balancers.
 
 ### December 27, 2022
