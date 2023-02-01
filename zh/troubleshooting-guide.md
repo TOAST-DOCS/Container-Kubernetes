@@ -142,3 +142,52 @@ In the case of pulling container images from dockerhub on the worker node of NKS
 The solutions are as follows:
 * If you log in to dockerhub, the number of images you can download increases, and you are limited by account level, not by public IP. Create a dockerhub account, sign up for a tier that provides the desired number of pulls, and use NKS. See [How to use a Private Registry with Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/).
 * If you want to be limited by an independent public IP without logging in to dockerhub, assign a floating IP to the worker node. 
+
+### > Failed to pull image "k8s.gcr.io/pause:3.2" occurs in a closed network environment.
+
+This problem occurs because NKS in a closed network environment cannot receive images from public registries. Images distributed by default, such as the "k8s.gcr.io/pause:3.2" image, are pulled from NHN Cloud's internal registry when creating a worker node. The list of images distributed by default when creating a cluster is as follows:
+* kubernetesui/dashboard
+* k8s.gcr.io/pause
+* k8s.gcr.io/kube-proxy
+* kubernetesui/dashboard
+* kubernetesui/metrics-scraper
+* quay.io/coreos/flannel
+* quay.io/coreos/flannel-cni
+* docker.io/calico/kube-controllers
+* docker.io/calico/typha
+* docker.io/calico/cni
+* docker.io/calico/node
+* coredns/coredns
+* k8s.gcr.io/metrics-server-amd64
+* k8s.gcr.io/metrics-server/metrics-server
+* gcr.io/google_containers/cluster-proportional-autoscaler-amd64
+* k8s.gcr.io/cpa/cluster-proportional-autoscaler-amd64
+* k8s.gcr.io/cpa/cluster-proportional-autoscaler-amd64
+* k8s.gcr.io/sig-storage/csi-attacher
+* k8s.gcr.io/sig-storage/csi-provisioner
+* k8s.gcr.io/sig-storage/csi-snapshotter
+* k8s.gcr.io/sig-storage/csi-resizer
+* k8s.gcr.io/sig-storage/csi-node-driver-registrar
+* k8s.gcr.io/sig-storage/snapshot-controller
+* docker.io/k8scloudprovider/cinder-csi-plugin
+* k8s.gcr.io/node-problem-detector
+* k8s.gcr.io/node-problem-detector/node-problem-detector
+* k8s.gcr.io/autoscaling/cluster-autoscaler
+* nvidia/k8s-device-plugin
+The same problem can occur for the image.
+
+Base images can be deleted by kubelet's Image garbage collection. For more information on kubelet garbage, see [Garbage Collection](https://kubernetes.io/docs/concepts/architecture/garbage-collection/). For NKS, imageGCHighThresholdPercent, imageGCLowThresholdPercent are set by default.
+```
+imageGCHighThresholdPercent : 85
+imageGCLowThresholdPercent : 80
+```
+
+The solutions are as follows.
+If the image pull fails, you can pull the image from the NHN Cloud internal registry using the command below. For NKS 1.24.3 version or higher, you must use nerdctl, not docker.
+```
+TARGET_IMAGE="image with failed to pull occurred"
+INFRA_REGISTRY="harbor-kr1.cloud.toastoven.net/container_service/$(basename $TARGET_IMAGE)"
+docker pull $INFRA_REGISTRY
+docker tag $INFRA_REGISTRY $TARGET_IMAGE
+docker rmi $INFRA_REGISTRY
+```

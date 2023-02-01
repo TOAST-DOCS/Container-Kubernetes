@@ -1,5 +1,52 @@
 ## Container > NHN Kubernetes Service (NKS) > Release Notes
 
+### January 31, 2023
+
+#### Added Features
+
+* Added a feature to change cluster OWNER.
+    * For more details, see [User Guide](/Container/NKS/zh/user-guide/#_4).
+* Kubernetes v1.25.4 is supported.
+* Kubernetes v1.21.6 is no longer supported when creating clusters. But, clusters in use are not affected.
+* Proxy protocol can be set for the listener of load balancer.
+
+* You can create physical load balancers.
+
+### December 27, 2022
+
+#### Added Features
+
+* Image added
+    * Rocky Linux 8.6 - Container (2022.12)
+
+### November 29, 2022
+
+#### Feature Updates
+
+* Image update
+    * Changes
+        * NVDIA device plugin version changed from 450.156.00 to 450.191.01.
+        * Docker version changed from 19.03 to 20.10.
+    * Target Image
+        * Ubuntu Server 18.04.6 LTS - Container (2022.11.22)
+        * CentOS 7.9 - Container (2022.11.22)
+
+#### Added Features
+
+* The start node/stop node features are available.
+* Various types of load balancers can be created.
+* You can create a cluster name and node group name with up to 32 characters each.
+* Image added
+    * Debian 11.5 Bullseye - Container (2022.11.22)
+
+### September 27, 2022
+
+#### Added Features
+
+* Added support for Kubernetes v1.24.3.
+* Kubernetes v1.20.12 is no longer supported for cluster creation. However, the clusters in use are not affected.
+
+
 ### July 26, 2022
 
 #### Added Features
