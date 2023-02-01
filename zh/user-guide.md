@@ -4,11 +4,20 @@
 Cluster refers to a group of instances that comprise user's Kubernetes.
 
 ### Creating Clusters
-To use NHN Kubernetes Service (NKS), you must first create a cluster. Go to **Container > NHN Kubernetes Service (NKS)** and click **Create Cluster**, and a page for creating clusters shows up. The following items are required to create a cluster:
+To use NHN Kubernetes Service (NKS), you must create clusters first.
+
+> [Caution] Setting up permissions to use clusters<br>
+> To create a cluster, the user must have **Infrastructure ADMIN** or **Infrastructure LoadBalancer ADMIN** permissions of basic infrastructure services for the project.
+Only with the permissions, the user can normally create and operate clusters running on basic infrastructure services. It is totally possible to add one of the two permissions when the other is already acquired.
+To learn more about setting up permissions, see [Manage Project Members](/TOAST/ko/console-guide/#_22).
+If there is some change to the permissions (permissions added or deleted) that were set up when creating a cluster, some features of the cluster may be restricted.
+For more information, see [Change Cluster OWNER](./user-guide/#_4).
+
+Go to **Container > NHN Kubernetes Service(NKS)** and click **Create Cluster** and a page for creating clusters shows up. The following items are required to create a cluster.
 
 | Item | Description |
 | --- | --- |
-| Cluster Name | Name of a Kubernetes cluster. It is limited to 20 characters, and only lowercase English letters, numbers, and '-' can be entered. It must start with a lowercase letter and end with a lowercase letter or number. |
+| Cluster Name | Name of a Kubernetes cluster. It is limited to 20 characters, and only lowercase English letters, numbers, and '-' can be entered. It must start with a lowercase letter and end with a lowercase letter or number. RFC 4122 compliant UUID formats cannot be used. |
 | Kubernetes Version | Kubernetes version to use |
 | VPC | VPC network to be attached to clusters |
 | Subnet | Subnet to be associated with instances that comprise a cluster, among those defined in VPC |
@@ -19,6 +28,12 @@ To use NHN Kubernetes Service (NKS), you must first create a cluster. Go to **Co
 | Key Pair | Key pair to access default node group |
 | Block Storage Type | Type of block storage for a default node group instance |
 | Block Storage Size | Size of block storage for a default node group instance |
+| Additional Network | Additional network and subnet to create in a default worker node group |
+
+> [Caution] 
+When creating a cluster, make sure that the subnet range does not overlap the network range.
+>  - 10.100.0.0/16
+>  - 10.254.0.0/16
 
 NHN Kubernetes Service (NKS) supports several versions of Kubernetes. Some features may be restricted depending on the version.
 
@@ -27,10 +42,12 @@ NHN Kubernetes Service (NKS) supports several versions of Kubernetes. Some featu
 | v1.17.6 | Unavailable | Available |
 | v1.18.19 | Unavailable | Available |
 | v1.19.13 | Unavailable | Available |
-| v1.20.12 | Available | Available |
-| v1.21.6 | Available | Available |
+| v1.20.12 | Unavailable | Available |
+| v1.21.6 | Unavailable | Available |
 | v1.22.3 | Available | Available |
 | v1.23.3 | Available | Available |
+| v1.24.3 | Available | Available |
+| v1.25.4 | Available | Available |
 
 
 Enter information as required and click **Create Cluster**, and a cluster begins to be created. You can check the status from the list of clusters. It takes about 10 minutes to create; more time may be required depending on the cluster configuration.
@@ -50,7 +67,59 @@ A newly created cluster can be found in the **Container > NHN Kubernetes Service
 | Configuration File | Download button of configuration file required to access cluster for operation |
 
 ### Deleting Clusters
-Select a cluster to delete, and click **Delete Clusters** and it is deleted. It takes about 5 minutes to delete; more time may be required depending on the cluster status.
+Select a cluster to delete, and click **Delete Clusters** and it is deleted. It takes about 5 minutes to delete. More time may be required depending on the cluster status.
+
+### Change Cluster OWNER
+> [Notes]
+The cluster OWNER is set to the user who created the cluster, but can be changed to other user when required.
+
+The cluster operates based on the [OWNER permission](./user-guide/#_1) set when it is created.
+The permission is used in integrating with Kubernetes and NHN Cloud basic infrastructure services.
+Basic infrastructure services used by Kubernetes are as follows.
+
+| Basic Infrastructure Service | Kubernetes Integration |
+| --- | --- |
+| Compute | Use Instance service when scaling out or in worker nodes through Kubernetes Cluster Auto Scaler |
+| Network | Use Load Balancer and Floating IP services when creating Kubernetes Load Balancer service. |
+| Storage | Use Block Storage service when creating Kubernetes Persistent Volume |
+
+If any of the following situations occur during operation, basic infrastructure services cannot be used in Kubernetes.
+
+| Situation | Cause |
+| --- | --- |
+| Cluster OWNER departure from the project | Project member removal due to cluster OWNER resignation or manual project member removal  |
+| Change to cluster OWNER permissions | Permissions added or deleted after the cluster is created |
+
+When there is a problem in operating clusters and the clusters cannot be normalized through member and permission setup due to the above reasons, you can perform normalization by changing the cluster OWNER in the NKS console.
+How to change the cluster OWNER is as follows.
+
+> [Notes]
+The user who changes the cluster OWNER in the console becomes a new cluster OWNER. 
+The cluster after changing the cluster OWNER operates based on the new OWNER permission.
+
+![handover.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/handover.png)
+
+1. Click **Change Cluster Owner**.
+2. Specify an owner and cluster to change.
+    * Specify the current owner to choose the cluster to change.
+    * Select a cluster to change from the listed clusters.
+    * Specify a key pair to use when creating a new worker node.
+3. Click **Confirm** to continue to change the owner.
+4. Check the status of the cluster to be changed.
+    * Check the progress of the task for the cluster specified from the listed clusters in the NKS console.
+    * The status of cluster where changing OWNER is in progress is HANDOVER_IN_PROGRESS, and when the change completes, the status turns to HANDOVER_COMPLETE.
+        * All node groups under the cluster also turn to the HANDOVER_* status.  
+    * When there is a problem with the change, the status is converted to HANDOVER_FAILED, and it is not allowed to change cluster configuration until normalization completes.
+        * In this status, the **Retry** button is shown next to the status icon.
+        * To normalize the cluster status, click **Retry** and specifiy a key pair and click **Confirm**.
+
+> [Caution] Change cluster OWNER and key pair<br>
+> **Key pair resources** of NHN Cloud basic infrastructure services are dependent on specific users and cannot be shared with other users.
+(separate from the PEM file downloaded after generating the key pair in the NHN Cloud console)
+Therefore, the key pair resource specified when creating the cluster must also be newly designated to belong to the new OWNER when the cluster OWNER is changed.<br>
+> You can connect to the worker nodes (instances) created after changing the cluster OWNER using the newly specified key pair (PEM file).
+However, you still need the key pair (PEM file) of the existing OWNER to connect to the worker nodes created before the OWNER change.
+Therefore, even if the OWNER is changed, the existing key pair (PEM file) must be well managed at the project manager level.
 
 ## Node Group
 A node group is comprised of worker node instances that comprise a Kubernetes.
@@ -82,12 +151,13 @@ Along with a new cluster, a default node group is created, but more node groups 
 | Item | Description |
 | --- | --- |
 | Availability Zone | Area to create instances comprising a cluster |
-| Node Group Name | Name of an additional node group. It is limited to 20 characters, and only lowercase English letters, numbers, and '-' can be entered. It must start with a lowercase letter and end with a lowercase letter or number. |
+| Node Group Name | Name of an additional node group. It is limited to 20 characters, and only lowercase English letters, numbers, and '-' can be entered. It must start with a lowercase letter and end with a lowercase letter or number. RFC 4122 compliant UUID formats cannot be used.|
 | Flavor | Specifications of an instance for additional node group |
 | Node Count | Number of instances for additional node group |
 | Key Pair | Key pair to access additional node group |
 | Block Storage Type | Type of block storage of instance for additional node group |
 | Block Storage Size | Size of block storage of instance for additional node group |
+| Additional Network | Additional network and subnet to create in a default worker node group |
 
 Enter information as required and click **Create Node Groups**, and a node group begins to be created. You may check status from the list of node groups. It takes about 5 minutes to create; more time may be required depending on the node group setting.
 
@@ -114,6 +184,39 @@ Nodes can be deleted from operating node groups. The current list of nodes will 
 
 * [Safe node drain](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)
 * [Manual node management](https://kubernetes.io/docs/concepts/architecture/nodes/#manual-node-administration)
+
+### Stop and start node
+Nodes can be stopped from node groups and started again. The current list of nodes will appear upon clicking the node list tab on the node group information query page. Nodes can be stopped when a user selects nodes and click the stop button. The stopped nodes can be restarted when the user select them and click the start button.
+
+#### Action process
+
+When you stop a node that is started, the node operates in the following order.
+
+* The node is drained
+* The node is deleted from Kubernetes node resources.
+* Turn the node into the SHUTDOWN status at the instance level.
+
+If you start a stopped node, it operates in the following order.
+* The node becomes the ACTIVE status at the instance level.
+* The node is added to Kubernetes node resources again.
+
+#### Constraints
+
+Stop and start node feature has the following constraints.
+
+* You can stop a node that is started, and can start a stopped node.
+* You cannot stop all nodes from the worker node group.
+* Nodes cannot be stopped from node groups on which autoscaler is enabled.
+* Autoscaler cannot be enabled when the node group contains stopped nodes.
+* You cannot upgrade node groups that contain stopped nodes.
+
+#### Display status
+
+The status icon is displayed according to the node status on the node list tab. The status colors are as follows.
+
+* Green: A node in the start status
+* Gray: A node in the stop status
+* Red: A node in the abnormal status
 
 ### Using a GPU node group 
 When you need to run GPU-based workloads through Kubernetes, you can create a node group composed of GPU instances.
@@ -717,7 +820,6 @@ You can register a user script when creating clusters and additional node groups
     * A user script entered when creating clusters is applied to the default worker node group.
     * A user script entered when creating additional node groups is applied to the corresponding worker node group.
     * **The content of a user script cannot be changed after the worker node group is created.**
-        * Note, what is changed in a user script applies to the nodes created after the change of the user script.
 * Script execution time
     * A user script is executed during the instance initialization process while initializing the worker node.
     * After the user script has been executed, it sets and registers the instance as the worker node of the 'worker node group'.
@@ -733,6 +835,7 @@ You can register a user script when creating clusters and additional node groups
 The features of a new version of user script are included in the node groups created after July 26, 2022. The following features are found in the new version.
 
 * **You can change the user script content after the worker node group is created.**
+    * However, the changes are applied only to nodes created after the user script change. 
 * The script execution records are stored in the following location.
     * Script exit code: `/var/log/userscript_v2.exitcode`
     * Standard output and standard error streams of scrip: `/var/log/userscript_v2.output`
@@ -1044,7 +1147,98 @@ To find out more about safely evicting pods, see [Safely Drain a Node](https://k
 If the versions match after upgrading the versions of the master and all worker node groups, the system pod which runs for Kubernetes cluster configuration will be upgraded.
 
 > [Caution]
-> If you do not upgrade the worker node group after upgrading the master, some pods might not work properly.
+If you do not upgrade the worker node group after upgrading the master, some pods might not work properly.
+
+## Manage Worker Node
+
+### Manage Container
+
+#### Clusters of Kubernetes v1.24.3 or older
+Clusters of Kubernetes v1.24.3 or older use Docker to comprise the container runtime. In the worker node, you can use the docker CLI to view the container status and the container image. For more details and usage on the docker CLI, see [Use the Docker command line](https://docs.docker.com/engine/reference/commandline/cli/).
+
+#### Clusters of Kubernetes v1.24.3 and later
+
+Clusters of Kubernetes v1.24.3 or later use containerd to comprise the container runtime. In the worker node, you can use nerdctl instead of the docker CLI to view the container status and the container image. For more details and usage on nerdctl, see [nerdctl: Docker-compatible CLI for containerd](https://github.com/containerd/nerdctl#nerdctl-docker-compatible-cli-for-containerd).
+
+
+### Manage Network
+
+#### Default Network Interface
+Every worker node has a network interface that connects to the VPC/subnet entered when creating the cluster. This default network interface is named "eth0", and worker nodes connect to the master through this network interface.
+
+#### Additional Network Interface
+If you set additional networks when creating a cluster or worker node group, additional network interfaces are created on the worker nodes of that worker node group. Additional network interfaces are named eth1, eth2, ... in the order entered in the additional network settings.
+
+#### Default Route Settings
+If multiple network interfaces exist on a worker node, a default route is set for each network interface. If multiple default routes are set on a system, the default route with the lowest metric value acts as the system default route. Default routes per network interface have lower metric values for smaller interface numbers. This causes the smallest numbered network interface among active network interfaces to act as the system default route.
+
+To set the system default route as an additional network interface, the following tasks are required. 
+
+##### 1. Change Metric Settings per Network Interface
+All network interfaces of a worker node are assigned an IP address through a DHCP server. Set the default route for each network interface when an IP address is assigned from a DHCP server. At this time, the metric value of each default route is preset for each interface. The storage location and setting items for each Linux distribution are as follows.
+
+* CentOS
+    * Configuration file location: /etc/sysconfig/network-scripts/ifcfg-{network interface name}
+    * Configuration item for metric value: METRIC
+* Ubuntu
+    * Configuration file location: /etc/systemd/network/toastcloud-{network interface name}.network
+    * Configuration item for metric value: RouteMetric in DHCP section
+
+> [Note] 
+> The metric value for each default route is determined when the default route is set. 
+> Therefore, the changed settings will take effect at the time of setting the next default route. 
+> To change the metric value for each route currently applied to the system, refer to `Change Metric Value for the Current Route` below.
+
+##### 2. Change Metric Value for the Current Route
+
+To change the system default route, you can adjust the metric value of the default route for each network interface. The following is an example of adjusting the metric value of each default route using the route command.
+
+Below is the state before running the task. You can find that the smaller interface number has the lower metric value.
+```
+# route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         10.0.0.1        0.0.0.0         UG    0      0        0 eth0
+0.0.0.0         192.168.0.1     0.0.0.0         UG    100    0        0 eth1
+0.0.0.0         172.16.0.1      0.0.0.0         UG    200    0        0 eth2
+...
+```
+
+To set eth1 as the system default route, change the metric value for eth1 to 0 and the metric value for eth0 to 100. Since you can't just change the metric value, you must delete the route and add it again. First, delete the route of eth0 and set the metric value for eth0 to 100.
+
+```
+# route del -net 0.0.0.0/0 dev eth0
+# route add -net 0.0.0.0/0 gw 10.0.0.1 dev eth0 metric 100
+```
+
+Also delete the route of eth1 first, and set the metric value for eth1 to 0. 
+```
+# route del -net 0.0.0.0/0 dev eth1
+# route add -net 0.0.0.0/0 gw 192.168.0.1 dev eth1 metric 0
+```
+
+When you look up the route, you can find that the metric value has changed.
+```
+# route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         192.168.0.1     0.0.0.0         UG    0      0        0 eth1
+0.0.0.0         10.0.0.1        0.0.0.0         UG    100    0        0 eth0
+0.0.0.0         172.16.0.1      0.0.0.0         UG    200    0        0 eth2
+...
+```
+
+#### Change Default Route Settings using User Script
+If you use the User Script feature, the above settings can be maintained even when a node is newly initialized due to node scale-out. The following user script is an example of setting the metric value of eth0 to 100 and the metric value of eth1 to 0 on a worker node using CentOS. This also changes the metric value for default route currently applied to the system, which persist after the worker node restarts.
+```
+#!/bin/bash
+sed -i -e 's|^METRIC=.*$|METRIC=100|g' /etc/sysconfig/network-scripts/ifcfg-eth0
+sed -i -e 's|^METRIC=.*$|METRIC=0|g' /etc/sysconfig/network-scripts/ifcfg-eth1
+route del -net 0.0.0.0/0 dev eth0
+route add -net 0.0.0.0/0 gw 10.0.0.1 dev eth0 metric 100
+route del -net 0.0.0.0/0 dev eth1
+route add -net 0.0.0.0/0 gw 192.168.0.1 dev eth1 metric 0
+```
 
 ## LoadBalancer Service
 Pod is a basic execution unit of a Kubernetes application and it is connected to a cluster network via CNI (Container Network Interface). By default, pods are not accessible from outside the cluster. To expose a pod's services to the outside of the cluster, you need to create a path to expose to the outside using the Kubernetes `LoadBalancer` Service object. Creating a LoadBalancer service object creates an NHN Cloud Load Balancer outside the cluster and associates it with the service object.
@@ -1287,6 +1481,21 @@ When this manifest is applied, the per-listener settings are set as shown in the
 > All setting values for the features below must be entered in string format. In the YAML file input format, to enter in string format regardless of the input value, enclose the input value in double quotation marks ("). For more information about the YAML file format, see [Yaml Cookbook](https://yaml.org/YAML_for_ruby.html).
 >
 
+#### Set load balancer type
+You can set the load balancer type. For more information, see [Load Balancer Console User Guide](/Network/Load%20Balancer/en/console-guide/).
+
+* The setting location is loadbalancer.nhncloud/loadbalancer-type under .metadata.annotations.
+* **Per-listener settings cannot be applied.**
+* It can be set to one of the following:
+    * shared: A load balancer in the 'regular' type is created. Default value when not set.
+    * dedicated: A load balancer in the ‘dedicated’ type is created.
+    * physical_basic: A load balancer in the 'physical basic' type is created.
+    * physical_premium: A load balancer in the 'physical premium' type is created.
+
+> [Caution]
+> Physical load balancer is only provided in Korea (Pyeongchon) region.
+> You cannot attach physical load balancers to floating IPs. Instead, a public IP that is automatically assigned when creating the physical load balancer is used as an IP to receive traffic targeted for balancing. This public IP is shown as a service IP in the console.
+> For the above characteristics, you cannot see the exact status of the load balancer (including the associated floating IP) through Kubernetes service objects. Please check the status of physical load balancers in the console.
 
 #### Set the session affinity
 You can set the session affinity for the load balancer.
@@ -1385,6 +1594,40 @@ Depending on the combination of floating IP usage and load balancer IP setting, 
 | true | set | Associate a specified VIP with the load balancer. |
 
 
+#### Set VPC
+You can set a VPC to which the load balancer is connected when creating a load balancer.
+
+* The setting location is loadbalancer.openstack.org/network-id under .metadata.annotaions.
+* If not set, it is set to the VPC configured when creating the cluster.
+
+#### Set Subnet
+You can set a subnet to which the load balancer is connected when creating a load balancer.
+
+* The setting location is loadbalancer.openstack.org/subnet-id under .metadata.annotaions.
+* If not set, it is set to the subnet configured when creating the cluster.
+
+Below is an manifest example of setting a VPC and subnet for the load balancer.
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc-vpc-subnet
+  labels:
+     app: nginx
+  annotations:
+    loadbalancer.openstack.org/network-id: "49a5820b-d941-41e5-bfc3-0fd31f2f6773"
+    loadbalancer.openstack.org/subnet-id: "38794fd7-fd2e-4f34-9c89-6dd3fd12f548"
+spec:
+  ports:
+  - port: 8080
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: nginx
+  type: LoadBalancer
+```
+
 #### Set the listener connection limit
 You can set the connection limit for a listener.
 
@@ -1464,6 +1707,15 @@ metadata:
       u6X+8zlOYDOoS2BuG8d2brfKBLu3As5VAcAPLcJhE//3IVaZHxod
       -----END RSA PRIVATE KEY-----
 ```
+
+#### Set the listener proxy protocol
+When the listener protocol is TCP or HTTPS, you set the proxy protocol to the listener. For more information on proxy protocol, see [Load Balancer Proxy Mode](/Network/Load%20Balancer/zh/overview/#_4)
+
+* The setting location is loadbalancer.nhncloud/listener-protocol under .metadata.annotations.
+* Per-listener settings can be applied.
+* It can be set to one of the following:
+    * true: Enable the proxy protocol.
+    * false: Disable the proxy protocol. Default when not set.
 
 #### Set the load balancing method
 You can set the load balancing method.
@@ -2035,6 +2287,13 @@ A volume binding mode controls the time when volume binding and dynamic provisio
 * **Immediate**: Volume binding and dynamic provisioning start as soon as a persistent volume claim is created. When the persistent volume claim is created, there is no prior knowledge of the pods to which the volume will be attached. Therefore, if the availability zone of the volume and the availability zone of the node on which the pod will be scheduled are different, the pod will not work properly. 
 * **WaitForFirstConsumer**: Volume binding and dynamic provisioning are not performed when a persistent volume claim is created. When this persistent volume claim is attached to a pod for the first time, volume binding and dynamic provisioning are performed based on the availability zone information of the node on which the pod is scheduled. Therefore, there is no case where the pod does not work properly because the availability zone of the volume and the availability zone of the instance are different, such as in Immediate mode.
 
+#### Allow Volume Expansion (allowVolumeExpansion)
+Set whether to allow expansion of the created volume (if not input, false is set).
+
+* **True** : Volume expansion is allowed.
+* **False** : Volume expansion is not allowed.
+
+
 #### Example 1
 The storage class manifest below can be used for Kubernetes clusters using v1.19.13 or earlier. You can use parameters to specify the availability zone and volume type.
 
@@ -2268,3 +2527,225 @@ Filesystem      Size  Used Avail Use% Mounted on
 ```
 
 You can also check block storage attachment information in the **Storage > Block Storage** service page of the NHN Cloud web console.
+
+### Volume Expansion
+You can adjust an existing volume by editing the PersistentVolumeClaim (PVC) object. You can change the volume size by editing the **spec.resources.requests.storage** item of the PVC object. Volume shrinking is not supported. To use the volume expansion feature, the **allowVolumeExpansion** property of StorageClass must be **True**.
+
+
+#### Volume Expansion from v1.19.13 and older
+**kubernetes.io/cinder**, the storage provider from v1.19.13 and older does not provide the volume expansion feature for the volume in use. To use the feature for the volume in use, you must use **cinder.csi.openstack.org**, the storage provider from v1.20.12 and later. The cluster upgrade feature allows you to upgrade the version to v1.20.12 or later in order to use the storage provider **cinder.csi.openstack.org**.
+
+To use the storage provider **cinder.csi.openstack.org**from v1.20.12 and older instead of the storage provider **kubernetes.io/cinder** from v1.19.13 and older, you must modify the annotations of PVC as follows.
++ ~~pv.kubernetes.io/bind-completed: "yes"~~ > Delete
++ ~~pv.kubernetes.io/bound-by-controller: "yes"~~ > Delete
++ ~~volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/cinder~~ > volume.beta.kubernetes.io/storage-provisioner:cinder.csi.openstack.org
++ ~~volume.kubernetes.io/storage-resizer: kubernetes.io/cinder~~ > volume.kubernetes.io/storage-resizer: cinder.csi.openstack.org
++ pv.kubernetes.io/provisioned-by:cinder.csi.openstack.org > Add
+
+
+Below is a modified PVC example.
+
+``` yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    pv.kubernetes.io/provisioned-by: cinder.csi.openstack.org
+    volume.beta.kubernetes.io/storage-provisioner: cinder.csi.openstack.org
+    volume.kubernetes.io/storage-resizer: cinder.csi.openstack.org
+  creationTimestamp: "2022-07-18T06:13:01Z"
+  finalizers:
+  - kubernetes.io/pvc-protection
+  labels:
+    app: nginx
+  name: www-web-0
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 310Gi
+  storageClassName: sc-ssd
+  volumeMode: Filesystem
+  volumeName: pvc-0da7cd55-bf29-4597-ab84-2f3d46391e5b
+status:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 300Gi
+  phase: Bound
+```
+
+#### Volume Expansion from v1.20.12 and older
+The storage provider **cinder.csi.openstack.org** from v1.20.12 and later supports the expansion of the volume in use by default. You can change the volume size by modifying the **spec.resources.requests.storage** item of the PVC object to a desired value.
+
+
+### Integrate with NAS Service
+You can utilize NAS storage provided by NHN Cloud as PV. In order to use NAS services, you must use a cluster of version v1.20 or later. For more information on using NHN Cloud NAS, please refer to the [NAS Console User Guide](/Storage/NAS/ko/console-guide).
+
+> [Note] 
+The NHN Cloud NAS service is currently (2022.09) only available in some regions. For more information on supported regions for NHN Cloud NAS service, see [NAS Service Overview](/Storage/NAS/zh/overview).
+
+
+#### Install the nfs Package on Worker Node
+To use NAS storage, you must install the nfs package on the worker node. After connecting to the worker node, run the following command to install the nfs package.
+
+For Ubuntu, you can install the nfs package with the command below.
+```
+$ apt-get install -y nfs-common
+```
+
+For CentOS, you can install the nfs package with the command below.
+```
+$ yum install -y nfs-utils
+```
+
+#### Install csi-driver-nfs
+To use the NHN Cloud NAS service, you must deploy the csi-driver-nfs components.
+
+csi-driver-nfs is a driver that supports dynamic provisioning of PVs, which works by creating new subdirectories on the nfs server. 
+csi-driver-nfs works by providing nfs server information to a storage class, reducing what users need to manage.
+
+If you configure multiple PVs using the nfs-csi-driver, the nfs-csi-driver registers the NFS server information in the StorageClass, removing the need to configure an NFS-Provisioner pod. 
+![nfs-csi-driver-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nfs-csi-driver-02.png)
+
+> [Note]
+> During the internal execution of the csi-driver-nfs execution script, the kubectl apply command is performed. Therefore, the installation should proceed with the `kubectl` command operating normally.
+
+##### 1. Save the absolute path of a cluster configuration file in an environment variable.
+```
+$ export KUBECONFIG={Absolute path of a cluster configruration file}
+```
+
+##### 2. Download the git project containing the csi-driver-nfs components.
+```
+$ git clone https://github.com/kubernetes-csi/csi-driver-nfs.git
+```
+
+##### 3. After moving to the csi-driver-nfs folder, use the **./deploy/install-driver.sh v4.1.0 local** command to install the csi-driver-nfs components.
+
+```
+$ cd csi-driver-nfs
+
+$ ./deploy/install-driver.sh v4.1.0 local
+use local deploy
+Installing NFS CSI driver, version: v4.1.0 ...
+serviceaccount/csi-nfs-controller-sa created
+serviceaccount/csi-nfs-node-sa created
+clusterrole.rbac.authorization.k8s.io/nfs-external-provisioner-role created
+clusterrolebinding.rbac.authorization.k8s.io/nfs-csi-provisioner-binding created
+csidriver.storage.k8s.io/nfs.csi.k8s.io created
+deployment.apps/csi-nfs-controller created
+daemonset.apps/csi-nfs-node created
+NFS CSI driver installed successfully.
+```
+
+#### 4. Check that the components are installed properly.
+```
+$ kubectl get pods -n kube-system
+NAMESPACE     NAME                                         READY   STATUS    RESTARTS   AGE
+kube-system   csi-nfs-controller-844d5989dc-scphc          3/3     Running   0          53s
+kube-system   csi-nfs-node-hmps6                           3/3     Running   0          52s
+
+$ kubectl get clusterrolebinding
+NAME                                                                                                ROLE                                                               AGE
+clusterrolebinding.rbac.authorization.k8s.io/nfs-csi-provisioner-binding                            ClusterRole/nfs-external-provisioner-role                          52s
+
+$ kubectl get clusterrole
+NAME                                                                                                         CREATED AT
+clusterrole.rbac.authorization.k8s.io/nfs-external-provisioner-role                                          2022-08-09T06:21:20Z
+
+$ kubectl get csidriver
+NAME                                                ATTACHREQUIRED   PODINFOONMOUNT   MODES                  AGE
+csidriver.storage.k8s.io/nfs.csi.k8s.io             false            false            Persistent,Ephemeral   47s
+
+$ kubectl get deployment -n kube-system
+NAMESPACE     NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
+kube-system   coredns                     2/2     2            2           22d
+kube-system   csi-nfs-controller          1/1     1            1           4m32s
+
+$ kubectl get daemonset -n kube-system
+NAMESPACE     NAME                    DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR                   AGE
+kube-system   csi-nfs-node            1         1         1       1            1           kubernetes.io/os=linux          4m23s
+```
+
+#### Static Provisioning
+To utilize NHN Cloud NAS storage as a PV through static provisioning, you must define **csi** information when creating PV manifest. The setting location is csi under .spec.
+
+* driver: Enter **nfs.csi.k8s.io**
+* readOnly: Enter **false**
+* volumeHandle: Enter a unique, non-duplicate id within the cluster.
+* volumeAttributes: Enter connection information for NAS storage.
+  * server: Enter the value of the **ip** part of the NAS storage connection information.
+  * share: Enter the value of the **volume name** part of the NAS storage connection information.
+
+``` yaml
+# static-pv.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-onas
+spec:
+  capacity:
+    storage: 300Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  csi:
+    driver: nfs.csi.k8s.io
+    readOnly: false
+    volumeHandle: unique-volumeid
+    volumeAttributes:
+      server: 192.168.0.98
+      share: /onas_300gb
+```
+
+Create the PV and check that it has been created.
+```
+$ kubectl apply -f static-pv.yaml
+persistentvolume/pv-onas created
+
+$ kubectl get pv -o wide
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM                      STORAGECLASS   REASON   AGE    VOLUMEMODE
+pv-onas                                    300Gi      RWX            Retain           Available                                                      101s   Filesystem
+```
+
+After creating PV, the process of creating a PVC and mounting a volume to the pod is the same as the basic static provisioning process. For more information on static provisioning, see [Static Provisioning](/Container/NKS/ko/user-guide/#_51).
+
+#### Dynamic Provisioning
+In order to utilize NHN Cloud NAS storage as PV through dynamic provisioning, storage provider information and NHN Cloud NAS storage connection information must be defined when creating the StorageClass manifest.
+
+* provisioner: Enter**nfs.csi.k8s.io**.
+* parameters: Enter the connection information of the NAS storage.
+  * server: Enter the value of the **ip** part of the NAS storage connection information.
+  * share: Enter the value of the **volume name** part of the NAS storage connection information.
+
+``` yaml
+# storageclass.yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: onas-sc
+provisioner: nfs.csi.k8s.io
+parameters:
+  server: 192.168.0.37
+  share: /onas_300gb_dynamic
+reclaimPolicy: Retain
+volumeBindingMode: Immediate
+```
+
+Create and check StorageClass.
+```
+$ kubectl apply -f storageclass.yaml
+
+$ kubectl get sc,pvc,pv
+NAME                                  PROVISIONER      RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
+storageclass.storage.k8s.io/onas-sc   nfs.csi.k8s.io   Retain          Immediate           false                  15s
+```
+
+After creating the StorageClass, the process of creating a PVC and mounting the volume to the pod is the same as the basic dynamic provisioning process. For more information on dynamic provisioning, see [Dynamic Provisioning](/Container/NKS/ko/user-guide/#_52).
+
+> [Note] 
+nfs-csi-driver works by creating a subdirectory inside the nfs storage when creating a PV through dynamic provisioning. 
+In the process of mounting the PV to the pod, not only the subdirectory is mounted, but the entire nfs storage is mounted, so it is not possible to force the application to use the volume by the provisioned size. 
