@@ -47,7 +47,7 @@ NHN Kubernetes Service (NKS) supports several versions of Kubernetes. Some featu
 | v1.22.3 | Available | Available |
 | v1.23.3 | Available | Available |
 | v1.24.3 | Available | Available |
-|  | Available | Available |
+| v1.25.4 | Available | Available |
 
 
 Enter information as required and click **Create Cluster**, and a cluster begins to be created. You can check the status from the list of clusters. It takes about 10 minutes to create; more time may be required depending on the cluster configuration.
@@ -1709,7 +1709,7 @@ metadata:
 ```
 
 #### Set the listener proxy protocol
-When the listener protocol is TCP or HTTPS, you set the proxy protocol to the listener. For more information on proxy protocol, see [Load Balancer Proxy Mode](/Network/Load%20Balancer/ko/overview/#_4)
+When the listener protocol is TCP or HTTPS, you set the proxy protocol to the listener. For more information on proxy protocol, see [Load Balancer Proxy Mode](/Network/Load%20Balancer/en/overview/#_4)
 
 * The setting location is loadbalancer.nhncloud/listener-protocol under .metadata.annotations.
 * Per-listener settings can be applied.
@@ -2585,7 +2585,7 @@ The storage provider **cinder.csi.openstack.org** from v1.20.12 and later suppor
 You can utilize NAS storage provided by NHN Cloud as PV. In order to use NAS services, you must use a cluster of version v1.20 or later. For more information on using NHN Cloud NAS, please refer to the [NAS Console User Guide](/Storage/NAS/ko/console-guide).
 
 > [Note] 
-The NHN Cloud NAS service is currently (2022.09) only available in some regions. For more information on supported regions for NHN Cloud NAS service, see [NAS Service Overview](/Storage/NAS/ko/overview).
+The NHN Cloud NAS service is currently (2022.09) only available in some regions. For more information on supported regions for NHN Cloud NAS service, see [NAS Service Overview](/Storage/NAS/en/overview).
 
 
 #### Install the nfs Package on Worker Node
