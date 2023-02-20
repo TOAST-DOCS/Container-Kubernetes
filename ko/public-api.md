@@ -593,6 +593,69 @@ X-Auth-Token: {tokenId}
 </p>
 </details>
 
+### 클러스터 CNI 변경
+클러스터 CNI(Container Network Interface)를 Flannel에서 Calico로 변경합니다.
+
+```
+POST /v1/clusters/{CLUSTER_ID}/actions/cni_update
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
+| cni | Body | String | O | 변경하고자 하는 CNI를 설정 (선택 가능 CNI 목록 : calico) | 
+| num_buffer_nodes | Body | Integer | X | 버퍼 노드 수. 기본값: 1, 최솟값: 0, 최댓값: 모든 워커 노드의(워커 노드 그룹당 최대 노드 수 쿼터-해당 워커 노드 그룹의 현재 노드 수) 중 최소값. |
+| num_max_unavailable_nodes | Body |  Integer | X | 최대 서비스 불가 노드 수. 최솟값: 1, 최댓값: 해당 cluster의 현재 노드 수, 기본값: 1 |
+| pod_cidr | Body | String | X | calico pod cidr 설정, 기본값: 10.200.0.0/16, pod_cidr 입력 규칙 참고 |
+
+pod_cidr는 아래와 같은 규칙으로 입력되어야 합니다.
+* CIDR은 사설 주소 범위로 입력되어야 합니다.
+* CIDR은 링크 로컬 주소 범위(169.254.0.0/16)로 입력할 수 없습니다.
+* CIDR은 NKS 클러스터에 사용된 host network subnet 대역값과 일치할 수 없습니다.
+* CIDR은 현재 NKS 클러스터에 사용되고 있는 pod CIDR 대역값과 일치할 수 없습니다.
+* /24보다 큰 CIDR 블록은 입력할 수 없습니다.
+
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "cni": "calico",
+    "num_max_unavailable_nodes": 1,
+    "num_buffer_nodes": 1,
+    "pod_cidr": "10.200.0.0/16"
+}
+```
+
+</p>
+</details>
+
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | UUID | 클러스터 UUID |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "0641db9f-5e71-4df9-9571-089c7964d82e"
+}
+```
+
+</p>
+</details>
 ---
 
 ## 노드 그룹

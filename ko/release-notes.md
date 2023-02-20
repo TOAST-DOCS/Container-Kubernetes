@@ -1,5 +1,12 @@
 ## Container > NHN Kubernetes Service(NKS) > 릴리스 노트
 
+### 2023. 03. 31.
+
+#### 기능 추가
+
+* 클러스터 CNI 변경 기능이 추가되었습니다.
+    * 자세한 내용은 [사용 가이드](/Container/NKS/ko/user-guide/#_5)를 참고하세요.
+
 ### 2023. 01. 31.
 
 #### 기능 추가
