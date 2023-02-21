@@ -594,10 +594,12 @@ X-Auth-Token: {tokenId}
 </details>
 
 ### 클러스터 CNI 변경
-클러스터 CNI(Container Network Interface)를 Flannel에서 Calico로 변경합니다.
+클러스터 CNI(Container Network Interface)를 변경합니다.
+Flannel CNI를 다른 CNI로 변경할 수 있습니다.
+변경할 수 있는 CNI는 Calico가 있습니다.
 
 ```
-POST /v1/clusters/{CLUSTER_ID}/actions/cni_update
+POST /v1/clusters/{CLUSTER_ID_OR_NAME}/actions/cni_update
 Accept: application/json
 Content-Type: application/json
 OpenStack-API-Version: container-infra latest
@@ -618,8 +620,9 @@ X-Auth-Token: {tokenId}
 pod_cidr는 아래와 같은 규칙으로 입력되어야 합니다.
 * CIDR은 사설 주소 범위로 입력되어야 합니다.
 * CIDR은 링크 로컬 주소 범위(169.254.0.0/16)로 입력할 수 없습니다.
-* CIDR은 NKS 클러스터에 사용된 host network subnet 대역값과 일치할 수 없습니다.
-* CIDR은 현재 NKS 클러스터에 사용되고 있는 pod CIDR 대역값과 일치할 수 없습니다. (클러스터가 flannel CNI인 경우 10.100.0.0/16 CIDR은 사용할 수 없습니다.)
+* CIDR은 NKS 내부에서 사용하고 있는 IP범위(10.254.0.0/16, 198.18.0.0/19)로 입력할 수 없습니다.
+* CIDR은 NKS 클러스터에 연결된 VPC 네트워크 서브넷 또는 추가 네트워크 서브넷의 대역과 중첩될 수 없습니다.
+* CIDR은 현재 NKS 클러스터에 사용되고 있는 pod CIDR 대역값과 중첩할 수 없습니다. (클러스터가 flannel CNI인 경우 10.100.0.0/16 CIDR은 사용할 수 없습니다.)
 * /24보다 큰 CIDR 블록은 입력할 수 없습니다. (다음과 같은 CIDR 블록은 사용할 수 없습니다. /26, /30)
 
 
