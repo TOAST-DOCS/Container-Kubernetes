@@ -1,5 +1,18 @@
 ## Container > NHN Kubernetes Service(NKS) > 릴리스 노트
 
+### 2023. 04. 04.
+
+#### 기능 추가
+
+* 노드 그룹의 인스턴스 타입을 변경할 수 있습니다.
+
+#### 기능 변경
+
+* NKS API 주소 도메인이 변경되었습니다.
+    * 기존: https://gov-api-kubernetes.infrastructure.cloud.toast.com
+    * 변경: https://kr1-api-kubernetes-infrastructure.gov-nhncloudservice.com
+
+
 ### 2023. 02. 07.
 
 #### 기능 추가

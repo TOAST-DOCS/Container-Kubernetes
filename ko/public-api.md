@@ -7,7 +7,7 @@ API를 사용하려면 API 엔드포인트와 토큰 등이 필요합니다. [AP
 
 | 타입 | 리전 | 엔드포인트 |
 |---|---|---|
-| kubernetes | 한국(판교) 리전<br>한국(평촌) 리전 | https://kr1-api-kubernetes.infrastructure.cloud.toast.com <br>https://kr2-api-kubernetes.infrastructure.cloud.toast.com |
+| kubernetes | 한국(판교) 리전<br>한국(평촌) 리전 | https://kr1-api-kubernetes-infrastructure.nhncloudservice.com <br>https://kr2-api-kubernetes-infrastructure.nhncloudservice.com |
 
 
 API 응답에 가이드에 명시되지 않은 필드가 나타날 수 있습니다. 이런 필드는 NHN Cloud 내부 용도로 사용되며 사전 공지 없이 변경될 수 있으므로 사용하지 않습니다.
@@ -170,11 +170,11 @@ X-Auth-Token: {tokenId}
             },
             "links": [
                 {
-                    "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/v1/clusters/f0af4484-0a16-433a-a15c-295d9ba6537d",
+                    "href": "https://kr2-api-kubernetes-infrastructure.nhncloudservice.com/v1/clusters/f0af4484-0a16-433a-a15c-295d9ba6537d",
                     "rel": "self"
                 },
                 {
-                    "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/clusters/f0af4484-0a16-433a-a15c-295d9ba6537d",
+                    "href": "https://kr2-api-kubernetes-infrastructure.nhncloudservice.com/clusters/f0af4484-0a16-433a-a15c-295d9ba6537d",
                     "rel": "bookmark"
                 }
             ],
@@ -306,11 +306,11 @@ X-Auth-Token: {tokenId}
     },
     "links": [
         {
-            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/v1/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
+            "href": "https://kr2-api-kubernetes-infrastructure.nhncloudservice.com/v1/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
             "rel": "self"
         },
         {
-            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
+            "href": "https://kr2-api-kubernetes-infrastructure.nhncloudservice.com/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
             "rel": "bookmark"
         }
     ],
@@ -770,11 +770,11 @@ X-Auth-Token: {tokenId}
     },
     "links": [
         {
-            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
+            "href": "https://kr2-api-kubernetes-infrastructure.nhncloudservice.com/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
             "rel": "self"
         },
         {
-            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
+            "href": "https://kr2-api-kubernetes-infrastructure.nhncloudservice.com/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
             "rel": "bookmark"
         }
     ],
@@ -915,11 +915,11 @@ X-Auth-Token: {tokenId}
     },
     "links": [
         {
-            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
+            "href": "https://kr2-api-kubernetes-infrastructure.nhncloudservice.com/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
             "rel": "self"
         },
         {
-            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
+            "href": "https://kr2-api-kubernetes-infrastructure.nhncloudservice.com/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
             "rel": "bookmark"
         }
     ],
