@@ -51,7 +51,7 @@ NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전�
 | v1.24.3 | 가능 | 가능 |
 | v1.25.4 | 가능 | 가능 |
 
-NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Network Interface(CNI)를 제공합니다. v1.24.3 버전 이상의 클러스터 생성 시 CNI가 Calico로 생성됩니다. Flannel과 Calico CNI의 Network mode는 모두 VXLAN 방식으로 동작합니다.
+NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Network Interface(CNI)를 제공합니다. 2023/03/31 이후에는 v1.24.3 버전 이상의 클러스터 생성 시 CNI가 Calico로 생성됩니다. Flannel과 Calico CNI의 Network mode는 모두 VXLAN 방식으로 동작합니다.
 
 | 버전 | 클러스터 생성 시 설치한 CNI 종류 및 버전 | CNI 변경 가능 여부 |
 | :-: | :-: | :-: |
