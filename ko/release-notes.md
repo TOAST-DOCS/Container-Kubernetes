@@ -1,11 +1,25 @@
 ## Container > NHN Kubernetes Service(NKS) > 릴리스 노트
 
-### 2023. 03. 31.
+
+=======
+### 2023. 03. 28.
 
 #### 기능 추가
 
 * 클러스터 CNI 변경 기능이 추가되었습니다.
     * 자세한 내용은 [사용 가이드](/Container/NKS/ko/user-guide/#_5)를 참고하세요.
+* 노드 그룹의 인스턴스 타입을 변경할 수 있습니다.
+
+#### 기능 변경
+
+* NKS API 주소 도메인이 변경되었습니다.
+    * 한국(판교) 리전
+        * 기존: https://kr1-api-kubernetes.infrastructure.cloud.toast.com
+        * 변경: https://kr1-api-kubernetes-infrastructure.nhncloudservice.com
+    * 한국(평촌) 리전
+        * 기존: https://kr2-api-kubernetes.infrastructure.cloud.toast.com
+        * 변경: https://kr2-api-kubernetes-infrastructure.nhncloudservice.com
+
 
 ### 2023. 01. 31.
 
@@ -16,6 +30,7 @@
 * Kubernetes v1.25.4를 지원합니다.
 * 클러스터 생성 시 Kubernetes v1.21.6은 더 이상 지원하지 않습니다. 단, 사용 중인 클러스터에는 영향이 없습니다.
 * 로드 밸런서의 리스너에 프록시 프로토콜(Proxy Protocol)을 설정할 수 있습니다.
+* 물리 로드 밸런서를 생성할 수 있습니다.
 
 ### 2022. 12. 27.
 

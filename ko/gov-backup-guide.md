@@ -23,7 +23,7 @@ Object Storage API를 사용하려면 테넌트 아이디(tenant ID) 및 API 엔
 
 | 항목 | API Endpoint | 용도 |
 | --- | --- | --- |
-| Identity | https://gov-api-identity.infrastructure.cloud.toast.com/v2.0 | 인증 토큰 발급 |
+| Identity | https://kr1-api-kubernetes-infrastructure.gov-nhncloudservice.com/v2.0 | 인증 토큰 발급 |
 | Tenant ID | 숫자 + 영문자로 구성된 32자 길이의 문자열 | 인증 토큰 발급 |
 
 #### API 비밀번호 설정
