@@ -13,6 +13,12 @@
     * 기존: https://gov-api-kubernetes.infrastructure.cloud.toast.com
     * 변경: https://kr1-api-kubernetes-infrastructure.gov-nhncloudservice.com
 
+#### 기능 개선
+
+* 이미지 업데이트
+    * Ubuntu Server 18.04.6 LTS - Container (2023.02.21)
+    * Debian 11.6 Bullseye - Container (2023.02.21)
+    * Rocky Linux 8.6 - Container (2023.02.21)
 
 ### 2023. 02. 07.
 

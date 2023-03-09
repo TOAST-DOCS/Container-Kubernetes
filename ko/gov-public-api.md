@@ -55,8 +55,9 @@ GET /v2.0/networks?router:external=True
 | 리전 | 베이스 이미지 이름 | 베이스 이미지 UUID |
 |---|---|---|
 | 한국(판교) 리전 | CentOS 7.9 | 527ec5cb-001f-4d11-99c8-79ab92134ede |
-| | Ubuntu Server 18.04.6 LTS | 78326f52-2c36-46d7-99a9-aa73e52c6250 |
-| | Debian 11.5 Bullseye | dc9d2caf-8daf-4715-a25f-7f062992fec5 |
+| | Ubuntu Server 18.04.6 LTS | b4dcfbb6-712b-4eb8-99c4-5cf21425800b |
+| | Debian 11.6 Bullseye | 6aed44d4-f4fc-4e5d-a088-6c636813bf3e |
+| | Rocky Linux 8.6 | 4eda4ea0-a807-4d35-997a-ea3bd026cba6 |
 
 ### 블록 스토리지 종류
 
