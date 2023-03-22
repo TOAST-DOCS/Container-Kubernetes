@@ -1,5 +1,27 @@
 ## Container > NHN Kubernetes Service(NKS) > 릴리스 노트
 
+### 2023. 04. 04.
+
+#### 기능 추가
+
+* 클러스터 CNI 변경 기능이 추가되었습니다.
+    * 자세한 내용은 [사용 가이드](/Container/NKS/ko/gov-user-guide/#_5)를 참고하세요.
+* 노드 그룹의 인스턴스 타입을 변경할 수 있습니다.
+* 콘솔에서 Kubernetes 자원 조회 기능을 사용할 수 있습니다.
+
+#### 기능 변경
+
+* NKS API 주소 도메인이 변경되었습니다.
+    * 기존: https://gov-api-kubernetes.infrastructure.cloud.toast.com
+    * 변경: https://kr1-api-kubernetes-infrastructure.gov-nhncloudservice.com
+
+#### 기능 개선
+
+* 이미지 업데이트
+    * Ubuntu Server 18.04.6 LTS - Container (2023.02.21)
+    * Debian 11.6 Bullseye - Container (2023.02.21)
+    * Rocky Linux 8.6 - Container (2023.02.21)
+
 ### 2023. 02. 07.
 
 #### 기능 추가
