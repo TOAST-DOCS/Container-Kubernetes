@@ -1136,19 +1136,19 @@ NHN Cloud의 Kubernetes 클러스터 버전 관리 방식과 Kubernetes 버전 �
 
 | 상태 | 마스터 버전 | 마스터 업그레이드 가능 여부 | 워커 노드 그룹 버전 | 워커 노드 그룹 업그레이드 가능 여부
 | --- | :-: | :-: | :-: | :-: |
-| 초기 상태| v1.21.6 | 가능① | v1.21.6 | 불가능 ② | 
-| 마스터 업그레이드 후 상태 | v1.22.3 | 불가능 ③ | v1.21.6 | 가능 ④ | 
-| 워커 노드 그룹 업그레이드 후 상태 | v1.22.3 | 가능 ① | v1.22.3 | 불가능 ② |
-| 마스터 업그레이드 후 상태 | v1.23.3 | 불가능 ③ | v1.22.3 | 가능 ④ | 
-| 워커 노드 그룹 업그레이드 후 상태 | v1.23.3 | 불가능 ⑤ | v1.23.3 | 불가능 ② |
+| 초기 상태| v1.21.6 | 가능 <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.21.6 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> | 
+| 마스터 업그레이드 후 상태 | v1.22.3 | 불가능 <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.21.6 | 가능 <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
+| 워커 노드 그룹 업그레이드 후 상태 | v1.22.3 | 가능 <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.22.3 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
+| 마스터 업그레이드 후 상태 | v1.23.3 | 불가능 <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.22.3 | 가능 <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
+| 워커 노드 그룹 업그레이드 후 상태 | v1.23.3 | 불가능 <sup>[5](#footnote_cluster_upgrade_rule_5)</sup> | v1.23.3 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
 
 주석
 
-* ① 마스터와 모든 워커 노드 그룹의 버전이 일치하는 상태이기 때문에 업그레이드 가능
-* ② 워커 노드 그룹은 마스터가 업그레이드된 후 업그레이드 가능
-* ③ 마스터와 모든 워커 노드 그룹의 버전이 일치해야 업그레이드 가능
-* ④ 마스터가 업그레이드됐기 때문에 업그레이드 가능
-* ⑤ NHN Cloud에서 지원하는 가장 최신 버전을 사용하고 있기 때문에 업그레이드 불가능
+* <a name="footnote_cluster_upgrade_rule_1">1</a>: 마스터와 모든 워커 노드 그룹의 버전이 일치하는 상태이기 때문에 업그레이드 가능
+* <a name="footnote_cluster_upgrade_rule_1">2</a>: 워커 노드 그룹은 마스터가 업그레이드된 후 업그레이드 가능
+* <a name="footnote_cluster_upgrade_rule_1">3</a>: 마스터와 모든 워커 노드 그룹의 버전이 일치해야 업그레이드 가능
+* <a name="footnote_cluster_upgrade_rule_1">4</a>: 마스터가 업그레이드됐기 때문에 업그레이드 가능
+* <a name="footnote_cluster_upgrade_rule_1">5</a>: NHN Cloud에서 지원하는 가장 최신 버전을 사용하고 있기 때문에 업그레이드 불가능
 
 
 ##### 마스터 구성 요소 업그레이드
