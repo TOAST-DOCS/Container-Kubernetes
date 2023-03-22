@@ -1196,7 +1196,7 @@ NHN Cloud가 지원하는 Kubernetes 버전 목록: v1.23.3, v1.24.3, v1.25.4
 클러스터는 v1.23.3으로 생성
 
 | 상태 | 클러스터 버전 | 현재 CNI | CNI 변경 가능 여부|
-| --- | :-: | :-: | :-: | :-: |
+| --- | :-: | :-: | :-: |
 | 초기 상태| v1.23.3 | Flannel | 불가능 <sup>[1](#footnote_calico_change_rule_1)</sup> |
 | 클러스터 업그레이드 후 상태 | v1.24.3 | Flannel | 가능 <sup>[2](#footnote_calico_change_rule_2)</sup> | 
 | CNI 변경 후 상태 | v1.24.3 | Calico | 불가능 <sup>[3](#footnote_calico_change_rule_3)</sup> |
