@@ -51,6 +51,27 @@ NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전�
 | v1.24.3 | 가능 | 가능 |
 | v1.25.4 | 가능 | 가능 |
 
+NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Network Interface(CNI)를 제공합니다. 2023/03/31 이후에는 v1.24.3 버전 이상의 클러스터 생성 시 CNI가 Calico로 생성됩니다. Flannel과 Calico CNI의 Network mode는 모두 VXLAN 방식으로 동작합니다.
+
+| 버전 | 클러스터 생성 시 설치한 CNI 종류 및 버전 | CNI 변경 가능 여부 |
+| :-: | :-: | :-: |
+| v1.17.6 | Flannel v0.12.0 | 불가 |
+| v1.18.19 | Flannel v0.12.0 | 불가 |
+| v1.19.13 | Flannel v0.14.0 | 불가 |
+| v1.20.12 | Flannel v0.14.0 | 불가 |
+| v1.21.6 | Flannel v0.14.0 | 불가 |
+| v1.22.3 | Flannel v0.14.0 | 불가 |
+| v1.23.3 | Flannel v0.14.0 | 불가 |
+| v1.24.3 | Flannel v0.14.0 혹은 Calico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
+| v1.25.4 | Flannel v0.14.0 혹은 Calico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
+
+주석
+* <a name="footnote_calico_version_1">1</a>: 2023/03/31 이전에 생성된 클러스터에는 Flannel이 설치되어 있습니다. 2023/03/31 이후에 생성되는 v1.24.3 이상의 클러스터는 Calico가 설치됩니다.
+* <a name="footnote_calico_version_2">2</a>: CNI 변경은 v1.24.3 이상의 클러스터에서만 지원되며, 현재 Flannel에서 Calico로의 변경만 지원합니다.
+
+CNI의 기본 파드 CIDR 정보는 다음과 같습니다.
+* Flannel: 10.100.0.0/16
+* Calico: 10.200.0.0/16
 
 필요한 정보를 입력하고 **클러스터 생성**을 클릭하면 클러스터 생성이 시작됩니다. 클러스터 목록에서 상태를 확인할 수 있습니다. 생성하는 데는 약 10분 정도 걸립니다. 클러스터 설정에 따라 더 오래 걸릴 수도 있습니다.
 
@@ -1122,6 +1143,77 @@ NHN Cloud의 Kubernetes 클러스터 마스터는 고가용성 보장을 위해 
 
 > [주의]
 > 마스터 업그레이드 후 워커 노드 그룹을 업그레이드하지 않으면 일부 파드가 정상적으로 동작하지 않을 수 있습니다.
+
+
+### 클러스터 CNI 변경
+NHN Kubernetes Service(NKS)는 동작 중인 Kubernetes 클러스터의 CNI(container network interface) 변경을 지원합니다. 
+클러스터 CNI 변경 기능을 사용하면 NHN Kubernetes Service(NKS)의 CNI가 Flannel CNI에서 Calico CNI로 변경됩니다.
+
+#### CNI 변경 규칙
+NHN Cloud의 Kubernetes 클러스터 CNI 변경 기능에 적용되는 규칙은 다음과 같습니다.
+
+* CNI 변경 기능은 NHN Kubernetes Service(NKS) 버전 1.24.3 이상인 경우에 사용할 수 있습니다.
+* 기존 NHN Kubernetes Service(NKS)에서 사용하고 있는 CNI가 Flannel인 경우에만 CNI 변경을 사용할 수 있습니다.
+* CNI 변경 시작 시 마스터와 모든 워커 노드 그룹에 대해 일괄적으로 작업을 진행합니다.
+* 마스터의 Kubernetes 버전과 모든 워커 노드 그룹의 Kubernetes 버전이 일치해야 CNI 변경이 가능합니다.
+* Calico에서 Flannel로 CNI 변경은 지원하지 않습니다.
+* 다른 기능의 동작으로 인해 클러스터가 업데이트 중인 상태에서는 CNI 변경이 불가능합니다.
+
+다음 예시는 Kubernetes CNI 변경 과정에서 변경 가능 여부를 표로 나타낸 것입니다. 예시에 사용된 조건은 다음과 같습니다. 
+
+NHN Cloud가 지원하는 Kubernetes 버전 목록: v1.23.3, v1.24.3, v1.25.4
+클러스터는 v1.23.3으로 생성
+
+| 상태 | 클러스터 버전 | 현재 CNI | CNI 변경 가능 여부
+| --- | :-: | :-: | :-: | :-: |
+| 초기 상태| v1.23.3 | Flannel | 불가능 <sup>[1](#footnote_calico_change_rule_1)</sup> |
+| 클러스터 업그레이드 후 상태 | v1.24.3 | Flannel | 가능 <sup>[2](#footnote_calico_change_rule_2)</sup> | 
+| CNI 변경 후 상태 | v1.24.3 | Calico | 불가능 <sup>[3](#footnote_calico_change_rule_3)</sup> |
+
+
+주석
+
+* <a name="footnote_calico_change_rule_1">1</a>: 클러스터 버전이 1.24.3 미만이기 때문에 CNI 변경 불가능
+* <a name="footnote_calico_change_rule_2">2</a>: 클러스터 버전이 1.24.3 이상이기 때문에 CNI 변경 가능
+* <a name="footnote_calico_change_rule_3">3</a>: CNI가 이미 Calico이므로 CNI 변경 불가능
+
+#### Flannel에서 Calico CNI로 변경 진행 과정
+CNI 변경은 다음 순서로 진행됩니다.
+
+1. 모든 워커 노드 그룹에 버퍼 노드<sup>[1](#footnote_calico_change_step_1)</sup>를 추가합니다.<sup>[2](#footnote_calico_change_step_2)</sup>
+2. 클러스터에 Calico CNI가 배포됩니다.<sup>[3](#footnote_calico_change_step_3)</sup>
+3. 클러스터 오토스케일러 기능을 비활성화합니다.<sup>[4](#footnote_calico_change_step_4)</sup>
+3. 모든 워커 노드 그룹 내의 모든 워커 노드에 대해 순차적으로 아래 작업을 수행합니다.<sup>[5](#footnote_calico_change_step_5)</sup>
+    1. 해당 워커 노드에서 동작 중인 파드를 축출하고, 노드를 스케줄 불가능한 상태로 전환합니다.
+    2. 워커 노드의 파드 IP를 Calico CIDR로 재할당합니다. 해당 노드에 배포되어 있는 모든 파드는 재배포됩니다.<sup>[6](#footnote_calico_change_step_6)</sup>
+    3. 노드를 스케줄 가능한 상태로 전환합니다.
+5. 버퍼 노드에서 동작 중인 파드를 축출하고 버퍼 노드를 삭제합니다.
+6. 클러스터 오토스케일러 기능을 다시 활성화합니다.<sup>[4](#footnote_calico_change_step_4)</sup>
+7. Flannel CNI를 제거합니다.
+
+
+주석
+
+* <a name="footnote_calico_change_step_1">1</a>: 버퍼 노드란 CNI 변경 과정 중 기존 워커 노드에서 축출된 파드가 다시 스케줄링될 수 있도록 생성해 두는 여유 노드를 말합니다. 해당 워커 노드 그룹에서 정의한 워커 노드와 동일한 규격의 노드로 생성되며, 업그레이드 과정이 종료될 때 자동으로 삭제됩니다. 이 노드는 Instance 요금 정책에 따라 비용이 청구됩니다. 
+* <a name="footnote_calico_change_step_2">2</a>: CNI 변경 시 버퍼 노드 수를 설정할 수 있습니다. 기본값은 1이며, 0으로 설정하면 버퍼 노드를 추가하지 않습니다. 최솟값은 0이고, 최댓값은 (노드 그룹당 최대 노드 수 쿼터-해당 워커 노드 그룹의 현재 노드 수)입니다.
+* <a name="footnote_calico_change_step_3">3</a>: 클러스터에 Calico CNI가 배포되면 Flannel과 Calico CNI가 공존하게 됩니다. 이 상태에서 새로운 파드가 배포되면 파드 IP는 Flannel CNI로 설정되어 배포됩니다. Flannel CIDR IP를 가진 파드와 Calico CIDR IP를 가진 파드는 서로 통신할 수 있습니다.
+* <a name="footnote_calico_change_step_4">4</a>: 이 단계는 업그레이드 기능 시작 전 클러스터 오토스케일러 기능이 활성화되어 있는 경우에만 유효합니다.
+* <a name="footnote_calico_change_step_5">5</a>: CNI 변경 시 설정한 최대 서비스 불가 노드 수만큼씩 작업을 수행합니다. 기본값은 1입니다. 최솟값은 1이고, 최댓값은 현재 클러스터의 모든 노드 수입니다.
+* <a name="footnote_calico_change_step_6">6</a>: 기존에 배포되어 있는 파드의 IP는 모두 Flannel CIDR로 할당되어있습니다. Calico CNI로 변경하기 위해 Flannel CIDR의 IP가 할당되어 있는 파드들을 모두 재배포하여 Calico CIDR IP를 할당합니다. 새로운 파드가 배포되면 파드 IP는 Calico CNI로 설정되어 배포됩니다.
+
+이 과정에서 아래와 같은 일들이 발생할 수 있습니다.
+
+* 서비스 중인 파드가 축출되어 다른 노드로 스케줄링됩니다. (파드 축출에 대한 더 자세한 내용은 [클러스터 업그레이드](/NKS/ko/user-guide/#_27)를 참고하시길 바랍니다.)
+* 클러스터에 배포되어있는 모든 파드가 재배포 됩니다. (파드 재배포에 대한 더 자세한 내용은 아래 파드 재배포 주의 사항을 참고하시길 바랍니다.)
+* 오토스케일러 기능이 동작하지 않습니다. 
+
+
+> [파드 재배포 주의 사항]
+> 1. 파드 축출 과정을 통해 다른 노드로 옮겨지지 않은 파드에 대해 진행됩니다.
+> 2. CNI 변경 과정 중에 Flannel CIDR와 Calico CIDR 간 정상 통신을 위해 CNI 변경 파드 CIDR 값은 기존 Flannel CIDR값과 동일하면 안됩니다.
+> 3. 기존에 배포되어 있던 파드들의 pause 컨테이너는 모두 stop 되어졌다가 kubelet에 의해 다시 재생성됩니다. 파드 이름과 로컬 저장 공간 등 설정은 그대로 유지되지만 IP는 Calico CIDR의 IP로 변경됩니다.
+
+
 
 ## 워커 노드 관리
 
