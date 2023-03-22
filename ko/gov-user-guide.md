@@ -11,7 +11,7 @@ NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해�
 > 해당 권한이 있어야만 기본 인프라 서비스를 기반으로 하는 클러스터를 정상적으로 생성하고 활용할 수 있으며, 이 중 하나의 권한을 가진 상태에서 다른 권한이 추가되는 것은 사용에 문제가 없습니다.
 > 권한 설정에 대해서는 [프로젝트 멤버 관리](/TOAST/ko/console-guide-gov/#_22)를 참고하세요.
 > 클러스터 생성 시점의 권한 설정 내역이 차후 변경(임의의 권한 추가 혹은 삭제)될 경우 클러스터의 일부 기능 사용에 제한이 있을 수 있습니다.
-> 이에 대한 자세한 내용은 [클러스터 OWNER 변경](./gov-user-guide/#_4)을 참고하세요.
+> 이에 대한 자세한 내용은 [클러스터 OWNER 변경](/NKS/ko/gov-user-guide/#owner)을 참고하세요.
 
 **Container > NHN Kubernetes Service(NKS)** 페이지에서 **클러스터 생성**을 클릭하면 클러스터 생성 페이지가 나타납니다. 클러스터 생성에 필요한 항목은 다음과 같습니다.
 
@@ -66,10 +66,12 @@ NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Netwo
 | v1.25.4 | Flannel v0.14.0 혹은 Calico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
 
 주석
+
 * <a name="footnote_calico_version_1">1</a>: 2023/03/31 이전에 생성된 클러스터에는 Flannel이 설치되어 있습니다. 2023/03/31 이후에 생성되는 v1.24.3 이상의 클러스터는 Calico가 설치됩니다.
 * <a name="footnote_calico_version_2">2</a>: CNI 변경은 v1.24.3 이상의 클러스터에서만 지원되며, 현재 Flannel에서 Calico로의 변경만 지원합니다.
 
 CNI의 기본 파드 CIDR 정보는 다음과 같습니다.
+
 * Flannel: 10.100.0.0/16
 * Calico: 10.200.0.0/16
 
@@ -96,7 +98,7 @@ CNI의 기본 파드 CIDR 정보는 다음과 같습니다.
 > [참고]
 > 기본적으로 클러스터 OWNER는 클러스터를 생성한 사용자를 의미하지만, 상황에 따라 다른 사용자로 변경 가능합니다.
 
-클러스터는 생성 시점의 [OWNER 권한](./gov-user-guide/#_1)을 기반으로 동작합니다.
+클러스터는 생성 시점의 [OWNER 권한](/NKS/ko/gov-user-guide/#_1)을 기반으로 동작합니다.
 해당 권한은 Kubernetes와 NHN Cloud 기본 인프라 서비스의 연동 과정에서 사용됩니다.
 Kubernetes에서 사용하는 기본 인프라 서비스는 다음과 같습니다.
 
@@ -882,7 +884,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 4. 버퍼 노드에서 동작 중인 파드를 축출하고 버퍼 노드를 삭제합니다.
 5. 클러스터 오토스케일러 기능을 다시 활성화합니다.
 
-인스턴스 타입 변경은 워커 구성 요소 업그레이드와 유사한 방법으로 진행됩니다. 버퍼 노드의 생성과 삭제, 파드의 축출에 대해서는 [클러스터 업그레이드](/NKS/ko/gov-user-guide/#_27)를 참고하세요.
+인스턴스 타입 변경은 워커 구성 요소 업그레이드와 유사한 방법으로 진행됩니다. 버퍼 노드의 생성과 삭제, 파드의 축출에 대해서는 [클러스터 업그레이드](/NKS/ko/gov-user-guide/#_30)를 참고하세요.
 
 
 #### 제약 사항
@@ -1193,7 +1195,7 @@ NHN Cloud의 Kubernetes 클러스터 CNI 변경 기능에 적용되는 규칙은
 NHN Cloud가 지원하는 Kubernetes 버전 목록: v1.23.3, v1.24.3, v1.25.4
 클러스터는 v1.23.3으로 생성
 
-| 상태 | 클러스터 버전 | 현재 CNI | CNI 변경 가능 여부
+| 상태 | 클러스터 버전 | 현재 CNI | CNI 변경 가능 여부|
 | --- | :-: | :-: | :-: | :-: |
 | 초기 상태| v1.23.3 | Flannel | 불가능 <sup>[1](#footnote_calico_change_rule_1)</sup> |
 | 클러스터 업그레이드 후 상태 | v1.24.3 | Flannel | 가능 <sup>[2](#footnote_calico_change_rule_2)</sup> | 
@@ -1232,7 +1234,7 @@ CNI 변경은 다음 순서로 진행됩니다.
 
 이 과정에서 아래와 같은 일들이 발생할 수 있습니다.
 
-* 서비스 중인 파드가 축출되어 다른 노드로 스케줄링됩니다. (파드 축출에 대한 더 자세한 내용은 [클러스터 업그레이드](/NKS/ko/gov-user-guide/#_27)를 참고하시길 바랍니다.)
+* 서비스 중인 파드가 축출되어 다른 노드로 스케줄링됩니다. (파드 축출에 대한 더 자세한 내용은 [클러스터 업그레이드](/NKS/ko/gov-user-guide/#_30)를 참고하시길 바랍니다.)
 * 클러스터에 배포되어있는 모든 파드가 재배포 됩니다. (파드 재배포에 대한 더 자세한 내용은 아래 파드 재배포 주의 사항을 참고하시길 바랍니다.)
 * 오토스케일러 기능이 동작하지 않습니다. 
 
@@ -1529,7 +1531,7 @@ spec:
 >
 
 #### 로드 밸런서 타입 설정
-로드 밸런서의 타입을 설정할 수 있습니다. 로드 밸런서에 대한 자세한 내용은 [로드 밸런서 콘솔 사용 가이드](/Network/Load%20Balancer/ko/console-guide/)를 참고하세요.
+로드 밸런서의 타입을 설정할 수 있습니다. 로드 밸런서에 대한 자세한 내용은 [로드 밸런서 콘솔 사용 가이드](/Network/Load%20Balancer/ko/console-guide-gov/)를 참고하세요.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/loadbalancer-type입니다.
 * **리스너별 설정을 적용할 수 없습니다.**
@@ -1746,7 +1748,7 @@ metadata:
 ```
 
 #### 리스너 프록시 프로토콜(Proxy Protocol) 설정
-리스너 프로토콜이 TCP 혹은 HTTPS인 경우 리스너에 프록시 프로토콜을 설정할 수 있습니다. 프록시 프로토콜에 대한 자세한 내용은 [로드 밸런서 프록시 모드](/Network/Load%20Balancer/ko/overview/#_4)를 참고하세요.
+리스너 프로토콜이 TCP 혹은 HTTPS인 경우 리스너에 프록시 프로토콜을 설정할 수 있습니다. 프록시 프로토콜에 대한 자세한 내용은 [로드 밸런서 프록시 모드](/Network/Load%20Balancer/ko/overview-gov/#_4)를 참고하세요.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/proxy-protocol입니다.
 * 리스너별 설정을 적용할 수 있습니다.
@@ -2202,14 +2204,14 @@ kubernetes-dashboard   LoadBalancer   10.254.95.176   123.123.123.81   443:30963
 > 생성된 로드 밸런서는 **Network > Load Balancer** 페이지에서 확인할 수 있습니다.
 > 로드 밸런서의 IP는 외부에서 접근할 수 있는 플로팅 IP입니다. **Network > Floating IP** 페이지에서 확인할 수 있습니다.
 
-웹 브라우저에서 `https://{EXTERNAL-IP}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 엑세스 토큰](/Container/NKS/ko/gov-user-guide/#_47)을 참고하세요.
+웹 브라우저에서 `https://{EXTERNAL-IP}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 엑세스 토큰](/Container/NKS/ko/gov-user-guide/#_64)을 참고하세요.
 
 > [참고]
 > Kubernetes 대시보드는 자동 생성되는 사설 인증서를 사용하기 때문에 웹 브라우저의 종류와 보안 설정에 따라 안전하지 않은 페이지로 표시될 수 있습니다.
 
 #### 인그레스(Ingress)를 이용한 서비스 공개
 
-인그레스는 클러스터 내부의 여러 서비스들로 접근하기 위한 라우팅을 제공하는 네트워크 객체입니다. 인그레스 객체의 설정은 인그래스 컨트롤러로 구동됩니다. `kubernetes-dashboard` 서비스 객체를 인그레스를 통해 공개할 수 있습니다. 인그레스와 인그레스 컨트롤러에 대한 설명은 [인그레스 컨트롤러](/Container/NKS/ko/gov-user-guide/#_40)를 참고하세요. 아래 그림은 인그레스를 통해 대시보드를 외부에 공개하는 구조를 나타냅니다.
+인그레스는 클러스터 내부의 여러 서비스들로 접근하기 위한 라우팅을 제공하는 네트워크 객체입니다. 인그레스 객체의 설정은 인그래스 컨트롤러로 구동됩니다. `kubernetes-dashboard` 서비스 객체를 인그레스를 통해 공개할 수 있습니다. 인그레스와 인그레스 컨트롤러에 대한 설명은 [인그레스 컨트롤러](/Container/NKS/ko/gov-user-guide/#_57)를 참고하세요. 아래 그림은 인그레스를 통해 대시보드를 외부에 공개하는 구조를 나타냅니다.
 
 ![dashboard-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-02.png)
 
@@ -2256,7 +2258,7 @@ NAME                    CLASS   HOSTS   ADDRESS          PORTS     AGE
 k8s-dashboard-ingress   nginx   *       123.123.123.44   80, 443   34s
 ```
 
-웹 브라우저에서 `https://{ADDRESS}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 엑세스 토큰](/Container/NKS/ko/gov-user-guide/#_47)을 참고하세요.
+웹 브라우저에서 `https://{ADDRESS}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 엑세스 토큰](/Container/NKS/ko/gov-user-guide/#_64)을 참고하세요.
 
 ### 대시보드 엑세스 토큰
 Kubernetes 대시보드에 로그인하려면 토큰이 필요합니다. 토큰은 다음 명령으로 얻을 수 있습니다.
