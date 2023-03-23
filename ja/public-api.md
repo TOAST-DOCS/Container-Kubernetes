@@ -7,7 +7,7 @@ APIを使用するにはAPIエンドポイントとトークンなどが必要�
 
 | タイプ | リージョン | エンドポイント |
 |---|---|---|
-| kubernetes | 韓国(パンギョ)リージョン<br>韓国(坪村)リージョン | https://kr1-api-kubernetes.infrastructure.cloud.toast.com <br>https://kr2-api-kubernetes.infrastructure.cloud.toast.com |
+| kubernetes | 韓国(パンギョ)リージョン<br>韓国(坪村)リージョン | https://kr1-api-kubernetes-infrastructure.nhncloudservice.com <br>https://kr2-api-kubernetes-infrastructure.nhncloudservice.com |
 
 
 APIレスポンスにガイドに明示されていないフィールドが表示されることがあります。これらのフィールドはNHN Cloud内部用途で使用され、予告なしに変更されることがあるため使用しません。
@@ -55,12 +55,13 @@ GET /v2.0/networks?router:external=True
 | リージョン | ベースイメージ名 | ベースイメージUUID |
 |---|---|---|
 | 韓国(パンギョ)リージョン | CentOS 7.9 | 5ceda96d-480a-491e-a69c-7a2a12344aec |
-|  | Ubuntu Server 18.04.6 LTS | f3b876c0-7c3b-4cf0-b879-91c677457f98 |
-|  | Debian 11.5 Bullseye | 9dd53786-02f2-414b-b8ad-e082825e117f |
+|  | Ubuntu Server 18.04.6 LTS | 853fd864-352d-465c-a341-bae13f26ab35 |
+|  | Debian 11.6 Bullseye | 4463e35c-bb39-46f2-8057-8bb200f3f171 |
+|  | Rocky Linux 8.6 | 1d236d11-b41d-40e5-97e7-c9723f926842 |
 | 韓国(坪村)リージョン | CentOS 7.9 | 2976678f-49fe-454b-a4d6-50712822c814 |
-|  | Ubuntu Server 18.04 LTS | 276b07d2-96f2-4048-aa90-3c921d9685f7 |
-|  | Debian 11.5 Bullseye | 24f40f7c-de69-456d-8a43-17fe7e5aa2c1 |
-
+|  | Ubuntu Server 18.04 LTS | 749e654b-d633-4b1f-a0dc-dcc4bb275fe3 |
+|  | Debian 11.6 Bullseye | e51131ce-6cfd-4752-a1b6-9ed6dcf55825 |
+|  | Rocky Linux 8.6 | bf20a58e-ca16-47a6-af97-90cd6e94ee01 |
 
 
 
@@ -174,7 +175,7 @@ X-Auth-Token: {tokenId}
             },
             "links": [
                 {
-                    "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/clusters/f0af4484-0a16-433a-a15c-295d9ba6537d",
+                    "href": "https://kr2-api-kubernetes-infrastructure.nhncloudservice/clusters/f0af4484-0a16-433a-a15c-295d9ba6537d",
                     "rel": "self"
                 },
                 {
@@ -310,11 +311,11 @@ X-Auth-Token: {tokenId}
     },
     "links": [
         {
-            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/v1/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
+            "href": "https://kr2-api-kubernetes-infrastructure.nhncloudservice/v1/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
             "rel": "self"
         },
         {
-            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
+            "href": "https://kr2-api-kubernetes-infrastructure.nhncloudservice/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
             "rel": "bookmark"
         }
     ],
@@ -597,6 +598,70 @@ X-Auth-Token: {tokenId}
 </p>
 </details>
 
+### クラスタCNIの変更
+クラスタCNI(container network interface)を変更します。Flannel CNIを他のCNIに変更できます。変更できるCNIの種類と変更可能条件については[使用ガイド](/Container/NKS/ko/user-guide/#_5)を参照してください。
+
+```
+POST /v1/clusters/{CLUSTER_ID_OR_NAME}/actions/cni_update
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### リクエスト
+
+| 名前 | 種類 | 形式 | 必須 | 説明 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | トークンID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
+| cni | Body | String | O | 変更するCNIを設定(選択可能CNIリスト：calico) | 
+| num_buffer_nodes | Body | Integer | X | バッファノード数。デフォルト値：1、最小値：0、最大値：すべてのワーカーノードの(ワーカーノードグループあたりの最大ノード数クォーター - 該当ワーカーノードグループの現在のノード数)うち最小値。 |
+| num_max_unavailable_nodes | Body |  Integer | X | 最大サービス不可ノード数。最小値：1、最大値：該当clusterの現在ノード数、デフォルト値：1 |
+| pod_cidr | Body | String | X | calico pod cidr設定、デフォルト値：10.200.0.0/16, pod_cidr入力ルール参考 |
+
+pod_cidrは、以下のようなルールで入力する必要があります。
+* CIDRはリンクローカルアドレス帯域(169.254.0.0/16)と重複できません。
+* CIDRはNKSクラスタに使用されたservice IP帯域(10.254.0.0/16)と重複できません。
+* CIDRはNKS内部で使用しているIP帯域(198.18.0.0/19)と重複できません。
+* CIDRはNKSクラスタに接続されたVPCネットワークサブネットまたは追加ネットワークサブネットの帯域と重複できません。
+* CIDRは現在NKSクラスタに使用されているpod CIDR帯域値と重複できません。(クラスタがflannel CNIの場合、10.100.0.0/16 CIDRは使用できません。)
+* /24より大きいCIDRブロックは入力できません。 (次のようなCIDRブロックは使用できません。 /26, /30)
+
+
+<details><summary>例</summary>
+<p>
+
+```json
+{
+    "cni": "calico",
+    "num_max_unavailable_nodes": 1,
+    "num_buffer_nodes": 1,
+    "pod_cidr": "10.200.0.0/16"
+}
+```
+
+</p>
+</details>
+
+
+#### レスポンス
+
+| 名前 | 種類 | 形式 | 説明 |
+|---|---|---|---|
+| uuid | Body | UUID | クラスタUUID |
+
+<details><summary>例</summary>
+<p>
+
+```json
+{
+    "uuid": "0641db9f-5e71-4df9-9571-089c7964d82e"
+}
+```
+
+</p>
+</details>
 ---
 
 ## ノードグループ
@@ -774,11 +839,11 @@ X-Auth-Token: {tokenId}
     },
     "links": [
         {
-            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
+            "href": "https://kr2-api-kubernetes-infrastructure.nhncloudservice/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
             "rel": "self"
         },
         {
-            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
+            "href": "https://kr2-api-kubernetes-infrastructure.nhncloudservice/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
             "rel": "bookmark"
         }
     ],
@@ -919,11 +984,11 @@ X-Auth-Token: {tokenId}
     },
     "links": [
         {
-            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
+            "href": "https://kr2-api-kubernetes-infrastructure.nhncloudservice/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
             "rel": "self"
         },
         {
-            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
+            "href": "https://kr2-api-kubernetes-infrastructure.nhncloudservice/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
             "rel": "bookmark"
         }
     ],
@@ -1321,6 +1386,66 @@ X-Auth-Token: {tokenId}
 
 ---
 
+### インスタンスタイプを変更する
+
+ノードグループのインスタンスタイプを変更します。
+
+```
+PATCH /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### リクエスト
+
+| 名前 | 種類 | 形式 | 必須 | 説明 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | トークンID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | ノードグループUUIDまたはノードグループ名 | 
+| type | Body | String | O | `flavor_id`に設定 |
+| flavor_id | Body | String | O | インスタンスタイプUUID |
+| num_buffer_nodes | Body | Integer | X | バッファノード数。最小値：0、最大値：(ワーカーノードグループあたりの最大ノード数クォーター - 該当ワーカーノードグループの現在ノード数)、デフォルト値：1 |
+| num_max_unavailable_nodes | Body |  Integer | X | 最大サービス不可ノード数。最小値：1、最大値：該当ワーカーノードグループの現在ノード数、デフォルト値: 1 |
+
+
+<details><summary>例</summary>
+<p>
+
+```json
+{
+    "type": "flavor_id",
+    "flavor_id": "1d0d6983-8e9d-44dc-810e-d7689afa372c",
+    "num_buffer_nodes": 1,
+    "num_max_unavailable_nodes":1
+}
+```
+
+</p>
+</details>
+
+
+#### レスポンス
+
+| 名前 | 種類 | 形式 | 説明 |
+|---|---|---|---|
+| uuid | Body | UUID | ノードグループUUID |
+
+<details><summary>例</summary>
+<p>
+
+```json
+{
+    "uuid": "018b06c5-1293-4081-8242-167a1cb9f262"
+}
+```
+
+</p>
+</details>
+
+---
 
 ## その他機能
 
