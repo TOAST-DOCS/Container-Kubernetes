@@ -7,7 +7,7 @@ All API calls are made using the `kubernetes` type endpoint.
 
 | Type | Region | Endpoint |
 |---|---|---|
-| kubernetes | Korea (Pangyo) Region <br> Korea (Pyeongchon) Region | https://kr1-api-kubernetes.infrastructure.cloud.toast.com <br>https://kr2-api-kubernetes.infrastructure.cloud.toast.com |
+| kubernetes | Korea (Pangyo) Region <br> Korea (Pyeongchon) Region | https://kr1-api-kubernetes-infrastructure.nhncloudservice.com <br>https://kr2-api-kubernetes-infrastructure.nhncloudservice.com |
 
 
 Fields not specified in the guide may appear in API responses. These fields are used for internal use by NHN Cloud and are subject to change without prior notice, so we advise you not to use them.
@@ -55,11 +55,13 @@ Enter the base image UUID to use for creating a node. The base image name and UU
 | Region | Base Image Name | Base Image UUID |
 |---|---|---|
 | Korea (Pangyo) Region | CentOS 7.9 | 5ceda96d-480a-491e-a69c-7a2a12344aec |
-|  | Ubuntu Server 18.04.6 LTS | f3b876c0-7c3b-4cf0-b879-91c677457f98 |
-|  | Debian 11.5 Bullseye | 9dd53786-02f2-414b-b8ad-e082825e117f |
-| Korea (Pyeongchon) Region | CentOS 7.9 | 2976678f-49fe-454b-a4d6-50712822c814 |
+|  | Ubuntu Server 18.04.6 LTS | 853fd864-352d-465c-a341-bae13f26ab35 |
+|  | Debian 11.6 Bullseye | 4463e35c-bb39-46f2-8057-8bb200f3f171 |
+|  | Rocky Linux 8.6 | 1d236d11-b41d-40e5-97e7-c9723f926842 |
 |  | Ubuntu Server 18.04 LTS | 276b07d2-96f2-4048-aa90-3c921d9685f7 |
-|  | Debian 11.5 Bullseye | 24f40f7c-de69-456d-8a43-17fe7e5aa2c1 |
+|  | Ubuntu Server 18.04 LTS | 749e654b-d633-4b1f-a0dc-dcc4bb275fe3 |
+|  | Debian 11.6 Bullseye | e51131ce-6cfd-4752-a1b6-9ed6dcf55825 |
+|  | Rocky Linux 8.6 | bf20a58e-ca16-47a6-af97-90cd6e94ee01 |
 
 ### Block Storage Type
 
@@ -170,11 +172,11 @@ This API does not require a request body.
             },
             "links": [
                 {
-                    "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/v1/clusters/f0af4484-0a16-433a-a15c-295d9ba6537d",
+                    "href": "https://kr2-api-kubernetes-infrastructure.nhncloudservice.com/v1/clusters/f0af4484-0a16-433a-a15c-295d9ba6537d",
                     "rel": "self"
                 },
                 {
-                    "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/clusters/f0af4484-0a16-433a-a15c-295d9ba6537d",
+                    "href": "https://kr2-api-kubernetes-infrastructure.nhncloudservice.com/clusters/f0af4484-0a16-433a-a15c-295d9ba6537d",
                     "rel": "bookmark"
                 }
             ],
@@ -305,11 +307,11 @@ This API does not require a request body.
     },
     "links": [
         {
-            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/v1/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
+            "href": "https://kr2-api-kubernetes-infrastructure.nhncloudservice.com/v1/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
             "rel": "self"
         },
         {
-            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
+            "href": "https://kr2-api-kubernetes-infrastructure.nhncloudservice.com/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
             "rel": "bookmark"
         }
     ],
@@ -591,6 +593,71 @@ This API does not require a request body.
 </p>
 </details>
 
+### Change Cluster CNI
+Changes the cluster CNI (container network interface). You can change Flannel CNI to a different CNI. For more information on the types of CNIs you can change and the conditions under which they can be changed, see [User Guide](/Container/NKS/ko/user-guide/#_5).
+
+```
+POST /v1/clusters/{CLUSTER_ID_OR_NAME}/actions/cni_update
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### Request
+
+| Name | Type | Format | Required | Description |
+|---|---|---|---|---|
+| tokenId | Header | String | O | Token ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
+| cni | Body | String | O | Configure a CNI to change (Selectable CNI list: calico) | 
+| num_buffer_nodes | Body | Integer | X | Number of buffer nodes. Default: 1, minimum: 0, maximum: the minimum of all worker nodes (maximum number of nodes per worker node group - current number of nodes in that worker node group). |
+| num_max_unavailable_nodes | Body |  Integer | X | Maximum number of unavailable nodes. minimum: 1, maximum: current number of nodes for the cluster, default: 1) |
+| pod_cidr | Body | String | X | calico pod cidr settings, default: 10.200.0.0/16, see the input rule of pod_cidr |
+
+pod_cidr must be entered in the following rules.
+* CIDR cannot overlap with the link-local address band (169.254.0.0/16).
+* CIDR cannot overlap with the service IP band (10.254.0.0/16) used in NKS clusters. 
+* CIDR cannot overlap with the IP band (198.18.0.0/19) being used inside the NKS.
+* CIDR cannot overlap with bands of the VPC network subnet or additional network subnets connected to NKS clusters.
+* CIDR cannot overlap with a pod CIDR band that is currently being used for NKS clusters. (If the cluster is a flannel CNI, the 10.100.0.0/16 CIDR cannot be used.)
+* You cannot enter a CIDR block greater than /24. (The following CIDR blocks are not available: /26, /30)
+
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "cni": "calico",
+    "num_max_unavailable_nodes": 1,
+    "num_buffer_nodes": 1,
+    "pod_cidr": "10.200.0.0/16"
+}
+```
+
+</p>
+</details>
+
+
+#### Response
+
+| Name | Type | Format | Description |
+|---|---|---|---|
+| uuid | Body | UUID | Cluster UUID |
+
+<details><summary>Example</summary>
+<p>
+
+
+```json
+{
+    "uuid": "0641db9f-5e71-4df9-9571-089c7964d82e"
+}
+```
+
+</p>
+</details>
 ---
 
 ## Node Group
@@ -768,11 +835,11 @@ This API does not require a request body.
     },
     "links": [
         {
-            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
+            "href": "https://kr2-api-kubernetes-infrastructure.nhncloudservice.com/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
             "rel": "self"
         },
         {
-            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
+            "href": "https://kr2-api-kubernetes-infrastructure.nhncloudservice.com/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
             "rel": "bookmark"
         }
     ],
@@ -913,11 +980,11 @@ X-Auth-Token: {tokenId}
     },
     "links": [
         {
-            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
+            "href": "https://kr2-api-kubernetes-infrastructure.nhncloudservice.com/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
             "rel": "self"
         },
         {
-            "href": "https://kr2-api-kubernetes.infrastructure.cloud.toast.com/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
+            "href": "https://kr2-api-kubernetes-infrastructure.nhncloudservice.com/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
             "rel": "bookmark"
         }
     ],
@@ -1314,6 +1381,66 @@ X-Auth-Token: {tokenId}
 
 ---
 
+### Change Instance Flavor
+
+You can change the instance flavor of a node group.
+
+```
+PATCH /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### Request
+
+| Name | Type | Format | Required | Description |
+|---|---|---|---|---|
+| tokenId | Header | String | O | Token ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | Node group UUID or node group name | 
+| type | Body | String | O | Set to `flavor_id` |
+| flavor_id | Body | String | O | Flavor UUID |
+| num_buffer_nodes | Body | Integer | X | Number of buffer nodes. Minimum: 0, Maximum: (maximum number of nodes per worker node group - current number of nodes in that worker node group), Default: 1 |
+| num_max_unavailable_nodes | Body |  Integer | X | Maximum number of unavailable nodes. Minimum: 1, Maximum: Current number of nodes in the worker node group, Default: 1) |
+
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "type": "flavor_id",
+    "flavor_id": "1d0d6983-8e9d-44dc-810e-d7689afa372c",
+    "num_buffer_nodes": 1,
+    "num_max_unavailable_nodes":1
+}
+```
+
+</p>
+</details>
+
+
+#### Response
+
+| Name | Type | Format | Description |
+|---|---|---|---|
+| uuid | Body | UUID | Node group UUID |
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "uuid": "018b06c5-1293-4081-8242-167a1cb9f262"
+}
+```
+
+</p>
+</details>
+
+---
 
 ## Other Features
 
