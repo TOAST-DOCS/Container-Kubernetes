@@ -23,7 +23,7 @@ Object Storage APIを使用するにはテナントID(tenant ID)およびAPIエ�
 
 | 項目 | API Endpoint | 用途 |
 | --- | --- | --- |
-| Identity | https://api-identity.infrastructure.cloud.toast.com/v2.0 | 認証トークン発行 |
+| Identity | https://api-identity-infrastructure.nhncloudservice.com/v2.0 | 認証トークン発行 |
 | Tenant ID | 数字 + 英字で構成された32文字の文字列 | 認証トークン発行 |
 
 #### APIパスワード設定

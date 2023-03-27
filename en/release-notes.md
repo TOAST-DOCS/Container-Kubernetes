@@ -1,5 +1,32 @@
 ## Container > NHN Kubernetes Service (NKS) > Release Notes
 
+
+### March 28, 2023
+
+#### Added Features
+
+* Added the change cluster CNI feature.
+    * For more details, see [Console User Guide](/Container/NKS/en/user-guide/#cni).
+* You can change the instance flavor of a node group.
+* You can use a feature to view Kubernetes resources fron the console.
+
+#### Feature Updates
+
+* The NKS API domain has been changed.
+    * Korea (Pangyo) region
+        * AS-IS: https://kr1-api-kubernetes.infrastructure.cloud.toast.com
+        * TO-BE: https://kr1-api-kubernetes-infrastructure.nhncloudservice.com
+    * Korea (Pyeongchon) region
+        * AS-IS: https://kr2-api-kubernetes.infrastructure.cloud.toast.com
+        * TO-BE: https://kr2-api-kubernetes-infrastructure.nhncloudservice.com
+
+#### Feature Updates
+
+* Image update
+    * Ubuntu Server 18.04.6 LTS - Container (2023.02.21)
+    * Debian 11.6 Bullseye - Container (2023.02.21)
+    * Rocky Linux 8.6 - Container (2023.02.21)
+
 ### January 31, 2023
 
 #### Added Features
