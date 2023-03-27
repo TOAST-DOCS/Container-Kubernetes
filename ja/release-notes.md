@@ -1,5 +1,31 @@
 ## Container > Kubernetes > リリースノート
 
+### 2023. 03. 28.
+
+#### 機能追加
+
+* クラスタCNI変更機能が追加されました。
+    * 詳細については[使用ガイド](/Container/NKS/ko/user-guide/#_5)を参照してください。
+* ノードグループのインスタンスタイプを変更できます。
+* コンソールでKubernetesリソース照会機能を使用できます。
+
+#### 機能変更
+
+* NKS APIアドレスドメインが変更されました。
+    * 韓国(パンギョ)リージョン
+        * 既存：https://kr1-api-kubernetes.infrastructure.cloud.toast.com
+        * 変更：https://kr1-api-kubernetes-infrastructure.nhncloudservice.com
+    * 韓国(ピョンチョン)リージョン
+        * 既存：https://kr2-api-kubernetes.infrastructure.cloud.toast.com
+        * 変更：https://kr2-api-kubernetes-infrastructure.nhncloudservice.com
+
+#### 機能改善
+
+* イメージアップデート
+    * Ubuntu Server 18.04.6 LTS - Container (2023.02.21)
+    * Debian 11.6 Bullseye - Container (2023.02.21)
+    * Rocky Linux 8.6 - Container (2023.02.21)
+
 ### 2023. 01. 31.
 
 #### 機能追加
