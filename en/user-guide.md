@@ -9,7 +9,7 @@ To use NHN Kubernetes Service (NKS), you must create clusters first.
 > [Caution] Setting up permissions to use clusters<br>
 > To create a cluster, the user must have **Infrastructure ADMIN** or **Infrastructure LoadBalancer ADMIN** permissions of basic infrastructure services for the project.
 Only with the permissions, the user can normally create and operate clusters running on basic infrastructure services. It is totally possible to add one of the two permissions when the other is already acquired.
-To learn more about setting up permissions, see [Manage Project Members](/TOAST/ko/console-guide/#_22).
+To learn more about setting up permissions, see [Manage Project Members](/TOAST/en/console-guide/#_22).
 If there is some change to the permissions (permissions added or deleted) that were set up when creating a cluster, some features of the cluster may be restricted.
 For more information, see [Change Cluster OWNER](./user-guide/#_4).
 
@@ -222,6 +222,7 @@ If you start a stopped node, it operates in the following order.
 * The node becomes the ACTIVE status at the instance level.
 * The node is added to Kubernetes node resources again.
 
+
 #### Constraints
 
 Stop and start node feature has the following constraints.
@@ -232,6 +233,7 @@ Stop and start node feature has the following constraints.
 * Autoscaler cannot be enabled when the node group contains stopped nodes.
 * You cannot upgrade node groups that contain stopped nodes.
 
+
 #### Display status
 
 The status icon is displayed according to the node status on the node list tab. The status colors are as follows.
@@ -239,6 +241,7 @@ The status icon is displayed according to the node status on the node list tab. 
 * Green: A node in the start status
 * Gray: A node in the stop status
 * Red: A node in the abnormal status
+
 
 ### Using a GPU node group 
 When you need to run GPU-based workloads through Kubernetes, you can create a node group composed of GPU instances.
@@ -890,7 +893,7 @@ Changing the instance flavor proceeds in the following order.
 4. Evict working pods from the buffer node, and delete the buffer node.
 5. Reactivate the cluster auto scaler feature.
 
-Instance flavor changes work in a similar way to worker component upgrades. For more details on creating and deleting buffer nodes and evicting pods, see [Upgrade a Cluster](/Container/NKS/ko/user-guide/#_30).
+Instance flavor changes work in a similar way to worker component upgrades. For more details on creating and deleting buffer nodes and evicting pods, see [Upgrade a Cluster](/Container/NKS/en/user-guide/#_30).
 
 
 #### Constraints
@@ -1176,6 +1179,7 @@ Notes
 * <a name="footnote_worker_component_upgrade_2">3</a>: Buffer node is an extra node which is created so that the pods evicted from existing worker nodes can be rescheduled during the upgrade process. It is created having the same scale as the worker node defined in that worker node group, and is automatically deleted when the upgrade process is over. This node is charged based on the instance fee policy. 
 * <a name="footnote_worker_component_upgrade_3">3</a>: You can define the number of buffer nodes during upgrade. The default value is 1, and buffer nodes are not added when set to 0. Minimum value of 0, maximum value of (maximum number of nodes per node group - the current number of nodes for the worker node group).
 * <a name="footnote_worker_component_upgrade_4">4</a>: Tasks are executed by the maximum number of unavailable nodes set during upgrade. The default value of 1, minimum value of 1, and maximum value of the current number of nodes for the worker node group.
+
 In this process, the following might happen:
 
 * Pods in service will be evicted and scheduled to another node. (To find out more about pod eviction, refer to the notes below.)
@@ -1248,7 +1252,6 @@ CNI change proceeds in the following order.
 6. Re-enables cluster Auto scale feature <sup>[4](#footnote_calico_change_step_4)</sup>.
 7. Delete Flannel CNI.
 
-> 
 
 Notes
 
@@ -1261,7 +1264,7 @@ Notes
 
 The following can happen in this process.
 
-* The pod in service is evicted and scheduled to another node. (For more information on pod eviction, ss [Cluster Upgrade](/NKS/ko/user-guide/#_27)).
+* The pod in service is evicted and scheduled to another node. (For more information on pod eviction, ss [Cluster Upgrade](/NKS/en/user-guide/#_27)).
 * All the pods deployed in the cluster are redeployed. (For more information on redeploying pods, see the precautions for pod redeployment below.)
 * Auto scale feature does not operate. 
 
@@ -1270,6 +1273,10 @@ The following can happen in this process.
 > 1. It proceeds for the pod that has not been transferred to another node through the evicting process. 
 > 2. For normal communication between Flannel CIDR and Calico CIDR during the CNI change process, CNI change pod CIDR value should not be the same as the existing Flannel CIDR value. 
 > 3. Pause containers of the previously distributed pod are all stopped and then regenerated by kubelet. The settings, such as the pod name and local storage space, remain unchanged, but the IP is changed to the IP of Calico CIDR.
+
+
+
+
 
 ## Manage Worker Node
 
@@ -2415,7 +2422,6 @@ Set whether to allow expansion of the created volume (if not input, false is set
 * **True** : Volume expansion is allowed.
 * **False** : Volume expansion is not allowed.
 
-
 #### Example 1
 The storage class manifest below can be used for Kubernetes clusters using v1.19.13 or earlier. You can use parameters to specify the availability zone and volume type.
 
@@ -2563,7 +2569,6 @@ volumeBindingMode: Immediate
 
 There is no need to create PV for dynamic provisioning; therefore, PVC manifest does not require the setting of **spec.volumeName**.
 
-
 ```yaml
 # pvc-dynamic.yaml
 apiVersion: v1
@@ -2704,7 +2709,7 @@ The storage provider **cinder.csi.openstack.org** from v1.20.12 and later suppor
 
 
 ### Integrate with NAS Service
-You can utilize NAS storage provided by NHN Cloud as PV. In order to use NAS services, you must use a cluster of version v1.20 or later. For more information on using NHN Cloud NAS, please refer to the [NAS Console User Guide](/Storage/NAS/ko/console-guide).
+You can utilize NAS storage provided by NHN Cloud as PV. In order to use NAS services, you must use a cluster of version v1.20 or later. For more information on using NHN Cloud NAS, please refer to the [NAS Console User Guide](/Storage/NAS/en/console-guide).
 
 > [Note] 
 The NHN Cloud NAS service is currently (2023.03) only available in some regions. For more information on supported regions for NHN Cloud NAS service, see [NAS Service Overview](/Storage/NAS/en/overview).
@@ -2717,10 +2722,12 @@ For Ubuntu, you can install the nfs package with the command below.
 $ apt-get install -y nfs-common
 ```
 
+
 For CentOS, you can install the nfs package with the command below.
 ```
 $ yum install -y nfs-utils
 ```
+
 
 After installing the nfs package, execute the command below to run the rpcbind service. The rpcbind service execution command is the same regardless of the image type.
 ```
@@ -2750,7 +2757,6 @@ $ git clone https://github.com/kubernetes-csi/csi-driver-nfs.git
 ```
 
 ##### 3. After moving to the csi-driver-nfs folder, use the **./deploy/install-driver.sh v4.1.0 local** command to install the csi-driver-nfs components.
-
 ```
 $ cd csi-driver-nfs
 
@@ -2837,7 +2843,7 @@ NAME                                       CAPACITY   ACCESS MODES   RECLAIM POL
 pv-onas                                    300Gi      RWX            Retain           Available                                                      101s   Filesystem
 ```
 
-After creating PV, the process of creating a PVC and mounting a volume to the pod is the same as the basic static provisioning process. For more information on static provisioning, see [Static Provisioning](/Container/NKS/ko/user-guide/#_51).
+After creating PV, the process of creating a PVC and mounting a volume to the pod is the same as the basic static provisioning process. For more information on static provisioning, see [Static Provisioning](/Container/NKS/en/user-guide/#_51).
 
 #### Dynamic Provisioning
 In order to utilize NHN Cloud NAS storage as PV through dynamic provisioning, storage provider information and NHN Cloud NAS storage connection information must be defined when creating the StorageClass manifest.
@@ -2870,7 +2876,7 @@ NAME                                  PROVISIONER      RECLAIMPOLICY   VOLUMEBIN
 storageclass.storage.k8s.io/onas-sc   nfs.csi.k8s.io   Retain          Immediate           false                  15s
 ```
 
-After creating the StorageClass, the process of creating a PVC and mounting the volume to the pod is the same as the basic dynamic provisioning process. For more information on dynamic provisioning, see [Dynamic Provisioning](/Container/NKS/ko/user-guide/#_52).
+After creating the StorageClass, the process of creating a PVC and mounting the volume to the pod is the same as the basic dynamic provisioning process. For more information on dynamic provisioning, see [Dynamic Provisioning](/Container/NKS/en/user-guide/#_52).
 
 > [Note] 
 nfs-csi-driver works by creating a subdirectory inside the nfs storage when creating a PV through dynamic provisioning. 
