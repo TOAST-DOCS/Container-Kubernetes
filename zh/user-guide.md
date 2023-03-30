@@ -49,6 +49,28 @@ NHN Kubernetes Service (NKS) supports several versions of Kubernetes. Some featu
 | v1.24.3 | Available | Available |
 | v1.25.4 | Available | Available |
 
+NHN Kubernetes Service (NKS) provides different types of Container Network Interface (CNI) according its version. After 31 March 2023, CNI is created with Calico when creating a cluster with version 1.24.3 or higher. Network mode of Flannel and Calico CNI all operate in VXLAN method.
+
+| Version | CNI Type and Version Installed when creating Cluster | CNI Change Available |
+| :-: | :-: | :-: |
+| v1.17.6 | Flannel v0.12.0 | Unavailable |
+| v1.18.19 | Flannel v0.12.0 | Unavailable |
+| v1.19.13 | Flannel v0.14.0 | Unavailable |
+| v1.20.12 | Flannel v0.14.0 | Unavailable |
+| v1.21.6 | Flannel v0.14.0 | Unavailable |
+| v1.22.3 | Flannel v0.14.0 | Unavailable |
+| v1.23.3 | Flannel v0.14.0 | Unavailable |
+| v1.24.3 | Flannel v0.14.0 or Calico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | Conditionally Available |
+| v1.25.4 | Flannel v0.14.0 or Calico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | Conditionally Available |
+
+Notes
+
+* <a name="footnote_calico_version_1">1</a>: Flannel is installed in clusters created before 31 March 2023. For clusters of v1.24.3 or higher created after that date, Calico is installed.
+* <a name="footnote_calico_version_2">2</a>: CNI change is only supported on clusters of v1.24.3 or higher, and currently changing from Flannel to Calico is only supported.
+
+CIDR of default pod for CNI is as follows.
+* Flannel: 10.100.0.0/16
+* Calico: 10.200.0.0/16
 
 Enter information as required and click **Create Cluster**, and a cluster begins to be created. You can check the status from the list of clusters. It takes about 10 minutes to create; more time may be required depending on the cluster configuration.
 
@@ -200,6 +222,7 @@ If you start a stopped node, it operates in the following order.
 * The node becomes the ACTIVE status at the instance level.
 * The node is added to Kubernetes node resources again.
 
+
 #### Constraints
 
 Stop and start node feature has the following constraints.
@@ -210,6 +233,7 @@ Stop and start node feature has the following constraints.
 * Autoscaler cannot be enabled when the node group contains stopped nodes.
 * You cannot upgrade node groups that contain stopped nodes.
 
+
 #### Display status
 
 The status icon is displayed according to the node status on the node list tab. The status colors are as follows.
@@ -218,12 +242,13 @@ The status icon is displayed according to the node status on the node list tab. 
 * Gray: A node in the stop status
 * Red: A node in the abnormal status
 
+
 ### Using a GPU node group 
 When you need to run GPU-based workloads through Kubernetes, you can create a node group composed of GPU instances.
 Select the `g2` type when selecting a flavor while creating the clusters or node groups to create a GPU node group.
 
 > [Note]
-> GPU provided by NHN Cloud GPU instance is affiliated with NVIDIA. ([Identify available GPU specifications that can be used](/Compute/GPU%20Instance/zh/overview/#gpu-specifications))
+> GPU provided by NHN Cloud GPU instance is affiliated with NVIDIA. ([Identify available GPU specifications that can be used](/Compute/GPU%20Instance/zh/overview/#gpu-specifications)
 > nvidia-device-plugin required for Kubernetes to use an NVIDIA GPU will be installed automatically when creating a GPU node group.
 
 To check the default setting and run a simple operation test for the created GPU node, use the following method:
@@ -850,6 +875,35 @@ The features of a new version of user script are included in the node groups cre
         1. The old version of a user script
         2. The new version of a user script
 
+### Change Instance Flavor
+Change the instance flavor of a worker node group. The instance flavors of all worker nodes in a worker node group are changed.
+
+
+
+#### Process
+
+Changing the instance flavor proceeds in the following order.
+
+1. Deactivate the cluster auto scaler feature.
+2. Add a buffer node to the worker node group. 
+3. Perform the following tasks for all worker nodes within the worker node group:
+    1. Evict the working pods from the worker node, and make the nodes not schedulable.
+    2. Change the instance flavor of a worker node.
+    3. Make the nodes schedulable.
+4. Evict working pods from the buffer node, and delete the buffer node.
+5. Reactivate the cluster auto scaler feature.
+
+Instance flavor changes work in a similar way to worker component upgrades. For more details on creating and deleting buffer nodes and evicting pods, see [Upgrade a Cluster](/Container/NKS/zh/user-guide/#_30).
+
+
+#### Constraints
+
+You can only change an instance to another flavor that is compatible with its current flavor.
+
+* m2, c2, r2, t2, x1 flavor instances can be changed to m2, c2, r2, t2, x1 flavors.
+* m2, c2, r2, t2, x1 flavor instances cannot be changed to u2 flavors.
+* u2 flavor instances cannot be changed to other flavors once they have been created, not even to those of the same u2 flavor.
+
 ## Cluster Management
 To run and manage clusters from a remote host, `kubectl` is required, which is the command-line tool (CLI) provided by Kubernetes.
 
@@ -1082,19 +1136,19 @@ The following table shows whether upgrade is possible while upgrading the Kubern
 
 | Status | Master version | Whether master can be upgraded | Worker node group version | Whether worker node group can be upgraded
 | --- | :-: | :-: | :-: | :-: |
-| Initial state| v1.21.6 | Possible (Note 1) | v1.21.6 | Not possible (Note 2) | 
-| State after master upgrade | v1.22.3 | Not possible (Note 3) | v1.21.6 | Possible (Note 4) | 
-| State after worker node group upgrade | v1.22.3 | Possible (Note 1) | v1.22.3 | Not possible (Note 2) |
-| State after master upgrade | v1.23.3 | Not possible (Note 3) | v1.22.3 | Possible (Note 4) | 
-| State after worker node group upgrade | v1.23.3 | Not possible (Note 5) | v1.23.3 | Not possible (Note 2) |
+| Initial state| v1.21.6 | Available <sup>[1](#footnote_cluster_upgrade_rule_1)</sup>  | v1.21.6 | Unavailable  <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> | 
+| State after master upgrade | v1.22.3 | Unavailable <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.21.6 | Available <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
+| State after worker node group upgrade | v1.22.3 | Available  <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.22.3 | Unavailable  <sup>[2](#footnote_cluster_upgrade_rule_2)</sup>  |
+| State after master upgrade | v1.23.3 | Unavailable <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.22.3 | Available <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
+| State after worker node group upgrade | v1.23.3 | Unavailable <sup>[5](#footnote_cluster_upgrade_rule_5)</sup>  | v1.23.3 | Unavailable <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
 
 Notes
 
-* (Note 1) Upgrade is possible because the versions of the master and all worker node groups are matching
-* (Note 2) Worker node groups can be upgraded once the master is upgraded
-* (Note 3) The versions of the master and all worker node groups must match in order to upgrade
-* (Note 4) Upgrade is possible because the master is upgraded
-* (Note 5) Upgrade is not possible because the latest version supported by NHN Cloud is being used
+* <a name="footnote_cluster_upgrade_rule_1">1</a>: Upgrade is possible because the versions of the master and all worker node groups are matching
+* <a name="footnote_cluster_upgrade_rule_1">2</a>: Worker node groups can be upgraded once the master is upgraded
+* <a name="footnote_cluster_upgrade_rule_1">3</a>: The versions of the master and all worker node groups must match in order to upgrade
+* <a name="footnote_cluster_upgrade_rule_1">4</a>: Upgrade is possible because the master is upgraded
+* <a name="footnote_cluster_upgrade_rule_1">5</a>: Upgrade is not possible because the latest version supported by NHN Cloud is being used
 
 
 ##### Upgrading master components
@@ -1108,22 +1162,23 @@ In this process, the following might happen:
 ##### Upgrading worker components
 Worker components can be upgraded for each worker node group. Worker components are upgraded in the following steps:
 
-1. Deactivate the cluster auto scaler feature. (Note 1)
-2. Add a buffer node② to the worker node group.③
-3. Perform the following tasks for all worker nodes within the worker node group④ :
+1. Deactivate the cluster auto scaler feature.<sup>[1](#footnote_worker_component_upgrade_1)</sup>
+2. Add a buffer node.<sup>[2](#footnote_worker_component_upgrade_2)</sup> to the worker node group.<sup>[3](#footnote_worker_component_upgrade_3)</sup> 
+3. Perform the following tasks for all worker nodes within the worker node group.<sup>[4](#footnote_worker_component_upgrade_4)</sup>
     1. Evict the working pods from the worker node, and make the nodes not schedulable.
     2. Upgrade worker components.
     3. Make the nodes schedulable.
 4. Evict working pods from the buffer node, and delete the buffer node.
-5. Reactivate the cluster auto scaler feature. (Note 1)
+5. Reactivate the cluster auto scaler feature.<sup>[1](#footnote_worker_component_upgrade_1)</sup> 
 
 
 Notes
 
-* (Note 1) This step is valid only if the cluster autoscaler feature is enabled before starting the upgrade feature.
-* (Note 2) Buffer node is an extra node which is created so that the pods evicted from existing worker nodes can be rescheduled during the upgrade process. It is created having the same scale as the worker node defined in that worker node group, and is automatically deleted when the upgrade process is over. This node is charged based on the instance fee policy. 
-* ③ You can define the number of buffer nodes during upgrade. The default value is 1, and buffer nodes are not added when set to 0. Minimum value of 0, maximum value of (maximum number of nodes per node group - the current number of nodes for the worker node group).
-* ④ Tasks are executed by the maximum number of unavailable nodes set during upgrade. The default value of 1, minimum value of 1, and maximum value of the current number of nodes for the worker node group.
+* <a name="footnote_worker_component_upgrade_1">1</a>: This step is valid only if the cluster autoscaler feature is enabled before starting the upgrade feature.
+* <a name="footnote_worker_component_upgrade_2">3</a>: Buffer node is an extra node which is created so that the pods evicted from existing worker nodes can be rescheduled during the upgrade process. It is created having the same scale as the worker node defined in that worker node group, and is automatically deleted when the upgrade process is over. This node is charged based on the instance fee policy. 
+* <a name="footnote_worker_component_upgrade_3">3</a>: You can define the number of buffer nodes during upgrade. The default value is 1, and buffer nodes are not added when set to 0. Minimum value of 0, maximum value of (maximum number of nodes per node group - the current number of nodes for the worker node group).
+* <a name="footnote_worker_component_upgrade_4">4</a>: Tasks are executed by the maximum number of unavailable nodes set during upgrade. The default value of 1, minimum value of 1, and maximum value of the current number of nodes for the worker node group.
+
 In this process, the following might happen:
 
 * Pods in service will be evicted and scheduled to another node. (To find out more about pod eviction, refer to the notes below.)
@@ -1148,6 +1203,79 @@ If the versions match after upgrading the versions of the master and all worker 
 
 > [Caution]
 If you do not upgrade the worker node group after upgrading the master, some pods might not work properly.
+
+
+### Change Cluster CNI
+NHN Kubernetes Service (NKS) supports changing the container network interface (CNI) of a running Kubernetes cluster. 
+The Change Cluster CNI feature allows you to change the CNI of the NHN Kubernetes Service (NKS) from Flannel CNI to Calico CNI.
+
+#### CNI Change Rules
+The following rules apply to the Kubernetes Cluster CNI change feature in the NHN Cloud.
+
+* The CNI change feature is available for the NHN Kubernetes Service (NKS) v1.24.3 and above.
+* The CNI change is only available if the CNI being used by the existing NHN Kubernetes Service (NKS) is Flannel.
+* At the start of the CNI change, the task is collectively done on the master and all worker node groups.
+* The CNI change is possible only when the Kubernetes version of the master matches the Kubernetes version of all worker node groups.
+* CNI change from Calico to Flannel is not supported.
+* CNI change is not possible when the cluster is being updated due to other features being operated.
+
+The following example shows a table of possible changes during the Kubernetes CNI change process. The conditions used in the example are as follows. 
+
+List of Kubernetes versions supported by NHN Cloud: v1.23.3, v1.24.3, v1.25.4 
+Clusters are created as v1.23.3
+
+| Status | Cluster Version | Current CNI | CNI Change Available 
+| --- | :-: | :-: | :-: | :-: | 
+| Initial state | v1.23.3 | Flannel | Unavailable<sup>[1](#footnote_calico_change_rule_1)</sup> 
+| Status after cluster upgrade | v1.24.3 | Flannel | Available<sup>[2](#footnote_calico_change_rule_2)</sup> 
+| Status after CNI change | v1.24.3 | Calico | Unavailable<sup>[3](#footnote_calico_change_rule_3)</sup>
+
+
+Notes
+
+* <a name="footnote_calico_change_rule_1">1</a>: CNI change is unavailable because the cluster version is below 1.24.3
+* <a name="footnote_calico_change_rule_2">2</a>: CNI change is available because the cluster version is 1.24.3 or higher.
+* <a name="footnote_calico_change_rule_3">3</a>: CNI change is unavailable because CNI is already Calico
+
+#### Change Process from Flannel to Calico CNI
+CNI change proceeds in the following order.
+
+1. Add buffer nodes <sup>[1](#footnote_calico_change_step_1)</sup> to all worker node groups.<sup>[2](#footnote_calico_change_step_2)</sup>
+2. Calico CNI is deployed on the cluster.<sup>[3](#footnote_calico_change_step_3)</sup>
+3. Disable the cluster Auto scale feature.<sup>[4](#footnote_calico_change_step_4)</sup>
+3. Perform the following jobs sequentially for all worker nodes in all worker node groups. <sup>[5](#footnote_calico_change_step_5)</sup>
+    1. Evict working pods from the worker node, and make the node not schedulable.
+    2. Reassign the worker node's pod IPs to Calico CIDR. Any pod deployed on the node is to be redeployed. <sup>[6](#footnote_calico_change_step_6)</sup>
+    3. Make the node schedulable.
+5. Evict working pods from the buffer node, and delete the buffer node.
+6. Re-enables cluster Auto scale feature <sup>[4](#footnote_calico_change_step_4)</sup>.
+7. Delete Flannel CNI.
+
+
+Notes
+
+* <a name="footnote_calico_change_step_1">1</a>: A buffer node is a free node that is created so that the pod evicted from the existing worker node can be rescheduled during the CNI change process. It is created as a node of the same specification as the worker node defined in the corresponding worker node group and is automatically deleted at the end of the upgrade process. This node is charged in accordance with the Instance pricing policy. 
+* <a name="footnote_calico_change_step_2">2</a>: You can set the number of buffer nodes when changing CNI. Defaults to 1\. If set to 0, no buffer nodes are added. The minimum is 0 and the maximum is (maximum number of nodes per node group - the current number of nodes in that worker node group).
+* <a name="footnote_calico_change_step_3">3</a>: When Calico CNI is deployed in a cluster, the Flannel and Calico CNI coexist. In this state, when a new pod is deployed, the pod IP is set to Flannel CNI and then deployed. A pod with Flannel CIDR IP and a pod with Calico CIDR IP can communicate with each other.
+* <a name="footnote_calico_change_step_4">4</a>: This step is valid only if the cluster Auto scale feature is enabled before starting upgrade features.
+* <a name="footnote_calico_change_step_5">5</a>: Perform jobs as many as the maximum number of unavailable nodes set when changing the CNI. Default value is 1. Minimum value is 1, and maximum value is the number of all nodes in the current cluster.
+* <a name="footnote_calico_change_step_6">6</a>: The IPs of the existing deployed Pods are all assigned with Flannel CIDRs. To change to Calico CNI, redeploy all the pods that have IP assigned to the Flannel CIDR to reassign Calico CIDR IP. When a new pod is deployed, the pod IP is set to Calico CNI and deployed.
+
+The following can happen in this process.
+
+* The pod in service is evicted and scheduled to another node. (For more information on pod eviction, ss [Cluster Upgrade](/NKS/zh/user-guide/#_27)).
+* All the pods deployed in the cluster are redeployed. (For more information on redeploying pods, see the precautions for pod redeployment below.)
+* Auto scale feature does not operate. 
+
+
+> [Precautions for pod redeployment] 
+> 1. It proceeds for the pod that has not been transferred to another node through the evicting process. 
+> 2. For normal communication between Flannel CIDR and Calico CIDR during the CNI change process, CNI change pod CIDR value should not be the same as the existing Flannel CIDR value. 
+> 3. Pause containers of the previously distributed pod are all stopped and then regenerated by kubelet. The settings, such as the pod name and local storage space, remain unchanged, but the IP is changed to the IP of Calico CIDR.
+
+
+
+
 
 ## Manage Worker Node
 
@@ -1241,7 +1369,7 @@ route add -net 0.0.0.0/0 gw 192.168.0.1 dev eth1 metric 0
 ```
 
 ## LoadBalancer Service
-Pod is a basic execution unit of a Kubernetes application and it is connected to a cluster network via CNI (Container Network Interface). By default, pods are not accessible from outside the cluster. To expose a pod's services to the outside of the cluster, you need to create a path to expose to the outside using the Kubernetes `LoadBalancer` Service object. Creating a LoadBalancer service object creates an NHN Cloud Load Balancer outside the cluster and associates it with the service object.
+Pod is a basic execution unit of a Kubernetes application and it is connected to a cluster network via CNI (container network interface). By default, pods are not accessible from outside the cluster. To expose a pod's services to the outside of the cluster, you need to create a path to expose to the outside using the Kubernetes `LoadBalancer` Service object. Creating a LoadBalancer service object creates an NHN Cloud Load Balancer outside the cluster and associates it with the service object.
 
 ### Creating Web Server Pods
 Write a deployment object manifest file that executes two nginx pods as follows and create an object.
@@ -1482,7 +1610,7 @@ When this manifest is applied, the per-listener settings are set as shown in the
 >
 
 #### Set load balancer type
-You can set the load balancer type. For more information, see [Load Balancer Console User Guide](/Network/Load%20Balancer/en/console-guide/).
+You can set the load balancer type. For more information, see [Load Balancer Console User Guide](/Network/Load%20Balancer/zh/console-guide/).
 
 * The setting location is loadbalancer.nhncloud/loadbalancer-type under .metadata.annotations.
 * **Per-listener settings cannot be applied.**
@@ -2293,7 +2421,6 @@ Set whether to allow expansion of the created volume (if not input, false is set
 * **True** : Volume expansion is allowed.
 * **False** : Volume expansion is not allowed.
 
-
 #### Example 1
 The storage class manifest below can be used for Kubernetes clusters using v1.19.13 or earlier. You can use parameters to specify the availability zone and volume type.
 
@@ -2585,11 +2712,11 @@ The storage provider **cinder.csi.openstack.org** from v1.20.12 and later suppor
 You can utilize NAS storage provided by NHN Cloud as PV. In order to use NAS services, you must use a cluster of version v1.20 or later. For more information on using NHN Cloud NAS, please refer to the [NAS Console User Guide](/Storage/NAS/ko/console-guide).
 
 > [Note] 
-The NHN Cloud NAS service is currently (2022.09) only available in some regions. For more information on supported regions for NHN Cloud NAS service, see [NAS Service Overview](/Storage/NAS/zh/overview).
+The NHN Cloud NAS service is currently (2023.03) only available in some regions. For more information on supported regions for NHN Cloud NAS service, see [NAS Service Overview](/Storage/NAS/zh/overview).
 
 
-#### Install the nfs Package on Worker Node
-To use NAS storage, you must install the nfs package on the worker node. After connecting to the worker node, run the following command to install the nfs package.
+#### Install the nfs Package on Worker Node and Run the rpcbind service
+To use NAS storage, you must install the nfs package on the worker node, and run the rpcbind service. After connecting to the worker node, run the following command to install the nfs package.
 
 For Ubuntu, you can install the nfs package with the command below.
 ```
@@ -2599,6 +2726,12 @@ $ apt-get install -y nfs-common
 For CentOS, you can install the nfs package with the command below.
 ```
 $ yum install -y nfs-utils
+```
+
+
+After installing the nfs package, execute the command below to run the rpcbind service. The rpcbind service execution command is the same regardless of the image type.
+```
+$ systemctl start rpcbind
 ```
 
 #### Install csi-driver-nfs
