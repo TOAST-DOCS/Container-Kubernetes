@@ -23,7 +23,7 @@ You can check the tenant ID and API endpoint by clicking the **Set API Endpoint*
 
 | Item | API Endpoint | Usage |
 | --- | --- | --- |
-| Identity | https://api-identity.infrastructure.cloud.toast.com/v2.0 | Issue an authentication token |
+| Identity | https://api-identity-infrastructure.nhncloudservice.com/v2.0 | Issue an authentication token |
 | Tenant ID | 32 character string consisting of numbers and alphabets | Issue an authentication token |
 
 #### Set an API password

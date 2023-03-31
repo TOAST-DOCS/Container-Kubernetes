@@ -901,7 +901,6 @@ Instance flavor changes work in a similar way to worker component upgrades. For 
 You can only change an instance to another flavor that is compatible with its current flavor.
 
 * m2, c2, r2, t2, x1 flavor instances can be changed to m2, c2, r2, t2, x1 flavors.
-* g2 flavor instances can only be changed to g2 flavor.
 * m2, c2, r2, t2, x1 flavor instances cannot be changed to u2 flavors.
 * u2 flavor instances cannot be changed to other flavors once they have been created, not even to those of the same u2 flavor.
 
