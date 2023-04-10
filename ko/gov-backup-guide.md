@@ -115,7 +115,7 @@ $ helm install velero vmware-tanzu/velero \
 --set initContainers[0].image=lirt/velero-plugin-for-openstack:v0.3.0 \
 --set initContainers[0].volumeMounts[0].mountPath=/target \
 --set initContainers[0].volumeMounts[0].name=plugins \
---set deployRestic=true \
+--set deployNodeAgent=true \
 --set configuration.defaultVolumesToRestic=true \
 --set configuration.defaultResticPruneFrequency=0h1m0s \
 --set configuration.backupStorageLocation.bucket={Container} \
