@@ -2152,8 +2152,10 @@ $ curl 123.123.123.44/unknown
 NHN Kubernetes Service(NKS)는 기본 웹 UI 대시보드(dashboard)를 제공합니다. Kubernetes 대시보드에 대한 자세한 내용은 [웹 UI (대시보드)](https://kubernetes.io/ko/docs/tasks/access-application-cluster/web-ui-dashboard/) 문서를 참고하세요.
 
 > [주의]
-> Kubernetes 대시보드는 NKS v1.25.4까지만 기본 제공합니다.
-> NHN Cloud 웹 콘솔에서 Kubernetes 리소스를 조회할 수 있습니다.
+> * Kubernetes 대시보드는 NKS v1.25.4까지만 기본 제공합니다.
+> * NKS 클러스터 버전을 v1.25.4에서 v1.26.3으로 업그레이드해도 동작 중이던 Kubernetes 대시보드 파드와 관련 리소스는 그대로 유지됩니다.
+> * NHN Cloud 웹 콘솔에서 Kubernetes 리소스를 조회할 수 있습니다.
+
 
 ### 대시보드 서비스 공개
 사용자 Kubernetes에는 대시보드를 공개하기 위한 `kubernetes-dashboard` 서비스 객체가 미리 생성되어 있습니다.
