@@ -1616,7 +1616,9 @@ spec:
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/loadbalancer-name입니다.
 * **리스너별 설정을 적용할 수 없습니다.**
-* 영문자와 숫자, '-', '_'만 입력 가능합니다
+* 영문자와 숫자, '-', '_'만 입력 가능합니다.
+* 유효하지 않은 문자가 포함된 경우 기본 로드 밸런서 이름 양식에 따라 로드 밸런서 이름이 설정됩니다.
+* 기본 로드 밸런서 이름 양식: "kube_service_{CLUSTER_UUID}_{SERVICE_NAMESPACE}_{SERVICE_NAME}"
 * 최대 길이는 255자이며, 최대 길이 초과 시 로드 밸런서 이름은 255자로 잘립니다.
 
 > [주의]
