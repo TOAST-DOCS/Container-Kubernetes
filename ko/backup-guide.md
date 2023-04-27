@@ -15,7 +15,7 @@ Velero에 대한 자세한 내용은 [Velero Docs](https://velero.io/docs/v1.9/)
 
 ### 사전 준비
 
-Object Storage API를 사용하려면 테넌트 아이디(tenant ID) 및 API 엔드포인트(endpoint) 확인, API 비밀번호 설정, TempURL 생성이 필요합니다.
+Object Storage API를 사용하려면 테넌트 아이디(tenant ID) 및 API 엔드포인트(endpoint) 확인, API 비밀번호 설정, Temporary URL Key 생성이 필요합니다.
 
 #### 테넌트 아이디 및 API 엔드포인트 확인
 
@@ -36,18 +36,18 @@ API 비밀번호는 Object Storage 서비스 페이지의 **API Endpoint 설정*
 
 Object Storage API에 대한 자세한 내용은 [Object Storage API 가이드](/Storage/Object%20Storage/ko/api-guide/)를 참고해 주세요.
 
-#### TempURL 생성
+#### Temporary URL Key 생성
 
-Velero 클라이언트에서 `velero log` 명령어를 사용하기 위해서는 Object Storage에 TempURL을 생성해야 합니다.
+Velero 클라이언트에서 `velero log` 명령어를 사용하기 위해서는 Object Storage에 Temporary URL Key를 생성해야 합니다.
 
 1. [Object Storage 인증 토큰 발급](/Storage/Object%20Storage/ko/api-guide/#_2)을 합니다.
 2. **API Endpoint 설정** 버튼을 클릭하여 서비스의 Object Store URL을 확인합니다.
-3. API를 이용하여 TempURL 생성을 합니다.
+3. API를 이용하여 Temporary URL Key를 생성합니다.
 
 | 이름 | 종류 | 형식 | 필수 | 설명 |
 | --- | --- | --- | --- | --- |
-| X-Auth-Token | Header | String | 토큰 ID |
-| X-Account-Meta-Temp-Url-Key | Header | String | Temp URL에 사용되는 Key 정보 |
+| X-Auth-Token | Header | String | O | 토큰 ID |
+| X-Account-Meta-Temp-Url-Key | Header | String | O | Temporary URL에 사용되는 Key 정보 |
 
 ```
 $ curl -X POST {Object Store} -H "X-Auth-Token: {tokenId}" -H "X-Account-Meta-Temp-Url-Key: {key}"
