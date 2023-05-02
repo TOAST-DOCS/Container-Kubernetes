@@ -9,7 +9,7 @@ This document describes how to back up and restore a cluster using Object Storag
     * Backup cluster: A cluster to be backed up.
     * Restore cluster: A cluster that is restored using the backed up content.
 
-For more information on Velero, refer to [Velero Docs](https://velero.io/docs/v1.7/).
+For more information on Velero, refer to [Velero Docs](https://velero.io/docs/v1.9/).
 
 ## Cluster Backup and Restoration with Velero
 
@@ -45,13 +45,13 @@ For more information on kubeconfig settings, see [Installing kubectl](/Container
 #### Download the Velero Client
 
 ```
-$ wget https://github.com/vmware-tanzu/velero/releases/download/v1.7.1/velero-v1.7.1-linux-amd64.tar.gz
+$ wget https://github.com/vmware-tanzu/velero/releases/download/v1.9.4/velero-v1.9.4-linux-amd64.tar.gz
 ```
 
 #### Decompress the File
 
 ```
-$ tar xzf velero-v1.7.1-linux-amd64.tar.gz
+$ tar xzf velero-v1.9.4-linux-amd64.tar.gz
 ```
 
 #### Change the Location or Set the Path
@@ -61,7 +61,7 @@ Move the file to the path specified in the environment variable so that you can 
 * Change the location to the path specified in the environment variable
 
 ```
-$ sudo mv velero-v1.7.1-linux-amd64/velero /usr/local/bin
+$ sudo mv velero-v1.9.4-linux-amd64/velero /usr/local/bin
 ```
 
 * Add the path to environment variable
@@ -110,12 +110,13 @@ The Velero server must be installed on a `backup cluster` and a `restore cluster
 $ helm install velero vmware-tanzu/velero \
 --namespace velero \
 --create-namespace \
+--version 2.32.6 \
 --set configuration.provider=community.openstack.org/openstack \
 --set initContainers[0].name=velero-plugin-for-openstack \
 --set initContainers[0].image=lirt/velero-plugin-for-openstack:v0.3.0 \
 --set initContainers[0].volumeMounts[0].mountPath=/target \
 --set initContainers[0].volumeMounts[0].name=plugins \
---set deployNodeAgent=true \
+--set deployRestic=true \
 --set configuration.defaultVolumesToRestic=true \
 --set configuration.defaultResticPruneFrequency=0h1m0s \
 --set configuration.backupStorageLocation.bucket={Container} \
