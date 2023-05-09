@@ -6,7 +6,7 @@
 
 * Kubernetes v1.26.3을 지원합니다.
 * 커스텀 이미지를 워커 이미지로 활용하는 기능이 추가되었습니다.
-    * 자세한 내용은 [사용 가이드](/Container/NKS/ko/user-guide/#custom-image)를 참고하세요.
+    * 자세한 내용은 [사용 가이드](/Container/NKS/ko/user-guide/#_23)를 참고하세요.
 
 ### 2023. 03. 28.
 
