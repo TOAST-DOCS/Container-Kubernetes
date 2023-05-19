@@ -29,16 +29,16 @@ GET /v2.0/networks?router:external=True
 
 ### インターネットゲートウェイに接続されたサブネットUUIDリスト
 
-インターネットゲートウェイに接続されたVPCネットワークに接続されたサブネットUUIDを入力します。複数のサブネットが検索された場合はコロン(`:`)でつなげて力します。サブネットリスト照会APIの詳細については、[サブネットリスト表示](/Network/VPC/ko/public-api/#_6)を参照してください。
+インターネットゲートウェイに接続されたVPCネットワークに接続されたサブネットUUIDを入力します。複数のサブネットが検索された場合はコロン(`:`)でつなげて力します。サブネットリスト照会APIの詳細については、[サブネットリスト表示](/Network/VPC/ko/public-api/#vpc_7)を参照してください。
 
 
 ### VPCネットワークUUID
 
-ノードと接続する内部VPCネットワークUUIDを入力します。ネットワークリスト照会APIの詳細については[ネットワークリスト表示](/Network/VPC/ko/public-api/#_2)を参照してください。
+ノードと接続する内部VPCネットワークUUIDを入力します。ネットワークリスト照会APIの詳細については[ネットワークリスト表示](/Network/VPC/ko/public-api/#vpc_1)を参照してください。
 
 ### VPCサブネットUUID
 
-ノードと接続する内部VPCネットワークに接続されたサブネットUUIDを入力します。サブネットリスト照会APIの詳細については[サブネットリスト表示](/Network/VPC/ko/public-api/#_6)を参照してください。
+ノードと接続する内部VPCネットワークに接続されたサブネットUUIDを入力します。サブネットリスト照会APIの詳細については[サブネットリスト表示](/Network/VPC/ko/public-api/#vpc_7)を参照してください。
 
 ### アベイラビリティゾーンUUID
 
@@ -599,7 +599,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 ### クラスタCNIの変更
-クラスタCNI(container network interface)を変更します。Flannel CNIを他のCNIに変更できます。変更できるCNIの種類と変更可能条件については[使用ガイド](/Container/NKS/ko/user-guide/#_5)を参照してください。
+クラスタCNI(container network interface)を変更します。Flannel CNIを他のCNIに変更できます。変更できるCNIの種類と変更可能条件については[使用ガイド](/Container/NKS/ko/user-guide/#cni)を参照してください。
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/actions/cni_update

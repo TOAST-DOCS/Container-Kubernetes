@@ -621,7 +621,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 ### 클러스터 CNI 변경
-클러스터 CNI(container network interface)를 변경합니다. Flannel CNI를 다른 CNI로 변경할 수 있습니다. 변경할 수 있는 CNI 종류와 변경 가능 조건에 대한 자세한 내용은 [사용 가이드](/Container/NKS/ko/gov-user-guide/#_5)를 참고하세요.
+클러스터 CNI(container network interface)를 변경합니다. Flannel CNI를 다른 CNI로 변경할 수 있습니다. 변경할 수 있는 CNI 종류와 변경 가능 조건에 대한 자세한 내용은 [사용 가이드](/Container/NKS/ko/gov-user-guide/#cni)를 참고하세요.
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/actions/cni_update

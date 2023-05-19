@@ -29,16 +29,16 @@ GET /v2.0/networks?router:external=True
 
 ### 인터넷 게이트웨이에 연결된 서브넷 UUID 목록
 
-인터넷 게이트웨이에 연결된 VPC 네트워크와 연결된 서브넷 UUID를 입력합니다. 여러 서브넷이 조회됐다면 콜론(`:`)으로 연결해 입력합니다. 서브넷 목록 조회 API에 대한 좀 더 자세한 내용은 [서브넷 목록 보기](/Network/VPC/ko/public-api/#_6)를 참고하세요.
+인터넷 게이트웨이에 연결된 VPC 네트워크와 연결된 서브넷 UUID를 입력합니다. 여러 서브넷이 조회됐다면 콜론(`:`)으로 연결해 입력합니다. 서브넷 목록 조회 API에 대한 좀 더 자세한 내용은 [서브넷 목록 보기](/Network/VPC/ko/public-api/#vpc_7)를 참고하세요.
 
 
 ### VPC 네트워크 UUID
 
-노드와 연결할 내부 VPC 네트워크 UUID를 입력합니다. 네트워크 목록 조회 API에 대한 좀 더 자세한 내용은 [네트워크 목록 보기](/Network/VPC/ko/public-api/#_2)를 참고하세요.
+노드와 연결할 내부 VPC 네트워크 UUID를 입력합니다. 네트워크 목록 조회 API에 대한 좀 더 자세한 내용은 [네트워크 목록 보기](/Network/VPC/ko/public-api/#vpc_1)를 참고하세요.
 
 ### VPC 서브넷 UUID
 
-노드와 연결할 내부 VPC 네트워크와 연결된 서브넷 UUID를 입력합니다. 서브넷 목록 조회 API에 대한 좀 더 자세한 내용은 [서브넷 목록 보기](/Network/VPC/ko/public-api/#_6)를 참고하세요.
+노드와 연결할 내부 VPC 네트워크와 연결된 서브넷 UUID를 입력합니다. 서브넷 목록 조회 API에 대한 좀 더 자세한 내용은 [서브넷 목록 보기](/Network/VPC/ko/public-api/#vpc_7)를 참고하세요.
 
 ### 가용성 영역 UUID
 
@@ -624,7 +624,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 ### 클러스터 CNI 변경
-클러스터 CNI(container network interface)를 변경합니다. Flannel CNI를 다른 CNI로 변경할 수 있습니다. 변경할 수 있는 CNI 종류와 변경 가능 조건에 대한 자세한 내용은 [사용 가이드](/Container/NKS/ko/user-guide/#_5)를 참고하세요.
+클러스터 CNI(container network interface)를 변경합니다. Flannel CNI를 다른 CNI로 변경할 수 있습니다. 변경할 수 있는 CNI 종류와 변경 가능 조건에 대한 자세한 내용은 [사용 가이드](/Container/NKS/ko/user-guide/#cni)를 참고하세요.
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/actions/cni_update
