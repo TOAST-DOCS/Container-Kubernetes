@@ -2382,7 +2382,7 @@ kubernetes-dashboard   LoadBalancer   10.254.95.176   123.123.123.81   443:30963
 
 #### 인그레스(Ingress)를 이용한 서비스 공개
 
-인그레스는 클러스터 내부의 여러 서비스들로 접근하기 위한 라우팅을 제공하는 네트워크 객체입니다. 인그레스 객체의 설정은 인그래스 컨트롤러로 구동됩니다. `kubernetes-dashboard` 서비스 객체를 인그레스를 통해 공개할 수 있습니다. 인그레스와 인그레스 컨트롤러에 대한 설명은 [인그레스 컨트롤러](/Container/NKS/ko/user-guide/#_42)를 참고하세요. 아래 그림은 인그레스를 통해 대시보드를 외부에 공개하는 구조를 나타냅니다.
+인그레스는 클러스터 내부의 여러 서비스들로 접근하기 위한 라우팅을 제공하는 네트워크 객체입니다. 인그레스 객체의 설정은 인그래스 컨트롤러로 구동됩니다. `kubernetes-dashboard` 서비스 객체를 인그레스를 통해 공개할 수 있습니다. 인그레스와 인그레스 컨트롤러에 대한 설명은 [인그레스 컨트롤러](/Container/NKS/ko/user-guide/#_57)를 참고하세요. 아래 그림은 인그레스를 통해 대시보드를 외부에 공개하는 구조를 나타냅니다.
 
 ![dashboard-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-02.png)
 
@@ -2429,7 +2429,7 @@ NAME                    CLASS   HOSTS   ADDRESS          PORTS     AGE
 k8s-dashboard-ingress   nginx   *       123.123.123.44   80, 443   34s
 ```
 
-웹 브라우저에서 `https://{ADDRESS}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 엑세스 토큰](/Container/NKS/ko/user-guide/#_49)을 참고하세요.
+웹 브라우저에서 `https://{ADDRESS}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 엑세스 토큰](/Container/NKS/ko/user-guide/#_64)을 참고하세요.
 
 ### 대시보드 엑세스 토큰
 Kubernetes 대시보드에 로그인하려면 토큰이 필요합니다. 토큰은 다음 명령으로 얻을 수 있습니다.
@@ -2744,10 +2744,10 @@ PersistentVolumeClaim (PVC) 개체를 편집하여 기존 볼륨의 크기를 �
 v1.19.13 이전 버전의 스토리지 제공자 **kubernetes.io/cinder**는 사용 중인 볼륨의 확장 기능을 제공하지 않습니다. 사용 중인 볼륨의 확장 기능을 사용하기 위해서는 v1.20.12 이후 버전의 **cinder.csi.openstack.org** 스토리지 제공자를 사용해야 합니다. 클러스터 업그레이드 기능을 통해 v1.20.12 이후 버전으로 업그레이드하여 **cinder.csi.openstack.org** 스토리지 제공자를 사용할 수 있습니다.
 
 v1.19.13 이전 버전의 **kubernetes.io/cinder** 스토리지 제공자 대신 v1.20.12 이후 버전의 **cinder.csi.openstack.org** 스토리지 제공자를 사용하기 위하여 PVC의 어노테이션을 아래와 같이 수정해야 합니다.
-+ ~~pv.kubernetes.io/bind-completed: "yes"~~ > 삭제
-+ ~~pv.kubernetes.io/bound-by-controller: "yes"~~ > 삭제
-+ ~~volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/cinder~~ > volume.beta.kubernetes.io/storage-provisioner:cinder.csi.openstack.org
-+ ~~volume.kubernetes.io/storage-resizer: kubernetes.io/cinder~~ > volume.kubernetes.io/storage-resizer: cinder.csi.openstack.org
++ pv.kubernetes.io/bind-completed: "yes" > 삭제
++ pv.kubernetes.io/bound-by-controller: "yes" > 삭제
++ volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/cinder > volume.beta.kubernetes.io/storage-provisioner:cinder.csi.openstack.org
++ volume.kubernetes.io/storage-resizer: kubernetes.io/cinder > volume.kubernetes.io/storage-resizer: cinder.csi.openstack.org
 + pv.kubernetes.io/provisioned-by:cinder.csi.openstack.org > 추가
 
 
@@ -2793,7 +2793,7 @@ v1.20.12 이후 버전의 스토리지 제공자 **cinder.csi.openstack.org**는
 NHN Cloud에서 제공하는 NAS 스토리지를 PV로 활용할 수 있습니다. NAS 서비스를 사용하기 위해서는 v1.20 이후 버전의 클러스터를 사용해야 합니다. NHN Cloud NAS 사용에 대한 자세한 내용은 [NAS 콘솔 사용 가이드](/Storage/NAS/ko/console-guide)를 참고하세요.
 
 > [참고]
-> NHN Cloud NAS 서비스는 현재(2023. 03.) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS/ko/overview)를 참고하세요.
+> NHN Cloud NAS 서비스는 현재(2023. 05.) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS/ko/overview)를 참고하세요.
 
 #### 워커 노드에 nfs 패키지 설치 및 rpcbind 서비스 실행
 NAS 스토리지를 사용하려면 워커 노드에 nfs 패키지를 설치하고, rpcbind 서비스를 실행해야 합니다. 워커 노드에 접속한 뒤 아래 명령어를 실행해 nfs 패키지를 설치합니다.

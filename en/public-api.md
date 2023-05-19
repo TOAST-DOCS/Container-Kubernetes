@@ -29,16 +29,16 @@ For more information about the network list query API, refer to [List Networks](
 
 ### List of UUIDs of Subnets Attached to the Internet Gateway
 
-Enter the UUID of subnet associated with the VPC network attached to the internet gateway. If multiple subnets are found, enter them by concatenating them with a colon (`:`). For more information about the subnet list query API, refer to [List Subnets](/Network/VPC/en/public-api/#list-subnets).
+Enter the UUID of subnet associated with the VPC network attached to the internet gateway. If multiple subnets are found, enter them by concatenating them with a colon (`:`). For more information about the subnet list query API, refer to [List Subnets](/Network/VPC/en/public-api/#list-vpc-subnets).
 
 
 ### VPC Network UUID
 
-Enter the UUID of internal VPC network to associate with the node. For more information about the network list query API, refer to [List Networks](/Network/VPC/en/public-api/#list-networks).
+Enter the UUID of internal VPC network to associate with the node. For more information about the network list query API, refer to [List Networks](/Network/VPC/en/public-api/#view-vpc-list).
 
 ### VPC Subnet UUID
 
-Enter the UUID of subnet associated with the internal VPC network to associate with the node. For more information about the subnet list query API, refer to [List Subnets](/Network/VPC/en/public-api/#list-subnets).
+Enter the UUID of subnet associated with the internal VPC network to associate with the node. For more information about the subnet list query API, refer to [List Subnets](/Network/VPC/en/public-api/#list-vpc-subnets).
 
 ### Availability Zone UUID
 
@@ -594,7 +594,7 @@ This API does not require a request body.
 </details>
 
 ### Change Cluster CNI
-Changes the cluster CNI (container network interface). You can change Flannel CNI to a different CNI. For more information on the types of CNIs you can change and the conditions under which they can be changed, see [User Guide](/Container/NKS/ko/user-guide/#_5).
+Changes the cluster CNI (container network interface). You can change Flannel CNI to a different CNI. For more information on the types of CNIs you can change and the conditions under which they can be changed, see [User Guide](/Container/NKS/ko/user-guide/#cni).
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/actions/cni_update
