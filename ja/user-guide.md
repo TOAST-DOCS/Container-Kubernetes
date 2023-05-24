@@ -2280,7 +2280,7 @@ Webブラウザで`https://{EXTERNAL-IP}`に接続するとKubernetesダッシ�
 
 #### イングレス(Ingress)を利用したサービス公開
 
-イングレスは、クラスタ内部の複数のサービスにアクセスするためのルーティングを提供するネットワークオブジェクトです。イングレスオブジェクトの設定は、イングレスコントローラーで動作します。 `kubernetes-dashboard`サービスオブジェクトをイングレスを介して公開できます。イングレスとイングレスコントローラーの詳細については[イングレスコントローラー](/Container/NKS/ja/user-guide/#_42)を参照してください。次の図はイングレスを介してダッシュボードを外部に公開する構造を表しています。
+イングレスは、クラスタ内部の複数のサービスにアクセスするためのルーティングを提供するネットワークオブジェクトです。イングレスオブジェクトの設定は、イングレスコントローラーで動作します。 `kubernetes-dashboard`サービスオブジェクトをイングレスを介して公開できます。イングレスとイングレスコントローラーの詳細については[イングレスコントローラー](/Container/NKS/ja/user-guide/#_57)を参照してください。次の図はイングレスを介してダッシュボードを外部に公開する構造を表しています。
 
 ![dashboard-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-02.png)
 
@@ -2327,7 +2327,7 @@ NAME                    CLASS   HOSTS   ADDRESS          PORTS     AGE
 k8s-dashboard-ingress   nginx   *       123.123.123.44   80, 443   34s
 ```
 
-Webブラウザで`https://{ADDRESS}`に接続するとKubernetesダッシュボードページがローディングされます。ログインのために必要なトークンは[ダッシュボードアクセストークン](/Container/NKS/ja/user-guide/#_49)を参照してください。
+Webブラウザで`https://{ADDRESS}`に接続するとKubernetesダッシュボードページがローディングされます。ログインのために必要なトークンは[ダッシュボードアクセストークン](/Container/NKS/ja/user-guide/#_64)を参照してください。
 
 ### ダッシュボードアクセストークン
 Kubernetesダッシュボードにログインするにはトークンが必要です。トークンは次のコマンドで取得できます。
@@ -2881,10 +2881,10 @@ PersistentVolumeClaim (PVC)オブジェクトを編集して既存ボリュー�
 v1.19.13以前のバージョンのストレージプロバイダー**kubernetes.io/cinder**は使用中のボリュームの拡張機能を提供しません。使用中のボリュームの拡張機能を使用するにはv1.20.12以降のバージョンの**cinder.csi.openstack.org**ストレージプロバイダーを使用する必要があります。クラスタアップグレード機能を利用してv1.20.12以降のバージョンにアップグレードして**cinder.csi.openstack.org**ストレージプロバイダーを使用できます。
 
 v1.19.13以前のバージョンの**kubernetes.io/cinder**ストレージプロバイダーの代わりにv1.20.12以降のバージョンの**cinder.csi.openstack.org**ストレージプロバイダーを使用するためにPVCのアノテーションを以下のように修正する必要があります。
-+ ~~pv.kubernetes.io/bind-completed: "yes"~~ > 削除
-+ ~~pv.kubernetes.io/bound-by-controller: "yes"~~ > 削除
-+ ~~volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/cinder~~ > volume.beta.kubernetes.io/storage-provisioner:cinder.csi.openstack.org
-+ ~~volume.kubernetes.io/storage-resizer: kubernetes.io/cinder~~ > volume.kubernetes.io/storage-resizer: cinder.csi.openstack.org
++ pv.kubernetes.io/bind-completed: "yes" > 削除
++ pv.kubernetes.io/bound-by-controller: "yes" > 削除
++ volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/cinder > volume.beta.kubernetes.io/storage-provisioner:cinder.csi.openstack.org
++ volume.kubernetes.io/storage-resizer: kubernetes.io/cinder > volume.kubernetes.io/storage-resizer: cinder.csi.openstack.org
 + pv.kubernetes.io/provisioned-by:cinder.csi.openstack.org > 追加
 
 
@@ -2930,7 +2930,7 @@ v1.20.12以降のバージョンのストレージプロバイダー**cinder.csi
 NHN Cloudで提供するNASストレージをPVとして活用できます。NASサービスを使用するにはv1.20以降のバージョンのクラスタを使用する必要があります。NHN Cloud NASの詳細については[NASコンソール使用ガイド](/Storage/NAS/ko/console-guide)を参照してください。
 
 > [参考]
-> NHN Cloud NASサービスは現在(2023年3月基準)、一部リージョンでのみ提供されています。NHN Cloud NASサービスのサポートリージョンの詳細については[NASサービス概要](/Storage/NAS/ko/overview)を参照してください。
+> NHN Cloud NASサービスは現在(2023年5月基準)、一部リージョンでのみ提供されています。NHN Cloud NASサービスのサポートリージョンの詳細については[NASサービス概要](/Storage/NAS/ko/overview)を参照してください。
 
 #### ワーカーノードにnfsパッケージインストールおよびrpcbindサービス実行
 NASストレージを使用するにはワーカーノードにnfsパッケージをインストールし、rpcbindサービスを実行する必要があります。ワーカーノードに接続した後、以下のコマンドを実行してnfsパッケージをインストールします。

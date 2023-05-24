@@ -13,7 +13,7 @@ Kubernetes is an open-source platform which manages containerized workload and s
 
 For more details, see the following documents on Kubernetes:  
 
-* [What is Kubernetes?](https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/)
+* [What is Kubernetes?](https://kubernetes.io/docs/concepts/overview/)
 
 ## Kubernetes Cluster 
 A Kubernetes cluster is a computer cluster connected to each other and run as one unit. Features provided by Kubernetes operate on a cluster-by-cluster basis and can be configured on a cluster-by-cluster basis.

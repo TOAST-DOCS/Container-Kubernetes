@@ -2662,10 +2662,10 @@ You can adjust an existing volume by editing the PersistentVolumeClaim (PVC) obj
 **kubernetes.io/cinder**, the storage provider from v1.19.13 and older does not provide the volume expansion feature for the volume in use. To use the feature for the volume in use, you must use **cinder.csi.openstack.org**, the storage provider from v1.20.12 and later. The cluster upgrade feature allows you to upgrade the version to v1.20.12 or later in order to use the storage provider **cinder.csi.openstack.org**.
 
 To use the storage provider **cinder.csi.openstack.org**from v1.20.12 and older instead of the storage provider **kubernetes.io/cinder** from v1.19.13 and older, you must modify the annotations of PVC as follows.
-+ ~~pv.kubernetes.io/bind-completed: "yes"~~ > Delete
-+ ~~pv.kubernetes.io/bound-by-controller: "yes"~~ > Delete
-+ ~~volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/cinder~~ > volume.beta.kubernetes.io/storage-provisioner:cinder.csi.openstack.org
-+ ~~volume.kubernetes.io/storage-resizer: kubernetes.io/cinder~~ > volume.kubernetes.io/storage-resizer: cinder.csi.openstack.org
++ pv.kubernetes.io/bind-completed: "yes" > Delete
++ pv.kubernetes.io/bound-by-controller: "yes" > Delete
++ volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/cinder > volume.beta.kubernetes.io/storage-provisioner:cinder.csi.openstack.org
++ volume.kubernetes.io/storage-resizer: kubernetes.io/cinder > volume.kubernetes.io/storage-resizer: cinder.csi.openstack.org
 + pv.kubernetes.io/provisioned-by:cinder.csi.openstack.org > Add
 
 
@@ -2711,7 +2711,7 @@ The storage provider **cinder.csi.openstack.org** from v1.20.12 and later suppor
 You can utilize NAS storage provided by NHN Cloud as PV. In order to use NAS services, you must use a cluster of version v1.20 or later. For more information on using NHN Cloud NAS, please refer to the [NAS Console User Guide](/Storage/NAS/en/console-guide).
 
 > [Note] 
-The NHN Cloud NAS service is currently (2023.03) only available in some regions. For more information on supported regions for NHN Cloud NAS service, see [NAS Service Overview](/Storage/NAS/en/overview).
+The NHN Cloud NAS service is currently (2023.05) only available in some regions. For more information on supported regions for NHN Cloud NAS service, see [NAS Service Overview](/Storage/NAS/en/overview).
 
 #### Install the nfs Package on Worker Node and Run the rpcbind service
 To use NAS storage, you must install the nfs package on the worker node, and run the rpcbind service. After connecting to the worker node, run the following command to install the nfs package.

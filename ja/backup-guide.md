@@ -9,7 +9,7 @@ NHN Kubernetes Service(NKS)クラスタのバックアップが必要な場合�
     * バックアップクラスタ：バックアップするクラスタを意味します。
     * 復元クラスタ：バックアップした内容を活用して復元されるクラスタを意味します。
 
-Veleroの詳細については[Velero Docs](https://velero.io/docs/v1.7/)を参照してください。
+Veleroの詳細については[Velero Docs](https://velero.io/docs/v1.9/)を参照してください。
 
 ## Veleroを利用したクラスタのバックアップと復元
 
@@ -45,13 +45,13 @@ kubeconfig設定の詳細については[kubectlインストール](/Container/N
 #### Veleroクライアントのダウンロード
 
 ```
-$ wget https://github.com/vmware-tanzu/velero/releases/download/v1.7.1/velero-v1.7.1-linux-amd64.tar.gz
+$ wget https://github.com/vmware-tanzu/velero/releases/download/v1.9.4/velero-v1.9.4-linux-amd64.tar.gz
 ```
 
 #### 解凍
 
 ```
-$ tar xzf velero-v1.7.1-linux-amd64.tar.gz
+$ tar xzf velero-v1.9.4-linux-amd64.tar.gz
 ```
 
 #### 位置変更またはパス指定
@@ -61,7 +61,7 @@ $ tar xzf velero-v1.7.1-linux-amd64.tar.gz
 * 環境変数で指定されたパスに位置を変更
 
 ```
-$ sudo mv velero-v1.7.1-linux-amd64/velero /usr/local/bin
+$ sudo mv velero-v1.9.4-linux-amd64/velero /usr/local/bin
 ```
 
 * 環境変数にパスを追加
@@ -110,6 +110,7 @@ Veleroサーバーは`バックアップクラスタ`と`復元クラスタ`に�
 $ helm install velero vmware-tanzu/velero \
 --namespace velero \
 --create-namespace \
+--version 2.32.6 \
 --set configuration.provider=community.openstack.org/openstack \
 --set initContainers[0].name=velero-plugin-for-openstack \
 --set initContainers[0].image=lirt/velero-plugin-for-openstack:v0.3.0 \

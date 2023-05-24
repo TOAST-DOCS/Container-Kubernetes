@@ -29,16 +29,16 @@ GET /v2.0/networks?router:external=True
 
 ### インターネットゲートウェイに接続されたサブネットUUIDリスト
 
-インターネットゲートウェイに接続されたVPCネットワークに接続されたサブネットUUIDを入力します。複数のサブネットが検索された場合はコロン(`:`)でつなげて力します。サブネットリスト照会APIの詳細については、[サブネットリスト表示](/Network/VPC/ko/public-api/#_6)を参照してください。
+インターネットゲートウェイに接続されたVPCネットワークに接続されたサブネットUUIDを入力します。複数のサブネットが検索された場合はコロン(`:`)でつなげて力します。サブネットリスト照会APIの詳細については、[サブネットリスト表示](/Network/VPC/ko/public-api/#vpc_7)を参照してください。
 
 
 ### VPCネットワークUUID
 
-ノードと接続する内部VPCネットワークUUIDを入力します。ネットワークリスト照会APIの詳細については[ネットワークリスト表示](/Network/VPC/ko/public-api/#_2)を参照してください。
+ノードと接続する内部VPCネットワークUUIDを入力します。ネットワークリスト照会APIの詳細については[ネットワークリスト表示](/Network/VPC/ko/public-api/#vpc_1)を参照してください。
 
 ### VPCサブネットUUID
 
-ノードと接続する内部VPCネットワークに接続されたサブネットUUIDを入力します。サブネットリスト照会APIの詳細については[サブネットリスト表示](/Network/VPC/ko/public-api/#_6)を参照してください。
+ノードと接続する内部VPCネットワークに接続されたサブネットUUIDを入力します。サブネットリスト照会APIの詳細については[サブネットリスト表示](/Network/VPC/ko/public-api/#vpc_7)を参照してください。
 
 ### アベイラビリティゾーンUUID
 
@@ -54,14 +54,14 @@ GET /v2.0/networks?router:external=True
 
 | リージョン | ベースイメージ名 | ベースイメージUUID |
 |---|---|---|
-| 韓国(パンギョ)リージョン | CentOS 7.9 | 5ceda96d-480a-491e-a69c-7a2a12344aec |
-|  | Ubuntu Server 18.04.6 LTS | 853fd864-352d-465c-a341-bae13f26ab35 |
-|  | Debian 11.6 Bullseye | 4463e35c-bb39-46f2-8057-8bb200f3f171 |
-|  | Rocky Linux 8.6 | 1d236d11-b41d-40e5-97e7-c9723f926842 |
-| 韓国(坪村)リージョン | CentOS 7.9 | 2976678f-49fe-454b-a4d6-50712822c814 |
-|  | Ubuntu Server 18.04 LTS | 749e654b-d633-4b1f-a0dc-dcc4bb275fe3 |
-|  | Debian 11.6 Bullseye | e51131ce-6cfd-4752-a1b6-9ed6dcf55825 |
-|  | Rocky Linux 8.6 | bf20a58e-ca16-47a6-af97-90cd6e94ee01 |
+| 韓国(パンギョ)リージョン | CentOS 7.9 | cb759b56-3eac-48c2-bef2-68c031f4c5ae |
+|  | Ubuntu Server 20.04.6 LTS | 68c2e710-1c2a-4b82-bbd4-001fa3a99430 |
+|  | Debian 11.6 Bullseye | ba7ed924-5d2c-4518-8dde-f047ea8b4c70 |
+|  | Rocky Linux 8.7 | 95a3f98f-53b5-4876-bc92-2ec3c2ac0f32 |
+| 韓国(坪村)リージョン | CentOS 7.9 | 7934eee5-85d4-4e33-af5b-511b3bee696b |
+|  | Ubuntu Server 20.04 LTS | 9a918ff3-18e2-4876-a5bb-f627055b78d0 |
+|  | Debian 11.6 Bullseye | c13f016f-5e1c-4eff-99c4-88c697e061a1 |
+|  | Rocky Linux 8.7 | 186782d7-4016-4c4b-82e8-743105aac23d |
 
 
 
@@ -599,7 +599,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 ### クラスタCNIの変更
-クラスタCNI(container network interface)を変更します。Flannel CNIを他のCNIに変更できます。変更できるCNIの種類と変更可能条件については[使用ガイド](/Container/NKS/ko/user-guide/#_5)を参照してください。
+クラスタCNI(container network interface)を変更します。Flannel CNIを他のCNIに変更できます。変更できるCNIの種類と変更可能条件については[使用ガイド](/Container/NKS/ko/user-guide/#cni)を参照してください。
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/actions/cni_update

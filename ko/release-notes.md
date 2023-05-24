@@ -1,5 +1,30 @@
 ## Container > NHN Kubernetes Service(NKS) > 릴리스 노트
 
+### 2023. 05. 30.
+
+#### 기능 추가
+
+* Kubernetes v1.26.3을 지원합니다.
+* 커스텀 이미지를 워커 이미지로 활용하는 기능이 추가되었습니다.
+    * 자세한 내용은 [사용자 가이드](/Container/NKS/ko/user-guide/#_24)를 참고하세요.
+
+#### 기능 개선
+
+* 클러스터 및 노드 그룹 생성 시 사용하는 이미지의 배포판 버전이 변경되었습니다.
+    * 변경 전: Ubuntu Server 18.04.6 LTS - Container (2023.03.21)
+    * 변경 후: Ubuntu Server 20.04.6 LTS - Container (2023.05.25)
+
+
+* 이미지 업데이트
+    * 변경 사항
+        * nvidia-device-plugin 버전이 450.216.04에서 470.182.03으로 변경되었습니다.
+        * cuda 버전이 11.0.3에서 11.4로 변경되었습니다.
+        * dcgm 버전이 3.0.0에서 3.1.7로 변경되었습니다.
+        * Docker 버전이 20.10.23에서 20.10.24로 변경되었습니다.
+    * 대상 이미지
+        * CentOS 7.9 - Container (2022.11.22)
+        * Rocky Linux 8.6 - Container (2023.03.21)
+        * Ubuntu Server 20.04.6 LTS - Container (2023.05.25)
 
 ### 2023. 03. 28.
 
