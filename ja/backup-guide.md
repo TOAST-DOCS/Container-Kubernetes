@@ -15,7 +15,7 @@ Veleroの詳細については[Velero Docs](https://velero.io/docs/v1.9/)を参�
 
 ### 事前準備
 
-Object Storage APIを使用するにはテナントID(tenant ID)およびAPIエンドポイント(endpoint)の確認、APIパスワードの設定を行う必要があります。
+Object Storage APIを使用するにはテナントID(tenant ID)およびAPIエンドポイント(endpoint)の確認、APIパスワードの設定、Temporary URL Keyの作成を行う必要があります。
 
 #### テナントIDおよびAPIエンドポイントの確認
 
@@ -35,6 +35,23 @@ APIパスワードはObject Storageサービスページの**API Endpoint設定*
 3. **保存**ボタンをクリックします。
 
 Object Storage APIの詳細については[Object Storage APIガイド](/Storage/Object%20Storage/ja/api-guide/)を参照してください。
+
+#### Temporary URL Keyの作成
+
+Veleroクライアントで`velero log`コマンドを使用するにはObject StorageにTemporary URL Keyを作成する必要があります。
+
+1. [Object Storage認証トークン発行](/Storage/Object%20Storage/ko/api-guide/#_2)を行います。
+2. **API Endpoint設定**ボタンをクリックしてサービスのObject Store URLを確認します。
+3. APIを利用してTemporary URL Keyを作成します。
+
+| 名前 | 種類 | 形式 | 必須 | 説明 |
+| --- | --- | --- | --- | --- |
+| X-Auth-Token | Header | String | O | トークンID |
+| X-Account-Meta-Temp-Url-Key | Header | String | O | Temporary URLに使用されるKey情報 |
+
+```
+$ curl -X POST {Object Store} -H "X-Auth-Token: {tokenId}" -H "X-Account-Meta-Temp-Url-Key: {key}"
+```
 
 ### Veleroクライアントのインストール
 
