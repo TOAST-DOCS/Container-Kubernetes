@@ -20,6 +20,7 @@ NHN Kubernetes Service(NKS)を使用するには、まずクラスターを作�
 | Kubernetesのバージョン | 使用するKubernetesのバージョン |
 | VPC | クラスターに接続するVPCネットワーク |
 | サブネット | VPCに定義されたサブネットのうち、クラスターを構成するインスタンスに接続するサブネット |
+| CIDR | クラスタのservice object CIDR設定 |
 | イメージ | クラスターを構成するインスタンスに使用するイメージ |
 | アベイラビリティゾーン | 基本ノードグループインスタンスを作成する領域 |
 | インスタンスタイプ | 基本ノードグループインスタンスの仕様 |
@@ -27,6 +28,8 @@ NHN Kubernetes Service(NKS)を使用するには、まずクラスターを作�
 | キーペア | 基本ノードグループアクセスに使用するキーペア |
 | ブロックストレージタイプ | 基本ノードグループインスタンスのブロックストレージの種類 |
 | ブロックストレージサイズ | 基本ノードグループインスタンスのブロックストレージサイズ |
+| Podサブネット | クラスタのPodサブネット設定 |
+| Pod CIDR | クラスタのPod CIDR設定 |
 | 追加ネットワーク | 基本ワーカーノードグループに作成する追加ネットワーク/サブネット |
 
 > [注意]
@@ -34,6 +37,13 @@ NHN Kubernetes Service(NKS)を使用するには、まずクラスターを作�
 >  - 10.100.0.0/16
 >  - 10.254.0.0/16
 >  - 198.18.0.0/19
+> クラスタCIDRとPod CIDRの場合、以下の制約事項に該当しないように設定する必要があります。
+>  - CIDRはリンクローカルアドレス帯域(169.254.0.0/16)と重複できません。
+>  - Pod CIDRとクラスタCIDR帯域は重複できません。
+>  - CIDRはNKS内部で使用しているIP帯域(198.18.0.0/19)と重複できません。
+>  - CIDRはNKSクラスタに接続されたVPCネットワークサブネットまたは追加ネットワークサブネットの帯域と重複できません。
+>  - /24より大きいCIDRブロックは入力できません(次のようなCIDRブロックは使用できません。 /26, /30)。
+>  - v1.23.3以下クラスタの場合ドッカーBIP(bridged IP range)と重複できません(172.17.0.0/16).
 
 NHN Kubernetes Service(NKS)は複数のバージョンをサポートしています。バージョンによっては一部機能に制約がある場合があります。
 
@@ -44,10 +54,11 @@ NHN Kubernetes Service(NKS)は複数のバージョンをサポートしてい�
 | v1.19.13 | 不可 | 可能 |
 | v1.20.12 | 不可 | 可能 |
 | v1.21.6 | 不可 | 可能 |
-| v1.22.3 | 可能 | 可能 |
+| v1.22.3 | 不可 | 可能 |
 | v1.23.3 | 可能 | 可能 |
 | v1.24.3 | 可能 | 可能 |
 | v1.25.4 | 可能 | 可能 |
+| v1.26.3 | 可能 | 可能 |
 
 NHN Kubernetes Service(NKS)はバージョンによって異なる種類のContainer Network Interface(CNI)を提供します。2023/03/31以降はv1.24.3バージョン以上のクラスタを作成する時、CNIがCalicoで作成されます。 FlannelとCalico CNIのNetwork modeは全てVXLAN方式で作します。
 
@@ -62,14 +73,11 @@ NHN Kubernetes Service(NKS)はバージョンによって異なる種類のConta
 | v1.23.3 | Flannel v0.14.0 | 不可 |
 | v1.24.3 | Flannel v0.14.0またはCalico v3.24.1 <sup>(注1)(#footnote_calico_version_1)</sup> | 条件付きで可能 <sup>(注2)(#footnote_calico_version_2)</sup> |
 | v1.25.4 | Flannel v0.14.0またはCalico v3.24.1 <sup>(注1)(#footnote_calico_version_1)</sup> | 条件付きで可能 <sup>(注2)(#footnote_calico_version_2)</sup> |
+| v1.26.3 | Flannel v0.14.0またはCalico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 条件付き可能 <sup>[2](#footnote_calico_version_2)</sup> |
 
 注釈
 * <a name="footnote_calico_version_1">(注1)</a>2023/03/31以前に作成されたクラスタにはFlannelがインストールされています。 2023/03/31以降に作成されるv1.24.3以上のクラスタはCalicoがインストールされます。
 * <a name="footnote_calico_version_2">(注2)</a>CNIの変更はv1.24.3以上のクラスタでのみサポートされ、現在FlannelからCalicoへの変更のみサポートします。
-
-CNIの基本Pod CIDR情報は次のとおりです。
-* Flannel：10.100.0.0/16
-* Calico：10.200.0.0/16
 
 必要な情報を入力し、**クラスター作成**を押すと、クラスターの作成が始まります。クラスターリストで状態を確認できます。作成には約10分かかります。クラスターの設定によっては、さらに時間がかかる場合もあります。
 
@@ -82,6 +90,10 @@ CNIの基本Pod CIDR情報は次のとおりです。
 | クラスター名 | Kubernetesクラスターの名前とID |
 | ノード数 | クラスターを構成するすべてのノードインスタンス数 |
 | Kubernetesバージョン | 使用中のKubernetesバージョン |
+| CNI | 使用中のKubernetes CNI種類 |
+| クラスタCIDR | 使用中のKubernetes CIDR設定 |
+| Pod CIDR | 使用中のKubernetes Pod CIDR設定 |
+| Podサブネット | 使用中のKubernetes Podサブネット設定 |
 | VPC | クラスターに接続したVPCネットワーク |
 | サブネット | クラスターを構成するノードインスタンスに接続したサブネット |
 | APIエンドポイント | クラスターにアクセスして操作するためのAPIエンドポイントURI |
@@ -894,6 +906,53 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 * m2、c2、r2、t2、x1、g2タイプのインスタンスはu2タイプに変更できません。
 * u2タイプのインスタンスは作成後にタイプを変更できません。同じu2タイプへの変更もできません。
 
+### カスタムイメージをワーカーイメージとして活用
+
+ユーザーのカスタムイメージをベースにしたウォーカーノードグループを作成することができます。カスタムイメージがワーカーノードイメージとして活用できるようにNHN Cloud Image Builderサービスで追加作業(NKSワーカーノード化)が必要です。 Image BuilderサービスでNHN Kubernetes Service(NKS)ワーカーノードアプリケーションでイメージテンプレートを作成してカスタムワーカーノードイメージを作成できます。 Image Builderサービスの詳細については[Image Builderユーザーガイド](/Compute/Image%20Builder/ko/console-guide/#_1)を参照してください。
+
+> [注意]
+> NKSワーカーノード化作業にはパッケージのインストールや設定変更などが含まれているため、正常に動作しないイメージで作業を進める場合、失敗する可能性があります。
+> Image Builderサービスの使用に対して課金される場合があります。
+#### 制約事項
+NHN Cloudインスタンスをベースに作成したカスタムイメージのみ、ワーカーノードイメージとして使用できます。該当機能は特定インスタンスイメージに対してのみ提供されます。カスタムイメージを作成する基盤インスタンスのイメージに合わせて、正しいバージョンのワーカーノード化アプリケーションを選択する必要があります。インスタンスイメージごとに選択しなければならないアプリケーションバージョン情報は下表を参照してください。
+
+| OS | イメージ | アプリケーションバージョン |
+| --- | --- | --- |
+| CentOS | CentOS 7.9 (2022.11.22)  | 1.0 |
+|  | CentOS 7.9 (2023.05.25)  | 1.1 |
+| Rocky | Rocky Linux 8.6 (2023.03.21)  | 1.0 |
+|  | Rocky Linux 8.7 (2023.05.25)  | 1.1 |
+| Ubuntu | Ubuntu Server 20.04.6 LTS (2023.03.21)  | 1.0 |
+|  | Ubuntu Server 20.04.6 LTS (2023.05.25)  | 1.1 |
+| Debian | Debian 11.6 Bullseye (2023.03.21)  | 1.0 |
+|  | Debian 11.6 Bullseye (2023.05.25)  | 1.1 |
+
+
+> [参考]
+> カスタムイメージをワーカーノードイメージに変換する過程で選択したオプションによってGPUドライバーがインストールされます。
+> したがって、 カスタムGPUワーカーノードイメージを作成する場合にも、カスタムイメージの作成をGPUインスタンスで行う必要はありません。
+#### 進行過程
+
+カスタムイメージをワーカーノードイメージとして活用するため、Image Builderサービスで下記のようなプロセスを実行します。
+
+1. **イメージテンプレートを作成** ボタンをクリックします。
+2. アプリケーションを選択した後、**イメージテンプレート名**、**OS**、**最小ブロックストレージ(GB)**、**ユーザースクリプト**、**説明**を作成します。
+    * GPU Flavorを使用しないワーカーノードグループの場合、NHN Kubernetes Service(NKS) Worker Nodeアプリケーションを選択します。
+    * GPU Flavorを使用するワーカーノードグループの場合、NHN Kubernetes Service(NKS) Worker Node(GPU)アプリケーションを選択します。
+3. **確認**ボタンを押してイメージテンプレートを作成します。
+4. 作成されたイメージテンプレートを選択した後、**イメージビルド**を選択します。
+5. **イメージビルド**画面で**個人イメージ**タブを選択後、NKS Worker Node化を進めるカスタムイメージを選択します。
+6. **確認**ボタンを押すと、NKSワーカーノード化が進行された後、新しいイメージを作成します。
+7. **クラスタ作成画面** または **ノードグループ作成** 画面で作成されたカスタムイメージを選択します。
+
+![nkscustom_image_1.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nkscustom_image_1.png)
+
+![nkscustom_image_2.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nkscustom_image_2.png)
+
+![nkscustom_image_3.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nkscustom_image_3.png)
+
+
+
 ## クラスター管理
 遠隔のホストからクラスターを操作し、管理するには、Kubernetesが提供するコマンドラインツール(CLI)、`kubectl`が必要です。
 
@@ -1589,6 +1648,22 @@ spec:
 > 以下の機能の設定値は全て文字列形式で入力する必要があります。YAMLファイル入力形式で入力値の形式に関係なく文字列形式で入力するには入力値を二重引用符(")で囲んでください。 YAMLファイル形式の詳しい内容は[Yaml Cookbook](https://yaml.org/YAML_for_ruby.html)文書を参照してください。
 >
 
+### ロードバランサー名設定
+
+ロードバランサーの名前を設定できます。
+
+* 設定位置は .metadata.annotations下位のloadbalancer.nhncloud/loadbalancer-nameです。
+* **リスナーごとの設定は適用できません。**
+* 英字と数字、 '-', '_'のみ入力可能です。
+    * 有効ではない文字が含まれている場合、基本ロードバランサー名の形式に基づいてロードバランサー名が設定されます。
+    * 基本ロードバランサー名の形式："kube_service_{CLUSTER_UUID}\_{SERVICE_NAMESPACE}_{SERVICE_NAME}"
+* 最大長さは255文字で、最大長さを超えるとロードバランサー名は255文字で切り捨てられます。
+
+> [注意]
+> 次の行為を行うと、ロードバランサーの深刻な誤動作を引き起こす可能性があります。
+> * サービスオブジェクトが作成された後、ロードバランサー名を修正
+> * プロジェクト内に同じ名前のロードバランサーを作成
+
 #### ロードバランサータイプ設定
 ロードバランサーのタイプを設定できます。ロードバランサーの詳細については[ロードバランサーコンソール使用ガイド](/Network/Load%20Balancer/ko/console-guide/)を参照してください。
 
@@ -2218,6 +2293,11 @@ $ curl 123.123.123.44/unknown
 
 ## Kubernetesダッシュボード
 NHN Kubernetes Service(NKS)は基本Web UIダッシュボード(dashboard)を提供します。 Kubernetesダッシュボードの詳細については[Web UI (ダッシュボード)](https://kubernetes.io/ko/docs/tasks/access-application-cluster/web-ui-dashboard/)文書を参照してください。
+
+> [注意]
+> * KubernetesダッシュボードはNKS v1.25.4までのみ基本提供します。
+> * NKSクラスタバージョンをv1.25.4からv1.26.3にアップグレードしても、動作中のKubernetesダッシュボードPodと関連リソースはそのまま維持されます。
+> * NHN CloudコンソールでKubernetesリソースを照会できます。
 
 ### ダッシュボードサービス公開
 ユーザーKubernetesにはダッシュボードを公開するための`kubernetes-dashboard`サービスオブジェクトがあらかじめ作成されています。
