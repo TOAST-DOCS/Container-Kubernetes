@@ -29,7 +29,7 @@ GET /v2.0/networks?router:external=True
 
 ### インターネットゲートウェイに接続されたサブネットUUIDリスト
 
-インターネットゲートウェイに接続されたVPCネットワークに接続されたサブネットUUIDを入力します。複数のサブネットが検索された場合はコロン(`:`)でつなげて力します。サブネットリスト照会APIの詳細については、[サブネットリスト表示](/Network/VPC/ko/public-api/#vpc_7)を参照してください。
+インターネットゲートウェイに接続されたVPCネットワークに接続されたサブネットUUIDを入力します。複数のサブネットが検索された場合はコロン(`:`)でつなげて入力します。サブネットリスト照会APIの詳細については、[サブネットリスト表示](/Network/VPC/ko/public-api/#vpc_7)を参照してください。
 
 
 ### VPCネットワークUUID
@@ -58,13 +58,10 @@ GET /v2.0/networks?router:external=True
 |  | Ubuntu Server 20.04.6 LTS | 68c2e710-1c2a-4b82-bbd4-001fa3a99430 |
 |  | Debian 11.6 Bullseye | ba7ed924-5d2c-4518-8dde-f047ea8b4c70 |
 |  | Rocky Linux 8.7 | 95a3f98f-53b5-4876-bc92-2ec3c2ac0f32 |
-| 韓国(坪村)リージョン | CentOS 7.9 | 7934eee5-85d4-4e33-af5b-511b3bee696b |
+| 韓国(ピョンチョン)リージョン | CentOS 7.9 | 7934eee5-85d4-4e33-af5b-511b3bee696b |
 |  | Ubuntu Server 20.04 LTS | 9a918ff3-18e2-4876-a5bb-f627055b78d0 |
 |  | Debian 11.6 Bullseye | c13f016f-5e1c-4eff-99c4-88c697e061a1 |
 |  | Rocky Linux 8.7 | 186782d7-4016-4c4b-82e8-743105aac23d |
-
-
-
 
 ### ブロックストレージの種類
 
@@ -129,6 +126,10 @@ X-Auth-Token: {tokenId}
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Kubernetes APIエンドポイントに公認ドメインアドレスを作成するかどうか("True" / "False") |
 | clusters.labels.additional_network_id_list | Body | String | 基本ワーカーノードグループ適用：追加ネットワークのVPCネットワークUUIDリスト(コロン区切り) |
 | clusters.labels.additional_subnet_id_list | Body | String | 基本ワーカーノードグループ適用：追加ネットワークのVPCサブネットUUIDリスト(コロン区切り) |
+| clusters.labels.cni_driver | Body | String | クラスタCIDR、クラスタでService作成時、ClusterIPに割り当てられるIP帯域2023.03.31. 以降に作成されたクラスタで確認可能) |
+| clusters.labels.service_cluster_ip_range | Body | String | クラスタCIDR(2023.03.31. 以降に作成されたクラスタで確認可能) |
+| clusters.labels.pods_network_cidr | Body | String | クラスタPod CIDR(2023.03.31. 以降に作成されたクラスタで確認可能) |
+| clusters.labels.pods_network_subnet | Body | String | クラスタPodサブネット(2023.03.31. 以降に作成されたクラスタで確認可能) |
 
 
 <details><summary>例</summary>
@@ -171,7 +172,10 @@ X-Auth-Token: {tokenId}
                 "os_type": "linux",
                 "os_version": "7.8",
                 "project_domain": "NORMAL",
-                "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575"
+                "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575",
+                "service_cluster_ip_range": "10.254.0.0/16",
+                "pods_network_cidr" : "10.100.0.0/16",
+                "pods_network_subnet" : "24"
             },
             "links": [
                 {
@@ -257,6 +261,10 @@ X-Auth-Token: {tokenId}
 | labels.master_lb_floating_ip_enabled | Body | String | Kubernetes APIエンドポイントに公認ドメインアドレスを作成するかどうか("True" / "False") |
 | clusters.labels.additional_network_id_list | Body | String | 基本ワーカーノードグループ適用：追加ネットワークのVPCネットワークUUIDリスト(コロン区切り) |
 | clusters.labels.additional_subnet_id_list | Body | String | 基本ワーカーノードグループ適用：追加ネットワークのVPCサブネットUUIDリスト(コロン区切り) |
+| clusters.labels.cni_driver | Body | String | クラスタCNI(2023.03.31. 以降に作成されたクラスタで確認可能) |
+| clusters.labels.service_cluster_ip_range | Body | String | クラスタCIDR、クラスタでService作成時、ClusterIPに割り当てられるIP帯域(2023.03.31. 以降に作成されたクラスタで確認可能) |
+| clusters.labels.pods_network_cidr | Body | String | クラスタPod CIDR(2023.03.31. 以降に作成されたクラスタで確認可能) |
+| clusters.labels.pods_network_subnet | Body | String | クラスタPodサブネット(2023.03.31. 以降に作成されたクラスタで確認可能) |
 
 <details><summary>例</summary>
 <p>
@@ -307,7 +315,10 @@ X-Auth-Token: {tokenId}
         "os_type": "linux",
         "os_version": "7.8",
         "project_domain": "NORMAL",
-        "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575"
+        "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575",
+        "service_cluster_ip_range": "10.254.0.0/16",
+        "pods_network_cidr" : "10.100.0.0/16",
+        "pods_network_subnet" : "24"
     },
     "links": [
         {
@@ -381,9 +392,23 @@ X-Auth-Token: {tokenId}
 | labels.master_lb_floating_ip_enabled | Body | String | O | Kubernetes APIエンドポイントに公認ドメインアドレスを作成するかどうか("True" / "False")<br>labels.external_network_idとexternal_subnet_id_listが設定されている場合にのみ"True"に設定可能 |
 | labels.additional_network_id_list | Body | String | X | 基本ワーカーノードグループ適用：追加ネットワークのVPCネットワークUUIDリスト(コロン区切り) |
 | labels.additional_subnet_id_list | Body | String | X | 基本ワーカーノードグループ適用：追加ネットワークのVPCサブネットUUIDリスト(コロン区切り) |
+| labels.service_cluster_ip_range | Body | String  | X | クラスタCIDR、クラスタでService作成時、ClusterIPに割り当てられるIP帯域、 pods_network_cidr, service_cluster_ip_range入力ルール参考 |
+| labels.pods_network_cidr | Body | String |  X | クラスタPod CIDR, pods_network_cidr, service_cluster_ip_range入力ルール参考 |
+| labels.pods_network_subnet | Body | Integer | X | クラスタPodサブネット、 pods_network_subnet入力ルール参考 |
 | flavor_id | Body | UUID | O | 基本ワーカーノードグループ適用：ノードインスタンスタイプUUID |
 | fixed_network | Body | UUID | O | VPC Network UUID |
 | fixed_subnet | Body | UUID | O | VPC Subnet UUID |
+> pods_network_cidr, service_cluster_ip_rangeは以下のようなルールで入力する必要があります。
+>  - CIDRはリンクローカルアドレス帯域(169.254.0.0/16)と重複することはできません。
+>  - Pod CIDRとクラスタCIDR帯域は重複することができません。
+>  - CIDRはNKS内部で使用しているIP帯域(198.18.0.0.0/19)と重複することはできません。.
+>  - CIDRはNKSクラスタに接続されたVPCネットワークサブネットまたは追加ネットワークサブネットの帯域と重複することはできません。
+>  - /24より大きいCIDRブロックは入力できません(次のようなCIDRブロックは使用できません。/26, /30)。
+>  - v1.23.3以下クラスタの場合ドッカーBIP(bridged IP range)と重複できません(172.17.0.0/16)。
+> pods_network_subnetは下記のようなルールで入力する必要があります。
+> - 20-28(含む)範囲の値のみ入力可能です。
+>  - pods_network_subnet値がpods_network_cidr prefixの値より最低2大きい必要があります。正常例(サブネット：24、Pod CIDR: 10.100.0.0/22)
+
 
 > [注意]
 > fixed_subnet帯域が以下のネットワーク帯域と重ならないように設定する必要があります。
@@ -599,7 +624,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 ### クラスタCNIの変更
-クラスタCNI(container network interface)を変更します。Flannel CNIを他のCNIに変更できます。変更できるCNIの種類と変更可能条件については[使用ガイド](/Container/NKS/ko/user-guide/#cni)を参照してください。
+クラスタCNI(container network interface)を変更します。Flannel CNIを他のCNIに変更できます。変更できるCNIの種類と変更可能条件については[ユーザーガイド](/Container/NKS/ko/user-guide/#cni)を参照してください。
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/actions/cni_update
@@ -618,15 +643,21 @@ X-Auth-Token: {tokenId}
 | cni | Body | String | O | 変更するCNIを設定(選択可能CNIリスト：calico) | 
 | num_buffer_nodes | Body | Integer | X | バッファノード数。デフォルト値：1、最小値：0、最大値：すべてのワーカーノードの(ワーカーノードグループあたりの最大ノード数クォーター - 該当ワーカーノードグループの現在のノード数)うち最小値。 |
 | num_max_unavailable_nodes | Body |  Integer | X | 最大サービス不可ノード数。最小値：1、最大値：該当clusterの現在ノード数、デフォルト値：1 |
-| pod_cidr | Body | String | X | calico pod cidr設定、デフォルト値：10.200.0.0/16, pod_cidr入力ルール参考 |
+| pod_cidr | Body | String | O | calico pod cidr設定、 pod_cidr入力ルール参考 |
+| pod_subnet | Body | String | O | calico pod cidr subnet設定、デフォルト値: 24、 pod_subnet入力ルール参考 |
 
 pod_cidrは、以下のようなルールで入力する必要があります。
 * CIDRはリンクローカルアドレス帯域(169.254.0.0/16)と重複できません。
 * CIDRはNKSクラスタに使用されたservice IP帯域(10.254.0.0/16)と重複できません。
 * CIDRはNKS内部で使用しているIP帯域(198.18.0.0/19)と重複できません。
 * CIDRはNKSクラスタに接続されたVPCネットワークサブネットまたは追加ネットワークサブネットの帯域と重複できません。
-* CIDRは現在NKSクラスタに使用されているpod CIDR帯域値と重複できません。(クラスタがflannel CNIの場合、10.100.0.0/16 CIDRは使用できません。)
+* CIDRは現在NKSクラスタに使用されているpod CIDR帯域値と重複できません。
 * /24より大きいCIDRブロックは入力できません。 (次のようなCIDRブロックは使用できません。 /26, /30)
+
+pod_subnetは以下のようなルールで入力する必要があります。
+* 20-28(含む)範囲の値のみ入力可能です。
+* pod_subnetの値がpod_cidrのprefixの値より最低2大きい必要があります。正常例(サブネット: 24, Pod CIDR: 10.100.0.0/22)
+
 
 
 <details><summary>例</summary>
