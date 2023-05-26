@@ -21,6 +21,7 @@ Go to **Container > NHN Kubernetes Service(NKS)** and click **Create Cluster** a
 | Kubernetes Version | Kubernetes version to use |
 | VPC | VPC network to be attached to clusters |
 | Subnet | Subnet to be associated with instances that comprise a cluster, among those defined in VPC |
+| CIDR | Service object CIDR for a cluster |
 | Image | Images for instances comprising a cluster |
 | Availability Zone | Area to create a default node group instance |
 | Flavor | Instance specifications for a default node group |
@@ -28,12 +29,22 @@ Go to **Container > NHN Kubernetes Service(NKS)** and click **Create Cluster** a
 | Key Pair | Key pair to access default node group |
 | Block Storage Type | Type of block storage for a default node group instance |
 | Block Storage Size | Size of block storage for a default node group instance |
+| Pod Subnet | Pod subnet for a cluster |
+| Pod CIDR | Pod CIDR for a cluster |
 | Additional Network | Additional network and subnet to create in a default worker node group |
 
 > [Caution] 
 When creating a cluster, make sure that the subnet range does not overlap the network range.
 >  - 10.100.0.0/16
 >  - 10.254.0.0/16
+>  - 198.18.0.0/19
+> For cluster CIDRs and pod CIDRs, the following constraints must be avoided.
+>  - CIDR cannot overlap with the link-local address band (169.254.0.0/16).
+>  - Pod CIDR and cluster CIDR bands cannot overlap.
+>  - CIDR cannot overlap with the IP band (198.18.0.0/19) being used inside the NKS.
+>  - CIDR cannot overlap with bands of the VPC network subnet or additional network subnets connected to NKS clusters.
+>  - You cannot enter a CIDR block greater than /24. (The following CIDR blocks are not available: /26, /30).
+>  - For clusters of v1.23.3 or earlier, they cannot overlap with BIP (bridged IP range) (172.17.0.0/16).
 
 NHN Kubernetes Service (NKS) supports several versions of Kubernetes. Some features may be restricted depending on the version.
 
@@ -44,10 +55,11 @@ NHN Kubernetes Service (NKS) supports several versions of Kubernetes. Some featu
 | v1.19.13 | Unavailable | Available |
 | v1.20.12 | Unavailable | Available |
 | v1.21.6 | Unavailable | Available |
-| v1.22.3 | Available | Available |
+| v1.22.3 | Unavailable | Available |
 | v1.23.3 | Available | Available |
 | v1.24.3 | Available | Available |
 | v1.25.4 | Available | Available |
+| v1.26.3 | Available | Available |
 
 NHN Kubernetes Service (NKS) provides different types of Container Network Interface (CNI) according its version. After 31 March 2023, CNI is created with Calico when creating a cluster with version 1.24.3 or higher. Network mode of Flannel and Calico CNI all operate in VXLAN method.
 
@@ -62,15 +74,12 @@ NHN Kubernetes Service (NKS) provides different types of Container Network Inter
 | v1.23.3 | Flannel v0.14.0 | Unavailable |
 | v1.24.3 | Flannel v0.14.0 or Calico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | Conditionally Available |
 | v1.25.4 | Flannel v0.14.0 or Calico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | Conditionally Available |
+| v1.26.3 | Flannel v0.14.0 or Calico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | Conditionally Available |
 
 Notes
 
 * <a name="footnote_calico_version_1">1</a>: Flannel is installed in clusters created before 31 March 2023. For clusters of v1.24.3 or higher created after that date, Calico is installed.
 * <a name="footnote_calico_version_2">2</a>: CNI change is only supported on clusters of v1.24.3 or higher, and currently changing from Flannel to Calico is only supported.
-
-CIDR of default pod for CNI is as follows.
-* Flannel: 10.100.0.0/16
-* Calico: 10.200.0.0/16
 
 Enter information as required and click **Create Cluster**, and a cluster begins to be created. You can check the status from the list of clusters. It takes about 10 minutes to create; more time may be required depending on the cluster configuration.
 
@@ -83,6 +92,10 @@ A newly created cluster can be found in the **Container > NHN Kubernetes Service
 | Cluster Name | Name and ID of Kubernetes Cluster |
 | Node Count | Number of instances of all nodes comprising a cluster |
 | Kubernetes Version | Kubernetes version in service |
+| CNI | Kubernetes CNI type in service |
+| Cluster CIDR | Kubernetes CIDR in service |
+| Pod CIDR | Kubernetes pod CIDR in service |
+| Pod Subnet | Kubernetes pod subnet in service |
 | VPC | VPC network attached to cluster |
 | Subnet | Subnet associated to a node instance comprising a cluster |
 | API Endpoint | URI of API endpoint to access cluster for operation |
@@ -115,9 +128,8 @@ If any of the following situations occur during operation, basic infrastructure 
 When there is a problem in operating clusters and the clusters cannot be normalized through member and permission setup due to the above reasons, you can perform normalization by changing the cluster OWNER in the NKS console.
 How to change the cluster OWNER is as follows.
 
-> [Notes]
-The user who changes the cluster OWNER in the console becomes a new cluster OWNER. 
-The cluster after changing the cluster OWNER operates based on the new OWNER permission.
+> [Notes] The user who changes the cluster OWNER in the console becomes a new cluster OWNER. 
+> The cluster after changing the cluster OWNER operates based on the new OWNER permission.
 
 ![handover.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/handover.png)
 
@@ -904,6 +916,55 @@ You can only change an instance to another flavor that is compatible with its cu
 * m2, c2, r2, t2, x1 flavor instances cannot be changed to u2 flavors.
 * u2 flavor instances cannot be changed to other flavors once they have been created, not even to those of the same u2 flavor.
 
+### Use Custom Image as Worker Image
+
+You can create a worker node group using your custom images. This requires additional work (conversion to NKS worker node) in NHN Cloud Image Builder so that the custom image can be used as a worker node image. In Image Builder, you can create custom worker node images by creating image templates with the worker node application of NHN Kubernetes Service (NKS). For more information on Image Builder, see [](/Compute/Image%20Builder/ko/console-guide/#_1)Image Builder User Guide[](/Compute/Image%20Builder/ko/console-guide/#_1).
+
+> [Caution] 
+> Conversion to NKS worker node involves installing packages and changing settings, so if you work with images that don't work properly, it may fail.
+You may be charged for using the Image Builder service.
+
+#### Constraints
+Only custom images created based on NHN Cloud instances can be used as worker node images. This feature is only available for specific instance images. You must select the correct version of application for the conversion wok to match the image of the base instance you are creating your custom image from. See the table below for information on the application version to choose for each instance image.
+
+| OS | Image | Application name |
+| --- | --- | --- |
+| CentOS | CentOS 7.9 (2022.11.22)  | 1.0 |
+|  | CentOS 7.9 (2023.05.25)  | 1.1 |
+| Rocky | Rocky Linux 8.6 (2023.03.21)  | 1.0 |
+|  | Rocky Linux 8.7 (2023.05.25)  | 1.1 |
+| Ubuntu | Ubuntu Server 20.04.6 LTS (2023.03.21)  | 1.0 |
+|  | Ubuntu Server 20.04.6 LTS (2023.05.25)  | 1.1 |
+| Debian | Debian 11.6 Bullseye (2023.03.21)  | 1.0 |
+|  | Debian 11.6 Bullseye (2023.05.25)  | 1.1 |
+
+
+> [Notes]
+> During the process of converting a custom image to a worker node image, GPU drivers are installed according to the options selected.
+> So even if you create a custom GPU worker node image, you don't need to create a custom image with a GPU instance.
+
+#### Process
+
+To use a custom image as a worker node image, perform the following process in the Image Builder service.
+
+1. Click **Create Image Template**.
+2. After selecting the application, write the **image template name** , **OS** , **minimum block storage (GB)**, **user script**, and **description**.
+    * For a group of worker nodes that do not use GPU Flavor, choose the NHN Kubernetes Service (NKS) Worker Node application.
+    * For a group of worker nodes using GPU Flavor, select NHN Kubernetes Service (NKS) Worker Node (GPU) Application.
+3. Click **Confirm** to create a image template.
+4. Select the created image template and choose **Build Image**.
+5.  On the **Build Image** screen, select the **Private Image** tab and select a custom image to convert to a worker node.
+6. Click **Confirm** to create a new image after conversion to NKS worker node completes.
+7. Select the created custom image on the **Create Cluster** or **Create Node Group**.
+
+![nkscustom_image_1.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nkscustom_image_1.png)
+
+![nkscustom_image_2.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nkscustom_image_2.png)
+
+![nkscustom_image_3.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nkscustom_image_3.png)
+
+
+
 ## Cluster Management
 To run and manage clusters from a remote host, `kubectl` is required, which is the command-line tool (CLI) provided by Kubernetes.
 
@@ -1276,7 +1337,6 @@ The following can happen in this process.
 
 
 
-
 ## Manage Worker Node
 
 ### Manage Container
@@ -1609,6 +1669,22 @@ When this manifest is applied, the per-listener settings are set as shown in the
 > All setting values for the features below must be entered in string format. In the YAML file input format, to enter in string format regardless of the input value, enclose the input value in double quotation marks ("). For more information about the YAML file format, see [Yaml Cookbook](https://yaml.org/YAML_for_ruby.html).
 >
 
+### Setting Load Balancer Name
+
+You can set a name for the load balancer.
+
+* The setting location is loadbalancer.nhncloud/loadbalancer-name under .metadata.annotations.
+* **Per-listener settings cannot be applied.**
+* Only alphanumerics, -, and _ are allowed.
+    * If it contains invalid characters, the load balancer name is set according to the default load balancer name form.
+    * Default load balancer name form: "kube_service_{CLUSTER_UUID}_{SERVICE_NAMESPACE}_{SERVICE_NAME}"
+* The maximum length is 255 characters, and the load balancer name is truncated to 255 characters if the maximum length is exceeded.
+
+> [Caution]
+> The following cases can cause serious malfunction of the load balancer.
+> * Modifying the load balancer name after the service object is created
+> * Creating a load balancer with a duplicate name within the same project
+
 #### Set load balancer type
 You can set the load balancer type. For more information, see [Load Balancer Console User Guide](/Network/Load%20Balancer/en/console-guide/).
 
@@ -1650,6 +1726,7 @@ The load balancer has a floating IP associated with it. You can set whether to d
 
 > [Caution]
 > v1.18.19 clusters created before October 26, 2021 have an issue where floating IPs are not deleted when the load balancer is deleted. If you contact us through 1:1 inquiry of the Customer Center, we will provide detailed information on the procedure to solve this issue.
+
 
 #### Set the load balancer IP
 You can set the load balancer IP when creating a load balancer.
@@ -2239,6 +2316,11 @@ $ curl 123.123.123.44/unknown
 ## Kubernetes Dashboard
 NHN Kubernetes Service (NKS) provides the default web UI dashboard. For more details on Kubernetes Dashboard, see [Web UI (Dashboard)](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/).
 
+> [Caution]
+> * Kubernetes Dashboard supports up to NKS v1.25.4 by default.
+> * If you upgrade your NKS cluster version from v1.25.4 to v1.26.3, the Kubernetes Dashboard pods and related resources will remain in action.
+> * You can view Kubernetes resources from the NHN Cloud console.
+
 ### Opening Dashboard Services
 User Kubernetes has the `kubernetes-dashboard` service object which has been already created to publicly open dashboard.
 
@@ -2811,6 +2893,7 @@ To utilize NHN Cloud NAS storage as a PV through static provisioning, you must d
   * server: Enter the value of the **ip** part of the NAS storage connection information.
   * share: Enter the value of the **volume name** part of the NAS storage connection information.
 
+Below is an example manifest to statically provision NHN Cloud NAS storage.
 ``` yaml
 # static-pv.yaml
 apiVersion: v1
@@ -2842,7 +2925,38 @@ NAME                                       CAPACITY   ACCESS MODES   RECLAIM POL
 pv-onas                                    300Gi      RWX            Retain           Available                                                      101s   Filesystem
 ```
 
-After creating PV, the process of creating a PVC and mounting a volume to the pod is the same as the basic static provisioning process. For more information on static provisioning, see [Static Provisioning](/Container/NKS/en/user-guide/#_51).
+Create a PVC manifest to use the PV you created. In **spec.volumeName**, you must specify the name of the PV. Set the other entries to be the same as in the PV manifest.
+```
+# pvc-static.yaml
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc-onas-static
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 300Gi
+  volumeName: pv-onas
+```
+
+Create and check PVC.
+```
+$ kubectl apply -f static-pvc.yaml
+persistentvolumeclaim/pvc-onas-static created
+
+$ kubectl get pvc -o wide
+NAME              STATUS   VOLUME    CAPACITY   ACCESS MODES   STORAGECLASS   AGE    VOLUMEMODE
+pvc-onas-static   Bound    pv-onas   300Gi      RWX                           2m8s   Filesystem
+```
+
+If you create a PVC and then check the status of the PV, you can see that the **CLAIM** entry is specified with the PVC name and the STATUS entry is changed to `Bound`.
+```
+$ kubectl get pv -o wide
+NAME      CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                     STORAGECLASS   REASON   AGE     VOLUMEMODE
+pv-onas   300Gi      RWX            Retain           Bound    default/pvc-onas-static                           3m20s   Filesystem
+```
 
 #### Dynamic Provisioning
 In order to utilize NHN Cloud NAS storage as PV through dynamic provisioning, storage provider information and NHN Cloud NAS storage connection information must be defined when creating the StorageClass manifest.
@@ -2852,6 +2966,7 @@ In order to utilize NHN Cloud NAS storage as PV through dynamic provisioning, st
   * server: Enter the value of the **ip** part of the NAS storage connection information.
   * share: Enter the value of the **volume name** part of the NAS storage connection information.
 
+Below is an example of a Storage Class manifest to connect to NHN Cloud NAS service.
 ``` yaml
 # storageclass.yaml
 apiVersion: storage.k8s.io/v1
@@ -2860,7 +2975,7 @@ metadata:
   name: onas-sc
 provisioner: nfs.csi.k8s.io
 parameters:
-  server: 192.168.0.37
+  server: 192.168.0.81
   share: /onas_300gb_dynamic
 reclaimPolicy: Retain
 volumeBindingMode: Immediate
@@ -2869,14 +2984,96 @@ volumeBindingMode: Immediate
 Create and check StorageClass.
 ```
 $ kubectl apply -f storageclass.yaml
+storageclass.storage.k8s.io/onas-sc created
 
-$ kubectl get sc,pvc,pv
-NAME                                  PROVISIONER      RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
-storageclass.storage.k8s.io/onas-sc   nfs.csi.k8s.io   Retain          Immediate           false                  15s
+$ kubectl get sc
+NAME      PROVISIONER      RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
+onas-sc   nfs.csi.k8s.io   Retain          Immediate           false                  3s
 ```
 
-After creating the StorageClass, the process of creating a PVC and mounting the volume to the pod is the same as the basic dynamic provisioning process. For more information on dynamic provisioning, see [Dynamic Provisioning](/Container/NKS/en/user-guide/#_52).
+There is no need to create PV for dynamic provisioning; therefore, PVC manifest does not require the setting of **spec.volumeName**.
+```
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc-onas-dynamic
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 300Gi
+  storageClassName: onas-sc
+```
+If you do not set the volume binding mode or set it to Immediate and create a PVC, the PV will be created automatically. 
+
+```
+$ kubectl apply -f dynamic-pvc.yaml
+persistentvolumeclaim/pvc-onas-dynamic created
+
+$ kubectl get sc,pv,pvc
+NAME                                  PROVISIONER      RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
+storageclass.storage.k8s.io/onas-sc   nfs.csi.k8s.io   Retain          Immediate           false                  25s
+
+NAME                                                        CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                      STORAGECLASS   REASON   AGE
+persistentvolume/pvc-71392e58-5d8e-43b2-9798-5b59de34b203   300Gi      RWX            Retain           Bound    default/pvc-onas-dynamic   onas-sc                 3s
+
+NAME                                     STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+persistentvolumeclaim/pvc-onas-dynamic   Bound    pvc-71392e58-5d8e-43b2-9798-5b59de34b203   300Gi      RWX            onas-sc        4s
+```
+
+To mount PVC to a pod, mount information must be defined at the pod manifest. Enter the PVC name to use in spec.volumes.persistenVolumeClaim.claimName and enter paths to mount in spec.containers.volumeMounts.mountPath.
+
+Below is an example manifest that mounts a PVC created by dynamic provisioning to `/tmp/nfs` in a Pod.
+```
+# deployment-dynamic.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx
+  name: nginx-dynamic
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - image: nginx
+        imagePullPolicy: Always
+        name: nginx
+        volumeMounts:
+          - name: onas-dynamic
+            mountPath: "/tmp/nfs"
+      volumes:
+        - name: onas-dynamic
+          persistentVolumeClaim:
+            claimName: pvc-onas-dynamic
+```
+
+Create the pod and make sure the NAS storage is mounted.
+```
+$ kubectl apply -f deployment-dynamic.yaml
+deployment.apps/nginx-dynamic created
+
+$ kubectl get pods
+NAME                             READY   STATUS    RESTARTS   AGE
+nginx-dynamic-5fbc846574-q28cf   1/1     Running   0          26s
+
+$ kubectl exec -it nginx-dynamic-5fbc846574-q28cf -- df -h
+Filesystem                                                                 Size  Used Avail Use% Mounted on
+...
+192.168.0.45:/onas_300gb_dynamic/pvc-71392e58-5d8e-43b2-9798-5b59de34b203  270G  256K  270G   1% /tmp/nfs
+...
+```
+
+You can also check the connection information of your NAS storage on **Storage > NAS** service page from the NHN Cloud Console.
 
 > [Note] 
-nfs-csi-driver works by creating a subdirectory inside the nfs storage when creating a PV through dynamic provisioning. 
-In the process of mounting the PV to the pod, not only the subdirectory is mounted, but the entire nfs storage is mounted, so it is not possible to force the application to use the volume by the provisioned size. 
+> nfs-csi-driver works by creating a subdirectory inside the nfs storage when creating a PV through dynamic provisioning. 
+> In the process of mounting the PV to the pod, not only the subdirectory is mounted, but the entire nfs storage is mounted, so it is not possible to force the application to use the volume by the provisioned size. 

@@ -15,7 +15,7 @@ For more information on Velero, refer to [Velero Docs](https://velero.io/docs/v1
 
 ### Prerequisites
 
-To use the Object Storage API, you need to check the tenant ID and API endpoint, and set the API password.
+To use the Object Storage API, you must check the tenant ID and API endpoint, and set the API password and create Temporary URL key.
 
 #### Check the Tenant ID and API Endpoint
 
@@ -35,6 +35,23 @@ You can set the API password by clicking the **Set API Endpoint** button on the 
 3. Click **Save**.
 
 For more information about the Object Storage API, see the [Object Storage API Guide](/Storage/Object%20Storage/en/api-guide/).
+
+#### Create Temporary URL Key
+
+To use the `velero log` command in the Velero client, you must create a Temporary URL Key in Object Storage.
+
+1. [Obtain bject Storage Authentication Token](/Storage/Object%20Storage/en/api-guide/#_2).
+2. Click **Set API Endpoint** to check the Object Storage URL of the service.
+3. Create Temporary URL Key using the API.
+
+| Name | Type | Format | Required | Description |
+| --- | --- | --- | --- | --- |
+| X-Auth-Token | Header | String | O | Token ID |
+| X-Account-Meta-Temp-Url-Key | Header | String | O | Key information used in Temporary |
+
+```
+$ curl -X POST {Object Store} -H "X-Auth-Token: {tokenId}" -H "X-Account-Meta-Temp-Url-Key: {key}"
+```
 
 ### Install the Velero Client
 

@@ -1,5 +1,30 @@
 ## Container > NHN Kubernetes Service (NKS) > Release Notes
 
+### May 30, 2023
+
+#### Added Features
+
+* Added support for Kubernetes v1.26.3.
+* Added a feature to use common images as worker images.
+    * For more information, see [User Guide](/Container/NKS/ko/user-guide/#_24).
+
+#### Feature Updates
+
+* Changed the distribution version of the image used when creating clusters and node groups.
+    * AS-IS: Ubuntu Server 18.04.6 LTS - Container (2023.03.21)
+    * TO-BE: Ubuntu Server 20.04.6 LTS - Container (2023.05.25)
+
+
+* Image update
+    * Changes
+        * nvidia-device-plugin version changed from 450.216.04 to 470.182.
+        * cuda version changed from 11.0.3 to 11.4.
+        * dcgm version changed from 3.0.0 to 3.1.7.
+        * Docker version changed from 20.10.23 to 20.10.24.
+    * Target Images
+        * CentOS 7.9 - Container (2022.11.22)
+        * Rocky Linux 8.6 - Container (2023.03.21)
+        * Ubuntu Server 20.04.6 LTS - Container (2023.05.25)
 
 ### March 28, 2023
 
