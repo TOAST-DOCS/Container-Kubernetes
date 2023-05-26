@@ -9,13 +9,13 @@ This document describes how to back up and restore a cluster using Object Storag
     * Backup cluster: A cluster to be backed up.
     * Restore cluster: A cluster that is restored using the backed up content.
 
-For more information on Velero, refer to [Velero Docs](https://velero.io/docs/v1.7/).
+For more information on Velero, refer to [Velero Docs](https://velero.io/docs/v1.9/).
 
 ## Cluster Backup and Restoration with Velero
 
 ### Prerequisites
 
-To use the Object Storage API, you need to check the tenant ID and API endpoint, and set the API password.
+To use the Object Storage API, you must check the tenant ID and API endpoint, and set the API password and create Temporary URL key.
 
 #### Check the Tenant ID and API Endpoint
 
@@ -36,6 +36,23 @@ You can set the API password by clicking the **Set API Endpoint** button on the 
 
 For more information about the Object Storage API, see the [Object Storage API Guide](/Storage/Object%20Storage/en/api-guide/).
 
+#### Create Temporary URL Key
+
+To use the `velero log` command in the Velero client, you must create a Temporary URL Key in Object Storage.
+
+1. [Obtain bject Storage Authentication Token](/Storage/Object%20Storage/en/api-guide/#_2).
+2. Click **Set API Endpoint** to check the Object Storage URL of the service.
+3. Create Temporary URL Key using the API.
+
+| Name | Type | Format | Required | Description |
+| --- | --- | --- | --- | --- |
+| X-Auth-Token | Header | String | O | Token ID |
+| X-Account-Meta-Temp-Url-Key | Header | String | O | Key information used in Temporary |
+
+```
+$ curl -X POST {Object Store} -H "X-Auth-Token: {tokenId}" -H "X-Account-Meta-Temp-Url-Key: {key}"
+```
+
 ### Install the Velero Client
 
 The Velero client is a program where you can enter the cluster's backup and restore commands.
@@ -45,13 +62,13 @@ For more information on kubeconfig settings, see [Installing kubectl](/Container
 #### Download the Velero Client
 
 ```
-$ wget https://github.com/vmware-tanzu/velero/releases/download/v1.7.1/velero-v1.7.1-linux-amd64.tar.gz
+$ wget https://github.com/vmware-tanzu/velero/releases/download/v1.9.4/velero-v1.9.4-linux-amd64.tar.gz
 ```
 
 #### Decompress the File
 
 ```
-$ tar xzf velero-v1.7.1-linux-amd64.tar.gz
+$ tar xzf velero-v1.9.4-linux-amd64.tar.gz
 ```
 
 #### Change the Location or Set the Path
@@ -61,7 +78,7 @@ Move the file to the path specified in the environment variable so that you can 
 * Change the location to the path specified in the environment variable
 
 ```
-$ sudo mv velero-v1.7.1-linux-amd64/velero /usr/local/bin
+$ sudo mv velero-v1.9.4-linux-amd64/velero /usr/local/bin
 ```
 
 * Add the path to environment variable
@@ -110,6 +127,7 @@ The Velero server must be installed on a `backup cluster` and a `restore cluster
 $ helm install velero vmware-tanzu/velero \
 --namespace velero \
 --create-namespace \
+--version 2.32.6 \
 --set configuration.provider=community.openstack.org/openstack \
 --set initContainers[0].name=velero-plugin-for-openstack \
 --set initContainers[0].image=lirt/velero-plugin-for-openstack:v0.3.0 \

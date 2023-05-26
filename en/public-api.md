@@ -29,16 +29,16 @@ For more information about the network list query API, refer to [List Networks](
 
 ### List of UUIDs of Subnets Attached to the Internet Gateway
 
-Enter the UUID of subnet associated with the VPC network attached to the internet gateway. If multiple subnets are found, enter them by concatenating them with a colon (`:`). For more information about the subnet list query API, refer to [List Subnets](/Network/VPC/en/public-api/#list-subnets).
+Enter the UUID of subnet associated with the VPC network attached to the internet gateway. If multiple subnets are found, enter them by concatenating them with a colon (`:`). For more information about the subnet list query API, refer to [List Subnets](/Network/VPC/en/public-api/#list-vpc-subnets).
 
 
 ### VPC Network UUID
 
-Enter the UUID of internal VPC network to associate with the node. For more information about the network list query API, refer to [List Networks](/Network/VPC/en/public-api/#list-networks).
+Enter the UUID of internal VPC network to associate with the node. For more information about the network list query API, refer to [List Networks](/Network/VPC/en/public-api/#view-vpc-list).
 
 ### VPC Subnet UUID
 
-Enter the UUID of subnet associated with the internal VPC network to associate with the node. For more information about the subnet list query API, refer to [List Subnets](/Network/VPC/en/public-api/#list-subnets).
+Enter the UUID of subnet associated with the internal VPC network to associate with the node. For more information about the subnet list query API, refer to [List Subnets](/Network/VPC/en/public-api/#list-vpc-subnets).
 
 ### Availability Zone UUID
 
@@ -54,14 +54,14 @@ Enter the base image UUID to use for creating a node. The base image name and UU
 
 | Region | Base Image Name | Base Image UUID |
 |---|---|---|
-| Korea (Pangyo) Region | CentOS 7.9 | 5ceda96d-480a-491e-a69c-7a2a12344aec |
-|  | Ubuntu Server 18.04.6 LTS | 853fd864-352d-465c-a341-bae13f26ab35 |
-|  | Debian 11.6 Bullseye | 4463e35c-bb39-46f2-8057-8bb200f3f171 |
-|  | Rocky Linux 8.6 | 1d236d11-b41d-40e5-97e7-c9723f926842 |
-|  | Ubuntu Server 18.04 LTS | 276b07d2-96f2-4048-aa90-3c921d9685f7 |
-|  | Ubuntu Server 18.04 LTS | 749e654b-d633-4b1f-a0dc-dcc4bb275fe3 |
-|  | Debian 11.6 Bullseye | e51131ce-6cfd-4752-a1b6-9ed6dcf55825 |
-|  | Rocky Linux 8.6 | bf20a58e-ca16-47a6-af97-90cd6e94ee01 |
+| Korea (Pangyo) Region | CentOS 7.9 | cb759b56-3eac-48c2-bef2-68c031f4c5ae |
+|  | Ubuntu Server 20.04.6 LTS | 68c2e710-1c2a-4b82-bbd4-001fa3a99430 |
+|  | Debian 11.6 Bullseye | ba7ed924-5d2c-4518-8dde-f047ea8b4c70 |
+|  | Rocky Linux 8.7 | 95a3f98f-53b5-4876-bc92-2ec3c2ac0f32 |
+| Korea (Pyeongchon) Region | CentOS 7.9 | 7934eee5-85d4-4e33-af5b-511b3bee696b |
+|  | Ubuntu Server 20.04 LTS | 9a918ff3-18e2-4876-a5bb-f627055b78d0 |
+|  | Debian 11.6 Bullseye | c13f016f-5e1c-4eff-99c4-88c697e061a1 |
+|  | Rocky Linux 8.7 | 186782d7-4016-4c4b-82e8-743105aac23d |
 
 ### Block Storage Type
 
@@ -126,6 +126,10 @@ This API does not require a request body.
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Whether to create a public domain address for Kubernetes API endpoint ("True" / "False") |
 | clusters.labels.additional_network_id_list | Body | String | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
 | clusters.labels.additional_subnet_id_list | Body | String | Applied to the default worker node group: List of VPC subnet UUIDs for additional networks (separated by colons) |
+| clusters.labels.cni_driver | Body | String | Cluster CIDR, IP range allocated to ClusterIP when creating the service in the cluster (Available for clusters created on or after 2023.03.31) |
+| clusters.labels.service_cluster_ip_range | Body | String | Cluster CIDR (Available for clusters created on or after 2023.03.31) |
+| clusters.labels.pods_network_cidr | Body | String | Cluster pod CIDR (Available for clusters created on or after 2023.03.31) |
+| clusters.labels.pods_network_subnet | Body | String | Cluster pod subnet (Available for clusters created on or after 2023.03.31) |
 
 <details><summary>Example</summary>
 <p>
@@ -168,7 +172,10 @@ This API does not require a request body.
                 "os_type": "linux",
                 "os_version": "7.8",
                 "project_domain": "NORMAL",
-                 "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575"
+                 "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575",
+                "service_cluster_ip_range": "10.254.0.0/16",
+                "pods_network_cidr" : "10.100.0.0/16",
+                "pods_network_subnet" : "24"
             },
             "links": [
                 {
@@ -254,6 +261,11 @@ This API does not require a request body.
 | labels.master_lb_floating_ip_enabled | Body | String | Whether to create a public domain address for Kubernetes API endpoint ("True" / "False") |
 | clusters.labels.additional_network_id_list | Body | String | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
 | clusters.labels.additional_subnet_id_list | Body | String | Applied to the default worker node group: List of VPC subnet UUIDs for additional networks (separated by colons) |
+| clusters.labels.cni_driver | Body | String | Cluster CNI (Available for clusters created on or after 2023.03.31) |
+| clusters.labels.service_cluster_ip_range | Body | String | Cluster CIDR, IP range allocated to ClusterIP when creating the service in the cluster (Available for clusters created on or after 2023.03.31) |
+| clusters.labels.pods_network_cidr | Body | String | Cluster pod CIDR (Available for clusters created on or after 2023.03.31) |
+| clusters.labels.pods_network_subnet | Body | String | Cluster pod subnet (Available for clusters created on or after 2023.03.31) |
+
 <details><summary>Example</summary>
 <p>
 
@@ -303,7 +315,10 @@ This API does not require a request body.
         "os_type": "linux",
         "os_version": "7.8",
         "project_domain": "NORMAL",
-        "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575"
+        "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575",
+        "service_cluster_ip_range": "10.254.0.0/16",
+        "pods_network_cidr" : "10.100.0.0/16",
+        "pods_network_subnet" : "24"
     },
     "links": [
         {
@@ -377,6 +392,9 @@ X-Auth-Token: {tokenId}
 | labels.master_lb_floating_ip_enabled | Body | String | O | Whether to create a public domain address for Kubernetes API endpoint ("True" / "False")<br>Can be set to "True" only when labels.external_network_id and labels.external_subnet_id_list are set |
 | labels.additional_network_id_list | Body | String | X | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
 | labels.additional_subnet_id_list | Body | String | X |  Applied to the default worker node group: List of VPC subnet UUIDs for additional networks (separated by colons) |
+| labels.service_cluster_ip_range | Body | String  | X |  Cluster CIDR, IP range allocated to ClusterIP when creating the service in the cluster, see the input rules of pods_network_cidr, service_cluster_ip_range |
+| labels.pods_network_cidr | Body | String |  X |  Cluster pod CIDR, see the input rules of pods_network_cidr, service_cluster_ip_range |
+| labels.pods_network_subnet | Body | Integer | X |  Cluster pod subnet, see the input rules of pods_network_subnet |
 | flavor_id | Body | UUID | O | Applied to the default worker node group: Node flavor UUID |
 | fixed_network | Body | UUID | O | VPC Network UUID |
 | fixed_subnet | Body | UUID | O | VPC Subnet UUID |
@@ -385,6 +403,18 @@ X-Auth-Token: {tokenId}
 Make sure that the fixed_subnet range does not overlap the network range.
 >  - 10.100.0.0/16
 >  - 10.254.0.0/16
+>  - 198.18.0.0/19
+> pods_network_cidr, service_cluster_ip_range must be entered in the following rules.
+>  - CIDR cannot overlap with the link-local address band (169.254.0.0/16).
+>  - Pod CIDR and cluster CIDR bands cannot overlap.
+>  - CIDR cannot overlap with the IP band (198.18.0.0/19) being used inside the NKS.
+>  - CIDR cannot overlap with bands of the VPC network subnet or additional network subnets connected to NKS clusters.
+>  - You cannot enter a CIDR block greater than /24. (The following CIDR blocks are not available: /26, /30).
+>  - For clusters of v1.23.3 or earlier, they cannot overlap with BIP (bridged IP range) (172.17.0.0/16).
+pod_network_subnet must be entered in the following rules.
+>  - Values between 20 and 28 (included) are allowed.
+>  - The pods_network_subnet value must be at least 2 greater than the pods_network_cidr prefix value. Normal example (subnet: 24, pod CIDR: 10.100.0.0/22)
+
 
 <details><summary>Example</summary>
 <p>
@@ -594,7 +624,7 @@ This API does not require a request body.
 </details>
 
 ### Change Cluster CNI
-Changes the cluster CNI (container network interface). You can change Flannel CNI to a different CNI. For more information on the types of CNIs you can change and the conditions under which they can be changed, see [User Guide](/Container/NKS/ko/user-guide/#_5).
+Changes the cluster CNI (container network interface). You can change Flannel CNI to a different CNI. For more information on the types of CNIs you can change and the conditions under which they can be changed, see [User Guide](/Container/NKS/ko/user-guide/#cni).
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/actions/cni_update
@@ -612,16 +642,22 @@ X-Auth-Token: {tokenId}
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
 | cni | Body | String | O | Configure a CNI to change (Selectable CNI list: calico) | 
 | num_buffer_nodes | Body | Integer | X | Number of buffer nodes. Default: 1, minimum: 0, maximum: the minimum of all worker nodes (maximum number of nodes per worker node group - current number of nodes in that worker node group). |
-| num_max_unavailable_nodes | Body |  Integer | X | Maximum number of unavailable nodes. minimum: 1, maximum: current number of nodes for the cluster, default: 1) |
-| pod_cidr | Body | String | X | calico pod cidr settings, default: 10.200.0.0/16, see the input rule of pod_cidr |
+| num_max_unavailable_nodes | Body |  Integer | X | Maximum number of unavailable nodes. minimum: 1, maximum: current number of nodes for the cluster, default: 1 |
+| pod_cidr | Body | String | O | calico pod cidr settings, see the input rules of pod_cidr |
+| pod_subnet | Body | String | O | calico pod cidr subnet settings, Default: 24, see the input rules of pod_subnet |
 
 pod_cidr must be entered in the following rules.
 * CIDR cannot overlap with the link-local address band (169.254.0.0/16).
 * CIDR cannot overlap with the service IP band (10.254.0.0/16) used in NKS clusters. 
 * CIDR cannot overlap with the IP band (198.18.0.0/19) being used inside the NKS.
 * CIDR cannot overlap with bands of the VPC network subnet or additional network subnets connected to NKS clusters.
-* CIDR cannot overlap with a pod CIDR band that is currently being used for NKS clusters. (If the cluster is a flannel CNI, the 10.100.0.0/16 CIDR cannot be used.)
+* CIDR cannot overlap with a pod CIDR band that is currently being used for NKS clusters.
 * You cannot enter a CIDR block greater than /24. (The following CIDR blocks are not available: /26, /30)
+
+pod_subnet must be entered in the following rules.
+* Values between 20 and 28 (included) are allowed.
+* The value of pod_subnet must be at least 2 greater than the prefix value of pod_cidr. Normal example (subnet: 24, pod CIDR: 10.100.0.0/22)
+
 
 
 <details><summary>Example</summary>
