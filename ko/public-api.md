@@ -127,9 +127,9 @@ X-Auth-Token: {tokenId}
 | clusters.labels.additional_network_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 네트워크 UUID 목록(콜론으로 구분) |
 | clusters.labels.additional_subnet_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 서브넷 UUID 목록(콜론으로 구분) |
 | clusters.labels.cni_driver | Body | String | 클러스터 CNI(2023.03.31. 이후에 생성된 클러스터에서 확인 가능) |
-| clusters.labels.service_cluster_ip_range | Body | String | K8s 서비스 네트워크, 클러스터에서 Service 생성 시 ClusterIP에 할당되는 IP 대역(2023.05.31. 이후에 생성된 클러스터에서 확인 가능) |
-| clusters.labels.pods_network_cidr | Body | String | 클러스터 파드 네트워크(2023.05.31. 이후에 생성된 클러스터에서 확인 가능) |
-| clusters.labels.pods_network_subnet | Body | String | 클러스터 파드 서브넷 크기(2023.05.31. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.service_cluster_ip_range | Body | String | K8s 서비스 네트워크, 클러스터에서 Service 생성 시 ClusterIP에 할당되는 IP 대역(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.pods_network_cidr | Body | String | 클러스터 파드 네트워크(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.pods_network_subnet | Body | String | 클러스터 파드 서브넷 크기(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
 
 
 <details><summary>예시</summary>
@@ -262,9 +262,9 @@ X-Auth-Token: {tokenId}
 | clusters.labels.additional_network_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 네트워크 UUID 목록(콜론으로 구분) |
 | clusters.labels.additional_subnet_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 서브넷 UUID 목록(콜론으로 구분) |
 | clusters.labels.cni_driver | Body | String | 클러스터 CNI(2023.03.31. 이후에 생성된 클러스터에서 확인 가능) |
-| clusters.labels.service_cluster_ip_range | Body | String | K8s 서비스 네트워크, 클러스터에서 Service 생성 시 ClusterIP에 할당되는 IP 대역(2023.05.31. 이후에 생성된 클러스터에서 확인 가능) |
-| clusters.labels.pods_network_cidr | Body | String | 클러스터 파드 네트워크(2023.05.31. 이후에 생성된 클러스터에서 확인 가능) |
-| clusters.labels.pods_network_subnet | Body | String | 클러스터 파드 서브넷 크기(2023.05.31. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.service_cluster_ip_range | Body | String | K8s 서비스 네트워크, 클러스터에서 Service 생성 시 ClusterIP에 할당되는 IP 대역(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.pods_network_cidr | Body | String | 클러스터 파드 네트워크(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.pods_network_subnet | Body | String | 클러스터 파드 서브넷 크기(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
 
 <details><summary>예시</summary>
 <p>
