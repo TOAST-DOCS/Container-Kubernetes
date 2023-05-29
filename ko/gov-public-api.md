@@ -122,10 +122,10 @@ X-Auth-Token: {tokenId}
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
 | clusters.labels.additional_network_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 네트워크 UUID 목록(콜론으로 구분) |
 | clusters.labels.additional_subnet_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 서브넷 UUID 목록(콜론으로 구분) |
-| clusters.labels.cni_driver | Body | String | 클러스터 CIDR, 클러스터에서 Service 생성 시 ClusterIP에 할당되는 IP 대역(2023.03.31. 이후에 생성된 클러스터에서 확인 가능) |
-| clusters.labels.service_cluster_ip_range | Body | String | 클러스터 CIDR(2023.03.31. 이후에 생성된 클러스터에서 확인 가능) |
-| clusters.labels.pods_network_cidr | Body | String | 클러스터 파드 CIDR(2023.03.31. 이후에 생성된 클러스터에서 확인 가능) |
-| clusters.labels.pods_network_subnet | Body | String | 클러스터 파드 서브넷(2023.03.31. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.cni_driver | Body | String | 클러스터 CNI(2023.03.31. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.service_cluster_ip_range | Body | String | K8s 서비스 네트워크, 클러스터에서 Service 생성 시 ClusterIP에 할당되는 IP 대역(2023.05.31. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.pods_network_cidr | Body | String | 클러스터 파드 네트워크(2023.05.31. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.pods_network_subnet | Body | String | 클러스터 파드 서브넷 크기(2023.05.31. 이후에 생성된 클러스터에서 확인 가능) |
 
 
 <details><summary>예시</summary>
@@ -257,10 +257,10 @@ X-Auth-Token: {tokenId}
 | labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
 | clusters.labels.additional_network_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 네트워크 UUID 목록(콜론으로 구분) |
 | clusters.labels.additional_subnet_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 서브넷 UUID 목록(콜론으로 구분) |
-| clusters.labels.cni_driver | Body | String | 클러스터 CIDR, 클러스터에서 Service 생성 시 ClusterIP에 할당되는 IP 대역(2023.03.31. 이후에 생성된 클러스터에서 확인 가능) |
-| clusters.labels.service_cluster_ip_range | Body | String | 클러스터 CIDR(2023.03.31. 이후에 생성된 클러스터에서 확인 가능) |
-| clusters.labels.pods_network_cidr | Body | String | 클러스터 파드 CIDR(2023.03.31. 이후에 생성된 클러스터에서 확인 가능) |
-| clusters.labels.pods_network_subnet | Body | String | 클러스터 파드 서브넷(2023.03.31. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.cni_driver | Body | String | 클러스터 CNI(2023.03.31. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.service_cluster_ip_range | Body | String | K8s 서비스 네트워크, 클러스터에서 Service 생성 시 ClusterIP에 할당되는 IP 대역(2023.05.31. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.pods_network_cidr | Body | String | 클러스터 파드 네트워크(2023.05.31. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.pods_network_subnet | Body | String | 클러스터 파드 서브넷 크기(2023.05.31. 이후에 생성된 클러스터에서 확인 가능) |
 
 
 <details><summary>예시</summary>
@@ -392,25 +392,25 @@ X-Auth-Token: {tokenId}
 | flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
 | fixed_network | Body | UUID | O | VPC 네트워크 UUID |
 | fixed_subnet | Body | UUID | O | VPC 서브넷 UUID |
-| labels.service_cluster_ip_range | Body | String  | X |  클러스터 CIDR, 클러스터에서 Service 생성 시 ClusterIP에 할당되는 IP 대역, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
-| labels.pods_network_cidr | Body | String |  X |  클러스터 파드 CIDR, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
-| labels.pods_network_subnet | Body | Integer | X |  클러스터 파드 서브넷, pods_network_subnet 입력 규칙 참고 |
+| labels.service_cluster_ip_range | Body | String  | X |  K8s 서비스 네트워크, 클러스터에서 Service 생성 시 ClusterIP에 할당되는 IP 대역, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
+| labels.pods_network_cidr | Body | String |  X |  클러스터 파드 네트워크, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
+| labels.pods_network_subnet | Body | Integer | X |  클러스터 파드 서브넷 크기, pods_network_subnet 입력 규칙 참고 |
 
 > [주의]
 > fixed_subnet 대역이 아래 네트워크 대역과 겹치지 않도록 설정해야 합니다.
 >  - 10.100.0.0/16
 >  - 10.254.0.0/16
 >  - 198.18.0.0/19
-> pods_network_cidr, service_cluster_ip_range는 아래와 같은 규칙으로 입력되어야 합니다.
+> pods_network_cidr, service_cluster_ip_range의 CIDR은 아래와 같은 규칙으로 입력되어야 합니다.
 >  - CIDR은 링크 로컬 주소 대역(169.254.0.0/16)과 중첩될 수 없습니다.
->  - 파드 CIDR와 클러스터 CIDR 대역은 중첩될 수 없습니다.
+>  - 파드 네트워크와 K8s 서비스 네트워크 대역은 중첩될 수 없습니다.
 >  - CIDR은 NKS 내부에서 사용하고 있는 IP 대역(198.18.0.0/19)과 중첩될 수 없습니다.
 >  - CIDR은 NKS 클러스터에 연결된 VPC 네트워크 서브넷 또는 추가 네트워크 서브넷의 대역과 중첩될 수 없습니다.
 >  - /24보다 큰 CIDR 블록은 입력할 수 없습니다(다음과 같은 CIDR 블록은 사용할 수 없습니다. /26, /30).
 >  - v1.23.3 이하 클러스터의 경우 도커 BIP(bridged IP range)와 중첩될 수 없습니다(172.17.0.0/16).
 > pods_network_subnet은 아래와 같은 규칙으로 입력되어야 합니다.
 >  - 20-28(포함) 범위의 값만 입력 가능합니다.
->  - pods_network_subnet 값이 pods_network_cidr prefix 값보다 최소 2 커야 합니다. 정상 예시(서브넷: 24, 파드 CIDR: 10.100.0.0/22)
+>  - pods_network_subnet 값이 pods_network_cidr prefix 값보다 최소 2 커야 합니다. 정상 예시(파드 서브넷 크기: 24, 파드 네트워크: 10.100.0.0/22)
 
 
 <details><summary>예시</summary>
@@ -645,15 +645,15 @@ X-Auth-Token: {tokenId}
 
 pod_cidr는 아래와 같은 규칙으로 입력되어야 합니다.
 * CIDR은 링크 로컬 주소 대역(169.254.0.0/16)과 중첩될 수 없습니다.
-* CIDR은 NKS 클러스터에 사용된 service IP 대역(10.254.0.0/16)과 중첩될 수 없습니다.
+* CIDR은 NKS 클러스터에 사용된 service IP 대역(K8s 서비스 네트워크)과 중첩될 수 없습니다.
 * CIDR은 NKS 내부에서 사용하고 있는 IP 대역(198.18.0.0/19)과 중첩될 수 없습니다.
 * CIDR은 NKS 클러스터에 연결된 VPC 네트워크 서브넷 또는 추가 네트워크 서브넷의 대역과 중첩될 수 없습니다.
-* CIDR은 현재 NKS 클러스터에 사용되고 있는 파드 CIDR 대역값과 중첩될 수 없습니다.
+* CIDR은 현재 NKS 클러스터에 사용되고 있는 파드 네트워크 대역값과 중첩될 수 없습니다.
 * /24보다 큰 CIDR 블록은 입력할 수 없습니다. (다음과 같은 CIDR 블록은 사용할 수 없습니다. /26, /30)
 
 pod_subnet은 아래와 같은 규칙으로 입력되어야 합니다.
 * 20-28(포함) 범위의 값만 입력 가능합니다.
-* pod_subnet의 값이 pod_cidr의 prefix 값보다 최소 2 커야 합니다. 정상 예시(서브넷: 24, 파드 CIDR: 10.100.0.0/22)
+* pod_subnet의 값이 pod_cidr의 prefix 값보다 최소 2 커야 합니다. 정상 예시(파드 서브넷 크기: 24, 파드 네트워크: 10.100.0.0/22)
 
 
 
