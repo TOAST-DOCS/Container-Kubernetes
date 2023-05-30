@@ -9,13 +9,13 @@ NHN Kubernetes Service(NKS) 클러스터의 백업이 필요한 경우 Velero �
     * 백업 클러스터: 백업할 클러스터를 의미합니다.
     * 복구 클러스터: 백업한 내용을 활용하여 복구되는 클러스터를 의미합니다.
 
-Velero에 대한 자세한 내용은 [Velero Docs](https://velero.io/docs/v1.7/)를 참고해 주세요.
+Velero에 대한 자세한 내용은 [Velero Docs](https://velero.io/docs/v1.9/)를 참고해 주세요.
 
 ## Velero를 이용한 클러스터 백업 및 복구
 
 ### 사전 준비
 
-Object Storage API를 사용하려면 테넌트 아이디(tenant ID) 및 API 엔드포인트(endpoint) 확인, API 비밀번호 설정이 필요합니다.
+Object Storage API를 사용하려면 테넌트 아이디(tenant ID) 및 API 엔드포인트(endpoint) 확인, API 비밀번호 설정, Temporary URL Key 생성이 필요합니다.
 
 #### 테넌트 아이디 및 API 엔드포인트 확인
 
@@ -36,6 +36,23 @@ API 비밀번호는 Object Storage 서비스 페이지의 **API Endpoint 설정*
 
 Object Storage API에 대한 자세한 내용은 [Object Storage API 가이드](/Storage/Object%20Storage/ko/api-guide-gov/)를 참고해 주세요.
 
+#### Temporary URL Key 생성
+
+Velero 클라이언트에서 `velero log` 명령어를 사용하기 위해서는 Object Storage에 Temporary URL Key를 생성해야 합니다.
+
+1. [Object Storage 인증 토큰 발급](/Storage/Object%20Storage/ko/api-guide-gov/#_2)을 합니다.
+2. **API Endpoint 설정** 버튼을 클릭하여 서비스의 Object Store URL을 확인합니다.
+3. API를 이용하여 Temporary URL Key를 생성합니다.
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+| --- | --- | --- | --- | --- |
+| X-Auth-Token | Header | String | O | 토큰 ID |
+| X-Account-Meta-Temp-Url-Key | Header | String | O | Temporary URL에 사용되는 Key 정보 |
+
+```
+$ curl -X POST {Object Store} -H "X-Auth-Token: {tokenId}" -H "X-Account-Meta-Temp-Url-Key: {key}"
+```
+
 ### Velero 클라이언트 설치
 
 Velero 클라이언트는 클러스터의 백업 및 복구 명령을 입력하는 프로그램입니다.
@@ -45,13 +62,13 @@ kubeconfig 설정에 대한 자세한 내용은 [kubectl 설치](/Container/NKS/
 #### Velero 클라이언트 다운로드
 
 ```
-$ wget https://github.com/vmware-tanzu/velero/releases/download/v1.7.1/velero-v1.7.1-linux-amd64.tar.gz
+$ wget https://github.com/vmware-tanzu/velero/releases/download/v1.9.4/velero-v1.9.4-linux-amd64.tar.gz
 ```
 
 #### 압축 해제
 
 ```
-$ tar xzf velero-v1.7.1-linux-amd64.tar.gz
+$ tar xzf velero-v1.9.4-linux-amd64.tar.gz
 ```
 
 #### 위치 변경 또는 경로 지정
@@ -61,7 +78,7 @@ $ tar xzf velero-v1.7.1-linux-amd64.tar.gz
 * 환경 변수에 지정된 경로로 위치 변경
 
 ```
-$ sudo mv velero-v1.7.1-linux-amd64/velero /usr/local/bin
+$ sudo mv velero-v1.9.4-linux-amd64/velero /usr/local/bin
 ```
 
 * 환경 변수에 경로 추가

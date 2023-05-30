@@ -21,6 +21,7 @@ NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해�
 | Kubernetes 버전 | 사용할 Kubernetes 버전 |
 | VPC | 클러스터에 연결할 VPC 네트워크 |
 | 서브넷 | VPC에 정의된 서브넷 중 클러스터를 구성하는 인스턴스에 연결할 서브넷 |
+| CIDR | 클러스터의 service object CIDR 설정 |
 | 이미지 | 클러스터를 구성하는 인스턴스에 사용할 이미지 |
 | 가용성 영역 | 기본 노드 그룹 인스턴스를 생성할 영역 |
 | 인스턴스 타입 | 기본 노드 그룹 인스턴스 사양 |
@@ -28,6 +29,8 @@ NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해�
 | 키 페어 | 기본 노드 그룹 접근에 사용할 키 페어 |
 | 블록 스토리지 타입 | 기본 노드 그룹 인스턴스의 블록 스토리지 종류 |
 | 블록 스토리지 크기 | 기본 노드 그룹 인스턴스의 블록 스토리지 크기 |
+| 파드 서브넷 | 클러스터의 파드 서브넷 설정 |
+| 파드 CIDR | 클러스터의 파드 CIDR 설정 |
 | 추가 네트워크 | 기본 워커 노드 그룹에 생성할 추가 네트워크/서브넷 |
 
 > [주의]
@@ -35,6 +38,13 @@ NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해�
 >  - 10.100.0.0/16
 >  - 10.254.0.0/16
 >  - 198.18.0.0/19
+> 클러스터 CIDR와 파드 CIDR의 경우 아래의 제약 사항에 해당하지 않도록 설정해야 합니다.
+>  - CIDR은 링크 로컬 주소 대역(169.254.0.0/16)과 중첩될 수 없습니다.
+>  - 파드 CIDR와 클러스터 CIDR 대역은 중첩될 수 없습니다.
+>  - CIDR은 NKS 내부에서 사용하고 있는 IP 대역(198.18.0.0/19)과 중첩될 수 없습니다.
+>  - CIDR은 NKS 클러스터에 연결된 VPC 네트워크 서브넷 또는 추가 네트워크 서브넷의 대역과 중첩될 수 없습니다.
+>  - /24보다 큰 CIDR 블록은 입력할 수 없습니다(다음과 같은 CIDR 블록은 사용할 수 없습니다. /26, /30).
+>  - v1.23.3 이하 클러스터의 경우 도커 BIP(bridged IP range)와 중첩될 수 없습니다(172.17.0.0/16).
 
 NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전에 따라 일부 기능에 제약이 있을 수 있습니다.
 
@@ -45,10 +55,11 @@ NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전�
 | v1.19.13 | 불가능 | 가능 |
 | v1.20.12 | 불가능 | 가능 |
 | v1.21.6 | 불가능 | 가능 |
-| v1.22.3 | 가능 | 가능 |
+| v1.22.3 | 불가능 | 가능 |
 | v1.23.3 | 가능 | 가능 |
 | v1.24.3 | 가능 | 가능 |
 | v1.25.4 | 가능 | 가능 |
+| v1.26.3 | 가능 | 가능 |
 
 NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Network Interface(CNI)를 제공합니다. 2023/03/31 이후에는 v1.24.3 버전 이상의 클러스터 생성 시 CNI가 Calico로 생성됩니다. Flannel과 Calico CNI의 Network mode는 모두 VXLAN 방식으로 동작합니다.
 
@@ -63,15 +74,12 @@ NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Netwo
 | v1.23.3 | Flannel v0.14.0 | 불가 |
 | v1.24.3 | Flannel v0.14.0 혹은 Calico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
 | v1.25.4 | Flannel v0.14.0 혹은 Calico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
+| v1.26.3 | Flannel v0.14.0 혹은 Calico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
 
 주석
 
 * <a name="footnote_calico_version_1">1</a>: 2023/03/31 이전에 생성된 클러스터에는 Flannel이 설치되어 있습니다. 2023/03/31 이후에 생성되는 v1.24.3 이상의 클러스터는 Calico가 설치됩니다.
 * <a name="footnote_calico_version_2">2</a>: CNI 변경은 v1.24.3 이상의 클러스터에서만 지원되며, 현재 Flannel에서 Calico로의 변경만 지원합니다.
-
-CNI의 기본 파드 CIDR 정보는 다음과 같습니다.
-* Flannel: 10.100.0.0/16
-* Calico: 10.200.0.0/16
 
 필요한 정보를 입력하고 **클러스터 생성**을 클릭하면 클러스터 생성이 시작됩니다. 클러스터 목록에서 상태를 확인할 수 있습니다. 생성하는 데는 약 10분 정도 걸립니다. 클러스터 설정에 따라 더 오래 걸릴 수도 있습니다.
 
@@ -84,6 +92,10 @@ CNI의 기본 파드 CIDR 정보는 다음과 같습니다.
 | 클러스터 이름 | Kubernetes 클러스터의 이름과 ID |
 | 노드 수 | 클러스터를 구성하는 모든 노드 인스턴스 수 |
 | Kubernetes 버전 | 사용 중인 Kubernetes 버전 |
+| CNI | 사용 중인 Kubernetes CNI 종류 |
+| 클러스터 CIDR | 사용 중인 Kubernetes CIDR 설정 |
+| 파드 CIDR | 사용 중인 Kubernetes 파드 CIDR 설정 |
+| 파드 서브넷 | 사용 중인 Kubernetes 파드 서브넷 설정 |
 | VPC | 클러스터에 연결된 VPC 네트워크 |
 | 서브넷 | 클러스터를 구성하는 노드 인스턴스에 연결된 서브넷 |
 | API 엔드포인트 | 클러스터에 접근해 조작하기 위한 API 엔드포인트 URI |
@@ -904,6 +916,55 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 * m2, c2, r2, t2, x1, g2 타입의 인스턴스는 u2 타입으로 변경할 수 없습니다.
 * u2 타입의 인스턴스는 생성 이후에 타입을 변경할 수 없습니다. 같은 u2 타입으로의 변경도 불가합니다.
 
+### 커스텀 이미지를 워커 이미지로 활용
+
+사용자의 커스텀 이미지를 기반으로 한 워커 노드 그룹을 생성할 수 있습니다. 커스텀 이미지가 워커 노드 이미지로 활용될 수 있도록 NHN Cloud Image Builder 서비스에서 추가적인 작업(NKS 워커 노드화)이 필요합니다. Image Builder 서비스에서 NHN Kubernetes Service(NKS) 워커 노드 애플리케이션으로 이미지 템플릿을 생성하여 커스텀 워커 노드 이미지를 생성할 수 있습니다. Image Builder 서비스에 대한 자세한 내용은 [Image Builder 사용자 가이드](/Compute/Image%20Builder/ko/console-guide/#_1)를 참고하세요.
+
+> [주의]
+> NKS 워커 노드화 작업에는 패키지 설치 및 설정 변경 등이 포함되어 있어 정상적으로 동작하지 않는 이미지로 작업을 진행하는 경우 실패할 수 있습니다.
+> Image Builder 서비스 사용에 대해 과금될 수 있습니다.
+
+#### 제약 사항
+NHN Cloud 인스턴스를 기반으로 생성한 커스텀 이미지만 워커 노드 이미지로 사용할 수 있습니다. 해당 기능은 특정 인스턴스 이미지에 대해서만 제공됩니다. 커스텀 이미지를 생성하는 기반 인스턴스의 이미지에 맞춰 올바른 버전의 워커 노드화 애플리케이션을 선택해야 합니다. 인스턴스 이미지별 선택해야 하는 애플리케이션 버전 정보는 아래 표를 참고하세요.
+
+| OS | 이미지 | 애플리케이션 버전 |
+| --- | --- | --- |
+| CentOS | CentOS 7.9 (2022.11.22)  | 1.0 |
+|  | CentOS 7.9 (2023.05.25)  | 1.1 |
+| Rocky | Rocky Linux 8.6 (2023.03.21)  | 1.0 |
+|  | Rocky Linux 8.7 (2023.05.25)  | 1.1 |
+| Ubuntu | Ubuntu Server 20.04.6 LTS (2023.03.21)  | 1.0 |
+|  | Ubuntu Server 20.04.6 LTS (2023.05.25)  | 1.1 |
+| Debian | Debian 11.6 Bullseye (2023.03.21)  | 1.0 |
+|  | Debian 11.6 Bullseye (2023.05.25)  | 1.1 |
+
+
+> [참고]
+> 커스텀 이미지를 워커 노드 이미지로 변환하는 과정에서 선택한 옵션에 따라 GPU 드라이버가 설치됩니다.
+> 따라서 커스텀 GPU 워커 노드 이미지를 생성하는 경우에도 커스텀 이미지 생성을 GPU 인스턴스로 할 필요가 없습니다.
+
+#### 진행 과정
+
+커스텀 이미지를 워커 노드 이미지로 활용하기 위해서 Image Builder 서비스에서 아래와 같은 과정을 수행합니다.
+
+1. **이미지 템플릿을 생성** 버튼을 클릭합니다.
+2. 애플리케이션을 선택한 후 **이미지 템플릿 이름**, **OS**, **최소 블록 스토리지(GB)**, **사용자 스크립트**, **설명**을 작성합니다.
+    * GPU Flavor를 사용하지 않는 워커 노드 그룹인 경우 NHN Kubernetes Service(NKS) Worker Node 애플리케이션을 선택합니다.
+    * GPU Flavor를 사용하는 워커 노드 그룹인 경우 NHN Kubernetes Service(NKS) Worker Node(GPU) 애플리케이션을 선택합니다.
+3. **확인** 버튼을 눌러 이미지 템플릿을 생성합니다.
+4. 생성된 이미지 템플릿을 선택한 후 **이미지 빌드**를 선택합니다.
+5. **이미지 빌드** 화면에서 **개인 이미지** 탭 선택 후 NKS 워커 노드화를 진행할 커스텀 이미지를 선택합니다.
+6. **확인** 버튼을 누르면 NKS 워커 노드화가 진행된 후 새로운 이미지를 생성합니다.
+7. **클러스터 생성 화면** 또는 **노드 그룹 생성** 화면에서 생성된 커스텀 이미지를 선택합니다.
+
+![nkscustom_image_1.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nkscustom_image_1.png)
+
+![nkscustom_image_2.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nkscustom_image_2.png)
+
+![nkscustom_image_3.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nkscustom_image_3.png)
+
+
+
 ## 클러스터 관리
 원격의 호스트에서 클러스터를 조작하고 관리하려면 Kubernetes가 제공하는 명령줄 도구(CLI)인 `kubectl`이 필요합니다.
 
@@ -1608,6 +1669,22 @@ spec:
 > 아래 기능의 설정값은 모두 문자열 형식으로 입력해야 합니다. YAML 파일 입력 형식에서 입력값 형태에 관계없이 문자열 형식으로 입력하기 위해서는 입력값을 큰따옴표(")로 감싸주면 됩니다. YAML 파일 형식에 대한 더 자세한 내용은 [Yaml Cookbook](https://yaml.org/YAML_for_ruby.html) 문서를 참조하세요.
 >
 
+### 로드 밸런서 이름 설정
+
+로드 밸런서의 이름을 설정할 수 있습니다.
+
+* 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/loadbalancer-name입니다.
+* **리스너별 설정을 적용할 수 없습니다.**
+* 영문자와 숫자, '-', '_'만 입력 가능합니다.
+    * 유효하지 않은 문자가 포함된 경우 기본 로드 밸런서 이름 양식에 따라 로드 밸런서 이름이 설정됩니다.
+    * 기본 로드 밸런서 이름 양식: "kube_service_{CLUSTER_UUID}\_{SERVICE_NAMESPACE}_{SERVICE_NAME}"
+* 최대 길이는 255자이며, 최대 길이 초과 시 로드 밸런서 이름은 255자로 잘립니다.
+
+> [주의]
+> 다음 행위를 하는 경우 로드 밸런서의 심각한 오동작을 초래할 수 있습니다.
+> * 서비스 객체가 생성된 후 로드 밸런서 이름을 수정
+> * 프로젝트 내에 같은 이름의 로드 밸런서를 생성
+
 #### 로드 밸런서 타입 설정
 로드 밸런서의 타입을 설정할 수 있습니다. 로드 밸런서에 대한 자세한 내용은 [로드 밸런서 콘솔 사용 가이드](/Network/Load%20Balancer/ko/console-guide/)를 참고하세요.
 
@@ -2239,6 +2316,11 @@ $ curl 123.123.123.44/unknown
 ## Kubernetes 대시보드
 NHN Kubernetes Service(NKS)는 기본 웹 UI 대시보드(dashboard)를 제공합니다. Kubernetes 대시보드에 대한 자세한 내용은 [웹 UI (대시보드)](https://kubernetes.io/ko/docs/tasks/access-application-cluster/web-ui-dashboard/) 문서를 참고하세요.
 
+> [주의]
+> * Kubernetes 대시보드는 NKS v1.25.4까지만 기본 제공합니다.
+> * NKS 클러스터 버전을 v1.25.4에서 v1.26.3으로 업그레이드해도 동작 중이던 Kubernetes 대시보드 파드와 관련 리소스는 그대로 유지됩니다.
+> * NHN Cloud 콘솔에서 Kubernetes 리소스를 조회할 수 있습니다.
+
 ### 대시보드 서비스 공개
 사용자 Kubernetes에는 대시보드를 공개하기 위한 `kubernetes-dashboard` 서비스 객체가 미리 생성되어 있습니다.
 
@@ -2300,7 +2382,7 @@ kubernetes-dashboard   LoadBalancer   10.254.95.176   123.123.123.81   443:30963
 
 #### 인그레스(Ingress)를 이용한 서비스 공개
 
-인그레스는 클러스터 내부의 여러 서비스들로 접근하기 위한 라우팅을 제공하는 네트워크 객체입니다. 인그레스 객체의 설정은 인그래스 컨트롤러로 구동됩니다. `kubernetes-dashboard` 서비스 객체를 인그레스를 통해 공개할 수 있습니다. 인그레스와 인그레스 컨트롤러에 대한 설명은 [인그레스 컨트롤러](/Container/NKS/ko/user-guide/#_42)를 참고하세요. 아래 그림은 인그레스를 통해 대시보드를 외부에 공개하는 구조를 나타냅니다.
+인그레스는 클러스터 내부의 여러 서비스들로 접근하기 위한 라우팅을 제공하는 네트워크 객체입니다. 인그레스 객체의 설정은 인그레스 컨트롤러로 구동됩니다. `kubernetes-dashboard` 서비스 객체를 인그레스를 통해 공개할 수 있습니다. 인그레스와 인그레스 컨트롤러에 대한 설명은 [인그레스 컨트롤러](/Container/NKS/ko/user-guide/#_57)를 참고하세요. 아래 그림은 인그레스를 통해 대시보드를 외부에 공개하는 구조를 나타냅니다.
 
 ![dashboard-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-02.png)
 
@@ -2347,7 +2429,7 @@ NAME                    CLASS   HOSTS   ADDRESS          PORTS     AGE
 k8s-dashboard-ingress   nginx   *       123.123.123.44   80, 443   34s
 ```
 
-웹 브라우저에서 `https://{ADDRESS}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 엑세스 토큰](/Container/NKS/ko/user-guide/#_49)을 참고하세요.
+웹 브라우저에서 `https://{ADDRESS}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 엑세스 토큰](/Container/NKS/ko/user-guide/#_64)을 참고하세요.
 
 ### 대시보드 엑세스 토큰
 Kubernetes 대시보드에 로그인하려면 토큰이 필요합니다. 토큰은 다음 명령으로 얻을 수 있습니다.
@@ -2662,10 +2744,10 @@ PersistentVolumeClaim (PVC) 개체를 편집하여 기존 볼륨의 크기를 �
 v1.19.13 이전 버전의 스토리지 제공자 **kubernetes.io/cinder**는 사용 중인 볼륨의 확장 기능을 제공하지 않습니다. 사용 중인 볼륨의 확장 기능을 사용하기 위해서는 v1.20.12 이후 버전의 **cinder.csi.openstack.org** 스토리지 제공자를 사용해야 합니다. 클러스터 업그레이드 기능을 통해 v1.20.12 이후 버전으로 업그레이드하여 **cinder.csi.openstack.org** 스토리지 제공자를 사용할 수 있습니다.
 
 v1.19.13 이전 버전의 **kubernetes.io/cinder** 스토리지 제공자 대신 v1.20.12 이후 버전의 **cinder.csi.openstack.org** 스토리지 제공자를 사용하기 위하여 PVC의 어노테이션을 아래와 같이 수정해야 합니다.
-+ ~~pv.kubernetes.io/bind-completed: "yes"~~ > 삭제
-+ ~~pv.kubernetes.io/bound-by-controller: "yes"~~ > 삭제
-+ ~~volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/cinder~~ > volume.beta.kubernetes.io/storage-provisioner:cinder.csi.openstack.org
-+ ~~volume.kubernetes.io/storage-resizer: kubernetes.io/cinder~~ > volume.kubernetes.io/storage-resizer: cinder.csi.openstack.org
++ pv.kubernetes.io/bind-completed: "yes" > 삭제
++ pv.kubernetes.io/bound-by-controller: "yes" > 삭제
++ volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/cinder > volume.beta.kubernetes.io/storage-provisioner:cinder.csi.openstack.org
++ volume.kubernetes.io/storage-resizer: kubernetes.io/cinder > volume.kubernetes.io/storage-resizer: cinder.csi.openstack.org
 + pv.kubernetes.io/provisioned-by:cinder.csi.openstack.org > 추가
 
 
@@ -2711,7 +2793,7 @@ v1.20.12 이후 버전의 스토리지 제공자 **cinder.csi.openstack.org**는
 NHN Cloud에서 제공하는 NAS 스토리지를 PV로 활용할 수 있습니다. NAS 서비스를 사용하기 위해서는 v1.20 이후 버전의 클러스터를 사용해야 합니다. NHN Cloud NAS 사용에 대한 자세한 내용은 [NAS 콘솔 사용 가이드](/Storage/NAS/ko/console-guide)를 참고하세요.
 
 > [참고]
-> NHN Cloud NAS 서비스는 현재(2023. 03.) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS/ko/overview)를 참고하세요.
+> NHN Cloud NAS 서비스는 현재(2023. 05.) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS/ko/overview)를 참고하세요.
 
 #### 워커 노드에 nfs 패키지 설치 및 rpcbind 서비스 실행
 NAS 스토리지를 사용하려면 워커 노드에 nfs 패키지를 설치하고, rpcbind 서비스를 실행해야 합니다. 워커 노드에 접속한 뒤 아래 명령어를 실행해 nfs 패키지를 설치합니다.
