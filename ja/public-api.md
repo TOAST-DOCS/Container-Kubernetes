@@ -126,10 +126,10 @@ X-Auth-Token: {tokenId}
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Kubernetes APIエンドポイントに公認ドメインアドレスを作成するかどうか("True" / "False") |
 | clusters.labels.additional_network_id_list | Body | String | 基本ワーカーノードグループ適用：追加ネットワークのVPCネットワークUUIDリスト(コロン区切り) |
 | clusters.labels.additional_subnet_id_list | Body | String | 基本ワーカーノードグループ適用：追加ネットワークのVPCサブネットUUIDリスト(コロン区切り) |
-| clusters.labels.cni_driver | Body | String | クラスタCIDR、クラスタでService作成時、ClusterIPに割り当てられるIP帯域2023.03.31. 以降に作成されたクラスタで確認可能) |
-| clusters.labels.service_cluster_ip_range | Body | String | クラスタCIDR(2023.03.31. 以降に作成されたクラスタで確認可能) |
-| clusters.labels.pods_network_cidr | Body | String | クラスタPod CIDR(2023.03.31. 以降に作成されたクラスタで確認可能) |
-| clusters.labels.pods_network_subnet | Body | String | クラスタPodサブネット(2023.03.31. 以降に作成されたクラスタで確認可能) |
+| clusters.labels.cni_driver | Body | String | クラスタCNI(2023.03.31. 以降に作成されたクラスタで確認可能) |
+| clusters.labels.service_cluster_ip_range | Body | String | K8sサービスネットワーク、クラスタでサービス作成時、ClusterIPに割り当てられるIP帯域(2023.05.30. 以降に作成されたクラスタで確認可能) |
+| clusters.labels.pods_network_cidr | Body | String | クラスタPodネットワーク(2023.05.30. 以降に作成されたクラスタで確認可能) |
+| clusters.labels.pods_network_subnet | Body | String | クラスタPodサブネットサイズ(2023.05.30. 以降に作成されたクラスタで確認可能) |
 
 
 <details><summary>例</summary>
@@ -262,9 +262,9 @@ X-Auth-Token: {tokenId}
 | clusters.labels.additional_network_id_list | Body | String | 基本ワーカーノードグループ適用：追加ネットワークのVPCネットワークUUIDリスト(コロン区切り) |
 | clusters.labels.additional_subnet_id_list | Body | String | 基本ワーカーノードグループ適用：追加ネットワークのVPCサブネットUUIDリスト(コロン区切り) |
 | clusters.labels.cni_driver | Body | String | クラスタCNI(2023.03.31. 以降に作成されたクラスタで確認可能) |
-| clusters.labels.service_cluster_ip_range | Body | String | クラスタCIDR、クラスタでService作成時、ClusterIPに割り当てられるIP帯域(2023.03.31. 以降に作成されたクラスタで確認可能) |
-| clusters.labels.pods_network_cidr | Body | String | クラスタPod CIDR(2023.03.31. 以降に作成されたクラスタで確認可能) |
-| clusters.labels.pods_network_subnet | Body | String | クラスタPodサブネット(2023.03.31. 以降に作成されたクラスタで確認可能) |
+| clusters.labels.service_cluster_ip_range | Body | String | K8sサービスネットワーク、クラスタでサービス作成時、ClusterIPに割り当てられるIP帯域(2023.05.30. 以降に作成されたクラスタで確認可能) |
+| clusters.labels.pods_network_cidr | Body | String | クラスタPodネットワーク(2023.05.30. 以降に作成されたクラスタで確認可能) |
+| clusters.labels.pods_network_subnet | Body | String | クラスタPodサブネットサイズ(2023.05.30. 以降に作成されたクラスタで確認可能) |
 
 <details><summary>例</summary>
 <p>
@@ -392,22 +392,22 @@ X-Auth-Token: {tokenId}
 | labels.master_lb_floating_ip_enabled | Body | String | O | Kubernetes APIエンドポイントに公認ドメインアドレスを作成するかどうか("True" / "False")<br>labels.external_network_idとexternal_subnet_id_listが設定されている場合にのみ"True"に設定可能 |
 | labels.additional_network_id_list | Body | String | X | 基本ワーカーノードグループ適用：追加ネットワークのVPCネットワークUUIDリスト(コロン区切り) |
 | labels.additional_subnet_id_list | Body | String | X | 基本ワーカーノードグループ適用：追加ネットワークのVPCサブネットUUIDリスト(コロン区切り) |
-| labels.service_cluster_ip_range | Body | String  | X | クラスタCIDR、クラスタでService作成時、ClusterIPに割り当てられるIP帯域、 pods_network_cidr, service_cluster_ip_range入力ルール参考 |
-| labels.pods_network_cidr | Body | String |  X | クラスタPod CIDR, pods_network_cidr, service_cluster_ip_range入力ルール参考 |
-| labels.pods_network_subnet | Body | Integer | X | クラスタPodサブネット、 pods_network_subnet入力ルール参考 |
+| labels.service_cluster_ip_range | Body | String  | X |  K8sサービスネットワーク、クラスタでサービス作作成時、ClusterIPに割り当てられるIP帯域、 pods_network_cidr, service_cluster_ip_range入力ルール参考 |
+| labels.pods_network_cidr | Body | String |  X | クラスタPodネットワーク、 pods_network_cidr, service_cluster_ip_range入力ルール参考 |
+| labels.pods_network_subnet | Body | Integer | X | クラスタPodサブネットサイズ、 pods_network_subnet入力ルール参考 |
 | flavor_id | Body | UUID | O | 基本ワーカーノードグループ適用：ノードインスタンスタイプUUID |
 | fixed_network | Body | UUID | O | VPC Network UUID |
 | fixed_subnet | Body | UUID | O | VPC Subnet UUID |
-> pods_network_cidr, service_cluster_ip_rangeは以下のようなルールで入力する必要があります。
+> pods_network_cidr, service_cluster_ip_rangeのCIDRは以下のようなルールで入力する必要があります。
 >  - CIDRはリンクローカルアドレス帯域(169.254.0.0/16)と重複することはできません。
->  - Pod CIDRとクラスタCIDR帯域は重複することができません。
+>  - PodネットワークとK8sサービスネットワーク帯域は重複することができません。
 >  - CIDRはNKS内部で使用しているIP帯域(198.18.0.0.0/19)と重複することはできません。.
 >  - CIDRはNKSクラスタに接続されたVPCネットワークサブネットまたは追加ネットワークサブネットの帯域と重複することはできません。
 >  - /24より大きいCIDRブロックは入力できません(次のようなCIDRブロックは使用できません。/26, /30)。
 >  - v1.23.3以下クラスタの場合ドッカーBIP(bridged IP range)と重複できません(172.17.0.0/16)。
 > pods_network_subnetは下記のようなルールで入力する必要があります。
 > - 20-28(含む)範囲の値のみ入力可能です。
->  - pods_network_subnet値がpods_network_cidr prefixの値より最低2大きい必要があります。正常例(サブネット：24、Pod CIDR: 10.100.0.0/22)
+>  - pods_network_subnet値がpods_network_cidr prefixの値より最低2大きい必要があります。正常例(Podサブネットサイズ: 24, Podネットワーク: 10.100.0.0/22)
 
 
 > [注意]
@@ -641,22 +641,22 @@ X-Auth-Token: {tokenId}
 | tokenId | Header | String | O | トークンID |
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
 | cni | Body | String | O | 変更するCNIを設定(選択可能CNIリスト：calico) | 
-| num_buffer_nodes | Body | Integer | X | バッファノード数。デフォルト値：1、最小値：0、最大値：すべてのワーカーノードの(ワーカーノードグループあたりの最大ノード数クォーター - 該当ワーカーノードグループの現在のノード数)うち最小値。 |
+| num_buffer_nodes | Body | Integer | X | バッファノード数。デフォルト値：1、最小値：0、最大値：各ワーカーノードグループにて追加で作成可能なノード数(ワーカーノードグループあたりの最大ノード数クォーター - 該当ワーカーノードグループの現在のノード数)うち最小値。 |
 | num_max_unavailable_nodes | Body |  Integer | X | 最大サービス不可ノード数。最小値：1、最大値：該当clusterの現在ノード数、デフォルト値：1 |
 | pod_cidr | Body | String | O | calico pod cidr設定、 pod_cidr入力ルール参考 |
 | pod_subnet | Body | String | O | calico pod cidr subnet設定、デフォルト値: 24、 pod_subnet入力ルール参考 |
 
 pod_cidrは、以下のようなルールで入力する必要があります。
 * CIDRはリンクローカルアドレス帯域(169.254.0.0/16)と重複できません。
-* CIDRはNKSクラスタに使用されたservice IP帯域(10.254.0.0/16)と重複できません。
+* CIDRはNKSクラスタに使用されたサービスIP帯域(K8sサービスネットワーク)と重複できません。
 * CIDRはNKS内部で使用しているIP帯域(198.18.0.0/19)と重複できません。
 * CIDRはNKSクラスタに接続されたVPCネットワークサブネットまたは追加ネットワークサブネットの帯域と重複できません。
-* CIDRは現在NKSクラスタに使用されているpod CIDR帯域値と重複できません。
+* CIDRは現在NKSクラスタに使用されているpodネットワーク帯域値と重複できません。
 * /24より大きいCIDRブロックは入力できません。 (次のようなCIDRブロックは使用できません。 /26, /30)
 
 pod_subnetは以下のようなルールで入力する必要があります。
 * 20-28(含む)範囲の値のみ入力可能です。
-* pod_subnetの値がpod_cidrのprefixの値より最低2大きい必要があります。正常例(サブネット: 24, Pod CIDR: 10.100.0.0/22)
+* pod_subnetの値がpod_cidrのprefixの値より最低2大きい必要があります。正常例(Podサブネットサイズ: 24、Podネットワーク: 10.100.0.0/22)
 
 
 
