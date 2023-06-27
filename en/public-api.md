@@ -126,10 +126,10 @@ This API does not require a request body.
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Whether to create a public domain address for Kubernetes API endpoint ("True" / "False") |
 | clusters.labels.additional_network_id_list | Body | String | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
 | clusters.labels.additional_subnet_id_list | Body | String | Applied to the default worker node group: List of VPC subnet UUIDs for additional networks (separated by colons) |
-| clusters.labels.cni_driver | Body | String | Cluster CIDR, IP range allocated to ClusterIP when creating the service in the cluster (Available for clusters created on or after 2023.03.31) |
-| clusters.labels.service_cluster_ip_range | Body | String | Cluster CIDR (Available for clusters created on or after 2023.03.31) |
-| clusters.labels.pods_network_cidr | Body | String | Cluster pod CIDR (Available for clusters created on or after 2023.03.31) |
-| clusters.labels.pods_network_subnet | Body | String | Cluster pod subnet (Available for clusters created on or after 2023.03.31) |
+| clusters.labels.cni_driver | Body | String | Cluster CNI (Available for clusters created on or after 2023.03.31) |
+| clusters.labels.service_cluster_ip_range | Body | String | IP range assigned to ClusterIP when creating a service from K8s service network and clusters (Available for clusters created on or after 2023.05.30) |
+| clusters.labels.pods_network_cidr | Body | String | Cluster pod network (Available for clusters created on or after 2023.05.30) |
+| clusters.labels.pods_network_subnet | Body | String | Cluster pod subnet size (Available for clusters created on or after 2023.05.30) |
 
 <details><summary>Example</summary>
 <p>
@@ -262,9 +262,9 @@ This API does not require a request body.
 | clusters.labels.additional_network_id_list | Body | String | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
 | clusters.labels.additional_subnet_id_list | Body | String | Applied to the default worker node group: List of VPC subnet UUIDs for additional networks (separated by colons) |
 | clusters.labels.cni_driver | Body | String | Cluster CNI (Available for clusters created on or after 2023.03.31) |
-| clusters.labels.service_cluster_ip_range | Body | String | Cluster CIDR, IP range allocated to ClusterIP when creating the service in the cluster (Available for clusters created on or after 2023.03.31) |
-| clusters.labels.pods_network_cidr | Body | String | Cluster pod CIDR (Available for clusters created on or after 2023.03.31) |
-| clusters.labels.pods_network_subnet | Body | String | Cluster pod subnet (Available for clusters created on or after 2023.03.31) |
+| clusters.labels.service_cluster_ip_range | Body | String | Cluster CIDR, IP range allocated to ClusterIP when creating a service from K8s service network and clusters (Available for clusters created on or after 2023.05.30) |
+| clusters.labels.pods_network_cidr | Body | String | Cluster pod network (Available for clusters created on or after 2023.03.31) |
+| clusters.labels.pods_network_subnet | Body | String | Cluster pod subnet size  (Available for clusters created on or after 2023.03.31) |
 
 <details><summary>Example</summary>
 <p>
@@ -392,9 +392,9 @@ X-Auth-Token: {tokenId}
 | labels.master_lb_floating_ip_enabled | Body | String | O | Whether to create a public domain address for Kubernetes API endpoint ("True" / "False")<br>Can be set to "True" only when labels.external_network_id and labels.external_subnet_id_list are set |
 | labels.additional_network_id_list | Body | String | X | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
 | labels.additional_subnet_id_list | Body | String | X |  Applied to the default worker node group: List of VPC subnet UUIDs for additional networks (separated by colons) |
-| labels.service_cluster_ip_range | Body | String  | X |  Cluster CIDR, IP range allocated to ClusterIP when creating the service in the cluster, see the input rules of pods_network_cidr, service_cluster_ip_range |
-| labels.pods_network_cidr | Body | String |  X |  Cluster pod CIDR, see the input rules of pods_network_cidr, service_cluster_ip_range |
-| labels.pods_network_subnet | Body | Integer | X |  Cluster pod subnet, see the input rules of pods_network_subnet |
+| labels.service_cluster_ip_range | Body | String  | X |  Cluster CIDR, IP range allocated to ClusterIP when creating a service from K8s service network and clusters, see the input rules of pods_network_cidr, service_cluster_ip_range |
+| labels.pods_network_cidr | Body | String |  X |  Cluster pod network, see the input rules of pods_network_cidr, service_cluster_ip_range |
+| labels.pods_network_subnet | Body | Integer | X |  Cluster pod subnet size, see the input rules of pods_network_subnet |
 | flavor_id | Body | UUID | O | Applied to the default worker node group: Node flavor UUID |
 | fixed_network | Body | UUID | O | VPC Network UUID |
 | fixed_subnet | Body | UUID | O | VPC Subnet UUID |
@@ -404,16 +404,16 @@ Make sure that the fixed_subnet range does not overlap the network range.
 >  - 10.100.0.0/16
 >  - 10.254.0.0/16
 >  - 198.18.0.0/19
-> pods_network_cidr, service_cluster_ip_range must be entered in the following rules.
+> pods_network_cidr, CIDR of service_cluster_ip_range must be entered in the following rules.
 >  - CIDR cannot overlap with the link-local address band (169.254.0.0/16).
->  - Pod CIDR and cluster CIDR bands cannot overlap.
+>  - Pod network and K8s service network bands cannot overlap.
 >  - CIDR cannot overlap with the IP band (198.18.0.0/19) being used inside the NKS.
 >  - CIDR cannot overlap with bands of the VPC network subnet or additional network subnets connected to NKS clusters.
 >  - You cannot enter a CIDR block greater than /24. (The following CIDR blocks are not available: /26, /30).
 >  - For clusters of v1.23.3 or earlier, they cannot overlap with BIP (bridged IP range) (172.17.0.0/16).
 pod_network_subnet must be entered in the following rules.
 >  - Values between 20 and 28 (included) are allowed.
->  - The pods_network_subnet value must be at least 2 greater than the pods_network_cidr prefix value. Normal example (subnet: 24, pod CIDR: 10.100.0.0/22)
+>  - The pods_network_subnet value must be at least 2 greater than the pods_network_cidr prefix value. Normal example (Pod subnet size: 24, pod network: 10.100.0.0/22)
 
 
 <details><summary>Example</summary>
@@ -641,22 +641,22 @@ X-Auth-Token: {tokenId}
 | tokenId | Header | String | O | Token ID |
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
 | cni | Body | String | O | Configure a CNI to change (Selectable CNI list: calico) | 
-| num_buffer_nodes | Body | Integer | X | Number of buffer nodes. Default: 1, minimum: 0, maximum: the minimum of all worker nodes (maximum number of nodes per worker node group - current number of nodes in that worker node group). |
+| num_buffer_nodes | Body | Integer | X | Number of buffer nodes. Default: 1, minimum: 0, maximum: number of additional nodes that can be created in each worker node group (maximum number of nodes per worker node group - current number of nodes in that worker node group) |
 | num_max_unavailable_nodes | Body |  Integer | X | Maximum number of unavailable nodes. minimum: 1, maximum: current number of nodes for the cluster, default: 1 |
 | pod_cidr | Body | String | O | calico pod cidr settings, see the input rules of pod_cidr |
 | pod_subnet | Body | String | O | calico pod cidr subnet settings, Default: 24, see the input rules of pod_subnet |
 
 pod_cidr must be entered in the following rules.
 * CIDR cannot overlap with the link-local address band (169.254.0.0/16).
-* CIDR cannot overlap with the service IP band (10.254.0.0/16) used in NKS clusters. 
+* CIDR cannot overlap with the service IP band (K8s service network) used in NKS clusters. 
 * CIDR cannot overlap with the IP band (198.18.0.0/19) being used inside the NKS.
 * CIDR cannot overlap with bands of the VPC network subnet or additional network subnets connected to NKS clusters.
-* CIDR cannot overlap with a pod CIDR band that is currently being used for NKS clusters.
+* CIDR cannot overlap with a pod network band that is currently being used for NKS clusters.
 * You cannot enter a CIDR block greater than /24. (The following CIDR blocks are not available: /26, /30)
 
 pod_subnet must be entered in the following rules.
 * Values between 20 and 28 (included) are allowed.
-* The value of pod_subnet must be at least 2 greater than the prefix value of pod_cidr. Normal example (subnet: 24, pod CIDR: 10.100.0.0/22)
+* The value of pod_subnet must be at least 2 greater than the prefix value of pod_cidr. Normal example (pod subnet size: 24, pod network: 10.100.0.0/22)
 
 
 

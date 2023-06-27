@@ -7,6 +7,7 @@
 * Added support for Kubernetes v1.26.3.
 * Added a feature to use common images as worker images.
     * For more information, see [User Guide](/Container/NKS/ko/user-guide/#_24).
+* Added a feature to change the size of cluster service network, pod network, and pod subnet.
 
 #### Feature Updates
 
