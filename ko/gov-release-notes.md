@@ -2,15 +2,13 @@
 
 ### 2023. 07. 19.
 
-#### 버그 수정
+#### 이미지 업데이트
 * Rocky Linux 8.7 - Container (2023.05.25) 이미지로 노드 그룹 생성 시 iptables 커널 모듈이 정상적으로 초기화되지 않는 문제가 수정되었습니다.
-    * 문제 발생 기간 : 2023.05.25 ~ 2023.07.19
-    * 이미지 업데이트
-        * Rocky Linux 8.7 - Container (2023.07.25)
+    * 문제 이미지: Rocky Linux 8.7 - Container (2023.05.25)
+    * 해결 이미지: Rocky Linux 8.7 - Container (2023.07.25)
 * CentOS 7.9 - Container (2023.05.25) 이미지로 GPU 노드 그룹 생성 시 nvidia-container-runtime 모듈이 배포되지 않는 문제가 수정되었습니다.
-    * 문제 발생 기간 : 2023.05.25 ~ 2023.07.19
-    * 이미지 업데이트
-        * CentOS 7.9 - Container (2023.07.25)
+    * 문제 이미지: CentOS 7.9 - Container (2023.05.25)
+    * 해결 이미지: CentOS 7.9 - Container (2023.07.25)
 
 
 ### 2023. 06. 06.
