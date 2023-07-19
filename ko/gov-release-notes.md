@@ -1,5 +1,18 @@
 ## Container > NHN Kubernetes Service(NKS) > 릴리스 노트
 
+### 2023. 07. 19.
+
+#### 버그 수정
+* Rocky Linux 8.7 - Container (2023.05.25) 이미지로 노드 그룹 생성 시 iptables 커널 모듈이 정상적으로 초기화되지 않는 문제가 수정되었습니다.
+    * 문제 발생 기간 : 2023.05.25 ~ 07.19
+    * 이미지 업데이트
+        * Rocky Linux 8.7 - Container (2023.07.25)
+* CentOS 7.9 - Container (2023.05.25) 이미지로 그래픽 최적화된 인스턴스 타입(g2) 노드 그룹 생성 시 nvidia-container-runtime 모듈이 배포되지 않는 문제가 수정되었습니다.
+    * 문제 발생 기간 : 2023.05.25 ~ 07.19
+    * 이미지 업데이트
+        * CentOS 7.9 - Container (2023.07.25)
+
+
 ### 2023. 06. 06.
 
 #### 기능 추가
@@ -20,8 +33,8 @@
         * dcgm 버전이 3.0.0에서 3.1.7로 변경되었습니다.
         * Docker 버전이 20.10.23에서 20.10.24로 변경되었습니다.
     * 대상 이미지
-        * CentOS 7.9 - Container (2022.11.22)
-        * Rocky Linux 8.6 - Container (2023.03.21)
+        * CentOS 7.9 - Container (2023.05.25)
+        * Rocky Linux 8.7 - Container (2023.05.25)
         * Ubuntu Server 20.04.6 LTS - Container (2023.05.25)
 
 ### 2023. 04. 04.
