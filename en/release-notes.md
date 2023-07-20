@@ -34,8 +34,8 @@
         * dcgm version changed from 3.0.0 to 3.1.7.
         * Docker version changed from 20.10.23 to 20.10.24.
     * Target Images
-        * CentOS 7.9 - Container (2022.11.22)
-        * Rocky Linux 8.6 - Container (2023.03.21)
+        * CentOS 7.9 - Container (2023.05.25)
+        * Rocky Linux 8.7 - Container (2023.05.25)
         * Ubuntu Server 20.04.6 LTS - Container (2023.05.25)
 
 ### March 28, 2023
