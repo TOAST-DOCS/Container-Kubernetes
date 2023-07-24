@@ -111,18 +111,9 @@ X-Auth-Token: {tokenId}
 | clusters.labels.kube_tag | Body |String | 마스터 노드 그룹 Kubernetes 버전 |
 | clusters.labels.availability_zone | Body | String | 기본 워커 노드 그룹 적용 : 가용성 영역 |
 | clusters.labels.node_image | Body | UUID | 기본 워커 노드 그룹 적용 : 베이스 이미지 UUID |
-| clusters.labels.boot_volume_type | Body | String | 기본 워커 노드 그룹 적용 : 블록 스토리지 종류|
-| clusters.labels.boot_volume_size | Body | String | 기본 워커 노드 그룹 적용 : 블록 스토리지 사이즈(GB) |
 | clusters.labels.external_network_id | Body | String | 인터넷 게이트웨이에 연결된 VPC 네트워크 UUID |
 | clusters.labels.external_subnet_id_list | Body | String | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분) |
 | clusters.labels.cert_manager_api | Body | String | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
-| clusters.labels.ca_enable | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 기능 활성화 여부 ("True" / "False") |
-| clusters.labels.ca_max_node_count | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최대 노드 수 |
-| clusters.labels.ca_min_node_count | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최소 노드 수 |
-| clusters.labels.ca_scale_down_enable | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 감축 활성 여부 ("True" / "False") |
-| clusters.labels.ca_scale_down_unneeded_time | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 임계 영역 유지 시간 |
-| clusters.labels.ca_scale_down_util_thresh | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 리소스 사용량 임계치  |
-| clusters.labels.ca_scale_down_delay_after_add | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 증설 후 감축 지연 시간 |
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
 | clusters.labels.additional_network_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 네트워크 UUID 목록(콜론으로 구분) |
 | clusters.labels.additional_subnet_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 서브넷 UUID 목록(콜론으로 구분) |
@@ -147,15 +138,6 @@ X-Auth-Token: {tokenId}
             "keypair": "testkeypair",
             "labels": {
                 "availability_zone": "kr2-pub-b",
-                "boot_volume_size": "20",
-                "boot_volume_type": "General HDD",
-                "ca_enable": "false",
-                "ca_max_node_count": "10",
-                "ca_min_node_count": "1",
-                "ca_scale_down_delay_after_add": "3",
-                "ca_scale_down_enable": "true",
-                "ca_scale_down_unneeded_time": "3",
-                "ca_scale_down_util_thresh": "50",
                 "cert_manager_api": "True",
                 "clusterautoscale": "nodegroupfeature",
                 "etcd_volume_size": "10",
@@ -246,18 +228,9 @@ X-Auth-Token: {tokenId}
 | labels.kube_tag | Body |String | 마스터 노드 그룹 Kubernetes 버전 |
 | labels.availability_zone | Body | String | 기본 워커 노드 그룹 적용 : 가용성 영역 |
 | labels.node_image | Body | UUID | 기본 워커 노드 그룹 적용 : 베이스 이미지 UUID |
-| labels.boot_volume_type | Body | String | 기본 워커 노드 그룹 적용 : 블록 스토리지 종류|
-| labels.boot_volume_size | Body | String | 기본 워커 노드 그룹 적용 : 블록 스토리지 사이즈(GB) |
 | labels.external_network_id | Body | String | 인터넷 게이트웨이에 연결된 VPC 네트워크 UUID |
 | labels.external_subnet_id_list | Body | String | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분) |
 | labels.cert_manager_api | Body | String | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
-| labels.ca_enable | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 기능 활성화 여부 ("True" / "False") |
-| labels.ca_max_node_count | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최대 노드 수 |
-| labels.ca_min_node_count | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최소 노드 수 |
-| labels.ca_scale_down_enable | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 감축 활성 여부 ("True" / "False") |
-| labels.ca_scale_down_unneeded_time | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 임계 영역 유지 시간 |
-| labels.ca_scale_down_util_thresh | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 리소스 사용량 임계치  |
-| labels.ca_scale_down_delay_after_add | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 증설 후 감축 지연 시간 |
 | labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
 | clusters.labels.additional_network_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 네트워크 UUID 목록(콜론으로 구분) |
 | clusters.labels.additional_subnet_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 서브넷 UUID 목록(콜론으로 구분) |
@@ -289,15 +262,6 @@ X-Auth-Token: {tokenId}
     "keypair": "test-keypair",
     "labels": {
         "availability_zone": "kr2-pub-b",
-        "boot_volume_size": "20",
-        "boot_volume_type": "General HDD",
-        "ca_enable": "false",
-        "ca_max_node_count": "10",
-        "ca_min_node_count": "1",
-        "ca_scale_down_delay_after_add": "3",
-        "ca_scale_down_enable": "true",
-        "ca_scale_down_unneeded_time": "3",
-        "ca_scale_down_util_thresh": "50",
         "cert_manager_api": "True",
         "clusterautoscale": "nodegroupfeature",
         "etcd_volume_size": "10",
@@ -376,6 +340,8 @@ X-Auth-Token: {tokenId}
 | labels.node_image | Body | UUID | O | 기본 워커 노드 그룹 적용 : 베이스 이미지 UUID |
 | labels.boot_volume_type | Body | String | O | 기본 워커 노드 그룹 적용 : 블록 스토리지 종류|
 | labels.boot_volume_size | Body | String | O | 기본 워커 노드 그룹 적용 : 블록 스토리지 사이즈(GB) |
+| labels.boot_volume_key_id | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우)암호화된 블록 스토리지에 적용할 대칭키 ID |
+| labels.boot_volume_appkey | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우)암호화된 블록 스토리지에 적용할 대칭키의 앱키 |
 | labels.external_network_id | Body | String | X | 인터넷 게이트웨이에 연결된 VPC 네트워크 UUID<br>VPC 서브넷이 연동된 라우터가 인터넷 게이트웨이에 연결된 경우 반드시 설정 |
 | labels.external_subnet_id_list | Body | String | X | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분)<br>VPC 서브넷이 연동된 라우터가 인터넷 게이트웨이에 연결된 경우 반드시 설정 |
 | labels.cert_manager_api | Body | String | O | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
@@ -651,7 +617,7 @@ pod_cidr는 아래와 같은 규칙으로 입력되어야 합니다.
 * CIDR은 NKS 클러스터에 사용된 서비스 IP 대역(K8s 서비스 네트워크)과 중첩될 수 없습니다.
 * CIDR은 NKS 내부에서 사용하고 있는 IP 대역(198.18.0.0/19)과 중첩될 수 없습니다.
 * CIDR은 NKS 클러스터에 연결된 VPC 네트워크 서브넷 또는 추가 네트워크 서브넷의 대역과 중첩될 수 없습니다.
-* CIDR은 현재 NKS 클러스터에 사용되고 있는 파드 네트워크 대역값과 중첩될 수 없습니다. 
+* CIDR은 현재 NKS 클러스터에 사용되고 있는 파드 네트워크 대역값과 중첩될 수 없습니다.
 * /24보다 큰 CIDR 블록은 입력할 수 없습니다. (다음과 같은 CIDR 블록은 사용할 수 없습니다. /26, /30)
 
 pod_subnet은 아래와 같은 규칙으로 입력되어야 합니다.
@@ -799,6 +765,8 @@ X-Auth-Token: {tokenId}
 | labels.node_image | Body | UUID | 워커 노드 그룹 적용 : 베이스 이미지 UUID |
 | labels.boot_volume_type | Body | String | 워커 노드 그룹 적용 : 블록 스토리지 종류|
 | labels.boot_volume_size | Body | String | 워커 노드 그룹 적용 : 블록 스토리지 사이즈(GB) |
+| labels.boot_volume_key_id | Body | String | (암호화된 블록 스토리지를 사용하는 경우)블록 스토리지에 적용한 대칭키 ID |
+| labels.boot_volume_appkey | Body | String | (암호화된 블록 스토리지를 사용하는 경우)블록 스토리지에 적용한 대칭키의 앱키 |
 | labels.external_network_id | Body | String | 인터넷 게이트웨이에 연결된 VPC 네트워크 UUID |
 | labels.external_subnet_id_list | Body | String | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분) |
 | labels.cert_manager_api | Body | String | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
@@ -926,6 +894,8 @@ X-Auth-Token: {tokenId}
 | labels.availability_zone | Body | String | O | 기본 워커 노드 그룹 적용 : 가용성 영역 |
 | labels.boot_volume_type | Body | String | O | 기본 워커 노드 그룹 적용 : 블록 스토리지 종류|
 | labels.boot_volume_size | Body | String | O | 기본 워커 노드 그룹 적용 : 블록 스토리지 사이즈(GB) |
+| labels.boot_volume_key_id | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우)블록 스토리지에 적용할 대칭키 ID |
+| labels.boot_volume_appkey | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우)블록 스토리지에 적용할 대칭키의 앱키 |
 | labels.ca_enable | Body | String | O | 기본 워커 노드 그룹 적용 : 오토 스케일러: 기능 활성화 여부 ("True" / "False") |
 | labels.ca_max_node_count | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최대 노드 수 |
 | labels.ca_min_node_count | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최소 노드 수 |
@@ -1518,10 +1488,12 @@ X-Auth-Token: {tokenId}
         "v1.19.13": false,
         "v1.20.12": false,
         "v1.21.6": false,
-        "v1.22.3": true,
-        "v1.23.3": true,
+        "v1.22.3": false,
+        "v1.23.3": false,
         "v1.24.3": true,
-        "v1.25.4": true
+        "v1.25.4": true,
+        "v1.26.3": true,
+        "v1.27.3": true
     }
 }
 ```
