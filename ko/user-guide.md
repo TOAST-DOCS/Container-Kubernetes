@@ -2858,7 +2858,7 @@ v1.20.12 이후 버전의 스토리지 제공자 **cinder.csi.openstack.org**는
 NHN Cloud에서 제공하는 NAS 스토리지를 PV로 활용할 수 있습니다. NAS 서비스를 사용하기 위해서는 v1.20 이후 버전의 클러스터를 사용해야 합니다. NHN Cloud NAS 사용에 대한 자세한 내용은 [NAS 콘솔 사용 가이드](/Storage/NAS/ko/console-guide)를 참고하세요.
 
 > [참고]
-> NHN Cloud NAS 서비스는 현재(2023. 05.) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS/ko/overview)를 참고하세요.
+> NHN Cloud NAS 서비스는 현재(2023. 08.) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS/ko/overview)를 참고하세요.
 
 #### 워커 노드에 nfs 패키지 설치 및 rpcbind 서비스 실행
 NAS 스토리지를 사용하려면 워커 노드에 nfs 패키지를 설치하고, rpcbind 서비스를 실행해야 합니다. 워커 노드에 접속한 뒤 아래 명령어를 실행해 nfs 패키지를 설치합니다.
@@ -2897,18 +2897,23 @@ nfs-csi-driver를 사용하여 여러 개의 PV를 구성하는 경우 nfs-csi-d
 $ export KUBECONFIG={클러스터 설정 파일 절대경로}
 ```
 
-##### 2. csi-driver-nfs 구성 요소가 포함된 git 프로젝트를 다운로드합니다.
+##### 2. ORAS 명령줄 도구를 사용하여 csi-driver-nfs 설치 패키지를 다운로드합니다.
+ORAS(OCI Registry As Storage)는 OCI 레지스트리에서 OCI 아티팩트를 push 및 pull하는 방법을 제공하는 툴입니다.
+[ORAS installation](https://oras.land/docs/installation)을 참고하여 ORAS 명령줄 도구를 설치합니다. ORAS 명령줄 도구의 자세한 사용법은 [ORAS docs](https://oras.land/docs/)를 참고하십시오.
+
 ```
-$ git clone https://github.com/kubernetes-csi/csi-driver-nfs.git
+$ oras pull dfe965c3-kr1-registry.container.nhncloud.com/nks_container/nfs-deploy-tool:v1
 ```
 
-##### 3. csi-driver-nfs 폴더로 이동 후 **./deploy/install-driver.sh v4.1.0 local** 명령어를 사용하여 csi-driver-nfs 구성 요소를 설치합니다. 
-```
-$ cd csi-driver-nfs
+##### 3. 설치 패키지를 압축 해제한 후 **install-driver.sh {mode}** 명령어를 사용하여 csi-driver-nfs 구성 요소를 설치합니다.
+mode는 NKS 클러스터가 인터넷망 환경에 구성되었는지, 폐쇄망 환경에 구성되었는지에 따라 각각 **public**/**private** 값을 가집니다.
+아래는 인터넷망 환경에 구성된 클러스터에 csi-driver-nfs 패키지를 설치하는 예시입니다.
 
-$ ./deploy/install-driver.sh v4.1.0 local
-use local deploy
-Installing NFS CSI driver, version: v4.1.0 ...
+```
+$ tar -xvf nfs-deploy-tool.tar
+
+$ ./install-driver.sh public
+Installing NFS CSI driver, mode: public ...
 serviceaccount/csi-nfs-controller-sa created
 serviceaccount/csi-nfs-node-sa created
 clusterrole.rbac.authorization.k8s.io/nfs-external-provisioner-role created
@@ -2948,8 +2953,11 @@ NAMESPACE     NAME                    DESIRED   CURRENT   READY   UP-TO-DATE   A
 kube-system   csi-nfs-node            1         1         1       1            1           kubernetes.io/os=linux          4m23s
 ```
 
-#### 정적 프로비저닝
-NHN Cloud NAS 스토리지를 정적 프로비저닝을 통해 PV로 활용하기 위해서 PV 매니페스트 작성 시 **csi** 정보를 정의해야 합니다. 설정 위치는 .spec 하위의 csi입니다.
+#### 프로비저닝 시 기존 NHN Cloud NAS 스토리지를 이용하는 방법
+PV 매니페스트 작성 시 NAS 정보를 입력하거나 Storage Class에 NAS 정보를 입력하는 방법을 통해 기존 NAS 스토리지를 PV로 활용할 수 있습니다.
+
+##### 방법 1. PV 매니페스트 작성 시 NAS 스토리지 정보 정의
+PV 매니페스트 작성 시 NHN Cloud NAS 스토리지 정보를 정의합니다. 설정 위치는 .spec 하위의 **csi**입니다.
 
 * driver: **nfs.csi.k8s.io**를 입력합니다.
 * readOnly: **false**를 입력합니다.
@@ -2958,7 +2966,7 @@ NHN Cloud NAS 스토리지를 정적 프로비저닝을 통해 PV로 활용하�
   * server: NAS 스토리지의 연결 정보 중 **ip** 부분의 값을 입력합니다.
   * share: NAS 스토리지의 연결 정보 중 **볼륨 이름** 부분의 값을 입력합니다.
 
-아래는 NHN Cloud NAS 스토리지를 정적 프로비저닝 하는 매니페스트 예제입니다.
+아래는 매니페스트 예제입니다.
 ``` yaml
 # static-pv.yaml
 apiVersion: v1
@@ -3023,15 +3031,15 @@ NAME      CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM             
 pv-onas   300Gi      RWX            Retain           Bound    default/pvc-onas-static                           3m20s   Filesystem
 ```
 
-#### 동적 프로비저닝
-NHN Cloud NAS 스토리지를 동적 프로비저닝을 통해 PV로 활용하기 위해서 StorageClass 매니페스트 작성 시 스토리지 제공자 정보 및 NHN Cloud NAS 스토리지 연결 정보를 정의해야 합니다.
+##### 방법 2. StorageClass 매니페스트 작성 시 NAS 정보 정의
+StorageClass 매니페스트 작성 시 스토리지 제공자 정보 및 NHN Cloud NAS 스토리지 정보를 정의합니다.
 
 * provisioner: **nfs.csi.k8s.io**를 입력합니다.
 * parameters: NAS 스토리지의 연결 정보를 입력합니다.
   * server: NAS 스토리지의 연결 정보 중 **ip** 부분의 값을 입력합니다.
   * share: NAS 스토리지의 연결 정보 중 **볼륨 이름** 부분의 값을 입력합니다.
 
-아래는 NHN Cloud NAS 서비스에 연동하기 위한 Storage Class 매니페스트 예제입니다.
+아래는 매니페스트 예제입니다.
 ``` yaml
 # storageclass.yaml
 apiVersion: storage.k8s.io/v1
@@ -3056,7 +3064,7 @@ NAME      PROVISIONER      RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANS
 onas-sc   nfs.csi.k8s.io   Retain          Immediate           false                  3s
 ```
 
-동적 프로비저닝은 PV를 생성할 필요가 없습니다. 따라서 PVC 매니페스트만 작성합니다. PVC 매니페스트에는 **spec.volumeName**을 설정하지 않습니다.
+PV를 생성할 필요가 없습니다. 따라서 PVC 매니페스트만 작성합니다. PVC 매니페스트에는 **spec.volumeName**을 설정하지 않습니다.
 ```
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -3087,9 +3095,9 @@ NAME                                     STATUS   VOLUME                        
 persistentvolumeclaim/pvc-onas-dynamic   Bound    pvc-71392e58-5d8e-43b2-9798-5b59de34b203   300Gi      RWX            onas-sc        4s
 ```
 
-파드에 PVC를 마운트하려면 파드 매니페스트에 마운트 정보를 정의해야 합니다. spec.volumes.persistenVolumeClaim.claimName에 사용할 PVC 이름을 입력합니다. 그리고 spec.containers.volumeMounts.mountPath에 마운트 할 경로를 입력합니다.
+파드에 PVC를 마운트하려면 파드 매니페스트에 마운트 정보를 정의해야 합니다. **spec.volumes.persistenVolumeClaim.claimName**에 사용할 PVC 이름을 입력합니다. 그리고 **spec.containers.volumeMounts.mountPath**에 마운트 할 경로를 입력합니다.
 
-아래는 동적 프로비저닝으로 생성한 PVC를 파드의 `/tmp/nfs`에 마운트하는 매니페스트 예제입니다.
+아래는 생성한 PVC를 파드의 `/tmp/nfs`에 마운트하는 매니페스트 예제입니다.
 ```
 # deployment-dynamic.yaml
 apiVersion: apps/v1
@@ -3137,7 +3145,157 @@ Filesystem                                                                 Size 
 ...
 ```
 
-NHN Cloud 콘솔 **Storage > NAS** 서비스 페이지에서도 NAS 스토리지의 연결 정보를 확인할 수 있습니다.
+#### 프로비저닝 시 새로운 NHN Cloud NAS 스토리지를 생성하는 방법
+Storage Class 및 PVC 매니페스트 작성 시 NAS 정보를 입력하는 방법을 통해 자동으로 생성된 NAS 스토리지를 PV로 활용할 수 있습니다.
+
+Storage Class 매니페스트에 스토리지 제공자 정보 및 생성할 NAS 스토리지의 스냅숏 정책, 접근 제어 목록(ACL), 서브넷 정보를 정의합니다.
+* provisioner: **nfs.csi.k8s.io**를 입력합니다.
+* parameters: 입력 항목은 아래 표를 참고하세요. 파라미터 값에 다중 값을 정의하는 경우 **,**를 이용하여 값을 구분합니다.
+
+| 항목 | 설명 | 예시 | 다중 값 | 필수 | 기본값 |
+| ---- | ------- |------- | --------------------------- | ---------------------------- | --------- | ------------- |
+| maxscheduledcount | 최대 저장 가능한 스냅숏 개수입니다. 최대 저장 개수에 도달하면 자동으로 생성된 스냅숏 중 가장 먼저 만들어진 스냅숏이 삭제됩니다. 1~20 사이의 숫자만 입력 가능합니다. | "7" | X | X |  |
+| reservepercent | 최대 저장 가능한 스냅숏 저장 용량입니다. 스냅숏 용량의 총합이 설정한 크기를 초과할 경우 모든 스냅숏 중 가장 먼저 만들어진 스냅숏이 삭제됩니다. 0~80 사이의 숫자만 입력 가능합니다. | "80" | X | X |  |
+| scheduletime | 스냅숏이 생성될 시각입니다. | "09:00" | X | X |  |
+| scheduletimeoffset | 스냅숏 생성 시각에 대한 오프셋입니다. UTC 기준이며 KST로 사용 시 +09:00 값을 지정합니다. | 오프셋 | "+09:00" | X | X |  |
+| scheduleweekdays | 스냅숏 생성 주기입니다. 일요일~토요일은 각각 숫자 0~6으로 표현됩니다. | "6" | O | X |  |
+| subnet | 스토리지에 접근할 서브넷입니다. 선택된 VPC의 서브넷만 선택할 수 있습니다. | "59526f1c-c089-4517-86fd-2d3dac369210" | O | O |  |
+| acl | 읽기, 쓰기 권한을 허용할 IP 또는 IP 대역 목록입니다. | "0.0.0.0/0" | O | X | 0.0.0.0/0 |
+| onDelete | PVC 삭제 시 NAS 볼륨 삭제 여부입니다. | "delete" / "retain" | X | X | delete |
+
+> [주의]
+> 스냅숏 파라미터 사용 시 관련된 모든 파라미터 값을 정의해야 합니다. 스냅숏 관련 파라미터는 아래와 같습니다.
+> + maxscheduledcount
+> + reservepercent
+> + scheduletime
+> + scheduletimeoffset
+> + scheduleweekdays
+
+아래는 매니페스트 예제입니다.
+```yaml
+# storage_class.yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: sc-nfs
+provisioner: nfs.csi.k8s.io
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+parameters:
+  maxscheduledcount : "7"
+  reservepercent : "80"
+  scheduletime : "09:00"
+  scheduletimeoffset : "+09:00"
+  scheduleweekdays : "6"
+  subnet : "59526f1c-c089-4517-86fd-2d3dac369210"
+  acl : ""
+```
+
+PVC 매니페스트의 **Annotation**에 생성할 NAS 스토리지의 이름, 설명, 크기를 정의합니다. 입력 항목은 아래 표를 참고하세요.
+
+| 항목 | 설명 | 예시 | 필수 |
+| ---- | ------- | --------------------------- | --------- |
+| nfs-volume-name | 생성될 스토리지의 이름입니다. 스토리지 이름을 통해 NFS 접근 경로를 만듭니다. 이름은 100자 이내의 영문자와 숫자, 일부 기호('-', '_')만 입력할 수 있습니다. | "nas_sample_volume_100gb" | Yes |
+| nfs-volume-description | 생성할 NAS 스토리지의 설명입니다. | "nas sample volume" | No |
+| nfs-volume-sizegb | 생성할 NAS 스토리지의 크기입니다. Gb 단위로 설정됩니다. | "100" | Yes |
+
+아래는 매니페스트 예제입니다.
+```yaml
+# dynamic-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-nfs
+  annotations:
+    nfs-volume-name: "nas_sample_volume_100gb"
+    nfs-volume-description: "nas sample volume"
+    nfs-volume-sizegb: "100"
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: sc-nfs
+```
+
+StorageClass 및 PVC를 생성하고 확인합니다.
+```
+$ kubectl apply -f storage_class.yaml
+storageclass.storage.k8s.io/sc-nfs created
+
+$ kubectl get sc
+NAME         PROVISIONER      RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
+sc-nfs       nfs.csi.k8s.io   Delete          Immediate           false                  50s
+```
+
+PV를 생성할 필요가 없습니다. 따라서 PVC 매니페스트만 작성합니다. PVC 매니페스트에는 **spec.volumeName**을 설정하지 않습니다.
+볼륨 바인딩 모드를 설정하지 않거나 Immediate로 설정하고 PVC를 생성하면 PV가 자동으로 생성됩니다. NAS 스토리지가 생성된 후 Bound되기까지 약 1분정도의 시간이 소요됩니다.
+NHN Cloud 콘솔 **Storage > NAS** 서비스 페이지에서도 생성된 NAS 스토리지의 정보를 확인할 수 있습니다.
+
+```
+$ kubectl apply -f dynamic-pvc.yaml
+persistentvolumeclaim/pvc-nfs created
+
+$ kubectl get pv,pvc
+NAME                                                        CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM             STORAGECLASS   REASON   AGE
+persistentvolume/pvc-a8ea2054-0849-4fe8-8207-ee0e43b8a103   50Gi       RWX            Delete           Bound    default/pvc-nfs   sc-nfs                  2s
+
+NAME                            STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+persistentvolumeclaim/pvc-nfs   Bound    pvc-a8ea2054-0849-4fe8-8207-ee0e43b8a103   50Gi       RWX            sc-nfs         75s
+```
+
+파드에 PVC를 마운트하려면 파드 매니페스트에 마운트 정보를 정의해야 합니다. **spec.volumes.persistenVolumeClaim.claimName**에 사용할 PVC 이름을 입력합니다. 그리고 **spec.containers.volumeMounts.mountPath**에 마운트 할 경로를 입력합니다.
+
+아래는 생성한 PVC를 파드의 `/tmp/nfs`에 마운트하는 매니페스트 예제입니다.
+```yaml
+# deployment-dynamic.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx
+  name: nginx-dynamic
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - image: nginx
+        imagePullPolicy: Always
+        name: nginx
+        volumeMounts:
+          - name: nas
+            mountPath: "/tmp/nfs"
+      volumes:
+        - name: nas
+          persistentVolumeClaim:
+            claimName: pvc-nfs
+```
+
+파드를 생성하고 NAS 스토리지가 마운트 되어 있는지 확인합니다.
+```
+$ kubectl apply -f deployment-dynamic.yaml
+deployment.apps/nginx-dynamic created
+
+$ kubectl get pods
+NAME                             READY   STATUS    RESTARTS   AGE
+nginx-dynamic-9f448b9f7-xw92w   1/1     Running   0          12s
+
+$ kubectl exec -it nginx-dynamic-9f448b9f7-xw92w -- df -h
+Filesystem                                                                     Size  Used Avail Use% Mounted on
+overlay                                                                         20G   16G  4.2G  80% /
+tmpfs                                                                           64M     0   64M   0% /dev
+tmpfs                                                                          1.9G     0  1.9G   0% /sys/fs/cgroup
+192.168.0.57:nas_sample_volume_100gb/pvc-a8ea2054-0849-4fe8-8207-ee0e43b8a103   20G  256K   20G   1% /tmp/nfs
+...
+```
 
 > [참고]
 > nfs-csi-driver는 동적 프로비저닝을 통해 PV를 생성할 때 nfs 스토리지 내부에 subdirectory를 생성하는 방식으로 동작합니다.
