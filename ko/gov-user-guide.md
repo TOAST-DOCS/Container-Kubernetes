@@ -977,6 +977,9 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 ### kubectl 설치
 kubectl은 특별한 설치 과정 없이 실행 파일을 다운로드해 바로 사용할 수 있습니다. 운영체제별 다운로드 경로는 다음과 같습니다.
 
+> [주의]
+> kubectl을 설치하는 경우, 워커 노드가 아닌 다른 환경에 설치해야 합니다. 생성된 클러스터의 워커 노드에는 기본적으로 kubelet이 설치되어 동작하고 있습니다. 워커 노드에서 패키지 매니저를 통해 kubeadm, kubelet, kubectl을 설치하는 경우 클러스터가 정상적으로 동작하지 않을 수 있습니다.
+
 | 운영체제 | 다운로드 커맨드 |
 | --- | --- |
 | Linux | curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.15.7/bin/linux/amd64/kubectl |
