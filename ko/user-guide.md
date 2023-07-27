@@ -2907,6 +2907,10 @@ $ oras pull dfe965c3-kr1-registry.container.nhncloud.com/nks_container/nfs-deplo
 
 ##### 3. 설치 패키지를 압축 해제한 후 **install-driver.sh {mode}** 명령어를 사용하여 csi-driver-nfs 구성 요소를 설치합니다.
 mode는 NKS 클러스터가 인터넷망 환경에 구성되었는지, 폐쇄망 환경에 구성되었는지에 따라 각각 **public**/**private** 값을 가집니다.
+
+> [참고]
+> csi-driver-nfs 컨테이너 이미지는 사내 NCR 레지스트리에서 관리되고 있습니다. 폐쇄망 환경에 구성된 클러스터는 인터넷에 연결되어 있지 않기 때문에 이미지를 정상적으로 받아오기 위해서는 Private URI를 사용하기 위한 환경 구성이 필요합니다. Private URI 사용법에 대한 자세한 내용은 [NHN Container Registry(NCR) 사용 가이드](NCR/ko/user-guide/#private-uri)를 참고하세요.
+
 아래는 인터넷망 환경에 구성된 클러스터에 csi-driver-nfs 패키지를 설치하는 예시입니다.
 
 ```
