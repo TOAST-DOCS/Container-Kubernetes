@@ -9,6 +9,23 @@
 * 워커 노드에서 암호화된 블록 스토리지를 사용할 수 있습니다.
 * 클러스터와 노드 그룹 목록 조회 화면에서 좀 더 상세한 상태 정보를 제공합니다.
 
+#### 기능 개선
+* 클러스터 및 노드 그룹 생성 시 사용하는 이미지의 배포판 버전이 변경되었습니다.
+    * 변경 전
+        * Rocky Linux 8.7 - Container (2023.05.21)
+    * 변경 후
+        * Rocky Linux 8.8 - Container (2023.08.22)
+
+* 이미지 업데이트 
+    * 변경 사항
+        * nvidia-device-plugin 버전이 470.182.03에서 470.199.02로 변경되었습니다.
+        * dcgm 버전이 3.1.7에서 3.1.8로 변경되었습니다.
+        * nvidia-mig-manager 버전이 0.5.2에서 0.5.3로 변경되었습니다.
+    * 대상 이미지
+        * CentOS 7.9 - Container (2023.08.22)
+        * Rocky Linux 8.8 - Container (2023.08.22)
+        * Ubuntu Server 20.04.6 LTS - Container (2023.08.22)
+
 ### 2023. 05. 30.
 
 #### 기능 추가
@@ -21,8 +38,12 @@
 #### 기능 개선
 
 * 클러스터 및 노드 그룹 생성 시 사용하는 이미지의 배포판 버전이 변경되었습니다.
-    * 변경 전: Ubuntu Server 18.04.6 LTS - Container (2023.03.21)
-    * 변경 후: Ubuntu Server 20.04.6 LTS - Container (2023.05.25)
+    * 변경 전
+        * Ubuntu Server 18.04.6 LTS - Container (2023.03.21)
+        * Rocky Linux 8.6 - Container (2023.03.21)
+    * 변경 후
+        * Ubuntu Server 20.04.6 LTS - Container (2023.05.25)
+        * Rocky Linux 8.7 - Container (2023.05.25)
 
 
 * 이미지 업데이트
@@ -32,8 +53,8 @@
         * dcgm 버전이 3.0.0에서 3.1.7로 변경되었습니다.
         * Docker 버전이 20.10.23에서 20.10.24로 변경되었습니다.
     * 대상 이미지
-        * CentOS 7.9 - Container (2022.11.22)
-        * Rocky Linux 8.6 - Container (2023.03.21)
+        * CentOS 7.9 - Container (2023.05.25)
+        * Rocky Linux 8.7 - Container (2023.05.25)
         * Ubuntu Server 20.04.6 LTS - Container (2023.05.25)
 
 ### 2023. 03. 28.
