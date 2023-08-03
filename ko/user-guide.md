@@ -3208,9 +3208,9 @@ PVC 매니페스트의 **Annotation**에 생성할 NAS 스토리지의 이름, �
 
 | 항목 | 설명 | 예시 | 필수 |
 | ---- | ------- | --------------------------- | --------- |
-| nfs-volume-name | 생성될 스토리지의 이름입니다. 스토리지 이름을 통해 NFS 접근 경로를 만듭니다. 이름은 100자 이내의 영문자와 숫자, 일부 기호('-', '_')만 입력할 수 있습니다. | "nas_sample_volume_100gb" | Yes |
-| nfs-volume-description | 생성할 NAS 스토리지의 설명입니다. | "nas sample volume" | No |
-| nfs-volume-sizegb | 생성할 NAS 스토리지의 크기입니다. Gb 단위로 설정됩니다. | "100" | Yes |
+| nfs-volume-name | 생성될 스토리지의 이름입니다. 스토리지 이름을 통해 NFS 접근 경로를 만듭니다. 이름은 100자 이내의 영문자와 숫자, 일부 기호('-', '_')만 입력할 수 있습니다. | "nas_sample_volume_100gb" | O |
+| nfs-volume-description | 생성할 NAS 스토리지의 설명입니다. | "nas sample volume" | X |
+| nfs-volume-sizegb | 생성할 NAS 스토리지의 크기입니다. Gb 단위로 설정됩니다. | "100" | O |
 
 아래는 매니페스트 예제입니다.
 ```yaml
