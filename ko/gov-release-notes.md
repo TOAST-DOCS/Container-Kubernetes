@@ -27,6 +27,17 @@
     * Rocky Linux 8.8 - Container (2023.08.22)
     * Ubuntu Server 20.04.6 LTS - Container (2023.08.22)
 
+### 2023. 07. 19.
+
+#### 이미지 업데이트
+* 노드 그룹 생성 시 일부 이미지에서 iptables 커널 모듈이 정상적으로 초기화되지 않는 문제를 수정했습니다.
+    * 문제 이미지: Rocky Linux 8.7 - Container (2023.05.25)
+    * 해결 이미지: Rocky Linux 8.7 - Container (2023.07.25)
+* GPU 노드 그룹 생성 시 일부 이미지에서 nvidia-container-runtime 모듈이 배포되지 않는 문제를 수정했습니다.
+    * 문제 이미지: CentOS 7.9 - Container (2023.05.25)
+    * 해결 이미지: CentOS 7.9 - Container (2023.07.25)
+
+
 ### 2023. 06. 06.
 
 #### 기능 추가

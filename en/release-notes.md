@@ -1,5 +1,16 @@
 ## Container > NHN Kubernetes Service (NKS) > Release Notes
 
+### July 19, 2023
+
+#### Image Update
+* Fixed an issue where, when creating node groups, the iptables kernel module is not initialized normally on some images.
+    * AS-IS: Rocky Linux 8.7 - Container (2023.05.25)
+    * TO-BE: Rocky Linux 8.7 - Container (2023.07.25)
+* Fixed an issue where, when creating GPU node groups, the nvidia-container-runtime module is not deployed on some images.
+    * AS-IS: CentOS 7.9 - Container (2023.05.25)
+    * TO-BE: CentOS 7.9 - Container (2023.07.25)
+
+
 ### May 30, 2023
 
 #### Added Features
@@ -23,8 +34,8 @@
         * dcgm version changed from 3.0.0 to 3.1.7.
         * Docker version changed from 20.10.23 to 20.10.24.
     * Target Images
-        * CentOS 7.9 - Container (2022.11.22)
-        * Rocky Linux 8.6 - Container (2023.03.21)
+        * CentOS 7.9 - Container (2023.05.25)
+        * Rocky Linux 8.7 - Container (2023.05.25)
         * Ubuntu Server 20.04.6 LTS - Container (2023.05.25)
 
 ### March 28, 2023

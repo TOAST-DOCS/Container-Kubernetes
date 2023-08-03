@@ -1,5 +1,16 @@
 ## Container > Kubernetes > リリースノート
 
+### 2023. 07. 19.
+
+#### イメージアップデート
+* ノードグループ生成時、一部のイメージでiptablesカーネルモジュールが正常に初期化されない問題を修正しました。
+    * 問題イメージ：Rocky Linux 8.7 - Container (2023.05.25)
+    * 解決イメージ：Rocky Linux 8.7 - Container (2023.07.25)
+* GPUノードグループ作成時に一部のイメージでnvidia-container-runtimeモジュールが配布されない問題を修正しました。
+    * 問題イメージ：CentOS 7.9 - Container (2023.05.25)
+    * 解決イメージ：CentOS 7.9 - Container (2023.07.25)
+
+
 ### 2023. 05. 30.
 
 #### 機能追加
@@ -23,8 +34,8 @@
         * dcgmバージョンが3.0.0から3.1.7に変更されました。
         * Dockerバージョンが20.10.23から20.10.24に変更されました。
     * 対象イメージ
-        * CentOS 7.9 - Container (2022.11.22)
-        * Rocky Linux 8.6 - Container (2023.03.21)
+        * CentOS 7.9 - Container (2023.05.25)
+        * Rocky Linux 8.7 - Container (2023.05.25)
         * Ubuntu Server 20.04.6 LTS - Container (2023.05.25)
 
 ### 2023. 03. 28.
