@@ -996,12 +996,16 @@ NHN Cloud 인스턴스를 기반으로 생성한 커스텀 이미지만 워커 �
 | --- | --- | --- |
 | CentOS | CentOS 7.9 (2022.11.22)  | 1.0 |
 |  | CentOS 7.9 (2023.05.25)  | 1.1 |
+|  | CentOS 7.9 (2023.08.22)  | 1.2 |
 | Rocky | Rocky Linux 8.6 (2023.03.21)  | 1.0 |
 |  | Rocky Linux 8.7 (2023.05.25)  | 1.1 |
-| Ubuntu | Ubuntu Server 20.04.6 LTS (2023.03.21)  | 1.0 |
+|  | Rocky Linux 8.8 (2023.08.22)  | 1.2 |
+| Ubuntu | Ubuntu Server 18.04.6 LTS (2023.03.21)  | 1.0 |
 |  | Ubuntu Server 20.04.6 LTS (2023.05.25)  | 1.1 |
+|  | Ubuntu Server 20.04.6 LTS (2023.08.22)  | 1.2 |
 | Debian | Debian 11.6 Bullseye (2023.03.21)  | 1.0 |
 |  | Debian 11.6 Bullseye (2023.05.25)  | 1.1 |
+|  | Debian 11.6 Bullseye (2023.08.22)  | 1.2 |
 
 
 > [참고]
