@@ -894,8 +894,8 @@ X-Auth-Token: {tokenId}
 | labels.availability_zone | Body | String | O | 기본 워커 노드 그룹 적용 : 가용성 영역 |
 | labels.boot_volume_type | Body | String | O | 기본 워커 노드 그룹 적용 : 블록 스토리지 종류|
 | labels.boot_volume_size | Body | String | O | 기본 워커 노드 그룹 적용 : 블록 스토리지 사이즈(GB) |
-| labels.boot_volume_key_id | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우)블록 스토리지에 적용할 대칭키 ID |
-| labels.boot_volume_appkey | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우)블록 스토리지에 적용할 대칭키의 앱키 |
+| labels.boot_volume_key_id | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 블록 스토리지에 적용할 대칭키 ID |
+| labels.boot_volume_appkey | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 블록 스토리지에 적용할 대칭키의 앱키 |
 | labels.ca_enable | Body | String | O | 기본 워커 노드 그룹 적용 : 오토 스케일러: 기능 활성화 여부 ("True" / "False") |
 | labels.ca_max_node_count | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최대 노드 수 |
 | labels.ca_min_node_count | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최소 노드 수 |
