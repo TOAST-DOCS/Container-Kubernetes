@@ -340,8 +340,8 @@ X-Auth-Token: {tokenId}
 | labels.node_image | Body | UUID | O | 기본 워커 노드 그룹 적용 : 베이스 이미지 UUID |
 | labels.boot_volume_type | Body | String | O | 기본 워커 노드 그룹 적용 : 블록 스토리지 종류|
 | labels.boot_volume_size | Body | String | O | 기본 워커 노드 그룹 적용 : 블록 스토리지 사이즈(GB) |
-| labels.boot_volume_key_id | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우)암호화된 블록 스토리지에 적용할 대칭키 ID |
-| labels.boot_volume_appkey | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우)암호화된 블록 스토리지에 적용할 대칭키의 앱키 |
+| labels.boot_volume_key_id | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키 ID |
+| labels.boot_volume_appkey | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키의 앱키 |
 | labels.external_network_id | Body | String | X | 인터넷 게이트웨이에 연결된 VPC 네트워크 UUID<br>VPC 서브넷이 연동된 라우터가 인터넷 게이트웨이에 연결된 경우 반드시 설정 |
 | labels.external_subnet_id_list | Body | String | X | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분)<br>VPC 서브넷이 연동된 라우터가 인터넷 게이트웨이에 연결된 경우 반드시 설정 |
 | labels.cert_manager_api | Body | String | O | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
@@ -617,7 +617,7 @@ pod_cidr는 아래와 같은 규칙으로 입력되어야 합니다.
 * CIDR은 NKS 클러스터에 사용된 서비스 IP 대역(K8s 서비스 네트워크)과 중첩될 수 없습니다.
 * CIDR은 NKS 내부에서 사용하고 있는 IP 대역(198.18.0.0/19)과 중첩될 수 없습니다.
 * CIDR은 NKS 클러스터에 연결된 VPC 네트워크 서브넷 또는 추가 네트워크 서브넷의 대역과 중첩될 수 없습니다.
-* CIDR은 현재 NKS 클러스터에 사용되고 있는 파드 네트워크 대역값과 중첩될 수 없습니다.
+* CIDR은 현재 NKS 클러스터에 사용되고 있는 파드 네트워크 대역 값과 중첩될 수 없습니다.
 * /24보다 큰 CIDR 블록은 입력할 수 없습니다. (다음과 같은 CIDR 블록은 사용할 수 없습니다. /26, /30)
 
 pod_subnet은 아래와 같은 규칙으로 입력되어야 합니다.
@@ -765,8 +765,8 @@ X-Auth-Token: {tokenId}
 | labels.node_image | Body | UUID | 워커 노드 그룹 적용 : 베이스 이미지 UUID |
 | labels.boot_volume_type | Body | String | 워커 노드 그룹 적용 : 블록 스토리지 종류|
 | labels.boot_volume_size | Body | String | 워커 노드 그룹 적용 : 블록 스토리지 사이즈(GB) |
-| labels.boot_volume_key_id | Body | String | (암호화된 블록 스토리지를 사용하는 경우)블록 스토리지에 적용한 대칭키 ID |
-| labels.boot_volume_appkey | Body | String | (암호화된 블록 스토리지를 사용하는 경우)블록 스토리지에 적용한 대칭키의 앱키 |
+| labels.boot_volume_key_id | Body | String | (암호화된 블록 스토리지를 사용하는 경우) 블록 스토리지에 적용한 대칭 키 ID |
+| labels.boot_volume_appkey | Body | String | (암호화된 블록 스토리지를 사용하는 경우 )블록 스토리지에 적용한 대칭 키의 앱키 |
 | labels.external_network_id | Body | String | 인터넷 게이트웨이에 연결된 VPC 네트워크 UUID |
 | labels.external_subnet_id_list | Body | String | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분) |
 | labels.cert_manager_api | Body | String | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |

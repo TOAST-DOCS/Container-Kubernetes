@@ -2863,7 +2863,7 @@ spec:
 ```
 
 > [참고]
-> NHN Cloud Container Registry 사용 방법은 [Container Registry 사용 가이드](/Container/NCR/ko/user-guide) 문서를 참고하세요.
+> NHN Cloud Container Registry 사용 방법은 [Container Registry 사용자 가이드](/Container/NCR/ko/user-guide) 문서를 참고하세요.
 
 
 ### NHN Cloud NAS 서비스 연동
@@ -2872,10 +2872,10 @@ NHN Cloud에서 제공하는 NAS 스토리지를 PV로 활용할 수 있습니�
 > [참고]
 > NHN Cloud NAS 서비스는 현재(2023. 08.) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS/ko/overview)를 참고하세요.
 
-#### 워커 노드에 nfs 패키지 설치 및 rpcbind 서비스 실행
-NAS 스토리지를 사용하려면 워커 노드에 nfs 패키지를 설치하고, rpcbind 서비스를 실행해야 합니다. 워커 노드에 접속한 뒤 아래 명령어를 실행해 nfs 패키지를 설치합니다.
+#### 워커 노드에 NFS 패키지 설치 및 rpcbind 서비스 실행
+NAS 스토리지를 사용하려면 워커 노드에 NFS 패키지를 설치하고, rpcbind 서비스를 실행해야 합니다. 워커 노드에 접속한 뒤 아래 명령어를 실행해 NFS 패키지를 설치합니다.
 
-Ubuntu, Debian의 경우 아래 명령어로 nfs 패키지를 설치할 수 있습니다.
+Ubuntu, Debian의 경우 아래 명령어로 NFS 패키지를 설치할 수 있습니다.
 ```
 $ apt-get install -y nfs-common
 ```
@@ -2899,11 +2899,12 @@ csi-driver-nfs는 NFS 스토리지에 새 하위 디렉터리를 생성하는 �
 csi-driver-nfs는 스토리지 클래스에 NFS 스토리지 정보를 제공하는 방식으로 동작하여 사용자가 관리해야 하는 대상을 줄여 줍니다.
 
 nfs-csi-driver를 사용하여 여러 개의 PV를 구성하는 경우 nfs-csi-driver가 NFS 스토리지 정보를 StorageClass에 등록하여 NFS-Provisoner pod를 구성할 필요가 없습니다.
+
 ![nfs-csi-driver-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nfs-csi-driver-02.png)
 
 > [참고]
 > csi-driver-nfs 설치 스크립트의 내부 실행 과정에서 kubectl apply 명령이 수행됩니다. 따라서 `kubectl` 명령어가 정상적으로 동작하는 상태에서 설치를 진행해야 합니다.
-> csi-driver-nfs 설치 과정은 linux 환경을 기준으로 작성되었습니다.
+> csi-driver-nfs 설치 과정은 Linux 환경을 기준으로 작성되었습니다.
 
 ##### 1. 클러스터 설정 파일 절대경로를 환경 변수에 저장합니다.
 ```
@@ -2911,8 +2912,8 @@ $ export KUBECONFIG={클러스터 설정 파일 절대경로}
 ```
 
 ##### 2. ORAS 명령줄 도구를 사용하여 csi-driver-nfs 설치 패키지를 다운로드합니다.
-ORAS(OCI Registry As Storage)는 OCI 레지스트리에서 OCI 아티팩트를 push 및 pull하는 방법을 제공하는 툴입니다.
-[ORAS installation](https://oras.land/docs/installation)을 참고하여 ORAS 명령줄 도구를 설치합니다. ORAS 명령줄 도구의 자세한 사용법은 [ORAS docs](https://oras.land/docs/)를 참고하십시오.
+ORAS(OCI Registry As Storage)는 OCI 레지스트리에서 OCI 아티팩트를 push 및 pull 하는 방법을 제공하는 툴입니다.
+[ORAS installation](https://oras.land/docs/installation)을 참고하여 ORAS 명령줄 도구를 설치합니다. ORAS 명령줄 도구의 자세한 사용법은 [ORAS docs](https://oras.land/docs/)를 참고하세요.
 
 ```
 $ oras pull dfe965c3-kr1-registry.container.nhncloud.com/nks_container/nfs-deploy-tool:v1
@@ -2924,7 +2925,7 @@ install-driver.sh 명령 실행 시 인터넷 연결이 가능한 클러스터�
 
 
 > [참고]
-> csi-driver-nfs 컨테이너 이미지는 사내 NCR 레지스트리에서 관리되고 있습니다. 폐쇄망 환경에 구성된 클러스터는 인터넷에 연결되어 있지 않기 때문에 이미지를 정상적으로 받아오기 위해서는 Private URI를 사용하기 위한 환경 구성이 필요합니다. Private URI 사용법에 대한 자세한 내용은 [NHN Cloud Container Registry(NCR) 사용 가이드](NCR/ko/user-guide/#private-uri)를 참고하세요.
+> csi-driver-nfs 컨테이너 이미지는 사내 NCR 레지스트리에서 관리되고 있습니다. 폐쇄망 환경에 구성된 클러스터는 인터넷에 연결되어 있지 않기 때문에 이미지를 정상적으로 받아오기 위해서는 Private URI를 사용하기 위한 환경 구성이 필요합니다. Private URI 사용법에 대한 자세한 내용은 [NHN Cloud Container Registry(NCR) 사용자 가이드](NCR/ko/user-guide/#private-uri)를 참고하세요.
 
 아래는 인터넷망 환경에 구성된 클러스터에 설치 패키지를 이용하여 csi-driver-nfs를 설치하는 예시입니다.
 
@@ -3178,7 +3179,7 @@ StorageClass 매니페스트에 스토리지 제공자 정보 및 생성할 NAS 
 | reservepercent | 최대 저장 가능한 스냅숏 저장 용량입니다. 스냅숏 용량의 총합이 설정한 크기를 초과할 경우 모든 스냅숏 중 가장 먼저 만들어진 스냅숏이 삭제됩니다. 0~80 사이의 숫자만 입력 가능합니다. | "80" | X | X |  |
 | scheduletime | 스냅숏이 생성될 시각입니다. | "09:00" | X | X |  |
 | scheduletimeoffset | 스냅숏 생성 시각에 대한 오프셋입니다. UTC 기준이며 KST로 사용 시 +09:00 값을 지정합니다. | "+09:00" | X | X |  |
-| scheduleweekdays | 스냅숏 생성 주기입니다. 일요일~토요일은 각각 숫자 0~6으로 표현됩니다. | "6" | O | X |  |
+| scheduleweekdays | 스냅숏 생성 주기입니다. 일요일부터 토요일까지 각각 숫자 0~6으로 표현됩니다. | "6" | O | X |  |
 | subnet | 스토리지에 접근할 서브넷입니다. 선택된 VPC의 서브넷만 선택할 수 있습니다. | "59526f1c-c089-4517-86fd-2d3dac369210" | X | O |  |
 | acl | 읽기, 쓰기 권한을 허용할 IP 또는 IP 대역 목록입니다. | "0.0.0.0/0" | O | X | 0.0.0.0/0 |
 | onDelete | PVC 삭제 시 NAS 볼륨 삭제 여부입니다. | "delete" / "retain" | X | X | delete |
@@ -3217,7 +3218,7 @@ PVC 매니페스트의 **Annotation**에 생성할 NAS 스토리지의 이름, �
 | ---- | ------- | --------------------------- | --------- |
 | nfs-volume-name | 생성될 스토리지의 이름입니다. 스토리지 이름을 통해 NFS 접근 경로를 만듭니다. 이름은 100자 이내의 영문자와 숫자, 일부 기호('-', '_')만 입력할 수 있습니다. | "nas_sample_volume_100gb" | O |
 | nfs-volume-description | 생성할 NAS 스토리지의 설명입니다. | "nas sample volume" | X |
-| nfs-volume-sizegb | 생성할 NAS 스토리지의 크기입니다. Gb 단위로 설정됩니다. | "100" | O |
+| nfs-volume-sizegb | 생성할 NAS 스토리지의 크기입니다. GB 단위로 설정됩니다. | "100" | O |
 
 아래는 매니페스트 예제입니다.
 ```yaml
@@ -3265,9 +3266,9 @@ NAME                            STATUS   VOLUME                                 
 persistentvolumeclaim/pvc-nfs   Bound    pvc-a8ea2054-0849-4fe8-8207-ee0e43b8a103   50Gi       RWX            sc-nfs         75s
 ```
 
-파드에 PVC를 마운트하려면 파드 매니페스트에 마운트 정보를 정의해야 합니다. **spec.volumes.persistenVolumeClaim.claimName**에 사용할 PVC 이름을 입력합니다. 그리고 **spec.containers.volumeMounts.mountPath**에 마운트 할 경로를 입력합니다.
+파드에 PVC를 마운트 하려면 파드 매니페스트에 마운트 정보를 정의해야 합니다. **spec.volumes.persistenVolumeClaim.claimName**에 사용할 PVC 이름을 입력합니다. 그리고 **spec.containers.volumeMounts.mountPath**에 마운트 할 경로를 입력합니다.
 
-아래는 생성한 PVC를 파드의 `/tmp/nfs`에 마운트하는 매니페스트 예제입니다.
+아래는 생성한 PVC를 파드의 `/tmp/nfs`에 마운트 하는 매니페스트 예제입니다.
 ```yaml
 # deployment.yaml
 apiVersion: apps/v1
@@ -3318,5 +3319,5 @@ tmpfs                                                                          1
 ```
 
 > [참고]
-> nfs-csi-driver는 프로비저닝 시 nfs 스토리지 내부에 subdirectory를 생성하는 방식으로 동작합니다.
-> pod에 PV를 마운트하는 과정에서 subdirectory만 마운트되는 것이 아니라 nfs 스토리지 전체가 마운트되기 때문에 어플리케이션이 프로비저닝된 크기만큼 볼륨을 사용하도록 강제할 수 없습니다.
+> nfs-csi-driver는 프로비저닝 시 NFS 스토리지 내부에 subdirectory를 생성하는 방식으로 동작합니다.
+> pod에 PV를 마운트 하는 과정에서 subdirectory만 마운트 되는 것이 아니라 NFS 스토리지 전체가 마운트 되기 때문에 애플리케이션이 프로비저닝된 크기만큼 볼륨을 사용하도록 강제할 수 없습니다.
