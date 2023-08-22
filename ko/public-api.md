@@ -766,7 +766,7 @@ X-Auth-Token: {tokenId}
 | labels.boot_volume_type | Body | String | 워커 노드 그룹 적용 : 블록 스토리지 종류|
 | labels.boot_volume_size | Body | String | 워커 노드 그룹 적용 : 블록 스토리지 사이즈(GB) |
 | labels.boot_volume_key_id | Body | String | (암호화된 블록 스토리지를 사용하는 경우) 블록 스토리지에 적용한 대칭 키 ID |
-| labels.boot_volume_appkey | Body | String | (암호화된 블록 스토리지를 사용하는 경우 )블록 스토리지에 적용한 대칭 키의 앱키 |
+| labels.boot_volume_appkey | Body | String | (암호화된 블록 스토리지를 사용하는 경우) 블록 스토리지에 적용한 대칭 키의 앱키 |
 | labels.external_network_id | Body | String | 인터넷 게이트웨이에 연결된 VPC 네트워크 UUID |
 | labels.external_subnet_id_list | Body | String | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분) |
 | labels.cert_manager_api | Body | String | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
