@@ -1,5 +1,35 @@
 ## Container > NHN Kubernetes Service(NKS) > 릴리스 노트
 
+### 2023. 08. 31.
+
+#### 신규 서비스 출시
+* 한국(평촌) 리전에서도 Kubernetes 서비스를 사용할 수 있습니다.
+
+#### 기능 추가
+
+* Kubernetes v1.27.3을 지원합니다.
+* 클러스터 생성 시 Kubernetes API 엔드포인트의 속성을 설정할 수 있습니다.
+* 클러스터와 노드 그룹 목록 조회 화면에서 좀 더 상세한 상태 정보를 제공합니다.
+* 커스텀 이미지를 워커 이미지로 활용하는 기능이 추가되었습니다.
+    * 자세한 내용은 [사용자 가이드](/Container/NKS/ko/gov-user-guide/#_23)를 참고하세요.
+
+#### 기능 개선
+* 클러스터 및 노드 그룹 생성 시 사용하는 이미지의 배포판 버전이 변경되었습니다.
+    * 변경 전
+        * Rocky Linux 8.7 - Container (2023.07.25)
+    * 변경 후
+        * Rocky Linux 8.8 - Container (2023.08.22)
+
+#### 이미지 업데이트 
+* 변경 사항
+    * nvidia-device-plugin 버전이 470.182.03에서 470.199.02로 변경되었습니다.
+    * dcgm 버전이 3.1.7에서 3.1.8로 변경되었습니다.
+    * nvidia-mig-manager 버전이 0.5.2에서 0.5.3로 변경되었습니다.
+* 대상 이미지
+    * CentOS 7.9 - Container (2023.08.22)
+    * Rocky Linux 8.8 - Container (2023.08.22)
+    * Ubuntu Server 20.04.6 LTS - Container (2023.08.22)
+
 ### 2023. 07. 19.
 
 #### 이미지 업데이트
@@ -20,8 +50,12 @@
 #### 기능 개선
 
 * 클러스터 및 노드 그룹 생성 시 사용하는 이미지의 배포판 버전이 변경되었습니다.
-    * 변경 전: Ubuntu Server 18.04.6 LTS - Container (2023.03.21)
-    * 변경 후: Ubuntu Server 20.04.6 LTS - Container (2023.05.25)
+    * 변경 전
+        * Ubuntu Server 18.04.6 LTS - Container (2023.03.21)
+        * Rocky Linux 8.6 - Container (2023.03.21)
+    * 변경 후
+        * Ubuntu Server 20.04.6 LTS - Container (2023.05.25)
+        * Rocky Linux 8.7 - Container (2023.05.25)
 
 
 * 이미지 업데이트
