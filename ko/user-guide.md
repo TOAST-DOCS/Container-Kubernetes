@@ -101,6 +101,7 @@ NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Netwo
 | k8s Node 상태 | Kubernetes Node 리소스의 상태 |
 
 작업 상태의 아이콘 별 의미는 다음과 같습니다.
+
 | 아이콘 | 의미 |
 | --- | --- |
 | 초록색 솔리드 아이콘 | 작업 정상 종료 |
@@ -109,6 +110,7 @@ NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Netwo
 | 회색 솔리드 아이콘 | 클러스터 사용 불가능 |
 
 k8s API 상태의 아이콘 별 의미는 다음과 같습니다.
+
 | 아이콘 | 의미 |
 | --- | --- |
 | 초록색 솔리드 아이콘 | 정상 동작 중 |
@@ -116,6 +118,7 @@ k8s API 상태의 아이콘 별 의미는 다음과 같습니다.
 | 빨간색 솔리드 아이콘 | Kubernetes API 엔드포인트가 정상 동작하지 않거나 정보의 유효 기간이 만료됐음 |
 
 k8s Node 상태의 아이콘 별 의미는 다음과 같습니다.
+
 | 아이콘 | 의미 |
 | --- | --- |
 | 초록색 솔리드 아이콘 | 클러스터의 모든 노드가 Ready 상태임 |
@@ -2915,13 +2918,14 @@ $ export KUBECONFIG={클러스터 설정 파일 절대경로}
 ORAS(OCI Registry As Storage)는 OCI 레지스트리에서 OCI 아티팩트를 push 및 pull 하는 방법을 제공하는 툴입니다.
 [ORAS installation](https://oras.land/docs/installation)을 참고하여 ORAS 명령줄 도구를 설치합니다. ORAS 명령줄 도구의 자세한 사용법은 [ORAS docs](https://oras.land/docs/)를 참고하세요.
 
-```
-$ oras pull dfe965c3-kr1-registry.container.nhncloud.com/nks_container/nfs-deploy-tool:v1
-```
+
+| 리전 | 다운로드 커맨드 |
+| --- | --- |
+| 한국(판교) 리전 | oras pull dfe965c3-kr1-registry.container.nhncloud.com/nks_container/nfs-deploy-tool:v1 |
+| 한국(평촌) 리전 | oras pull 6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/nfs-deploy-tool:v1 |
 
 ##### 3. 설치 패키지를 압축 해제한 후 **install-driver.sh {mode}** 명령어를 사용하여 csi-driver-nfs 구성 요소를 설치합니다.
 install-driver.sh 명령 실행 시 인터넷 연결이 가능한 클러스터는 **public**, 그렇지 않은 클러스터는 **private**을 입력해야 합니다.
-
 
 
 > [참고]
@@ -3184,13 +3188,20 @@ StorageClass 매니페스트에 스토리지 제공자 정보 및 생성할 NAS 
 | acl | 읽기, 쓰기 권한을 허용할 IP 또는 IP 대역 목록입니다. | "0.0.0.0/0" | O | X | 0.0.0.0/0 |
 | onDelete | PVC 삭제 시 NAS 볼륨 삭제 여부입니다. | "delete" / "retain" | X | X | delete |
 
-> [주의]
+> [참고]
 > 스냅숏 파라미터 사용 시 관련된 모든 파라미터 값을 정의해야 합니다. 스냅숏 관련 파라미터는 아래와 같습니다.
 > + maxscheduledcount
 > + reservepercent
 > + scheduletime
 > + scheduletimeoffset
 > + scheduleweekdays
+
+<br>
+
+> [주의] 다중 서브넷 환경에서의 제약사항
+> 
+> NAS 스토리지는 스토리지 클래스에 정의된 서브넷에 연결됩니다.
+> 파드가 NAS 스토리지와 연동하기 위해서는 모든 워커 노드 그룹이 이 서브넷에 연결되어야 합니다.
 
 아래는 매니페스트 예제입니다.
 ```yaml
