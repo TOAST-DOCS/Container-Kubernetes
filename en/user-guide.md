@@ -2919,6 +2919,11 @@ Refer to [](https://oras.land/docs/installation)ORAS installation[](https://oras
 $ oras pull dfe965c3-kr1-registry.container.nhncloud.com/nks_container/nfs-deploy-tool:v1
 ```
 
+| Region | Download Command |
+| --- | --- |
+| Korea (Pangyo) region | oras pull dfe965c3-kr1-registry.container.nhncloud.com/nks_container/nfs-deploy-tool:v1 |
+| Korea (Pyengchon) region | oras pull 6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/nfs-deploy-tool:v1 |
+
 ##### 3. After unzipping the installation package, install the csi-driver-nfs component using the **install-driver.sh {mode}** command.
 When you run the install-driver.sh command, you must enter **public** for clusters that can connect to the Internet, and **private** for clusters that do not.
 
@@ -3184,13 +3189,20 @@ In the StorageClass manifest, define the storage provider information, snapshot 
 | acl | A list of the IPs or CIDR blocks that allow read and write permissions. | "0.0.0.0/0" | O | X | 0.0.0.0/0 |
 | onDelete | Whether to delete the NAS volume when deleting PVC. | "delete" / "retain" | X | X | delete |
 
-> [Caution]
+> [Note]
 When using snapshot parameters, all relevant parameter values must be defined. Snapshot related parameters are as follows.
 > + maxscheduledcount
 > + reservepercent
 > + scheduletime
 > + scheduletimeoffset
 > + scheduleweekdays
+
+<br>
+
+> [Caution] Limitations in multi-subnet environments
+> 
+> NAS storage is attached to the subnet defined in the storage class.
+> To integrate pods with NAS storage, all worker node groups must be connected to the subnet.
 
 Below is an example manifest.
 ```yaml
