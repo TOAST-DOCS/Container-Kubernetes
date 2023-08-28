@@ -101,6 +101,7 @@ A newly created cluster can be found in the **Container > NHN Kubernetes Service
 | k8s Node Status | Status of Kubernetes Node resources |
 
 The meaning of each icon of the task status is as follows.
+
 | Icon | Meaning |
 | --- | --- |
 | Green solid icon | Normal end of task|
@@ -109,6 +110,7 @@ The meaning of each icon of the task status is as follows.
 | Gray solid icon | Cluster unavailable |
 
 The meaning of each icon in the k8s API status is as follows:
+
 | Icon | Meaning |
 | --- | --- |
 | Green solid icon | Working properly|
@@ -116,6 +118,7 @@ The meaning of each icon in the k8s API status is as follows:
 | Red solid icon | Kubernetes API endpoint is not working properly or information expired |
 
 The meaning of each icon in k8s Node status is as follows.
+
 | Icon | Meaning |
 | --- | --- |
 | Green solid icon | All nodes in the cluster are in the Ready state |
