@@ -21,6 +21,9 @@ NHN Kubernetes Service(NKS)を使用するには、まずクラスターを作�
 | VPC | クラスターに接続するVPCネットワーク |
 | サブネット | VPCに定義されたサブネットのうち、クラスターを構成するインスタンスに接続するサブネット |
 | K8sサービスネットワーク | クラスタのservice object CIDR設定 |
+| Podネットワーク | クラスタのPodネットワーク設定 |
+| Podサブネットサイズ | クラスタのPodサブネットサイズ設定 |
+| Kubernetes APIエンドポイント | Public:エンドポイントにドメインアドレスを割り当て、Floating IPを接続<br>Private:エンドポイントを内部ネットワークアドレスに設定 |
 | イメージ | クラスターを構成するインスタンスに使用するイメージ |
 | アベイラビリティゾーン | 基本ノードグループインスタンスを作成する領域 |
 | インスタンスタイプ | 基本ノードグループインスタンスの仕様 |
@@ -28,8 +31,6 @@ NHN Kubernetes Service(NKS)を使用するには、まずクラスターを作�
 | キーペア | 基本ノードグループアクセスに使用するキーペア |
 | ブロックストレージタイプ | 基本ノードグループインスタンスのブロックストレージの種類 |
 | ブロックストレージサイズ | 基本ノードグループインスタンスのブロックストレージサイズ |
-| Podネットワーク | クラスタのPodネットワーク設定 |
-| Podサブネットサイズ | クラスタのPodサブネットサイズ設定 |
 | 追加ネットワーク | 基本ワーカーノードグループに作成する追加ネットワーク/サブネット |
 
 > [注意]
@@ -55,10 +56,11 @@ NHN Kubernetes Service(NKS)は複数のバージョンをサポートしてい�
 | v1.20.12 | 不可 | 可能 |
 | v1.21.6 | 不可 | 可能 |
 | v1.22.3 | 不可 | 可能 |
-| v1.23.3 | 可能 | 可能 |
+| v1.23.3 | 不可 | 可能 |
 | v1.24.3 | 可能 | 可能 |
 | v1.25.4 | 可能 | 可能 |
 | v1.26.3 | 可能 | 可能 |
+| v1.27.3 | 可能 | 可能 |
 
 NHN Kubernetes Service(NKS)はバージョンによって異なる種類のContainer Network Interface(CNI)を提供します。2023/03/31以降はv1.24.3バージョン以上のクラスタを作成する時、CNIがCalicoで作成されます。 FlannelとCalico CNIのNetwork modeは全てVXLAN方式で作します。
 
@@ -74,6 +76,7 @@ NHN Kubernetes Service(NKS)はバージョンによって異なる種類のConta
 | v1.24.3 | Flannel v0.14.0またはCalico v3.24.1 <sup>(注1)(#footnote_calico_version_1)</sup> | 条件付きで可能 <sup>(注2)(#footnote_calico_version_2)</sup> |
 | v1.25.4 | Flannel v0.14.0またはCalico v3.24.1 <sup>(注1)(#footnote_calico_version_1)</sup> | 条件付きで可能 <sup>(注2)(#footnote_calico_version_2)</sup> |
 | v1.26.3 | Flannel v0.14.0またはCalico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 条件付き可能 <sup>[2](#footnote_calico_version_2)</sup> |
+| v1.27.3 | Calico v3.24.1 | 不可|
 
 注釈
 * <a name="footnote_calico_version_1">(注1)</a>2023/03/31以前に作成されたクラスタにはFlannelがインストールされています。 2023/03/31以降に作成されるv1.24.3以上のクラスタはCalicoがインストールされます。
@@ -83,7 +86,41 @@ NHN Kubernetes Service(NKS)はバージョンによって異なる種類のConta
 
 
 ### クラスター照会
-作成したクラスターは**Container > NHN Kubernetes Service(NKS)**サービスページで確認できます。クラスターを選択すると、下部にクラスター情報が表示されます。
+作成したクラスタは**Container > NHN Kubernetes Service(NKS)**サービスページで確認できます。クラスタリストには各クラスタの簡単な情報が表示されます。
+
+| 項目 | 説明 |
+| --- | --- |
+| クラスタ名 | クラスタの名前 |
+| ノード数 | クラスタの全体ワーカーノード数 |
+| Kubernetesバージョン | Kubernetesバージョン情報 |
+| kubeconfigファイル | クラスタを制御するためのkubeconfigファイルのダウンロードボタン |
+| 作業状態 | クラスタに出したコマンドの作業状態 |
+| k8s API状態 | Kubernetes APIエンドポイントの動作状態 |
+| k8s Node状態 | Kubernetes Nodeリソースの状態 |
+
+作業状態のアイコン別の意味は次のとおりです。
+| アイコン | 意味 |
+| --- | --- |
+| 緑色のソリッドアイコン | 作業正常終了 |
+| 円形回転アイコン | 作業進行中 |
+| 赤色のソリッドアイコン | 作業失敗 |
+| 灰色のソリッドアイコン | クラスタ使用不可 |
+
+k8s API状態のアイコン別の意味は次のとおりです。
+| アイコン | 意味 |
+| --- | --- |
+| 緑色のソリッドアイコン | 正常動作中 |
+| 黄色のソリッドアイコン | 情報の有効期間(5分)が残り少ないため、情報が正確ではない |
+| 赤色のソリッドアイコン | Kubernetes APIエンドポイントが正常に動作していないか、情報の有効期限が切れている |
+
+k8s Node状態のアイコン別の意味は次のとおりです。
+| アイコン | 意味 |
+| --- | --- |
+| 緑色のソリッドアイコン | クラスタのすべてのノードがReady状態 |
+| 黄色のソリッドアイコン | Kubernetes APIエンドポイントが正常に動作していないか、クラスタ内にNotReady状態のノードが存在する |
+| 赤色のソリッドアイコン | クラスタのすべてのノードがNotReady状態 |
+
+クラスタを選択すると、下部にクラスタ情報が表示されます。
 
 | 項目 | 説明 |
 | --- | --- |
@@ -155,7 +192,35 @@ Kubernetesで使用する基本インフラサービスは次のとおりです�
 ノードグループはKubernetesを構成するワーカーノードインスタンスのグループです。
 
 ### ノードグループ照会
-クラスターリストからクラスター名を押すと、ノードグループリストを確認できます。ノードグループを選択すると、下部にノードグループ情報が表示されます。
+クラスタリストからクラスタ名を押すと、ノードグループリストを確認できます。ノードグループを選択すると、下部にノードグループ情報が表示されます。
+
+| 項目 | 説明 |
+| --- | --- |
+| ノードグループ名 | ノードグループの名前 |
+| ノード数 | ノードグループに属するノード数 |
+| Kubernetesバージョン | ノードグループに適用されたKubernetesバージョン情報 |
+| アベイラビリティゾーン | ノードグループに適用されたアベイラビリティゾーン情報 |
+| インスタンスタイプ | ノードグループのインスタンスタイプ |
+| イメージタイプ | ノードグループのイメージタイプ |
+| 作業状態 | ノードグループに出したコマンドの作業状態 |
+| k8s Node状態 | ノードグループに属するKubernetes Nodeリソースの状態 |
+
+作業状態のアイコン別の意味は次のとおりです。
+| アイコン | 意味 |
+| --- | --- |
+| 緑色のソリッドアイコン | 作業正常終了 |
+| 円形回転アイコン | 作業進行中 |
+| 赤色のソリッドアイコン | 作業失敗 |
+| 灰色のソリッドアイコン | クラスタおよびノードグループ使用不可 |
+
+k8s Node状態のアイコン別の意味は次のとおりです。
+| アイコン | 意味 |
+| --- | --- |
+| 緑色のソリッドアイコン | ノードグループのすべてのノードがReady状態 |
+| 黄色のソリッドアイコン | Kubernetes APIエンドポイントが正常に動作していないか、ノードグループ内にNotReady状態のノードが存在する |
+| 赤色のソリッドアイコン | ノードグループのすべてのノードがNotReady状態 |
+
+ノードグループを選択すると、下部にノードグループ情報が表示されます。
 
 * 基本情報
 **基本情報**タブでは、次のような情報を確認できます。
@@ -922,10 +987,13 @@ NHN Cloudインスタンスをベースに作成したカスタムイメージ�
 |  | CentOS 7.9 (2023.05.25)  | 1.1 |
 | Rocky | Rocky Linux 8.6 (2023.03.21)  | 1.0 |
 |  | Rocky Linux 8.7 (2023.05.25)  | 1.1 |
-| Ubuntu | Ubuntu Server 20.04.6 LTS (2023.03.21)  | 1.0 |
+|  | Rocky Linux 8.8 (2023.08.22)  | 1.2 |
+| Ubuntu | Ubuntu Server 18.04.6 LTS (2023.03.21)  | 1.0 |
 |  | Ubuntu Server 20.04.6 LTS (2023.05.25)  | 1.1 |
+|  | Ubuntu Server 20.04.6 LTS (2023.08.22)  | 1.2 |
 | Debian | Debian 11.6 Bullseye (2023.03.21)  | 1.0 |
 |  | Debian 11.6 Bullseye (2023.05.25)  | 1.1 |
+|  | Debian 11.6 Bullseye (2023.08.22)  | 1.2 |
 
 
 > [参考]
@@ -958,6 +1026,9 @@ NHN Cloudインスタンスをベースに作成したカスタムイメージ�
 
 ### kubectlインストール
 kubectlは、インストール不要で、実行ファイルをダウンロードしてすぐに使用できます。各OSのダウンロードパスは次のとおりです。
+
+> [注意]
+> ワーカーノードでパッケージマネージャーを利用してkubeadm、kubelet、kubectlなどのKubernetes関連コンポーネントをインストールすると、クラスタの誤作動を引き起こす可能性があります。ワーカーノードにkubectlをインストールする場合、下記のダウンロードコマンドを参考にしてファイルをダウンロードしてください。
 
 | OS | ダウンロードコマンド |
 | --- | --- |
@@ -1452,51 +1523,6 @@ NAME                                READY   STATUS    RESTARTS   AGE
 nginx-deployment-7fd6966748-pvrzs   1/1     Running   0          4m13s
 nginx-deployment-7fd6966748-wv7rd   1/1     Running   0          4m13s
 ```
-
-NHN Cloud Container Registryに保存したイメージを使用したい場合は、先にユーザーレジストリにログインするためのシークレット(secret)を作成する必要があります。
-NHN Cloud (Old) Container Registryを使用するには次のようにシークレットを作成する必要があります。
-
-```
-$ kubectl create secret docker-registry registry-credential --docker-server={ユーザーレジストリアドレス} --docker-username={NHN Cloudアカウントemailアドレス} --docker-password={サービスAppkeyまたは統合Appkey}
-secret/registry-credential created
-
-$ kubectl get secrets
-NAME                  TYPE                             DATA   AGE
-registry-credential   kubernetes.io/dockerconfigjson   1      30m
-```
-
-
-NHN Cloud Container Registryを使用するには次のようにシークレットを作成する必要があります。
-
-```
-$ kubectl create secret docker-registry registry-credential --docker-server={ユーザーレジストリアドレス} --docker-username={User Access Key ID} --docker-password={Secret Access Key}
-secret/registry-credential created
-$ kubectl get secrets
-NAME                  TYPE                             DATA   AGE
-registry-credential   kubernetes.io/dockerconfigjson   1      30m
-
-
-デプロイメントマニフェストファイルにシークレット情報を追加し、イメージ名を変更すると、ユーザーレジストリに保存されたイメージを利用してPodを作成できます。
-
-```yaml
-# nginx.yaml
-...
-spec:
-  ...
-  template:
-    ...
-    spec:
-      containers:
-      - name: nginx
-        image: {ユーザーレジストリアドレス}/nginx:1.14.2
-        ...
-      imagePullSecrets:
-      - name: registry-credential
-
-```
-
-> [参考]
-> NHN Cloud Container Registryの使用方法については、[Container Registryユーザーガイド](/Container/NCR/ko/user-guide)のドキュメントを参照してください。
 
 ### LoadBalancerサービスの作成
 Kubernetesのサービスオブジェクトを定義するには、次の項目で構成されたマニフェストが必要です。
@@ -3006,16 +3032,66 @@ status:
 v1.20.12以降のバージョンのストレージプロバイダー**cinder.csi.openstack.org**は基本的に使用中のボリュームの拡張機能をサポートします。PVCオブジェクトの**spec.resources.requests.storage**項目の値を修正してボリュームサイズを変更できます。
 
 
+## NHN Cloudサービス連動
+
+### NHN Cloud Container Registry(NCR)サービス連動
+NHN Cloud Container Registryに保存したイメージを使うことができます。レジストリに保存したイメージを使うためには、ユーザーレジストリにログインするためのシークレット(secret)を作成する必要があります。
+
+NHN Cloud (Old) Container Registryを使用するには次のようにシークレットを作成する必要があります。
+
+```
+$ kubectl create secret docker-registry registry-credential --docker-server={ユーザーレジストリアドレス} --docker-username={NHN Cloudアカウントemailアドレス} --docker-password={サービスAppkeyまたは統合Appkey}
+secret/registry-credential created
+$ kubectl get secrets
+NAME                  TYPE                             DATA   AGE
+registry-credential   kubernetes.io/dockerconfigjson   1      30m
+```
+
+
+NHN Cloud Container Registryを使用するには次のようにシークレットを作成する必要があります。
+
+```
+$ kubectl create secret docker-registry registry-credential --docker-server={ユーザーレジストリアドレス} --docker-username={User Access Key ID} --docker-password={Secret Access Key}
+secret/registry-credential created
+$ kubectl get secrets
+NAME                  TYPE                             DATA   AGE
+registry-credential   kubernetes.io/dockerconfigjson   1      30m
+```
+
+
+デプロイメントマニフェストファイルにシークレット情報を追加し、イメージ名を変更すると、ユーザーレジストリに保存されたイメージを利用してPodを作成できます。
+
+```yaml
+# nginx.yaml
+...
+spec:
+  ...
+  template:
+    ...
+    spec:
+      containers:
+      - name: nginx
+        image: {ユーザーレジストリアドレス}/nginx:1.14.2
+        ...
+      imagePullSecrets:
+      - name: registry-credential
+
+```
+
+> [参考]
+> NHN Cloud Container Registryの使い方は[Container Registryユーザーガイド](/Container/NCR/ko/user-guide)文書を参照してください。
+
+
 ### NASサービス連動
 NHN Cloudで提供するNASストレージをPVとして活用できます。NASサービスを使用するにはv1.20以降のバージョンのクラスタを使用する必要があります。NHN Cloud NASの詳細については[NASコンソール使用ガイド](/Storage/NAS/ko/console-guide)を参照してください。
 
 > [参考]
-> NHN Cloud NASサービスは現在(2023年5月基準)、一部リージョンでのみ提供されています。NHN Cloud NASサービスのサポートリージョンの詳細については[NASサービス概要](/Storage/NAS/ko/overview)を参照してください。
+> NHN Cloud NASサービスは現在(2023年8月基準)、一部リージョンでのみ提供されています。NHN Cloud NASサービスのサポートリージョンの詳細については[NASサービス概要](/Storage/NAS/ko/overview)を参照してください。
 
-#### ワーカーノードにnfsパッケージインストールおよびrpcbindサービス実行
-NASストレージを使用するにはワーカーノードにnfsパッケージをインストールし、rpcbindサービスを実行する必要があります。ワーカーノードに接続した後、以下のコマンドを実行してnfsパッケージをインストールします。
+#### ワーカーノードにNFSパッケージインストールおよびrpcbindサービス実行
+NASストレージを使用するにはワーカーノードにNFSパッケージをインストールし、rpcbindサービスを実行する必要があります。ワーカーノードに接続した後、以下のコマンドを実行してNFSパッケージをインストールします。
 
-Ubuntu、Debianの場合、以下のコマンドでnfsパッケージをインストールできます。
+Ubuntu、Debianの場合、以下のコマンドでNFSパッケージをインストールできます。
 ```
 $ apt-get install -y nfs-common
 ```
@@ -3035,32 +3111,45 @@ $ systemctl start rpcbind
 #### csi-driver-nfsのインストール
 NHN Cloud NASサービスを使用するにはクラスタにcsi-driver-nfsコンポーネントを配布する必要があります。
 
-csi-driver-nfsはnfsサーバーに新たなサブディレクトリを作成する方式で動作するPVの動的プロビジョニングをサポートするドライバーです。
-csi-driver-nfsはストレージクラスにnfsサーバー情報を提供する方式で動作してユーザーが管理しなければならない対象を減らします。
+csi-driver-nfsはNFSストレージに新たなサブディレクトリを作成する方式で動作するNFSストレージプロビジョニングをサポートするドライバーです。
+csi-driver-nfsはストレージクラスにNFSストレージ情報を提供する方式で動作してユーザーが管理しなければならない対象を減らします。
 
-nfs-csi-driverを使用して複数のPVを構成する場合、nfs-csi-driverがNFSサーバー情報をStorageClassに登録してNFS-Provisoner podを構成する必要がありません。
+nfs-csi-driverを使用して複数のPVを構成する場合、nfs-csi-driverがNFSストレージ情報をStorageClassに登録してNFS-Provisoner podを構成する必要がありません。
+<br>
 ![nfs-csi-driver-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nfs-csi-driver-02.png)
 
 > [参考]
 > csi-driver-nfsインストールスクリプトの内部実行プロセスでkubectl applyコマンドが実行されます。したがって`kubectl`コマンドが正常に動作する状態でインストールを進める必要があります。
+> csi-driver-nfsインストール手順はLinux環境を基準に作成されました。
 
 ##### 1. クラスタ設定ファイルの絶対パスを環境変数に保存します。
 ```
 $ export KUBECONFIG={クラスタ設定ファイルの絶対パス}
 ```
 
-##### 2. csi-driver-nfsコンポーネントが含まれるgitプロジェクトをダウンロードします。
+##### 2. ORASコマンドラインツールを使用してcsi-driver-nfsインストールパッケージをダウンロードします。
+ORAS(OCI Registry As Storage)はOCIレジストリからOCIアーティファクトをpushおよびpullする方法を提供するツールです。
+[ORAS installation](https://oras.land/docs/installation)を参考してORASコマンドラインツールをインストールします。 ORASコマンドラインツールの詳しい使用方法は[ORAS docs](https://oras.land/docs/)を参照してください。
+
 ```
-$ git clone https://github.com/kubernetes-csi/csi-driver-nfs.git
+$ oras pull dfe965c3-kr1-registry.container.nhncloud.com/nks_container/nfs-deploy-tool:v1
 ```
 
-##### 3. csi-driver-nfsフォルダに移動し、**./deploy/install-driver.sh v4.1.0 local**コマンドを使用してcsi-driver-nfsコンポーネントをインストールします。 
-```
-$ cd csi-driver-nfs
+##### 3. インストールパッケージを解凍した後、**install-driver.sh {mode}**コマンドを使用してcsi-driver-nfsコンポーネントをインストールします。 
+install-driver.shコマンド実行時、インターネット接続が可能なクラスタは**public**、そうでないクラスタは**private**を入力する必要があります。
 
-$ ./deploy/install-driver.sh v4.1.0 local
-use local deploy
-Installing NFS CSI driver, version: v4.1.0 ...
+
+
+> [参考]
+> csi-driver-nfsコンテナイメージは社内NCRレジストリで管理されています。クローズドネットワーク環境で構成されたクラスタはインターネットに接続されていないため、イメージを正常に受け取るためにはPrivate URIを使用するための環境設定が必要です。Private URIの使い方については、[NHN Cloud Container Registry(NCR)ユーザーガイド](NCR/ja/user-guide/#private-uri)を参照してください。
+
+以下はインターネットネットワーク環境に構成されたクラスタにインストールパッケージを利用してcsi-driver-nfsをインストールする例です。
+
+```
+$ tar -xvf nfs-deploy-tool.tar
+
+$ ./install-driver.sh public
+Installing NFS CSI driver, mode: public ...
 serviceaccount/csi-nfs-controller-sa created
 serviceaccount/csi-nfs-node-sa created
 clusterrole.rbac.authorization.k8s.io/nfs-external-provisioner-role created
@@ -3100,8 +3189,11 @@ NAMESPACE     NAME                    DESIRED   CURRENT   READY   UP-TO-DATE   A
 kube-system   csi-nfs-node            1         1         1       1            1           kubernetes.io/os=linux          4m23s
 ```
 
-#### 静的プロビジョニング
-NHN Cloud NASストレージを静的プロビジョニングを利用してPVとして活用するにはPVマニフェストを作成する時に**csi**情報を定義する必要があります。設定位置は.spec下のcsiです。
+#### プロビジョニング時に既存のNHN Cloud NASストレージを利用する方法
+PVマニフェストの作成時にNAS情報を入力するか、StorageClassマニフェストにNAS情報を入力して、既存のNASストレージをPVとして使用できます。
+
+##### 方法1. PVマニフェスト作成時にNASストレージ情報を定義
+PVマニフェスト作成時にNHN Cloud NASストレージ情報を定義します。設定位置は.specサブの**csi**です。
 
 * driver：**nfs.csi.k8s.io**を入力します。
 * readOnly：**false**を入力します。
@@ -3110,9 +3202,9 @@ NHN Cloud NASストレージを静的プロビジョニングを利用してPV�
   * server：NASストレージの接続情報の**ip**部分の値を入力します。
   * share：NASストレージの接続情報の**ボリューム名**部分の値を入力します。
 
-以下はNHN Cloud NASストレージを静的プロビジョニングするマニフェストの例です。
+以下はマニフェストの例です。
 ``` yaml
-# static-pv.yaml
+# pv.yaml
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -3134,7 +3226,7 @@ spec:
 
 PVを作成し、確認します。
 ```
-$ kubectl apply -f static-pv.yaml
+$ kubectl apply -f pv.yaml
 persistentvolume/pv-onas created
 
 $ kubectl get pv -o wide
@@ -3143,12 +3235,12 @@ pv-onas                                    300Gi      RWX            Retain     
 ```
 
 作成したPVを使用するためのPVCマニフェストを作成します。**spec.volumeName**にはPVの名前を指定する必要があります。他の項目はPVマニフェストの内容と同じに設定します。
-```
-# pvc-static.yaml
+```yaml
+# pvc.yaml
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: pvc-onas-static
+  name: pvc-onas
 spec:
   accessModes:
     - ReadWriteMany
@@ -3160,29 +3252,29 @@ spec:
 
 PVCを作成して確認します。
 ```
-$ kubectl apply -f static-pvc.yaml
-persistentvolumeclaim/pvc-onas-static created
+$ kubectl apply -f pvc.yaml
+persistentvolumeclaim/pvc-onas created
 $ kubectl get pvc -o wide
 NAME              STATUS   VOLUME    CAPACITY   ACCESS MODES   STORAGECLASS   AGE    VOLUMEMODE
-pvc-onas-static   Bound    pv-onas   300Gi      RWX                           2m8s   Filesystem
+pvc-onas   Bound    pv-onas   300Gi      RWX                           2m8s   Filesystem
 ```
 
 PVCを作成した後、PVの状態を照会すると**CLAIM**項目にPVC名が指定され、STATUS項目が`Bound`に変更されていることを確認できます。
 ```
 $ kubectl get pv -o wide
 NAME      CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                     STORAGECLASS   REASON   AGE     VOLUMEMODE
-pv-onas   300Gi      RWX            Retain           Bound    default/pvc-onas-static                           3m20s   Filesystem
+pv-onas   300Gi      RWX            Retain           Bound    default/pvc-onas                           3m20s   Filesystem
 ```
 
-#### 動的プロビジョニング
-NHN Cloud NASストレージを動的プロビジョニングを利用してPVとして活用するにはStorageClassマニフェスト作成時にストレージプロバイダー情報およびNHN Cloud NASストレージ接続情報を定義する必要があります。
+##### 方法2.StorageClassマニフェスト作成時にNAS情報を定義
+StorageClassマニフェスト作成時、ストレージプロバイダー情報およびNHN Cloud NASストレージ情報を定義します。
 
 * provisioner：**nfs.csi.k8s.io**を入力します。
 * parameters：NASストレージの接続情報を入力します。
   * server：NASストレージの接続情報の**ip**部分の値を入力します。
   * share：NASストレージの接続情報の**ボリューム名**部分の値を入力します。
 
-以下はNHN Cloud NASサービスに連動するためのStorage Classマニフェストの例です。
+以下はマニフェストの例です。
 ``` yaml
 # storageclass.yaml
 apiVersion: storage.k8s.io/v1
@@ -3192,7 +3284,7 @@ metadata:
 provisioner: nfs.csi.k8s.io
 parameters:
   server: 192.168.0.81
-  share: /onas_300gb_dynamic
+  share: /onas_300gb
 reclaimPolicy: Retain
 volumeBindingMode: Immediate
 ```
@@ -3206,8 +3298,9 @@ NAME      PROVISIONER      RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANS
 onas-sc   nfs.csi.k8s.io   Retain          Immediate           false                  3s
 ```
 
-動的プロビジョニングはPVを作成する必要がありません。したがってPVCマニフェストのみ作成します。 PVCマニフェストには**spec.volumeName**を設定しません。
-```
+PVを別途作成する必要がないので、PVCマニフェストだけを作成します。PVCマニフェストには**spec.volumeName**を設定しません。
+```yaml
+# pvc.yaml
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -3223,28 +3316,30 @@ spec:
 ボリュームバインディングモードを設定しない場合、またはImmediateに設定してPVCを作成した場合はPVが自動的に作成されます。
 
 ```
-$ kubectl apply -f dynamic-pvc.yaml
-persistentvolumeclaim/pvc-onas-dynamic created
+$ kubectl apply -f pvc.yaml
+persistentvolumeclaim/pvc-onas created
+
 $ kubectl get sc,pv,pvc
 NAME                                  PROVISIONER      RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
 storageclass.storage.k8s.io/onas-sc   nfs.csi.k8s.io   Retain          Immediate           false                  25s
 NAME                                                        CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                      STORAGECLASS   REASON   AGE
-persistentvolume/pvc-71392e58-5d8e-43b2-9798-5b59de34b203   300Gi      RWX            Retain           Bound    default/pvc-onas-dynamic   onas-sc                 3s
+persistentvolume/pvc-71392e58-5d8e-43b2-9798-5b59de34b203   300Gi      RWX            Retain           Bound    default/pvc-onas   onas-sc                 3s
+
 NAME                                     STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-persistentvolumeclaim/pvc-onas-dynamic   Bound    pvc-71392e58-5d8e-43b2-9798-5b59de34b203   300Gi      RWX            onas-sc        4s
+persistentvolumeclaim/pvc-onas   Bound    pvc-71392e58-5d8e-43b2-9798-5b59de34b203   300Gi      RWX            onas-sc        4s
 ```
 
-PodにPVCをマウントするにはPodマニフェストにマウント情報を定義する必要があります。 spec.volumes.persistenVolumeClaim.claimNameに使用するPVC名を入力します。そしてspec.containers.volumeMounts.mountPathにマウントするパスを入力します。
+PodにPVCをマウントするにはPodマニフェストにマウント情報を定義する必要があります。 **spec.volumes.persistenVolumeClaim.claimName**に使用するPVC名を入力します。そして**spec.containers.volumeMounts.mountPath**にマウントするパスを入力します。
 
-以下は動的プロビジョニングで作成したPVCをPodの`/tmp/nfs`にマウントするマニフェスト例です。
-```
-# deployment-dynamic.yaml
+以下は作成したPVCをPodの`/tmp/nfs`にマウントするマニフェスト例です。
+```yaml
+# deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
     app: nginx
-  name: nginx-dynamic
+  name: nginx
   namespace: default
 spec:
   selector:
@@ -3263,28 +3358,172 @@ spec:
           - name: onas-dynamic
             mountPath: "/tmp/nfs"
       volumes:
-        - name: onas-dynamic
+        - name: onas
           persistentVolumeClaim:
-            claimName: pvc-onas-dynamic
+            claimName: pvc-onas
 ```
 
 Podを作成し、NASストレージがマウントされていることを確認します。
 ```
-$ kubectl apply -f deployment-dynamic.yaml
-deployment.apps/nginx-dynamic created
+$ kubectl apply -f deployment.yaml
+deployment.apps/nginx created
 $ kubectl get pods
 NAME                             READY   STATUS    RESTARTS   AGE
-nginx-dynamic-5fbc846574-q28cf   1/1     Running   0          26s
-$ kubectl exec -it nginx-dynamic-5fbc846574-q28cf -- df -h
+nginx-5fbc846574-q28cf   1/1     Running   0          26s
+$ kubectl exec -it nginx-5fbc846574-q28cf -- df -h
 Filesystem                                                                 Size  Used Avail Use% Mounted on
 ...
-192.168.0.45:/onas_300gb_dynamic/pvc-71392e58-5d8e-43b2-9798-5b59de34b203  270G  256K  270G   1% /tmp/nfs
+192.168.0.45:/onas_300gb/pvc-71392e58-5d8e-43b2-9798-5b59de34b203  270G  256K  270G   1% /tmp/nfs
 ...
 ```
 
-NHN Cloudコンソール**Storage > NAS**サービスページでもNASストレージの接続情報を確認できます。
+#### プロビジョニング時に新しいNHN Cloud NASストレージを作成する方法
+StorageClassおよびPVCマニフェスト作成時にNAS情報を入力すると、自動的に作成されたNASストレージをPVとして使用できます。
+
+StorageClassマニフェストにストレージプロバイダー情報と作成するNASストレージのスナップショットポリシー、アクセス制御リスト(ACL)、サブネット情報を定義します。
+* provisioner:**nfs.csi.k8s.io**を入力します。
+* parameters:入力項目は下表を参照してください。パラメータ値に複数の値を定義する場合、**,**を使用して値を区切ります。
+
+| 項目 | 説明 | 例 | 複数値 | 必須 | デフォルト値 |
+| ------- |------- | --------------------------- | ---------------------------- | --------- | ------------- |
+| maxscheduledcount | 保存可能な最大スナップショット数です。最大保存数に達すると、自動的に作成されたスナップショットのうち、最初に作成されたスナップショットが削除されます。1～20の数字のみ入力可能です。 | "7" | X | X |  |
+| reservepercent | 最大保存可能なスナップショット保存容量です。スナップショット容量の合計が設定したサイズを超える場合、すべてのスナップショットのうち最初に作成されたスナップショットが削除されます。0～80の間の数字のみ入力可能です。 | "80" | X | X |  |
+| scheduletime | スナップショットが作成される時刻です。 | "09:00" | X | X |  |
+| scheduletimeoffset | スナップショット作成時刻に対するオフセットです。 UTC基準で、KSTで使用する時は+09:00値を指定します。 | "+09:00" | X | X |  |
+| scheduleweekdays | スナップショット作成周期です。日曜日から土曜日までそれぞれ0～6の数字で表現されます。 | "6" | O | X |  |
+| subnet | ストレージにアクセスするサブネットです。選択されたVPCのサブネットのみ選択できます。 | "59526f1c-c089-4517-86fd-2d3dac369210" | X | O |  |
+| acl | 読み取り、書き込み権限を許可するIPまたはIP帯域のリストです。 | "0.0.0.0/0" | O | X | 0.0.0.0/0 |
+| onDelete | PVC削除時にNASボリュームを削除するかどうかです。 | "delete" / "retain" | X | X | delete |
+
+> [注意]
+> スナップショットパラメータを使用する場合、関連するすべてのパラメータ値を定義する必要があります。スナップショット関連パラメータは次のとおりです。
+> + maxscheduledcount
+> + reservepercent
+> + scheduletime
+> + scheduletimeoffset
+> + scheduleweekdays
+
+以下はマニフェストの例です。
+```yaml
+# storage_class.yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: sc-nfs
+provisioner: nfs.csi.k8s.io
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+parameters:
+  maxscheduledcount : "7"
+  reservepercent : "80"
+  scheduletime : "09:00"
+  scheduletimeoffset : "+09:00"
+  scheduleweekdays : "6"
+  subnet : "59526f1c-c089-4517-86fd-2d3dac369210"
+  acl : ""
+```
+
+PVCマニフェストの**Annotation**に作成するNASストレージの名前、説明、サイズを定義します。入力項目は下表を参照してください。
+
+| 項目 | 説明 | 例 | 必須 |
+| ---- | ------- | --------------------------- | --------- |
+| nfs-volume-name | 作成されるストレージの名前です。ストレージ名を通じてNFSアクセスパスを作成します。名前は100文字以内の英字と数字、一部記号('-', '_')のみ入力できます。 | "nas_sample_volume_100gb" | O |
+| nfs-volume-description | 作成するNASストレージの説明です。 | "nas sample volume" | X |
+| nfs-volume-sizegb | 作成するNASストレージのサイズです。GB単位で設定されます。 | "100" | O |
+
+以下はマニフェストの例です。
+```yaml
+# pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-nfs
+  annotations:
+    nfs-volume-name: "nas_sample_volume_100gb"
+    nfs-volume-description: "nas sample volume"
+    nfs-volume-sizegb: "100"
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: sc-nfs
+```
+
+StorageClassおよびPVCを作成し、確認します。
+```
+$ kubectl apply -f storage_class.yaml
+storageclass.storage.k8s.io/sc-nfs created
+$ kubectl get sc
+NAME         PROVISIONER      RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
+sc-nfs       nfs.csi.k8s.io   Delete          Immediate           false                  50s
+```
+
+PVを別途作成する必要がないので、PVCマニフェストだけを作成します。PVCマニフェストには**spec.volumeName**を設定しません。
+ボリュームバインディングモードを設定しないか、Immediateに設定してPVCを作成すると、PVが自動的に作成されます。NASストレージが作成された後、Boundされるまで約1分程度かかります。
+NHN Cloudコンソール**Storage > NAS**サービスページでも作成されたNASストレージの情報を確認できます。
+
+```
+$ kubectl apply -f pvc.yaml
+persistentvolumeclaim/pvc-nfs created
+$ kubectl get pv,pvc
+NAME                                                        CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM             STORAGECLASS   REASON   AGE
+persistentvolume/pvc-a8ea2054-0849-4fe8-8207-ee0e43b8a103   50Gi       RWX            Delete           Bound    default/pvc-nfs   sc-nfs                  2s
+NAME                            STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+persistentvolumeclaim/pvc-nfs   Bound    pvc-a8ea2054-0849-4fe8-8207-ee0e43b8a103   50Gi       RWX            sc-nfs         75s
+```
+
+PVCをPodにマウントするには、Podマニフェストにマウント情報を定義する必要があります。**spec.volumes.persistenVolumeClaim.claimName**に使うPVCの名前を入力します。そして、**spec.containers.volumeMounts.mountPath**にマウントするパスを入力します。
+
+以下は作成したPVCをパッドの`/tmp/nfs`にマウントするマニフェストの例です。
+```yaml
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx
+  name: nginx
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - image: nginx
+        imagePullPolicy: Always
+        name: nginx
+        volumeMounts:
+          - name: nas
+            mountPath: "/tmp/nfs"
+      volumes:
+        - name: nas
+          persistentVolumeClaim:
+            claimName: pvc-nfs
+```
+
+Podを作成し、NASストレージがマウントされていることを確認します。
+```
+$ kubectl apply -f deployment.yaml
+deployment.apps/nginx created
+$ kubectl get pods
+NAME                             READY   STATUS    RESTARTS   AGE
+nginx-9f448b9f7-xw92w   1/1     Running   0          12s
+$ kubectl exec -it nginx-9f448b9f7-xw92w -- df -h
+Filesystem                                                                     Size  Used Avail Use% Mounted on
+overlay                                                                         20G   16G  4.2G  80% /
+tmpfs                                                                           64M     0   64M   0% /dev
+tmpfs                                                                          1.9G     0  1.9G   0% /sys/fs/cgroup
+192.168.0.57:nas_sample_volume_100gb/pvc-a8ea2054-0849-4fe8-8207-ee0e43b8a103   20G  256K   20G   1% /tmp/nfs
+...
+```
 
 > [参考]
-> nfs-csi-driverは動的プロビジョニングを利用してPVを作成する時、nfsストレージ内部にsubdirectoryを作成する方式で動作します。
-> podにPVをマウントするプロセスでsubdirectoryのみマウントされるのではなく、nfsストレージ全体がマウントされるため、アプリケーションがプロビジョニングされたサイズだけボリュームを使用するように強制できません。
+> nfs-csi-driverはプロビジョニング時にNFSストレージ内部にsubdirectoryを作成する方式で動作します。
 > podにPVをマウントするプロセスでsubdirectoryのみマウントされるのではなく、nfsストレージ全体がマウントされるため、アプリケーションがプロビジョニングされたサイズだけボリュームを使用するように強制できません。
