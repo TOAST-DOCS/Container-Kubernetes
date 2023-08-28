@@ -111,18 +111,9 @@ X-Auth-Token: {tokenId}
 | clusters.labels.kube_tag | Body |String | マスターノードグループのKubernetesバージョン |
 | clusters.labels.availability_zone | Body | String | 基本ワーカーノードグループ適用：アベイラビリティゾーン |
 | clusters.labels.node_image | Body | UUID | 基本ワーカーノードグループ適用：ベースイメージuuid |
-| clusters.labels.boot_volume_type | Body | String | 基本ワーカーノードグループ適用：ブロックストレージの種類|
-| clusters.labels.boot_volume_size | Body | String | 基本ワーカーノードグループ適用：ブロックストレージサイズ(GB) |
 | clusters.labels.external_network_id | Body | String | インターネットゲートウェイに接続されたVPC network UUID |
 | clusters.labels.external_subnet_id_list | Body | String | インターネットゲートウェイに接続されたサブネットUUIDリスト(コロンで区切る) |
 | clusters.labels.cert_manager_api | Body | String | CSR(Certificate Signing Request)機能を有効にするかどうか。必ず"True"に設定 |
-| clusters.labels.ca_enable | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：機能を有効にするかどうか("True" / "False") |
-| clusters.labels.ca_max_node_count | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：最大ノード数 |
-| clusters.labels.ca_min_node_count | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：最小ノード数 |
-| clusters.labels.ca_scale_down_enable | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：縮小が有効かどうか("True" / "False") |
-| clusters.labels.ca_scale_down_unneeded_time | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：しきい値領域維持時間 |
-| clusters.labels.ca_scale_down_util_thresh | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：リソース使用量しきい値 |
-| clusters.labels.ca_scale_down_delay_after_add | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：増設後の縮小遅延時間 |
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Kubernetes APIエンドポイントに公認ドメインアドレスを作成するかどうか("True" / "False") |
 | clusters.labels.additional_network_id_list | Body | String | 基本ワーカーノードグループ適用：追加ネットワークのVPCネットワークUUIDリスト(コロン区切り) |
 | clusters.labels.additional_subnet_id_list | Body | String | 基本ワーカーノードグループ適用：追加ネットワークのVPCサブネットUUIDリスト(コロン区切り) |
@@ -147,15 +138,6 @@ X-Auth-Token: {tokenId}
             "keypair": "testkeypair",
             "labels": {
                 "availability_zone": "kr2-pub-b",
-                "boot_volume_size": "20",
-                "boot_volume_type": "General HDD",
-                "ca_enable": "false",
-                "ca_max_node_count": "10",
-                "ca_min_node_count": "1",
-                "ca_scale_down_delay_after_add": "3",
-                "ca_scale_down_enable": "true",
-                "ca_scale_down_unneeded_time": "3",
-                "ca_scale_down_util_thresh": "50",
                 "cert_manager_api": "True",
                 "clusterautoscale": "nodegroupfeature",
                 "etcd_volume_size": "10",
@@ -246,18 +228,9 @@ X-Auth-Token: {tokenId}
 | labels.kube_tag | Body |String | マスターノードグループKubernetesバージョン |
 | labels.availability_zone | Body | String | 基本ワーカーノードグループ適用：アベイラビリティゾーン |
 | labels.node_image | Body | UUID | 基本ワーカーノードグループ適用：ベースイメージUUID |
-| labels.boot_volume_type | Body | String | 基本ワーカーノードグループ適用：ブロックストレージの種類|
-| labels.boot_volume_size | Body | String | 基本ワーカーノードグループ適用：ブロックストレージサイズ(GB) |
 | labels.external_network_id | Body | String | インターネットゲートウェイに接続されたVPC network UUID |
 | labels.external_subnet_id_list | Body | String | インターネットゲートウェイに接続されたサブネットUUIDリスト(コロンで区切る) |
 | labels.cert_manager_api | Body | String | CSR(Certificate Signing Request)機能を有効にするかどうか。必ず"True"に設定 |
-| labels.ca_enable | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：機能を有効にするかどうか("True" / "False") |
-| labels.ca_max_node_count | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：最大ノード数 |
-| labels.ca_min_node_count | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：最小ノード数 |
-| labels.ca_scale_down_enable | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：縮小が有効かどうか("True" / "False") |
-| labels.ca_scale_down_unneeded_time | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：しきい値領域維持時間 |
-| labels.ca_scale_down_util_thresh | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：リソース使用量しきい値 |
-| labels.ca_scale_down_delay_after_add | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：増設後の縮小遅延時間 |
 | labels.master_lb_floating_ip_enabled | Body | String | Kubernetes APIエンドポイントに公認ドメインアドレスを作成するかどうか("True" / "False") |
 | clusters.labels.additional_network_id_list | Body | String | 基本ワーカーノードグループ適用：追加ネットワークのVPCネットワークUUIDリスト(コロン区切り) |
 | clusters.labels.additional_subnet_id_list | Body | String | 基本ワーカーノードグループ適用：追加ネットワークのVPCサブネットUUIDリスト(コロン区切り) |
@@ -289,15 +262,6 @@ X-Auth-Token: {tokenId}
     "keypair": "test-keypair",
     "labels": {
         "availability_zone": "kr2-pub-b",
-        "boot_volume_size": "20",
-        "boot_volume_type": "General HDD",
-        "ca_enable": "false",
-        "ca_max_node_count": "10",
-        "ca_min_node_count": "1",
-        "ca_scale_down_delay_after_add": "3",
-        "ca_scale_down_enable": "true",
-        "ca_scale_down_unneeded_time": "3",
-        "ca_scale_down_util_thresh": "50",
         "cert_manager_api": "True",
         "clusterautoscale": "nodegroupfeature",
         "etcd_volume_size": "10",
@@ -376,6 +340,8 @@ X-Auth-Token: {tokenId}
 | labels.node_image | Body | UUID | O | 基本ワーカーノードグループ適用：ベースイメージUUID |
 | labels.boot_volume_type | Body | String | O | 基本ワーカーノードグループ適用：ブロックストレージの種類|
 | labels.boot_volume_size | Body | String | O | 基本ワーカーノードグループ適用：ブロックストレージサイズ(GB) |
+| labels.boot_volume_key_id | Body | String | X | (暗号化されたブロックストレージを使用する場合)暗号化されたブロックストレージに適用する対称鍵ID |
+| labels.boot_volume_appkey | Body | String | X | (暗号化されたブロックストレージを使用する場合)暗号化されたブロックストレージに適用する対称鍵のアプリケーションキー |
 | labels.external_network_id | Body | String | X | インターネットゲートウェイに接続されたVPCネットワークUUID<br>VPCサブネットが接続されているルーターがインターネットゲートウェイに接続されている場合は必ず設定 |
 | labels.external_subnet_id_list | Body | String | X | インターネットゲートウェイに接続されたサブネットUUIDリスト(コロンで区切る)<br>VPCサブネットが接続されているルーターがインターネットゲートウェイに接続されている場合は必ず設定 |
 | labels.cert_manager_api | Body | String | O | CSR(Certificate Signing Request)機能を有効にするかどうか。必ず"True"に設定 |
@@ -799,6 +765,8 @@ X-Auth-Token: {tokenId}
 | labels.node_image | Body | UUID | ワーカーノードグループ適用：ベースイメージUUID |
 | labels.boot_volume_type | Body | String | ワーカーノードグループ適用：ブロックストレージの種類|
 | labels.boot_volume_size | Body | String | ワーカーノードグループ適用：ブロックストレージサイズ(GB) |
+| labels.boot_volume_key_id | Body | String | (暗号化されたブロックストレージを使用する場合)ブロックストレージに適用した対称鍵ID |
+| labels.boot_volume_appkey | Body | String | (暗号化されたブロックストレージを使用する場合)ブロックストレージに適用した対称鍵のアプリケーションキー |
 | labels.external_network_id | Body | String | インターネットゲートウェイに接続されたVPC network UUID |
 | labels.external_subnet_id_list | Body | String | インターネットゲートウェイに接続されたサブネットUUIDリスト(コロンで区切る) |
 | labels.cert_manager_api | Body | String | CSR(Certificate Signing Request)機能を有効にするかどうか。必ず"True"に設定 |
@@ -926,6 +894,8 @@ X-Auth-Token: {tokenId}
 | labels.availability_zone | Body | String | O | 基本ワーカーノードグループ適用：アベイラビリティゾーン |
 | labels.boot_volume_type | Body | String | O | 基本ワーカーノードグループ適用：ブロックストレージの種類|
 | labels.boot_volume_size | Body | String | O | 基本ワーカーノードグループ適用：ブロックストレージサイズ(GB) |
+| labels.boot_volume_key_id | Body | String | X | (暗号化されたブロックストレージを使用する場合)ブロックストレージに適用する対称鍵ID |
+| labels.boot_volume_appkey | Body | String | X | (暗号化されたブロックストレージを使用する場合)ブロックストレージに適用する対称鍵のアプリケーションキー |
 | labels.ca_enable | Body | String | O | 基本ワーカーノードグループ適用：オートスケーラー：機能を有効にするかどうか("True" / "False") |
 | labels.ca_max_node_count | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：最大ノード数 |
 | labels.ca_min_node_count | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：最小ノード数 |
@@ -1519,9 +1489,12 @@ X-Auth-Token: {tokenId}
         "v1.19.13": false,
         "v1.20.12": false,
         "v1.21.6": true,
-        "v1.22.3": true,
-        "v1.23.3": true,
+        "v1.22.3": false,
+        "v1.23.3": false,
         "v1.24.3": true
+        "v1.25.4": true,
+        "v1.26.3": true,
+        "v1.27.3": true
     }
 }
 ```
