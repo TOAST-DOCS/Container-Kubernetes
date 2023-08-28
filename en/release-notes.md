@@ -1,5 +1,32 @@
 ## Container > NHN Kubernetes Service (NKS) > Release Notes
 
+### August 29, 2023
+
+#### Added Features
+
+* Added support for Kubernetes v1.27.3
+* You can set the properties of Kubernetes API endpoint when creating a cluster.
+* You can use encrypted block storage on worker nodes.
+* Provided more detailed status information on the cluster and node group query screen.
+* Added a feature to create new NAS storage upon provisioning.
+
+#### Feature Updates
+* Changed the distribution version of the images used at the time of generating clusters or node groups.
+    * AS-IS
+        * Rocky Linux 8.7 - Container (2023.07.25)
+    * TO-BE
+        * Rocky Linux 8.8 - Container (2023.08.22)
+
+#### Image update 
+* Changes
+    * Changed the nvidia-device-plugin version from 470.182.03 to 470.199.02.
+    * Changed the dcgm version from 3.1.7 to 3.1.8.
+    * Changed the nvidia-mig-manager version from 0.5.2 to 0.5.3.
+* Target image
+    * CentOS 7.9 - Container (2023.08.22)
+    * Rocky Linux 8.8 - Container (2023.08.22)
+    * Ubuntu Server 20.04.6 LTS - Container (2023.08.22)
+
 ### July 19, 2023
 
 #### Image Update
@@ -23,9 +50,12 @@
 #### Feature Updates
 
 * Changed the distribution version of the image used when creating clusters and node groups.
-    * AS-IS: Ubuntu Server 18.04.6 LTS - Container (2023.03.21)
-    * TO-BE: Ubuntu Server 20.04.6 LTS - Container (2023.05.25)
-
+  * AS-IS
+        * Ubuntu Server 18.04.6 LTS - Container (2023.03.21)
+        * Rocky Linux 8.6 - Container (2023.03.21)
+    * TO-BE
+        * Ubuntu Server 20.04.6 LTS - Container (2023.05.25)
+        * Rocky Linux 8.7 - Container (2023.05.25)
 
 * Image update
     * Changes
