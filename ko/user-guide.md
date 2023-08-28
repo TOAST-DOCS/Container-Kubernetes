@@ -2921,8 +2921,8 @@ ORAS(OCI Registry As Storage)는 OCI 레지스트리에서 OCI 아티팩트를 p
 
 | 리전 | 다운로드 커맨드 |
 | --- | --- |
-| 판교 리전 | oras pull dfe965c3-kr1-registry.container.nhncloud.com/nks_container/nfs-deploy-tool:v1 |
-| 평촌 리전 | oras pull 6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/nfs-deploy-tool:v1 |
+| 한국(판교) 리전 | oras pull dfe965c3-kr1-registry.container.nhncloud.com/nks_container/nfs-deploy-tool:v1 |
+| 한국(평촌) 리전 | oras pull 6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/nfs-deploy-tool:v1 |
 
 ##### 3. 설치 패키지를 압축 해제한 후 **install-driver.sh {mode}** 명령어를 사용하여 csi-driver-nfs 구성 요소를 설치합니다.
 install-driver.sh 명령 실행 시 인터넷 연결이 가능한 클러스터는 **public**, 그렇지 않은 클러스터는 **private**을 입력해야 합니다.
