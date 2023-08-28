@@ -111,18 +111,9 @@ This API does not require a request body.
 | clusters.labels.kube_tag | Body |String | Kubernetes version of the master node group |
 | clusters.labels.availability_zone | Body | String | Applied to the default worker node group: Availability zone |
 | clusters.labels.node_image | Body | UUID | Applied to the default worker node group: Base image UUID |
-| clusters.labels.boot_volume_type | Body | String | Applied to the default worker node group: Block storage type|
-| clusters.labels.boot_volume_size | Body | String | Applied to the default worker node group: Block storage size (GB) |
-| clusters.labels.external_network_id | Body | String | UUID of the VPC network attached to the internet gateway |
-| clusters.labels.external_subnet_id_list | Body | String | List of UUIDs of subnets attached to the internet gateway (separated by colons) |
+| clusters.labels.external_network_id | Body | String | UUID of VPC network attached to the internet gateway |
+| clusters.labels.external_subnet_id_list | Body | String | List of UUIDs of subnets attached to the internet gateway (separated by colons)|
 | clusters.labels.cert_manager_api | Body | String | Whether to enable the certificate signing request (CSR) feature. Must be set to "True" |
-| clusters.labels.ca_enable | Body | String | Applied to the default worker node group: Autoscaler: Whether to enable the feature ("True" / "False") |
-| clusters.labels.ca_max_node_count | Body | String | Applied to the default worker node group: Autoscaler: Maximum number of nodes |
-| clusters.labels.ca_min_node_count | Body | String | Applied to the default worker node group: Autoscaler: Minimum number of nodes |
-| clusters.labels.ca_scale_down_enable | Body | String | Applied to the default worker node group: Autoscaler: Whether to enable scale-down ("True" / "False") |
-| clusters.labels.ca_scale_down_unneeded_time | Body | String | Applied to the default worker node group: Autoscaler: Scale down unneeded time |
-| clusters.labels.ca_scale_down_util_thresh | Body | String | Applied to the default worker node group: Autoscaler: Scale down utilization threshold  |
-| clusters.labels.ca_scale_down_delay_after_add | Body | String | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Whether to create a public domain address for Kubernetes API endpoint ("True" / "False") |
 | clusters.labels.additional_network_id_list | Body | String | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
 | clusters.labels.additional_subnet_id_list | Body | String | Applied to the default worker node group: List of VPC subnet UUIDs for additional networks (separated by colons) |
@@ -130,6 +121,7 @@ This API does not require a request body.
 | clusters.labels.service_cluster_ip_range | Body | String | IP range assigned to ClusterIP when creating a service from K8s service network and clusters (Available for clusters created on or after 2023.05.30) |
 | clusters.labels.pods_network_cidr | Body | String | Cluster pod network (Available for clusters created on or after 2023.05.30) |
 | clusters.labels.pods_network_subnet | Body | String | Cluster pod subnet size (Available for clusters created on or after 2023.05.30) |
+
 
 <details><summary>Example</summary>
 <p>
@@ -146,15 +138,6 @@ This API does not require a request body.
             "keypair": "testkeypair",
             "labels": {
                 "availability_zone": "kr2-pub-b",
-                "boot_volume_size": "20",
-                "boot_volume_type": "General HDD",
-                "ca_enable": "false",
-                "ca_max_node_count": "10",
-                "ca_min_node_count": "1",
-                "ca_scale_down_delay_after_add": "3",
-                "ca_scale_down_enable": "true",
-                "ca_scale_down_unneeded_time": "3",
-                "ca_scale_down_util_thresh": "50",
                 "cert_manager_api": "True",
                 "clusterautoscale": "nodegroupfeature",
                 "etcd_volume_size": "10",
@@ -163,7 +146,6 @@ This API does not require a request body.
                 "flavor_type": "core",
                 "hypervisor_type": "qemu",
                 "kube_tag": "v1.23.3",
-                "kube_version_status": "NEED_UPGRADE",
                 "login_username": "centos",
                 "master_lb_floating_ip_enabled": "true",
                 "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
@@ -289,15 +271,6 @@ This API does not require a request body.
     "keypair": "test-keypair",
     "labels": {
         "availability_zone": "kr2-pub-b",
-        "boot_volume_size": "20",
-        "boot_volume_type": "General HDD",
-        "ca_enable": "false",
-        "ca_max_node_count": "10",
-        "ca_min_node_count": "1",
-        "ca_scale_down_delay_after_add": "3",
-        "ca_scale_down_enable": "true",
-        "ca_scale_down_unneeded_time": "3",
-        "ca_scale_down_util_thresh": "50",
         "cert_manager_api": "True",
         "clusterautoscale": "nodegroupfeature",
         "etcd_volume_size": "10",
@@ -685,7 +658,6 @@ pod_subnet must be entered in the following rules.
 <details><summary>Example</summary>
 <p>
 
-
 ```json
 {
     "uuid": "0641db9f-5e71-4df9-9571-089c7964d82e"
@@ -800,6 +772,8 @@ This API does not require a request body.
 | labels.node_image | Body | UUID | Applied to the worker node group: Base image UUID |
 | labels.boot_volume_type | Body | String | Applied to the worker node group: Block storage type|
 | labels.boot_volume_size | Body | String | Applied to the worker node group: Block storage size (GB) |
+| labels.boot_volume_key_id | Body | String | ID of symmetric key applied to block storage (when using encrypted block storage) |
+| labels.boot_volume_appkey | Body | String | Appkey of symmetric key applied to block storage (when using encrypted block storage) |
 | labels.external_network_id | Body | String | UUID of the VPC network attached to the internet gateway |
 | labels.external_subnet_id_list | Body | String | List of UUIDs of subnets attached to the internet gateway (separated by colons) |
 | labels.cert_manager_api | Body | String | Whether to enable the certificate signing request (CSR) feature. Must be set to "True" |
@@ -1519,10 +1493,12 @@ This API does not require a request body.
         "v1.19.13": false,
         "v1.20.12": false,
         "v1.21.6": false,
-        "v1.22.3": true,
-        "v1.23.3": true,
+        "v1.22.3": false,
+        "v1.23.3": false,
         "v1.24.3": true,
-        "v1.25.4": true
+        "v1.25.4": true,
+        "v1.26.3": true,
+        "v1.27.3": true
     }
 }
 ```
