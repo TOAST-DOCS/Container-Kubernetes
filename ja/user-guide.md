@@ -99,6 +99,7 @@ NHN Kubernetes Service(NKS)はバージョンによって異なる種類のConta
 | k8s Node状態 | Kubernetes Nodeリソースの状態 |
 
 作業状態のアイコン別の意味は次のとおりです。
+
 | アイコン | 意味 |
 | --- | --- |
 | 緑色のソリッドアイコン | 作業正常終了 |
@@ -107,6 +108,7 @@ NHN Kubernetes Service(NKS)はバージョンによって異なる種類のConta
 | 灰色のソリッドアイコン | クラスタ使用不可 |
 
 k8s API状態のアイコン別の意味は次のとおりです。
+
 | アイコン | 意味 |
 | --- | --- |
 | 緑色のソリッドアイコン | 正常動作中 |
@@ -114,6 +116,7 @@ k8s API状態のアイコン別の意味は次のとおりです。
 | 赤色のソリッドアイコン | Kubernetes APIエンドポイントが正常に動作していないか、情報の有効期限が切れている |
 
 k8s Node状態のアイコン別の意味は次のとおりです。
+
 | アイコン | 意味 |
 | --- | --- |
 | 緑色のソリッドアイコン | クラスタのすべてのノードがReady状態 |
@@ -3131,13 +3134,14 @@ $ export KUBECONFIG={クラスタ設定ファイルの絶対パス}
 ORAS(OCI Registry As Storage)はOCIレジストリからOCIアーティファクトをpushおよびpullする方法を提供するツールです。
 [ORAS installation](https://oras.land/docs/installation)を参考してORASコマンドラインツールをインストールします。 ORASコマンドラインツールの詳しい使用方法は[ORAS docs](https://oras.land/docs/)を参照してください。
 
-```
-$ oras pull dfe965c3-kr1-registry.container.nhncloud.com/nks_container/nfs-deploy-tool:v1
-```
+
+| リージョン | ダウンロードコマンド |
+| --- | --- |
+| 韓国(パンギョ)リージョン | oras pull dfe965c3-kr1-registry.container.nhncloud.com/nks_container/nfs-deploy-tool:v1 |
+| 韓国(ピョンチョン)リージョン | oras pull 6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/nfs-deploy-tool:v1 |
 
 ##### 3. インストールパッケージを解凍した後、**install-driver.sh {mode}**コマンドを使用してcsi-driver-nfsコンポーネントをインストールします。 
 install-driver.shコマンド実行時、インターネット接続が可能なクラスタは**public**、そうでないクラスタは**private**を入力する必要があります。
-
 
 
 > [参考]
@@ -3395,13 +3399,20 @@ StorageClassマニフェストにストレージプロバイダー情報と作�
 | acl | 読み取り、書き込み権限を許可するIPまたはIP帯域のリストです。 | "0.0.0.0/0" | O | X | 0.0.0.0/0 |
 | onDelete | PVC削除時にNASボリュームを削除するかどうかです。 | "delete" / "retain" | X | X | delete |
 
-> [注意]
+> [参考]
 > スナップショットパラメータを使用する場合、関連するすべてのパラメータ値を定義する必要があります。スナップショット関連パラメータは次のとおりです。
 > + maxscheduledcount
 > + reservepercent
 > + scheduletime
 > + scheduletimeoffset
 > + scheduleweekdays
+
+<br>
+
+> [注意]マルチサブネット環境での制約事項
+> 
+> NASストレージはストレージクラスに定義されたサブネットに接続されます。
+> PodがNASストレージと連動するためには、すべてのワーカーノードグループがこのサブネットに接続されている必要があります。
 
 以下はマニフェストの例です。
 ```yaml
