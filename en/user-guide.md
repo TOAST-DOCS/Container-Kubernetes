@@ -2933,7 +2933,7 @@ When you run the install-driver.sh command, you must enter **public** for cluste
 
 
 > [Note]
-The csi-driver-nfs container image is maintained in our NCR registry. Since the cluster configured in a closed network environment is not connected to the Internet, it is necessary to configure the environment to use a private URI in order to receive images normally. For information on how to use Private URI, refer to the [](NCR/ko/user-guide/#private-uri)NHN Cloud Container Registry (NCR) User Guide[](NCR/ko/user-guide/#private-uri).
+The csi-driver-nfs container image is maintained in our NCR registry. Since the cluster configured in a closed network environment is not connected to the Internet, it is necessary to configure the environment to use a private URI in order to receive images normally. For information on how to use Private URI, refer to the [NHN Cloud Container Registry (NCR) User Guide](Container/NCR/ko/user-guide/#private-uri).
 
 Below is an example of installing csi-driver-nfs using the installation package in the cluster configured in the Internet network environment.
 

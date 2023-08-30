@@ -3145,7 +3145,7 @@ install-driver.shコマンド実行時、インターネット接続が可能な
 
 
 > [参考]
-> csi-driver-nfsコンテナイメージは社内NCRレジストリで管理されています。クローズドネットワーク環境で構成されたクラスタはインターネットに接続されていないため、イメージを正常に受け取るためにはPrivate URIを使用するための環境設定が必要です。Private URIの使い方については、[NHN Cloud Container Registry(NCR)ユーザーガイド](NCR/ja/user-guide/#private-uri)を参照してください。
+> csi-driver-nfsコンテナイメージは社内NCRレジストリで管理されています。クローズドネットワーク環境で構成されたクラスタはインターネットに接続されていないため、イメージを正常に受け取るためにはPrivate URIを使用するための環境設定が必要です。Private URIの使い方については、[NHN Cloud Container Registry(NCR)ユーザーガイド](Container/NCR/ja/user-guide/#private-uri)を参照してください。
 
 以下はインターネットネットワーク環境に構成されたクラスタにインストールパッケージを利用してcsi-driver-nfsをインストールする例です。
 
