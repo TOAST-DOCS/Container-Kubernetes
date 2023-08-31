@@ -213,6 +213,7 @@ Click a cluster name on the list to find the list of node groups. Select a node 
 | k8s Node Status | Status of Kubernetes Node resources belonging to a node group |
 
 The meaning of each icon of the task status is as follows.
+
 | Icon | Meaning |
 | --- | --- |
 | Green solid icon | Normal end of task |
@@ -221,6 +222,7 @@ The meaning of each icon of the task status is as follows.
 | Gray solid icon | Clusters and node groups unavailable |
 
 The meaning of each icon of k8s Node status is as follows.
+
 | Icon | Meaning |
 | --- | --- |
 | Green solid icon | All nodes in the node group are in the Ready state |
