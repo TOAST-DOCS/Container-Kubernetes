@@ -2774,10 +2774,10 @@ spec:
 > NHN Cloud Container Registry 사용 방법은 [Container Registry 사용자 가이드](/Container/NCR/ko/user-guide) 문서를 참고하세요.
 
 ### NHN Cloud NAS 서비스 연동
-NHN Cloud에서 제공하는 NAS 스토리지를 PV로 활용할 수 있습니다. NAS 서비스를 사용하기 위해서는 v1.20 이후 버전의 클러스터를 사용해야 합니다. NHN Cloud NAS 사용에 대한 자세한 내용은 [NAS 콘솔 사용 가이드](/Storage/Storage-Online-NAS/ko/console-guide-gov)를 참고하세요.
+NHN Cloud에서 제공하는 NAS 스토리지를 PV로 활용할 수 있습니다. NAS 서비스를 사용하기 위해서는 v1.20 이후 버전의 클러스터를 사용해야 합니다. NHN Cloud NAS 사용에 대한 자세한 내용은 [NAS 콘솔 사용 가이드](/Storage/NAS%20(online)/ko/console-guide-gov)를 참고하세요.
 
 > [참고]
-> NHN Cloud NAS 서비스는 현재(2023. 08.) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/Storage-Online-NAS/ko/overview-gov)를 참고하세요.
+> NHN Cloud NAS 서비스는 현재(2023. 08.) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS%20(online)/ko/overview-gov)를 참고하세요.
 
 #### 워커 노드에 NFS 패키지 설치 및 rpcbind 서비스 실행
 NAS 스토리지를 사용하려면 워커 노드에 NFS 패키지를 설치하고, rpcbind 서비스를 실행해야 합니다. 워커 노드에 접속한 뒤 아래 명령어를 실행해 NFS 패키지를 설치합니다.
@@ -2824,7 +2824,7 @@ ORAS(OCI Registry As Storage)는 OCI 레지스트리에서 OCI 아티팩트를 p
 
 | 리전 | 다운로드 커맨드 |
 | --- | --- |
-| 한국(평촌) 리전 | oras pull ed2533ed-kr2-registry.container.gov-nhncloud.com/nks_container/nfs-deploy-tool:v1 |
+| 한국(평촌) 리전 | oras pull ca6dde7d-kr2-registry.container.gov-nhncloud.com/nks_container/nfs-deploy-tool:v1 |
 
 ##### 3. 설치 패키지를 압축 해제한 후 **install-driver.sh {mode}** 명령어를 사용하여 csi-driver-nfs 구성 요소를 설치합니다.
 install-driver.sh 명령 실행 시 인터넷 연결이 가능한 클러스터는 **public**, 그렇지 않은 클러스터는 **private**을 입력해야 합니다.
