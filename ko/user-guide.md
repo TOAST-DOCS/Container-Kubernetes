@@ -1107,22 +1107,22 @@ Server Version: version.Info{Major:"1", Minor:"15", GitVersion:"v1.15.7", GitCom
 Kubernetes의 인증 API(Certificate API)를 통해 Kubernetes API 클라이언트를 위한 X.509 인증서(certificate)를 요청하고 발급할 수 있습니다. CSR 자원은 인증서를 요청하고, 요청에 대해 승인/거부를 결정할 수 있도록 합니다. 자세한 사항은 [Certificate Signing Requests](https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/) 문서를 참고하세요.
 
 #### CSR 요청과 발급 승인 예제
-먼저 개인키(private key)를 생성합니다. 인증서 생성에 관한 자세한 내용은 [Certificates](https://kubernetes.io/docs/concepts/cluster-administration/certificates/) 문서를 참고하세요.
+먼저 개인키(private key)를 생성합니다. 인증서 생성에 관한 자세한 내용은 [Certificates](https://kubernetes.io/docs/tasks/administer-cluster/certificates/) 문서를 참고하세요.
 
 ```
-# openssl genrsa -out dev-user1.key 2048
+$ openssl genrsa -out dev-user1.key 2048
 Generating RSA private key, 2048 bit long modulus
 ...........................................................................+++++
 ..................+++++
 e is 65537 (0x010001)
 
-# openssl req -new -key dev-user1.key -subj "/CN=dev-user1" -out dev-user1.csr
+$ openssl req -new -key dev-user1.key -subj "/CN=dev-user1" -out dev-user1.csr
 ```
 
 생성한 개인키 정보를 포함하는 CSR 자원을 생성해 인증서 발급을 요청합니다.
 
 ```
-# BASE64_CSR=$(cat dev-user1.csr | base64 | tr -d '\n')
+$ BASE64_CSR=$(cat dev-user1.csr | base64 | tr -d '\n')
 # cat <<EOF > csr.yaml -
 apiVersion: certificates.k8s.io/v1beta1
 kind: CertificateSigningRequest
@@ -1132,10 +1132,9 @@ spec:
   groups:
   - system:authenticated
   request: ${BASE64_CSR}
+  signerName: kubernetes.io/kube-apiserver-client
+  expirationSeconds: 86400  # one day
   usages:
-  - digital signature
-  - key encipherment
-  - server auth
   - client auth
 EOF
 
@@ -1143,12 +1142,15 @@ EOF
 certificatesigningrequest.certificates.k8s.io/dev-user1 created
 ```
 
+> [참고]
+> MAC OS 환경에서는 tr 명령어가 정상적으로 동작하지 않아 CSR 생성 시 다음과 같이 `CertificateSigningRequest in version "v1" cannot be handled as a CertificateSigningRequest: illegal base64 data at input byte 0` 에러가 발생할 수 있습니다. 에러가 발생하는 경우 dev-user1.csr 파일의 base64 인코딩된 값을 CSR 매니페스트의 ${BASE64_CSR} 위치에 직접 입력해야합니다.
+
 등록된 CSR은 `Pending` 상태입니다. 이 상태는 발급 승인 또는 거부를 기다리는 상태입니다.
 
 ```
-# kubectl get csr
-NAME        AGE   REQUESTOR          CONDITION
-dev-user1   6s    system:unsecured   Pending
+$ kubectl get csr
+NAME        AGE   SIGNERNAME                            REQUESTOR   REQUESTEDDURATION   CONDITION
+dev-user1   3s    kubernetes.io/kube-apiserver-client   admin       24h                 Pending
 ```
 
 이 인증서 발급 요청에 대해 승인 처리합니다.
@@ -1159,44 +1161,44 @@ certificatesigningrequest.certificates.k8s.io/dev-user1 approved
 ```
 
 CSR을 다시 확인해보면 `Approved,Issued` 상태로 변경된 것을 확인할 수 있습니다.
+
 ```
-# kubectl get csr
-NAME        AGE    REQUESTOR          CONDITION
-dev-user1   114s   system:unsecured   Approved,Issued
+$ kubectl get csr
+NAME        AGE   SIGNERNAME                            REQUESTOR   REQUESTEDDURATION   CONDITION
+dev-user1   28s   kubernetes.io/kube-apiserver-client   admin       24h                 Approved,Issued
 ```
 
 인증서는 다음과 같이 조회할 수 있습니다. 인증서는 status의 certificate 필드의 값입니다.
 
 ```
-# kubectl get csr/dev-user1 -o yaml
-apiVersion: certificates.k8s.io/v1beta1
+$ apiVersion: certificates.k8s.io/v1
 kind: CertificateSigningRequest
 metadata:
   annotations:
     kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"certificates.k8s.io/v1beta1","kind":"CertificateSigningRequest","metadata":{"annotations":{},"name":"dev-user1"},"spec":{"groups":["system:authenticated"],"request":"LS0tLS...(이하 생략)","usages":["digital signature","key encipherment","server auth","client auth"]}}
-  creationTimestamp: "2020-12-07T06:32:53Z"
+      {"apiVersion":"certificates.k8s.io/v1","kind":"CertificateSigningRequest","metadata":{"annotations":{},"name":"dev-user1"},"spec":{"expirationSeconds":86400,"groups":["system:authenticated"],"request":"LS0t..(이하생략)","signerName":"kubernetes.io/kube-apiserver-client","usages":["client auth"]}}
+  creationTimestamp: "2023-09-15T05:53:12Z"
   name: dev-user1
-  resourceVersion: "3202"
-  selfLink: /apis/certificates.k8s.io/v1beta1/certificatesigningrequests/dev-user1
-  uid: b22477eb-0abc-4fc4-8a79-f6516751a940
+  resourceVersion: "176619"
+  uid: a5813153-40de-4725-9237-3bf684fd1db9
 spec:
+  expirationSeconds: 86400
   groups:
   - system:masters
   - system:authenticated
-  request: LS0tLS...(이하 생략)
+  request: LS0t..(이하생략)
+  signerName: kubernetes.io/kube-apiserver-client
   usages:
-  - digital signature
-  - key encipherment
-  - server auth
   - client auth
-  username: system:unsecured
+  username: admin
 status:
-  certificate: LS0tLS...(이하 생략)
+  certificate: LS0t..(이하생략)
   conditions:
-  - lastUpdateTime: "2020-12-07T06:34:43Z"
+  - lastTransitionTime: "2023-09-15T05:53:26Z"
+    lastUpdateTime: "2023-09-15T05:53:26Z"
     message: This CSR was approved by kubectl certificate approve.
     reason: KubectlApprove
+    status: "True"
     type: Approved
 ```
 
