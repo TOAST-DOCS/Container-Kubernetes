@@ -196,3 +196,13 @@ docker pull $INFRA_REGISTRY
 docker tag $INFRA_REGISTRY $TARGET_IMAGE
 docker rmi $INFRA_REGISTRY
 ```
+
+### > `pulling from host docker.pkg.github.com failed` 에러와 함께 이미지 pull이 실패합니다. 
+
+github의 패키지 레지스트리가 Docker 레지스트리에서 Container 레지스트리로 변경되었기 때문에 발생한 문제입니다. 패키지 레지스트리 이전에 관한 자세한 사항은 [Migration to Container registry from the Docker registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/migrating-to-the-container-registry-from-the-docker-registry)를 참고하세요.
+
+v1.24 이전 버전의 클러스터는 컨테이너 런타임으로 Docker를 사용하여 `docker.pkg.github.com` 레지스트리에서 이미지 pull이 가능했지만, v1.24 이상 버전의 NKS 클러스터는 컨테이너 런타임으로 cotainerd를 사용하기 때문에 더이상 `docker.pkg.github.com` 레지스트리에서 이미지 pull이 불가능합니다.
+
+
+해결 방안은 다음과 같습니다.
+이미지를 변경된 레지스트리에서 pull 할 수 있도록 secret/github-registry 및 Pod 매니페스트에 정의된 image URL의 base를 `docker.pkg.github.com`에서 `gchr.io`로 변경합니다.
