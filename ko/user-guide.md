@@ -1124,7 +1124,7 @@ $ openssl req -new -key dev-user1.key -subj "/CN=dev-user1" -out dev-user1.csr
 ```
 $ BASE64_CSR=$(cat dev-user1.csr | base64 | tr -d '\n')
 # cat <<EOF > csr.yaml -
-apiVersion: certificates.k8s.io/v1beta1
+apiVersion: certificates.k8s.io/v1
 kind: CertificateSigningRequest
 metadata:
   name: dev-user1
