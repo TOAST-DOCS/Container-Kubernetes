@@ -1123,7 +1123,7 @@ $ openssl req -new -key dev-user1.key -subj "/CN=dev-user1" -out dev-user1.csr
 
 ```
 $ BASE64_CSR=$(cat dev-user1.csr | base64 | tr -d '\n')
-# cat <<EOF > csr.yaml -
+$ cat <<EOF > csr.yaml -
 apiVersion: certificates.k8s.io/v1
 kind: CertificateSigningRequest
 metadata:
@@ -1138,7 +1138,7 @@ spec:
   - client auth
 EOF
 
-# kubectl apply -f csr.yaml
+$ kubectl apply -f csr.yaml
 certificatesigningrequest.certificates.k8s.io/dev-user1 created
 ```
 
@@ -1153,7 +1153,7 @@ dev-user1   3s    kubernetes.io/kube-apiserver-client   admin       24h         
 이 인증서 발급 요청에 대해 승인 처리합니다.
 
 ```
-# kubectl certificate approve dev-user1
+$ kubectl certificate approve dev-user1
 certificatesigningrequest.certificates.k8s.io/dev-user1 approved
 ```
 
