@@ -1079,9 +1079,6 @@ EOF
 certificatesigningrequest.certificates.k8s.io/dev-user1 created
 ```
 
-> [참고]
-> MAC OS 환경에서는 tr 명령어가 정상적으로 동작하지 않아 CSR 생성 시 다음과 같이 `CertificateSigningRequest in version "v1" cannot be handled as a CertificateSigningRequest: illegal base64 data at input byte 0` 에러가 발생할 수 있습니다. 에러가 발생하는 경우 dev-user1.csr 파일의 base64 인코딩된 값을 CSR 매니페스트의 ${BASE64_CSR} 위치에 직접 입력해야합니다.
-
 등록된 CSR은 `Pending` 상태입니다. 이 상태는 발급 승인 또는 거부를 기다리는 상태입니다.
 
 ```
