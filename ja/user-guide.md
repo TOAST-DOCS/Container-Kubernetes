@@ -3,6 +3,36 @@
 ## クラスター
 クラスターは、ユーザーのKubernetesを構成するインスタンスのグループです。
 
+### Kubernetesバージョンサポートポリシー
+
+NKSのKubernetesバージョンサポートポリシーは次のとおりです。
+
+* 最新Kubernetesバージョンをサポート
+    * NKSは最新のKubernetesバージョンを継続的に提供し、クラスタが最新のバージョンを維持できるようにします。
+    * クラスタを新しいバージョンで作成したり、既存のクラスタを新しいバージョンにアップグレードして使用できます。
+* 作成可能なバージョン
+    * クラスタとして作成可能なKubernetesバージョンは4つに維持されます。
+    * 従って、作成可能なバージョンが一つ追加されると、既存の作成可能バージョンリストから最も低いバージョンが削除されます。
+* サービスサポートバージョン
+    * サービスサポートが終了したバージョンを使用するクラスタは、NKSの新規機能動作を保証しません。
+    * NKSのクラスタのバージョンアップグレード機能でクラスタのKubernetesバージョンをアップグレードできます。
+    * サービスサポートKubernetesバージョンは5つに維持されます。
+    * 従って、作成可能なバージョンが一つ追加されると、既存のサービスサポート可能バージョンリストから最も低いバージョンが削除されます。
+
+Kubernetesバージョン別の作成可能バージョンに追加/削除する時点と、サービスサポート終了時点は以下の通りです。
+(ただし、この表は2023年9月26日基準で作成されたもので、新規作成可能バージョンのバージョン名と提供時期は弊社内部事情により変更される場合があります)
+
+| バージョン   | 作成可能バージョンに追加 | 作成可能バージョンから削除 | サービスサポート終了 |
+|:-------:|:-------------------:|:--------------------:|:---------------------:|
+| v1.22.3 | 2022. 01.           | 2023. 05.            | 2023. 08.             |
+| v1.23.3 | 2022. 03.           | 2023. 08.            | 2024. 02.(予定)       |
+| v1.24.3 | 2022. 09.           | 2024. 02.(予定)      | 2024. 05.(予定)       |
+| v1.25.4 | 2023. 01.           | 2024. 05.(予定)      | 2024. 08.(予定)       |
+| v1.26.3 | 2023. 05.           | 2024. 08.(予定)      | 2025. 02.(予定)       |
+| v1.27.3 | 2023. 08.           | 2025. 02.(予定)      | 2025. 05.(予定)       |
+| v1.28.x | 2024. 02.(予定)     | 2025. 05.(予定)      | 2025. 08.(予定)       |
+
+
 ### クラスター作成
 NHN Kubernetes Service(NKS)を使用するには、まずクラスターを作成する必要があります。
 
@@ -1094,24 +1124,24 @@ Server Version: version.Info{Major:"1", Minor:"15", GitVersion:"v1.15.7", GitCom
 Kubernetesの認証API(Certificate API)を通してKubernetes APIクライアントのためのX.509証明書(certificate)をリクエストして発行できます。 CSRリソースは証明書をリクエストして、リクエストに対して承認/拒否を決定できるようにします。詳細事項は[Certificate Signing Requests](https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/)文書を参照してください。
 
 #### CSRリクエストと発行承認例
-まず秘密鍵(private key)を作成します。証明書作成に関する詳細は[Certificates](https://kubernetes.io/docs/concepts/cluster-administration/certificates/)文書を参照してください。
+まず秘密鍵(private key)を作成します。証明書作成に関する詳細は[Certificates](https://kubernetes.io/docs/tasks/administer-cluster/certificates/)文書を参照してください。
 
 ```
-# openssl genrsa -out dev-user1.key 2048
+$ openssl genrsa -out dev-user1.key 2048
 Generating RSA private key, 2048 bit long modulus
 ...........................................................................+++++
 ..................+++++
 e is 65537 (0x010001)
 
-# openssl req -new -key dev-user1.key -subj "/CN=dev-user1" -out dev-user1.csr
+$ openssl req -new -key dev-user1.key -subj "/CN=dev-user1" -out dev-user1.csr
 ```
 
 作成した秘密鍵情報を含むCSRリソースを作成して証明書発行をリクエストします。
 
 ```
-# BASE64_CSR=$(cat dev-user1.csr | base64 | tr -d '\n')
-# cat <<EOF > csr.yaml -
-apiVersion: certificates.k8s.io/v1beta1
+$ BASE64_CSR=$(cat dev-user1.csr | base64 | tr -d '\n')
+$ cat <<EOF > csr.yaml -
+apiVersion: certificates.k8s.io/v1
 kind: CertificateSigningRequest
 metadata:
   name: dev-user1
@@ -1119,71 +1149,68 @@ spec:
   groups:
   - system:authenticated
   request: ${BASE64_CSR}
+  signerName: kubernetes.io/kube-apiserver-client
+  expirationSeconds: 86400  # one day
   usages:
-  - digital signature
-  - key encipherment
-  - server auth
   - client auth
 EOF
 
-# kubectl apply -f csr.yaml
+$ kubectl apply -f csr.yaml
 certificatesigningrequest.certificates.k8s.io/dev-user1 created
 ```
 
 登録されたCSRは`Pending`状態です。この状態は発行承認または拒否を待っている状態です。
 
 ```
-# kubectl get csr
-NAME        AGE   REQUESTOR          CONDITION
-dev-user1   6s    system:unsecured   Pending
+$ kubectl get csr
+NAME        AGE   SIGNERNAME                            REQUESTOR   REQUESTEDDURATION   CONDITION
+dev-user1   3s    kubernetes.io/kube-apiserver-client   admin       24h                 Pending
 ```
 
 この証明書発行リクエストに対して承認処理を行います。
 
 ```
-# kubectl certificate approve dev-user1
+$ kubectl certificate approve dev-user1
 certificatesigningrequest.certificates.k8s.io/dev-user1 approved
 ```
 
 CSRをもう一度確認すると`Approved,Issued`状態に変更されたことを確認できます。
 ```
-# kubectl get csr
-NAME        AGE    REQUESTOR          CONDITION
-dev-user1   114s   system:unsecured   Approved,Issued
+$ kubectl get csr
+NAME        AGE   SIGNERNAME                            REQUESTOR   REQUESTEDDURATION   CONDITION
+dev-user1   28s   kubernetes.io/kube-apiserver-client   admin       24h                 Approved,Issued
 ```
 
 証明書は次のように照会できます。証明書はstatusのcertificateフィールドの値です。
 
 ```
-# kubectl get csr/dev-user1 -o yaml
-apiVersion: certificates.k8s.io/v1beta1
+$ apiVersion: certificates.k8s.io/v1
 kind: CertificateSigningRequest
 metadata:
   annotations:
     kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"certificates.k8s.io/v1beta1","kind":"CertificateSigningRequest","metadata":{"annotations":{},"name":"dev-user1"},"spec":{"groups":["system:authenticated"],"request":"LS0tLS...(以下省略)","usages":["digital signature","key encipherment","server auth","client auth"]}}
-  creationTimestamp: "2020-12-07T06:32:53Z"
+      {"apiVersion":"certificates.k8s.io/v1","kind":"CertificateSigningRequest","metadata":{"annotations":{},"name":"dev-user1"},"spec":{"expirationSeconds":86400,"groups":["system:authenticated"],"request":"LS0t..(以下省略)","signerName":"kubernetes.io/kube-apiserver-client","usages":["client auth"]}}
+  creationTimestamp: "2023-09-15T05:53:12Z"
   name: dev-user1
-  resourceVersion: "3202"
-  selfLink: /apis/certificates.k8s.io/v1beta1/certificatesigningrequests/dev-user1
-  uid: b22477eb-0abc-4fc4-8a79-f6516751a940
+  resourceVersion: "176619"
+  uid: a5813153-40de-4725-9237-3bf684fd1db9
 spec:
+  expirationSeconds: 86400
   groups:
   - system:masters
   - system:authenticated
   request: LS0tLS...(以下省略)
+  signerName: kubernetes.io/kube-apiserver-client
   usages:
-  - digital signature
-  - key encipherment
-  - server auth
   - client auth
-  username: system:unsecured
+  username: admin
 status:
   certificate: LS0tLS...(以下省略)
   conditions:
-  - lastUpdateTime: "2020-12-07T06:34:43Z"
-    message: This CSR was approved by kubectl certificate approve.
+  - lastTransitionTime: "2023-09-15T05:53:26Z"
+    lastUpdateTime: "2023-09-15T05:53:26Z"
     reason: KubectlApprove
+    status: "True"
     type: Approved
 ```
 
