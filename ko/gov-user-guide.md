@@ -1074,7 +1074,7 @@ Server Version: version.Info{Major:"1", Minor:"15", GitVersion:"v1.15.7", GitCom
 Kubernetes의 인증 API(Certificate API)를 통해 Kubernetes API 클라이언트를 위한 X.509 인증서(certificate)를 요청하고 발급할 수 있습니다. CSR 자원은 인증서를 요청하고, 요청에 대해 승인/거부를 결정할 수 있도록 합니다. 자세한 사항은 [Certificate Signing Requests](https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/) 문서를 참고하세요.
 
 #### CSR 요청과 발급 승인 예제
-먼저 개인키(private key)를 생성합니다. 인증서 생성에 관한 자세한 내용은 [Certificates](https://kubernetes.io/docs/tasks/administer-cluster/certificates/) 문서를 참고하세요.
+먼저 개인 키(private key)를 생성합니다. 인증서 생성에 관한 자세한 내용은 [Certificates](https://kubernetes.io/docs/tasks/administer-cluster/certificates/) 문서를 참고하세요.
 
 ```
 $ openssl genrsa -out dev-user1.key 2048
@@ -1086,7 +1086,7 @@ e is 65537 (0x010001)
 $ openssl req -new -key dev-user1.key -subj "/CN=dev-user1" -out dev-user1.csr
 ```
 
-생성한 개인키 정보를 포함하는 CSR 자원을 생성해 인증서 발급을 요청합니다.
+생성한 개인 키 정보를 포함하는 CSR 자원을 생성해 인증서 발급을 요청합니다.
 
 ```
 $ BASE64_CSR=$(cat dev-user1.csr | base64 | tr -d '\n')
@@ -3263,4 +3263,4 @@ tmpfs                                                                          1
 
 > [참고]
 > nfs-csi-driver는 프로비저닝 시 NFS 스토리지 내부에 subdirectory를 생성하는 방식으로 동작합니다.
-> pod에 PV를 마운트 하는 과정에서 subdirectory만 마운트 되는 것이 아니라 NFS 스토리지 전체가 마운트 되기 때문에 애플리케이션이 프로비저닝된 크기만큼 볼륨을 사용하도록 강제할 수 없습니다.
+> 파드에 PV를 마운트하는 과정에서 subdirectory만 마운트되는 것이 아니라 NFS 스토리지 전체가 마운트되기 때문에 애플리케이션이 프로비저닝된 크기만큼 볼륨을 사용하도록 강제할 수 없습니다.
