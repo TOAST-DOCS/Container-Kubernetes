@@ -3,6 +3,36 @@
 ## 클러스터
 클러스터는 사용자의 Kubernetes를 구성하는 인스턴스들의 그룹입니다.
 
+### Kubernetes 버전 지원 정책
+
+NKS의 Kubernetes 버전 지원 정책은 다음과 같습니다.
+
+* 최신 Kubernetes 버전 지원
+    * NKS는 최신 Kubernetes 버전을 지속적으로 제공해 클러스터가 최신 버전을 유지할 수 있도록 합니다.
+    * 클러스터를 새로운 버전으로 생성하거나 기존 클러스터를 새로운 버전으로 업그레이드해 사용할 수 있습니다.
+* 생성 가능 버전
+    * 클러스터로 생성 가능한 Kubernetes 버전은 4개로 유지됩니다.
+    * 따라서 생성 가능한 버전이 하나 추가되면 기존의 생성 가능 버전 목록에서 가장 낮은 버전이 제거됩니다.
+* 서비스 지원 버전
+    * 서비스 지원이 종료된 버전을 사용하는 클러스터는 NKS의 신규 기능 동작을 보장하지 않습니다.
+    * NKS의 클러스터 버전 업그레이드 기능으로 클러스터의 Kubernetes 버전을 업그레이드할 수 있습니다.
+    * 서비스 지원 Kubernetes 버전은 5개로 유지됩니다.
+    * 따라서 생성 가능한 버전이 하나 추가되면 기존의 서비스 지원 가능 버전 목록에서 가장 낮은 버전이 제거됩니다.
+
+각 Kubernetes 버전별 생성 가능 버전에 추가/삭제하는 시점과 서비스 지원 종료 시점은 다음과 같습니다.
+(단, 이 표는 2023년 9월 26일 기준으로 작성되었으며, 신규 생성 가능 버전의 버전명과 제공 시기는 당사 내부 사정에 의해 변경될 수 있습니다)
+
+| 버전    | 생성 가능 버전에 추가 | 생성 가능 버전에서 제거 | 서비스 지원 종료 |
+|:-------:|:-------------------:|:--------------------:|:---------------------:|
+| v1.22.3 | 2022. 01.           | 2023. 05.            | 2023. 08.             |
+| v1.23.3 | 2022. 03.           | 2023. 08.            | 2024. 02.(예정)       |
+| v1.24.3 | 2022. 09.           | 2024. 02.(예정)      | 2024. 05.(예정)       |
+| v1.25.4 | 2023. 01.           | 2024. 05.(예정)      | 2024. 08.(예정)       |
+| v1.26.3 | 2023. 05.           | 2024. 08.(예정)      | 2025. 02.(예정)       |
+| v1.27.3 | 2023. 08.           | 2025. 02.(예정)      | 2025. 05.(예정)       |
+| v1.28.x | 2024. 02.(예정)     | 2025. 05.(예정)      | 2025. 08.(예정)       |
+
+
 ### 클러스터 생성
 NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해야 합니다.
 
@@ -1044,24 +1074,24 @@ Server Version: version.Info{Major:"1", Minor:"15", GitVersion:"v1.15.7", GitCom
 Kubernetes의 인증 API(Certificate API)를 통해 Kubernetes API 클라이언트를 위한 X.509 인증서(certificate)를 요청하고 발급할 수 있습니다. CSR 자원은 인증서를 요청하고, 요청에 대해 승인/거부를 결정할 수 있도록 합니다. 자세한 사항은 [Certificate Signing Requests](https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/) 문서를 참고하세요.
 
 #### CSR 요청과 발급 승인 예제
-먼저 개인키(private key)를 생성합니다. 인증서 생성에 관한 자세한 내용은 [Certificates](https://kubernetes.io/docs/concepts/cluster-administration/certificates/) 문서를 참고하세요.
+먼저 개인 키(private key)를 생성합니다. 인증서 생성에 관한 자세한 내용은 [Certificates](https://kubernetes.io/docs/tasks/administer-cluster/certificates/) 문서를 참고하세요.
 
 ```
-# openssl genrsa -out dev-user1.key 2048
+$ openssl genrsa -out dev-user1.key 2048
 Generating RSA private key, 2048 bit long modulus
 ...........................................................................+++++
 ..................+++++
 e is 65537 (0x010001)
 
-# openssl req -new -key dev-user1.key -subj "/CN=dev-user1" -out dev-user1.csr
+$ openssl req -new -key dev-user1.key -subj "/CN=dev-user1" -out dev-user1.csr
 ```
 
-생성한 개인키 정보를 포함하는 CSR 자원을 생성해 인증서 발급을 요청합니다.
+생성한 개인 키 정보를 포함하는 CSR 자원을 생성해 인증서 발급을 요청합니다.
 
 ```
-# BASE64_CSR=$(cat dev-user1.csr | base64 | tr -d '\n')
-# cat <<EOF > csr.yaml -
-apiVersion: certificates.k8s.io/v1beta1
+$ BASE64_CSR=$(cat dev-user1.csr | base64 | tr -d '\n')
+$ cat <<EOF > csr.yaml -
+apiVersion: certificates.k8s.io/v1
 kind: CertificateSigningRequest
 metadata:
   name: dev-user1
@@ -1069,71 +1099,70 @@ spec:
   groups:
   - system:authenticated
   request: ${BASE64_CSR}
+  signerName: kubernetes.io/kube-apiserver-client
+  expirationSeconds: 86400  # one day
   usages:
-  - digital signature
-  - key encipherment
-  - server auth
   - client auth
 EOF
 
-# kubectl apply -f csr.yaml
+$ kubectl apply -f csr.yaml
 certificatesigningrequest.certificates.k8s.io/dev-user1 created
 ```
 
 등록된 CSR은 `Pending` 상태입니다. 이 상태는 발급 승인 또는 거부를 기다리는 상태입니다.
 
 ```
-# kubectl get csr
-NAME        AGE   REQUESTOR          CONDITION
-dev-user1   6s    system:unsecured   Pending
+$ kubectl get csr
+NAME        AGE   SIGNERNAME                            REQUESTOR   REQUESTEDDURATION   CONDITION
+dev-user1   3s    kubernetes.io/kube-apiserver-client   admin       24h                 Pending
 ```
 
 이 인증서 발급 요청에 대해 승인 처리합니다.
 
 ```
-# kubectl certificate approve dev-user1
+$ kubectl certificate approve dev-user1
 certificatesigningrequest.certificates.k8s.io/dev-user1 approved
 ```
 
 CSR을 다시 확인해보면 `Approved,Issued` 상태로 변경된 것을 확인할 수 있습니다.
+
 ```
-# kubectl get csr
-NAME        AGE    REQUESTOR          CONDITION
-dev-user1   114s   system:unsecured   Approved,Issued
+$ kubectl get csr
+NAME        AGE   SIGNERNAME                            REQUESTOR   REQUESTEDDURATION   CONDITION
+dev-user1   28s   kubernetes.io/kube-apiserver-client   admin       24h                 Approved,Issued
 ```
 
 인증서는 다음과 같이 조회할 수 있습니다. 인증서는 status의 certificate 필드의 값입니다.
 
 ```
-# kubectl get csr/dev-user1 -o yaml
-apiVersion: certificates.k8s.io/v1beta1
+$ apiVersion: certificates.k8s.io/v1
 kind: CertificateSigningRequest
 metadata:
   annotations:
     kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"certificates.k8s.io/v1beta1","kind":"CertificateSigningRequest","metadata":{"annotations":{},"name":"dev-user1"},"spec":{"groups":["system:authenticated"],"request":"LS0tLS...(이하 생략)","usages":["digital signature","key encipherment","server auth","client auth"]}}
-  creationTimestamp: "2020-12-07T06:32:53Z"
+      {"apiVersion":"certificates.k8s.io/v1","kind":"CertificateSigningRequest","metadata":{"annotations":{},"name":"dev-user1"},"spec":{"expirationSeconds":86400,"groups":["system:authenticated"],"request":"LS0t..(이하생략)","signerName":"kubernetes.io/kube-apiserver-client","usages":["client auth"]}}
+  creationTimestamp: "2023-09-15T05:53:12Z"
   name: dev-user1
-  resourceVersion: "3202"
-  selfLink: /apis/certificates.k8s.io/v1beta1/certificatesigningrequests/dev-user1
-  uid: b22477eb-0abc-4fc4-8a79-f6516751a940
+  resourceVersion: "176619"
+  uid: a5813153-40de-4725-9237-3bf684fd1db9
 spec:
+  expirationSeconds: 86400
   groups:
   - system:masters
   - system:authenticated
-  request: LS0tLS...(이하 생략)
+  request: LS0t..(이하생략)
+  signerName: kubernetes.io/kube-apiserver-client
   usages:
-  - digital signature
-  - key encipherment
-  - server auth
   - client auth
-  username: system:unsecured
+  username: admin
 status:
-  certificate: LS0tLS...(이하 생략)
+  certificate: LS0t..(이하생략)
   conditions:
-  - lastUpdateTime: "2020-12-07T06:34:43Z"
+  - lastTransitionTime: "2023-09-15T05:53:26Z"
+    lastUpdateTime: "2023-09-15T05:53:26Z"
     message: This CSR was approved by kubectl certificate approve.
     reason: KubectlApprove
+    status: "True"
     type: Approved
 ```
 
@@ -3234,4 +3263,4 @@ tmpfs                                                                          1
 
 > [참고]
 > nfs-csi-driver는 프로비저닝 시 NFS 스토리지 내부에 subdirectory를 생성하는 방식으로 동작합니다.
-> pod에 PV를 마운트 하는 과정에서 subdirectory만 마운트 되는 것이 아니라 NFS 스토리지 전체가 마운트 되기 때문에 애플리케이션이 프로비저닝된 크기만큼 볼륨을 사용하도록 강제할 수 없습니다.
+> 파드에 PV를 마운트하는 과정에서 subdirectory만 마운트되는 것이 아니라 NFS 스토리지 전체가 마운트되기 때문에 애플리케이션이 프로비저닝된 크기만큼 볼륨을 사용하도록 강제할 수 없습니다.
