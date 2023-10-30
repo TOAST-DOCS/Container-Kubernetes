@@ -2621,6 +2621,8 @@ PV를 생성하려면 블록 스토리지의 ID가 필요합니다. **Storage > 
 
 블록 스토리지와 연결할 PV 매니페스트를 작성합니다. **spec.storageClassName**에는 스토리지 클래스 이름을 입력합니다. NHN Cloud Block Storage를 사용하려면 **spec.accessModes**는 반드시 `ReadWriteOnce`로 설정해야 합니다. **spec.presistentVolumeReclaimPolicy**는 `Delete` 또는 `Retain`으로 설정할 수 있습니다.
 
+v1.20.12 이후 버전의 클러스터는 **cinder.csi.openstack.org** 스토리지 제공자를 사용해야 합니다. 스토리지 제공자를 정의하기 위해 **spec.annotations** 하위에 `pv.kubernetes.io/provisioned-by: cinder.csi.openstack.org` 값을 지정하고, **csi** 항목 하위에 `driver: cinder.csi.openstack.org` 값을 지정합니다.
+
 > [주의]
 > Kubernetes 버전에 맞는 스토리지 제공자가 정의된 스토리지 클래스를 설정해야 합니다.
 
@@ -2629,6 +2631,8 @@ PV를 생성하려면 블록 스토리지의 ID가 필요합니다. **Storage > 
 apiVersion: v1
 kind: PersistentVolume
 metadata:
+  annotations: 
+    pv.kubernetes.io/provisioned-by: cinder.csi.openstack.org
   name: pv-static-001
 spec:
   capacity:
@@ -2638,9 +2642,10 @@ spec:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Delete
   storageClassName: sc-default
-  cinder:
+  csi:
+    driver: cinder.csi.openstack.org
     fsType: "ext3"
-    volumeID: "e6f95191-d58b-40c3-a191-9984ce7532e5"
+    volumeHandle: "e6f95191-d58b-40c3-a191-9984ce7532e5" # UUID of Block Storage
 ```
 
 PV를 생성하고 확인합니다.
