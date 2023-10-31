@@ -1534,6 +1534,20 @@ route del -net 0.0.0.0/0 dev eth1
 route add -net 0.0.0.0/0 gw 192.168.0.1 dev eth1 metric 0
 ```
 
+### kubelet 사용자 정의 아규먼트 설정 기능
+kubelet은 모든 워커 노드에서 동작하는 노드 에이전트입니다. kubelet은 커맨드라인 아규먼트를 이용해 여러 설정을 입력받습니다. NKS에서 제공하는 kubelet 사용자 정의 아규먼트 설정 기능을 이용하면 kubelet 시작 시 입력되는 아규먼트를 추가할 수 있습니다.  kubelet 사용자 정의 아규먼트는 다음과 같이 설정하고 시스템에 적용할 수 있습니다. 
+
+* 워커 노드의 `/etc/kubernetes/kubelet-user-args` 파일에 `KUBELET_USER_ARGS="사용자 정의 아규먼트"` 형식으로 사용자 정의 아규먼트를 입력합니다.
+* `systemctl daemon-reload` 명령을 수행합니다.
+* `systemctl restart kubelet` 명령을 수행합니다.
+* `systemctl status kubelet` 명령으로 kubelet이 정상 동작 중인지 확인합니다.
+
+> [주의]
+> * 이 기능은 2023년 11월 28일 이후 신규 생성된 클러스터에서만 동작합니다.
+> * 사용자 정의 아규먼트를 설정하고 싶은 워커 노드 별로 수행합니다.
+> * 올바르지 않은 형식의 사용자 정의 아규먼트 입력 시 kubelet이 정상 동작하지 않습니다.
+> * 설정된 사용자 정의 아규먼트는 시스템 재시작 시에도 그대로 적용됩니다.
+
 ## LoadBalancer 서비스
 Kubernetes 애플리케이션의 기본 실행 단위인 파드(pod)는 CNI(container network interface)로 클러스터 네트워크에 연결됩니다. 기본적으로 클러스터 외부에서 파드로는 접근할 수 없습니다. 파드의 서비스를 클러스터 외부에 공개하려면 Kubernetes의 `LoadBalancer` 서비스(Service) 객체(object)를 이용해 외부에 공개할 경로를 만들어야 합니다. LoadBalancer 서비스 객체를 만들면 클러스터 외부에 NHN Cloud Load Balancer가 생성되어 서비스 객체와 연결됩니다.
 
