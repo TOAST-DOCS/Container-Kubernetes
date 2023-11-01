@@ -1656,7 +1656,7 @@ spec:
 > 아래 기능의 설정값은 모두 문자열 형식으로 입력해야 합니다. YAML 파일 입력 형식에서 입력값 형태에 관계없이 문자열 형식으로 입력하기 위해서는 입력값을 큰따옴표(")로 감싸주면 됩니다. YAML 파일 형식에 대한 더 자세한 내용은 [Yaml Cookbook](https://yaml.org/YAML_for_ruby.html) 문서를 참조하세요.
 >
 
-### 로드 밸런서 이름 설정
+#### 로드 밸런서 이름 설정
 
 로드 밸런서의 이름을 설정할 수 있습니다.
 
@@ -2001,6 +2001,17 @@ HTTP 상태 코드는 다음과 같이 설정할 수 있습니다.
 * 최소값 1, 최대값 10입니다.
 * 설정하지 않거나 범위에서 벗어나는 값을 입력하면 기본값인 3으로 설정됩니다.
 
+#### keep-alive 타임아웃 설정
+keep-alive 타임아웃 값을 설정할 수 있습니다.
+
+* 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/keepalive-timeout입니다.
+* 리스너별 설정을 적용할 수 있습니다.
+* 초 단위로 설정합니다.
+* 최소값 0, 최대값 3600입니다.
+* 설정하지 않거나 범위에서 벗어나는 값을 입력하면 기본값인 300으로 설정됩니다.
+
+> [주의]
+> keep-alive 타임아웃 설정은 2023년 11월 30일 이후 v1.24.3 이상의 버전으로 업그레이드 됐거나 신규 생성된 클러스에서 설정 가능합니다.
 
 ## 인그레스 컨트롤러
 인그레스 컨트롤러(ingress controller)는 인그레스(Ingress) 객체에 정의된 규칙을 참조하여 클러스터 외부에서 내부 서비스로 HTTP와 HTTPS 요청을 라우팅하고 SSL/TSL 종료, 가상 호스팅 등을 제공합니다. 인그레스 컨트롤러와 인그레스에 대한 자세한 내용은 [인그레스 컨트롤러](https://kubernetes.io/ko/docs/concepts/services-networking/ingress-controllers/), [인그레스](https://kubernetes.io/ko/docs/concepts/services-networking/ingress/) 문서를 참고하세요.
