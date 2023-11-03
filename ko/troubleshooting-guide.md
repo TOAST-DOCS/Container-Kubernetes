@@ -205,11 +205,9 @@ github의 패키지 레지스트리가 Docker 레지스트리에서 Container �
 해결 방안은 다음과 같습니다.
 Pod 매니페스트에 정의된 image URL의 base를 `docker.pkg.github.com`에서 `gchr.io`로 변경합니다.
 
-### > `cannot allocate memory` 오류가 발생하며 Pod의 상태가 `FailedCreatePodContainer`로 나타납니다.
+### > `cannot allocate memory` 오류가 발생하며 파드의 상태가 `FailedCreatePodContainer`로 나타납니다.
 
-memory cgroup에 대한 kernel object accounting 기능에서 발생하는 linux kernel bug로 인한 현상입니다.(주로 커널 3.x, 4.x 버전에서 발생하며, dying memory cgroup problem 이슈로 알려져 있습니다.)
-
-본 이슈는 커널 이슈로써 근복적으로는 해결할 수 없어, 사용자가 이미지 수준에서 memory cgroup에 대한 kernel object accounting 기능을 비활성화하는 방안을 제시하고 있습니다.
+리눅스 커널의 기능 중 memory cgroup에 대한 kernel object accounting 기능의 버그로 발생하는 현상입니다. 주로 리눅스 커널 3.x, 4.x 버전에서 발생하며, dying memory cgroup problem 이슈로 알려져 있습니다. 사용자가 이미지 수준에서 memory cgroup에 대한 kernel object accounting 기능을 비활성화해 이 문제를 우회할 수 있습니다. 
 
 #### 기존에 생성된 클러스터에 해결 방안 적용
 워커 노드에 접속하여 부팅 옵션을 변경한 후 재시작합니다.
