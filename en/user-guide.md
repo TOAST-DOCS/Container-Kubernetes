@@ -3,6 +3,35 @@
 ## Cluster
 Cluster refers to a group of instances that comprise user's Kubernetes.
 
+### Kubernetes Version Support Policy
+
+NKS's Kubernetes version support policy is as follows.
+
+* Support for the latest Kubernetes version
+    * NKS continuously delivers the latest Kubernetes version to ensure that your cluster is up to date.
+    * You can create a cluster with a new version or upgrade an existing cluster to a new version.
+* Createable version
+    * The number of Kubernetes versions that allow you to create clusters remains at 4.
+    * Therefore, when a new available version is added, the oldest available version is removed from the available version list.
+* Serviceable version
+    * Clusters using end-of-service versions are not guaranteed to work with new features in NKS.
+    * You can upgrade the Kubernetes version of your cluster with the cluster version upgrade feature in NKS.
+    * The number of Kubernetes versions that can be serviced remains at five.
+    * So when a new version is added to the createable versions, the lowest version among the serviceable versions is removed.
+
+For each Kubernetes version, here's when you can expect to see additions/deletions to the createable versions and when versions are listed as end of service.
+(Note that this table is current as of September 26, 2023, and the version names of createable versions and when they are provided are subject to change due to our internal circumstances)
+
+| Version    | Add to Createable Versions | Remove from Createable Versions | End of Service Support |
+|:-------:|:-------------------:|:--------------------:|:---------------------:|
+| v1.22.3 | 2022. 01.           | 2023. 05.            | 2023. 08.             |
+| v1.23.3 | 2022. 03.           | 2023. 08.            | 2024. 02.(Scheduled)       |
+| v1.24.3 | 2022. 09.           | 2024. 02.(Scheduled)      | 2024. 05.(Scheduled)       |
+| v1.25.4 | 2023. 01.           | 2024. 05.(Scheduled)      | 2024. 08.(Scheduled)       |
+| v1.26.3 | 2023. 05.           | 2024. 08.(Scheduled)      | 2025. 02.(Scheduled)       |
+| v1.27.3 | 2023. 08.           | 2025. 02.(Scheduled)      | 2025. 05.(Scheduled)       |
+| v1.28.x | 2024. 02.(Scheduled)     | 2025. 05.(Scheduled)      | 2025. 08.(Scheduled)       |
+
 ### Creating Clusters
 To use NHN Kubernetes Service (NKS), you must create clusters first.
 
