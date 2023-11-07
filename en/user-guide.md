@@ -1203,7 +1203,7 @@ kind: CertificateSigningRequest
 metadata:
   annotations:
     kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"certificates.k8s.io/v1","kind":"CertificateSigningRequest","metadata":{"annotations":{},"name":"dev-user1"},"spec":{"expirationSeconds":86400,"groups":["system:authenticated"],"request":"LS0t..(이하생략)","signerName":"kubernetes.io/kube-apiserver-client","usages":["client auth"]}}
+      {"apiVersion":"certificates.k8s.io/v1","kind":"CertificateSigningRequest","metadata":{"annotations":{},"name":"dev-user1"},"spec":{"expirationSeconds":86400,"groups":["system:authenticated"],"request":"LS0t..(omitted)","signerName":"kubernetes.io/kube-apiserver-client","usages":["client auth"]}}
   creationTimestamp: "2023-09-15T05:53:12Z"
   name: dev-user1
   resourceVersion: "176619"
