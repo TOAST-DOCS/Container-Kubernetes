@@ -204,4 +204,4 @@ This issue is caused by the change of the package registry on github from the Do
 
 
 The workaround is as follows
-Change the base of the image URL defined in the Pod manifest `from docker.pkg.github.com` `to gchr.io`.
+Change the base of the image URL defined in the Pod manifest `from docker.pkg.github.com` to `gchr.io`.

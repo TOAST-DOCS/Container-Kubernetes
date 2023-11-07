@@ -1137,24 +1137,24 @@ Server Version: version.Info{Major:"1", Minor:"15", GitVersion:"v1.15.7", GitCom
 Using Certificate API of Kubernetes, you can request and issue the X.509 certificate for a Kubernetes API client . CSR resource lets you request certificate and decide to accept/reject the request. For more information, see the [Certificate Signing Requests](https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/) document.
 
 #### CSR Request and Issue Approval Example
-First of all, create a private key. For more information on certificate creation, see the [Certificates](https://kubernetes.io/docs/concepts/cluster-administration/certificates/) document.
+First of all, create a private key. For more information on certificate creation, see the [Certificates](https://kubernetes.io/docs/tasks/administer-cluster/certificates/) document.
 
 ```
-# openssl genrsa -out dev-user1.key 2048
+$ openssl genrsa -out dev-user1.key 2048
 Generating RSA private key, 2048 bit long modulus
 ...........................................................................+++++
 ..................+++++
 e is 65537 (0x010001)
 
-# openssl req -new -key dev-user1.key -subj "/CN=dev-user1" -out dev-user1.csr
+$ openssl req -new -key dev-user1.key -subj "/CN=dev-user1" -out dev-user1.csr
 ```
 
 Create a CSR resource that includes created private key information and request certificate issuance.
 
 ```
-# BASE64_CSR=$(cat dev-user1.csr | base64 | tr -d '\n')
-# cat <<EOF > csr.yaml -
-apiVersion: certificates.k8s.io/v1beta1
+$ BASE64_CSR=$(cat dev-user1.csr | base64 | tr -d '\n')
+$ cat <<EOF > csr.yaml -
+apiVersion: certificates.k8s.io/v1
 kind: CertificateSigningRequest
 metadata:
   name: dev-user1
@@ -1162,71 +1162,70 @@ spec:
   groups:
   - system:authenticated
   request: ${BASE64_CSR}
+signerName: kubernetes.io/kube-apiserver-client
+expirationSeconds: 86400  # one day
   usages:
-  - digital signature
-  - key encipherment
-  - server auth
   - client auth
 EOF
 
-# kubectl apply -f csr.yaml
+$ kubectl apply -f csr.yaml
 certificatesigningrequest.certificates.k8s.io/dev-user1 created
 ```
 
 The registered CSR is in `Pending` state. This state indicates waiting for issuance approval or rejection.
 
 ```
-# kubectl get csr
-NAME        AGE   REQUESTOR          CONDITION
-dev-user1   6s    system:unsecured   Pending
+$ kubectl get csr
+NAME        AGE   SIGNERNAME                            REQUESTOR   REQUESTEDDURATION   CONDITION
+dev-user1   3s    kubernetes.io/kube-apiserver-client   admin       24h                 Pending
 ```
 
 Approve this certificate issuance request.
 
 ```
-# kubectl certificate approve dev-user1
+$ kubectl certificate approve dev-user1
 certificatesigningrequest.certificates.k8s.io/dev-user1 approved
 ```
 
 If you check the CSR again, you can see that it has been changed to the `Approved,Issued` state.
+
 ```
-# kubectl get csr
-NAME        AGE    REQUESTOR          CONDITION
-dev-user1   114s   system:unsecured   Approved,Issued
+$ kubectl get csr
+NAME        AGE   SIGNERNAME                            REQUESTOR   REQUESTEDDURATION   CONDITION
+dev-user1   28s   kubernetes.io/kube-apiserver-client   admin       24h                 Approved,Issued
 ```
 
 You can look up the certificate as below. The certificate is a value for the Certificate field under Status.
 
 ```
-# kubectl get csr/dev-user1 -o yaml
-apiVersion: certificates.k8s.io/v1beta1
+$ apiVersion: certificates.k8s.io/v1
 kind: CertificateSigningRequest
 metadata:
   annotations:
     kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"certificates.k8s.io/v1beta1","kind":"CertificateSigningRequest","metadata":{"annotations":{},"name":"dev-user1"},"spec":{"groups":["system:authenticated"],"request":"LS0tLS...((omitted))","usages":["digital signature","key encipherment","server auth","client auth"]}}
-  creationTimestamp: "2020-12-07T06:32:53Z"
+      {"apiVersion":"certificates.k8s.io/v1","kind":"CertificateSigningRequest","metadata":{"annotations":{},"name":"dev-user1"},"spec":{"expirationSeconds":86400,"groups":["system:authenticated"],"request":"LS0t..(이하생략)","signerName":"kubernetes.io/kube-apiserver-client","usages":["client auth"]}}
+  creationTimestamp: "2023-09-15T05:53:12Z"
   name: dev-user1
-  resourceVersion: "3202"
-  selfLink: /apis/certificates.k8s.io/v1beta1/certificatesigningrequests/dev-user1
-  uid: b22477eb-0abc-4fc4-8a79-f6516751a940
+  resourceVersion: "176619"
+  uid: a5813153-40de-4725-9237-3bf684fd1db9
 spec:
+  expirationSeconds: 86400
   groups:
   - system:masters
   - system:authenticated
-  request: LS0tLS...((omitted))
+  request: LS0t..(omitted)
+  signerName: kubernetes.io/kube-apiserver-client
   usages:
-  - digital signature
-  - key encipherment
-  - server auth
   - client auth
-  username: system:unsecured
+  username: admin
 status:
-  certificate: LS0tLS...((omitted))
+  certificate: LS0t..(omitted)
   conditions:
-  - lastUpdateTime: "2020-12-07T06:34:43Z"
+  - lastTransitionTime: "2023-09-15T05:53:26Z"
+    lastUpdateTime: "2023-09-15T05:53:26Z"
     message: This CSR was approved by kubectl certificate approve.
     reason: KubectlApprove
+    status: "True"
     type: Approved
 ```
 
