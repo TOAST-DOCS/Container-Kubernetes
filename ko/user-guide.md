@@ -1962,7 +1962,7 @@ spec:
     * TCP: 미설정 시 기본값입니다.
     * HTTP
     * HTTPS
-    * TERMINATED_HTTPS: TERMINATED_HTTPS로 설정합니다. SSL 버전, 인증서, 개인키 정보를 추가 설정해야 합니다.
+    * TERMINATED_HTTPS: TERMINATED_HTTPS로 설정합니다. SSL 버전, 인증서, 개인 키 정보를 추가 설정해야 합니다.
 
 > [주의]
 > 리스너 프로토콜 설정은 서비스 객체를 변경해도 로드 밸런서에 적용되지 않습니다. 
@@ -1991,13 +1991,13 @@ SSL 버전은 다음과 같이 설정할 수 있습니다.
 * 리스너별 설정을 적용할 수 있습니다.
 * 시작줄 및 끝줄을 포함해야 합니다.
 
-개인키 정보는 다음과 같이 설정할 수 있습니다.
+개인 키 정보는 다음과 같이 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/listener-terminated-https-key입니다.
 * 리스너별 설정을 적용할 수 있습니다.
 * 시작줄 및 끝줄을 포함해야 합니다.
 
-다음은 리스너 프로토콜을 TERMINATED_HTTPS로 설정할 때의 매니페스트 예제입니다. 인증서 정보와 개인키 정보는 일부 생략되어 있습니다.
+다음은 리스너 프로토콜을 TERMINATED_HTTPS로 설정할 때의 매니페스트 예제입니다. 인증서 정보와 개인 키 정보는 일부 생략되어 있습니다.
 ```yaml
 metadata:
   name: echosvr-svc
