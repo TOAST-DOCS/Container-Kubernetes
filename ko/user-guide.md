@@ -3432,8 +3432,39 @@ tmpfs                                                                          1
 ### NHN Cloud 암호화 블록 스토리지 서비스 연동
 NHN Cloud에서 제공하는 암호화된 블록 스토리지를 PV로 활용할 수 있습니다. NHN Cloud 암호화 블록 스토리지에 대한 자세한 내용은 [암호화 블록 스토리지](/Storage/Block%20Storage/ko/console-guide/#_2)를 참고하세요.
 
+> [참고]
+> 암호화 블록 스토리지 서비스 연동 기능은 v1.24.3 이상 버전의 클러스터에서 사용 가능합니다. <br>
+> 11월 28일 이후 신규 생성된 클러스터는 기본적으로 암호화 블록 스토리지 연동 기능이 내장되어 있습니다. <br>
+> 11월 28일 이전에 생성된 클러스터는 v1.24.3 이상의 버전으로 업그레이드 하거나 cinder-csi-driver의 컨테이너 이미지를 최신 이미지로 교체하여 암호화 블록 스토리지 연동 기능 사용이 가능합니다.
+
 > [주의]
-> 암호화 블록 스토리지 연동 기능은 11월 28일 이후 v1.24.3 이상의 버전으로 업그레이드 됐거나 신규 생성된 클러스터에서 사용 가능합니다.
+> v1.24.3 이전 버전의 클러스터를 업그레이드 하지 않고 cinder-csi-driver의 컨테이너 이미지만 교체하여 사용할 시 오동작을 초래할 수 있습니다.
+
+#### 기존 클러스터에서 암호화 블록 스토리지 서비스 연동 기능 사용
+클러스터에 배포된 cinder-csi-driver의 컨테이너 이미지를 암호화 블록 스토리지 연동 기능이 추가된 최신 이미지로 교체합니다. 
+
+| 리전 | 인터넷 연결 | cinder-csi-plugin 이미지 |
+| --- | --- | --- |
+| 한국(판교) 리전 | O | dfe965c3-kr1-registry.container.nhncloud.com/nks_container/cinder-csi-plugin:v1.27.101 |
+| | X | private-dfe965c3-kr1-registry.container.nhncloud.com/nks_container/cinder-csi-plugin:v1.27.101 |
+| 한국(평촌) 리전 | O | 6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/cinder-csi-plugin:v1.27.101 |
+|  | X | private-6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/cinder-csi-plugin:v1.27.101 |
+
+1. container_image에 올바른 cinder-csi-plugin 이미지 값을 입력합니다.
+    ```
+    $ container_image={cinder-csi-plugin 이미지}
+    ```
+
+2. 컨테이너 이미지를 교체합니다.
+    ```
+    $ kubectl -n kube-system patch statefulset csi-cinder-controllerplugin -p "{\"spec\": {\"template\": {\"spec\": {\"containers\": [{\"name\": \"cinder-csi-plugin\", \"image\": \"${container_image}\"}]}}}}"
+
+    $ kubectl -n kube-system patch daemonset csi-cinder-nodeplugin -p "{\"spec\": {\"template\": {\"spec\": {\"containers\": [{\"name\": \"cinder-csi-plugin\", \"image\": \"${container_image}\"}]}}}}"
+    ```
+
+> [참고]
+> cinder-csi-plugin 컨테이너 이미지는 사내 NCR 레지스트리에서 관리되고 있습니다. 폐쇄망 환경에 구성된 클러스터는 인터넷에 연결되어 있지 않기 때문에 이미지를 정상적으로 받아오기 위해서는 Private URI를 사용하기 위한 환경 구성이 필요합니다. Private URI 사용법에 대한 자세한 내용은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/user-guide/#private-uri)를 참고하세요.
+
 
 #### 정적 프로비저닝
 PV를 생성하려면 암호화 블록 스토리지의 ID가 필요합니다. Storage > Block Storage 서비스 페이지의 블록 스토리지 목록에서 사용할 블록 스토리지를 선택합니다. 하단 정보 탭의 블록 스토리지 이름 항목에서 ID를 확인할 수 있습니다.
