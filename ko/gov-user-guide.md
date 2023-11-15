@@ -1008,7 +1008,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 
 ### 커스텀 이미지를 워커 이미지로 활용
 
-사용자의 커스텀 이미지를 기반으로 한 워커 노드 그룹을 생성할 수 있습니다. 커스텀 이미지가 워커 노드 이미지로 활용될 수 있도록 NHN Cloud Image Builder 서비스에서 추가적인 작업(NKS 워커 노드화)이 필요합니다. Image Builder 서비스에서 NHN Kubernetes Service(NKS) 워커 노드 애플리케이션으로 이미지 템플릿을 생성하여 커스텀 워커 노드 이미지를 생성할 수 있습니다. Image Builder 서비스에 대한 자세한 내용은 [Image Builder 사용자 가이드](/Compute/Image%20Builder/ko/console-guide/#_1)를 참고하세요.
+사용자의 커스텀 이미지를 기반으로 한 워커 노드 그룹을 생성할 수 있습니다. 커스텀 이미지가 워커 노드 이미지로 활용될 수 있도록 NHN Cloud Image Builder 서비스에서 추가적인 작업(NKS 워커 노드화)이 필요합니다. Image Builder 서비스에서 NHN Kubernetes Service(NKS) 워커 노드 애플리케이션으로 이미지 템플릿을 생성하여 커스텀 워커 노드 이미지를 생성할 수 있습니다. Image Builder 서비스에 대한 자세한 내용은 [Image Builder 사용자 가이드](/Compute/Image%20Builder/ko/console-guide-gov/#_1)를 참고하세요.
 
 > [주의]
 > NKS 워커 노드화 작업에는 패키지 설치 및 설정 변경 등이 포함되어 있어 정상적으로 동작하지 않는 이미지로 작업을 진행하는 경우 실패할 수 있습니다.
