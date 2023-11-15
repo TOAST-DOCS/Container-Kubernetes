@@ -3435,22 +3435,22 @@ NHN Cloud에서 제공하는 암호화된 블록 스토리지를 PV로 활용할
 > [참고]
 > 암호화 블록 스토리지 서비스 연동 기능은 v1.24.3 이상 버전의 클러스터에서 사용 가능합니다.
 > 2023년 11월 28일 이후 신규 생성된 클러스터는 기본적으로 암호화 블록 스토리지 연동 기능이 내장되어 있습니다.
-> 2023년 11월 28일 이전에 생성된 클러스터는 v1.24.3 이상의 버전으로 업그레이드 하거나 cinder-csi-driver의 컨테이너 이미지를 최신 이미지로 교체하여 암호화 블록 스토리지 연동 기능 사용이 가능합니다.
+> 2023년 11월 28일 이전에 생성된 클러스터는 v1.24.3 이상의 버전으로 업그레이드 하거나 csi-cinder-controllerplugin 스테이트풀셋과 csi-cinder-nodeplugin 데몬셋의 cinder-csi-plugin 이미지를 최신 버전으로 교체하여 암호화 블록 스토리지 연동 기능 사용이 가능합니다.
 
 > [주의]
-> v1.24.3 이전 버전의 클러스터를 업그레이드 하지 않고 cinder-csi-driver의 컨테이너 이미지만 교체하여 사용할 시 오동작을 초래할 수 있습니다.
+> v1.24.3 이전 버전의 클러스터를 업그레이드 하지 않고 cinder-csi-plugin 컨테이너 이미지만 교체하여 사용하는 경우 오동작을 초래할 수 있습니다.
 
-#### 2023년 11월 28일 이전에 생성된 클러스터에서 암호화 블록 스토리지 연동 기능 사용
-아래 커맨드를 실행하여 2023년 11월 28일 이전에 생성된 클러스터인지 확인할 수 있습니다.
-조회되는 cinder-csi-plugin 이미지의 태그가 v1.27.101 이상인 경우 2023년 11월 28일 이후에 생성 및 업그레이드된 클러스터로 컨테이너 이미지 교체가 불필요합니다.
+#### 암호화 블록 스토리지 연동을 위한 cinder-csi-plugin 이미지 업데이트
+아래 커맨드를 실행하여 현재 클러스터에 배포된 cinder-csi-plugin 이미지의 태그를 확인할 수 있습니다.
 
 ```
-$ kubectl -n kube-system get statefulset csi-cinder-controllerplugin -o=jsonpath="{$.spec.template.spec.containers[-1].image}"
+$ kubectl -n kube-system get statefulset csi-cinder-controllerplugin -o=jsonpath="{$.spec.template.spec.containers[?(@.name=='cinder-csi-plugin')].image}"
 
 > registry.k8s.io/provider-os/cinder-csi-plugin:v1.27.101
 ```
 
-cinder-csi-driver의 컨테이너 이미지를 암호화 블록 스토리지 연동 기능이 추가된 최신 이미지로 교체합니다.
+cinder-csi-plugin 이미지의 태그가 v1.27.101 이상인 경우 아무런 조치 없이 암호화 블록 스토리지를 연동할 수 있습니다.
+cinder-csi-plugin 이미지의 태그가 v1.27.101 미만인 경우 아래의 과정을 통해 cinder-csi-plugin의 이미지를 업데이트한 후 암호화 블록 스토리지를 연동할 수 있습니다.
 
 | 리전 | 인터넷 연결 | cinder-csi-plugin 이미지 |
 | --- | --- | --- |
