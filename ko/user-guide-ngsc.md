@@ -1449,6 +1449,20 @@ route del -net 0.0.0.0/0 dev eth1
 route add -net 0.0.0.0/0 gw 192.168.0.1 dev eth1 metric 0
 ```
 
+### kubelet 사용자 정의 아규먼트 설정 기능
+kubelet은 모든 워커 노드에서 동작하는 노드 에이전트입니다. kubelet은 커맨드라인 아규먼트를 이용해 여러 설정을 입력 받습니다. NKS에서 제공하는 kubelet 사용자 정의 아규먼트 설정 기능을 이용하면 kubelet 시작 시 입력되는 아규먼트를 추가할 수 있습니다. kubelet 사용자 정의 아규먼트는 다음과 같이 설정하고 시스템에 적용할 수 있습니다.
+
+* 워커 노드의 `/etc/kubernetes/kubelet-user-args` 파일에 `KUBELET_USER_ARGS="사용자 정의 아규먼트"` 형식으로 사용자 정의 아규먼트를 입력합니다.
+* `systemctl daemon-reload` 명령을 수행합니다.
+* `systemctl restart kubelet` 명령을 수행합니다.
+* `systemctl status kubelet` 명령으로 kubelet이 정상 동작 중인지 확인합니다.
+
+> [주의]
+> * 이 기능은 2023년 12월 5일 이후 신규 생성된 클러스터에서만 동작합니다.
+> * 사용자 정의 아규먼트를 설정할 워커 노드별로 수행합니다.
+> * 올바르지 않은 형식의 사용자 정의 아규먼트 입력 시 kubelet이 정상 동작하지 않습니다.
+> * 설정된 사용자 정의 아규먼트는 시스템 재시작 시에도 그대로 적용됩니다.
+
 ## LoadBalancer 서비스
 Kubernetes 애플리케이션의 기본 실행 단위인 파드(pod)는 CNI(container network interface)로 클러스터 네트워크에 연결됩니다. 기본적으로 클러스터 외부에서 파드로는 접근할 수 없습니다. 파드의 서비스를 클러스터 외부에 공개하려면 Kubernetes의 `LoadBalancer` 서비스(Service) 객체(object)를 이용해 외부에 공개할 경로를 만들어야 합니다. LoadBalancer 서비스 객체를 만들면 클러스터 외부에 NHN Cloud Load Balancer가 생성되어 서비스 객체와 연결됩니다.
 
@@ -1583,7 +1597,28 @@ Commercial support is available at
 ```
 
 ### 로드 밸런서 상세 옵션 설정
-Kubernetes의 서비스 객체를 정의할 때 로드 밸런서의 여러 가지 옵션을 설정할 수 있습니다.
+Kubernetes의 서비스 객체를 정의할 때 로드 밸런서의 여러 가지 옵션을 설정할 수 있습니다. 설정 가능한 항목은 아래와 같습니다.
+
+* 전역 설정과 리스너별 설정
+* 리스너별 설정 형식
+* 로드 밸런서 이름 설정
+* keep-alive 타임아웃 설정
+* 로드 밸런서 타입 설정
+* 세션 지속성 설정
+* 로드 밸런서 삭제 시 플로팅 IP 주소 보존 여부 설정
+* 로드 밸런서 IP 설정
+* 플로팅 IP 사용 여부 설정
+* VPC 설정
+* 서브넷 설정
+* 멤버 서브넷 설정
+* 리스너 연결 제한 설정
+* 리스너 프로토콜 설정
+* 리스너 프록시 프로토콜(Proxy Protocol) 설정
+* 로드 밸런싱 방식 설정
+* 상태 확인 프로토콜 설정
+* 상태 확인 주기 설정
+* 상태 확인 최대 응답 시간 설정
+* 상태 확인 최대 재시도 횟수 설정
 
 #### 전역 설정과 리스너별 설정
 설정 항목별로 전역 설정과 리스너별 설정이 가능합니다. 전역 설정과 리스너별 설정 모두 없는 경우 설정별 기본값을 사용합니다.
@@ -1642,7 +1677,7 @@ spec:
 > 아래 기능의 설정값은 모두 문자열 형식으로 입력해야 합니다. YAML 파일 입력 형식에서 입력값 형태에 관계없이 문자열 형식으로 입력하기 위해서는 입력값을 큰따옴표(")로 감싸주면 됩니다. YAML 파일 형식에 대한 더 자세한 내용은 [Yaml Cookbook](https://yaml.org/YAML_for_ruby.html) 문서를 참조하세요.
 >
 
-### 로드 밸런서 이름 설정
+#### 로드 밸런서 이름 설정
 
 로드 밸런서의 이름을 설정할 수 있습니다.
 
@@ -1768,7 +1803,7 @@ spec:
 * 설정하지 않으면 클러스터 생성 시 설정한 VPC로 설정합니다.
 
 #### 서브넷 설정
-로드 밸런서 생성 시 로드 밸런서가 연결될 서브넷을 설정할 수 있습니다.
+로드 밸런서 생성 시 로드 밸런서가 연결될 서브넷을 설정할 수 있습니다. 설정된 서브넷에 로드 밸런서의 사설 IP가 연결됩니다. 멤버 서브넷 설정이 없는 경우 이 서브넷에 연결된 워커 노드가 로드 밸런서 멤버로 추가됩니다.
 
 * 설정 위치는 .metadata.annotaions 하위의 loadbalancer.openstack.org/subnet-id입니다.
 * 설정하지 않으면 클러스터 생성 시 설정한 서브넷으로 설정합니다.
@@ -1794,6 +1829,40 @@ spec:
     app: nginx
   type: LoadBalancer
 ```
+
+#### 멤버 서브넷 설정
+로드 밸런서 생성 시 로드 밸런서 멤버가 연결될 서브넷을 설정할 수 있습니다. 이 서브넷에 연결된 워커 노드가 로드 밸런서 멤버로 추가됩니다.
+
+* 설정 위치는 .metadata.annotaions 하위의 loadbalancer.nhncloud/member-subnet-id입니다.
+* 설정하지 않으면 로드 밸런서의 서브넷 설정값이 적용됩니다.
+* 멤버 서브넷은 **반드시 로드 밸런서 서브넷과 동일한 VPC에 포함**되어 있어야 합니다.
+* 2개 이상의 멤버 서브넷을 설정하기 위해서는 콤마로 구분된 목록으로 입력합니다.
+
+아래는 로드 밸런서에 VPC, 서브넷, 멤버 서브넷을 설정하는 매니페스트 예제입니다.
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc-vpc-subnet
+  labels:
+     app: nginx
+  annotations:
+    loadbalancer.openstack.org/network-id: "49a5820b-d941-41e5-bfc3-0fd31f2f6773"
+    loadbalancer.openstack.org/subnet-id: "38794fd7-fd2e-4f34-9c89-6dd3fd12f548"
+    loadbalancer.nhncloud/member-subnet-id: "c3548a5e-b73c-48ce-9dc4-4d4c484108bf"
+spec:
+  ports:
+  - port: 8080
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: nginx
+  type: LoadBalancer
+```
+
+> [주의]
+> 멤버 서브넷은 2023년 12월 5일 이후 v1.24.3 이상의 버전으로 업그레이드됐거나 신규 생성된 클러스터에서 설정 가능합니다.
 
 #### 리스너 연결 제한 설정
 리스너의 연결 제한을 설정할 수 있습니다.
@@ -1953,6 +2022,17 @@ HTTP 상태 코드는 다음과 같이 설정할 수 있습니다.
 * 최소값 1, 최대값 10입니다.
 * 설정하지 않거나 범위에서 벗어나는 값을 입력하면 기본값인 3으로 설정됩니다.
 
+#### keep-alive 타임아웃 설정
+keep-alive 타임아웃 값을 설정할 수 있습니다.
+
+* 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/keepalive-timeout입니다.
+* 리스너별 설정을 적용할 수 있습니다.
+* 초 단위로 설정합니다.
+* 최소값 0, 최대값 3600입니다.
+* 설정하지 않거나 범위에서 벗어나는 값을 입력하면 기본값인 300으로 설정됩니다.
+
+> [주의]
+> keep-alive 타임아웃은 2023년 12월 5일 이후 v1.24.3 이상의 버전으로 업그레이드됐거나 신규 생성된 클러스터에서 설정 가능합니다.
 
 ## 인그레스 컨트롤러
 인그레스 컨트롤러(ingress controller)는 인그레스(Ingress) 객체에 정의된 규칙을 참조하여 클러스터 외부에서 내부 서비스로 HTTP와 HTTPS 요청을 라우팅하고 SSL/TSL 종료, 가상 호스팅 등을 제공합니다. 인그레스 컨트롤러와 인그레스에 대한 자세한 내용은 [인그레스 컨트롤러](https://kubernetes.io/ko/docs/concepts/services-networking/ingress-controllers/), [인그레스](https://kubernetes.io/ko/docs/concepts/services-networking/ingress/) 문서를 참고하세요.
@@ -2525,6 +2605,8 @@ PV를 생성하려면 블록 스토리지의 ID가 필요합니다. **Storage > 
 
 블록 스토리지와 연결할 PV 매니페스트를 작성합니다. **spec.storageClassName**에는 스토리지 클래스 이름을 입력합니다. NHN Cloud Block Storage를 사용하려면 **spec.accessModes**는 반드시 `ReadWriteOnce`로 설정해야 합니다. **spec.presistentVolumeReclaimPolicy**는 `Delete` 또는 `Retain`으로 설정할 수 있습니다.
 
+v1.20.12 이후 버전의 클러스터는 **cinder.csi.openstack.org** 스토리지 제공자를 사용해야 합니다. 스토리지 제공자를 정의하기 위해 **spec.annotations** 하위에 `pv.kubernetes.io/provisioned-by: cinder.csi.openstack.org` 값을 지정하고, **csi** 항목 하위에 `driver: cinder.csi.openstack.org` 값을 지정합니다.
+
 > [주의]
 > Kubernetes 버전에 맞는 스토리지 제공자가 정의된 스토리지 클래스를 설정해야 합니다.
 
@@ -2533,6 +2615,8 @@ PV를 생성하려면 블록 스토리지의 ID가 필요합니다. **Storage > 
 apiVersion: v1
 kind: PersistentVolume
 metadata:
+  annotations: 
+    pv.kubernetes.io/provisioned-by: cinder.csi.openstack.org
   name: pv-static-001
 spec:
   capacity:
@@ -2542,9 +2626,10 @@ spec:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Delete
   storageClassName: sc-default
-  cinder:
+  csi:
+    driver: cinder.csi.openstack.org
     fsType: "ext3"
-    volumeID: "e6f95191-d58b-40c3-a191-9984ce7532e5"
+    volumeHandle: "e6f95191-d58b-40c3-a191-9984ce7532e5" # UUID of Block Storage
 ```
 
 PV를 생성하고 확인합니다.
