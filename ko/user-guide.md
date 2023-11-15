@@ -2996,7 +2996,7 @@ NHN Cloud NAS 서비스를 사용하기 위해 클러스터에 csi-driver-nfs �
 csi-driver-nfs는 NFS 스토리지에 새 하위 디렉터리를 생성하는 방식으로 동작하는 NFS 스토리지 프로비저닝을 지원하는 드라이버입니다.
 csi-driver-nfs는 스토리지 클래스에 NFS 스토리지 정보를 제공하는 방식으로 동작하여 사용자가 관리해야 하는 대상을 줄여 줍니다.
 
-nfs-csi-driver를 사용하여 여러 개의 PV를 구성하는 경우 nfs-csi-driver가 NFS 스토리지 정보를 StorageClass에 등록하여 NFS-Provisoner pod를 구성할 필요가 없습니다.
+csi-driver-nfs를 사용하여 여러 개의 PV를 구성하는 경우 csi-driver-nfs가 NFS 스토리지 정보를 StorageClass에 등록하여 NFS-Provisoner pod를 구성할 필요가 없습니다.
 <br>
 ![nfs-csi-driver-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nfs-csi-driver-02.png)
 
@@ -3426,7 +3426,7 @@ tmpfs                                                                          1
 ```
 
 > [참고]
-> nfs-csi-driver는 프로비저닝 시 NFS 스토리지 내부에 subdirectory를 생성하는 방식으로 동작합니다.
+> csi-driver-nfs는 프로비저닝 시 NFS 스토리지 내부에 subdirectory를 생성하는 방식으로 동작합니다.
 > 파드에 PV를 마운트하는 과정에서 subdirectory만 마운트되는 것이 아니라 NFS 스토리지 전체가 마운트되기 때문에 애플리케이션이 프로비저닝된 크기만큼 볼륨을 사용하도록 강제할 수 없습니다.
 
 ### NHN Cloud 암호화 블록 스토리지 연동
