@@ -1006,6 +1006,61 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 * m2, c2, r2, t2, x1, g2 타입의 인스턴스는 u2 타입으로 변경할 수 없습니다.
 * u2 타입의 인스턴스는 생성 이후에 타입을 변경할 수 없습니다. 같은 u2 타입으로의 변경도 불가합니다.
 
+### 커스텀 이미지를 워커 이미지로 활용
+
+사용자의 커스텀 이미지를 기반으로 한 워커 노드 그룹을 생성할 수 있습니다. 커스텀 이미지가 워커 노드 이미지로 활용될 수 있도록 NHN Cloud Image Builder 서비스에서 추가적인 작업(NKS 워커 노드화)이 필요합니다. Image Builder 서비스에서 NHN Kubernetes Service(NKS) 워커 노드 애플리케이션으로 이미지 템플릿을 생성하여 커스텀 워커 노드 이미지를 생성할 수 있습니다. Image Builder 서비스에 대한 자세한 내용은 [Image Builder 사용자 가이드](/Compute/Image%20Builder/ko/console-guide/#_1)를 참고하세요.
+
+> [주의]
+> NKS 워커 노드화 작업에는 패키지 설치 및 설정 변경 등이 포함되어 있어 정상적으로 동작하지 않는 이미지로 작업을 진행하는 경우 실패할 수 있습니다.
+> Image Builder 서비스 사용에 대해 과금될 수 있습니다.
+
+#### 제약 사항
+NHN Cloud 인스턴스를 기반으로 생성한 커스텀 이미지만 워커 노드 이미지로 사용할 수 있습니다. 해당 기능은 특정 인스턴스 이미지에 대해서만 제공됩니다. 커스텀 이미지를 생성하는 기반 인스턴스의 이미지에 맞춰 올바른 버전의 워커 노드화 애플리케이션을 선택해야 합니다. 인스턴스 이미지별 선택해야 하는 애플리케이션 버전 정보는 아래 표를 참고하세요.
+
+| OS | 이미지 | 애플리케이션 버전 |
+| --- | --- | --- |
+| CentOS | CentOS 7.9 (2022.11.22)  | 1.0 |
+|  | CentOS 7.9 (2023.05.25)  | 1.1 |
+|  | CentOS 7.9 (2023.08.22)  | 1.2 |
+|  | CentOS 7.9 (2023.11.21)  | 1.2 |
+| Rocky | Rocky Linux 8.6 (2023.03.21)  | 1.0 |
+|  | Rocky Linux 8.7 (2023.05.25)  | 1.1 |
+|  | Rocky Linux 8.8 (2023.08.22)  | 1.2 |
+|  | Rocky Linux 8.8 (2023.11.21)  | 1.3 |
+| Ubuntu | Ubuntu Server 18.04.6 LTS (2023.03.21)  | 1.0 |
+|  | Ubuntu Server 20.04.6 LTS (2023.05.25)  | 1.1 |
+|  | Ubuntu Server 20.04.6 LTS (2023.08.22)  | 1.2 |
+|  | Ubuntu Server 20.04.6 LTS (2023.11.21)  | 1.3 |
+|  | Ubuntu Server 22.04.3 LTS (2023.11.21)  | 1.3 |
+| Debian | Debian 11.6 Bullseye (2023.03.21)  | 1.0 |
+|  | Debian 11.6 Bullseye (2023.05.25)  | 1.1 |
+|  | Debian 11.7 Bullseye (2023.08.22)  | 1.2 |
+|  | Debian 11.8 Bullseye (2023.11.21)  | 1.3 |
+
+
+> [참고]
+> 커스텀 이미지를 워커 노드 이미지로 변환하는 과정에서 선택한 옵션에 따라 GPU 드라이버가 설치됩니다.
+> 따라서 커스텀 GPU 워커 노드 이미지를 생성하는 경우에도 커스텀 이미지 생성을 GPU 인스턴스로 할 필요가 없습니다.
+#### 진행 과정
+
+커스텀 이미지를 워커 노드 이미지로 활용하기 위해서 Image Builder 서비스에서 아래와 같은 과정을 수행합니다.
+
+1. **이미지 템플릿을 생성** 버튼을 클릭합니다.
+2. 애플리케이션을 선택한 후 **이미지 템플릿 이름**, **OS**, **최소 블록 스토리지(GB)**, **사용자 스크립트**, **설명**을 작성합니다.
+    * GPU Flavor를 사용하지 않는 워커 노드 그룹인 경우 NHN Kubernetes Service(NKS) Worker Node 애플리케이션을 선택합니다.
+    * GPU Flavor를 사용하는 워커 노드 그룹인 경우 NHN Kubernetes Service(NKS) Worker Node(GPU) 애플리케이션을 선택합니다.
+3. **확인** 버튼을 눌러 이미지 템플릿을 생성합니다.
+4. 생성된 이미지 템플릿을 선택한 후 **이미지 빌드**를 선택합니다.
+5. **이미지 빌드** 화면에서 **개인 이미지** 탭 선택 후 NKS 워커 노드화를 진행할 커스텀 이미지를 선택합니다.
+6. **확인** 버튼을 누르면 NKS 워커 노드화가 진행된 후 새로운 이미지를 생성합니다.
+7. **클러스터 생성 화면** 또는 **노드 그룹 생성** 화면에서 생성된 커스텀 이미지를 선택합니다.
+
+![nkscustom_image_1.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nkscustom_image_1.png)
+
+![nkscustom_image_2.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nkscustom_image_2.png)
+
+![nkscustom_image_3.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nkscustom_image_3.png)
+
 ## 클러스터 관리
 원격의 호스트에서 클러스터를 조작하고 관리하려면 Kubernetes가 제공하는 명령줄 도구(CLI)인 `kubectl`이 필요합니다.
 
