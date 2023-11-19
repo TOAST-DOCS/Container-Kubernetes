@@ -2870,7 +2870,7 @@ spec:
 NHN Cloud에서 제공하는 NAS 스토리지를 PV로 활용할 수 있습니다. NAS 서비스를 사용하기 위해서는 v1.20 이후 버전의 클러스터를 사용해야 합니다. NHN Cloud NAS 사용에 대한 자세한 내용은 [NAS 콘솔 사용 가이드](/Storage/NAS%20(online)/ko/console-guide-gov)를 참고하세요.
 
 > [참고]
-> NHN Cloud NAS 서비스는 현재(2023. 08.) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS%20(online)/ko/overview-gov)를 참고하세요.
+> NHN Cloud NAS 서비스는 현재(2023. 11.) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS%20(online)/ko/overview-gov)를 참고하세요.
 
 #### 워커 노드에 NFS 패키지 설치 및 rpcbind 서비스 실행
 NAS 스토리지를 사용하려면 워커 노드에 NFS 패키지를 설치하고, rpcbind 서비스를 실행해야 합니다. 워커 노드에 접속한 뒤 아래 명령어를 실행해 NFS 패키지를 설치합니다.
@@ -3145,9 +3145,9 @@ spec:
           - name: onas-dynamic
             mountPath: "/tmp/nfs"
       volumes:
-        - name: onas
+        - name: onas-dynamic
           persistentVolumeClaim:
-            claimName: pvc-onas
+            claimName: pvc-onas-dynamic
 ```
 
 파드를 생성하고 NAS 스토리지가 마운트 되어 있는지 확인합니다.
