@@ -200,3 +200,42 @@ githubのパッケージレジストリがDockerレジストリからContainer�
 
 解決方法は次のとおりです。
 Podマニフェストに定義されたimage URLのbaseを`docker.pkg.github.com`から`gchr.io`に変更します。
+
+### > `cannot allocate memory`エラーが発生し、Podの状態が`FailedCreatePodContainer`と表示されます。
+
+Linuxカーネルの機能の中でmemory cgroupに対するkernel object accounting機能のバグで発生する現象です。主にLinuxカーネル3.x, 4.xバージョンで発生し、dying memory cgroup problem問題として知られています。ユーザーがイメージレベルでmemory cgroupに対するkernel object accounting機能を無効にしてこの問題を回避できます。
+
+#### 作成済みのクラスタに解決策を適用
+ワーカーノードに接続して起動オプションを変更した後、再起動します。
+
+1. `/etc/default/grub`ファイルを開き、`GRUB_CMDLINE_LINUX`の既存値に`cgroup.memory=nokmem`を追加します。
+
+```diff
+# vim /etc/default/grub
+- GRUB_CMDLINE_LINUX="..."
++ GRUB_CMDLINE_LINUX="... cgroup.memory=nokmem"
+```
+
+2. 設定事項を反映します。
+```
+$ grub2-mkconfig -o /boot/grub2/grub.cfg
+```
+
+3. ワーカーノードを再起動します。
+```
+$ reboot
+```
+
+この問題は常に発生するわけではなく、ユーザーのアプリケーション特性によって発生する可能性があります。もし問題発生が懸念される場合、NKSのカスタムイメージ機能を利用して、最初から上記のような解決策が適用されたワーカーノードイメージを使用できます。
+
+#### NKSのカスタムイメージ機能を使って新しく作成したクラスタに解決策を適用
+NKSではユーザーのカスタムイメージをベースにしたワーカーノードグループを作成する機能を提供しています。NKSカスタムイメージ機能を使用してmemory cgroupに対するkernel object accounting機能が無効化されたイメージを作成し、クラスタ作成時に活用することができます。カスタムイメージの使用機能の詳細については、[カスタムイメージをワーカーイメージとして活用](/Container/NKS/ja/user-guide/#_25)を参照してください。
+
+1. イメージテンプレート作成過程でユーザースクリプトに下記の内容を入力します。
+```
+#!/bin/bash
+args="cgroup.memory=nokmem"
+grub_file="/etc/default/grub"
+sudo sed -i "s/GRUB_CMDLINE_LINUX=\"\(.*\)\"/GRUB_CMDLINE_LINUX=\"\1 $args\"/" "$grub_file"
+sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+```
