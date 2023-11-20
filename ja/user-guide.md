@@ -1513,6 +1513,20 @@ route del -net 0.0.0.0/0 dev eth1
 route add -net 0.0.0.0/0 gw 192.168.0.1 dev eth1 metric 0
 ```
 
+### kubeletユーザー定義引数設定機能
+kubeletはすべてのワーカーノードで動作するノードエージェントです。kubeletはコマンドラインアギュメントを利用して様々な設定を入力します。NKSが提供するkubeletユーザー定義引数設定機能を利用すると、kubelet起動時に入力される引数を追加できます。kubeletカスタム引数は次のように設定し、システムに適用できます。
+
+* ワーカーノードの`/etc/kubernetes/kubelet-user-args`ファイルに`KUBELET_USER_ARGS="User Defined Argument"`形式でユーザー定義引数を入力します。
+* `systemctl daemon-reload`コマンドを実行します。
+* `systemctl restart kubelet`コマンドを実行します。
+* `systemctl status kubelet`コマンドで、kubeletが正常に動作していることを確認します。
+
+> [注意]
+> * この機能は、2023年11月28日以降に新規作成されたクラスタでのみ動作します。
+> * ユーザー定義引数を設定するワーカーノードごとに実行します。
+> * 正しくない形式のユーザー定義アギュメントを入力すると、kubeletが正常に動作しないことがあります。
+> * 設定されたユーザー定義引数はシステム再起動時にもそのまま適用されます。
+
 ## LoadBalancerサービス
 Kubernetesアプリケーションの基本実行単位Podは、CNI(container network interface)でクラスターネットワークに接続されます。基本的にクラスターの外部からPodにはアクセスできません。Podのサービスをクラスターの外部に公開するにはKubernetesの`LoadBalancer`サービス(Service)オブジェクト(object)を利用して外部に公開するパスを作成する必要があります。LoadBalancerサービスオブジェクトを作成すると、クラスターの外部にNHN Cloud Load Balancerが作成され、サービスオブジェクトと接続されます。
 
@@ -1647,7 +1661,28 @@ Commercial support is available at
 ```
 
 ### ロードバランサー詳細オプション設定
-Kubernetesのサービスオブジェクトを定義する時、ロードバランサーの複数のオプションを設定できます。
+Kubernetesのサービスオブジェクトを定義する時、ロードバランサーの複数のオプションを設定できます。設定可能な項目は次のとおりです。
+
+* グローバル設定とリスナーごとの設定
+* リスナー別設定形式
+* ロードバランサー名設定
+* keep-aliveタイムアウト設定
+* ロードバランサータイプ設定
+* セッション持続性設定
+* ロードバランサー削除時にFloating IPアドレスを保存するかどうかの設定
+* ロードバランサーIP設定
+* Floating IPを使用するかどうかの設定
+* VPC設定
+* サブネット設定
+* メンバーサブネット設定
+* リスナー接続制限設定
+* リスナープロトコル設定
+* リスナープロキシプロトコル(Proxy Protocol)設定
+* ロードバランシング方式設定
+* ヘルスチェックプロトコル設定
+* ヘルスチェック周期設定
+* ヘルスチェック最大レスポンス時間設定
+* ヘルスチェック最大再試行回数設定
 
 #### グローバル設定とリスナー別設定
 設定項目ごとにグローバル設定とリスナー別設定が可能です。グローバル設定とリスナー別設定がどちらもない場合、設定別デフォルト値を使用します。
@@ -1706,7 +1741,7 @@ spec:
 > 以下の機能の設定値は全て文字列形式で入力する必要があります。YAMLファイル入力形式で入力値の形式に関係なく文字列形式で入力するには入力値を二重引用符(")で囲んでください。 YAMLファイル形式の詳しい内容は[Yaml Cookbook](https://yaml.org/YAML_for_ruby.html)文書を参照してください。
 >
 
-### ロードバランサー名設定
+#### ロードバランサー名設定
 
 ロードバランサーの名前を設定できます。
 
@@ -1842,7 +1877,7 @@ Floating IP使用設定とロードバランサーIP設定の組み合わせに�
 * 設定しない場合はクラスタ作成時に設定したVPCに設定します。
 
 #### サブネット設定
-ロードバランサー作成時、ロードバランサーが接続されるサブネットを設定できます。
+ロードバランサー作成時、ロードバランサーが接続されるサブネットを設定できます。設定されたサブネットにロードバランサーのプライベートIPが接続されます。メンバーサブネット設定がない場合、このサブネットに接続されたワーカーノードがロードバランサーメンバーとして追加されます。
 
 * 設定位置は .metadata.annotaions下のloadbalancer.openstack.org/subnet-idです。
 * 設定しない場合はクラスタ作成時に設定したサブネットに設定します。
@@ -1868,6 +1903,40 @@ spec:
     app: nginx
   type: LoadBalancer
 ```
+
+#### メンバーサブネット設定
+ロードバランサー作成時、ロードバランサーメンバーが接続されるサブネットを設定できます。このサブネットに接続されたワーカーノードがロードバランサーメンバーとして追加されます。
+
+* 設定場所は.metadata.annotaionsサブのloadbalancer.nhncloud/member-subnet-idです。
+* 設定しない場合、ロードバランサーのサブネット設定値が適用されます。
+* メンバーサブネットは**必ずロードバランサーサブネットと同じVPCに含まれている必要があります。
+* 2つ以上のメンバーサブネットを設定するためには、コンマで区切られたリストで入力します。
+
+以下はロードバランサーにVPC、サブネット、メンバーサブネットを設定するマニフェストの例です。
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc-vpc-subnet
+  labels:
+     app: nginx
+  annotations:
+    loadbalancer.openstack.org/network-id: "49a5820b-d941-41e5-bfc3-0fd31f2f6773"
+    loadbalancer.openstack.org/subnet-id: "38794fd7-fd2e-4f34-9c89-6dd3fd12f548"
+    loadbalancer.nhncloud/member-subnet-id: "c3548a5e-b73c-48ce-9dc4-4d4c484108bf"
+spec:
+  ports:
+  - port: 8080
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: nginx
+  type: LoadBalancer
+```
+
+> [注意]
+> メンバーサブネットは2023年11月28日以降v1.24.3以上のバージョンにアップグレードされたか、新しく作成されたクラスタで設定可能です。
 
 #### リスナー接続制限設定
 リスナーの接続制限を設定できます。
@@ -2028,6 +2097,17 @@ HTTPステータスコードは次のように設定できます。
 * 最小値1、最大値10です。
 * 設定しない場合や範囲外の値を入力するとデフォルト値の3に設定されます。
 
+#### keep-aliveタイムアウト設定
+keep-aliveタイムアウト値を設定できます。
+
+* 設定位置は .metadata.annotations下位のloadbalancer.nhncloud/keepalive-timeoutです。
+* リスナーごとに設定を適用できます。
+* 秒単位で設定します。
+* 最小値0、最大値3600です。
+* 設定しないか、範囲外の値を入力すると、デフォルト値である300に設定されます。
+
+> [注意]
+> keep-alive timeoutは2023年11月28日以降にv1.24.3以上のバージョンにアップグレードされたか、新規に作成されたクラスタで設定可能です。
 
 ## イングレスコントローラー
 イングレスコントローラー(Ingress Controller)は、イングレスオブジェクトに定義されているルールを参照してクラスタ外部から内部サービスにHTTPとHTTPSリクエストをルーティングし、SSL/TSL終了、仮想ホスティングなどを提供します。イングレスコントローラーとイングレスの詳細については[イングレスコントローラー](https://kubernetes.io/ko/docs/concepts/services-networking/ingress-controllers/)、[イングレス](https://kubernetes.io/ko/docs/concepts/services-networking/ingress/)文書を参照してください。
@@ -2598,6 +2678,8 @@ PVを作成するにはブロックストレージのIDが必要です。**Stora
 
 ブロックストレージと接続するPVマニフェストを作成します。**spec.storageClassName**にはストレージクラス名を入力します。 NHN Cloud Block Storageを使用するには**spec.accessModes**は必ず`ReadWriteOnce`に設定する必要があります。**spec.presistentVolumeReclaimPolicy**は`Delete`または`Retain`に設定できます。
 
+v1.20.12以降のバージョンのクラスタは**cinder.csi.openstack.org**ストレージプロバイダを使用する必要があります。ストレージプロバイダを定義するには、**spec.annotations**の下に`pv.kubernetes.io/provisioned-by: cinder.csi.openstack.org`を指定し、**csi**の下に`driver: cinder.csi.openstack.org`を指定します。
+
 > [注意]
 > Kubernetesバージョンに合ったストレージ提供者が定義されているストレージクラスを設定する必要があります。
 
@@ -2606,6 +2688,8 @@ PVを作成するにはブロックストレージのIDが必要です。**Stora
 apiVersion: v1
 kind: PersistentVolume
 metadata:
+  annotations: 
+    pv.kubernetes.io/provisioned-by: cinder.csi.openstack.org
   name: pv-static-001
 spec:
   capacity:
@@ -2615,9 +2699,10 @@ spec:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Delete
   storageClassName: sc-default
-  cinder:
+  csi:
+    driver: cinder.csi.openstack.org
     fsType: "ext3"
-    volumeID: "e6f95191-d58b-40c3-a191-9984ce7532e5"
+    volumeHandle: "e6f95191-d58b-40c3-a191-9984ce7532e5"
 ```
 
 PVを作成して確認します。
@@ -3168,6 +3253,7 @@ ORAS(OCI Registry As Storage)はOCIレジストリからOCIアーティファク
 | --- | --- |
 | 韓国(パンギョ)リージョン | oras pull dfe965c3-kr1-registry.container.nhncloud.com/nks_container/nfs-deploy-tool:v1 |
 | 韓国(ピョンチョン)リージョン | oras pull 6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/nfs-deploy-tool:v1 |
+| 韓国(光州)リージョン | oras pull d6628457-kr3-registry.container.nhncloud.com/nks_container/nfs-deploy-tool:v1 |
 
 ##### 3. インストールパッケージを解凍した後、**install-driver.sh {mode}**コマンドを使用してcsi-driver-nfsコンポーネントをインストールします。 
 install-driver.shコマンド実行時、インターネット接続が可能なクラスタは**public**、そうでないクラスタは**private**を入力する必要があります。
@@ -3567,3 +3653,68 @@ tmpfs                                                                          1
 > [参考]
 > nfs-csi-driverはプロビジョニング時にNFSストレージ内部にsubdirectoryを作成する方式で動作します。
 > podにPVをマウントするプロセスでsubdirectoryのみマウントされるのではなく、nfsストレージ全体がマウントされるため、アプリケーションがプロビジョニングされたサイズだけボリュームを使用するように強制できません。
+
+### NHN Cloud暗号化ブロックストレージサービス連動
+NHN Cloudが提供する暗号化ブロックストレージをPVとして活用できます。NHN Cloudの暗号化ブロックストレージの詳細については、[暗号化ブロックストレージ](/Storage/Block%20Storage/ja/console-guide/#_2)を参照してください。
+
+> [注意]
+> 暗号化ブロックストレージ連動機能は、11月28日以降にv1.24.3以上のバージョンにアップグレードされたか、新規に作成されたクラスタで使用可能です。
+#### 静的プロビジョニング
+PVを生成するには、暗号ブロックストレージのIDが必要です。Storage > Block Storageサービスページのブロックストレージ一覧から使用するブロックストレージを選択します。下部の情報タブのブロックストレージ名項目でIDを確認できます。
+
+PVマニフェスト作成時に暗号化ブロックストレージの情報を入力します。設定場所は**.spec.csi**の下にあります。
+* driver： `cinder.csi.openstack.org`を入力します。
+* fsType： `ext3`を入力します。
+* volumeHandle:作成した暗号化ブロックストレージのIDを入力します。
+
+以下はマニフェストの例です。
+```yaml
+# pv-static.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    pv.kubernetes.io/provisioned-by: cinder.csi.openstack.org
+  name: pv-static-encrypted-hdd
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  csi:
+    driver: cinder.csi.openstack.org
+    fsType: ext3
+    volumeHandle: 9f606b78-256b-4f74-8988-1331cd6d398b
+```
+
+PVCマニフェスト作成およびPodのマウントのプロセスは、一般的なブロックストレージの静的プロビジョニングと同じです。詳細は[静的プロビジョニング](/Container/NKS/ja/user-guide/#_70)を参照してください。
+
+#### 動的プロビジョニング
+ストレージクラスマニフェスト作成時に暗号化ブロックストレージの作成に必要な情報を入力して、自動的に作成された暗号化ブロックストレージをPVとして使用することができます。
+
+ストレージクラスマニフェストに暗号化ブロックストレージの作成に必要な情報を入力します。設定位置は**.parameters**の下にあります。
+* ストレージの種類(type)：ストレージの種類を入力します。
+    * **Encrypted HDD**:ストレージの種類が暗号化されたHDDに設定されます。
+    * **Encrypted SSD**:ストレージの種類が暗号化されたSSDに設定されます。
+* 暗号化キーID(volume_key_id): Secure Key Manager(SKM)サービスで作成した対称鍵のIDを入力します。
+* 暗号化アプリケーションキー(volume_appkey): Secure Key Manager(SKM)サービスで確認したAppkeyを入力します。
+
+以下はマニフェストの例です。
+```yaml
+# storage_class.yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: csi-storageclass-encrypted-hdd
+provisioner: cinder.csi.openstack.org
+volumeBindingMode: Immediate
+allowVolumeExpansion: true
+parameters:
+  type: Encrypted HDD
+  volume_key_id: "5530..."
+  volume_appkey: "uaUW..."
+```
+
+PVCマニフェストの作成およびPodにマウントするプロセスは一般的なブロックストレージの動的プロビジョニングと同じです。詳細は[動的プロビジョニング](/Container/NKS/ja/user-guide/#_71)を参照してください。
