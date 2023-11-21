@@ -1729,6 +1729,7 @@ spec:
 로드 밸런서를 생성할 때 로드 밸런서의 IP를 설정할 수 있습니다.
 
 * 설정 위치는 .spec.loadBalancerIP 입니다.
+* **리스너별 설정을 적용할 수 없습니다.**
 * 다음 중 하나로 설정할 수 있습니다.
   * 빈 문자열(""): 로드 밸런서에 자동으로 생성되는 플로팅 IP를 연결합니다. 미설정 시 기본값입니다.
   * <Floating_IP>: 로드 밸런서에 기존의 플로팅 IP를 연결합니다. 이미 할당 받았지만 연결되지 않은 플로팅 IP가 있을 때 사용 가능합니다.
@@ -1758,6 +1759,7 @@ spec:
 로드 밸런서 생성 시 플로팅 IP의 사용 여부를 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotaions 하위의 service.beta.kubernetes.io/openstack-internal-load-balancer입니다.
+* **리스너별 설정을 적용할 수 없습니다.**
 * 다음 중 하나로 설정할 수 있습니다.
   * true: 플로팅 IP를 사용하지 않고, VIP(Virtual IP)를 사용합니다.
   * false: 플로팅 IP를 사용합니다. 미설정 시 기본값입니다.
@@ -1800,12 +1802,14 @@ spec:
 로드 밸런서 생성 시 로드 밸런서가 연결될 VPC를 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotaions 하위의 loadbalancer.openstack.org/network-id입니다.
+* **리스너별 설정을 적용할 수 없습니다.**
 * 설정하지 않으면 클러스터 생성 시 설정한 VPC로 설정합니다.
 
 #### 서브넷 설정
 로드 밸런서 생성 시 로드 밸런서가 연결될 서브넷을 설정할 수 있습니다. 설정된 서브넷에 로드 밸런서의 사설 IP가 연결됩니다. 멤버 서브넷 설정이 없는 경우 이 서브넷에 연결된 워커 노드가 로드 밸런서 멤버로 추가됩니다.
 
 * 설정 위치는 .metadata.annotaions 하위의 loadbalancer.openstack.org/subnet-id입니다.
+* **리스너별 설정을 적용할 수 없습니다.**
 * 설정하지 않으면 클러스터 생성 시 설정한 서브넷으로 설정합니다.
 
 아래는 로드 밸런서에 VPC와 서브넷을 설정하는 매니페스트 예제입니다.
@@ -1834,6 +1838,7 @@ spec:
 로드 밸런서 생성 시 로드 밸런서 멤버가 연결될 서브넷을 설정할 수 있습니다. 이 서브넷에 연결된 워커 노드가 로드 밸런서 멤버로 추가됩니다.
 
 * 설정 위치는 .metadata.annotaions 하위의 loadbalancer.nhncloud/member-subnet-id입니다.
+* **리스너별 설정을 적용할 수 없습니다.**
 * 설정하지 않으면 로드 밸런서의 서브넷 설정값이 적용됩니다.
 * 멤버 서브넷은 **반드시 로드 밸런서 서브넷과 동일한 VPC에 포함**되어 있어야 합니다.
 * 2개 이상의 멤버 서브넷을 설정하기 위해서는 콤마로 구분된 목록으로 입력합니다.
@@ -2918,7 +2923,7 @@ NHN Cloud NAS 서비스를 사용하기 위해 클러스터에 csi-driver-nfs �
 
 csi-driver-nfs는 nfs 서버에 새 하위 디렉터리를 생성하는 방식으로 동작하는 PV의 동적 프로비저닝을 지원하는 드라이버입니다.
 csi-driver-nfs는 스토리지 클래스에 nfs 서버 정보를 제공하는 방식으로 동작하여 사용자가 관리해야 하는 대상을 줄여 줍니다.
-nfs-csi-driver를 사용하여 여러 개의 PV를 구성하는 경우 nfs-csi-driver가 NFS 서버 정보를 StorageClass에 등록하여 NFS-Provisoner pod를 구성할 필요가 없습니다.
+csi-driver-nfs를 사용하여 여러 개의 PV를 구성하는 경우 csi-driver-nfs가 NFS 서버 정보를 StorageClass에 등록하여 NFS-Provisoner pod를 구성할 필요가 없습니다.
 ![nfs-csi-driver-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nfs-csi-driver-02.png)
 
 > [참고]
@@ -3182,5 +3187,5 @@ Filesystem                                                                 Size 
 NHN Cloud 콘솔 **Storage > NAS** 서비스 페이지에서도 NAS 스토리지의 연결 정보를 확인할 수 있습니다.
 
 > [참고]
-> nfs-csi-driver는 동적 프로비저닝을 통해 PV를 생성할 때 nfs 스토리지 내부에 subdirectory를 생성하는 방식으로 동작합니다.
+> csi-driver-nfs는 동적 프로비저닝을 통해 PV를 생성할 때 nfs 스토리지 내부에 subdirectory를 생성하는 방식으로 동작합니다.
 > 파드에 PV를 마운트하는 과정에서 subdirectory만 마운트되는 것이 아니라 NFS 스토리지 전체가 마운트되기 때문에 애플리케이션이 프로비저닝된 크기만큼 볼륨을 사용하도록 강제할 수 없습니다.

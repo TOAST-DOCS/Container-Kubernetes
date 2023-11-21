@@ -1032,15 +1032,20 @@ NHN Cloud 인스턴스를 기반으로 생성한 커스텀 이미지만 워커 �
 | CentOS | CentOS 7.9 (2022.11.22)  | 1.0 |
 |  | CentOS 7.9 (2023.05.25)  | 1.1 |
 |  | CentOS 7.9 (2023.08.22)  | 1.2 |
+|  | CentOS 7.9 (2023.11.21)  | 1.3 |
 | Rocky | Rocky Linux 8.6 (2023.03.21)  | 1.0 |
 |  | Rocky Linux 8.7 (2023.05.25)  | 1.1 |
 |  | Rocky Linux 8.8 (2023.08.22)  | 1.2 |
+|  | Rocky Linux 8.8 (2023.11.21)  | 1.3 |
 | Ubuntu | Ubuntu Server 18.04.6 LTS (2023.03.21)  | 1.0 |
 |  | Ubuntu Server 20.04.6 LTS (2023.05.25)  | 1.1 |
 |  | Ubuntu Server 20.04.6 LTS (2023.08.22)  | 1.2 |
+|  | Ubuntu Server 20.04.6 LTS (2023.11.21)  | 1.3 |
+|  | Ubuntu Server 22.04.3 LTS (2023.11.21)  | 1.3 |
 | Debian | Debian 11.6 Bullseye (2023.03.21)  | 1.0 |
 |  | Debian 11.6 Bullseye (2023.05.25)  | 1.1 |
-|  | Debian 11.6 Bullseye (2023.08.22)  | 1.2 |
+|  | Debian 11.7 Bullseye (2023.08.22)  | 1.2 |
+|  | Debian 11.8 Bullseye (2023.11.21)  | 1.3 |
 
 
 > [참고]
@@ -1051,15 +1056,15 @@ NHN Cloud 인스턴스를 기반으로 생성한 커스텀 이미지만 워커 �
 
 커스텀 이미지를 워커 노드 이미지로 활용하기 위해서 Image Builder 서비스에서 아래와 같은 과정을 수행합니다.
 
-1. **이미지 템플릿을 생성** 버튼을 클릭합니다.
+1. **이미지 템플릿을 생성**을 클릭합니다.
 2. 애플리케이션을 선택한 후 **이미지 템플릿 이름**, **OS**, **최소 블록 스토리지(GB)**, **사용자 스크립트**, **설명**을 작성합니다.
     * GPU Flavor를 사용하지 않는 워커 노드 그룹인 경우 NHN Kubernetes Service(NKS) Worker Node 애플리케이션을 선택합니다.
     * GPU Flavor를 사용하는 워커 노드 그룹인 경우 NHN Kubernetes Service(NKS) Worker Node(GPU) 애플리케이션을 선택합니다.
-3. **확인** 버튼을 눌러 이미지 템플릿을 생성합니다.
+3. **확인**을 클릭해 이미지 템플릿을 생성합니다.
 4. 생성된 이미지 템플릿을 선택한 후 **이미지 빌드**를 선택합니다.
-5. **이미지 빌드** 화면에서 **개인 이미지** 탭 선택 후 NKS 워커 노드화를 진행할 커스텀 이미지를 선택합니다.
-6. **확인** 버튼을 누르면 NKS 워커 노드화가 진행된 후 새로운 이미지를 생성합니다.
-7. **클러스터 생성 화면** 또는 **노드 그룹 생성** 화면에서 생성된 커스텀 이미지를 선택합니다.
+5. **이미지 빌드** 화면에서 **개인 이미지** 탭을 선택한 뒤 NKS 워커 노드화를 진행할 커스텀 이미지를 선택합니다.
+6. **확인**을 클릭하면 NKS 워커 노드화가 진행된 후 새로운 이미지를 생성합니다.
+7. **클러스터 생성** 또는 **노드 그룹 생성** 화면에서 생성된 커스텀 이미지를 선택합니다.
 
 ![nkscustom_image_1.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nkscustom_image_1.png)
 
@@ -1826,6 +1831,7 @@ spec:
 로드 밸런서를 생성할 때 로드 밸런서의 IP를 설정할 수 있습니다.
 
 * 설정 위치는 .spec.loadBalancerIP 입니다.
+* **리스너별 설정을 적용할 수 없습니다.**
 * 다음 중 하나로 설정할 수 있습니다.
   * 빈 문자열(""): 로드 밸런서에 자동으로 생성되는 플로팅 IP를 연결합니다. 미설정 시 기본값입니다.
   * <Floating_IP>: 로드 밸런서에 기존의 플로팅 IP를 연결합니다. 이미 할당 받았지만 연결되지 않은 플로팅 IP가 있을 때 사용 가능합니다.
@@ -1855,6 +1861,7 @@ spec:
 로드 밸런서 생성 시 플로팅 IP의 사용 여부를 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotaions 하위의 service.beta.kubernetes.io/openstack-internal-load-balancer입니다.
+* **리스너별 설정을 적용할 수 없습니다.**
 * 다음 중 하나로 설정할 수 있습니다.
   * true: 플로팅 IP를 사용하지 않고, VIP(Virtual IP)를 사용합니다.
   * false: 플로팅 IP를 사용합니다. 미설정 시 기본값입니다.
@@ -1897,12 +1904,14 @@ spec:
 로드 밸런서 생성 시 로드 밸런서가 연결될 VPC를 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotaions 하위의 loadbalancer.openstack.org/network-id입니다.
+* **리스너별 설정을 적용할 수 없습니다.**
 * 설정하지 않으면 클러스터 생성 시 설정한 VPC로 설정합니다.
 
 #### 서브넷 설정
 로드 밸런서 생성 시 로드 밸런서가 연결될 서브넷을 설정할 수 있습니다. 설정된 서브넷에 로드 밸런서의 사설IP가 연결됩니다. 멤버 서브넷 설정이 없는 경우 이 서브넷에 연결된 워커 노드가 로드 밸런서 멤버로 추가됩니다.
 
 * 설정 위치는 .metadata.annotaions 하위의 loadbalancer.openstack.org/subnet-id입니다.
+* **리스너별 설정을 적용할 수 없습니다.**
 * 설정하지 않으면 클러스터 생성 시 설정한 서브넷으로 설정합니다.
 
 아래는 로드 밸런서에 VPC와 서브넷을 설정하는 매니페스트 예제입니다.
@@ -1931,6 +1940,7 @@ spec:
 로드 밸런서 생성 시 로드 밸런서 멤버가 연결될 서브넷을 설정할 수 있습니다. 이 서브넷에 연결된 워커 노드가 로드 밸런서 멤버로 추가됩니다.
 
 * 설정 위치는 .metadata.annotaions 하위의 loadbalancer.nhncloud/member-subnet-id입니다.
+* **리스너별 설정을 적용할 수 없습니다.**
 * 설정하지 않으면 로드 밸런서의 서브넷 설정값이 적용됩니다.
 * 멤버 서브넷은 **반드시 로드 밸런서 서브넷과 동일한 VPC에 포함**되어 있어야 합니다.
 * 2개 이상의 멤버 서브넷을 설정하기 위해서는 콤마로 구분된 목록으로 입력합니다.
@@ -2989,7 +2999,7 @@ spec:
 NHN Cloud에서 제공하는 NAS 스토리지를 PV로 활용할 수 있습니다. NAS 서비스를 사용하기 위해서는 v1.20 이후 버전의 클러스터를 사용해야 합니다. NHN Cloud NAS 사용에 대한 자세한 내용은 [NAS 콘솔 사용 가이드](/Storage/NAS/ko/console-guide)를 참고하세요.
 
 > [참고]
-> NHN Cloud NAS 서비스는 현재(2023. 08.) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS/ko/overview)를 참고하세요.
+> NHN Cloud NAS 서비스는 현재(2023. 11.) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS/ko/overview)를 참고하세요.
 
 #### 워커 노드에 NFS 패키지 설치 및 rpcbind 서비스 실행
 NAS 스토리지를 사용하려면 워커 노드에 NFS 패키지를 설치하고, rpcbind 서비스를 실행해야 합니다. 워커 노드에 접속한 뒤 아래 명령어를 실행해 NFS 패키지를 설치합니다.
@@ -3017,7 +3027,7 @@ NHN Cloud NAS 서비스를 사용하기 위해 클러스터에 csi-driver-nfs �
 csi-driver-nfs는 NFS 스토리지에 새 하위 디렉터리를 생성하는 방식으로 동작하는 NFS 스토리지 프로비저닝을 지원하는 드라이버입니다.
 csi-driver-nfs는 스토리지 클래스에 NFS 스토리지 정보를 제공하는 방식으로 동작하여 사용자가 관리해야 하는 대상을 줄여 줍니다.
 
-nfs-csi-driver를 사용하여 여러 개의 PV를 구성하는 경우 nfs-csi-driver가 NFS 스토리지 정보를 StorageClass에 등록하여 NFS-Provisoner pod를 구성할 필요가 없습니다.
+csi-driver-nfs를 사용하여 여러 개의 PV를 구성하는 경우 csi-driver-nfs가 NFS 스토리지 정보를 StorageClass에 등록하여 NFS-Provisoner pod를 구성할 필요가 없습니다.
 <br>
 ![nfs-csi-driver-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nfs-csi-driver-02.png)
 
@@ -3039,14 +3049,13 @@ ORAS(OCI Registry As Storage)는 OCI 레지스트리에서 OCI 아티팩트를 p
 | --- | --- |
 | 한국(판교) 리전 | oras pull dfe965c3-kr1-registry.container.nhncloud.com/nks_container/nfs-deploy-tool:v1 |
 | 한국(평촌) 리전 | oras pull 6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/nfs-deploy-tool:v1 |
-| 한국(광주) 리전 | oras pull d6628457-kr3-registry.container.nhncloud.com/nks_container/nfs-deploy-tool:v1 |
 
 ##### 3. 설치 패키지를 압축 해제한 후 **install-driver.sh {mode}** 명령어를 사용하여 csi-driver-nfs 구성 요소를 설치합니다.
 install-driver.sh 명령 실행 시 인터넷 연결이 가능한 클러스터는 **public**, 그렇지 않은 클러스터는 **private**을 입력해야 합니다.
 
 
 > [참고]
-> csi-driver-nfs 컨테이너 이미지는 사내 NCR 레지스트리에서 관리되고 있습니다. 폐쇄망 환경에 구성된 클러스터는 인터넷에 연결되어 있지 않기 때문에 이미지를 정상적으로 받아오기 위해서는 Private URI를 사용하기 위한 환경 구성이 필요합니다. Private URI 사용법에 대한 자세한 내용은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/user-guide/#private-uri)를 참고하세요.
+> csi-driver-nfs 컨테이너 이미지는 NHN Cloud NCR에서 관리되고 있습니다. 폐쇄망 환경에 구성된 클러스터는 인터넷에 연결되어 있지 않기 때문에 이미지를 정상적으로 받아오기 위해서는 Private URI를 사용하기 위한 환경 구성이 필요합니다. Private URI 사용법에 대한 자세한 내용은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/user-guide/#private-uri)를 참고하세요.
 
 아래는 인터넷망 환경에 구성된 클러스터에 설치 패키지를 이용하여 csi-driver-nfs를 설치하는 예시입니다.
 
@@ -3266,9 +3275,9 @@ spec:
           - name: onas-dynamic
             mountPath: "/tmp/nfs"
       volumes:
-        - name: onas
+        - name: onas-dynamic
           persistentVolumeClaim:
-            claimName: pvc-onas
+            claimName: pvc-onas-dynamic
 ```
 
 파드를 생성하고 NAS 스토리지가 마운트 되어 있는지 확인합니다.
@@ -3447,14 +3456,54 @@ tmpfs                                                                          1
 ```
 
 > [참고]
-> nfs-csi-driver는 프로비저닝 시 NFS 스토리지 내부에 subdirectory를 생성하는 방식으로 동작합니다.
+> csi-driver-nfs는 프로비저닝 시 NFS 스토리지 내부에 subdirectory를 생성하는 방식으로 동작합니다.
 > 파드에 PV를 마운트하는 과정에서 subdirectory만 마운트되는 것이 아니라 NFS 스토리지 전체가 마운트되기 때문에 애플리케이션이 프로비저닝된 크기만큼 볼륨을 사용하도록 강제할 수 없습니다.
 
-### NHN Cloud 암호화 블록 스토리지 서비스 연동
+### NHN Cloud 암호화 블록 스토리지 연동
 NHN Cloud에서 제공하는 암호화된 블록 스토리지를 PV로 활용할 수 있습니다. NHN Cloud 암호화 블록 스토리지에 대한 자세한 내용은 [암호화 블록 스토리지](/Storage/Block%20Storage/ko/console-guide/#_2)를 참고하세요.
 
+> [참고]
+> 암호화 블록 스토리지 서비스 연동 기능은 v1.24.3 이상 버전의 클러스터에서 사용 가능합니다.
+> 2023년 11월 28일 이후 신규 생성된 클러스터는 기본적으로 암호화 블록 스토리지 연동 기능이 내장되어 있습니다.
+> 2023년 11월 28일 이전에 생성된 클러스터는 v1.24.3 이상의 버전으로 업그레이드하거나 csi-cinder-controllerplugin 스테이트풀셋과 csi-cinder-nodeplugin 데몬셋의 cinder-csi-plugin 이미지를 최신 버전으로 교체하여 암호화 블록 스토리지 연동 기능 사용이 가능합니다.
+
 > [주의]
-> 암호화 블록 스토리지 연동 기능은 11월 28일 이후 v1.24.3 이상의 버전으로 업그레이드 됐거나 신규 생성된 클러스터에서 사용 가능합니다.
+> v1.24.3 이전 버전의 클러스터를 업그레이드하지 않고 cinder-csi-plugin 컨테이너 이미지만 교체하여 사용하는 경우 오동작을 초래할 수 있습니다.
+
+#### 암호화 블록 스토리지 연동을 위한 cinder-csi-plugin 이미지 업데이트
+아래 커맨드를 실행하여 현재 클러스터에 배포된 cinder-csi-plugin 이미지의 태그를 확인할 수 있습니다.
+
+```
+$ kubectl -n kube-system get statefulset csi-cinder-controllerplugin -o=jsonpath="{$.spec.template.spec.containers[?(@.name=='cinder-csi-plugin')].image}"
+
+> registry.k8s.io/provider-os/cinder-csi-plugin:v1.27.101
+```
+
+cinder-csi-plugin 이미지의 태그가 v1.27.101 이상인 경우 아무런 조치 없이 암호화 블록 스토리지를 연동할 수 있습니다.
+cinder-csi-plugin 이미지의 태그가 v1.27.101 미만인 경우 아래의 과정을 통해 cinder-csi-plugin의 이미지를 업데이트한 후 암호화 블록 스토리지를 연동할 수 있습니다.
+
+| 리전 | 인터넷 연결 | cinder-csi-plugin 이미지 |
+| --- | --- | --- |
+| 한국(판교) 리전 | O | dfe965c3-kr1-registry.container.nhncloud.com/nks_container/cinder-csi-plugin:v1.27.101 |
+| | X | private-dfe965c3-kr1-registry.container.nhncloud.com/nks_container/cinder-csi-plugin:v1.27.101 |
+| 한국(평촌) 리전 | O | 6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/cinder-csi-plugin:v1.27.101 |
+|  | X | private-6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/cinder-csi-plugin:v1.27.101 |
+
+1. container_image에 올바른 cinder-csi-plugin 이미지 값을 입력합니다.
+    ```
+    $ container_image={cinder-csi-plugin 이미지}
+    ```
+
+2. 컨테이너 이미지를 교체합니다.
+    ```
+    $ kubectl -n kube-system patch statefulset csi-cinder-controllerplugin -p "{\"spec\": {\"template\": {\"spec\": {\"containers\": [{\"name\": \"cinder-csi-plugin\", \"image\": \"${container_image}\"}]}}}}"
+
+    $ kubectl -n kube-system patch daemonset csi-cinder-nodeplugin -p "{\"spec\": {\"template\": {\"spec\": {\"containers\": [{\"name\": \"cinder-csi-plugin\", \"image\": \"${container_image}\"}]}}}}"
+    ```
+
+> [참고]
+> cinder-csi-plugin 컨테이너 이미지는 NHN Cloud NCR에서 관리되고 있습니다. 폐쇄망 환경에 구성된 클러스터는 인터넷에 연결되어 있지 않기 때문에 이미지를 정상적으로 받아오기 위해서는 Private URI를 사용하기 위한 환경 구성이 필요합니다. Private URI 사용법에 대한 자세한 내용은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/user-guide/#private-uri)를 참고하세요.
+
 
 #### 정적 프로비저닝
 PV를 생성하려면 암호화 블록 스토리지의 ID가 필요합니다. Storage > Block Storage 서비스 페이지의 블록 스토리지 목록에서 사용할 블록 스토리지를 선택합니다. 하단 정보 탭의 블록 스토리지 이름 항목에서 ID를 확인할 수 있습니다.
