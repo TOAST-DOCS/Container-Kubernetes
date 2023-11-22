@@ -205,3 +205,43 @@ This issue is caused by the change of the package registry on github from the Do
 
 The workaround is as follows
 Change the base of the image URL defined in the Pod manifest `from docker.pkg.github.com` to `gchr.io`.
+
+### > `cannot allocate memory` error occurs and the Pod's status appears `as FailedCreatePodContainer`.
+
+A bug in the Linux kernel's kernel object accounting feature for memory cgroups. It occurs primarily in versions 3.x and 4.x of the Linux kernel and is known as the dying memory cgroup problem issue. Users can bypass this issue by disabling the kernel object accounting feature for memory cgroups at the image level. 
+
+#### Apply the workaround to existing clusters
+Connect to the worker node, change the boot options, and restart it.
+
+1. Open the `/etc/default/grub` file and add `cgroup.memory=nokmem`to the existing value `of GRUB_CMDLINE_LINUX`.
+
+```diff
+# vim /etc/default/grub
+- GRUB_CMDLINE_LINUX="..."
++ GRUB_CMDLINE_LINUX="... cgroup.memory=nokmem"
+```
+
+2. Reflect your settings.
+```
+$ grub2-mkconfig -o /boot/grub2/grub.cfg
+```
+
+3. Restart the worker node.
+```
+$ reboot
+```
+
+This issue may not always occur, and may depend on the nature of your application. If you are concerned about this issue, you can use the custom image feature in NKS to use a worker node image with the above workaround applied from the start.
+
+#### Apply the workaround to newly created clusters using the NKS Custom Image feature
+NKS provides the feature to create a group of worker nodes based on your custom image. You can use the NKS custom image feature to create an image with kernel object accounting disabled for memory cgroups and utilize it when creating a cluster. For more information about the feature, see [](/Container/NKS/ko/user-guide/#_25)Use Custom Image as Worker Image[](/Container/NKS/ko/user-guide/#_25).
+
+1. While creating the image template, enter the following in the user script.
+```
+#!/bin/bash
+args="cgroup.memory=nokmem"
+grub_file="/etc/default/grub"
+sudo sed -i "s/GRUB_CMDLINE_LINUX=\"\(.*\)\"/GRUB_CMDLINE_LINUX=\"\1 $args\"/" "$grub_file"
+
+sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+```
