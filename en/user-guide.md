@@ -1032,15 +1032,20 @@ Only custom images created based on NHN Cloud instances can be used as worker no
 | CentOS | CentOS 7.9 (2022.11.22)  | 1.0 |
 |  | CentOS 7.9 (2023.05.25)  | 1.1 |
 |  | CentOS 7.9 (2023.08.22)  | 1.2 |
+|  | CentOS 7.9 (2023.11.21)  | 1.3 |
 | Rocky | Rocky Linux 8.6 (2023.03.21)  | 1.0 |
 |  | Rocky Linux 8.7 (2023.05.25)  | 1.1 |
 |  | Rocky Linux 8.8 (2023.08.22)  | 1.2 |
+|  | Rocky Linux 8.8 (2023.11.21)  | 1.3 |
 | Ubuntu | Ubuntu Server 18.04.6 LTS (2023.03.21)  | 1.0 |
 |  | Ubuntu Server 20.04.6 LTS (2023.05.25)  | 1.1 |
 |  | Ubuntu Server 20.04.6 LTS (2023.08.22)  | 1.2 |
+|  | Ubuntu Server 20.04.6 LTS (2023.11.21)  | 1.3 |
+|  | Ubuntu Server 22.04.3 LTS (2023.11.21)  | 1.3 |
 | Debian | Debian 11.6 Bullseye (2023.03.21)  | 1.0 |
 |  | Debian 11.6 Bullseye (2023.05.25)  | 1.1 |
-|  | Debian 11.6 Bullseye (2023.08.22)  | 1.2 |
+|  | Debian 11.7 Bullseye (2023.08.22)  | 1.2 |
+|  | Debian 11.8 Bullseye (2023.11.21)  | 1.3 |
 
 
 > [Notes]
@@ -1826,6 +1831,7 @@ v1.18.19 clusters created before October 26, 2021 have an issue where floating I
 You can set the load balancer IP when creating a load balancer.
 
 * The setting location is .spec.loadBalancerIP.
+* **Per-listener settings cannot be applied.**
 * It can be set to one of the following.
   * Empty string(""): Associate an automatically created floating IP with the load balancer. The default when not set.
   * <Floating_IP>: Associate the existing floating IP with the load balancer. It can be used when there is a floating IP that is allocated and not associated.
@@ -1855,6 +1861,7 @@ spec:
 You can set whether to use floating IPs when creating the load balancer.
 
 * The setting location is service.beta.kubernetes.io/openstack-internal-load-balancer under .metadata.annotaions.
+* **Per-listener settings cannot be applied.**
 * It can be set to one of the following.
   * true: Use a VIP (Virtual IP), not a floating IP.
   * false: Use a floating IP. The default when not set.
@@ -1897,12 +1904,14 @@ Depending on the combination of floating IP usage and load balancer IP setting, 
 You can set a VPC to which the load balancer is connected when creating a load balancer.
 
 * The setting location is loadbalancer.openstack.org/network-id under .metadata.annotaions.
+* **Per-listener settings cannot be applied.**
 * If not set, it is set to the VPC configured when creating the cluster.
 
 #### Set Subnet
 You can set a subnet to which the load balancer is connected when creating a load balancer. The load balancer's private IP is connected to the set subnet. If no member subnet is set, worker nodes connected to this subnet are added as load balancer members.
 
 * The setting location is loadbalancer.openstack.org/subnet-id under .metadata.annotaions.
+* **Per-listener settings cannot be applied.**
 * If not set, it is set to the subnet configured when creating the cluster.
 
 Below is an manifest example of setting a VPC and subnet for the load balancer.
@@ -2991,7 +3000,7 @@ Regarding how to use NHN Cloud Container Registry, see [User Guide for Container
 You can utilize NAS storage provided by NHN Cloud as PV. In order to use NAS services, you must use a cluster of version v1.20 or later. For more information on using NHN Cloud NAS, please refer to the [NAS Console User Guide](/Storage/NAS/en/console-guide).
 
 > [Note]
-The NHN Cloud NAS service is currently (2032.08) only available in some regions. For more information on supported regions for NHN Cloud NAS service, see [NAS Service Overview](/Storage/NAS/ko/overview).
+The NHN Cloud NAS service is currently (2023.11) only available in some regions. For more information on supported regions for NHN Cloud NAS service, see [NAS Service Overview](/Storage/NAS/en/overview).
 
 #### Install the nfs Package on Worker Node and Run the rpcbind service
 To use NAS storage, you must install the nfs package on the worker node, and run the rpcbind service. After connecting to the worker node, run the following command to install the nfs package.
@@ -3052,7 +3061,7 @@ When you run the install-driver.sh command, you must enter **public** for cluste
 
 
 > [Note]
-The csi-driver-nfs container image is maintained in our NCR registry. Since the cluster configured in a closed network environment is not connected to the Internet, it is necessary to configure the environment to use a private URI in order to receive images normally. For information on how to use Private URI, refer to the [NHN Cloud Container Registry (NCR) User Guide](Container/NCR/ko/user-guide/#private-uri).
+The csi-driver-nfs container image is maintained in NHN Cloud NCR. Since the cluster configured in a closed network environment is not connected to the Internet, it is necessary to configure the environment to use a private URI in order to receive images normally. For information on how to use Private URI, refer to the [NHN Cloud Container Registry (NCR) User Guide](Container/NCR/ko/user-guide/#private-uri).
 
 Below is an example of installing csi-driver-nfs using the installation package in the cluster configured in the Internet network environment.
 
@@ -3272,9 +3281,9 @@ spec:
           - name: onas-dynamic
             mountPath: "/tmp/nfs"
       volumes:
-        - name: onas
+        - name: onas-dynamic
           persistentVolumeClaim:
-            claimName: pvc-onas
+            claimName: pvc-onas-dynamic
 ```
 
 Create the pod and make sure the NAS storage is mounted.
@@ -3453,7 +3462,7 @@ tmpfs                                                                          1
 ```
 
 > [Note]
-> nfs-csi-driver works by creating a subdirectory inside the NFS storage when provisioning.
+> csi-driver-nfsworks by creating a subdirectory inside the NFS storage when provisioning.
 > In the process of mounting the PV to the pod, not only the subdirectory is mounted, but the entire nfs storage is mounted, so it is not possible to force the application to use the volume by the provisioned size.
 
 ### NHN Cloud Encrypted Block Storage Integration
@@ -3499,7 +3508,7 @@ $ kubectl -n kube-system patch daemonset csi-cinder-nodeplugin -p "{\"spec\": {\
     ```
 
 > [Note]
-The cinder-csi-plugin container image is maintained in NHN Cloud NCR. Since the cluster configured in a closed network environment is not connected to the Internet, it is necessary to configure the environment to use a private URI in order to receive images normally. For information on how to use Private URI, refer to the [](/Container/NCR/ko/user-guide/#private-uri)NHN Cloud Container Registry (NCR) User Guide[](/Container/NCR/ko/user-guide/#private-uri).
+> The cinder-csi-plugin container image is maintained in NHN Cloud NCR. Since the cluster configured in a closed network environment is not connected to the Internet, it is necessary to configure the environment to use a private URI in order to receive images normally. For information on how to use Private URI, refer to the [NHN Cloud Container Registry (NCR)](/Container/NCR/ko/user-guide/#private-uri).
 
 
 #### Static Provisioning
@@ -3532,7 +3541,7 @@ spec:
     volumeHandle: 9f606b78-256b-4f74-8988-1331cd6d398b
 ```
 
-The process of creating a PVC manifest and mounting it to a Pod is the same as static provisioning for general block storage. For more information, see [Static Provisioning](/Container/NKS/ko/user-guide/#_70).
+The process of creating a PVC manifest and mounting it to a Pod is the same as static provisioning for general block storage. For more information, see [Static Provisioning](/Container/NKS/en/user-guide/#_70).
 
 #### Dynamic Provisioning
 You can use automatically generated encrypted block storage as a PV by entering the information required to create encrypted block storage when creating the storage class manifest.
@@ -3560,4 +3569,4 @@ parameters:
   volume_appkey: "uaUW..."
 ```
 
-The process of creating a PVC manifest and mounting it to a Pod is the same as dynamic provisioning for general block storage. For more information, see [Dynamic Provisioning](/Container/NKS/ko/user-guide/#_71).
+The process of creating a PVC manifest and mounting it to a Pod is the same as dynamic provisioning for general block storage. For more information, see [Dynamic Provisioning](/Container/NKS/en/user-guide/#_71).
