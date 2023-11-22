@@ -1,5 +1,30 @@
 ## Container > NHN Kubernetes Service (NKS) > Release Notes
 
+### November 28, 2023
+
+#### Added Features
+* Added the feature to set kubelet custom arguments.
+* Added the feature to set member subnets as setting detailed options for load balancer
+* Added the feature to set the keep-alive timeout value as setting detailed options for load balancer
+* Added the feature to create PVs using encrypted block storage.
+
+#### Image update
+* Added new images that can be used when creating clusters and node groups.
+    * Target image
+        * Ubuntu Server 22.04.3 LTS - Container (2023.11.21)
+* Changed existing images to support GPU worker node functionality.
+    * Target image
+        * Debian 11.8 Bullseye - Container (2023.11.21)
+* The version of the GPU driver installed in the image has changed.
+    * Changes
+        * Changed the nvidia-device-plugin version from 470.199.02 to 535.104.12.
+        * Changed the dcgm version from 11.4 to 12.2.
+        * Changed the nvidia-mig-manager version from 0.5.3 to 0.5.5.
+    * Target image
+        * CentOS 7.9 - Container (2023.11.21)
+        * Rocky Linux 8.8 - Container (2023.11.21)
+        * Ubuntu Server 20.04.6 LTS - Container (2023.11.21)
+
 ### August 29, 2023
 
 #### Added Features
