@@ -1020,16 +1020,21 @@ NHN Cloudインスタンスをベースに作成したカスタムイメージ�
 | --- | --- | --- |
 | CentOS | CentOS 7.9 (2022.11.22)  | 1.0 |
 |  | CentOS 7.9 (2023.05.25)  | 1.1 |
+|  | CentOS 7.9 (2023.08.22)  | 1.2 |
+|  | CentOS 7.9 (2023.11.21)  | 1.3 |
 | Rocky | Rocky Linux 8.6 (2023.03.21)  | 1.0 |
 |  | Rocky Linux 8.7 (2023.05.25)  | 1.1 |
 |  | Rocky Linux 8.8 (2023.08.22)  | 1.2 |
+|  | Rocky Linux 8.8 (2023.11.21)  | 1.3 |
 | Ubuntu | Ubuntu Server 18.04.6 LTS (2023.03.21)  | 1.0 |
 |  | Ubuntu Server 20.04.6 LTS (2023.05.25)  | 1.1 |
 |  | Ubuntu Server 20.04.6 LTS (2023.08.22)  | 1.2 |
+|  | Ubuntu Server 20.04.6 LTS (2023.11.21)  | 1.3 |
+|  | Ubuntu Server 22.04.3 LTS (2023.11.21)  | 1.3 |
 | Debian | Debian 11.6 Bullseye (2023.03.21)  | 1.0 |
 |  | Debian 11.6 Bullseye (2023.05.25)  | 1.1 |
-|  | Debian 11.6 Bullseye (2023.08.22)  | 1.2 |
-
+|  | Debian 11.7 Bullseye (2023.08.22)  | 1.2 |
+|  | Debian 11.8 Bullseye (2023.11.21)  | 1.3 |
 
 > [参考]
 > カスタムイメージをワーカーノードイメージに変換する過程で選択したオプションによってGPUドライバーがインストールされます。
@@ -1038,15 +1043,15 @@ NHN Cloudインスタンスをベースに作成したカスタムイメージ�
 
 カスタムイメージをワーカーノードイメージとして活用するため、Image Builderサービスで下記のようなプロセスを実行します。
 
-1. **イメージテンプレートを作成** ボタンをクリックします。
+1. **イメージテンプレートを作成**をクリックします。
 2. アプリケーションを選択した後、**イメージテンプレート名**、**OS**、**最小ブロックストレージ(GB)**、**ユーザースクリプト**、**説明**を作成します。
     * GPU Flavorを使用しないワーカーノードグループの場合、NHN Kubernetes Service(NKS) Worker Nodeアプリケーションを選択します。
     * GPU Flavorを使用するワーカーノードグループの場合、NHN Kubernetes Service(NKS) Worker Node(GPU)アプリケーションを選択します。
-3. **確認**ボタンを押してイメージテンプレートを作成します。
+3. **確認**を押してイメージテンプレートを作成します。
 4. 作成されたイメージテンプレートを選択した後、**イメージビルド**を選択します。
-5. **イメージビルド**画面で**個人イメージ**タブを選択後、NKS Worker Node化を進めるカスタムイメージを選択します。
-6. **確認**ボタンを押すと、NKSワーカーノード化が進行された後、新しいイメージを作成します。
-7. **クラスタ作成画面** または **ノードグループ作成** 画面で作成されたカスタムイメージを選択します。
+5. **イメージビルド**画面で**個人イメージ**タブを選択した後、NKS Worker Node化を進めるカスタムイメージを選択します。
+6. **確認**をクリックすると、NKSワーカーノード化が進行された後、新しいイメージを作成します。
+7. **クラスタ作成**または**ノードグループ作成**画面で作成されたカスタムイメージを選択します。
 
 ![nkscustom_image_1.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nkscustom_image_1.png)
 
@@ -1803,6 +1808,7 @@ spec:
 ロードバランサーを作成するときにロードバランサーのIPを設定できます。
 
 * 設定位置は .spec.loadBalancerIPです。
+* **リスナー別の設定を適用できません。**
 * 次のいずれかに設定できます。
   * 空の文字列("")：ロードバランサーに自動的に作成されるFloating IPを接続します。未設定時のデフォルト値です。
   * <Floating_IP>：ロードバランサーに既存のFloating IPを接続します。すでに割り当てられているが接続されていないFloating IPがある場合に使用できます。
@@ -1832,6 +1838,7 @@ spec:
 ロードバランサーを作成するときにFloating IPを使用するかどうかを設定できます。
 
 * 設定位置は .metadata.annotaions下のservice.beta.kubernetes.io/openstack-internal-load-balancerです。
+* **リスナー別の設定を適用できません。**
 * 次のいずれかに設定できます。
   * true：Floating IPを使用せず、VIP(Virtual IP)を使用します。
   * false：Floating IPを使用します。未設定時のデフォルト値です。
@@ -1874,12 +1881,14 @@ Floating IP使用設定とロードバランサーIP設定の組み合わせに�
 ロードバランサー作成時、ロードバランサーが接続されるVPCを設定できます。
 
 * 設定位置は .metadata.annotaions下のloadbalancer.openstack.org/network-idです。
+* **リスナー別の設定を適用できません。**
 * 設定しない場合はクラスタ作成時に設定したVPCに設定します。
 
 #### サブネット設定
 ロードバランサー作成時、ロードバランサーが接続されるサブネットを設定できます。設定されたサブネットにロードバランサーのプライベートIPが接続されます。メンバーサブネット設定がない場合、このサブネットに接続されたワーカーノードがロードバランサーメンバーとして追加されます。
 
 * 設定位置は .metadata.annotaions下のloadbalancer.openstack.org/subnet-idです。
+* **リスナー別の設定を適用できません。**
 * 設定しない場合はクラスタ作成時に設定したサブネットに設定します。
 
 以下はロードバランサーにVPCとサブネットを設定するマニフェスト例です。
@@ -1908,6 +1917,7 @@ spec:
 ロードバランサー作成時、ロードバランサーメンバーが接続されるサブネットを設定できます。このサブネットに接続されたワーカーノードがロードバランサーメンバーとして追加されます。
 
 * 設定場所は.metadata.annotaionsサブのloadbalancer.nhncloud/member-subnet-idです。
+* **リスナー別の設定を適用できません。**
 * 設定しない場合、ロードバランサーのサブネット設定値が適用されます。
 * メンバーサブネットは**必ずロードバランサーサブネットと同じVPCに含まれている必要があります。
 * 2つ以上のメンバーサブネットを設定するためには、コンマで区切られたリストで入力します。
@@ -3203,7 +3213,7 @@ spec:
 NHN Cloudで提供するNASストレージをPVとして活用できます。NASサービスを使用するにはv1.20以降のバージョンのクラスタを使用する必要があります。NHN Cloud NASの詳細については[NASコンソール使用ガイド](/Storage/NAS/ko/console-guide)を参照してください。
 
 > [参考]
-> NHN Cloud NASサービスは現在(2023年8月基準)、一部リージョンでのみ提供されています。NHN Cloud NASサービスのサポートリージョンの詳細については[NASサービス概要](/Storage/NAS/ko/overview)を参照してください。
+> NHN Cloud NASサービスは現在(2023年11月基準)、一部リージョンでのみ提供されています。NHN Cloud NASサービスのサポートリージョンの詳細については[NASサービス概要](/Storage/NAS/ko/overview)を参照してください。
 
 #### ワーカーノードにNFSパッケージインストールおよびrpcbindサービス実行
 NASストレージを使用するにはワーカーノードにNFSパッケージをインストールし、rpcbindサービスを実行する必要があります。ワーカーノードに接続した後、以下のコマンドを実行してNFSパッケージをインストールします。
@@ -3231,7 +3241,7 @@ NHN Cloud NASサービスを使用するにはクラスタにcsi-driver-nfsコ�
 csi-driver-nfsはNFSストレージに新たなサブディレクトリを作成する方式で動作するNFSストレージプロビジョニングをサポートするドライバーです。
 csi-driver-nfsはストレージクラスにNFSストレージ情報を提供する方式で動作してユーザーが管理しなければならない対象を減らします。
 
-nfs-csi-driverを使用して複数のPVを構成する場合、nfs-csi-driverがNFSストレージ情報をStorageClassに登録してNFS-Provisoner podを構成する必要がありません。
+csi-driver-nfsを使用して複数のPVを構成する場合、csi-driver-nfsがNFSストレージ情報をStorageClassに登録してNFS-Provisoner podを構成する必要がありません。
 <br>
 ![nfs-csi-driver-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nfs-csi-driver-02.png)
 
@@ -3253,14 +3263,13 @@ ORAS(OCI Registry As Storage)はOCIレジストリからOCIアーティファク
 | --- | --- |
 | 韓国(パンギョ)リージョン | oras pull dfe965c3-kr1-registry.container.nhncloud.com/nks_container/nfs-deploy-tool:v1 |
 | 韓国(ピョンチョン)リージョン | oras pull 6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/nfs-deploy-tool:v1 |
-| 韓国(光州)リージョン | oras pull d6628457-kr3-registry.container.nhncloud.com/nks_container/nfs-deploy-tool:v1 |
 
 ##### 3. インストールパッケージを解凍した後、**install-driver.sh {mode}**コマンドを使用してcsi-driver-nfsコンポーネントをインストールします。 
 install-driver.shコマンド実行時、インターネット接続が可能なクラスタは**public**、そうでないクラスタは**private**を入力する必要があります。
 
 
 > [参考]
-> csi-driver-nfsコンテナイメージは社内NCRレジストリで管理されています。クローズドネットワーク環境で構成されたクラスタはインターネットに接続されていないため、イメージを正常に受け取るためにはPrivate URIを使用するための環境設定が必要です。Private URIの使い方については、[NHN Cloud Container Registry(NCR)ユーザーガイド](Container/NCR/ja/user-guide/#private-uri)を参照してください。
+> csi-driver-nfsコンテナイメージはNHN Cloud NCRで管理されています。クローズドネットワーク環境で構成されたクラスタはインターネットに接続されていないため、イメージを正常に受け取るためにはPrivate URIを使用するための環境設定が必要です。Private URIの使い方については、[NHN Cloud Container Registry(NCR)ユーザーガイド](Container/NCR/ja/user-guide/#private-uri)を参照してください。
 
 以下はインターネットネットワーク環境に構成されたクラスタにインストールパッケージを利用してcsi-driver-nfsをインストールする例です。
 
@@ -3477,9 +3486,9 @@ spec:
           - name: onas-dynamic
             mountPath: "/tmp/nfs"
       volumes:
-        - name: onas
+        - name: onas-dynamic
           persistentVolumeClaim:
-            claimName: pvc-onas
+            claimName: pvc-onas-dynamic
 ```
 
 Podを作成し、NASストレージがマウントされていることを確認します。
@@ -3651,14 +3660,50 @@ tmpfs                                                                          1
 ```
 
 > [参考]
-> nfs-csi-driverはプロビジョニング時にNFSストレージ内部にsubdirectoryを作成する方式で動作します。
+> csi-driver-nfsはプロビジョニング時にNFSストレージ内部にsubdirectoryを作成する方式で動作します。
 > podにPVをマウントするプロセスでsubdirectoryのみマウントされるのではなく、nfsストレージ全体がマウントされるため、アプリケーションがプロビジョニングされたサイズだけボリュームを使用するように強制できません。
 
-### NHN Cloud暗号化ブロックストレージサービス連動
+### NHN Cloud暗号化ブロックストレージ連動
 NHN Cloudが提供する暗号化ブロックストレージをPVとして活用できます。NHN Cloudの暗号化ブロックストレージの詳細については、[暗号化ブロックストレージ](/Storage/Block%20Storage/ja/console-guide/#_2)を参照してください。
 
+> [参考]
+> 暗号化ブロックストレージサービス連動機能はv1.24.3以上のバージョンのクラスタで使用可能です。
+> 2023年11月28日以降に新規作成されたクラスタは、基本的に暗号化ブロックストレージ連動機能が内蔵されています。
+> 2023年11月28日以前に生成されたクラスタは、v1.24.3以上のバージョンにアップグレードするか、csi-cinder-cinder-controllerpluginステートフルセットとcsi-cinder-nodepluginデーモンセットのcinder-csi-pluginイメージを最新バージョンに置き換えることで暗号化ブロックストレージ連動機能を使用できます。
+
 > [注意]
-> 暗号化ブロックストレージ連動機能は、11月28日以降にv1.24.3以上のバージョンにアップグレードされたか、新規に作成されたクラスタで使用可能です。
+> v1.24.3以前のバージョンのクラスタをアップグレードせずにcinder-csi-pluginコンテナイメージだけを交換して使用する場合、誤動作を引き起こす可能性があります。
+#### 暗号化ブロックストレージ連動のためのcinder-csi-pluginイメージアップデート
+下記のコマンドを実行して、現在のクラスタに配布されたcinder-csi-pluginイメージのタグを確認できます。
+
+```
+$ kubectl -n kube-system get statefulset csi-cinder-controllerplugin -o=jsonpath="{$.spec.template.spec.containers[?(@.name=='cinder-csi-plugin')].image}"
+> registry.k8s.io/provider-os/cinder-csi-plugin:v1.27.101
+```
+
+cinder-csi-pluginイメージのタグがv1.27.101以上の場合、何もしなくても暗号化ブロックストレージを連動できます。
+cinder-csi-pluginイメージのタグがv1.27.101未満の場合、下記の手順でcinder-csi-pluginのイメージをアップデートした後、暗号化ブロックストレージを連動できます。
+
+| リージョン | インターネット接続 | cinder-csi-pluginイメージ |
+| --- | --- | --- |
+| 韓国(パンギョ)リージョン | O | dfe965c3-kr1-registry.container.nhncloud.com/nks_container/cinder-csi-plugin:v1.27.101 |
+| | X | private-dfe965c3-kr1-registry.container.nhncloud.com/nks_container/cinder-csi-plugin:v1.27.101 |
+| 韓国(ピョンチョン)リージョン | O | 6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/cinder-csi-plugin:v1.27.101 |
+|  | X | private-6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/cinder-csi-plugin:v1.27.101 |
+
+1. container_imageに正しいcinder-csi-pluginイメージ値を入力します。
+    ```
+    $ container_image={cinder-csi-pluginイメージ}
+    ```
+2. コンテナイメージを置き換えます。
+    ```
+    $ kubectl -n kube-system patch statefulset csi-cinder-controllerplugin -p "{\"spec\": {\"template\": {\"spec\": {\"containers\": [{\"name\": \"cinder-csi-plugin\", \"image\": \"${container_image}\"}]}}}}"
+    $ kubectl -n kube-system patch daemonset csi-cinder-nodeplugin -p "{\"spec\": {\"template\": {\"spec\": {\"containers\": [{\"name\": \"cinder-csi-plugin\", \"image\": \"${container_image}\"}]}}}}"
+    ```
+> [参考]
+> cinder-csi-pluginコンテナイメージは NHN Cloud NCR で管理されています。クローズドネットワーク環境で構成されたクラスタはインターネットに接続されていないため、イメージを正常に受け取るためにはPrivate URIを使うための環境設定が必要です。Private URIの使い方についての詳細は[NHN Cloud Container Registry(NCR) ユーザーガイド](/Container/NCR/ja/user-guide/#private-uri)を参照してください。
+
+
 #### 静的プロビジョニング
 PVを生成するには、暗号ブロックストレージのIDが必要です。Storage > Block Storageサービスページのブロックストレージ一覧から使用するブロックストレージを選択します。下部の情報タブのブロックストレージ名項目でIDを確認できます。
 
