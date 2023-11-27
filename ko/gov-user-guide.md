@@ -1006,6 +1006,61 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 * m2, c2, r2, t2, x1, g2 타입의 인스턴스는 u2 타입으로 변경할 수 없습니다.
 * u2 타입의 인스턴스는 생성 이후에 타입을 변경할 수 없습니다. 같은 u2 타입으로의 변경도 불가합니다.
 
+### 커스텀 이미지를 워커 이미지로 활용
+
+사용자의 커스텀 이미지를 기반으로 한 워커 노드 그룹을 생성할 수 있습니다. 커스텀 이미지가 워커 노드 이미지로 활용될 수 있도록 NHN Cloud Image Builder 서비스에서 추가적인 작업(NKS 워커 노드화)이 필요합니다. Image Builder 서비스에서 NHN Kubernetes Service(NKS) 워커 노드 애플리케이션으로 이미지 템플릿을 생성하여 커스텀 워커 노드 이미지를 생성할 수 있습니다. Image Builder 서비스에 대한 자세한 내용은 [Image Builder 사용자 가이드](/Compute/Image%20Builder/ko/console-guide-gov/#_1)를 참고하세요.
+
+> [주의]
+> NKS 워커 노드화 작업에는 패키지 설치 및 설정 변경 등이 포함되어 있어 정상적으로 동작하지 않는 이미지로 작업을 진행하는 경우 실패할 수 있습니다.
+> Image Builder 서비스 사용에 대해 과금될 수 있습니다.
+
+#### 제약 사항
+NHN Cloud 인스턴스를 기반으로 생성한 커스텀 이미지만 워커 노드 이미지로 사용할 수 있습니다. 해당 기능은 특정 인스턴스 이미지에 대해서만 제공됩니다. 커스텀 이미지를 생성하는 기반 인스턴스의 이미지에 맞춰 올바른 버전의 워커 노드화 애플리케이션을 선택해야 합니다. 인스턴스 이미지별 선택해야 하는 애플리케이션 버전 정보는 아래 표를 참고하세요.
+
+| OS | 이미지 | 애플리케이션 버전 |
+| --- | --- | --- |
+| CentOS | CentOS 7.9 (2022.11.22)  | 1.0 |
+|  | CentOS 7.9 (2023.05.25)  | 1.1 |
+|  | CentOS 7.9 (2023.08.22)  | 1.2 |
+|  | CentOS 7.9 (2023.11.21)  | 1.3 |
+| Rocky | Rocky Linux 8.6 (2023.03.21)  | 1.0 |
+|  | Rocky Linux 8.7 (2023.05.25)  | 1.1 |
+|  | Rocky Linux 8.8 (2023.08.22)  | 1.2 |
+|  | Rocky Linux 8.8 (2023.11.21)  | 1.3 |
+| Ubuntu | Ubuntu Server 18.04.6 LTS (2023.03.21)  | 1.0 |
+|  | Ubuntu Server 20.04.6 LTS (2023.05.25)  | 1.1 |
+|  | Ubuntu Server 20.04.6 LTS (2023.08.22)  | 1.2 |
+|  | Ubuntu Server 20.04.6 LTS (2023.11.21)  | 1.3 |
+|  | Ubuntu Server 22.04.3 LTS (2023.11.21)  | 1.3 |
+| Debian | Debian 11.6 Bullseye (2023.03.21)  | 1.0 |
+|  | Debian 11.6 Bullseye (2023.05.25)  | 1.1 |
+|  | Debian 11.7 Bullseye (2023.08.22)  | 1.2 |
+|  | Debian 11.8 Bullseye (2023.11.21)  | 1.3 |
+
+
+> [참고]
+> 커스텀 이미지를 워커 노드 이미지로 변환하는 과정에서 선택한 옵션에 따라 GPU 드라이버가 설치됩니다.
+> 따라서 커스텀 GPU 워커 노드 이미지를 생성하는 경우에도 커스텀 이미지 생성을 GPU 인스턴스로 할 필요가 없습니다.
+#### 진행 과정
+
+커스텀 이미지를 워커 노드 이미지로 활용하기 위해서 Image Builder 서비스에서 아래와 같은 과정을 수행합니다.
+
+1. **이미지 템플릿을 생성**을 클릭합니다.
+2. 애플리케이션을 선택한 후 **이미지 템플릿 이름**, **OS**, **최소 블록 스토리지(GB)**, **사용자 스크립트**, **설명**을 작성합니다.
+    * GPU Flavor를 사용하지 않는 워커 노드 그룹인 경우 NHN Kubernetes Service(NKS) Worker Node 애플리케이션을 선택합니다.
+    * GPU Flavor를 사용하는 워커 노드 그룹인 경우 NHN Kubernetes Service(NKS) Worker Node(GPU) 애플리케이션을 선택합니다.
+3. **확인**을 클릭해 이미지 템플릿을 생성합니다.
+4. 생성된 이미지 템플릿을 선택한 후 **이미지 빌드**를 선택합니다.
+5. **이미지 빌드** 화면에서 **개인 이미지** 탭을 선택한 뒤 NKS 워커 노드화를 진행할 커스텀 이미지를 선택합니다.
+6. **확인**을 클릭하면 NKS 워커 노드화가 진행된 후 새로운 이미지를 생성합니다.
+7. **클러스터 생성** 화면 또는 **노드 그룹 생성** 화면에서 생성된 커스텀 이미지를 선택합니다.
+
+![nkscustom_image_1.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nkscustom_image_1.png)
+
+![nkscustom_image_2.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nkscustom_image_2.png)
+
+![nkscustom_image_3.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nkscustom_image_3.png)
+
 ## 클러스터 관리
 원격의 호스트에서 클러스터를 조작하고 관리하려면 Kubernetes가 제공하는 명령줄 도구(CLI)인 `kubectl`이 필요합니다.
 
@@ -1449,6 +1504,20 @@ route del -net 0.0.0.0/0 dev eth1
 route add -net 0.0.0.0/0 gw 192.168.0.1 dev eth1 metric 0
 ```
 
+### kubelet 사용자 정의 아규먼트 설정 기능
+kubelet은 모든 워커 노드에서 동작하는 노드 에이전트입니다. kubelet은 커맨드라인 아규먼트를 이용해 여러 설정을 입력 받습니다. NKS에서 제공하는 kubelet 사용자 정의 아규먼트 설정 기능을 이용하면 kubelet 시작 시 입력되는 아규먼트를 추가할 수 있습니다. kubelet 사용자 정의 아규먼트는 다음과 같이 설정하고 시스템에 적용할 수 있습니다.
+
+* 워커 노드의 `/etc/kubernetes/kubelet-user-args` 파일에 `KUBELET_USER_ARGS="사용자 정의 아규먼트"` 형식으로 사용자 정의 아규먼트를 입력합니다.
+* `systemctl daemon-reload` 명령을 수행합니다.
+* `systemctl restart kubelet` 명령을 수행합니다.
+* `systemctl status kubelet` 명령으로 kubelet이 정상 동작 중인지 확인합니다.
+
+> [주의]
+> * 이 기능은 2023년 11월 30일 이후 신규 생성된 클러스터에서만 동작합니다.
+> * 사용자 정의 아규먼트를 설정할 워커 노드별로 수행합니다.
+> * 올바르지 않은 형식의 사용자 정의 아규먼트 입력 시 kubelet이 정상 동작하지 않습니다.
+> * 설정된 사용자 정의 아규먼트는 시스템 재시작 시에도 그대로 적용됩니다.
+
 ## LoadBalancer 서비스
 Kubernetes 애플리케이션의 기본 실행 단위인 파드(pod)는 CNI(container network interface)로 클러스터 네트워크에 연결됩니다. 기본적으로 클러스터 외부에서 파드로는 접근할 수 없습니다. 파드의 서비스를 클러스터 외부에 공개하려면 Kubernetes의 `LoadBalancer` 서비스(Service) 객체(object)를 이용해 외부에 공개할 경로를 만들어야 합니다. LoadBalancer 서비스 객체를 만들면 클러스터 외부에 NHN Cloud Load Balancer가 생성되어 서비스 객체와 연결됩니다.
 
@@ -1583,7 +1652,28 @@ Commercial support is available at
 ```
 
 ### 로드 밸런서 상세 옵션 설정
-Kubernetes의 서비스 객체를 정의할 때 로드 밸런서의 여러 가지 옵션을 설정할 수 있습니다.
+Kubernetes의 서비스 객체를 정의할 때 로드 밸런서의 여러 가지 옵션을 설정할 수 있습니다. 설정 가능한 항목은 아래와 같습니다.
+
+* 전역 설정과 리스너별 설정
+* 리스너별 설정 형식
+* 로드 밸런서 이름 설정
+* keep-alive 타임아웃 설정
+* 로드 밸런서 타입 설정
+* 세션 지속성 설정
+* 로드 밸런서 삭제 시 플로팅 IP 주소 보존 여부 설정
+* 로드 밸런서 IP 설정
+* 플로팅 IP 사용 여부 설정
+* VPC 설정
+* 서브넷 설정
+* 멤버 서브넷 설정
+* 리스너 연결 제한 설정
+* 리스너 프로토콜 설정
+* 리스너 프록시 프로토콜(Proxy Protocol) 설정
+* 로드 밸런싱 방식 설정
+* 상태 확인 프로토콜 설정
+* 상태 확인 주기 설정
+* 상태 확인 최대 응답 시간 설정
+* 상태 확인 최대 재시도 횟수 설정
 
 #### 전역 설정과 리스너별 설정
 설정 항목별로 전역 설정과 리스너별 설정이 가능합니다. 전역 설정과 리스너별 설정 모두 없는 경우 설정별 기본값을 사용합니다.
@@ -1642,7 +1732,7 @@ spec:
 > 아래 기능의 설정값은 모두 문자열 형식으로 입력해야 합니다. YAML 파일 입력 형식에서 입력값 형태에 관계없이 문자열 형식으로 입력하기 위해서는 입력값을 큰따옴표(")로 감싸주면 됩니다. YAML 파일 형식에 대한 더 자세한 내용은 [Yaml Cookbook](https://yaml.org/YAML_for_ruby.html) 문서를 참조하세요.
 >
 
-### 로드 밸런서 이름 설정
+#### 로드 밸런서 이름 설정
 
 로드 밸런서의 이름을 설정할 수 있습니다.
 
@@ -1694,6 +1784,7 @@ spec:
 로드 밸런서를 생성할 때 로드 밸런서의 IP를 설정할 수 있습니다.
 
 * 설정 위치는 .spec.loadBalancerIP 입니다.
+* **리스너별 설정을 적용할 수 없습니다.**
 * 다음 중 하나로 설정할 수 있습니다.
   * 빈 문자열(""): 로드 밸런서에 자동으로 생성되는 플로팅 IP를 연결합니다. 미설정 시 기본값입니다.
   * <Floating_IP>: 로드 밸런서에 기존의 플로팅 IP를 연결합니다. 이미 할당 받았지만 연결되지 않은 플로팅 IP가 있을 때 사용 가능합니다.
@@ -1723,6 +1814,7 @@ spec:
 로드 밸런서 생성 시 플로팅 IP의 사용 여부를 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotaions 하위의 service.beta.kubernetes.io/openstack-internal-load-balancer입니다.
+* **리스너별 설정을 적용할 수 없습니다.**
 * 다음 중 하나로 설정할 수 있습니다.
   * true: 플로팅 IP를 사용하지 않고, VIP(Virtual IP)를 사용합니다.
   * false: 플로팅 IP를 사용합니다. 미설정 시 기본값입니다.
@@ -1765,12 +1857,14 @@ spec:
 로드 밸런서 생성 시 로드 밸런서가 연결될 VPC를 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotaions 하위의 loadbalancer.openstack.org/network-id입니다.
+* **리스너별 설정을 적용할 수 없습니다.**
 * 설정하지 않으면 클러스터 생성 시 설정한 VPC로 설정합니다.
 
 #### 서브넷 설정
-로드 밸런서 생성 시 로드 밸런서가 연결될 서브넷을 설정할 수 있습니다.
+로드 밸런서 생성 시 로드 밸런서가 연결될 서브넷을 설정할 수 있습니다. 설정된 서브넷에 로드 밸런서의 사설 IP가 연결됩니다. 멤버 서브넷 설정이 없는 경우 이 서브넷에 연결된 워커 노드가 로드 밸런서 멤버로 추가됩니다.
 
 * 설정 위치는 .metadata.annotaions 하위의 loadbalancer.openstack.org/subnet-id입니다.
+* **리스너별 설정을 적용할 수 없습니다.**
 * 설정하지 않으면 클러스터 생성 시 설정한 서브넷으로 설정합니다.
 
 아래는 로드 밸런서에 VPC와 서브넷을 설정하는 매니페스트 예제입니다.
@@ -1795,6 +1889,41 @@ spec:
   type: LoadBalancer
 ```
 
+#### 멤버 서브넷 설정
+로드 밸런서 생성 시 로드 밸런서 멤버가 연결될 서브넷을 설정할 수 있습니다. 이 서브넷에 연결된 워커 노드가 로드 밸런서 멤버로 추가됩니다.
+
+* 설정 위치는 .metadata.annotaions 하위의 loadbalancer.nhncloud/member-subnet-id입니다.
+* **리스너별 설정을 적용할 수 없습니다.**
+* 설정하지 않으면 로드 밸런서의 서브넷 설정값이 적용됩니다.
+* 멤버 서브넷은 **반드시 로드 밸런서 서브넷과 동일한 VPC에 포함**되어 있어야 합니다.
+* 2개 이상의 멤버 서브넷을 설정하기 위해서는 콤마로 구분된 목록으로 입력합니다.
+
+아래는 로드 밸런서에 VPC, 서브넷, 멤버 서브넷을 설정하는 매니페스트 예제입니다.
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc-vpc-subnet
+  labels:
+     app: nginx
+  annotations:
+    loadbalancer.openstack.org/network-id: "49a5820b-d941-41e5-bfc3-0fd31f2f6773"
+    loadbalancer.openstack.org/subnet-id: "38794fd7-fd2e-4f34-9c89-6dd3fd12f548"
+    loadbalancer.nhncloud/member-subnet-id: "c3548a5e-b73c-48ce-9dc4-4d4c484108bf"
+spec:
+  ports:
+  - port: 8080
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: nginx
+  type: LoadBalancer
+```
+
+> [주의]
+> 멤버 서브넷은 2023년 11월 30일 이후 v1.24.3 이상의 버전으로 업그레이드됐거나 신규 생성된 클러스터에서 설정 가능합니다.
+
 #### 리스너 연결 제한 설정
 리스너의 연결 제한을 설정할 수 있습니다.
 
@@ -1817,7 +1946,7 @@ spec:
     * TCP: 미설정 시 기본값입니다.
     * HTTP
     * HTTPS
-    * TERMINATED_HTTPS: TERMINATED_HTTPS로 설정합니다. SSL 버전, 인증서, 개인키 정보를 추가 설정해야 합니다.
+    * TERMINATED_HTTPS: TERMINATED_HTTPS로 설정합니다. SSL 버전, 인증서, 개인 키 정보를 추가 설정해야 합니다.
 
 > [주의]
 > 리스너 프로토콜 설정은 서비스 객체를 변경해도 로드 밸런서에 적용되지 않습니다. 
@@ -1846,13 +1975,13 @@ SSL 버전은 다음과 같이 설정할 수 있습니다.
 * 리스너별 설정을 적용할 수 있습니다.
 * 시작줄 및 끝줄을 포함해야 합니다.
 
-개인키 정보는 다음과 같이 설정할 수 있습니다.
+개인 키 정보는 다음과 같이 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/listener-terminated-https-key입니다.
 * 리스너별 설정을 적용할 수 있습니다.
 * 시작줄 및 끝줄을 포함해야 합니다.
 
-다음은 리스너 프로토콜을 TERMINATED_HTTPS로 설정할 때의 매니페스트 예제입니다. 인증서 정보와 개인키 정보는 일부 생략되어 있습니다.
+다음은 리스너 프로토콜을 TERMINATED_HTTPS로 설정할 때의 매니페스트 예제입니다. 인증서 정보와 개인 키 정보는 일부 생략되어 있습니다.
 ```yaml
 metadata:
   name: echosvr-svc
@@ -1953,6 +2082,17 @@ HTTP 상태 코드는 다음과 같이 설정할 수 있습니다.
 * 최소값 1, 최대값 10입니다.
 * 설정하지 않거나 범위에서 벗어나는 값을 입력하면 기본값인 3으로 설정됩니다.
 
+#### keep-alive 타임아웃 설정
+keep-alive 타임아웃 값을 설정할 수 있습니다.
+
+* 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/keepalive-timeout입니다.
+* 리스너별 설정을 적용할 수 있습니다.
+* 초 단위로 설정합니다.
+* 최소값 0, 최대값 3600입니다.
+* 설정하지 않거나 범위에서 벗어나는 값을 입력하면 기본값인 300으로 설정됩니다.
+
+> [주의]
+> keep-alive 타임아웃은 2023년 11월 30일 이후 v1.24.3 이상의 버전으로 업그레이드됐거나 신규 생성된 클러스터에서 설정 가능합니다.
 
 ## 인그레스 컨트롤러
 인그레스 컨트롤러(ingress controller)는 인그레스(Ingress) 객체에 정의된 규칙을 참조하여 클러스터 외부에서 내부 서비스로 HTTP와 HTTPS 요청을 라우팅하고 SSL/TSL 종료, 가상 호스팅 등을 제공합니다. 인그레스 컨트롤러와 인그레스에 대한 자세한 내용은 [인그레스 컨트롤러](https://kubernetes.io/ko/docs/concepts/services-networking/ingress-controllers/), [인그레스](https://kubernetes.io/ko/docs/concepts/services-networking/ingress/) 문서를 참고하세요.
@@ -2525,6 +2665,8 @@ PV를 생성하려면 블록 스토리지의 ID가 필요합니다. **Storage > 
 
 블록 스토리지와 연결할 PV 매니페스트를 작성합니다. **spec.storageClassName**에는 스토리지 클래스 이름을 입력합니다. NHN Cloud Block Storage를 사용하려면 **spec.accessModes**는 반드시 `ReadWriteOnce`로 설정해야 합니다. **spec.presistentVolumeReclaimPolicy**는 `Delete` 또는 `Retain`으로 설정할 수 있습니다.
 
+v1.20.12 이후 버전의 클러스터는 **cinder.csi.openstack.org** 스토리지 제공자를 사용해야 합니다. 스토리지 제공자를 정의하기 위해 **spec.annotations** 하위에 `pv.kubernetes.io/provisioned-by: cinder.csi.openstack.org` 값을 지정하고, **csi** 항목 하위에 `driver: cinder.csi.openstack.org` 값을 지정합니다.
+
 > [주의]
 > Kubernetes 버전에 맞는 스토리지 제공자가 정의된 스토리지 클래스를 설정해야 합니다.
 
@@ -2533,6 +2675,8 @@ PV를 생성하려면 블록 스토리지의 ID가 필요합니다. **Storage > 
 apiVersion: v1
 kind: PersistentVolume
 metadata:
+  annotations: 
+    pv.kubernetes.io/provisioned-by: cinder.csi.openstack.org
   name: pv-static-001
 spec:
   capacity:
@@ -2542,9 +2686,10 @@ spec:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Delete
   storageClassName: sc-default
-  cinder:
+  csi:
+    driver: cinder.csi.openstack.org
     fsType: "ext3"
-    volumeID: "e6f95191-d58b-40c3-a191-9984ce7532e5"
+    volumeHandle: "e6f95191-d58b-40c3-a191-9984ce7532e5" # UUID of Block Storage
 ```
 
 PV를 생성하고 확인합니다.
@@ -2806,7 +2951,7 @@ spec:
 NHN Cloud에서 제공하는 NAS 스토리지를 PV로 활용할 수 있습니다. NAS 서비스를 사용하기 위해서는 v1.20 이후 버전의 클러스터를 사용해야 합니다. NHN Cloud NAS 사용에 대한 자세한 내용은 [NAS 콘솔 사용 가이드](/Storage/NAS%20(online)/ko/console-guide-gov)를 참고하세요.
 
 > [참고]
-> NHN Cloud NAS 서비스는 현재(2023. 08.) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS%20(online)/ko/overview-gov)를 참고하세요.
+> NHN Cloud NAS 서비스는 현재(2023. 11.) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS%20(online)/ko/overview-gov)를 참고하세요.
 
 #### 워커 노드에 NFS 패키지 설치 및 rpcbind 서비스 실행
 NAS 스토리지를 사용하려면 워커 노드에 NFS 패키지를 설치하고, rpcbind 서비스를 실행해야 합니다. 워커 노드에 접속한 뒤 아래 명령어를 실행해 NFS 패키지를 설치합니다.
@@ -2834,7 +2979,7 @@ NHN Cloud NAS 서비스를 사용하기 위해 클러스터에 csi-driver-nfs �
 csi-driver-nfs는 NFS 스토리지에 새 하위 디렉터리를 생성하는 방식으로 동작하는 NFS 스토리지 프로비저닝을 지원하는 드라이버입니다.
 csi-driver-nfs는 스토리지 클래스에 NFS 스토리지 정보를 제공하는 방식으로 동작하여 사용자가 관리해야 하는 대상을 줄여 줍니다.
 
-nfs-csi-driver를 사용하여 여러 개의 PV를 구성하는 경우 nfs-csi-driver가 NFS 스토리지 정보를 StorageClass에 등록하여 NFS-Provisoner pod를 구성할 필요가 없습니다.
+csi-driver-nfs를 사용하여 여러 개의 PV를 구성하는 경우 csi-driver-nfs가 NFS 스토리지 정보를 StorageClass에 등록하여 NFS-Provisoner pod를 구성할 필요가 없습니다.
 <br>
 ![nfs-csi-driver-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nfs-csi-driver-02.png)
 
@@ -3081,9 +3226,9 @@ spec:
           - name: onas-dynamic
             mountPath: "/tmp/nfs"
       volumes:
-        - name: onas
+        - name: onas-dynamic
           persistentVolumeClaim:
-            claimName: pvc-onas
+            claimName: pvc-onas-dynamic
 ```
 
 파드를 생성하고 NAS 스토리지가 마운트 되어 있는지 확인합니다.
@@ -3262,5 +3407,5 @@ tmpfs                                                                          1
 ```
 
 > [참고]
-> nfs-csi-driver는 프로비저닝 시 NFS 스토리지 내부에 subdirectory를 생성하는 방식으로 동작합니다.
+> csi-driver-nfs는 프로비저닝 시 NFS 스토리지 내부에 subdirectory를 생성하는 방식으로 동작합니다.
 > 파드에 PV를 마운트하는 과정에서 subdirectory만 마운트되는 것이 아니라 NFS 스토리지 전체가 마운트되기 때문에 애플리케이션이 프로비저닝된 크기만큼 볼륨을 사용하도록 강제할 수 없습니다.

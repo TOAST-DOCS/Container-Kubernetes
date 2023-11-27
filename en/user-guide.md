@@ -3,6 +3,36 @@
 ## Cluster
 Cluster refers to a group of instances that comprise user's Kubernetes.
 
+### Kubernetes Version Support Policy
+
+NKS's Kubernetes version support policy is as follows.
+
+* Support for the latest Kubernetes version
+    * NKS continuously delivers the latest Kubernetes version to ensure that your cluster is up to date.
+    * You can create a cluster with a new version or upgrade an existing cluster to a new version.
+* Createable version
+    * The number of Kubernetes versions that allow you to create clusters remains at 4.
+    * Therefore, when a new available version is added, the oldest available version is removed from the available version list.
+* Serviceable version
+    * Clusters using end-of-service versions are not guaranteed to work with new features in NKS.
+    * You can upgrade the Kubernetes version of your cluster with the cluster version upgrade feature in NKS.
+    * The number of Kubernetes versions that can be serviced remains at five.
+    * So when a new version is added to the createable versions, the lowest version among the serviceable versions is removed.
+
+For each Kubernetes version, here's when you can expect to see additions/deletions to the createable versions and when versions are listed as end of service.
+(Note that this table is current as of September 26, 2023, and the version names of createable versions and when they are provided are subject to change due to our internal circumstances)
+
+| Version    | Add to Createable Versions | Remove from Createable Versions | End of Service Support |
+|:-------:|:-------------------:|:--------------------:|:---------------------:|
+| v1.22.3 | 2022. 01.           | 2023. 05.            | 2023. 08.             |
+| v1.23.3 | 2022. 03.           | 2023. 08.            | 2024. 02.(Scheduled)       |
+| v1.24.3 | 2022. 09.           | 2024. 02.(Scheduled)      | 2024. 05.(Scheduled)       |
+| v1.25.4 | 2023. 01.           | 2024. 05.(Scheduled)      | 2024. 08.(Scheduled)       |
+| v1.26.3 | 2023. 05.           | 2024. 08.(Scheduled)      | 2025. 02.(Scheduled)       |
+| v1.27.3 | 2023. 08.           | 2025. 02.(Scheduled)      | 2025. 05.(Scheduled)       |
+| v1.28.x | 2024. 02.(Scheduled)     | 2025. 05.(Scheduled)      | 2025. 08.(Scheduled)       |
+
+
 ### Creating Clusters
 To use NHN Kubernetes Service (NKS), you must create clusters first.
 
@@ -1002,15 +1032,20 @@ Only custom images created based on NHN Cloud instances can be used as worker no
 | CentOS | CentOS 7.9 (2022.11.22)  | 1.0 |
 |  | CentOS 7.9 (2023.05.25)  | 1.1 |
 |  | CentOS 7.9 (2023.08.22)  | 1.2 |
+|  | CentOS 7.9 (2023.11.21)  | 1.3 |
 | Rocky | Rocky Linux 8.6 (2023.03.21)  | 1.0 |
 |  | Rocky Linux 8.7 (2023.05.25)  | 1.1 |
 |  | Rocky Linux 8.8 (2023.08.22)  | 1.2 |
+|  | Rocky Linux 8.8 (2023.11.21)  | 1.3 |
 | Ubuntu | Ubuntu Server 18.04.6 LTS (2023.03.21)  | 1.0 |
 |  | Ubuntu Server 20.04.6 LTS (2023.05.25)  | 1.1 |
 |  | Ubuntu Server 20.04.6 LTS (2023.08.22)  | 1.2 |
+|  | Ubuntu Server 20.04.6 LTS (2023.11.21)  | 1.3 |
+|  | Ubuntu Server 22.04.3 LTS (2023.11.21)  | 1.3 |
 | Debian | Debian 11.6 Bullseye (2023.03.21)  | 1.0 |
 |  | Debian 11.6 Bullseye (2023.05.25)  | 1.1 |
-|  | Debian 11.6 Bullseye (2023.08.22)  | 1.2 |
+|  | Debian 11.7 Bullseye (2023.08.22)  | 1.2 |
+|  | Debian 11.8 Bullseye (2023.11.21)  | 1.3 |
 
 
 > [Notes]
@@ -1107,24 +1142,24 @@ Server Version: version.Info{Major:"1", Minor:"15", GitVersion:"v1.15.7", GitCom
 Using Certificate API of Kubernetes, you can request and issue the X.509 certificate for a Kubernetes API client . CSR resource lets you request certificate and decide to accept/reject the request. For more information, see the [Certificate Signing Requests](https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/) document.
 
 #### CSR Request and Issue Approval Example
-First of all, create a private key. For more information on certificate creation, see the [Certificates](https://kubernetes.io/docs/concepts/cluster-administration/certificates/) document.
+First of all, create a private key. For more information on certificate creation, see the [Certificates](https://kubernetes.io/docs/tasks/administer-cluster/certificates/) document.
 
 ```
-# openssl genrsa -out dev-user1.key 2048
+$ openssl genrsa -out dev-user1.key 2048
 Generating RSA private key, 2048 bit long modulus
 ...........................................................................+++++
 ..................+++++
 e is 65537 (0x010001)
 
-# openssl req -new -key dev-user1.key -subj "/CN=dev-user1" -out dev-user1.csr
+$ openssl req -new -key dev-user1.key -subj "/CN=dev-user1" -out dev-user1.csr
 ```
 
 Create a CSR resource that includes created private key information and request certificate issuance.
 
 ```
-# BASE64_CSR=$(cat dev-user1.csr | base64 | tr -d '\n')
-# cat <<EOF > csr.yaml -
-apiVersion: certificates.k8s.io/v1beta1
+$ BASE64_CSR=$(cat dev-user1.csr | base64 | tr -d '\n')
+$ cat <<EOF > csr.yaml -
+apiVersion: certificates.k8s.io/v1
 kind: CertificateSigningRequest
 metadata:
   name: dev-user1
@@ -1132,71 +1167,70 @@ spec:
   groups:
   - system:authenticated
   request: ${BASE64_CSR}
+signerName: kubernetes.io/kube-apiserver-client
+expirationSeconds: 86400  # one day
   usages:
-  - digital signature
-  - key encipherment
-  - server auth
   - client auth
 EOF
 
-# kubectl apply -f csr.yaml
+$ kubectl apply -f csr.yaml
 certificatesigningrequest.certificates.k8s.io/dev-user1 created
 ```
 
 The registered CSR is in `Pending` state. This state indicates waiting for issuance approval or rejection.
 
 ```
-# kubectl get csr
-NAME        AGE   REQUESTOR          CONDITION
-dev-user1   6s    system:unsecured   Pending
+$ kubectl get csr
+NAME        AGE   SIGNERNAME                            REQUESTOR   REQUESTEDDURATION   CONDITION
+dev-user1   3s    kubernetes.io/kube-apiserver-client   admin       24h                 Pending
 ```
 
 Approve this certificate issuance request.
 
 ```
-# kubectl certificate approve dev-user1
+$ kubectl certificate approve dev-user1
 certificatesigningrequest.certificates.k8s.io/dev-user1 approved
 ```
 
 If you check the CSR again, you can see that it has been changed to the `Approved,Issued` state.
+
 ```
-# kubectl get csr
-NAME        AGE    REQUESTOR          CONDITION
-dev-user1   114s   system:unsecured   Approved,Issued
+$ kubectl get csr
+NAME        AGE   SIGNERNAME                            REQUESTOR   REQUESTEDDURATION   CONDITION
+dev-user1   28s   kubernetes.io/kube-apiserver-client   admin       24h                 Approved,Issued
 ```
 
 You can look up the certificate as below. The certificate is a value for the Certificate field under Status.
 
 ```
-# kubectl get csr/dev-user1 -o yaml
-apiVersion: certificates.k8s.io/v1beta1
+$ apiVersion: certificates.k8s.io/v1
 kind: CertificateSigningRequest
 metadata:
   annotations:
     kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"certificates.k8s.io/v1beta1","kind":"CertificateSigningRequest","metadata":{"annotations":{},"name":"dev-user1"},"spec":{"groups":["system:authenticated"],"request":"LS0tLS...((omitted))","usages":["digital signature","key encipherment","server auth","client auth"]}}
-  creationTimestamp: "2020-12-07T06:32:53Z"
+      {"apiVersion":"certificates.k8s.io/v1","kind":"CertificateSigningRequest","metadata":{"annotations":{},"name":"dev-user1"},"spec":{"expirationSeconds":86400,"groups":["system:authenticated"],"request":"LS0t..(omitted)","signerName":"kubernetes.io/kube-apiserver-client","usages":["client auth"]}}
+  creationTimestamp: "2023-09-15T05:53:12Z"
   name: dev-user1
-  resourceVersion: "3202"
-  selfLink: /apis/certificates.k8s.io/v1beta1/certificatesigningrequests/dev-user1
-  uid: b22477eb-0abc-4fc4-8a79-f6516751a940
+  resourceVersion: "176619"
+  uid: a5813153-40de-4725-9237-3bf684fd1db9
 spec:
+  expirationSeconds: 86400
   groups:
   - system:masters
   - system:authenticated
-  request: LS0tLS...((omitted))
+  request: LS0t..(omitted)
+  signerName: kubernetes.io/kube-apiserver-client
   usages:
-  - digital signature
-  - key encipherment
-  - server auth
   - client auth
-  username: system:unsecured
+  username: admin
 status:
-  certificate: LS0tLS...((omitted))
+  certificate: LS0t..(omitted)
   conditions:
-  - lastUpdateTime: "2020-12-07T06:34:43Z"
+  - lastTransitionTime: "2023-09-15T05:53:26Z"
+    lastUpdateTime: "2023-09-15T05:53:26Z"
     message: This CSR was approved by kubectl certificate approve.
     reason: KubectlApprove
+    status: "True"
     type: Approved
 ```
 
@@ -1505,6 +1539,20 @@ route del -net 0.0.0.0/0 dev eth1
 route add -net 0.0.0.0/0 gw 192.168.0.1 dev eth1 metric 0
 ```
 
+### Set kubelet Custom Arguments
+A kubelet is a node agent that runs on all worker nodes. The kubelet receives input for many settings using command-line arguments. The kubelet custom arguments setting feature provided by NKS allows you to add arguments that are input at kubelet startup. You can set up kubelet custom arguments and apply them to your system as follows.
+
+* Enter your custom arguments in the `/etc/kubernetes/kubelet-user-args` file on the worker node in the form `KUBELET_USER_ARGS="custom arguments` ".
+* Run the `systemctl daemon-reload` command.
+* Run the `systemctl restart kubelet` command.
+* Determine whether the kubelet is working properly with the `systemctl status kubelet` command.
+
+> [Caution]
+> * This feature will only work for clusters newly created after November 28, 2023.
+> * This feature runs on each worker node for which you want to set custom arguments.
+> * The kubelet will not behave correctly when you enter an incorrectly formatted custom argument.
+> * The set custom argument will remain in effect even when the system restarts.
+
 ## LoadBalancer Service
 Pod is a basic execution unit of a Kubernetes application and it is connected to a cluster network via CNI (container network interface). By default, pods are not accessible from outside the cluster. To expose a pod's services to the outside of the cluster, you need to create a path to expose to the outside using the Kubernetes `LoadBalancer` Service object. Creating a LoadBalancer service object creates an NHN Cloud Load Balancer outside the cluster and associates it with the service object.
 
@@ -1639,7 +1687,28 @@ Commercial support is available at
 ```
 
 ### Setting Detailed Options for Load Balancer
-When defining service objects in Kubernetes, you can set several options for the load balancer.
+When defining service objects in Kubernetes, you can set several options for the load balancer. You can set the following.
+
+* Global Setting and Per-Listener Setting
+* Format of Per-Listener Setting
+* Setting Load Balancer Name
+* Setting keep-alive timeout
+* Set load balancer type
+* Set the session affinity
+* Set whether to keep a floating IP address when deleting the load balancer
+* Set the load balancer IP
+* Set whether to use the floating IP
+* Set VPC
+* Set Subnet
+* Set Member Subnet
+* Set the listener connection limit
+* Set the listener protocol
+* Set the listener proxy protocol
+* Set the load balancing method
+* Set the health check protocol
+* Set the health check interval
+* Set the health check maximum response time
+* Set the maximum number of retries for a health check
 
 #### Global Setting and Per-Listener Setting
 For each setting item, global setting or per-listener setting is supported. If neither global nor per-listener setting is available, the default value for each setting is used.
@@ -1699,7 +1768,7 @@ For clusters of Kubernetes v1.19.13 version, per-listener settings apply only to
 All setting values for the features below must be entered in string format. In the YAML file input format, to enter in string format regardless of the input value, enclose the input value in double quotation marks ("). For more information about the YAML file format, see [Yaml Cookbook](https://yaml.org/YAML_for_ruby.html).
 >
 
-### Setting Load Balancer Name
+#### Setting Load Balancer Name
 
 You can set a name for the load balancer.
 
@@ -1762,6 +1831,7 @@ v1.18.19 clusters created before October 26, 2021 have an issue where floating I
 You can set the load balancer IP when creating a load balancer.
 
 * The setting location is .spec.loadBalancerIP.
+* **Per-listener settings cannot be applied.**
 * It can be set to one of the following.
   * Empty string(""): Associate an automatically created floating IP with the load balancer. The default when not set.
   * <Floating_IP>: Associate the existing floating IP with the load balancer. It can be used when there is a floating IP that is allocated and not associated.
@@ -1791,6 +1861,7 @@ spec:
 You can set whether to use floating IPs when creating the load balancer.
 
 * The setting location is service.beta.kubernetes.io/openstack-internal-load-balancer under .metadata.annotaions.
+* **Per-listener settings cannot be applied.**
 * It can be set to one of the following.
   * true: Use a VIP (Virtual IP), not a floating IP.
   * false: Use a floating IP. The default when not set.
@@ -1833,12 +1904,14 @@ Depending on the combination of floating IP usage and load balancer IP setting, 
 You can set a VPC to which the load balancer is connected when creating a load balancer.
 
 * The setting location is loadbalancer.openstack.org/network-id under .metadata.annotaions.
+* **Per-listener settings cannot be applied.**
 * If not set, it is set to the VPC configured when creating the cluster.
 
 #### Set Subnet
-You can set a subnet to which the load balancer is connected when creating a load balancer.
+You can set a subnet to which the load balancer is connected when creating a load balancer. The load balancer's private IP is connected to the set subnet. If no member subnet is set, worker nodes connected to this subnet are added as load balancer members.
 
 * The setting location is loadbalancer.openstack.org/subnet-id under .metadata.annotaions.
+* **Per-listener settings cannot be applied.**
 * If not set, it is set to the subnet configured when creating the cluster.
 
 Below is an manifest example of setting a VPC and subnet for the load balancer.
@@ -1862,6 +1935,41 @@ spec:
     app: nginx
   type: LoadBalancer
 ```
+
+#### Set Member Subnet
+When creating a load balancer, you can set a subnet to which load balancer members will be connected. Worker nodes connected to this subnet are added as load balancer members.
+
+* The setting is located at loadbalancer.nhncloud/member-subnet-id under .metadata.annotaions.
+* **Per-listener settings cannot be applied.**
+* If not set, the load balancer's subnet setting is applied.
+* The member subnet **must be in the same VPC as the load balancer subnet**.
+* To set up more than one member subnet, enter them as a comma-separated list.
+
+Below is an manifest example of setting a VPC, subnet, and member subnet for the load balancer.
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc-vpc-subnet
+  labels:
+     app: nginx
+  annotations:
+    loadbalancer.openstack.org/network-id: "49a5820b-d941-41e5-bfc3-0fd31f2f6773"
+    loadbalancer.openstack.org/subnet-id: "38794fd7-fd2e-4f34-9c89-6dd3fd12f548"
+    loadbalancer.nhncloud/member-subnet-id: "c3548a5e-b73c-48ce-9dc4-4d4c484108bf"
+spec:
+  ports:
+  - port: 8080
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: nginx
+  type: LoadBalancer
+```
+
+> [Caution]
+Member subnets can be set up on clusters that have been upgraded to v1.24.3 or later after November 28, 2023, or are newly created.
 
 #### Set the listener connection limit
 You can set the connection limit for a listener.
@@ -2021,6 +2129,17 @@ You can set the maximum number of retries for a health check.
 * Minimum value of 1, maximum value of 10.
 * If not set or a value out of range is entered, it is set to the default value of 3.
 
+#### Setting keep-alive timeout
+You can set a keep-alive timeout value.
+
+* The setting is located at loadbalancer.nhncloud/keepalive-timeout under .metadata.annotations.
+* Per-listener settings can be applied.
+* Set the value in seconds.
+* The minimum value is 0 and the maximum is 3600.
+* If not set or a value out of range is entered, it is set to the default value of 300.
+
+> [Caution]
+> The keep-alive timeout can be set up on clusters that have been upgraded to v1.24.3 or later after November 28, 2023, or are newly created.
 
 ## Ingress Controller
 Ingress Controller routes HTTP and HTTPS requests from cluster externals to internal services, in reference of the rules that are defined at ingress object so as to provide SSL/TSL closure and virtual hosting. For more details on Ingress Controller and Ingress, see [Ingress Controller](https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/), [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/).
@@ -2592,6 +2711,8 @@ To create a PV, you need the ID of the block storage. On the **Storage > Block S
 
 Write a manifest for the PV to be attached to the block storage. Enter the storage class name in **spec.storageClassName**. To use NHN Cloud Block Storage, **spec.accessModes** must be set to `ReadWriteOnce`. **spec.presistentVolumeReclaimPolicy** can be set to `Delete` or `Retain`.
 
+Clusters in v1.20.12 and later must use the **cinder.csi.openstack.org** storage provider. To define the storage provider, **specify** the value `pv.kubernetes.io/provisioned-by: cinder.csi.` `openstack`. `org` under **spec.annotations** and the value `driver: cinder.csi.openstack.org` under **csi** entries.
+
 > [Caution]
 You must set a storage class in which the storage provider suitable for your Kubernetes version has been defined.
 
@@ -2600,6 +2721,9 @@ You must set a storage class in which the storage provider suitable for your Kub
 apiVersion: v1
 kind: PersistentVolume
 metadata:
+  annotations: 
+    pv.kubernetes.io/provisioned-by: 
+cinder.csi.openstack.org
   name: pv-static-001
 spec:
   capacity:
@@ -2609,9 +2733,10 @@ spec:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Delete
   storageClassName: sc-default
-  cinder:
+  csi:
+    driver: cinder.csi.openstack.org
     fsType: "ext3"
-    volumeID: "e6f95191-d58b-40c3-a191-9984ce7532e5"
+    volumeHandle: "e6f95191-d58b-40c3-a191-9984ce7532e5" # UUID of Block Storage
 ```
 
 Create the PV and check that it has been created.
@@ -2875,7 +3000,7 @@ Regarding how to use NHN Cloud Container Registry, see [User Guide for Container
 You can utilize NAS storage provided by NHN Cloud as PV. In order to use NAS services, you must use a cluster of version v1.20 or later. For more information on using NHN Cloud NAS, please refer to the [NAS Console User Guide](/Storage/NAS/en/console-guide).
 
 > [Note]
-The NHN Cloud NAS service is currently (2032.08) only available in some regions. For more information on supported regions for NHN Cloud NAS service, see [NAS Service Overview](/Storage/NAS/ko/overview).
+The NHN Cloud NAS service is currently (2023.11) only available in some regions. For more information on supported regions for NHN Cloud NAS service, see [NAS Service Overview](/Storage/NAS/en/overview).
 
 #### Install the nfs Package on Worker Node and Run the rpcbind service
 To use NAS storage, you must install the nfs package on the worker node, and run the rpcbind service. After connecting to the worker node, run the following command to install the nfs package.
@@ -2928,6 +3053,7 @@ $ oras pull dfe965c3-kr1-registry.container.nhncloud.com/nks_container/nfs-deplo
 | --- | --- |
 | Korea (Pangyo) region | oras pull dfe965c3-kr1-registry.container.nhncloud.com/nks_container/nfs-deploy-tool:v1 |
 | Korea (Pyengchon) region | oras pull 6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/nfs-deploy-tool:v1 |
+| Korea (Gwangju) region | oras pull d6628457-kr3-registry.container.nhncloud.com/nks_container/nfs-deploy-tool:v1 |
 
 ##### 3. After unzipping the installation package, install the csi-driver-nfs component using the **install-driver.sh {mode}** command.
 When you run the install-driver.sh command, you must enter **public** for clusters that can connect to the Internet, and **private** for clusters that do not.
@@ -2935,7 +3061,7 @@ When you run the install-driver.sh command, you must enter **public** for cluste
 
 
 > [Note]
-The csi-driver-nfs container image is maintained in our NCR registry. Since the cluster configured in a closed network environment is not connected to the Internet, it is necessary to configure the environment to use a private URI in order to receive images normally. For information on how to use Private URI, refer to the [NHN Cloud Container Registry (NCR) User Guide](Container/NCR/ko/user-guide/#private-uri).
+The csi-driver-nfs container image is maintained in NHN Cloud NCR. Since the cluster configured in a closed network environment is not connected to the Internet, it is necessary to configure the environment to use a private URI in order to receive images normally. For information on how to use Private URI, refer to the [NHN Cloud Container Registry (NCR) User Guide](Container/NCR/ko/user-guide/#private-uri).
 
 Below is an example of installing csi-driver-nfs using the installation package in the cluster configured in the Internet network environment.
 
@@ -3155,9 +3281,9 @@ spec:
           - name: onas-dynamic
             mountPath: "/tmp/nfs"
       volumes:
-        - name: onas
+        - name: onas-dynamic
           persistentVolumeClaim:
-            claimName: pvc-onas
+            claimName: pvc-onas-dynamic
 ```
 
 Create the pod and make sure the NAS storage is mounted.
@@ -3336,5 +3462,111 @@ tmpfs                                                                          1
 ```
 
 > [Note]
-> nfs-csi-driver works by creating a subdirectory inside the NFS storage when provisioning.
+> csi-driver-nfsworks by creating a subdirectory inside the NFS storage when provisioning.
 > In the process of mounting the PV to the pod, not only the subdirectory is mounted, but the entire nfs storage is mounted, so it is not possible to force the application to use the volume by the provisioned size.
+
+### NHN Cloud Encrypted Block Storage Integration
+You can utilize encrypted block storage provided by NHN Cloud as PV. For more information about NHN Cloud encrypted block storage, see [Encrypted Block Storage](/Storage/Block%20Storage/ko/console-guide/#_2).
+
+> [Note]
+The Encrypted Block Storage service integration is available for clusters in v1.24.3 and later versions.
+Newly created clusters on or after November 28, 2023 have the Encrypted Block Storage integration feature built in by default.
+Clusters created before November 28, 2023 can enable encrypted block storage integration by upgrading to v1.24.3 or later, or by replacing the cinder-csi-plugin images in the csi-cinder-controllerplugin statefulset and csi-cinder-nodeplugin daemonset with newer versions.
+
+> [Caution]
+If you are using a cluster with a version prior to v1.24.3 without upgrading it and just replacing the cinder-csi-plugin container image, it can cause malfunctions.
+
+#### Updating cinder-csi-plugin image for encrypted block storage integration
+You can run the command below to see the tags of the cinder-csi-plugin images currently deployed in your cluster.
+
+```
+$ kubectl -n kube-system get statefulset csi-cinder-controllerplugin -o=jsonpath="{$.spec.template.spec.containers[?(@.name=='cinder-csi-plugin')].image}"
+
+> registry.k8s.io/provider-os/cinder-csi-plugin:v1.27.101
+```
+
+If the tag in the cinder-csi-plugin image is v1.27.101 or later, you can integrate encrypted block storage without taking any action.
+If the tag of the cinder-csi-plugin image is less than v1.27.101, you can update the image of the cinder-csi-plugin using the steps below and then integrate encrypted block storage.
+
+| Region | Internet Connection | cinder-csi-plugin image |
+| --- | --- | --- |
+| Korea (Pangyo) region | O | dfe965c3-kr1-registry.container.nhncloud.com/nks_container/cinder-csi-plugin:v1.27.101 |
+| | X | private-dfe965c3-kr1-registry.container.nhncloud.com/nks_container/cinder-csi-plugin:v1.27.101 |
+| Korea (Pyeongchon) region | O | 6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/cinder-csi-plugin:v1.27.101 |
+|  | X | private-6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/cinder-csi-plugin:v1.27.101 |
+
+1. Enter a valid cinder-csi-plugin image value for container_image.
+    ```
+    $ container_image={cinder-csi-plugin image}
+    ```
+
+2. Replace the container image.
+    ```
+    $ kubectl -n kube-system patch statefulset csi-cinder-controllerplugin -p "{\"spec\": {\"template\": {\"spec\": {\"containers\": [{\"name\": \"cinder-csi-plugin\", \"image\": \"${container_image}\"}]}}}}"
+
+$ kubectl -n kube-system patch daemonset csi-cinder-nodeplugin -p "{\"spec\": {\"template\": {\"spec\": {\"containers\": [{\"name\": \"cinder-csi-plugin\", \"image\": \"${container_image}\"}]}}}}"
+    ```
+
+> [Note]
+> The cinder-csi-plugin container image is maintained in NHN Cloud NCR. Since the cluster configured in a closed network environment is not connected to the Internet, it is necessary to configure the environment to use a private URI in order to receive images normally. For information on how to use Private URI, refer to the [NHN Cloud Container Registry (NCR)](/Container/NCR/ko/user-guide/#private-uri).
+
+
+#### Static Provisioning
+To create a PV, you need the ID of the encrypted block storage. On the Storage > Block Storage service page, select the block storage you want to use from the block storage list. You can find the ID under the block storage name section in the Information tab at the bottom.
+
+When creating the PV manifest, enter the encrypted block storage information. The setting location is under **.spec.csi**.
+* driver: Enter `cinder.csi.openstack.org`.
+* fsType: Enter `ext3`. 
+* volumeHandle: Enter the ID of the encrypted block storage you created.
+
+Below is an example manifest.
+```yaml
+# pv-static.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    pv.kubernetes.io/provisioned-by: cinder.csi.openstack.org
+  name: pv-static-encrypted-hdd
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  csi:
+    driver: cinder.csi.openstack.org
+    fsType: ext3
+    volumeHandle: 9f606b78-256b-4f74-8988-1331cd6d398b
+```
+
+The process of creating a PVC manifest and mounting it to a Pod is the same as static provisioning for general block storage. For more information, see [Static Provisioning](/Container/NKS/en/user-guide/#_70).
+
+#### Dynamic Provisioning
+You can use automatically generated encrypted block storage as a PV by entering the information required to create encrypted block storage when creating the storage class manifest.
+
+In the storage class manifest, enter the information required to create encrypted block storage. The settings are located under **.parameters**.
+* Storage type: Enter the type of storage.
+    * **Encrypted HDD**: The storage type is set to Encrypted HDD.
+    * **Encrypted SSD**: The storage type is set to Encrypted SSD.
+* Encryption key ID (volume_key_id): Enter the ID of the symmetric key generated by the Secure Key Manager (SKM) service.
+* Encryption appkey (volume_appkey): Enter the appkey verified by the Secure Key Manager (SKM) service.
+
+Below is an example manifest.
+```yaml
+# storage_class.yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: csi-storageclass-encrypted-hdd
+provisioner: cinder.csi.openstack.org
+volumeBindingMode: Immediate
+allowVolumeExpansion: true
+parameters:
+  type: Encrypted HDD
+  volume_key_id: "5530..."
+  volume_appkey: "uaUW..."
+```
+
+The process of creating a PVC manifest and mounting it to a Pod is the same as dynamic provisioning for general block storage. For more information, see [Dynamic Provisioning](/Container/NKS/en/user-guide/#_71).

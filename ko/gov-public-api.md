@@ -55,10 +55,16 @@ GET /v2.0/networks?router:external=True
 
 | 리전 | 베이스 이미지 이름 | 베이스 이미지 UUID |
 |---|---|---|
-| 한국(판교) 리전 | CentOS 7.9 | 527ec5cb-001f-4d11-99c8-79ab92134ede |
-| | Ubuntu Server 18.04.6 LTS | b4dcfbb6-712b-4eb8-99c4-5cf21425800b |
-| | Debian 11.6 Bullseye | 6aed44d4-f4fc-4e5d-a088-6c636813bf3e |
-| | Rocky Linux 8.6 | 4eda4ea0-a807-4d35-997a-ea3bd026cba6 |
+| 한국(판교) 리전 | CentOS 7.9 | 45c0e5c5-34b8-48db-98ae-d0a881e041c8 |
+|  | Debian 11.8 Bullseye | 01b6e85a-81d6-426a-9f11-c5ec3f29f12a |
+|  | Rocky Linux 8.8 | 76b4bee5-1767-4f76-81af-420507a4ff9b |
+|  | Ubuntu Server 20.04.6 LTS | 05ab46e8-7831-4ae4-98c3-75ee0aa835e0 |
+|  | Ubuntu Server 22.04.3 LTS | 4555ed5b-4a63-439b-baac-4b7803768ec4 |
+| 한국(평촌) 리전 | CentOS 7.9 | 889fbe81-e4ab-4cf0-975c-2e048e04b209 |
+|  | Debian 11.8 Bullseye | eb6fd4c6-c16f-4b81-ba49-4c5d10b9119d |
+|  | Rocky Linux 8.8 | 353ccfd3-480e-4aa0-a5e5-a1595324f53a |
+|  | Ubuntu Server 20.04.6 LTS | b8c67913-0991-4136-92c7-920140257dd6 |
+|  | Ubuntu Server 22.04.3 LTS | f00b14fc-5f72-4ea8-bebd-c98fd3e56ea7 |
 
 ### 블록 스토리지 종류
 

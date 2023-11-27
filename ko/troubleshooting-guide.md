@@ -127,7 +127,7 @@ $
 > [참고] 상기 내용은 동기화를 위한 하나의 방법일 뿐이며, 사용자 환경에 더 적절한 방법이 있다면 그것을 통해 동기화 작업이 수행되도록 하면 됩니다.
 
 
-### > Pod의 상태가 ImagePullBackOff로 나타납니다.
+### > 파드의 상태가 ImagePullBackOff로 나타납니다.
 
 2020년 11월 20일부터 dockerhub는 컨테이너 이미지 pull 요청 횟수에 다음과 같은 제한을 두는 정책을 시행하였습니다. 제한과 관련된 자세한 사항은 [Understanding Docker Hub Rate Limiting](https://www.docker.com/increase-rate-limits)과 [Pricing & Subscriptions](https://www.docker.com/pricing)을 참고하세요.
 
@@ -203,4 +203,45 @@ github의 패키지 레지스트리가 Docker 레지스트리에서 Container �
 
 
 해결 방안은 다음과 같습니다.
-Pod 매니페스트에 정의된 image URL의 base를 `docker.pkg.github.com`에서 `gchr.io`로 변경합니다.
+파드 매니페스트에 정의된 image URL의 base를 `docker.pkg.github.com`에서 `gchr.io`로 변경합니다.
+
+### > `cannot allocate memory` 오류가 발생하며 파드의 상태가 `FailedCreatePodContainer`로 나타납니다.
+
+리눅스 커널의 기능 중 memory cgroup에 대한 kernel object accounting 기능의 버그로 발생하는 현상입니다. 주로 리눅스 커널 3.x, 4.x 버전에서 발생하며, dying memory cgroup problem 이슈로 알려져 있습니다. 사용자가 이미지 수준에서 memory cgroup에 대한 kernel object accounting 기능을 비활성화해 이 문제를 우회할 수 있습니다. 
+
+#### 기존에 생성된 클러스터에 해결 방안 적용
+워커 노드에 접속하여 부팅 옵션을 변경한 후 재시작합니다.
+
+1. `/etc/default/grub` 파일을 열고 `GRUB_CMDLINE_LINUX`의 기존 값에 `cgroup.memory=nokmem`을 추가합니다.
+
+```diff
+# vim /etc/default/grub
+- GRUB_CMDLINE_LINUX="..."
++ GRUB_CMDLINE_LINUX="... cgroup.memory=nokmem"
+```
+
+2. 설정 사항을 반영합니다.
+```
+$ grub2-mkconfig -o /boot/grub2/grub.cfg
+```
+
+3. 워커 노드를 재시작합니다.
+```
+$ reboot
+```
+
+해당 이슈는 항상 발생하는 것은 아니며, 사용자의 애플리케이션 특성에 따라 발생할 수 있습니다. 만약 이슈 발생이 우려될 경우 NKS의 커스텀 이미지 기능을 이용해 처음부터 위와 같은 해결 방안이 적용된 워커 노드 이미지를 사용할 수 있습니다.
+
+#### NKS 커스텀 이미지 기능을 사용하여 새로 생성한 클러스터에 해결 방안 적용
+NKS에서는 사용자의 커스텀 이미지를 기반으로 한 워커 노드 그룹을 생성하는 기능을 제공하고 있습니다. NKS 커스텀 이미지 기능을 사용하여 memory cgroup에 대한 kernel object accounting 기능이 비활성화된 이미지를 만들고 클러스터 생성 시 활용할 수 있습니다. 커스텀 이미지 사용 기능에 대한 자세한 내용은 [커스텀 이미지를 워커 이미지로 활용](/Container/NKS/ko/user-guide/#_25)을 참고하세요.
+
+1. 이미지 템플릿 생성 과정에서 사용자 스크립트에 아래 내용을 입력합니다.
+```
+#!/bin/bash
+args="cgroup.memory=nokmem"
+grub_file="/etc/default/grub"
+sudo sed -i "s/GRUB_CMDLINE_LINUX=\"\(.*\)\"/GRUB_CMDLINE_LINUX=\"\1 $args\"/" "$grub_file"
+
+sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+```
+

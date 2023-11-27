@@ -31,7 +31,8 @@ In the worker node, container log rotation based on the setting above is perform
 
 #### Synchronize log rotation setting
 
-While operating clusters, log rotation setting for some of the worker nodes might change in the following cases:
+While operating clusters, log rotation setting for some of the worker nodes might change in the following cases.
+
   * When the instance images are different between node groups
     * Node based on images with log rotation setting applied vs. unapplied
   * When the setting is added directly to the node based on images with log rotation setting unapplied
@@ -139,13 +140,16 @@ Since November 20, 2020, dockerhub has implemented a policy that places the foll
 
 In the case of pulling container images from dockerhub on the worker node of NKS, if you download more than 100 images within 6 hours without logging in to dockerhub, you will no longer be able to download images. In particular, workers that do not have floating IPs associated can reach the limit faster because they use public IPs.
 
-The solutions are as follows:
+The workaround is as follows.
+
 * If you log in to dockerhub, the number of images you can download increases, and you are limited by account level, not by public IP. Create a dockerhub account, sign up for a tier that provides the desired number of pulls, and use NKS. See [How to use a Private Registry with Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/).
 * If you want to be limited by an independent public IP without logging in to dockerhub, assign a floating IP to the worker node. 
 
+
 ### > Failed to pull image "k8s.gcr.io/pause:3.2" occurs in a closed network environment.
 
-This problem occurs because NKS in a closed network environment cannot receive images from public registries. Images distributed by default, such as the "k8s.gcr.io/pause:3.2" image, are pulled from NHN Cloud's internal registry when creating a worker node. The list of images distributed by default when creating a cluster is as follows:
+This problem occurs because NKS in a closed network environment cannot receive images from public registries. Images distributed by default, such as the "k8s.gcr.io/pause:3.2" image, are pulled from NHN Cloud's internal registry when creating a worker node. The list of images distributed by default when creating a cluster is as follows.
+
 * kubernetesui/dashboard
 * k8s.gcr.io/pause
 * k8s.gcr.io/kube-proxy
@@ -174,6 +178,7 @@ This problem occurs because NKS in a closed network environment cannot receive i
 * k8s.gcr.io/node-problem-detector/node-problem-detector
 * k8s.gcr.io/autoscaling/cluster-autoscaler
 * nvidia/k8s-device-plugin
+
 The same problem can occur for the image.
 
 Base images can be deleted by kubelet's Image garbage collection. For more information on kubelet garbage, see [Garbage Collection](https://kubernetes.io/docs/concepts/architecture/garbage-collection/). For NKS, imageGCHighThresholdPercent, imageGCLowThresholdPercent are set by default.
@@ -182,7 +187,7 @@ imageGCHighThresholdPercent : 85
 imageGCLowThresholdPercent : 80
 ```
 
-The solutions are as follows.
+The workaround is as follows.
 If the image pull fails, you can pull the image from the NHN Cloud internal registry using the command below. For NKS 1.24.3 version or higher, you must use nerdctl, not docker.
 ```
 TARGET_IMAGE="image with failed to pull occurred"
@@ -190,4 +195,53 @@ INFRA_REGISTRY="harbor-kr1.cloud.toastoven.net/container_service/$(basename $TAR
 docker pull $INFRA_REGISTRY
 docker tag $INFRA_REGISTRY $TARGET_IMAGE
 docker rmi $INFRA_REGISTRY
+```
+
+
+### > In k8s v1.24 and later, the `pull from host docker.pkg.github.com failed` error occurs and the image pull fails. 
+
+This issue is caused by the change of the package registry on github from the Docker registry to the Container registry. Clusters in v1.24 or earlier used Docker as the container runtime and could pull images from the `docker.pkg.github.com` registry, but NKS clusters in v1.24 and later use cotainerd as the container runtime and can no longer pull images from the `docker.pkg.github.com` registry. For more information about package registry migration, see Migration to Container registry from the Docker registry[migrating](https://docs.github.com/en/packages/working-with-a-github-packages-registry/migrating-to-the-container-registry-from-the-docker-registry).
+
+
+The workaround is as follows
+Change the base of the image URL defined in the Pod manifest `from docker.pkg.github.com` to `gchr.io`.
+
+### > `cannot allocate memory` error occurs and the Pod's status appears `as FailedCreatePodContainer`.
+
+A bug in the Linux kernel's kernel object accounting feature for memory cgroups. It occurs primarily in versions 3.x and 4.x of the Linux kernel and is known as the dying memory cgroup problem issue. Users can bypass this issue by disabling the kernel object accounting feature for memory cgroups at the image level. 
+
+#### Apply the workaround to existing clusters
+Connect to the worker node, change the boot options, and restart it.
+
+1. Open the `/etc/default/grub` file and add `cgroup.memory=nokmem`to the existing value `of GRUB_CMDLINE_LINUX`.
+
+```diff
+# vim /etc/default/grub
+- GRUB_CMDLINE_LINUX="..."
++ GRUB_CMDLINE_LINUX="... cgroup.memory=nokmem"
+```
+
+2. Reflect your settings.
+```
+$ grub2-mkconfig -o /boot/grub2/grub.cfg
+```
+
+3. Restart the worker node.
+```
+$ reboot
+```
+
+This issue may not always occur, and may depend on the nature of your application. If you are concerned about this issue, you can use the custom image feature in NKS to use a worker node image with the above workaround applied from the start.
+
+#### Apply the workaround to newly created clusters using the NKS Custom Image feature
+NKS provides the feature to create a group of worker nodes based on your custom image. You can use the NKS custom image feature to create an image with kernel object accounting disabled for memory cgroups and utilize it when creating a cluster. For more information about the feature, see [](/Container/NKS/ko/user-guide/#_25)Use Custom Image as Worker Image[](/Container/NKS/ko/user-guide/#_25).
+
+1. While creating the image template, enter the following in the user script.
+```
+#!/bin/bash
+args="cgroup.memory=nokmem"
+grub_file="/etc/default/grub"
+sudo sed -i "s/GRUB_CMDLINE_LINUX=\"\(.*\)\"/GRUB_CMDLINE_LINUX=\"\1 $args\"/" "$grub_file"
+
+sudo grub2-mkconfig -o /boot/grub2/grub.cfg
 ```
