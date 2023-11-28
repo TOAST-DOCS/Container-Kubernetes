@@ -1273,6 +1273,7 @@ status:
 
 #### v1.20.12 이후 버전
 Kubernetes 버전 별 기본 활성 승인 컨트롤러는 모두 활성화됩니다. 기본 활성 승인 컨트롤러에 아래의 컨트롤러가 추가 활성화됩니다.
+
 * NodeRestriction
 * PodSecurityPolicy
 
@@ -2898,11 +2899,12 @@ PersistentVolumeClaim (PVC) 개체를 편집하여 기존 볼륨의 크기를 �
 v1.19.13 이전 버전의 스토리지 제공자 **kubernetes.io/cinder**는 사용 중인 볼륨의 확장 기능을 제공하지 않습니다. 사용 중인 볼륨의 확장 기능을 사용하기 위해서는 v1.20.12 이후 버전의 **cinder.csi.openstack.org** 스토리지 제공자를 사용해야 합니다. 클러스터 업그레이드 기능을 통해 v1.20.12 이후 버전으로 업그레이드하여 **cinder.csi.openstack.org** 스토리지 제공자를 사용할 수 있습니다.
 
 v1.19.13 이전 버전의 **kubernetes.io/cinder** 스토리지 제공자 대신 v1.20.12 이후 버전의 **cinder.csi.openstack.org** 스토리지 제공자를 사용하기 위하여 PVC의 어노테이션을 아래와 같이 수정해야 합니다.
-+ pv.kubernetes.io/bind-completed: "yes" > 삭제
-+ pv.kubernetes.io/bound-by-controller: "yes" > 삭제
-+ volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/cinder > volume.beta.kubernetes.io/storage-provisioner:cinder.csi.openstack.org
-+ volume.kubernetes.io/storage-resizer: kubernetes.io/cinder > volume.kubernetes.io/storage-resizer: cinder.csi.openstack.org
-+ pv.kubernetes.io/provisioned-by:cinder.csi.openstack.org > 추가
+
+* ~~pv.kubernetes.io/bind-completed: "yes"~~ > 삭제
+* ~~pv.kubernetes.io/bound-by-controller: "yes"~~ > 삭제
+* ~~volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/cinder~~ > volume.beta.kubernetes.io/storage-provisioner:cinder.csi.openstack.org
+* ~~volume.kubernetes.io/storage-resizer: kubernetes.io/cinder~~ > volume.kubernetes.io/storage-resizer: cinder.csi.openstack.org
+* pv.kubernetes.io/provisioned-by:cinder.csi.openstack.org > 추가
 
 
 아래는 수정된 PVC 예제입니다.
@@ -3489,17 +3491,17 @@ cinder-csi-plugin 이미지의 태그가 v1.27.101 미만인 경우 아래의 �
 | 한국(평촌) 리전 | O | 6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/cinder-csi-plugin:v1.27.101 |
 |  | X | private-6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/cinder-csi-plugin:v1.27.101 |
 
-1. container_image에 올바른 cinder-csi-plugin 이미지 값을 입력합니다.
-    ```
-    $ container_image={cinder-csi-plugin 이미지}
-    ```
+##### 1. container_image에 올바른 cinder-csi-plugin 이미지 값을 입력합니다.
+```
+$ container_image={cinder-csi-plugin 이미지}
+```
 
-2. 컨테이너 이미지를 교체합니다.
-    ```
-    $ kubectl -n kube-system patch statefulset csi-cinder-controllerplugin -p "{\"spec\": {\"template\": {\"spec\": {\"containers\": [{\"name\": \"cinder-csi-plugin\", \"image\": \"${container_image}\"}]}}}}"
+##### 2. 컨테이너 이미지를 교체합니다.
+```
+$ kubectl -n kube-system patch statefulset csi-cinder-controllerplugin -p "{\"spec\": {\"template\": {\"spec\": {\"containers\": [{\"name\": \"cinder-csi-plugin\", \"image\": \"${container_image}\"}]}}}}"
 
-    $ kubectl -n kube-system patch daemonset csi-cinder-nodeplugin -p "{\"spec\": {\"template\": {\"spec\": {\"containers\": [{\"name\": \"cinder-csi-plugin\", \"image\": \"${container_image}\"}]}}}}"
-    ```
+$ kubectl -n kube-system patch daemonset csi-cinder-nodeplugin -p "{\"spec\": {\"template\": {\"spec\": {\"containers\": [{\"name\": \"cinder-csi-plugin\", \"image\": \"${container_image}\"}]}}}}"
+```
 
 > [참고]
 > cinder-csi-plugin 컨테이너 이미지는 NHN Cloud NCR에서 관리되고 있습니다. 폐쇄망 환경에 구성된 클러스터는 인터넷에 연결되어 있지 않기 때문에 이미지를 정상적으로 받아오기 위해서는 Private URI를 사용하기 위한 환경 구성이 필요합니다. Private URI 사용법에 대한 자세한 내용은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/user-guide/#private-uri)를 참고하세요.
