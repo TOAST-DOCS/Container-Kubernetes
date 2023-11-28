@@ -1239,6 +1239,7 @@ status:
 
 #### v1.20.12 이후 버전
 Kubernetes 버전 별 기본 활성 승인 컨트롤러는 모두 활성화됩니다. 기본 활성 승인 컨트롤러에 아래의 컨트롤러가 추가 활성화됩니다.
+
 * NodeRestriction
 * PodSecurityPolicy
 
@@ -2852,11 +2853,12 @@ PersistentVolumeClaim (PVC) 개체를 편집하여 기존 볼륨의 크기를 �
 v1.19.13 이전 버전의 스토리지 제공자 **kubernetes.io/cinder**는 사용 중인 볼륨의 확장 기능을 제공하지 않습니다. 사용 중인 볼륨의 확장 기능을 사용하기 위해서는 v1.20.12 이후 버전의 **cinder.csi.openstack.org** 스토리지 제공자를 사용해야 합니다. 클러스터 업그레이드 기능을 통해 v1.20.12 이후 버전으로 업그레이드하여 **cinder.csi.openstack.org** 스토리지 제공자를 사용할 수 있습니다.
 
 v1.19.13 이전 버전의 **kubernetes.io/cinder** 스토리지 제공자 대신 v1.20.12 이후 버전의 **cinder.csi.openstack.org** 스토리지 제공자를 사용하기 위하여 PVC의 어노테이션을 아래와 같이 수정해야 합니다.
-+ ~~pv.kubernetes.io/bind-completed: "yes"~~ > 삭제
-+ ~~pv.kubernetes.io/bound-by-controller: "yes"~~ > 삭제
-+ ~~volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/cinder~~ > volume.beta.kubernetes.io/storage-provisioner:cinder.csi.openstack.org
-+ ~~volume.kubernetes.io/storage-resizer: kubernetes.io/cinder~~ > volume.kubernetes.io/storage-resizer: cinder.csi.openstack.org
-+ pv.kubernetes.io/provisioned-by:cinder.csi.openstack.org > 추가
+
+* pv.kubernetes.io/bind-completed: "yes" > 삭제
+* pv.kubernetes.io/bound-by-controller: "yes" > 삭제
+* volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/cinder > volume.beta.kubernetes.io/storage-provisioner:cinder.csi.openstack.org
+* volume.kubernetes.io/storage-resizer: kubernetes.io/cinder > volume.kubernetes.io/storage-resizer: cinder.csi.openstack.org
+* pv.kubernetes.io/provisioned-by:cinder.csi.openstack.org > 추가
 
 
 아래는 수정된 PVC 예제입니다.
