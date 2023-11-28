@@ -1273,6 +1273,7 @@ The following applies to clusters created on February 23, 2021 or later for the 
 
 #### v1.20.12 or later
 All default active admission controllers per Kubernetes version are enabled. The following controllers are activated in addition to the default active admission controllers.
+
 * NodeRestriction
 * PodSecurityPolicy
 
@@ -2899,11 +2900,12 @@ You can adjust an existing volume by editing the PersistentVolumeClaim (PVC) obj
 **kubernetes.io/cinder**, the storage provider from v1.19.13 and older does not provide the volume expansion feature for the volume in use. To use the feature for the volume in use, you must use **cinder.csi.openstack.org**, the storage provider from v1.20.12 and later. The cluster upgrade feature allows you to upgrade the version to v1.20.12 or later in order to use the storage provider **cinder.csi.openstack.org**.
 
 To use the storage provider **cinder.csi.openstack.org**from v1.20.12 and older instead of the storage provider **kubernetes.io/cinder** from v1.19.13 and older, you must modify the annotations of PVC as follows.
-+ pv.kubernetes.io/bind-completed: "yes" > Delete
-+ pv.kubernetes.io/bound-by-controller: "yes" > Delete
-+ volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/cinder > volume.beta.kubernetes.io/storage-provisioner:cinder.csi.openstack.org
-+ volume.kubernetes.io/storage-resizer: kubernetes.io/cinder > volume.kubernetes.io/storage-resizer: cinder.csi.openstack.org
-+ pv.kubernetes.io/provisioned-by:cinder.csi.openstack.org > Add
+
+* pv.kubernetes.io/bind-completed: "yes" > Delete
+* pv.kubernetes.io/bound-by-controller: "yes" > Delete
+* volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/cinder > volume.beta.kubernetes.io/storage-provisioner:cinder.csi.openstack.org
+* volume.kubernetes.io/storage-resizer: kubernetes.io/cinder > volume.kubernetes.io/storage-resizer: cinder.csi.openstack.org
+* pv.kubernetes.io/provisioned-by:cinder.csi.openstack.org > Add
 
 
 Below is a modified PVC example.
@@ -3495,17 +3497,17 @@ If the tag of the cinder-csi-plugin image is less than v1.27.101, you can update
 | Korea (Pyeongchon) region | O | 6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/cinder-csi-plugin:v1.27.101 |
 |  | X | private-6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/cinder-csi-plugin:v1.27.101 |
 
-1. Enter a valid cinder-csi-plugin image value for container_image.
-    ```
-    $ container_image={cinder-csi-plugin image}
-    ```
+##### 1. Enter a valid cinder-csi-plugin image value for container_image.
+```
+$ container_image={cinder-csi-plugin image}
+```
 
-2. Replace the container image.
-    ```
-    $ kubectl -n kube-system patch statefulset csi-cinder-controllerplugin -p "{\"spec\": {\"template\": {\"spec\": {\"containers\": [{\"name\": \"cinder-csi-plugin\", \"image\": \"${container_image}\"}]}}}}"
+##### 2. Replace the container image.
+```
+$ kubectl -n kube-system patch statefulset csi-cinder-controllerplugin -p "{\"spec\": {\"template\": {\"spec\": {\"containers\": [{\"name\": \"cinder-csi-plugin\", \"image\": \"${container_image}\"}]}}}}"
 
 $ kubectl -n kube-system patch daemonset csi-cinder-nodeplugin -p "{\"spec\": {\"template\": {\"spec\": {\"containers\": [{\"name\": \"cinder-csi-plugin\", \"image\": \"${container_image}\"}]}}}}"
-    ```
+```
 
 > [Note]
 > The cinder-csi-plugin container image is maintained in NHN Cloud NCR. Since the cluster configured in a closed network environment is not connected to the Internet, it is necessary to configure the environment to use a private URI in order to receive images normally. For information on how to use Private URI, refer to the [NHN Cloud Container Registry (NCR)](/Container/NCR/ko/user-guide/#private-uri).

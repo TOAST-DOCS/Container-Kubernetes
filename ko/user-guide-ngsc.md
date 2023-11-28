@@ -2799,11 +2799,11 @@ v1.19.13 이전 버전의 스토리지 제공자 **kubernetes.io/cinder**는 사
 
 v1.19.13 이전 버전의 **kubernetes.io/cinder** 스토리지 제공자 대신 v1.20.12 이후 버전의 **cinder.csi.openstack.org** 스토리지 제공자를 사용하기 위하여 PVC의 어노테이션을 아래와 같이 수정해야 합니다.
 
-+ ~~pv.kubernetes.io/bind-completed: "yes"~~ > 삭제
-+ ~~pv.kubernetes.io/bound-by-controller: "yes"~~ > 삭제
-+ ~~volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/cinder~~ > volume.beta.kubernetes.io/storage-provisioner:cinder.csi.openstack.org
-+ ~~volume.kubernetes.io/storage-resizer: kubernetes.io/cinder~~ > volume.kubernetes.io/storage-resizer: cinder.csi.openstack.org
-+ pv.kubernetes.io/provisioned-by:cinder.csi.openstack.org > 추가
+* pv.kubernetes.io/bind-completed: "yes" > 삭제
+* pv.kubernetes.io/bound-by-controller: "yes" > 삭제
+* volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/cinder > volume.beta.kubernetes.io/storage-provisioner:cinder.csi.openstack.org
+* volume.kubernetes.io/storage-resizer: kubernetes.io/cinder > volume.kubernetes.io/storage-resizer: cinder.csi.openstack.org
+* pv.kubernetes.io/provisioned-by:cinder.csi.openstack.org > 추가
 
 
 아래는 수정된 PVC 예제입니다.
