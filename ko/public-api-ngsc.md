@@ -389,14 +389,14 @@ X-Auth-Token: {tokenId}
 | labels.user_script | Body | String | X | 사용자 스크립트(old) |
 | labels.user_script_v2 | Body | String | X | 사용자 스크립트 |
 | labels.master_lb_floating_ip_enabled | Body | String | O | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False")<br>labels.external_network_id와 external_subnet_id_list가 설정된 경우에만 "True"로 설정 가능 |
-| labels.service_cluster_ip_range | Body | String  | X |  K8s 서비스 네트워크, 클러스터에서 서비스 생성 시 ClusterIP에 할당되는 IP 대역, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
-| labels.pods_network_cidr | Body | String |  X |  클러스터 파드 네트워크, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
-| labels.pods_network_subnet | Body | Integer | X |  클러스터 파드 서브넷 크기, pods_network_subnet 입력 규칙 참고 |
+| labels.service_cluster_ip_range | Body | String  | X |  K8s 서비스 네트워크, 클러스터에서 서비스 생성 시 ClusterIP에 할당되는 IP 대역 fixed_subnet, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
+| labels.pods_network_cidr | Body | String |  X |  클러스터 파드 네트워크. fixed_subnet, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
+| labels.pods_network_subnet | Body | Integer | X |  클러스터 파드 서브넷 크기. pods_network_subnet 입력 규칙 참고 |
 | flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
 | fixed_network | Body | UUID | O | VPC 네트워크 UUID |
-| fixed_subnet | Body | UUID | O | VPC 서브넷 UUID |
+| fixed_subnet | Body | UUID | O | VPC 서브넷 UUID. fixed_subnet, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
 
-> fixed_subnet, additional_subnet_id_list, pods_network_cidr, service_cluster_ip_range의 CIDR은 아래와 같은 규칙으로 입력되어야 합니다.
+> fixed_subnet, pods_network_cidr, service_cluster_ip_range의 CIDR은 아래와 같은 규칙으로 입력되어야 합니다.
 >  - 링크 로컬 주소 대역(169.254.0.0/16)과 중첩될 수 없습니다.
 >  - fixed_subnet, pods_network_cidr, service_cluster_ip_range 대역은 중첩될 수 없습니다.
 >  - NKS 내부에서 사용하고 있는 IP 대역(198.18.0.0/19)과 중첩될 수 없습니다.
