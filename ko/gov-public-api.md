@@ -367,16 +367,10 @@ X-Auth-Token: {tokenId}
 | fixed_network | Body | UUID | O | VPC 네트워크 UUID |
 | fixed_subnet | Body | UUID | O | VPC 서브넷 UUID |
 
-> [주의]
-> fixed_subnet 대역이 아래 네트워크 대역과 겹치지 않도록 설정해야 합니다.
->  - 10.100.0.0/16
->  - 10.254.0.0/16
->  - 198.18.0.0/19
-> pods_network_cidr, service_cluster_ip_range의 CIDR은 아래와 같은 규칙으로 입력되어야 합니다.
->  - CIDR은 링크 로컬 주소 대역(169.254.0.0/16)과 중첩될 수 없습니다.
->  - 파드 네트워크와 K8s 서비스 네트워크 대역은 중첩될 수 없습니다.
->  - CIDR은 NKS 내부에서 사용하고 있는 IP 대역(198.18.0.0/19)과 중첩될 수 없습니다.
->  - CIDR은 NKS 클러스터에 연결된 VPC 네트워크 서브넷 또는 추가 네트워크 서브넷의 대역과 중첩될 수 없습니다.
+> fixed_subnet, additional_subnet_id_list, pods_network_cidr, service_cluster_ip_range의 CIDR은 아래와 같은 규칙으로 입력되어야 합니다.
+>  - 링크 로컬 주소 대역(169.254.0.0/16)과 중첩될 수 없습니다.
+>  - fixed_subnet, pods_network_cidr, service_cluster_ip_range 대역은 중첩될 수 없습니다.
+>  - NKS 내부에서 사용하고 있는 IP 대역(198.18.0.0/19)과 중첩될 수 없습니다.
 >  - /24보다 큰 CIDR 블록은 입력할 수 없습니다(다음과 같은 CIDR 블록은 사용할 수 없습니다. /26, /30).
 >  - v1.23.3 이하 클러스터의 경우 도커 BIP(bridged IP range)와 중첩될 수 없습니다(172.17.0.0/16).
 > pods_network_subnet은 아래와 같은 규칙으로 입력되어야 합니다.

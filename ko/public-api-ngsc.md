@@ -123,6 +123,10 @@ X-Auth-Token: {tokenId}
 | clusters.labels.user_script | Body | String | 사용자 스크립트(old) |
 | clusters.labels.user_script_v2 | Body | String | 사용자 스크립트 |
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
+| clusters.labels.cni_driver | Body | String | 클러스터 CNI(2023.03.31. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.service_cluster_ip_range | Body | String | K8s 서비스 네트워크, 클러스터에서 서비스 생성 시 ClusterIP에 할당되는 IP 대역(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.pods_network_cidr | Body | String | 클러스터 파드 네트워크(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.pods_network_subnet | Body | String | 클러스터 파드 서브넷 크기(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
 
 
 <details><summary>예시</summary>
@@ -166,7 +170,10 @@ X-Auth-Token: {tokenId}
                 "os_version": "7.8",
                 "project_domain": "NORMAL",
                 "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575",
-                "user_script_v2": ""
+                "user_script_v2": "",
+                "service_cluster_ip_range": "10.254.0.0/16",
+                "pods_network_cidr" : "10.100.0.0/16",
+                "pods_network_subnet" : "24"
             },
             "links": [
                 {
@@ -252,6 +259,10 @@ X-Auth-Token: {tokenId}
 | labels.user_script | Body | String | 사용자 스크립트(old) |
 | labels.user_script_v2 | Body | String | 사용자 스크립트 |
 | labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
+| clusters.labels.cni_driver | Body | String | 클러스터 CNI(2023.03.31. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.service_cluster_ip_range | Body | String | K8s 서비스 네트워크, 클러스터에서 서비스 생성 시 ClusterIP에 할당되는 IP 대역(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.pods_network_cidr | Body | String | 클러스터 파드 네트워크(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.pods_network_subnet | Body | String | 클러스터 파드 서브넷 크기(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
 
 <details><summary>예시</summary>
 <p>
@@ -303,7 +314,10 @@ X-Auth-Token: {tokenId}
         "os_version": "7.8",
         "project_domain": "NORMAL",
         "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575",
-        "user_script_v2": ""
+        "user_script_v2": "",
+        "service_cluster_ip_range": "10.254.0.0/16",
+        "pods_network_cidr" : "10.100.0.0/16",
+        "pods_network_subnet" : "24"
     },
     "links": [
         {
@@ -375,9 +389,23 @@ X-Auth-Token: {tokenId}
 | labels.user_script | Body | String | X | 사용자 스크립트(old) |
 | labels.user_script_v2 | Body | String | X | 사용자 스크립트 |
 | labels.master_lb_floating_ip_enabled | Body | String | O | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False")<br>labels.external_network_id와 external_subnet_id_list가 설정된 경우에만 "True"로 설정 가능 |
+| labels.service_cluster_ip_range | Body | String  | X |  K8s 서비스 네트워크, 클러스터에서 서비스 생성 시 ClusterIP에 할당되는 IP 대역, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
+| labels.pods_network_cidr | Body | String |  X |  클러스터 파드 네트워크, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
+| labels.pods_network_subnet | Body | Integer | X |  클러스터 파드 서브넷 크기, pods_network_subnet 입력 규칙 참고 |
 | flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
 | fixed_network | Body | UUID | O | VPC 네트워크 UUID |
 | fixed_subnet | Body | UUID | O | VPC 서브넷 UUID |
+
+> fixed_subnet, additional_subnet_id_list, pods_network_cidr, service_cluster_ip_range의 CIDR은 아래와 같은 규칙으로 입력되어야 합니다.
+>  - 링크 로컬 주소 대역(169.254.0.0/16)과 중첩될 수 없습니다.
+>  - fixed_subnet, pods_network_cidr, service_cluster_ip_range 대역은 중첩될 수 없습니다.
+>  - NKS 내부에서 사용하고 있는 IP 대역(198.18.0.0/19)과 중첩될 수 없습니다.
+>  - /24보다 큰 CIDR 블록은 입력할 수 없습니다(다음과 같은 CIDR 블록은 사용할 수 없습니다. /26, /30).
+>  - v1.23.3 이하 클러스터의 경우 도커 BIP(bridged IP range)와 중첩될 수 없습니다(172.17.0.0/16).
+> pods_network_subnet은 아래와 같은 규칙으로 입력되어야 합니다.
+>  - 20-28(포함) 범위의 값만 입력 가능합니다.
+>  - pods_network_subnet 값이 pods_network_cidr prefix 값보다 최소 2 커야 합니다. 정상 예시(파드 서브넷 크기: 24, 파드 네트워크: 10.100.0.0/22)
+
 
 <details><summary>예시</summary>
 <p>
