@@ -55,6 +55,7 @@ NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해�
 | 파드 네트워크 | 클러스터의 파드 네트워크 설정 |
 | 파드 서브넷 크기 | 클러스터의 파드 서브넷 크기 설정 |
 | Kubernetes API 엔드포인트 | Public: 엔드포인트에 도메인 주소를 할당하고 플로팅 IP를 연결 <br>Private: 엔드포인트를 내부 네트워크 주소로 설정 |
+| 강화된 보안 규칙 | 노드 그룹에 적용되는 보안 그룹 생성 시 필수 보안 규칙만 생성. 클러스터 워커 노드 필수 보안 규칙 항목 참고<br>True: 필수 보안 규칙만 생성<br>False: 필수 보안 규칙과 모든 포트를 허용하는 보안 규칙 생성|
 | 이미지 | 클러스터를 구성하는 인스턴스에 사용할 이미지 |
 | 가용성 영역 | 기본 노드 그룹 인스턴스를 생성할 영역 |
 | 인스턴스 타입 | 기본 노드 그룹 인스턴스 사양 |
@@ -113,6 +114,53 @@ NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Netwo
 
 * <a name="footnote_calico_version_1">1</a>: 2023/03/31 이전에 생성된 클러스터에는 Flannel이 설치되어 있습니다. 2023/03/31 이후에 생성되는 v1.24.3 이상의 클러스터는 Calico가 설치됩니다.
 * <a name="footnote_calico_version_2">2</a>: CNI 변경은 v1.24.3 이상의 클러스터에서만 지원되며, 현재 Flannel에서 Calico로의 변경만 지원합니다.
+
+
+클러스터 워커 노드 필수 보안 규칙 항목 
+
+| 방향 | IP 프로토콜 | 포트 범위 | Ether | 원격 | 설명 | 특이 사항 |
+| :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+| ingress | TCP | 10250 | IPv4 | 워커 노드 | kubelet 포트, 방향: metrics-server(worker node) -> kubelet(worker node) | |
+| ingress | TCP | 10250 | IPv4 | 마스터 노드 | kubelet 포트, 방향: kube-apiserver(NKS Control plane) -> kubelet(worker node) | |
+| ingress | TCP | 5473 | IPv4 | 워커 노드 |  calico-typha 포트, 방향: calico-node(worker node) -> calico-typha(worker node) | CNI가 calico인 경우 생성 |
+| ingress | UDP | 8472 | IPv4 | 워커 노드 | flannel vxlan overlay network 포트, 방향: pod(worker node) -> pod(worker node) | CNI가 flannel인 경우 생성됨 |
+| ingress | UDP | 8472 | IPv4 | 워커 노드 | flannel vxlan overlay network 포트, 방향: pod(NKS Control plane) -> pod(worker node) | CNI가 flannel인 경우 생성됨 |
+| ingress | UDP | 4789 | IPv4 | 워커 노드 | calico-node vxlan overlay network 포트, 방향: pod(worker node) -> pod(worker node) | CNI가 calico인 경우 생성됨 |
+| ingress | UDP | 4789 | IPv4 | 마스터 노드 | calico-node vxlan overlay network 포트, 방향: pod(NKS Control plane) -> pod(worker node) | CNI가 calico인 경우 생성됨 |
+| egress | TCP | 2379 | IPv4 | 마스터 노드 | etcd 포트, 방향: calico-kube-controller(worker node) -> etcd(NKS Control plane)| CNI가 calico인 경우 생성됨 |
+| egress | TCP | 6443 | IPv4 | Kubernetes API 엔드포인트 | kube-apiserver 포트, 방향: kubelet, kube-proxy(worker node) -> kube-apiserver(NKS Control plane) | |
+| egress | TCP | 6443 | IPv4 | 마스터 노드 | kube-apiserver 포트, 방향: default kubernetes service(worker node) -> kube-apiserver(NKS Control plane) | |
+| egress | TCP | 5473 | IPv4 | 워커 노드 | CNI가 calico인 경우 생성됨, calico-typha 포트, 방향: calico-node(worker node) -> calico-typha(worker node) | |
+| egress | TCP | 53 | IPv4 | 워커 노드 | DNS 포트, 방향: worker node -> external | |
+| egress | TCP | 443 | IPv4 | 모두 허용 | HTTPS 포트, 방향: worker node -> external | |
+| egress | TCP | 80 | IPv4 | 모두 허용 | HTTP 포트, 방향: worker node -> external | |
+| egress | UDP | 8472 | IPv4 | 워커 노드 | flannel vxlan overlay network 포트, 방향: pod(worker node) -> pod(worker node)| CNI가 flannel인 경우 생성됨 |
+| egress | UDP | 8472 | IPv4 | 마스터 노드 | flannel vxlan overlay network 포트, 방향: pod(worker node) -> pod(NKS Control plane) | CNI가 flannel인 경우 생성됨 |
+| egress | UDP | 4789 | IPv4 | 워커 노드 | calico-node vxlan overlay network 포트, 방향: pod(worker node) -> pod(worker node) | CNI가 calico인 경우 생성됨 |
+| egress | UDP | 4789 | IPv4 | 마스터 노드 | calico-node vxlan overlay network 포트, 방향: pod(worker node) -> pod(NKS Control plane) | CNI가 calico인 경우 생성됨 |
+| egress | UDP | 53 | IPv4 | 모두 허용 | DNS 포트, 방향: worker node -> external | |
+
+강화된 보안 규칙 사용 시 Service object의 NodePort타입과 NHN Cloud NAS 서비스 연동에 사용되는 NFS 포트 범위가 추가되어있지 않음으로 사용 시 아래와 같은 포트를 수동으로 추가해줘야합니다.
+
+| 방향 | IP 프로토콜 | 포트 범위 | Ether | 원격 | 설명 |
+| :-: | :-: | :-: | :-: | :-: | :-: |
+| ingress | TCP | 30000 - 32767 | IPv4 | 모두 허용 | NKS service object NodePort, 방향: external -> worker node |
+| egress | TCP | 2049 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc nfs 포트, 방향: csi-nfs-node(worker node) -> NHN Cloud NAS 서비스 |
+| egress | TCP | 111 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc portmapper 포트, 방향: csi-nfs-node(worker node) -> NHN Cloud NAS 서비스 |
+| egress | TCP | 635 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc mountd 포트, 방향: csi-nfs-node(worker node) -> NHN Cloud NAS 서비스 |
+
+강화된 보안 규칙이 False로 설정될 경우 모든 포트를 허용하는 보안 규칙이 추가로 생성됩니다.
+
+| 방향 | IP 프로토콜 | 포트 범위 | Ether | 원격 | 설명 | 
+| :-: | :-: | :-: | :-: | :-: | :-: |
+| ingress | TCP | 1 - 65535 | IPv4 | 워커 노드 | 모든 포트, 방향: worker node -> worker node |
+| ingress | TCP | 1 - 65535 | IPv4 | 마스터 노드 | 모든 포트, 방향: NKS Control plane -> worker node |
+| ingress | TCP | 30000 - 32767 | IPv4 | 모두 허용 | NKS service object NodePort, 방향: external -> worker node |
+| ingress | UDP | 1 - 65535 | IPv4 | 워커 노드 | 모든 포트, 방향: worker node -> worker node |
+| ingress | UDP | 1 - 65535 | IPv4 | 마스터 노드 | 모든 포트, 방향: NKS Control plane -> worker node |
+| egress | 임의 | 1 - 65535 | IPv4 | 모두 허용 | 모든 포트, 방향: worker node - > external |
+| egress | 임의 | 1 - 65535 | IPv6 | 모두 허용 | 모든 포트, 방향: worker node - > external |
+
 
 필요한 정보를 입력하고 **클러스터 생성**을 클릭하면 클러스터 생성이 시작됩니다. 클러스터 목록에서 상태를 확인할 수 있습니다. 생성하는 데는 약 10분 정도 걸립니다. 클러스터 설정에 따라 더 오래 걸릴 수도 있습니다.
 
