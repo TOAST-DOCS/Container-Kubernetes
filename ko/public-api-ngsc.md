@@ -123,7 +123,7 @@ X-Auth-Token: {tokenId}
 | clusters.labels.user_script | Body | String | 사용자 스크립트(old) |
 | clusters.labels.user_script_v2 | Body | String | 사용자 스크립트 |
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
-| clusters.labels.sg_default_rules | Body | String | 노드 그룹 보안 그룹에 필수 보안 규칙만 생성 ("True" / "False"), (2024.02.28. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.strict_sg_rules | Body | String | 노드 그룹 보안 그룹에 필수 보안 규칙만 생성 ("True" / "False"), (2024.02.28. 이후에 생성된 클러스터에서 확인 가능) |
 
 <details><summary>예시</summary>
 <p>
@@ -159,7 +159,7 @@ X-Auth-Token: {tokenId}
                 "kube_tag": "v1.23.3",
                 "login_username": "centos",
                 "master_lb_floating_ip_enabled": "true",
-                "sg_default_rules": "True",
+                "strict_sg_rules": "True",
                 "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
                 "os_arch": "amd64",
                 "os_distro": "CentOS",
@@ -253,7 +253,7 @@ X-Auth-Token: {tokenId}
 | labels.user_script | Body | String | 사용자 스크립트(old) |
 | labels.user_script_v2 | Body | String | 사용자 스크립트 |
 | labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
-| labels.sg_default_rules | Body | String | 노드 그룹 보안 그룹에 필수 보안 규칙만 생성 ("True" / "False"), (2024.02.28. 이후에 생성된 클러스터에서 확인 가능) |
+| labels.strict_sg_rules | Body | String | 노드 그룹 보안 그룹에 필수 보안 규칙만 생성 ("True" / "False"), (2024.02.28. 이후에 생성된 클러스터에서 확인 가능) |
 
 <details><summary>예시</summary>
 <p>
@@ -298,7 +298,7 @@ X-Auth-Token: {tokenId}
         "kube_version_status": "NEED_UPGRADE",
         "login_username": "centos",
         "master_lb_floating_ip_enabled": "true",
-        "sg_default_rules": "True",
+        "strict_sg_rules": "True",
         "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
         "os_arch": "amd64",
         "os_distro": "CentOS",
@@ -378,7 +378,7 @@ X-Auth-Token: {tokenId}
 | labels.user_script | Body | String | X | 사용자 스크립트(old) |
 | labels.user_script_v2 | Body | String | X | 사용자 스크립트 |
 | labels.master_lb_floating_ip_enabled | Body | String | O | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False")<br>labels.external_network_id와 external_subnet_id_list가 설정된 경우에만 "True"로 설정 가능 |
-| labels.sg_default_rules | Body | String | X | 노드 그룹 보안 그룹에 필수 보안 규칙만 생성 ("True" / "False"), 기본값 : "False" |
+| labels.strict_sg_rules | Body | String | X | 노드 그룹 보안 그룹에 필수 보안 규칙만 생성 ("True" / "False"), 기본값 : "False" |
 | flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
 | fixed_network | Body | UUID | O | VPC 네트워크 UUID |
 | fixed_subnet | Body | UUID | O | VPC 서브넷 UUID |
@@ -411,7 +411,7 @@ X-Auth-Token: {tokenId}
         "external_subnet_id_list": "59ddc195-76b1-431d-9693-f09880747dc6",
         "kube_tag": "v1.23.3",
         "master_lb_floating_ip_enabled": "true",
-        "sg_default_rules": "True",
+        "strict_sg_rules": "True",
         "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
         "user_script_v2": ""
     },
@@ -710,7 +710,7 @@ X-Auth-Token: {tokenId}
 | labels.kube_tag | Body | String | 워커 노드 그룹 Kubernetes 버전 |
 | labels.user_script | Body | String | 사용자 스크립트(old) |
 | labels.user_script_v2 | Body | String | 사용자 스크립트 |
-| labels.sg_default_rules | Body | String | 노드 그룹 보안 그룹에 필수 보안 규칙만 생성 ("True" / "False"), (2024.02.28. 이후에 생성된 클러스터에서 확인 가능) |
+| labels.strict_sg_rules | Body | String | 노드 그룹 보안 그룹에 필수 보안 규칙만 생성 ("True" / "False"), (2024.02.28. 이후에 생성된 클러스터에서 확인 가능) |
 | max_node_count | Body | Integer | 최대 노드 수 |
 | min_node_count | Body | Integer | 최소 노드 수 |
 | node_addresses | Body | String list | 노드 IP 주소 목록 |
@@ -757,7 +757,7 @@ X-Auth-Token: {tokenId}
         "kube_version_status": "LATEST",
         "login_username": "centos",
         "master_lb_floating_ip_enabled": "true",
-        "sg_default_rules": "True",
+        "strict_sg_rules": "True",
         "node_image": "96aff4ab-d221-4688-8364-2fcf02d50547",
         "os_arch": "amd64",
         "os_distro": "CentOS",

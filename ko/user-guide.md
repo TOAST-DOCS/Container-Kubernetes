@@ -127,7 +127,7 @@ NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Netwo
 | ingress | UDP | 8472 | IPv4 | 워커 노드 | flannel vxlan overlay network 포트, 방향: pod(NKS Control plane) -> pod(worker node) | CNI가 flannel인 경우 생성됨 |
 | ingress | UDP | 4789 | IPv4 | 워커 노드 | calico-node vxlan overlay network 포트, 방향: pod(worker node) -> pod(worker node) | CNI가 calico인 경우 생성됨 |
 | ingress | UDP | 4789 | IPv4 | 마스터 노드 | calico-node vxlan overlay network 포트, 방향: pod(NKS Control plane) -> pod(worker node) | CNI가 calico인 경우 생성됨 |
-| egress | TCP | 2379 | IPv4 | 마스터 노드 | etcd 포트, 방향: calico-kube-controller(worker node) -> etcd(NKS Control plane)| CNI가 calico인 경우 생성됨 |
+| egress | TCP | 2379 | IPv4 | 마스터 노드 | etcd 포트, 방향: calico-kube-controller(worker node) -> etcd(NKS Control plane)| |
 | egress | TCP | 6443 | IPv4 | Kubernetes API 엔드포인트 | kube-apiserver 포트, 방향: kubelet, kube-proxy(worker node) -> kube-apiserver(NKS Control plane) | |
 | egress | TCP | 6443 | IPv4 | 마스터 노드 | kube-apiserver 포트, 방향: default kubernetes service(worker node) -> kube-apiserver(NKS Control plane) | |
 | egress | TCP | 5473 | IPv4 | 워커 노드 | CNI가 calico인 경우 생성됨, calico-typha 포트, 방향: calico-node(worker node) -> calico-typha(worker node) | |
@@ -3070,6 +3070,14 @@ nfs 패키지 설치 후 아래 명령어를 실행하여 rpcbind 서비스를 �
 ```
 $ systemctl start rpcbind
 ```
+
+강화된 보안 규칙을 사용하고 있는 클러스터의 경우, 보안 규칙 추가가 필요합니다.
+
+| 방향 | IP 프로토콜 | 포트 범위 | Ether | 원격 | 설명 | 
+| :-: | :-: | :-: | :-: | :-: | :-: | 
+| egress | TCP | 2049 | IPv4 | NAS IP 주소 | rpc의 NFS 포트, 방향: csi-nfs-node(worker node) -> NAS |
+| egress | TCP | 111 | IPv4 | NAS IP 주소 | rpc의 portmapper 포트, 방향: csi-nfs-node(worker node) -> NAS |
+| egress | TCP | 635 | IPv4 | NAS IP 주소 |  rpc의 mountd 포트, 방향: csi-nfs-node(worker node) -> NAS |
 
 #### csi-driver-nfs 설치
 NHN Cloud NAS 서비스를 사용하기 위해 클러스터에 csi-driver-nfs 컴포넌트를 배포해야 합니다.
