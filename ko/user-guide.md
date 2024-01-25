@@ -473,6 +473,20 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 > [참고]
 > GPU가 필요없는 워크로드가 GPU 노드에 할당되는 것을 막고 싶다면 [Taint 및 Toleration 개요](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)를 참고하세요.
 
+### 베어메탈 인스턴스 노드 그룹 사용
+
+노드 그룹에서 베어메탈 인스턴스를 사용할 수 있습니다. 베어메탈 인스턴스와 일반 인스턴스의 차이점은 [Bare Metal Instance 개요](/Compute/Compute-Baremetal/ko/overview/)를 참고하세요.
+
+베어메탈 인스턴스로 구성된 워커 노드 그룹은 일반 인스턴스로 구성된 워커 노드 그룹과 비교해 다음의 제약 사항이 있습니다.
+* 부트 볼륨의 크기를 설정할 수 없습니다.
+* 추가 네트워크를 구성할 수 없습니다.
+* 인스턴스 타입을 변경할 수 없습니다.
+* 추가 블록 스토리지를 연결할 수 없습니다.
+
+> [참고]
+> 베어메탈 인스턴스는 판교 리전에서만 지원됩니다.
+
+
 ### 오토 스케일러
 오토 스케일러는 노드 그룹의 가용 리소스가 부족해 파드(pod)를 스케줄링할 수 없거나 노드의 사용률이 일정 수준 이하로 유지되는 경우 노드의 수를 자동으로 조정하는 기능입니다. 이 기능은 노드 그룹별로 설정할 수 있고, 서로 독립적으로 동작합니다. 이 기능은 Kubernetes 프로젝트의 공식 지원 기능인 cluster-autoscaler 기능을 기반으로 합니다. 자세한 사항은 [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler)를 참고하세요.
 
