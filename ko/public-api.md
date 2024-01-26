@@ -117,7 +117,7 @@ X-Auth-Token: {tokenId}
 | clusters.labels.external_subnet_id_list | Body | String | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분) |
 | clusters.labels.cert_manager_api | Body | String | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
-| clusters.labels.strict_sg_rules | Body | String | 노드 그룹 보안 그룹에 필수 보안 규칙만 생성 ("True" / "False"), (2024.02.28. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.strict_sg_rules | Body | String | 노드 그룹 보안 그룹에 필수 보안 규칙만 생성 ("True" / "False"), (2024.02.27. 이후에 생성된 클러스터에서 확인 가능) |
 | clusters.labels.additional_network_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 네트워크 UUID 목록(콜론으로 구분) |
 | clusters.labels.additional_subnet_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 서브넷 UUID 목록(콜론으로 구분) |
 | clusters.labels.cni_driver | Body | String | 클러스터 CNI(2023.03.31. 이후에 생성된 클러스터에서 확인 가능) |
@@ -236,7 +236,7 @@ X-Auth-Token: {tokenId}
 | labels.external_subnet_id_list | Body | String | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분) |
 | labels.cert_manager_api | Body | String | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
 | labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
-| labels.strict_sg_rules | Body | String | 노드 그룹 보안 그룹에 필수 보안 규칙만 생성 ("True" / "False"), (2024.02.28. 이후에 생성된 클러스터에서 확인 가능) |
+| labels.strict_sg_rules | Body | String | 노드 그룹 보안 그룹에 필수 보안 규칙만 생성 ("True" / "False"), (2024.02.27. 이후에 생성된 클러스터에서 확인 가능) |
 | labels.additional_network_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 네트워크 UUID 목록(콜론으로 구분) |
 | labels.additional_subnet_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 서브넷 UUID 목록(콜론으로 구분) |
 | labels.cni_driver | Body | String | 클러스터 CNI(2023.03.31. 이후에 생성된 클러스터에서 확인 가능) |
@@ -790,7 +790,7 @@ X-Auth-Token: {tokenId}
 | labels.user_script_v2 | Body | String | 사용자 스크립트 |
 | labels.additional_network_id_list | Body | String | 워커 노드 그룹 적용: 추가 네트워크의 VPC 네트워크 UUID 목록(콜론으로 구분) |
 | labels.additional_subnet_id_list | Body | String | 워커 노드 그룹 적용: 추가 네트워크의 VPC 서브넷 UUID 목록(콜론으로 구분) |
-| labels.strict_sg_rules | Body | String | 노드 그룹 보안 그룹에 필수 보안 규칙만 생성 ("True" / "False"), (2024.02.28. 이후에 생성된 클러스터에서 확인 가능) |
+| labels.strict_sg_rules | Body | String | 노드 그룹 보안 그룹에 필수 보안 규칙만 생성 ("True" / "False"), (2024.02.27. 이후에 생성된 클러스터에서 확인 가능) |
 | max_node_count | Body | Integer | 최대 노드 수 |
 | min_node_count | Body | Integer | 최소 노드 수 |
 | node_addresses | Body | String list | 노드 IP 주소 목록 |

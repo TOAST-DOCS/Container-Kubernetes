@@ -123,7 +123,7 @@ X-Auth-Token: {tokenId}
 | clusters.labels.user_script | Body | String | 사용자 스크립트(old) |
 | clusters.labels.user_script_v2 | Body | String | 사용자 스크립트 |
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
-| clusters.labels.strict_sg_rules | Body | String | 노드 그룹 보안 그룹에 필수 보안 규칙만 생성 ("True" / "False"), (2024.02.28. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.strict_sg_rules | Body | String | 노드 그룹 보안 그룹에 필수 보안 규칙만 생성 ("True" / "False"), (2024.03.05. 이후에 생성된 클러스터에서 확인 가능) |
 
 <details><summary>예시</summary>
 <p>
@@ -253,7 +253,7 @@ X-Auth-Token: {tokenId}
 | labels.user_script | Body | String | 사용자 스크립트(old) |
 | labels.user_script_v2 | Body | String | 사용자 스크립트 |
 | labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
-| labels.strict_sg_rules | Body | String | 노드 그룹 보안 그룹에 필수 보안 규칙만 생성 ("True" / "False"), (2024.02.28. 이후에 생성된 클러스터에서 확인 가능) |
+| labels.strict_sg_rules | Body | String | 노드 그룹 보안 그룹에 필수 보안 규칙만 생성 ("True" / "False"), (2024.03.05. 이후에 생성된 클러스터에서 확인 가능) |
 
 <details><summary>예시</summary>
 <p>
@@ -710,7 +710,7 @@ X-Auth-Token: {tokenId}
 | labels.kube_tag | Body | String | 워커 노드 그룹 Kubernetes 버전 |
 | labels.user_script | Body | String | 사용자 스크립트(old) |
 | labels.user_script_v2 | Body | String | 사용자 스크립트 |
-| labels.strict_sg_rules | Body | String | 노드 그룹 보안 그룹에 필수 보안 규칙만 생성 ("True" / "False"), (2024.02.28. 이후에 생성된 클러스터에서 확인 가능) |
+| labels.strict_sg_rules | Body | String | 노드 그룹 보안 그룹에 필수 보안 규칙만 생성 ("True" / "False"), (2024.03.05. 이후에 생성된 클러스터에서 확인 가능) |
 | max_node_count | Body | Integer | 최대 노드 수 |
 | min_node_count | Body | Integer | 최소 노드 수 |
 | node_addresses | Body | String list | 노드 IP 주소 목록 |
