@@ -124,6 +124,8 @@ X-Auth-Token: {tokenId}
 | clusters.labels.service_cluster_ip_range | Body | String | K8s 서비스 네트워크, 클러스터에서 서비스 생성 시 ClusterIP에 할당되는 IP 대역(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
 | clusters.labels.pods_network_cidr | Body | String | 클러스터 파드 네트워크(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
 | clusters.labels.pods_network_subnet | Body | String | 클러스터 파드 서브넷 크기(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.ncr_sgw | Body | String | NCR 타입의 Service Gateway UUID |
+| clusters.labels.obs_sgw | Body | String | OBS 타입의 Service Gateway UUID |
 
 
 <details><summary>예시</summary>
@@ -241,6 +243,8 @@ X-Auth-Token: {tokenId}
 | clusters.labels.service_cluster_ip_range | Body | String | K8s 서비스 네트워크, 클러스터에서 서비스 생성 시 ClusterIP에 할당되는 IP 대역(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
 | clusters.labels.pods_network_cidr | Body | String | 클러스터 파드 네트워크(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
 | clusters.labels.pods_network_subnet | Body | String | 클러스터 파드 서브넷 크기(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.ncr_sgw | Body | String | NCR 타입의 Service Gateway UUID |
+| clusters.labels.obs_sgw | Body | String | OBS 타입의 Service Gateway UUID |
 
 
 <details><summary>예시</summary>
@@ -363,6 +367,8 @@ X-Auth-Token: {tokenId}
 | labels.service_cluster_ip_range | Body | String  | X |  K8s 서비스 네트워크, 클러스터에서 서비스 생성 시 ClusterIP에 할당되는 IP 대역, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
 | labels.pods_network_cidr | Body | String |  X |  클러스터 파드 네트워크, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
 | labels.pods_network_subnet | Body | Integer | X |  클러스터 파드 서브넷 크기, pods_network_subnet 입력 규칙 참고 |
+| labels.ncr_sgw | Body | String | X | NCR 타입의 Service Gateway UUID |
+| labels.obs_sgw | Body | String | X | OBS 타입의 Service Gateway UUID |
 | flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
 | fixed_network | Body | UUID | O | VPC 네트워크 UUID |
 | fixed_subnet | Body | UUID | O | VPC 서브넷 UUID |

@@ -51,6 +51,8 @@ NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해�
 | Kubernetes 버전 | 사용할 Kubernetes 버전 |
 | VPC | 클러스터에 연결할 VPC 네트워크 |
 | 서브넷 | VPC에 정의된 서브넷 중 클러스터를 구성하는 인스턴스에 연결할 서브넷 |
+| NCR Service Gateway | NCR 타입의 Service Gateway<br>(단, 서브넷에 인터넷 게이트웨이가 연결되어 있지 않은 경우에 한함) |
+| OBS Service Gateway | OBS 타입의 Service Gateway<br>(단, 서브넷에 인터넷 게이트웨이가 연결되어 있지 않은 경우에 한함) |
 | K8s 서비스 네트워크 | 클러스터의 service object CIDR 설정 |
 | 파드 네트워크 | 클러스터의 파드 네트워크 설정 |
 | 파드 서브넷 크기 | 클러스터의 파드 서브넷 크기 설정 |
@@ -76,6 +78,11 @@ NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해�
 >  - CIDR은 NKS 클러스터에 연결된 VPC 네트워크 서브넷 또는 추가 네트워크 서브넷의 대역과 중첩될 수 없습니다.
 >  - /24보다 큰 CIDR 블록은 입력할 수 없습니다(다음과 같은 CIDR 블록은 사용할 수 없습니다. /26, /30).
 >  - v1.23.3 이하 클러스터의 경우 도커 BIP(bridged IP range)와 중첩될 수 없습니다(172.17.0.0/16).
+
+> [참고]
+> 선택한 서브넷이 인터넷 게이트웨이에 연결되지 않은 경우 NCR Service Gateway와 OBS Service Gateway 설정이 필요합니다.
+> 이 두 개의 Service Gateway는 노드에서 쿠버네티스 초기화에 필요한 이미지/바이너리 등을 받아올 때 사용됩니다.
+> Service Gateway에 대한 자세한 설명은 [Service Gateway - 개요](/Network/Service%20Gateway/ko/overview/)를 참고하세요.
 
 NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전에 따라 일부 기능에 제약이 있을 수 있습니다.
 
