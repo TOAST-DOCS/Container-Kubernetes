@@ -343,12 +343,12 @@ X-Auth-Token: {tokenId}
 | 이름 | 종류 | 형식 | 설명 |
 |---|---|---|---|
 | events | Body | Array | 작업 이력 객체 목록 |
-| events.id | Body | Array | 작업 ID |
+| events.id | Body | Integer | 작업 ID |
 | events.uuid | Body | UUID | 작업 UUID |
 | events.project_id | Body | String | 프로젝트(테넌트) ID |
-| events.cluster_uuid | Body | String | 클러스터 UUID |
+| events.cluster_uuid | Body | UUID | 클러스터 UUID |
 | events.cluster_name | Body | String | 클러스터 이름 |
-| events.resource_uuid | Body | String | 작업 대상 UUID |
+| events.resource_uuid | Body | UUID | 작업 대상 UUID |
 | events.resource_name | Body | String | 작업 대상 이름 |
 | events.resource_type | Body | String | 작업 대상 종류("cluster" / "nodegroup") |
 | events.type | Body | String | 작업 종류 |
@@ -369,9 +369,9 @@ X-Auth-Token: {tokenId}
             "uuid": "868f218a-9446-4500-b6b3-8c1a95e3d7c3",
             "project_id": "5d8cc67593754d5581f7e8986badf358",
             "cluster_uuid": "388794e6-14dc-48ee-9a4f-9c40df5d97ec",
-            "cluster_name": "zzcctest",
+            "cluster_name": "nks-cluster",
             "resource_uuid": "388794e6-14dc-48ee-9a4f-9c40df5d97ec",
-            "resource_name": "zzcctest",
+            "resource_name": "nks-cluster",
             "resource_type": "cluster",
             "type": "CLUSTER_CREATE",
             "state": "SUCCESS",
@@ -412,12 +412,12 @@ X-Auth-Token: {tokenId}
 
 | 이름 | 종류 | 형식 | 설명 |
 |---|---|---|---|
-| id | Body | Array | 작업 ID |
+| id | Body | Integer | 작업 ID |
 | uuid | Body | UUID | 작업 UUID |
 | project_id | Body | String | 프로젝트(테넌트) ID |
-| cluster_uuid | Body | String | 클러스터 UUID |
+| cluster_uuid | Body | UUID | 클러스터 UUID |
 | cluster_name | Body | String | 클러스터 이름 |
-| resource_uuid | Body | String | 작업 대상 UUID |
+| resource_uuid | Body | UUID | 작업 대상 UUID |
 | resource_name | Body | String | 작업 대상 이름 |
 | resource_type | Body | String | 작업 대상 종류("cluster" / "nodegroup") |
 | type | Body | String | 작업 종류 |
@@ -436,9 +436,9 @@ X-Auth-Token: {tokenId}
     "uuid": "868f218a-9446-4500-b6b3-8c1a95e3d7c3",
     "project_id": "5d8cc67593754d5581f7e8986badf358",
     "cluster_uuid": "388794e6-14dc-48ee-9a4f-9c40df5d97ec",
-    "cluster_name": "zzcctest",
+    "cluster_name": "nks-cluster",
     "resource_uuid": "388794e6-14dc-48ee-9a4f-9c40df5d97ec",
-    "resource_name": "zzcctest",
+    "resource_name": "nks-cluster",
     "resource_type": "cluster",
     "type": "CLUSTER_CREATE",
     "state": "SUCCESS",
