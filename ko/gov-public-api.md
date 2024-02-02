@@ -661,6 +661,143 @@ pod_subnet은 아래와 같은 규칙으로 입력되어야 합니다.
 
 </p>
 </details>
+
+### 클러스터 API 엔드포인트 IP 접근제어 적용
+클러스터 API 엔드포인트에 IP 접근제어를 적용, 해제 할 수 있습니다.
+IP 접근제어 기능에 대한 자세한 사항은 [IP 접근제어](/Network/Load%20Balancer/ko/overview/#ip)문서 참고하시고
+클러스터 API 엔드포인트에 IP 접근제어 규칙에 대한 자세한 사항은 [사용자 가이드](/Container/NKS/ko/user-guide/#ipacl)를 참고하세요.
+
+```
+POST /v1/clusters/{CLUSTER_ID_OR_NAME}/api_ep_ipacl
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
+| enable | Body | String | O | 'true', 'false'중 하나로 설정 가능. 기본값: 'false', true:클러스터 API 엔드포인트에 IP 접근제어 적용, false: 클러스터 API 엔드포인트에 IP 접근제어 해제, false 설정 시 하위 설정은 모두 무시됨 | 
+| action | Body | String | O (enable 설정이 true인 경우) | IP 접근제어 타입, ALLOW, DENY중 하나로 설정 가능 |
+| ipacl_targets | Body |  Object | O (enable 설정이 true인 경우) | IP 접근제어 대상 객체 |
+| ipacl_targets.cidr_address | Body | String | O (enable 설정이 true인 경우) | IP 접근제어 대상 CIDR. 단독 IP 주소, 또는 CIDR 형식의 IP RANGE 입력 |
+| ipacl_targets.descripion | Body | String | X | IP 접근제어 대상 설명 |
+
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "enable": "True",
+    "action": "ALLOW",
+    "ipacl_targets": [
+        {
+            "cidr_address" : "192.168.0.5"
+        },
+        {
+            "cidr_address" : "10.10.22.3/24",
+            "description": "Your Friends"
+        }
+    ]   
+}
+```
+
+</p>
+</details>
+
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | UUID | 클러스터 UUID |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "0641db9f-5e71-4df9-9571-089c7964d82e"
+}
+```
+
+</p>
+</details>
+
+
+### 클러스터 API 엔드포인트 IP 접근제어 조회
+클러스터 API 엔드포인트에 적용된 IP 접근제어 정보를 확인할 수 있습니다.
+
+```
+GET /v1/clusters/{CLUSTER_ID_OR_NAME}/api_ep_ipacl
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+이 API는 요청 본문을 요구하지 않습니다.
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
+
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| cluster_uuid | Body | UUID | 클러스터 UUID |
+| enable | Body | String | true:클러스터 API 엔드포인트에 IP 접근제어가 적용 되어있음, false: 클러스터 API 엔드포인트에 IP 접근제어가 해제 되어있음 | 
+| action | Body | String | IP 접근제어 타입 ALLOW, DENY 확인 가능 |
+| ipacl_targets | Body |  Object | IP 접근제어 대상 객체 |
+| ipacl_targets.cidr_address | Body | String | IP 접근제어 대상 CIDR, 단독 IP 주소, 또는 CIDR 형식의 IP RANGE |
+| ipacl_targets.descripion | Body | String | IP 접근제어 대상 설명 |
+
+<details><summary>enable : true 인 경우 예시</summary>
+<p>
+
+```json
+{
+    "cluster_uuid" : "8be87215-9db7-45ed-a03c-38e6db939915",
+    "enable": "true",
+    "action": "ALLOW",
+    "ipacl_targets": [
+        {
+            "cidr_address" : "192.168.0.5",
+            "description": "My Friend"
+        },
+        {
+            "cidr_address" : "10.10.22.3/24"
+        }
+    ]   
+}
+```
+
+</p>
+</details>
+
+<details><summary>enable : false 인 경우 예시</summary>
+<p>
+
+```json
+{
+    "cluster_uuid" : "8be87215-9db7-45ed-a03c-38e6db939915",
+    "enable": "false"
+}
+```
+
+</p>
+</details>
+
+
 ---
 
 ## 노드 그룹
