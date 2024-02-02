@@ -337,6 +337,8 @@ X-Auth-Token: {tokenId}
 | 이름 | 종류 | 형식 | 필수 | 설명 |
 |---|---|---|---|---|
 | tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_UUID | URL | UUID | O | 클러스터 UUID |
+
 
 #### 응답
 
@@ -393,7 +395,7 @@ X-Auth-Token: {tokenId}
 클러스터의 작업 이력을 조회합니다.
 
 ```
-GET /v1/clusters/{CLUSTER_UUID}/events/{EVNET_UUID}
+GET /v1/clusters/{CLUSTER_UUID}/events/{EVENT_UUID}
 Accept: application/json
 Content-Type: application/json
 OpenStack-API-Version: container-infra latest
@@ -407,6 +409,9 @@ X-Auth-Token: {tokenId}
 | 이름 | 종류 | 형식 | 필수 | 설명 |
 |---|---|---|---|---|
 | tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_UUID | URL | UUID | O | 클러스터 UUID |
+| EVENT_UUID | URL | UUID | O | 작업 UUID |
+
 
 #### 응답
 
