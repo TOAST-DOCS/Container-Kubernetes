@@ -115,7 +115,6 @@ NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Netwo
 * <a name="footnote_calico_version_1">1</a>: 2023/03/31 이전에 생성된 클러스터에는 Flannel이 설치되어 있습니다. 2023/03/31 이후에 생성되는 v1.24.3 이상의 클러스터는 Calico가 설치됩니다.
 * <a name="footnote_calico_version_2">2</a>: CNI 변경은 v1.24.3 이상의 클러스터에서만 지원되며, 현재 Flannel에서 Calico로의 변경만 지원합니다.
 
-
 필요한 정보를 입력하고 **클러스터 생성**을 클릭하면 클러스터 생성이 시작됩니다. 클러스터 목록에서 상태를 확인할 수 있습니다. 생성하는 데는 약 10분 정도 걸립니다. 클러스터 설정에 따라 더 오래 걸릴 수도 있습니다.
 
 
@@ -2920,7 +2919,6 @@ nfs 패키지 설치 후 아래 명령어를 실행하여 rpcbind 서비스를 �
 ```
 $ systemctl start rpcbind
 ```
-
 
 #### csi-driver-nfs 설치
 NHN Cloud NAS 서비스를 사용하기 위해 클러스터에 csi-driver-nfs 컴포넌트를 배포해야 합니다.

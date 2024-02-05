@@ -124,6 +124,7 @@ X-Auth-Token: {tokenId}
 | clusters.labels.user_script_v2 | Body | String | 사용자 스크립트 |
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
 
+
 <details><summary>예시</summary>
 <p>
 
