@@ -55,7 +55,7 @@ NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해�
 | 파드 네트워크 | 클러스터의 파드 네트워크 설정 |
 | 파드 서브넷 크기 | 클러스터의 파드 서브넷 크기 설정 |
 | Kubernetes API 엔드포인트 | Public: 엔드포인트에 도메인 주소를 할당하고 플로팅 IP를 연결 <br>Private: 엔드포인트를 내부 네트워크 주소로 설정 |
-| 강화된 보안 규칙 | 노드 그룹에 적용되는 보안 그룹 생성 시 필수 보안 규칙만 생성. 클러스터 워커 노드 필수 보안 규칙 항목 참고<br>True: 필수 보안 규칙만 생성<br>False: 필수 보안 규칙과 모든 포트를 허용하는 보안 규칙 생성|
+| 강화된 보안 규칙 | 워커 노드 보안 그룹 생성 시 필수 보안 규칙만 생성. 클러스터 워커 노드 필수 보안 규칙 항목 참고<br>True: 필수 보안 규칙만 생성<br>False: 필수 보안 규칙과 모든 포트를 허용하는 보안 규칙 생성|
 | 이미지 | 클러스터를 구성하는 인스턴스에 사용할 이미지 |
 | 가용성 영역 | 기본 노드 그룹 인스턴스를 생성할 영역 |
 | 인스턴스 타입 | 기본 노드 그룹 인스턴스 사양 |
@@ -141,7 +141,7 @@ NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Netwo
 | egress | UDP | 4789 | IPv4 | 마스터 노드 | calico-node vxlan overlay network 포트, 방향: pod(worker node) -> pod(NKS Control plane) | CNI가 calico인 경우 생성됨 |
 | egress | UDP | 53 | IPv4 | 모두 허용 | DNS 포트, 방향: worker node -> external | |
 
-강화된 보안 규칙 사용 시 Service object의 NodePort타입과 NHN Cloud NAS 서비스 연동에 사용되는 NFS 포트 범위가 추가되어있지 않음으로 사용 시 아래와 같은 포트를 수동으로 추가해줘야합니다.
+강화된 보안 규칙 사용 시 NodePort 타입의 서비스와 NHN Cloud NAS 서비스에서 사용하는 포트에 대한 보안 규칙에 추가되어 있지 않습니다. 필요에 따라 아래 보안 규칙을 추가 설정해야 합니다. 
 
 | 방향 | IP 프로토콜 | 포트 범위 | Ether | 원격 | 설명 |
 | :-: | :-: | :-: | :-: | :-: | :-: |
@@ -150,7 +150,7 @@ NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Netwo
 | egress | TCP | 111 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc portmapper 포트, 방향: csi-nfs-node(worker node) -> NHN Cloud NAS 서비스 |
 | egress | TCP | 635 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc mountd 포트, 방향: csi-nfs-node(worker node) -> NHN Cloud NAS 서비스 |
 
-강화된 보안 규칙이 False로 설정될 경우 모든 포트를 허용하는 보안 규칙이 추가로 생성됩니다.
+강화된 보안 규칙을 사용하지 않는 경우 NodePort 타입의 서비스와 외부 네트워크 통신에 필요한 보안 규칙이 추가로 생성됩니다.
 
 | 방향 | IP 프로토콜 | 포트 범위 | Ether | 원격 | 설명 | 
 | :-: | :-: | :-: | :-: | :-: | :-: |
