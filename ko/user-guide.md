@@ -3064,10 +3064,12 @@ ORAS(OCI Registry As Storage)는 OCI 레지스트리에서 OCI 아티팩트를 p
 [ORAS installation](https://oras.land/docs/installation)을 참고하여 ORAS 명령줄 도구를 설치합니다. ORAS 명령줄 도구의 자세한 사용법은 [ORAS docs](https://oras.land/docs/)를 참고하세요.
 
 
-| 리전 | 다운로드 커맨드 |
-| --- | --- |
-| 한국(판교) 리전 | oras pull dfe965c3-kr1-registry.container.nhncloud.com/nks_container/nfs-deploy-tool:v1 |
-| 한국(평촌) 리전 | oras pull 6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/nfs-deploy-tool:v1 |
+| 리전 | 인터넷 연결 | 다운로드 커맨드 |
+| --- | --- | --- |
+| 한국(판교) 리전 | O | oras pull dfe965c3-kr1-registry.container.nhncloud.com/container_service/nfs-deploy-tool:v1 |
+| | X | oras pull private-dfe965c3-kr1-registry.container.nhncloud.com/container_service/nfs-deploy-tool:v1 |
+| 한국(평촌) 리전 | O | oras pull 6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/nfs-deploy-tool:v1 |
+| | X | oras pull private-6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/nfs-deploy-tool:v1 |
 
 ##### 3. 설치 패키지를 압축 해제한 후 **install-driver.sh {mode}** 명령어를 사용하여 csi-driver-nfs 구성 요소를 설치합니다.
 install-driver.sh 명령 실행 시 인터넷 연결이 가능한 클러스터는 **public**, 그렇지 않은 클러스터는 **private**을 입력해야 합니다.
@@ -3503,10 +3505,10 @@ cinder-csi-plugin 이미지의 태그가 v1.27.101 미만인 경우 아래의 �
 
 | 리전 | 인터넷 연결 | cinder-csi-plugin 이미지 |
 | --- | --- | --- |
-| 한국(판교) 리전 | O | dfe965c3-kr1-registry.container.nhncloud.com/nks_container/cinder-csi-plugin:v1.27.101 |
-| | X | private-dfe965c3-kr1-registry.container.nhncloud.com/nks_container/cinder-csi-plugin:v1.27.101 |
-| 한국(평촌) 리전 | O | 6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/cinder-csi-plugin:v1.27.101 |
-|  | X | private-6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/cinder-csi-plugin:v1.27.101 |
+| 한국(판교) 리전 | O | dfe965c3-kr1-registry.container.nhncloud.com/container_service/cinder-csi-plugin:v1.27.101 |
+| | X | private-dfe965c3-kr1-registry.container.nhncloud.com/container_service/cinder-csi-plugin:v1.27.101 |
+| 한국(평촌) 리전 | O | 6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/cinder-csi-plugin:v1.27.101 |
+| | X | private-6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/cinder-csi-plugin:v1.27.101 |
 
 ##### 1. container_image에 올바른 cinder-csi-plugin 이미지 값을 입력합니다.
 ```
