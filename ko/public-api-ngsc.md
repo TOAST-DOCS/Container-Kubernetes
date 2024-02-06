@@ -123,8 +123,6 @@ X-Auth-Token: {tokenId}
 | clusters.labels.user_script | Body | String | 사용자 스크립트(old) |
 | clusters.labels.user_script_v2 | Body | String | 사용자 스크립트 |
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
-| clusters.labels.ncr_sgw | Body | String | NCR 타입의 Service Gateway UUID |
-| clusters.labels.obs_sgw | Body | String | OBS 타입의 Service Gateway UUID |
 
 
 <details><summary>예시</summary>
@@ -254,8 +252,6 @@ X-Auth-Token: {tokenId}
 | labels.user_script | Body | String | 사용자 스크립트(old) |
 | labels.user_script_v2 | Body | String | 사용자 스크립트 |
 | labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
-| clusters.labels.ncr_sgw | Body | String | NCR 타입의 Service Gateway UUID |
-| clusters.labels.obs_sgw | Body | String | OBS 타입의 Service Gateway UUID |
 
 <details><summary>예시</summary>
 <p>
@@ -379,8 +375,6 @@ X-Auth-Token: {tokenId}
 | labels.user_script | Body | String | X | 사용자 스크립트(old) |
 | labels.user_script_v2 | Body | String | X | 사용자 스크립트 |
 | labels.master_lb_floating_ip_enabled | Body | String | O | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False")<br>labels.external_network_id와 external_subnet_id_list가 설정된 경우에만 "True"로 설정 가능 |
-| labels.ncr_sgw | Body | String | X | NCR 타입의 Service Gateway UUID |
-| labels.obs_sgw | Body | String | X | OBS 타입의 Service Gateway UUID |
 | flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
 | fixed_network | Body | UUID | O | VPC 네트워크 UUID |
 | fixed_subnet | Body | UUID | O | VPC 서브넷 UUID |
