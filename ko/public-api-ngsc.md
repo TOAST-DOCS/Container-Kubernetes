@@ -1236,10 +1236,15 @@ X-Auth-Token: {tokenId}
         "v1.17.6": false,
         "v1.18.19": false,
         "v1.19.13": false,
-        "v1.20.12": true,
-        "v1.21.6": true,
-        "v1.22.3": true,
-        "v1.23.3": true
+        "v1.20.12": false,
+        "v1.21.6": false,
+        "v1.22.3": false,
+        "v1.23.3": false,
+        "v1.24.3": false,
+        "v1.25.4": true,
+        "v1.26.3": true,
+        "v1.27.3": true,
+        "v1.28.3": true
     }
 }
 ```
