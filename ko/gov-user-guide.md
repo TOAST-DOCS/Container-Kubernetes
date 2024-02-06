@@ -2955,22 +2955,11 @@ NHN Cloud에서 제공하는 NAS 스토리지를 PV로 활용할 수 있습니�
 > [참고]
 > NHN Cloud NAS 서비스는 현재(2023. 11.) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS%20(online)/ko/overview-gov)를 참고하세요.
 
-#### 워커 노드에 NFS 패키지 설치 및 rpcbind 서비스 실행
-NAS 스토리지를 사용하려면 워커 노드에 NFS 패키지를 설치하고, rpcbind 서비스를 실행해야 합니다. 워커 노드에 접속한 뒤 아래 명령어를 실행해 NFS 패키지를 설치합니다.
+#### 모든 워커 노드에서 rpcbind 서비스 실행
+NAS 스토리지를 사용하려면 모든 워커 노드에서 rpcbind 서비스를 실행해야 합니다. 모든 워커 노드에 접속한 뒤 아래 명령어를 통해 rpcbind 서비스를 실행합니다.
 
-Ubuntu, Debian의 경우 아래 명령어로 NFS 패키지를 설치할 수 있습니다.
-```
-$ apt-get install -y nfs-common
-```
+rpcbind 서비스 실행 명령어는 이미지 종류와 상관없이 동일합니다.
 
-
-CentOS의 경우 아래 명령어로 nfs 패키지를 설치할 수 있습니다.
-```
-$ yum install -y nfs-utils
-```
-
-
-nfs 패키지 설치 후 아래 명령어를 실행하여 rpcbind 서비스를 실행합니다. rpcbind 서비스 실행 명령어는 이미지 종류와 상관없이 동일합니다.
 ```
 $ systemctl start rpcbind
 ```
