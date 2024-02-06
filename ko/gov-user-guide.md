@@ -2998,9 +2998,10 @@ $ export KUBECONFIG={클러스터 설정 파일 절대경로}
 ORAS(OCI Registry As Storage)는 OCI 레지스트리에서 OCI 아티팩트를 push 및 pull 하는 방법을 제공하는 툴입니다.
 [ORAS installation](https://oras.land/docs/installation)을 참고하여 ORAS 명령줄 도구를 설치합니다. ORAS 명령줄 도구의 자세한 사용법은 [ORAS docs](https://oras.land/docs/)를 참고하세요.
 
-| 리전 | 다운로드 커맨드 |
-| --- | --- |
-| 한국(평촌) 리전 | oras pull ca6dde7d-kr2-registry.container.gov-nhncloud.com/nks_container/nfs-deploy-tool:v1 |
+| 리전 | 인터넷 연결 | 다운로드 커맨드 |
+| --- | --- | --- |
+| 한국(평촌) 리전 | O | oras pull ca6dde7d-kr2-registry.container.gov-nhncloud.com/container_service/nfs-deploy-tool:v1 |
+| | X | oras pull private-ca6dde7d-kr2-registry.container.gov-nhncloud.com/container_service/nfs-deploy-tool:v1 |
 
 ##### 3. 설치 패키지를 압축 해제한 후 **install-driver.sh {mode}** 명령어를 사용하여 csi-driver-nfs 구성 요소를 설치합니다.
 install-driver.sh 명령 실행 시 인터넷 연결이 가능한 클러스터는 **public**, 그렇지 않은 클러스터는 **private**을 입력해야 합니다.
