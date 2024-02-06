@@ -318,6 +318,146 @@ X-Auth-Token: {tokenId}
 
 ---
 
+### 작업 이력 목록 보기
+
+클러스터의 작업 이력 목록을 조회합니다.
+
+```
+GET /v1/clusters/{CLUSTER_UUID}/events
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+이 API는 요청 본문을 요구하지 않습니다.
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_UUID | URL | UUID | O | 클러스터 UUID |
+
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| events | Body | Array | 작업 이력 객체 목록 |
+| events.id | Body | Integer | 작업 ID |
+| events.uuid | Body | UUID | 작업 UUID |
+| events.project_id | Body | String | 프로젝트(테넌트) ID |
+| events.cluster_uuid | Body | UUID | 클러스터 UUID |
+| events.cluster_name | Body | String | 클러스터 이름 |
+| events.resource_uuid | Body | UUID | 작업 대상 UUID |
+| events.resource_name | Body | String | 작업 대상 이름 |
+| events.resource_type | Body | String | 작업 대상 종류("cluster" / "nodegroup") |
+| events.type | Body | String | 작업 종류 |
+| events.state | Body | String | 작업 상태("SUCCESS" / "FAIL" / "IN_PROGRESS") |
+| events.contents | Body | String | 작업 진행 내용(성공 시 null) |
+| events.created_at | Body | String | 작업 시작 시간(UTC) |
+| events.updated_at | Body | String | 작업 완료 시간(UTC) |
+
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "events": [
+        {
+            "id": 3683,
+            "uuid": "868f218a-9446-4500-b6b3-8c1a95e3d7c3",
+            "project_id": "5d8cc67593754d5581f7e8986badf358",
+            "cluster_uuid": "388794e6-14dc-48ee-9a4f-9c40df5d97ec",
+            "cluster_name": "nks-cluster",
+            "resource_uuid": "388794e6-14dc-48ee-9a4f-9c40df5d97ec",
+            "resource_name": "nks-cluster",
+            "resource_type": "cluster",
+            "type": "CLUSTER_CREATE",
+            "state": "SUCCESS",
+            "contents": null,
+            "created_at": "2024-01-30T01:31:06+00:00",
+            "updated_at": "2024-01-30T01:42:39+00:00"
+        }
+    ]
+}
+```
+
+</p>
+</details>
+
+---
+
+### 작업 이력 보기
+
+클러스터의 작업 이력을 조회합니다.
+
+```
+GET /v1/clusters/{CLUSTER_UUID}/events/{EVENT_UUID}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+이 API는 요청 본문을 요구하지 않습니다.
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_UUID | URL | UUID | O | 클러스터 UUID |
+| EVENT_UUID | URL | UUID | O | 작업 UUID |
+
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| id | Body | Integer | 작업 ID |
+| uuid | Body | UUID | 작업 UUID |
+| project_id | Body | String | 프로젝트(테넌트) ID |
+| cluster_uuid | Body | UUID | 클러스터 UUID |
+| cluster_name | Body | String | 클러스터 이름 |
+| resource_uuid | Body | UUID | 작업 대상 UUID |
+| resource_name | Body | String | 작업 대상 이름 |
+| resource_type | Body | String | 작업 대상 종류("cluster" / "nodegroup") |
+| type | Body | String | 작업 종류 |
+| state | Body | String | 작업 상태("SUCCESS" / "FAIL" / "IN_PROGRESS") |
+| contents | Body | String | 작업 진행 내용(성공 시 null) |
+| created_at | Body | String | 작업 시작 시간(UTC) |
+| updated_at | Body | String | 작업 완료 시간(UTC) |
+
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "id": 3683,
+    "uuid": "868f218a-9446-4500-b6b3-8c1a95e3d7c3",
+    "project_id": "5d8cc67593754d5581f7e8986badf358",
+    "cluster_uuid": "388794e6-14dc-48ee-9a4f-9c40df5d97ec",
+    "cluster_name": "nks-cluster",
+    "resource_uuid": "388794e6-14dc-48ee-9a4f-9c40df5d97ec",
+    "resource_name": "nks-cluster",
+    "resource_type": "cluster",
+    "type": "CLUSTER_CREATE",
+    "state": "SUCCESS",
+    "contents": null,
+    "created_at": "2024-01-30T01:31:06+00:00",
+    "updated_at": "2024-01-30T01:42:39+00:00"
+}
+```
+
+</p>
+</details>
+
+---
+
 ### 클러스터 생성하기
 
 클러스터를 생성합니다.
@@ -1474,6 +1614,8 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|
 | supported_k8s | Body | Object | 지원되는 Kubernetes 버전 객체 |
 | supported_k8s."버전 이름" | Body | String | Kubernetes 버전의 유효성 여부(True/False) |
+| supported_event_type."작업 타입"| Body | Object | 지원되는 작업 타입 객체(cluster_events/nodegroup_events) |
+| supported_event_type."작업 타입"."작업 이름"| Body | Object | 작업 타입 및 설명 |
 
 <details><summary>예시</summary>
 <p>
@@ -1493,6 +1635,25 @@ X-Auth-Token: {tokenId}
         "v1.26.3": true,
         "v1.27.3": true,
         "v1.28.3": true
+    },
+    "supported_event_type": {
+        "cluster_events": {
+            "CLUSTER_CREATE": "클러스터 생성",
+            "CLUSTER_DELETE": "클러스터 삭제",
+            "CLUSTER_HANDOVER": "클러스터 OWNER 변경",
+            "CLUSTER_CNI_UPDATE": "CNI 변경"
+        },
+        "nodegroup_events": {
+            "NODEGROUP_CREATE": "노드 그룹 생성",
+            "NODEGROUP_DELETE": "노드 그룹 삭제",
+            "CLUSTER_RESIZE": "클러스터 크기 조정",
+            "NODEGROUP_UPDATE_FLAVOR": "인스턴스 타입 변경",
+            "NODEGROUP_UPGRADE": "노드 그룹 업그레이드",
+            "NODEGROUP_USERSCRIPT_UPDATE": "유저 스크립트 변경",
+            "NODEGROUP_SET_CLUSTER_AUTOSCALER": "오토 스케일러 설정 변경",
+            "NODEGROUP_NODE_ACTION_NODE_START": "워커 노드 시작",
+            "NODEGROUP_NODE_ACTION_NODE_STOP": "워커 노드 중지"
+        }
     }
 }
 ```
