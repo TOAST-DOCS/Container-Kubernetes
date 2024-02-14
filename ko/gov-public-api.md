@@ -118,7 +118,7 @@ X-Auth-Token: {tokenId}
 | clusters.labels.external_subnet_id_list | Body | String | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분) |
 | clusters.labels.cert_manager_api | Body | String | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
-| clusters.labels.strict_sg_rules | Body | String | 워커 노드 보안 그룹에 필수 보안 규칙만 생성 ("True" / "False"), (2024.03.05. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.strict_sg_rules | Body | String | 워커 노드 보안 그룹에 필수 보안 규칙만 생성("True" / "False"), (2024.03.05. 이후에 생성된 클러스터에서 확인 가능) |
 | clusters.labels.additional_network_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 네트워크 UUID 목록(콜론으로 구분) |
 | clusters.labels.additional_subnet_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 서브넷 UUID 목록(콜론으로 구분) |
 | clusters.labels.cni_driver | Body | String | 클러스터 CNI(2023.03.31. 이후에 생성된 클러스터에서 확인 가능) |
@@ -237,7 +237,7 @@ X-Auth-Token: {tokenId}
 | labels.external_subnet_id_list | Body | String | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분) |
 | labels.cert_manager_api | Body | String | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
 | labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
-| labels.strict_sg_rules | Body | String | 워커 노드 보안 그룹에 필수 보안 규칙만 생성 ("True" / "False"), (2024.03.05. 이후에 생성된 클러스터에서 확인 가능) |
+| labels.strict_sg_rules | Body | String | 워커 노드 보안 그룹에 필수 보안 규칙만 생성("True" / "False"), (2024.03.05. 이후에 생성된 클러스터에서 확인 가능) |
 | labels.additional_network_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 네트워크 UUID 목록(콜론으로 구분) |
 | labels.additional_subnet_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 서브넷 UUID 목록(콜론으로 구분) |
 | labels.cni_driver | Body | String | 클러스터 CNI(2023.03.31. 이후에 생성된 클러스터에서 확인 가능) |
@@ -501,7 +501,7 @@ X-Auth-Token: {tokenId}
 | labels.user_script | Body | String | X | 사용자 스크립트(old) |
 | labels.user_script_v2 | Body | String | X | 사용자 스크립트 |
 | labels.master_lb_floating_ip_enabled | Body | String | O | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False")<br>labels.external_network_id와 external_subnet_id_list가 설정된 경우에만 "True"로 설정 가능 |
-| labels.strict_sg_rules | Body | String | X | 워커 노드 보안 그룹에 필수 보안 규칙만 생성 ("True" / "False"), 기본값 : "False" |
+| labels.strict_sg_rules | Body | String | X | 워커 노드 보안 그룹에 필수 보안 규칙만 생성("True" / "False"), 기본값: "False" |
 | labels.additional_network_id_list | Body | String | X |  기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 네트워크 UUID 목록(콜론으로 구분) |
 | labels.additional_subnet_id_list | Body | String | X |  기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 서브넷 UUID 목록(콜론으로 구분) |
 | labels.service_cluster_ip_range | Body | String  | X |  K8s 서비스 네트워크, 클러스터에서 서비스 생성 시 ClusterIP에 할당되는 IP 대역. fixed_subnet, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
@@ -803,8 +803,8 @@ pod_subnet은 아래와 같은 규칙으로 입력되어야 합니다.
 </details>
 
 ### 클러스터 API 엔드포인트 IP 접근 제어 적용
-클러스터 API 엔드포인트에 IP 접근제어를 적용, 해제 할 수 있습니다.
-IP 접근 제어 기능에 대한 자세한 사항은 [IP 접근제어](/Network/Load%20Balancer/ko/overview-gov/#ip)문서 참고하시고
+클러스터 API 엔드포인트에 IP 접근 제어를 적용하거나 해제할 수 있습니다.
+IP 접근 제어 기능에 대한 자세한 사항은 [IP 접근제어](/Network/Load%20Balancer/ko/overview-gov/#ip) 문서를 참고하세요.
 클러스터 API 엔드포인트에 IP 접근 제어 규칙에 대한 자세한 사항은 [사용자 가이드](/Container/NKS/ko/user-guide-gov/#_67)를 참고하세요.
 
 ```
@@ -822,9 +822,9 @@ X-Auth-Token: {tokenId}
 | tokenId | Header | String | O | 토큰 ID |
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 |
 | enable | Body | String | O | 'true', 'false'중 하나로 설정 가능. 기본값: 'false'<br>true:클러스터 API 엔드포인트에 IP 접근 제어 적용<br>false: 클러스터 API 엔드포인트에 IP 접근 제어 해제, false 설정 시 하위 설정은 모두 무시됨 |
-| action | Body | String | O (enable 설정이 true인 경우) | IP 접근 제어 타입, ALLOW, DENY중 하나로 설정 가능 |
-| ipacl_targets | Body | List of Object | O (enable 설정이 true인 경우) | IP 접근 제어 대상 객체 |
-| ipacl_targets.cidr_address | Body | String | O (enable 설정이 true인 경우) | IP 접근 제어 대상. IP 주소 또는 CIDR 형식의 IP 주소 범위 입력 가능 |
+| action | Body | String | O(enable 설정이 true인 경우) | IP 접근 제어 타입, ALLOW, DENY 중 하나로 설정 가능 |
+| ipacl_targets | Body | List of Object | O(enable 설정이 true인 경우) | IP 접근 제어 대상 객체 |
+| ipacl_targets.cidr_address | Body | String | O(enable 설정이 true인 경우) | IP 접근 제어 대상. IP 주소 또는 CIDR 형식의 IP 주소 범위 입력 가능 |
 | ipacl_targets.descripion | Body | String | X | IP 접근 제어 대상 설명 |
 
 
@@ -895,13 +895,13 @@ X-Auth-Token: {tokenId}
 | 이름 | 종류 | 형식 | 설명 |
 |---|---|---|---|
 | cluster_uuid | Body | UUID | 클러스터 UUID |
-| enable | Body | String | true:클러스터 API 엔드포인트에 IP 접근제어가 적용 되어있음, false: 클러스터 API 엔드포인트에 IP 접근제어가 해제 되어있음 | 
+| enable | Body | String | true: 클러스터 API 엔드포인트에 IP 접근 제어가 적용 되어있음, false: 클러스터 API 엔드포인트에 IP 접근 제어가 해제 되어있음 | 
 | action | Body | String | IP 접근 제어 타입 ALLOW, DENY 확인 가능 |
 | ipacl_targets | Body | List of Object | IP 접근 제어 대상 객체 |
 | ipacl_targets.cidr_address | Body | String | IP 접근 제어 대상. IP 주소 또는 CIDR 형식의 IP 주소 범위 입력 가능 |
 | ipacl_targets.descripion | Body | String | IP 접근 제어 대상 설명 |
 
-<details><summary>enable : true 인 경우 예시</summary>
+<details><summary>enable: true 인 경우 예시</summary>
 <p>
 
 ```json
@@ -924,7 +924,7 @@ X-Auth-Token: {tokenId}
 </p>
 </details>
 
-<details><summary>enable : false 인 경우 예시</summary>
+<details><summary>enable: false 인 경우 예시</summary>
 <p>
 
 ```json
@@ -1059,7 +1059,7 @@ X-Auth-Token: {tokenId}
 | labels.user_script_v2 | Body | String | 사용자 스크립트 |
 | labels.additional_network_id_list | Body | String | 워커 노드 그룹 적용: 추가 네트워크의 VPC 네트워크 UUID 목록(콜론으로 구분) |
 | labels.additional_subnet_id_list | Body | String | 워커 노드 그룹 적용: 추가 네트워크의 VPC 서브넷 UUID 목록(콜론으로 구분) |
-| labels.strict_sg_rules | Body | String | 워커 노드 보안 그룹에 필수 보안 규칙만 생성 ("True" / "False"), (2024.03.05. 이후에 생성된 클러스터에서 확인 가능) |
+| labels.strict_sg_rules | Body | String | 워커 노드 보안 그룹에 필수 보안 규칙만 생성("True" / "False"), (2024.03.05. 이후에 생성된 클러스터에서 확인 가능) |
 | max_node_count | Body | Integer | 최대 노드 수 |
 | min_node_count | Body | Integer | 최소 노드 수 |
 | node_addresses | Body | String list | 노드 IP 주소 목록 |
