@@ -99,7 +99,6 @@ This API does not require a request body.
 | tokenId | Header | String | O | Token ID |
 
 #### Response
-
 | Name | Type | Format | Description |
 |---|---|---|---|
 | clusters | Body | Array | Cluster information object list |
@@ -118,12 +117,15 @@ This API does not require a request body.
 | clusters.labels.external_subnet_id_list | Body | String | List of UUIDs of subnets attached to the internet gateway (separated by colons)|
 | clusters.labels.cert_manager_api | Body | String | Whether to enable the certificate signing request (CSR) feature. Must be set to "True" |
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Whether to create a public domain address for Kubernetes API endpoint ("True" / "False") |
+| clusters.labels.strict_sg_rules | Body | String |Create only required security rules in worker node security groups ("True" / "False"), (available for clusters created on or after February 27, 2024) |
 | clusters.labels.additional_network_id_list | Body | String | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
 | clusters.labels.additional_subnet_id_list | Body | String | Applied to the default worker node group: List of VPC subnet UUIDs for additional networks (separated by colons) |
 | clusters.labels.cni_driver | Body | String | Cluster CNI (Available for clusters created on or after 2023.03.31) |
 | clusters.labels.service_cluster_ip_range | Body | String | IP range assigned to ClusterIP when creating a service from K8s service network and clusters (Available for clusters created on or after 2023.05.30) |
 | clusters.labels.pods_network_cidr | Body | String | Cluster pod network (Available for clusters created on or after 2023.05.30) |
 | clusters.labels.pods_network_subnet | Body | String | Cluster pod subnet size (Available for clusters created on or after 2023.05.30) |
+| clusters.labels.ncr_sgw | Body | String | NCR 타입의 서비스 게이트웨이 UUID |
+| clusters.labels.obs_sgw | Body | String | OBS 타입의 서비스 게이트웨이 UUID |
 
 
 <details><summary>Example</summary>
@@ -151,6 +153,7 @@ This API does not require a request body.
                 "kube_tag": "v1.23.3",
                 "login_username": "centos",
                 "master_lb_floating_ip_enabled": "true",
+                "strict_sg_rules": "True",
                 "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
                 "os_arch": "amd64",
                 "os_distro": "CentOS",
@@ -244,12 +247,15 @@ This API does not require a request body.
 | labels.ca_scale_down_util_thresh | Body | String | Applied to the default worker node group: Autoscaler: Scale down utilization threshold  |
 | labels.ca_scale_down_delay_after_add | Body | String | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
 | labels.master_lb_floating_ip_enabled | Body | String | Whether to create a public domain address for Kubernetes API endpoint ("True" / "False") |
-| clusters.labels.additional_network_id_list | Body | String | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
-| clusters.labels.additional_subnet_id_list | Body | String | Applied to the default worker node group: List of VPC subnet UUIDs for additional networks (separated by colons) |
-| clusters.labels.cni_driver | Body | String | Cluster CNI (Available for clusters created on or after 2023.03.31) |
-| clusters.labels.service_cluster_ip_range | Body | String | Cluster CIDR, IP range allocated to ClusterIP when creating a service from K8s service network and clusters (Available for clusters created on or after 2023.05.30) |
-| clusters.labels.pods_network_cidr | Body | String | Cluster pod network (Available for clusters created on or after 2023.03.31) |
-| clusters.labels.pods_network_subnet | Body | String | Cluster pod subnet size  (Available for clusters created on or after 2023.03.31) |
+| labels.strict_sg_rules | Body | String | Create only required security rules in worker node security groups ("True" / "False"), (available for clusters created on or after February 27, 2024) |
+| labels.additional_network_id_list | Body | String | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
+| labels.additional_subnet_id_list | Body | String | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
+| labels.cni_driver  | Body | String | Cluster CNI (Available for clusters created on or after 2023.03.31) |
+| labels.service_cluster_ip_range | Body | String | Cluster CIDR, IP range allocated to ClusterIP when creating the service in the cluster and K8s service networks (Available for clusters created on or after 2023.05.30) |
+| labels.pods_network_cidr | Body | String | Cluster pod network (Available for clusters created on or after 2023.05.30) |
+| labels.pods_network_subnet | Body | String | Cluster pod subnet size (Available for clusters created on or after 2023.05.30) |
+| labels.ncr_sgw | Body | String | Service Gateway UUID of NCR type |
+| labels.obs_sgw | Body | String | Service gateway UUID of OBS type |
 
 <details><summary>Example</summary>
 <p>
@@ -285,6 +291,7 @@ This API does not require a request body.
         "kube_version_status": "NEED_UPGRADE",
         "login_username": "centos",
         "master_lb_floating_ip_enabled": "true",
+        "strict_sg_rules": "True",
         "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
         "os_arch": "amd64",
         "os_distro": "CentOS",

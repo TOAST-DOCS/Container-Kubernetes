@@ -1,5 +1,15 @@
 ## Container > NHN Kubernetes Service (NKS) > Release Notes
 
+### February 27, 2024
+
+#### Added Features
+
+* You can apply enforced security rules to clusters.
+* Added IP access control to cluster API endpoints.
+* Added support for Kubernetes v1.28.3.
+* You can view the history of tasks on the clusters and node groups lookup screen.
+* Added support for bare metal instances in node groups.
+
 ### November 28, 2023
 
 #### Added Features
