@@ -505,7 +505,7 @@ X-Auth-Token: {tokenId}
 | labels.kube_tag | Body | String | O | Kubernetes Version |
 | labels.user_script | Body | String | X | User script (old) |
 | labels.user_script_v2 | Body | String | X | User script |
-| labels.master_lb_floating_ip_enabled | Body | String | X |  Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
+| labels.master_lb_floating_ip_enabled | Body | String | O |  Whether to create a public domain address for Kubernetes API endpoint ("True" / "False") |
 | labels.strict_sg_rules | Body | String | X | Create only required security rules in the worker node security group ("True" / "False"), default: "False" |
 | labels.additional_network_id_list | Body | String | X |  Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
 | labels.additional_subnet_id_list | Body | String | X |  Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
@@ -525,9 +525,9 @@ X-Auth-Token: {tokenId}
 >  - CIDR cannot overlap with the IP band (198.18.0.0/19) being used inside the NKS.
 >  - You cannot enter a CIDR block greater than /24. (The following CIDR blocks are not available: /26, /30).
 >  - For clusters of v1.23.3 or earlier, they cannot overlap with BIP (bridged IP range) (172.17.0.0/16).
-pod_network_subnet must be entered in the following rules.
+> pod_network_subnet must be entered in the following rules.
 >  - Values between 20 and 28 (included) are allowed.
->  - 
+> The pods_network_subnet value must be at least 2 greater than the pods_network_cidr prefix value. Normal example (Pod subnet size: 24, Pod network: 10.100.0.0/22)
 
 
 <details><summary>Example</summary>
