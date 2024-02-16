@@ -54,8 +54,7 @@ Enter the base image UUID to use for creating a node. The base image name and UU
 
 | Region | Base Image Name | Base Image UUID |
 |---|---|---|
-
-| Korea (Pangyo) region | CentOS 7.9 | 78c46d20-84a2-46b0-b858-584c45617f34 |
+| 한국(판교) 리전 | CentOS 7.9 | 78c46d20-84a2-46b0-b858-584c45617f34 |
 |  | Debian 11.8 Bullseye | e8d5ef4a-5b14-4514-9692-23b6a4250af2 |
 |  | Rocky Linux 8.8 | 75fff283-11a4-4800-8a3b-9eca24618b38 |
 |  | Ubuntu Server 20.04.6 LTS | 1213d033-bdf6-4d73-9763-4e8e57c745fb |
@@ -99,6 +98,7 @@ This API does not require a request body.
 | tokenId | Header | String | O | Token ID |
 
 #### Response
+
 | Name | Type | Format | Description |
 |---|---|---|---|
 | clusters | Body | Array | Cluster information object list |
@@ -160,7 +160,7 @@ This API does not require a request body.
                 "os_type": "linux",
                 "os_version": "7.8",
                 "project_domain": "NORMAL",
-                 "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575",
+                "server_group_meta": "k8s_2b778d83-8b67-45b1-920e-b0c5ad5c2f30_561c3f55-a23f-4e1a-b2fa-a5459b2c0575",
                 "service_cluster_ip_range": "10.254.0.0/16",
                 "pods_network_cidr" : "10.100.0.0/16",
                 "pods_network_subnet" : "24"
@@ -234,18 +234,9 @@ This API does not require a request body.
 | labels.kube_tag | Body |String | Kubernetes version of the master node group |
 | labels.availability_zone | Body | String | Applied to the default worker node group: Availability zone |
 | labels.node_image | Body | UUID | Applied to the default worker node group: Base image UUID |
-| labels.boot_volume_type | Body | String | Applied to the default worker node group: Block storage type|
-| labels.boot_volume_size | Body | String | Applied to the default worker node group: Block storage size (GB) |
 | labels.external_network_id | Body | String | UUID of the VPC network attached to the internet gateway |
 | labels.external_subnet_id_list | Body | String | List of UUIDs of subnets attached to the internet gateway (separated by colons) |
 | labels.cert_manager_api | Body | String | Whether to enable the certificate signing request (CSR) feature. Must be set to "True" |
-| labels.ca_enable | Body | String | Applied to the default worker node group: Autoscaler: Whether to enable the feature ("True" / "False") |
-| labels.ca_max_node_count | Body | String | Applied to the default worker node group: Autoscaler: Maximum number of nodes |
-| labels.ca_min_node_count | Body | String | Applied to the default worker node group: Autoscaler: Minimum number of nodes |
-| labels.ca_scale_down_enable | Body | String | Applied to the default worker node group: Autoscaler: Whether to enable scale-down ("True" / "False") |
-| labels.ca_scale_down_unneeded_time | Body | String | Applied to the default worker node group: Autoscaler: Scale down unneeded time |
-| labels.ca_scale_down_util_thresh | Body | String | Applied to the default worker node group: Autoscaler: Scale down utilization threshold  |
-| labels.ca_scale_down_delay_after_add | Body | String | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
 | labels.master_lb_floating_ip_enabled | Body | String | Whether to create a public domain address for Kubernetes API endpoint ("True" / "False") |
 | labels.strict_sg_rules | Body | String | Create only required security rules in worker node security groups ("True" / "False"), (available for clusters created on or after February 27, 2024) |
 | labels.additional_network_id_list | Body | String | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
@@ -333,6 +324,146 @@ This API does not require a request body.
 
 ---
 
+### View Task History List
+
+Views a list of the cluster's job history.
+
+```
+GET /v1/clusters/{CLUSTER_UUID}/events
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### Request
+
+This API does not require a request body.
+
+| Name | Type | Format | Required | Description |
+|---|---|---|---|---|
+| tokenId | Header | String | O | Token ID |
+| CLUSTER_UUID | URL | UUID | O | Cluster UUID |
+
+
+#### Response
+
+| Name | Type | Format | Description |
+|---|---|---|---|
+| events | Body | Array | Task history object list |
+| events.id | Body | Integer | Task ID |
+| events.uuid | Body | UUID | Task UUID |
+| events.project_id | Body | String | Project (tenant) ID |
+| events.cluster_uuid | Body | String | Cluster UUID |
+| events.cluster_name | Body | String | Cluster name |
+| events.resource_uuid | Body | String | Target UUID for the task |
+| events.resource_name | Body | String | Target name |
+| events.resource_type | Body | String | Target type ("cluster" / "nodegroup") |
+| events.type | Body | String | Task type |
+| events.state | Body | String | Task status ("SUCCESS" / "FAIL" / "IN_PROGRESS") |
+| events.contents | Body | String | Task progress (null when successful) |
+| events.created_at | Body | String | Task start time (UTC) |
+| events.updated_at | Body | String | Task end time (UTC) |
+
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "events": [
+        {
+            "id": 3683,
+            "uuid": "868f218a-9446-4500-b6b3-8c1a95e3d7c3",
+            "project_id": "5d8cc67593754d5581f7e8986badf358",
+            "cluster_uuid": "388794e6-14dc-48ee-9a4f-9c40df5d97ec",
+            "cluster_name": "nks-cluster",
+            "resource_uuid": "388794e6-14dc-48ee-9a4f-9c40df5d97ec",
+            "resource_name": "nks-cluster",
+            "resource_type": "cluster",
+            "type": "CLUSTER_CREATE",
+            "state": "SUCCESS",
+            "contents": null,
+            "created_at": "2024-01-30T01:31:06+00:00",
+            "updated_at": "2024-01-30T01:42:39+00:00"
+        }
+    ]
+}
+```
+
+</p>
+</details>
+
+---
+
+### List Task History
+
+Lists the job history of a cluster.
+
+```
+GET /v1/clusters/{CLUSTER_UUID}/events/{EVENT_UUID}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### Request
+
+This API does not require a request body.
+
+| Name | Type | Format | Required | Description |
+|---|---|---|---|---|
+| tokenId | Header | String | O | Token ID |
+| CLUSTER_UUID | URL | UUID | O | Cluster UUID |
+| EVENT_UUID | URL | UUID | O | Task UUID |
+
+
+#### Response
+
+| Name | Type | Format | Description |
+|---|---|---|---|
+| id | Body | Integer | Task ID |
+| uuid | Body | UUID | Task UUID |
+| project_id | Body | String | Project (tenant) ID |
+| cluster_uuid | Body | UUID | Cluster UUID |
+| cluster_name | Body | String | Cluster name |
+| resource_uuid | Body | UUID | Target UUID for the task |
+| resource.name | Body | String | Target name |
+| resource_type | Body | String | Target type ("cluster" / "nodegroup") |
+| type | Body | String | Task type |
+| state | Body | String | Task status ("SUCCESS" / "FAIL" / "IN_PROGRESS") |
+| contents | Body | String | Task progress (null when successful) |
+| created_at | Body | String | Task start time (UTC) |
+| updated_at | Body | String | Task end time (UTC) |
+
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "id": 3683,
+    "uuid": "868f218a-9446-4500-b6b3-8c1a95e3d7c3",
+    "project_id": "5d8cc67593754d5581f7e8986badf358",
+    "cluster_uuid": "388794e6-14dc-48ee-9a4f-9c40df5d97ec",
+    "cluster_name": "nks-cluster",
+    "resource_uuid": "388794e6-14dc-48ee-9a4f-9c40df5d97ec",
+    "resource_name": "nks-cluster",
+    "resource_type": "cluster",
+    "type": "CLUSTER_CREATE",
+    "state": "SUCCESS",
+    "contents": null,
+    "created_at": "2024-01-30T01:31:06+00:00",
+    "updated_at": "2024-01-30T01:42:39+00:00"
+}
+```
+
+</p>
+</details>
+
+---
+
 ### Create a Cluster
 
 Creates a cluster.
@@ -359,6 +490,8 @@ X-Auth-Token: {tokenId}
 | labels.node_image | Body | UUID | O | Applied to the default worker node group: Base image UUID |
 | labels.boot_volume_type | Body | String | O | Applied to the default worker node group: Block storage type|
 | labels.boot_volume_size | Body | String | O | Applied to the default worker node group: Block storage size (GB) |
+| labels.boot_volume_key_id | Body | String | X | (Symmetric key ID to apply to encrypted block storage (if using encrypted block storage) |
+| labels.boot_volume_appkey | Body | String | X | The appkey for the symmetric key to apply to encrypted block storage (if using encrypted block storage) |
 | labels.external_network_id | Body | String | X | UUID of the VPC network attached to the internet gateway<br>Must be set when a router associated with a VPC subnet is attached to the internet gateway |
 | labels.external_subnet_id_list | Body | String | X | List of UUIDs of subnets attached to the internet gateway (separated by colon)<br>Must be set when a router associated with a VPC subnet is attached to the internet gateway |
 | labels.cert_manager_api | Body | String | O | Whether to enable the certificate signing request (CSR) feature. Must be set to "True" |
@@ -370,33 +503,31 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_util_thresh | Body | String | X | Applied to the default worker node group: Autoscaler: Scale down utilization threshold  |
 | labels.ca_scale_down_delay_after_add | Body | String | X | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
 | labels.kube_tag | Body | String | O | Kubernetes Version |
-| labels.user_script | Body | String | X | User Script (old) |
-| labels.user_script_v2 | Body | String | X | User Script |
-| labels.master_lb_floating_ip_enabled | Body | String | O | Whether to create a public domain address for Kubernetes API endpoint ("True" / "False")<br>Can be set to "True" only when labels.external_network_id and labels.external_subnet_id_list are set |
-| labels.additional_network_id_list | Body | String | X | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
-| labels.additional_subnet_id_list | Body | String | X |  Applied to the default worker node group: List of VPC subnet UUIDs for additional networks (separated by colons) |
-| labels.service_cluster_ip_range | Body | String  | X |  Cluster CIDR, IP range allocated to ClusterIP when creating a service from K8s service network and clusters, see the input rules of pods_network_cidr, service_cluster_ip_range |
-| labels.pods_network_cidr | Body | String |  X |  Cluster pod network, see the input rules of pods_network_cidr, service_cluster_ip_range |
-| labels.pods_network_subnet | Body | Integer | X |  Cluster pod subnet size, see the input rules of pods_network_subnet |
-| flavor_id | Body | UUID | O | Applied to the default worker node group: Node flavor UUID |
+| labels.user_script | Body | String | X | User script (old) |
+| labels.user_script_v2 | Body | String | X | User script |
+| labels.master_lb_floating_ip_enabled | Body | String | X |  Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
+| labels.strict_sg_rules | Body | String | X | Create only required security rules in the worker node security group ("True" / "False"), default: "False" |
+| labels.additional_network_id_list | Body | String | X |  Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
+| labels.additional_subnet_id_list | Body | String | X |  Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
+| labels.service_cluster_ip_range | Body | String  | X |  K8s service network, the IP band assigned to the ClusterIP when creating a service in the cluster. See fixed_subnet, pods_network_cidr, and service_cluster_ip_range input rules. |
+| labels.pods_network_cidr | Body | String |  X |  Cluster Pod Network. See fixed_subnet, pods_network_cidr, service_cluster_ip_range input rules |
+| labels.pods_network_subnet | Body | Integer | X |  Cluster Pod subnet size. See pods_network_subnet input rules |
+| labels.ncr_sgw | Body | String | X | Service gateway UUID of NCR type |
+| labels.obs_sgw | Body | String | X | Service gateway UUID of OBS type |
+| flavor_id | Body | UUID | O | Applied to the default worker node group: Node instance flavor UUID |
 | fixed_network | Body | UUID | O | VPC Network UUID |
-| fixed_subnet | Body | UUID | O | VPC Subnet UUID |
+| fixed_subnet | Body | UUID | O | VPC subnet UUID. Note the rules for entering fixed_subnet, pods_network_cidr, and service_cluster_ip_range. |
 
-[Caution] 
-Make sure that the fixed_subnet range does not overlap the network range.
->  - 10.100.0.0/16
->  - 10.254.0.0/16
->  - 198.18.0.0/19
-> pods_network_cidr, CIDR of service_cluster_ip_range must be entered in the following rules.
+> [Caution]
+> The CIDRs for fixed_subnet, pods_network_cidr, and service_cluster_ip_range must be entered in the following conventions
 >  - CIDR cannot overlap with the link-local address band (169.254.0.0/16).
->  - Pod network and K8s service network bands cannot overlap.
+>  - The fixed_subnet, pods_network_cidr, and service_cluster_ip_range bands cannot be nested.
 >  - CIDR cannot overlap with the IP band (198.18.0.0/19) being used inside the NKS.
->  - CIDR cannot overlap with bands of the VPC network subnet or additional network subnets connected to NKS clusters.
 >  - You cannot enter a CIDR block greater than /24. (The following CIDR blocks are not available: /26, /30).
 >  - For clusters of v1.23.3 or earlier, they cannot overlap with BIP (bridged IP range) (172.17.0.0/16).
 pod_network_subnet must be entered in the following rules.
 >  - Values between 20 and 28 (included) are allowed.
->  - The pods_network_subnet value must be at least 2 greater than the pods_network_cidr prefix value. Normal example (Pod subnet size: 24, pod network: 10.100.0.0/22)
+>  - 
 
 
 <details><summary>Example</summary>
@@ -427,6 +558,7 @@ pod_network_subnet must be entered in the following rules.
         "external_subnet_id_list": "59ddc195-76b1-431d-9693-f09880747dc6",
         "kube_tag": "v1.23.3",
         "master_lb_floating_ip_enabled": "true",
+        "strict_sg_rules": "True",
         "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
         "user_script_v2": ""
     },
@@ -676,6 +808,142 @@ pod_subnet must be entered in the following rules.
 
 </p>
 </details>
+
+### Enforce IP Access Control to Cluster API Endpoints
+You can enforce or disable IP access control to cluster API endpoints.
+For more information about IP access control features, see [IP access control](/Network/Load%20Balancer/ko/overview/#ip).
+For more information about IP access control rules for Cluster API endpoints, see the [user guide](/Container/NKS/ko/user-guide/#_67).
+
+```
+POST /v1/clusters/{CLUSTER_ID_OR_NAME}/api_ep_ipacl
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### Request
+
+| Name | Type | Format | Required | Description |
+|---|---|---|---|---|
+| tokenId | Header | String | O | Token ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name |
+| enable | Body | String | O | Can be set to either 'true' or 'false'. Default: 'false'<br>Enforce IP Access Control to Cluster API Endpoints<br>false: Disable IP access control for cluster API endpoints, all sub-settings are ignored when set to false |
+| Endpoint stage ID | Body | String | O (if the enable setting is true) | IP access control type, can be set to either ALLOW or DENY |
+| ipacl_targets | Body | List of Object | O (if the enable setting is true) | IP access control target object |
+| ipacl_targets.cidr_address | Body | String | O (if the enable setting is true) | IP access control target. You can enter an IP address or a range of IP addresses in CIDR format. |
+| ipacl_targets.descripion | Body | String | X | IP access control target description |
+
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "enable": "True",
+    "action": "ALLOW",
+    "ipacl_targets": [
+        {
+            "cidr_address" : "192.168.0.5"
+        },
+        {
+            "cidr_address" : "10.10.22.3/24",
+            "description": "Your Friends"
+        }
+    ]   
+}
+```
+
+</p>
+</details>
+
+
+#### Response
+
+| Name | Type | Format | Description |
+|---|---|---|---|
+| uuid | Body | UUID | Cluster UUID |
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "uuid": "0641db9f-5e71-4df9-9571-089c7964d82e"
+}
+```
+
+</p>
+</details>
+
+
+### Get Cluster API Endpoint IP Access Control 
+You can view IP access control information applied to your cluster API endpoints.
+
+```
+GET /v1/clusters/{CLUSTER_ID_OR_NAME}/api_ep_ipacl
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### Request
+This API does not require a request body.
+
+| Name | Type | Format | Required | Description |
+|---|---|---|---|---|
+| tokenId | Header | String | O | Token ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
+
+
+#### Response
+
+| Name | Type | Format | Description |
+|---|---|---|---|
+| cluster_uuid | Body | UUID | Cluster UUID |
+| enable | Body | String | true: IP access control is applied to the cluster API endpoint, false: IP access control is off for the cluster API endpoint | 
+| Endpoint stage ID | Body | String | IP access control type ALLOW, DENY can be checked |
+| ipacl_targets | Body | List of Object | IP access control target object |
+| ipacl_targets.cidr_address | Body | String | IP access control target. You can enter an IP address or a range of IP addresses in CIDR format. |
+| ipacl_targets.descripion | Body | String | IP access control target description |
+
+<details><summary>Example when enable: true</summary>
+<p>
+
+```json
+{
+    "cluster_uuid" : "8be87215-9db7-45ed-a03c-38e6db939915",
+    "enable": "true",
+    "action": "ALLOW",
+    "ipacl_targets": [
+        {
+            "cidr_address" : "192.168.0.5",
+            "description": "My Friend"
+        },
+        {
+            "cidr_address" : "10.10.22.3/24"
+        }
+    ]   
+}
+```
+
+</p>
+</details>
+
+<details><summary>Example when enable: false</summary>
+<p>
+
+```json
+{
+    "cluster_uuid" : "8be87215-9db7-45ed-a03c-38e6db939915",
+    "enable": "false"
+}
+```
+
+</p>
+</details>
+
 ---
 
 ## Node Group
@@ -799,6 +1067,7 @@ This API does not require a request body.
 | labels.user_script_v2 | Body | String | User Script |
 | labels.additional_network_id_list | Body | String | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
 | labels.additional_subnet_id_list | Body | String | Applied to the default worker node group: List of VPC subnet UUIDs for additional networks (separated by colons) |
+| labels.strict_sg_rules | Body | String | Create only required security rules in worker node security groups ("True" / "False"), (available for clusters created on or after February 27, 2024) |
 | max_node_count | Body | Integer | Maximum Node Count |
 | min_node_count | Body | Integer | Minimum Node Count |
 | node_addresses | Body | String list | List of node IP addresses |
@@ -845,6 +1114,7 @@ This API does not require a request body.
         "kube_version_status": "LATEST",
         "login_username": "centos",
         "master_lb_floating_ip_enabled": "true",
+        "strict_sg_rules": "True",
         "node_image": "96aff4ab-d221-4688-8364-2fcf02d50547",
         "os_arch": "amd64",
         "os_distro": "CentOS",
@@ -916,6 +1186,8 @@ X-Auth-Token: {tokenId}
 | labels.ca_min_node_count | Body | String | X | Applied to the default worker node group: Autoscaler: Minimum number of nodes |
 | labels.ca_scale_down_enable | Body | String | X | Applied to the default worker node group: Autoscaler: Whether to enable scale-down ("True" / "False") |
 | labels.ca_scale_down_unneeded_time | Body | String | X | Applied to the default worker node group: Autoscaler: Scale down unneeded time |
+| labels.ca_scale_down_util_thresh | Body | String | X | Applied to the default worker node group: Autoscaler: Scale down utilization threshold  |
+| labels.ca_scale_down_delay_after_add | Body | String | X | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
 | labels.ca_scale_down_util_thresh | Body | String | X | Applied to the default worker node group: Autoscaler: Scale down utilization threshold  |
 | labels.ca_scale_down_delay_after_add | Body | String | X | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
 | labels.user_script | Body | String | X | User Script (old) |
@@ -1491,6 +1763,8 @@ This API does not require a request body.
 |---|---|---|---|
 | supported_k8s | Body | Object | Supported Kubernetes version object |
 | supported_k8s."version name" | Body | String | Whether the Kubernetes version is valid or not (True/False) |
+| supported_event_type."task type"| Body | Object | Supported task type objects (cluster_events/nodegroup_events) |
+| supported_event_type."task type"."task name"| Body | Object | Task type and description |
 
 <details><summary>Example</summary>
 <p>
@@ -1505,10 +1779,30 @@ This API does not require a request body.
         "v1.21.6": false,
         "v1.22.3": false,
         "v1.23.3": false,
-        "v1.24.3": true,
+        "v1.24.3": false,
         "v1.25.4": true,
         "v1.26.3": true,
         "v1.27.3": true
+        "v1.28.3": true
+    },
+    "supported_event_type": {
+        "cluster_events": {
+            "CLUSTER_CREATE": "Create a cluster",
+            "CLUSTER_DELETE": "Delete a cluster",
+            "CLUSTER_HANDOVER": "Cluster OWNER change",
+            "CLUSTER_CNI_UPDATE": "Change CNI"
+        },
+        "nodegroup_events": {
+            "NODEGROUP_CREATE": "Node group creation",
+            "NODEGROUP_DELETE": "Delete a node group",
+            "CLUSTER_RESIZE": "Resize the cluster",
+            "NODEGROUP_UPDATE_FLAVOR": "Change instance type",
+            "NODEGROUP_UPGRADE": "Upgrade a node group",
+            "NODEGROUP_USERSCRIPT_UPDATE": "Change userscript",
+            "NODEGROUP_SET_CLUSTER_AUTOSCALER": "Change Auto Scaler settings",
+            "NODEGROUP_NODE_ACTION_NODE_START": "Start worker node",
+            "NODEGROUP_NODE_ACTION_NODE_STOP": "Stop worker node"
+        }
     }
 }
 ```
