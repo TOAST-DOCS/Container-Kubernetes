@@ -124,8 +124,8 @@ This API does not require a request body.
 | clusters.labels.service_cluster_ip_range | Body | String | IP range assigned to ClusterIP when creating a service from K8s service network and clusters (Available for clusters created on or after 2023.05.30) |
 | clusters.labels.pods_network_cidr | Body | String | Cluster pod network (Available for clusters created on or after 2023.05.30) |
 | clusters.labels.pods_network_subnet | Body | String | Cluster pod subnet size (Available for clusters created on or after 2023.05.30) |
-| clusters.labels.ncr_sgw | Body | String | NCR 타입의 서비스 게이트웨이 UUID |
-| clusters.labels.obs_sgw | Body | String | OBS 타입의 서비스 게이트웨이 UUID |
+| clusters.labels.ncr_sgw | Body | String | Service gateway UUID of NCR type |
+| clusters.labels.obs_sgw | Body | String | Service gateway UUID of OBS type |
 
 
 <details><summary>Example</summary>
