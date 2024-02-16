@@ -54,7 +54,7 @@ Enter the base image UUID to use for creating a node. The base image name and UU
 
 | Region | Base Image Name | Base Image UUID |
 |---|---|---|
-| 한국(판교) 리전 | CentOS 7.9 | 78c46d20-84a2-46b0-b858-584c45617f34 |
+| Korea (Pangyo) region | CentOS 7.9 | 78c46d20-84a2-46b0-b858-584c45617f34 |
 |  | Debian 11.8 Bullseye | e8d5ef4a-5b14-4514-9692-23b6a4250af2 |
 |  | Rocky Linux 8.8 | 75fff283-11a4-4800-8a3b-9eca24618b38 |
 |  | Ubuntu Server 20.04.6 LTS | 1213d033-bdf6-4d73-9763-4e8e57c745fb |
