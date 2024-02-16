@@ -521,7 +521,7 @@ X-Auth-Token: {tokenId}
 > [Caution]
 > The CIDRs for fixed_subnet, pods_network_cidr, and service_cluster_ip_range must be entered in the following conventions
 >  - CIDR cannot overlap with the link-local address band (169.254.0.0/16).
->  - The fixed_subnet, pods_network_cidr, and service_cluster_ip_range bands cannot be nested.
+>  - The fixed_subnet, pods_network_cidr, and service_cluster_ip_range bands cannot overlap.
 >  - CIDR cannot overlap with the IP band (198.18.0.0/19) being used inside the NKS.
 >  - You cannot enter a CIDR block greater than /24. (The following CIDR blocks are not available: /26, /30).
 >  - For clusters of v1.23.3 or earlier, they cannot overlap with BIP (bridged IP range) (172.17.0.0/16).
