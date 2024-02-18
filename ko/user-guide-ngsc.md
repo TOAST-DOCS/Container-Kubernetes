@@ -1555,6 +1555,103 @@ kubelet은 모든 워커 노드에서 동작하는 노드 에이전트입니다.
 > * 올바르지 않은 형식의 사용자 정의 아규먼트 입력 시 kubelet이 정상 동작하지 않습니다.
 > * 설정된 사용자 정의 아규먼트는 시스템 재시작 시에도 그대로 적용됩니다.
 
+### 사용자 정의 containerd 레지스트리 설정 기능
+v1.24.3 이상의 NKS 클러스터는 컨테이너 런타임으로 containerd v1.6을 사용합니다. NKS에서는 containerd의 여러 가지 설정 중 레지스트리에 관련한 설정을 사용자 환경에 맞게 설정할 수 있는 기능을 제공합니다. containerd v1.6의 레지스트리 설정은 [Configure Image Registry](https://github.com/containerd/containerd/blob/release/1.6/docs/cri/registry.md)를 참고하세요.
+
+워커 노드가 초기화되는 과정 중 사용자 정의 containerd 레지스트리 설정 파일(`/etc/containerd/registry-config.json`)이 존재하면 이 파일의 내용을 containerd 설정 파일(`/etc/containerd/config.toml`)에 적용합니다. 사용자 정의 containerd 레지스트리 설정 파일이 존재하지 않으면 containerd 설정 파일에는 기본 레지스트리 설정이 적용됩니다. 기본 레지스트리 설정의 내용은 다음과 같습니다.
+
+```json
+[
+   {
+      "registry": "docker.io",
+      "endpoint_list": [
+         "https://registry-1.docker.io"
+      ]
+   }
+]
+```
+
+하나의 레지스트리에 대해 설정할 수 있는 키/값 형식은 다음과 같습니다.
+
+```json
+{
+  "registry": "REGISTRY_NAME",
+  "endpoint_list": [
+     "ENDPOINT1",
+     "ENDPOINT2"
+  ],
+  "tls": {
+     "ca_file": "CA_FILEPATH",
+     "cert_file": "CERT_FILEPATH",
+     "key_file": "KEY_FILEPATH",
+     "insecure_skip_verify": true_or_false
+  },
+  "auth": {
+     "username": "USERNAME",
+     "password": "PASSWORD",
+     "auth": "AUTH",
+     "identitytoken": "IDENTITYTOKEN"
+  }
+}
+```
+
+#### 예시1 
+
+`docker.io` 이외에 추가 레지스트리를 등록하려면 다음과 같이 설정할 수 있습니다.
+
+```json
+[
+   {
+      "registry": "docker.io",
+      "endpoint_list": [
+         "https://registry-1.docker.io"
+      ]
+   },
+   {
+      "registry": "additional.registry.io",
+      "endpoint_list": [
+         "https://additional.registry.io"
+      ]
+   }
+]
+```
+
+#### 예시2 
+
+`docker.io` 레지스트리를 제거하고 HTTP를 지원하는 레지스트리만 등록하려면 다음과 같이 설정할 수 있습니다.
+```json
+[
+   {
+      "registry": "user-defined.registry.io",
+      "endpoint_list": [
+         "http://user-defined.registry.io"
+      ],
+      "tls": {
+         "insecure_skip_verify": true
+      }
+   }
+]
+```
+
+#### 예시3
+
+노드 생성 시 사용자 정의 containerd 레지스트리 설정 파일을 예시2의 내용으로 생성하기 위해서 사용자 스크립트를 다음과 같이 설정할 수 있습니다.
+
+```bash
+mkdir -p /etc/containerd
+echo '[ { "registry": "user-defined.registry.io", "endpoint_list": [ "http://user-defined.registry.io" ], "tls": { "insecure_skip_verify": true } } ]' > /etc/containerd/registry-config.json
+```
+
+> [주의]
+> * containerd 설정 파일(`/etc/containerd/config.toml`)은 NKS에 의해 관리되는 파일입니다. 이 파일을 임의로 수정하면 NKS의 기능 동작에 오류가 발생하거나 임의로 수정된 내용이 제거될 수 있습니다. 
+> * 사용자 정의 containerd 레지스트리 설정 기능으로 올바르지 못한 레지스트리가 설정되면 워커 노드가 비정상 동작할 수 있습니다. 
+> * 사용자 정의 containerd 레지스트리 설정 기능이 containerd 설정 파일에 적용되는 시점은 워커 노드 초기화 과정입니다. 워커 노드 초기화 과정은 워커 노드 생성 과정과 워커 노드 그룹 업그레이드 과정에 포함됩니다.
+>     * 워커 노드 생성 시 사용자 정의 container 레지스트리 설정 기능을 적용하기 위해서는 사용자 스크립트에서 이 설정 파일을 생성하도록 해야합니다.
+>     * 워커 노드 그룹 업그레이드 시 사용자 정의 container 레지스트리 설정 기능을 적용하기 위해서는 모든 워커 노드에 이 파일을 수동 설정한 후 업그레이드를 진행해야 합니다.
+> * 사용자 정의 containerd 레지스트리 설정 파일이 존재하는 경우 이 파일에 설정된 내용이 containerd에 그대로 적용됩니다.
+>     * `docker.io` 레지스트리를 사용하려면 `docker.io` 레지스트리에 대한 설정도 포함되어야 합니다. `docker.io` 레지스트리의 설정은 기본 레지스트리 설정을 참고하세요.
+>     * `docker.io` 레지스트리를 사용하지 않으려면 `docker.io` 레지스트리에 대한 설정을 포함하지 않으면 됩니다. 단, 하나 이상의 레지스트리 설정이 존재해야 합니다.
+
 ## LoadBalancer 서비스
 Kubernetes 애플리케이션의 기본 실행 단위인 파드(pod)는 CNI(container network interface)로 클러스터 네트워크에 연결됩니다. 기본적으로 클러스터 외부에서 파드로는 접근할 수 없습니다. 파드의 서비스를 클러스터 외부에 공개하려면 Kubernetes의 `LoadBalancer` 서비스(Service) 객체(object)를 이용해 외부에 공개할 경로를 만들어야 합니다. LoadBalancer 서비스 객체를 만들면 클러스터 외부에 NHN Cloud Load Balancer가 생성되어 서비스 객체와 연결됩니다.
 
