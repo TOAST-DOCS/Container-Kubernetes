@@ -3263,10 +3263,10 @@ ORAS(OCI Registry As Storage)はOCIレジストリからOCIアーティファク
 
 | リージョン | インターネット接続 | ダウンロードコマンド |
 | --- | --- | --- |
-| 韓国(パンギョ)リージョン | O | oras pull dfe965c3-kr1-registry.container.nhncloud.com/container_service/nfs-deploy-tool:v1 |
-| | X | oras pull private-dfe965c3-kr1-registry.container.nhncloud.com/container_service/nfs-deploy-tool:v1 |
-| 韓国(ピョンチョン)リージョン | O | oras pull 6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/nfs-deploy-tool:v1 |
-| | X | oras pull private-6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/nfs-deploy-tool:v1 |
+| 韓国(パンギョ)リージョン | O | oras pull dfe965c3-kr1-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v1 |
+| | X | oras pull private-dfe965c3-kr1-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v1 |
+| 韓国(ピョンチョン)リージョン | O | oras pull 6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/oci/nfs-deploy-tool:v1 |
+| | X | oras pull private-6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/oci/nfs-deploy-tool:v1 |
 
 ##### 3. インストールパッケージを解凍した後、**install-driver.sh {mode}**コマンドを使用してcsi-driver-nfsコンポーネントをインストールします。 
 install-driver.shコマンド実行時、インターネット接続が可能なクラスタは**public**、そうでないクラスタは**private**を入力する必要があります。
