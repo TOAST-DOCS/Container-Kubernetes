@@ -176,7 +176,7 @@ NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Netwo
 
 | 방향 | IP 프로토콜 | 포트 범위 | Ether | 원격 | 설명 |
 | :-: | :-: | :-: | :-: | :-: | :-: |
-| ingress | TCP | 30000 - 32767 | IPv4 | 모두 허용 | NKS service object NodePort, 방향: external -> worker node |
+| ingress, egress | TCP | 30000 - 32767 | IPv4 | 모두 허용 | NKS service object NodePort, 방향: external -> worker node |
 | egress | TCP | 2049 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc nfs 포트, 방향: csi-nfs-node(worker node) -> NHN Cloud NAS 서비스 |
 | egress | TCP | 111 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc portmapper 포트, 방향: csi-nfs-node(worker node) -> NHN Cloud NAS 서비스 |
 | egress | TCP | 635 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc mountd 포트, 방향: csi-nfs-node(worker node) -> NHN Cloud NAS 서비스 |
@@ -1446,6 +1446,7 @@ IP 접근 제어 기능에 대한 자세한 사항은 [IP 접근제어](/Network
 클러스터 API 엔드포인트 IP 접근 제어 대상을 추가하는 경우 아래의 규칙이 적용됩니다.
 
 * IP 접근 제어 타입이 '허용'으로 설정된 경우 클러스터 기본 서브넷 CIDR가 접근 제어 대상에 자동으로 추가됩니다.
+* IP 접근 제어 타입이 '허용'으로 설정된 경우 NKS 콘솔의 대시보드, 네임스페이스, 워크로드, 서비스&네트워크, 스토리지, 설정, 이벤트 탭이 비활성화 됩니다.
 * IP 접근 제어 타입이 '차단'으로 설정된 경우 클러스터 기본 서브넷 CIDR 대역에 중첩되는 IP 대역이 접근 제어 대상 목록에 있으면 요청이 거절됩니다.
 * 최대 설정 가능한 IP 접근 제어 대상 수는 100개입니다.
 * IP 접근 제어 대상은 1개 이상 존재해야 합니다.
