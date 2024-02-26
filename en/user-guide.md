@@ -3151,10 +3151,10 @@ Refer to [](https://oras.land/docs/installation)ORAS installation[](https://oras
 
 | Region | Internet Connection | Download Command |
 | --- | --- | --- |
-| Korea (Pangyo) region | O |  oras pull dfe965c3-kr1-registry.container.nhncloud.com/container_service/nfs-deploy-tool:v1 |
-| | X | oras pull private-dfe965c3-kr1-registry.container.nhncloud.com/container_service/nfs-deploy-tool:v1 |
-| Korea (Pyengchon) region | O | oras pull 6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/nfs-deploy-tool:v1 |
-| | X | oras pull private-6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/nfs-deploy-tool:v1 |
+| Korea (Pangyo) region | O |  oras pull dfe965c3-kr1-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v1 |
+| | X | oras pull private-dfe965c3-kr1-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v1 |
+| Korea (Pyengchon) region | O | oras pull 6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/oci/nfs-deploy-tool:v1 |
+| | X | oras pull private-6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/oci/nfs-deploy-tool:v1 |
 
 ##### 3. After unzipping the installation package, install the csi-driver-nfs component using the **install-driver.sh {mode}** command.
 When you run the install-driver.sh command, you must enter **public** for clusters that can connect to the Internet, and **private** for clusters that do not.
