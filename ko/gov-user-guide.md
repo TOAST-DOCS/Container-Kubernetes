@@ -1492,9 +1492,9 @@ IP 접근 제어 기능에 대한 자세한 사항은 [IP 접근제어](/Network
 #### IP 접근 제어 대상 규칙
 클러스터 API 엔드포인트 IP 접근 제어 대상을 추가하는 경우 아래의 규칙이 적용됩니다.
 
-* IP 접근 제어 타입이 '허용'으로 설정된 경우 클러스터 기본 서브넷 CIDR가 접근 제어 대상에 자동으로 추가됩니다.
-* IP 접근 제어 타입이 '허용'으로 설정된 경우 NKS 콘솔의 대시보드, 네임스페이스, 워크로드, 서비스&네트워크, 스토리지, 설정, 이벤트 탭이 비활성화 됩니다.
-* IP 접근 제어 타입이 '차단'으로 설정된 경우 클러스터 기본 서브넷 CIDR 대역에 중첩되는 IP 대역이 접근 제어 대상 목록에 있으면 요청이 거절됩니다.
+* IP 접근 제어 타입이 **허용**으로 설정된 경우 클러스터 기본 서브넷 CIDR이 접근 제어 대상에 자동으로 추가됩니다.
+* IP 접근 제어 타입이 **허용**으로 설정된 경우 NKS 콘솔의 대시보드, 네임스페이스, 워크로드, 서비스&네트워크, 스토리지, 설정, 이벤트 탭이 비활성화됩니다.
+* IP 접근 제어 타입이 **차단**으로 설정된 경우 클러스터 기본 서브넷 CIDR 대역에 중첩되는 IP 대역이 접근 제어 대상 목록에 있으면 요청이 거절됩니다.
 * 최대 설정 가능한 IP 접근 제어 대상 수는 100개입니다.
 * IP 접근 제어 대상은 1개 이상 존재해야 합니다.
 
@@ -1605,7 +1605,7 @@ kubelet은 모든 워커 노드에서 동작하는 노드 에이전트입니다.
 > * 설정된 사용자 정의 아규먼트는 시스템 재시작 시에도 그대로 적용됩니다.
 
 ### 사용자 정의 containerd 레지스트리 설정 기능
-v1.24.3 이상의 NKS 클러스터는 컨테이너 런타임으로 containerd v1.6을 사용합니다. NKS에서는 containerd의 여러 가지 설정 중 레지스트리에 관련한 설정을 사용자 환경에 맞게 설정할 수 있는 기능을 제공합니다. containerd v1.6의 레지스트리 설정은 [Configure Image Registry](https://github.com/containerd/containerd/blob/release/1.6/docs/cri/registry.md)를 참고하세요.
+v1.24.3 이상의 NKS 클러스터는 컨테이너 런타임으로 containerd v1.6을 사용합니다. NKS에서는 containerd의 여러 가지 설정 중 레지스트리와 관련된 항목을 사용자 환경에 맞게 설정할 수 있는 기능을 제공합니다. containerd v1.6의 레지스트리 설정은 [Configure Image Registry](https://github.com/containerd/containerd/blob/release/1.6/docs/cri/registry.md)를 참고하세요.
 
 워커 노드가 초기화되는 과정 중 사용자 정의 containerd 레지스트리 설정 파일(`/etc/containerd/registry-config.json`)이 존재하면 이 파일의 내용을 containerd 설정 파일(`/etc/containerd/config.toml`)에 적용합니다. 사용자 정의 containerd 레지스트리 설정 파일이 존재하지 않으면 containerd 설정 파일에는 기본 레지스트리 설정이 적용됩니다. 기본 레지스트리 설정의 내용은 다음과 같습니다.
 
@@ -1695,7 +1695,7 @@ echo '[ { "registry": "user-defined.registry.io", "endpoint_list": [ "http://use
 > * containerd 설정 파일(`/etc/containerd/config.toml`)은 NKS에 의해 관리되는 파일입니다. 이 파일을 임의로 수정하면 NKS의 기능 동작에 오류가 발생하거나 임의로 수정된 내용이 제거될 수 있습니다. 
 > * 사용자 정의 containerd 레지스트리 설정 기능으로 올바르지 못한 레지스트리가 설정되면 워커 노드가 비정상 동작할 수 있습니다. 
 > * 사용자 정의 containerd 레지스트리 설정 기능이 containerd 설정 파일에 적용되는 시점은 워커 노드 초기화 과정입니다. 워커 노드 초기화 과정은 워커 노드 생성 과정과 워커 노드 그룹 업그레이드 과정에 포함됩니다.
->     * 워커 노드 생성 시 사용자 정의 container 레지스트리 설정 기능을 적용하기 위해서는 사용자 스크립트에서 이 설정 파일을 생성하도록 해야합니다.
+>     * 워커 노드 생성 시 사용자 정의 container 레지스트리 설정 기능을 적용하기 위해서는 사용자 스크립트에서 이 설정 파일을 생성하도록 해야 합니다.
 >     * 워커 노드 그룹 업그레이드 시 사용자 정의 container 레지스트리 설정 기능을 적용하기 위해서는 모든 워커 노드에 이 파일을 수동 설정한 후 업그레이드를 진행해야 합니다.
 > * 사용자 정의 containerd 레지스트리 설정 파일이 존재하는 경우 이 파일에 설정된 내용이 containerd에 그대로 적용됩니다.
 >     * `docker.io` 레지스트리를 사용하려면 `docker.io` 레지스트리에 대한 설정도 포함되어야 합니다. `docker.io` 레지스트리의 설정은 기본 레지스트리 설정을 참고하세요.
@@ -3457,7 +3457,7 @@ StorageClass 매니페스트에 스토리지 제공자 정보 및 생성할 NAS 
 
 <br>
 
-> [주의] 다중 서브넷 환경에서의 제약사항
+> [주의] 다중 서브넷 환경에서의 제약 사항
 > 
 > NAS 스토리지는 스토리지 클래스에 정의된 서브넷에 연결됩니다.
 > 파드가 NAS 스토리지와 연동하기 위해서는 모든 워커 노드 그룹이 이 서브넷에 연결되어야 합니다.
@@ -3536,9 +3536,9 @@ NAME                            STATUS   VOLUME                                 
 persistentvolumeclaim/pvc-nfs   Bound    pvc-a8ea2054-0849-4fe8-8207-ee0e43b8a103   50Gi       RWX            sc-nfs         75s
 ```
 
-파드에 PVC를 마운트 하려면 파드 매니페스트에 마운트 정보를 정의해야 합니다. **spec.volumes.persistenVolumeClaim.claimName**에 사용할 PVC 이름을 입력합니다. 그리고 **spec.containers.volumeMounts.mountPath**에 마운트 할 경로를 입력합니다.
+파드에 PVC를 마운트하려면 파드 매니페스트에 마운트 정보를 정의해야 합니다. **spec.volumes.persistenVolumeClaim.claimName**에 사용할 PVC 이름을 입력합니다. 그리고 **spec.containers.volumeMounts.mountPath**에 마운트할 경로를 입력합니다.
 
-아래는 생성한 PVC를 파드의 `/tmp/nfs`에 마운트 하는 매니페스트 예제입니다.
+아래는 생성한 PVC를 파드의 `/tmp/nfs`에 마운트하는 매니페스트 예제입니다.
 ```yaml
 # deployment.yaml
 apiVersion: apps/v1
@@ -3570,7 +3570,7 @@ spec:
             claimName: pvc-nfs
 ```
 
-파드를 생성하고 NAS 스토리지가 마운트 되어 있는지 확인합니다.
+파드를 생성하고 NAS 스토리지가 마운트되어 있는지 확인합니다.
 ```
 $ kubectl apply -f deployment.yaml
 deployment.apps/nginx created
