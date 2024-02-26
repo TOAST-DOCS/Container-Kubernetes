@@ -117,12 +117,15 @@ X-Auth-Token: {tokenId}
 | clusters.labels.external_subnet_id_list | Body | String | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분) |
 | clusters.labels.cert_manager_api | Body | String | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
+| clusters.labels.strict_sg_rules | Body | String | 워커 노드 보안 그룹에 필수 보안 규칙만 생성("True" / "False"), (2024.02.27. 이후에 생성된 클러스터에서 확인 가능) |
 | clusters.labels.additional_network_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 네트워크 UUID 목록(콜론으로 구분) |
 | clusters.labels.additional_subnet_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 서브넷 UUID 목록(콜론으로 구분) |
 | clusters.labels.cni_driver | Body | String | 클러스터 CNI(2023.03.31. 이후에 생성된 클러스터에서 확인 가능) |
 | clusters.labels.service_cluster_ip_range | Body | String | K8s 서비스 네트워크, 클러스터에서 서비스 생성 시 ClusterIP에 할당되는 IP 대역(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
 | clusters.labels.pods_network_cidr | Body | String | 클러스터 파드 네트워크(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
 | clusters.labels.pods_network_subnet | Body | String | 클러스터 파드 서브넷 크기(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.ncr_sgw | Body | String | NCR 타입의 서비스 게이트웨이 UUID |
+| clusters.labels.obs_sgw | Body | String | OBS 타입의 서비스 게이트웨이 UUID |
 
 
 <details><summary>예시</summary>
@@ -150,6 +153,7 @@ X-Auth-Token: {tokenId}
                 "kube_tag": "v1.23.3",
                 "login_username": "centos",
                 "master_lb_floating_ip_enabled": "true",
+                "strict_sg_rules": "True",
                 "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
                 "os_arch": "amd64",
                 "os_distro": "CentOS",
@@ -234,12 +238,15 @@ X-Auth-Token: {tokenId}
 | labels.external_subnet_id_list | Body | String | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분) |
 | labels.cert_manager_api | Body | String | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
 | labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
-| clusters.labels.additional_network_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 네트워크 UUID 목록(콜론으로 구분) |
-| clusters.labels.additional_subnet_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 서브넷 UUID 목록(콜론으로 구분) |
-| clusters.labels.cni_driver | Body | String | 클러스터 CNI(2023.03.31. 이후에 생성된 클러스터에서 확인 가능) |
-| clusters.labels.service_cluster_ip_range | Body | String | K8s 서비스 네트워크, 클러스터에서 서비스 생성 시 ClusterIP에 할당되는 IP 대역(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
-| clusters.labels.pods_network_cidr | Body | String | 클러스터 파드 네트워크(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
-| clusters.labels.pods_network_subnet | Body | String | 클러스터 파드 서브넷 크기(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
+| labels.strict_sg_rules | Body | String | 워커 노드 보안 그룹에 필수 보안 규칙만 생성("True" / "False"), (2024.02.27. 이후에 생성된 클러스터에서 확인 가능) |
+| labels.additional_network_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 네트워크 UUID 목록(콜론으로 구분) |
+| labels.additional_subnet_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 서브넷 UUID 목록(콜론으로 구분) |
+| labels.cni_driver | Body | String | 클러스터 CNI(2023.03.31. 이후에 생성된 클러스터에서 확인 가능) |
+| labels.service_cluster_ip_range | Body | String | K8s 서비스 네트워크, 클러스터에서 서비스 생성 시 ClusterIP에 할당되는 IP 대역(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
+| labels.pods_network_cidr | Body | String | 클러스터 파드 네트워크(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
+| labels.pods_network_subnet | Body | String | 클러스터 파드 서브넷 크기(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
+| labels.ncr_sgw | Body | String | NCR 타입의 서비스 게이트웨이 UUID |
+| labels.obs_sgw | Body | String | OBS 타입의 서비스 게이트웨이 UUID |
 
 <details><summary>예시</summary>
 <p>
@@ -275,6 +282,7 @@ X-Auth-Token: {tokenId}
         "kube_version_status": "NEED_UPGRADE",
         "login_username": "centos",
         "master_lb_floating_ip_enabled": "true",
+        "strict_sg_rules": "True",
         "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
         "os_arch": "amd64",
         "os_distro": "CentOS",
@@ -308,6 +316,146 @@ X-Auth-Token: {tokenId}
     "updated_at": "2021-08-05T04:39:49+00:00",
     "user_id": "12ba32bebc414c4992a2c9be3952a64c",
     "uuid": "2b778d83-8b67-45b1-920e-b0c5ad5c2f30"
+}
+```
+
+</p>
+</details>
+
+---
+
+### 작업 이력 목록 보기
+
+클러스터의 작업 이력 목록을 조회합니다.
+
+```
+GET /v1/clusters/{CLUSTER_UUID}/events
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+이 API는 요청 본문을 요구하지 않습니다.
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_UUID | URL | UUID | O | 클러스터 UUID |
+
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| events | Body | Array | 작업 이력 객체 목록 |
+| events.id | Body | Integer | 작업 ID |
+| events.uuid | Body | UUID | 작업 UUID |
+| events.project_id | Body | String | 프로젝트(테넌트) ID |
+| events.cluster_uuid | Body | String | 클러스터 UUID |
+| events.cluster_name | Body | String | 클러스터 이름 |
+| events.resource_uuid | Body | String | 작업 대상 UUID |
+| events.resource_name | Body | String | 작업 대상 이름 |
+| events.resource_type | Body | String | 작업 대상 종류("cluster" / "nodegroup") |
+| events.type | Body | String | 작업 종류 |
+| events.state | Body | String | 작업 상태("SUCCESS" / "FAIL" / "IN_PROGRESS") |
+| events.contents | Body | String | 작업 진행 내용(성공 시 null) |
+| events.created_at | Body | String | 작업 시작 시간(UTC) |
+| events.updated_at | Body | String | 작업 완료 시간(UTC) |
+
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "events": [
+        {
+            "id": 3683,
+            "uuid": "868f218a-9446-4500-b6b3-8c1a95e3d7c3",
+            "project_id": "5d8cc67593754d5581f7e8986badf358",
+            "cluster_uuid": "388794e6-14dc-48ee-9a4f-9c40df5d97ec",
+            "cluster_name": "nks-cluster",
+            "resource_uuid": "388794e6-14dc-48ee-9a4f-9c40df5d97ec",
+            "resource_name": "nks-cluster",
+            "resource_type": "cluster",
+            "type": "CLUSTER_CREATE",
+            "state": "SUCCESS",
+            "contents": null,
+            "created_at": "2024-01-30T01:31:06+00:00",
+            "updated_at": "2024-01-30T01:42:39+00:00"
+        }
+    ]
+}
+```
+
+</p>
+</details>
+
+---
+
+### 작업 이력 보기
+
+클러스터의 작업 이력을 조회합니다.
+
+```
+GET /v1/clusters/{CLUSTER_UUID}/events/{EVENT_UUID}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+이 API는 요청 본문을 요구하지 않습니다.
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_UUID | URL | UUID | O | 클러스터 UUID |
+| EVENT_UUID | URL | UUID | O | 작업 UUID |
+
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| id | Body | Integer | 작업 ID |
+| uuid | Body | UUID | 작업 UUID |
+| project_id | Body | String | 프로젝트(테넌트) ID |
+| cluster_uuid | Body | UUID | 클러스터 UUID |
+| cluster_name | Body | String | 클러스터 이름 |
+| resource_uuid | Body | UUID | 작업 대상 UUID |
+| resource_name | Body | String | 작업 대상 이름 |
+| resource_type | Body | String | 작업 대상 종류("cluster" / "nodegroup") |
+| type | Body | String | 작업 종류 |
+| state | Body | String | 작업 상태("SUCCESS" / "FAIL" / "IN_PROGRESS") |
+| contents | Body | String | 작업 진행 내용(성공 시 null) |
+| created_at | Body | String | 작업 시작 시간(UTC) |
+| updated_at | Body | String | 작업 완료 시간(UTC) |
+
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "id": 3683,
+    "uuid": "868f218a-9446-4500-b6b3-8c1a95e3d7c3",
+    "project_id": "5d8cc67593754d5581f7e8986badf358",
+    "cluster_uuid": "388794e6-14dc-48ee-9a4f-9c40df5d97ec",
+    "cluster_name": "nks-cluster",
+    "resource_uuid": "388794e6-14dc-48ee-9a4f-9c40df5d97ec",
+    "resource_name": "nks-cluster",
+    "resource_type": "cluster",
+    "type": "CLUSTER_CREATE",
+    "state": "SUCCESS",
+    "contents": null,
+    "created_at": "2024-01-30T01:31:06+00:00",
+    "updated_at": "2024-01-30T01:42:39+00:00"
 }
 ```
 
@@ -358,25 +506,23 @@ X-Auth-Token: {tokenId}
 | labels.user_script | Body | String | X | 사용자 스크립트(old) |
 | labels.user_script_v2 | Body | String | X | 사용자 스크립트 |
 | labels.master_lb_floating_ip_enabled | Body | String | O | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False")<br>labels.external_network_id와 external_subnet_id_list가 설정된 경우에만 "True"로 설정 가능 |
+| labels.strict_sg_rules | Body | String | X | 워커 노드 보안 그룹에 필수 보안 규칙만 생성("True" / "False"), 기본값: "False" |
 | labels.additional_network_id_list | Body | String | X |  기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 네트워크 UUID 목록(콜론으로 구분) |
 | labels.additional_subnet_id_list | Body | String | X |  기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 서브넷 UUID 목록(콜론으로 구분) |
-| labels.service_cluster_ip_range | Body | String  | X |  K8s 서비스 네트워크, 클러스터에서 서비스 생성 시 ClusterIP에 할당되는 IP 대역, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
-| labels.pods_network_cidr | Body | String |  X |  클러스터 파드 네트워크, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
-| labels.pods_network_subnet | Body | Integer | X |  클러스터 파드 서브넷 크기, pods_network_subnet 입력 규칙 참고 |
+| labels.service_cluster_ip_range | Body | String  | X |  K8s 서비스 네트워크, 클러스터에서 서비스 생성 시 ClusterIP에 할당되는 IP 대역. fixed_subnet, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
+| labels.pods_network_cidr | Body | String |  X |  클러스터 파드 네트워크. fixed_subnet, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
+| labels.pods_network_subnet | Body | Integer | X |  클러스터 파드 서브넷 크기. pods_network_subnet 입력 규칙 참고 |
+| labels.ncr_sgw | Body | String | X | NCR 타입의 서비스 게이트웨이 UUID |
+| labels.obs_sgw | Body | String | X | OBS 타입의 서비스 게이트웨이 UUID |
 | flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
 | fixed_network | Body | UUID | O | VPC 네트워크 UUID |
-| fixed_subnet | Body | UUID | O | VPC 서브넷 UUID |
+| fixed_subnet | Body | UUID | O | VPC 서브넷 UUID. fixed_subnet, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
 
 > [주의]
-> fixed_subnet 대역이 아래 네트워크 대역과 겹치지 않도록 설정해야 합니다.
->  - 10.100.0.0/16
->  - 10.254.0.0/16
->  - 198.18.0.0/19
-> pods_network_cidr, service_cluster_ip_range의 CIDR은 아래와 같은 규칙으로 입력되어야 합니다.
->  - CIDR은 링크 로컬 주소 대역(169.254.0.0/16)과 중첩될 수 없습니다.
->  - 파드 네트워크와 K8s 서비스 네트워크 대역은 중첩될 수 없습니다.
->  - CIDR은 NKS 내부에서 사용하고 있는 IP 대역(198.18.0.0/19)과 중첩될 수 없습니다.
->  - CIDR은 NKS 클러스터에 연결된 VPC 네트워크 서브넷 또는 추가 네트워크 서브넷의 대역과 중첩될 수 없습니다.
+> fixed_subnet, pods_network_cidr, service_cluster_ip_range의 CIDR은 아래와 같은 규칙으로 입력되어야 합니다.
+>  - 링크 로컬 주소 대역(169.254.0.0/16)과 중첩될 수 없습니다.
+>  - fixed_subnet, pods_network_cidr, service_cluster_ip_range 대역은 중첩될 수 없습니다.
+>  - NKS 내부에서 사용하고 있는 IP 대역(198.18.0.0/19)과 중첩될 수 없습니다.
 >  - /24보다 큰 CIDR 블록은 입력할 수 없습니다(다음과 같은 CIDR 블록은 사용할 수 없습니다. /26, /30).
 >  - v1.23.3 이하 클러스터의 경우 도커 BIP(bridged IP range)와 중첩될 수 없습니다(172.17.0.0/16).
 > pods_network_subnet은 아래와 같은 규칙으로 입력되어야 합니다.
@@ -412,6 +558,7 @@ X-Auth-Token: {tokenId}
         "external_subnet_id_list": "59ddc195-76b1-431d-9693-f09880747dc6",
         "kube_tag": "v1.23.3",
         "master_lb_floating_ip_enabled": "true",
+        "strict_sg_rules": "True",
         "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
         "user_script_v2": ""
     },
@@ -661,6 +808,142 @@ pod_subnet은 아래와 같은 규칙으로 입력되어야 합니다.
 
 </p>
 </details>
+
+### 클러스터 API 엔드포인트 IP 접근 제어 적용
+클러스터 API 엔드포인트에 IP 접근 제어를 적용하거나 해제할 수 있습니다.
+IP 접근 제어 기능에 대한 자세한 사항은 [IP 접근제어](/Network/Load%20Balancer/ko/overview/#ip) 문서를 참고하세요.
+클러스터 API 엔드포인트에 IP 접근 제어 규칙에 대한 자세한 사항은 [사용자 가이드](/Container/NKS/ko/user-guide/#_67)를 참고하세요.
+
+```
+POST /v1/clusters/{CLUSTER_ID_OR_NAME}/api_ep_ipacl
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 |
+| enable | Body | String | O | 'true', 'false'중 하나로 설정 가능. 기본값: 'false'<br>true:클러스터 API 엔드포인트에 IP 접근 제어 적용<br>false: 클러스터 API 엔드포인트에 IP 접근 제어 해제, false 설정 시 하위 설정은 모두 무시됨 |
+| action | Body | String | O(enable 설정이 true인 경우) | IP 접근 제어 타입, ALLOW, DENY 중 하나로 설정 가능 |
+| ipacl_targets | Body | List of Object | O(enable 설정이 true인 경우) | IP 접근 제어 대상 객체 |
+| ipacl_targets.cidr_address | Body | String | O(enable 설정이 true인 경우) | IP 접근 제어 대상. IP 주소 또는 CIDR 형식의 IP 주소 범위 입력 가능 |
+| ipacl_targets.descripion | Body | String | X | IP 접근 제어 대상 설명 |
+
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "enable": "True",
+    "action": "ALLOW",
+    "ipacl_targets": [
+        {
+            "cidr_address" : "192.168.0.5"
+        },
+        {
+            "cidr_address" : "10.10.22.3/24",
+            "description": "Your Friends"
+        }
+    ]   
+}
+```
+
+</p>
+</details>
+
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | UUID | 클러스터 UUID |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "0641db9f-5e71-4df9-9571-089c7964d82e"
+}
+```
+
+</p>
+</details>
+
+
+### 클러스터 API 엔드포인트 IP 접근 제어 조회
+클러스터 API 엔드포인트에 적용된 IP 접근 제어 정보를 확인할 수 있습니다.
+
+```
+GET /v1/clusters/{CLUSTER_ID_OR_NAME}/api_ep_ipacl
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+이 API는 요청 본문을 요구하지 않습니다.
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
+
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| cluster_uuid | Body | UUID | 클러스터 UUID |
+| enable | Body | String | true: 클러스터 API 엔드포인트에 IP 접근 제어가 적용 되어있음, false: 클러스터 API 엔드포인트에 IP 접근 제어가 해제 되어있음 | 
+| action | Body | String | IP 접근 제어 타입 ALLOW, DENY 확인 가능 |
+| ipacl_targets | Body | List of Object | IP 접근 제어 대상 객체 |
+| ipacl_targets.cidr_address | Body | String | IP 접근 제어 대상. IP 주소 또는 CIDR 형식의 IP 주소 범위 입력 가능 |
+| ipacl_targets.descripion | Body | String | IP 접근 제어 대상 설명 |
+
+<details><summary>enable: true 인 경우 예시</summary>
+<p>
+
+```json
+{
+    "cluster_uuid" : "8be87215-9db7-45ed-a03c-38e6db939915",
+    "enable": "true",
+    "action": "ALLOW",
+    "ipacl_targets": [
+        {
+            "cidr_address" : "192.168.0.5",
+            "description": "My Friend"
+        },
+        {
+            "cidr_address" : "10.10.22.3/24"
+        }
+    ]   
+}
+```
+
+</p>
+</details>
+
+<details><summary>enable: false 인 경우 예시</summary>
+<p>
+
+```json
+{
+    "cluster_uuid" : "8be87215-9db7-45ed-a03c-38e6db939915",
+    "enable": "false"
+}
+```
+
+</p>
+</details>
+
 ---
 
 ## 노드 그룹
@@ -784,6 +1067,7 @@ X-Auth-Token: {tokenId}
 | labels.user_script_v2 | Body | String | 사용자 스크립트 |
 | labels.additional_network_id_list | Body | String | 워커 노드 그룹 적용: 추가 네트워크의 VPC 네트워크 UUID 목록(콜론으로 구분) |
 | labels.additional_subnet_id_list | Body | String | 워커 노드 그룹 적용: 추가 네트워크의 VPC 서브넷 UUID 목록(콜론으로 구분) |
+| labels.strict_sg_rules | Body | String | 워커 노드 보안 그룹에 필수 보안 규칙만 생성("True" / "False"), (2024.02.27. 이후에 생성된 클러스터에서 확인 가능) |
 | max_node_count | Body | Integer | 최대 노드 수 |
 | min_node_count | Body | Integer | 최소 노드 수 |
 | node_addresses | Body | String list | 노드 IP 주소 목록 |
@@ -830,6 +1114,7 @@ X-Auth-Token: {tokenId}
         "kube_version_status": "LATEST",
         "login_username": "centos",
         "master_lb_floating_ip_enabled": "true",
+        "strict_sg_rules": "True",
         "node_image": "96aff4ab-d221-4688-8364-2fcf02d50547",
         "os_arch": "amd64",
         "os_distro": "CentOS",
@@ -1451,9 +1736,9 @@ X-Auth-Token: {tokenId}
 
 ## 기타 기능
 
-### 지원되는 Kubernetes 버전 보기
+### 지원되는 Kubernetes 버전 및 작업 종류 보기
 
-NHN Kubernetes Service(NKS)에서 지원하는 Kubernetes 버전을 조회합니다.
+NHN Kubernetes Service(NKS)에서 지원하는 Kubernetes 버전 및 작업 타입을 조회합니다.
 
 ```
 GET /v1/supports
@@ -1478,6 +1763,8 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|
 | supported_k8s | Body | Object | 지원되는 Kubernetes 버전 객체 |
 | supported_k8s."버전 이름" | Body | String | Kubernetes 버전의 유효성 여부(True/False) |
+| supported_event_type."작업 타입"| Body | Object | 지원되는 작업 타입 객체(cluster_events/nodegroup_events) |
+| supported_event_type."작업 타입"."작업 이름"| Body | Object | 작업 타입 및 설명 |
 
 <details><summary>예시</summary>
 <p>
@@ -1492,10 +1779,30 @@ X-Auth-Token: {tokenId}
         "v1.21.6": false,
         "v1.22.3": false,
         "v1.23.3": false,
-        "v1.24.3": true,
+        "v1.24.3": false,
         "v1.25.4": true,
         "v1.26.3": true,
-        "v1.27.3": true
+        "v1.27.3": true,
+        "v1.28.3": true
+    },
+    "supported_event_type": {
+        "cluster_events": {
+            "CLUSTER_CREATE": "클러스터 생성",
+            "CLUSTER_DELETE": "클러스터 삭제",
+            "CLUSTER_HANDOVER": "클러스터 OWNER 변경",
+            "CLUSTER_CNI_UPDATE": "CNI 변경"
+        },
+        "nodegroup_events": {
+            "NODEGROUP_CREATE": "노드 그룹 생성",
+            "NODEGROUP_DELETE": "노드 그룹 삭제",
+            "CLUSTER_RESIZE": "클러스터 크기 조정",
+            "NODEGROUP_UPDATE_FLAVOR": "인스턴스 타입 변경",
+            "NODEGROUP_UPGRADE": "노드 그룹 업그레이드",
+            "NODEGROUP_USERSCRIPT_UPDATE": "유저 스크립트 변경",
+            "NODEGROUP_SET_CLUSTER_AUTOSCALER": "오토 스케일러 설정 변경",
+            "NODEGROUP_NODE_ACTION_NODE_START": "워커 노드 시작",
+            "NODEGROUP_NODE_ACTION_NODE_STOP": "워커 노드 중지"
+        }
     }
 }
 ```

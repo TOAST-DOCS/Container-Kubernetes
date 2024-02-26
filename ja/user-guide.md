@@ -3261,10 +3261,12 @@ ORAS(OCI Registry As Storage)はOCIレジストリからOCIアーティファク
 [ORAS installation](https://oras.land/docs/installation)を参考してORASコマンドラインツールをインストールします。 ORASコマンドラインツールの詳しい使用方法は[ORAS docs](https://oras.land/docs/)を参照してください。
 
 
-| リージョン | ダウンロードコマンド |
-| --- | --- |
-| 韓国(パンギョ)リージョン | oras pull dfe965c3-kr1-registry.container.nhncloud.com/nks_container/nfs-deploy-tool:v1 |
-| 韓国(ピョンチョン)リージョン | oras pull 6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/nfs-deploy-tool:v1 |
+| リージョン | インターネット接続 | ダウンロードコマンド |
+| --- | --- | --- |
+| 韓国(パンギョ)リージョン | O | oras pull dfe965c3-kr1-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v1 |
+| | X | oras pull private-dfe965c3-kr1-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v1 |
+| 韓国(ピョンチョン)リージョン | O | oras pull 6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/oci/nfs-deploy-tool:v1 |
+| | X | oras pull private-6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/oci/nfs-deploy-tool:v1 |
 
 ##### 3. インストールパッケージを解凍した後、**install-driver.sh {mode}**コマンドを使用してcsi-driver-nfsコンポーネントをインストールします。 
 install-driver.shコマンド実行時、インターネット接続が可能なクラスタは**public**、そうでないクラスタは**private**を入力する必要があります。
@@ -3688,10 +3690,10 @@ cinder-csi-pluginイメージのタグがv1.27.101未満の場合、下記の手
 
 | リージョン | インターネット接続 | cinder-csi-pluginイメージ |
 | --- | --- | --- |
-| 韓国(パンギョ)リージョン | O | dfe965c3-kr1-registry.container.nhncloud.com/nks_container/cinder-csi-plugin:v1.27.101 |
-| | X | private-dfe965c3-kr1-registry.container.nhncloud.com/nks_container/cinder-csi-plugin:v1.27.101 |
-| 韓国(ピョンチョン)リージョン | O | 6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/cinder-csi-plugin:v1.27.101 |
-|  | X | private-6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/cinder-csi-plugin:v1.27.101 |
+| 韓国(パンギョ)リージョン | O | dfe965c3-kr1-registry.container.nhncloud.com/container_service/cinder-csi-plugin:v1.27.101 |
+| | X | private-dfe965c3-kr1-registry.container.nhncloud.com/container_service/cinder-csi-plugin:v1.27.101 |
+| 韓国(ピョンチョン)リージョン | O | 6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/cinder-csi-plugin:v1.27.101 |
+| | X | private-6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/cinder-csi-plugin:v1.27.101 |
 
 ##### 1. container_imageに正しいcinder-csi-pluginイメージ値を入力します。
 ```

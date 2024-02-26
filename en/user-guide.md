@@ -25,12 +25,13 @@ For each Kubernetes version, here's when you can expect to see additions/deletio
 | Version    | Add to Createable Versions | Remove from Createable Versions | End of Service Support |
 |:-------:|:-------------------:|:--------------------:|:---------------------:|
 | v1.22.3 | 2022. 01.           | 2023. 05.            | 2023. 08.             |
-| v1.23.3 | 2022. 03.           | 2023. 08.            | 2024. 02.(Scheduled)       |
-| v1.24.3 | 2022. 09.           | 2024. 02.(Scheduled)      | 2024. 05.(Scheduled)       |
+| v1.23.3 | 2022. 03.           | 2023. 08.            | 2024. 02.             |
+| v1.24.3 | 2022. 09.           | 2024. 02.            | 2024. 05.(Scheduled)       |
 | v1.25.4 | 2023. 01.           | 2024. 05.(Scheduled)      | 2024. 08.(Scheduled)       |
 | v1.26.3 | 2023. 05.           | 2024. 08.(Scheduled)      | 2025. 02.(Scheduled)       |
 | v1.27.3 | 2023. 08.           | 2025. 02.(Scheduled)      | 2025. 05.(Scheduled)       |
-| v1.28.x | 2024. 02.(Scheduled)     | 2025. 05.(Scheduled)      | 2025. 08.(Scheduled)       |
+| v1.28.3 | 2024. 02.           | 2025. 05.(Scheduled)      | 2025. 08.(Scheduled)       |
+| v1.29.x | 2024. 05.(Scheduled)     | 2025. 08.(Scheduled)      | 2025. 11.(Scheduled)       |
 
 
 ### Creating Clusters
@@ -51,10 +52,13 @@ Go to **Container > NHN Kubernetes Service(NKS)** and click **Create Cluster** a
 | Kubernetes Version | Kubernetes version to use |
 | VPC | VPC network to be attached to clusters |
 | Subnet | Subnet to be associated with instances that comprise a cluster, among those defined in VPC |
+| NCR Service Gateway | NCR Type Service Gateway<br>(but only if your subnet is not connected to the internet gateway |
+| OBS Service Gateway | OBS Type Service Gateway<br>(but only if your subnet is not connected to the internet gateway |
 | K8s Service Network | Service object CIDR for a cluster |
 | Pod Network | Pod network for a cluster |
 | Pod Subnet Size | Pod subnet size for a cluster |
 | Kubernetes API endpoint | Public: Endpoint assigned with the domain address and associated with a floating IP <br>Private: Endpoint set to an internal network address |
+| Enhanced Security Rule | Create only required security rules when creating a worker node security group. See C<br>True: Create only required security rules<br>False: Create required security rules and security rules that allow all ports|
 | Image | Images for instances comprising a cluster |
 | Availability Zone | Area to create a default node group instance |
 | Flavor | Instance specifications for a default node group |
@@ -65,17 +69,43 @@ Go to **Container > NHN Kubernetes Service(NKS)** and click **Create Cluster** a
 | Additional Network | Additional network and subnet to create in a default worker node group |
 
 > [Caution]
-When creating a cluster, make sure that the subnet range does not overlap the network range.
->  - 10.100.0.0/16
->  - 10.254.0.0/16
->  - 198.18.0.0/19
-For CIDRs of K8s service network and pod network, the following constraints must be avoided.
+> For CIDRs of VPC network subnet, K8s service network and pod network, the following constraints must be avoided.
 >  - CIDR cannot overlap with the link-local address band (169.254.0.0/16).
->  - Pod network and K8s service network bands cannot overlap.
+>  - CIDR cannot overlap with bands of the VPC network subnet or additional network subnets, pod network, and K8s service network.
 >  - CIDR cannot overlap with the IP band (198.18.0.0/19) being used inside the NKS.
->  - CIDR cannot overlap with bands of the VPC network subnet or additional network subnets connected to NKS clusters.
 >  - You cannot enter a CIDR block greater than /24. (The following CIDR blocks are not available: /26, /30).
 >  - For clusters of v1.23.3 or earlier, they cannot overlap with BIP (bridged IP range) (172.17.0.0/16).
+>
+> You should not delete the service gateway that you set up when you created the cluster.
+>  - If the selected subnet is not connected to an internet gateway, you need to set up NCR service gateway and OBS service gateway.
+>  - These two service gateways are used to get the images/binaries required for NKS cluster configuration and basic features.
+>  - If you delete the service gateway that was set up when the cluster was created, the cluster will not work properly.
+>
+> You should not change the Internet gateway connectivity for the subnet you set when you created the cluster.
+>  - The registry to receive the image/binary depends on whether the subnet you set up when creating the cluster is connected to the internet gateway or not.
+>  - If the subnet's Internet gateway connectivity changes after the cluster is created, the cluster will not work properly because it cannot connect to the set registry.
+
+> [Maximum number of nodes that can be created]
+> The maximum number of nodes that can be created when creating a cluster is determined by the pod network, pod subnet size settings.
+> Calculation: 2^(Pod Subnet Size - Host Bits in Pod Network) - 3
+> Example:
+>  - Pod subnet size = 24
+>  - Pod network = 10.100.0.0/16
+>  - Calculation: 2 ^ (24 - 16) - 3 = up to 253 nodes can be created
+
+> [Maximum number of IPs that can be assigned to the Pod for each node]
+The maximum number of IPs that can be used on a single node is determined by the Pods subnet size setting.
+Calculation: 2^(32 - pods_network_subnet) - 2
+Example:
+>  - Pod subnet size = 24
+>  - Calculation: 2 ^ (32 - 24) - 2 = up to 254 IPs available
+
+> [Maximum number of IPs that can be assigned to Pods in the cluster]
+> Calculation: Maximum number of IPs that can be assigned to a Pod for each node * Maximum number of nodes that can be created
+> Example:
+>  - Pod subnet size = 24
+>  - Pod network = 10.100.0.0/16
+>  - Calculate: 254 (maximum number of IPs that can be assigned to a Pod for each node) * 253 (maximum number of nodes that can be created) = 64,262 IPs available at most
 
 NHN Kubernetes Service (NKS) supports several versions of Kubernetes. Some features may be restricted depending on the version.
 
@@ -88,10 +118,11 @@ NHN Kubernetes Service (NKS) supports several versions of Kubernetes. Some featu
 | v1.21.6 | Unavailable | Available |
 | v1.22.3 | Unavailable | Available |
 | v1.23.3 | Unavailable | Available |
-| v1.24.3 | Available | Available |
+| v1.24.3 | Unavailable | Available |
 | v1.25.4 | Available | Available |
 | v1.26.3 | Available | Available |
 | v1.27.3 | Available | Available |
+| v1.28.3 | Available | Available |
 
 NHN Kubernetes Service (NKS) provides different types of Container Network Interface (CNI) according its version. After 31 March 2023, CNI is created with Calico when creating a cluster with version 1.24.3 or higher. Network mode of Flannel and Calico CNI all operate in VXLAN method.
 
@@ -108,11 +139,58 @@ NHN Kubernetes Service (NKS) provides different types of Container Network Inter
 | v1.25.4 | Flannel v0.14.0 or Calico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | Conditionally Available |
 | v1.26.3 | Flannel v0.14.0 or Calico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | Conditionally Available |
 | v1.27.3 | Calico v3.24.1 | Unavailable|
+| v1.28.3 | Calico v3.24.1 | Unavailable|
 
 Notes
 
 * <a name="footnote_calico_version_1">1</a>: Flannel is installed in clusters created before 31 March 2023. For clusters of v1.24.3 or higher created after that date, Calico is installed.
 * <a name="footnote_calico_version_2">2</a>: CNI change is only supported on clusters of v1.24.3 or higher, and currently changing from Flannel to Calico is only supported.
+
+
+Required Security Rules for Cluster Worker Nodes 
+
+| Direction | IP protocol | Port range | Ether | Remote | Description | Considerations |
+| :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+| ingress | TCP | 10250 | IPv4 | Worker node | kubelet port, direction: metrics-server(worker node) -> kubelet(worker node) | |
+| ingress | TCP | 10250 | IPv4 | Master node | kubelet port, direction: kube-apiserver(NKS Control plane) -> kubelet(worker node) | |
+| ingress | TCP | 5473 | IPv4 | Worker node |  calico-typha port, direction: calico-node(worker node) -> calico-typha(worker node) | Created when CNI is calico |
+| ingress | UDP | 8472 | IPv4 | Worker node | flannel vxlan overlay network port, direction: pod(worker node) -> pod(worker node) | Created when CNI is flannel |
+| ingress | UDP | 8472 | IPv4 | Worker node | flannel vxlan overlay network port, direction: pod(NKS Control plane) -> pod(worker node) | Created when CNI is flannel |
+| ingress | UDP | 4789 | IPv4 | Worker node | calico-node vxlan overlay network port, direction: pod(worker node) -> pod(worker node) | Created when CNI is calico |
+| ingress | UDP | 4789 | IPv4 | Master node | Calico-node vxlan overlay network port, direction: pod(NKS Control plane) -> pod(worker node) | Created when CNI is calico |
+| egress | TCP | 2379 | IPv4 | Master node | etcd port, direction: calico-kube-controller(worker node) -> etcd(NKS Control plane)| |
+| egress | TCP | 6443 | IPv4 | Kubernetes API endpoint | kube-apiserver port, direction: kubelet, kube-proxy(worker node) -> kube-apiserver(NKS Control plane) | |
+| egress | TCP | 6443 | IPv4 | Master node | kube-apiserver port, direction: default kubernetes service(worker node) -> kube-apiserver(NKS Control plane) | |
+| egress | TCP | 5473 | IPv4 | Worker node | Created when CNI is calico, calico-typha port, direction: calico-node(worker node) -> calico-typha(worker node) | |
+| egress | TCP | 53 | IPv4 | Worker node | DNS port, direction: worker node -> external | |
+| egress | TCP | 443 | IPv4 | Allow all | HTTPS port, direction: worker node -> external | |
+| egress | TCP | 80 | IPv4 | Allow all | HTTP port, direction: worker node -> external | |
+| egress | UDP | 8472 | IPv4 | Worker node | flannel vxlan overlay network port, direction: pod(worker node) -> pod(worker node)| Created when CNI is flannel |
+| egress | UDP | 8472 | IPv4 | Master node | flannel vxlan overlay network port, direction: pod (worker node) -> pod (NKS Control plane) | Created when CNI is flannel |
+| egress | UDP | 4789 | IPv4 | Worker node | calico-node vxlan overlay network port, direction: pod(worker node) -> pod(worker node) | Created when CNI is calico |
+| egress | UDP | 4789 | IPv4 | Master node | calico-node vxlan overlay network port, direction: pod(worker node) -> pod(NKS Control plane) | Created when CNI is calico |
+| egress | UDP | 53 | IPv4 | Allow all | DNS port, direction: worker node -> external | |
+
+When using enhanced security rules, the NodePort type of service and the ports used by the NHN Cloud NAS service are not added to the security rules. You need to set the following security rules as needed. 
+
+| Direction | IP protocol | Port range | Ether | Remote | Description |
+| :-: | :-: | :-: | :-: | :-: | :-: |
+| ingress | TCP | 30000 - 32767 | IPv4 | Allow all | NKS service object NodePort, direction: external -> worker node |
+| egress | TCP | 2049 | IPv4 | NHN Cloud NAS service IP address | RPC NFS port of csi-nfs-node, direction: csi-nfs-node(worker node) -> NHN Cloud NAS service |
+| egress | TCP | 111 | IPv4 | NHN Cloud NAS service IP address | rpc portmapper port of csi-nfs-node, direction: csi-nfs-node(worker node) -> NHN Cloud NAS service |
+| egress | TCP | 635 | IPv4 | NHN Cloud NAS service IP address | rpc mountd port of csi-nfs-node, direction: csi-nfs-node(worker node) -> NHN Cloud NAS service |
+
+If you don't use enhanced security rules, additional security rules are created for services of type NodePort and for external network communication.
+
+| Direction | IP protocol | Port range | Ether | Remote | Description | 
+| :-: | :-: | :-: | :-: | :-: | :-: |
+| ingress | TCP | 1 - 65535 | IPv4 | Worker node | All ports, direction: worker node -> worker node |
+| ingress | TCP | 1 - 65535 | IPv4 | Master node | All ports, direction: NKS Control plane -> worker node |
+| ingress | TCP | 30000 - 32767 | IPv4 | Allow all | NKS service object NodePort, direction: external -> worker node |
+| ingress | UDP | 1 - 65535 | IPv4 | Worker node | All ports, direction: worker node -> worker node |
+| ingress | UDP | 1 - 65535 | IPv4 | Master node | All ports, direction: NKS Control plane -> worker node |
+| egress | Random | 1 - 65535 | IPv4 | Allow all | All ports, direction: worker node - > external |
+| egress | Random | 1 - 65535 | IPv6 | Allow all | All ports, direction: worker node - > external |
 
 Enter information as required and click **Create Cluster**, and a cluster begins to be created. You can check the status from the list of clusters. It takes about 10 minutes to create; more time may be required depending on the cluster configuration.
 
@@ -472,6 +550,21 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 
 > [Note]
 To prevent workloads that do not require GPU from being allocated to GPU nodes, see [Taints and Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/).
+
+
+### Using Bare Metal Instance Node Group
+
+You can use bare metal instances in a node group. For the differences between bare metal instances and regular instances, see [Bare Metal Instances overview](/Compute/Compute-Baremetal/ko/overview/).
+
+A worker node group configured with bare metal instances has the following limitations compared to a worker node group configured with regular instances
+* You can't set the size of the boot volume.
+* You can't configure additional networks.
+* You can't change the instance flavor.
+* You can't attach additional block storage.
+
+> [Note]
+> Bare metal instances are only available in the Pangyo region.
+
 
 ### Autoscaler
 Autoscaler is a feature that automatically adjusts the number of nodes when a node group does not have enough resources available to schedule pods or when the node's utilization remains below a certain level. Autoscaler can be set for each node group and operates independently of each other. This feature is based on the cluster-autoscaler feature, an officially supported feature of the Kubernetes project. For more information, refer to [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler).
@@ -1447,6 +1540,17 @@ The following can happen in this process.
 > 3. Pause containers of the previously distributed pod are all stopped and then regenerated by kubelet. The settings, such as the pod name and local storage space, remain unchanged, but the IP is changed to the IP of Calico CIDR.
 
 
+### Enforce IP Access Control to Cluster API Endpoints
+You can enforce or disable IP access control to cluster API endpoints.
+For more information about the IP access control feature, see [IP Access Control](/Network/Load%20Balancer/ko/overview/#ip).
+
+#### IP Access Control Rules
+When you add a Cluster API endpoint to IP access control targets, the rules below apply.
+
+* If the IP access control type is set to ‘Allow’, the cluster default subnet CIDR is automatically added to the access control target.
+* When the IP access control type is set to ‘Block’, requests are denied if an IP band that overlaps the cluster default subnet CIDR band is in the access control target list.
+* The maximum number of IP access control targets you can set is 100.
+* At least one IP access control target must exist.
 
 
 ## Manage Worker Node
@@ -3004,25 +3108,22 @@ You can utilize NAS storage provided by NHN Cloud as PV. In order to use NAS ser
 > [Note]
 The NHN Cloud NAS service is currently (2023.11) only available in some regions. For more information on supported regions for NHN Cloud NAS service, see [NAS Service Overview](/Storage/NAS/en/overview).
 
-#### Install the nfs Package on Worker Node and Run the rpcbind service
-To use NAS storage, you must install the nfs package on the worker node, and run the rpcbind service. After connecting to the worker node, run the following command to install the nfs package.
+#### Run the rpcbind service on All Worker Nodes
+To use NAS storage, you must run the rpcbind service on all worker nodes. After connecting to all worker nodes, run the rpcbind service with the command below.
 
-For Ubuntu, you can install the nfs package with the command below.
-```
-$ apt-get install -y nfs-common
-```
+The command to run the rpcbind service is the same regardless of the image type.
 
-
-For CentOS, you can install the nfs package with the command below.
-```
-$ yum install -y nfs-utils
-```
-
-
-After installing the nfs package, execute the command below to run the rpcbind service. The rpcbind service execution command is the same regardless of the image type.
 ```
 $ systemctl start rpcbind
 ```
+
+For clusters that are using enforced security rules, you must add security rules.
+
+| Direction | IP protocol | Port range | Ether | Remote | Description | 
+| :-: | :-: | :-: | :-: | :-: | :-: | 
+| egress | TCP | 2049 | IPv4 | NAS IP address | NFS port in rpc, direction: csi-nfs-node(worker node) -> NAS |
+| egress | TCP | 111 | IPv4 | NAS IP address | portmapper port in rpc, direction: csi-nfs-node(worker node) -> NAS |
+| egress | TCP | 635 | IPv4 | NAS IP address |  rpc's mountd port, direction: csi-nfs-node(worker node) -> NAS |
 
 #### Install csi-driver-nfs
 To use the NHN Cloud NAS service, you must deploy the csi-driver-nfs components.
@@ -3047,15 +3148,13 @@ $ export KUBECONFIG={Absolute path of a cluster configruration file}
 ORAS (OCI Registry As Storage) is a tool that provides a way to push and pull OCI artifacts from an OCI registry.
 Refer to [](https://oras.land/docs/installation)ORAS installation[](https://oras.land/docs/installation) to install ORAS command line tools. For detailed usage of the ORAS command line tools, see the [](https://oras.land/docs/)ORAS docs[](https://oras.land/docs/).
 
-```
-$ oras pull dfe965c3-kr1-registry.container.nhncloud.com/nks_container/nfs-deploy-tool:v1
-```
 
-| Region | Download Command |
-| --- | --- |
-| Korea (Pangyo) region | oras pull dfe965c3-kr1-registry.container.nhncloud.com/nks_container/nfs-deploy-tool:v1 |
-| Korea (Pyengchon) region | oras pull 6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/nfs-deploy-tool:v1 |
-| Korea (Gwangju) region | oras pull d6628457-kr3-registry.container.nhncloud.com/nks_container/nfs-deploy-tool:v1 |
+| Region | Internet Connection | Download Command |
+| --- | --- | --- |
+| Korea (Pangyo) region | O |  oras pull dfe965c3-kr1-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v1 |
+| | X | oras pull private-dfe965c3-kr1-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v1 |
+| Korea (Pyengchon) region | O | oras pull 6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/oci/nfs-deploy-tool:v1 |
+| | X | oras pull private-6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/oci/nfs-deploy-tool:v1 |
 
 ##### 3. After unzipping the installation package, install the csi-driver-nfs component using the **install-driver.sh {mode}** command.
 When you run the install-driver.sh command, you must enter **public** for clusters that can connect to the Internet, and **private** for clusters that do not.
@@ -3492,10 +3591,10 @@ If the tag of the cinder-csi-plugin image is less than v1.27.101, you can update
 
 | Region | Internet Connection | cinder-csi-plugin image |
 | --- | --- | --- |
-| Korea (Pangyo) region | O | dfe965c3-kr1-registry.container.nhncloud.com/nks_container/cinder-csi-plugin:v1.27.101 |
-| | X | private-dfe965c3-kr1-registry.container.nhncloud.com/nks_container/cinder-csi-plugin:v1.27.101 |
-| Korea (Pyeongchon) region | O | 6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/cinder-csi-plugin:v1.27.101 |
-|  | X | private-6e7f43c6-kr2-registry.container.cloud.toast.com/nks_container/cinder-csi-plugin:v1.27.101 |
+| Korea (Pangyo) region | O | dfe965c3-kr1-registry.container.nhncloud.com/container_service/cinder-csi-plugin:v1.27.101 |
+| | X | private-dfe965c3-kr1-registry.container.nhncloud.com/container_service/cinder-csi-plugin:v1.27.101 |
+| Korea (Pyeongchon) region | O | 6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/cinder-csi-plugin:v1.27.101 |
+| | X | private-6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/cinder-csi-plugin:v1.27.101 |
 
 ##### 1. Enter a valid cinder-csi-plugin image value for container_image.
 ```
