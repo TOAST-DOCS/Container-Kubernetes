@@ -544,20 +544,6 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 > [参考]
 > GPUが必要ないワークロードがGPUノードに割り当てられることを防ぎたい場合は[TaintおよびTolerationの概要](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)を参照してください。
 
-### ベアメタルインスタンスノードグループ使用
-
-ノードグループでベアメタルインスタンスを使用できます。ベアメタルインスタンスと一般インスタンスの違いは[Bare Metal Instance概要](/Compute/Compute-Baremetal/ko/overview/)を参照してください。
-
-ベアメタルインスタンスで構成されたワーカーノードグループは、一般インスタンスで構成されたワーカーノードグループと比較して以下の制約があります。
-* ブートボリュームのサイズを設定できません。
-* 追加ネットワークを構成できません。
-* インスタンスタイプを変更できません。
-* 追加ブロックストレージを接続できません。
-
-> [参考]
-> ベアメタルインスタンスはパンギョリージョンでのみサポートされます。
-
-
 ### オートスケーラー
 オートスケーラーはノードグループの可用リソースが足りなくてPodをスケジューリングできなかったり、ノードの使用率が一定水準以下で維持する時、ノードの数を自動的に調整する機能です。この機能はノードグループごとに設定することができ、独立して動作します。この機能はKubernetesプロジェクトの公式サポート機能であるcluster-autoscaler機能をベースにします。詳細な事項は[Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler)を参照してください。
 
