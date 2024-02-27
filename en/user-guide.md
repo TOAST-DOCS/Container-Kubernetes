@@ -552,20 +552,6 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 To prevent workloads that do not require GPU from being allocated to GPU nodes, see [Taints and Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/).
 
 
-### Using Bare Metal Instance Node Group
-
-You can use bare metal instances in a node group. For the differences between bare metal instances and regular instances, see [Bare Metal Instances overview](/Compute/Compute-Baremetal/ko/overview/).
-
-A worker node group configured with bare metal instances has the following limitations compared to a worker node group configured with regular instances
-* You can't set the size of the boot volume.
-* You can't configure additional networks.
-* You can't change the instance flavor.
-* You can't attach additional block storage.
-
-> [Note]
-> Bare metal instances are only available in the Pangyo region.
-
-
 ### Autoscaler
 Autoscaler is a feature that automatically adjusts the number of nodes when a node group does not have enough resources available to schedule pods or when the node's utilization remains below a certain level. Autoscaler can be set for each node group and operates independently of each other. This feature is based on the cluster-autoscaler feature, an officially supported feature of the Kubernetes project. For more information, refer to [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler).
 

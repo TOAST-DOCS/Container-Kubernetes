@@ -8,7 +8,6 @@
 * Added IP access control to cluster API endpoints.
 * Added support for Kubernetes v1.28.3.
 * You can view the history of tasks on the clusters and node groups lookup screen.
-* Added support for bare metal instances in node groups.
 
 ### November 28, 2023
 
