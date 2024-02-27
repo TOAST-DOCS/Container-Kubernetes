@@ -25,12 +25,13 @@ Kubernetesバージョン別の作成可能バージョンに追加/削除する
 | バージョン   | 作成可能バージョンに追加 | 作成可能バージョンから削除 | サービスサポート終了 |
 |:-------:|:-------------------:|:--------------------:|:---------------------:|
 | v1.22.3 | 2022. 01.           | 2023. 05.            | 2023. 08.             |
-| v1.23.3 | 2022. 03.           | 2023. 08.            | 2024. 02.(予定)       |
-| v1.24.3 | 2022. 09.           | 2024. 02.(予定)      | 2024. 05.(予定)       |
+| v1.23.3 | 2022. 03.           | 2023. 08.            | 2024. 02.       |
+| v1.24.3 | 2022. 09.           | 2024. 02.      | 2024. 05.(予定)       |
 | v1.25.4 | 2023. 01.           | 2024. 05.(予定)      | 2024. 08.(予定)       |
 | v1.26.3 | 2023. 05.           | 2024. 08.(予定)      | 2025. 02.(予定)       |
 | v1.27.3 | 2023. 08.           | 2025. 02.(予定)      | 2025. 05.(予定)       |
-| v1.28.x | 2024. 02.(予定)     | 2025. 05.(予定)      | 2025. 08.(予定)       |
+| v1.28.3 | 2024. 02.           | 2025. 05.(予定)      | 2025. 08.(予定)       |
+| v1.29.x | 2024. 05.(予定)     | 2025. 08.(予定)      | 2025. 11.(予定)       |
 
 
 ### クラスター作成
@@ -50,10 +51,13 @@ NHN Kubernetes Service(NKS)を使用するには、まずクラスターを作�
 | Kubernetesのバージョン | 使用するKubernetesのバージョン |
 | VPC | クラスターに接続するVPCネットワーク |
 | サブネット | VPCに定義されたサブネットのうち、クラスターを構成するインスタンスに接続するサブネット |
+| NCRサービスゲートウェイ | NCRタイプのサービスゲートウェイ<br>(ただし、サブネットにインターネットゲートウェイが接続されていない場合に限る) |
+| OBSサービスゲートウェイ | OBSタイプのサービスゲートウェイ<br>(ただし、サブネットにインターネットゲートウェイが接続されていない場合に限る) |
 | K8sサービスネットワーク | クラスタのservice object CIDR設定 |
 | Podネットワーク | クラスタのPodネットワーク設定 |
 | Podサブネットサイズ | クラスタのPodサブネットサイズ設定 |
 | Kubernetes APIエンドポイント | Public:エンドポイントにドメインアドレスを割り当て、Floating IPを接続<br>Private:エンドポイントを内部ネットワークアドレスに設定 |
+| 強化されたセキュリティルール | ワーカーノードセキュリティグループ作成時、必須セキュリティルールのみ作成。クラスタワーカーノード必須セキュリティルール項目参照<br>True：必須セキュリティルールのみ作成<br>False：必須セキュリティルールとすべてのポートを許可するセキュリティルールを作成|
 | イメージ | クラスターを構成するインスタンスに使用するイメージ |
 | アベイラビリティゾーン | 基本ノードグループインスタンスを作成する領域 |
 | インスタンスタイプ | 基本ノードグループインスタンスの仕様 |
@@ -64,17 +68,40 @@ NHN Kubernetes Service(NKS)を使用するには、まずクラスターを作�
 | 追加ネットワーク | 基本ワーカーノードグループに作成する追加ネットワーク/サブネット |
 
 > [注意]
-> クラスタ作成時、サブネット帯域が以下のネットワーク帯域と重ならないように設定する必要があります。
->  - 10.100.0.0/16
->  - 10.254.0.0/16
->  - 198.18.0.0/19
-> K8sサービスネットワークとPodネットワークのCIDRの場合、以下の制約事項に該当しないように設定する必要があります。
->  - CIDRはリンクローカルアドレス帯域(169.254.0.0/16)と重複できません。
->  - PodネットワークとK8sサービスネットワーク帯域は重複できません。
->  - CIDRはNKS内部で使用しているIP帯域(198.18.0.0/19)と重複できません。
->  - CIDRはNKSクラスタに接続されたVPCネットワークサブネットまたは追加ネットワークサブネットの帯域と重複できません。
+> VPCネットワークサブネットとK8sサービスネットワーク、 PodネットワークのCIDRは、以下の制約事項に該当しないように設定する必要があります。
+>  - リンクローカルアドレス帯域(169.254.0.0/16)と重複することはできません。
+>  - VPCネットワークサブネット、追加ネットワークサブネット、 PodネットワークとK8sサービスネットワーク帯域は重複することができません。
+>  - NKS内部で使用しているIP帯域(198.18.0.0/19)と重複することはできません。
 >  - /24より大きいCIDRブロックは入力できません(次のようなCIDRブロックは使用できません。 /26, /30)。
 >  - v1.23.3以下クラスタの場合ドッカーBIP(bridged IP range)と重複できません(172.17.0.0/16).
+>
+> クラスタ作成時に設定したサービスゲートウェイは削除しないでください。
+>  - 選択したサブネットがインターネットゲートウェイに接続されていない場合、NCRサービスゲートウェイとOBSサービスゲートウェイの設定が必要です。
+>  - この2つのサービスゲートウェイはNKSクラスタ構成及び基本機能に必要なイメージ/バイナリを受信する際に使用されます。
+>  - クラスタ作成時に設定したサービスゲートウェイを削除すると、クラスタが正常に動作しません。
+>
+> クラスタ作成時に設定したサブネットのインターネットゲートウェイ接続の有無を変更しないでください。
+>  - クラスタ作成時に設定したサブネットのインターネットゲートウェイ接続の有無によって、イメージ/バイナリを受け取るレジストリが変わります。
+>  - クラスタ作成後、サブネットのインターネットゲートウェイ接続の有無が変更されると、設定されたレジストリに接続できず、クラスタが正常に動作しません。
+> [最大作成可能なノード数]
+> クラスタ作成時に作成可能な最大ノード数はPodネットワーク、 Podサブネットサイズ設定で決定されます。
+> 計算方法 : 2 ^ (Podサブネットサイズ - Podネットワークのホストビット) - 3
+> 例:
+>  - Podサブネットサイズ= 24
+>  - Podネットワーク= 10.100.0.0/16
+>  - 計算 : 2 ^ (24 - 16) - 3 = 最大253個ノード作成可能
+> [ノードごとにPodに割り当てることができる最大IP数]
+> 一つのノードで使用可能な最大IP数と、作成可能な最大ノード数はPodサブネットサイズ設定で決定されます。
+> 計算方法 : 2 ^ (32 - pods_network_subnet) - 2
+> 例:
+>  - Podサブネットサイズ= 24
+>  - 計算 : 2 ^ (32 - 24) - 2 =最大254個のIPを使用可能
+> [クラスタでPodに割り当てることができる最大IP数]
+> 計算方法 :ノードごとにPodに割り当てることができる最大IP数 * 最大作成可能なノード数
+> 例:
+>  - Podサブネットサイズ= 24
+>  - Podネットワーク= 10.100.0.0/16
+>  - 計算 : 254(ノードごとにPodに割り当て可能な最大IP数) * 253(最大作成可能なノード数) =最大64,262個のIPを使用可能
 
 NHN Kubernetes Service(NKS)は複数のバージョンをサポートしています。バージョンによっては一部機能に制約がある場合があります。
 
@@ -87,10 +114,11 @@ NHN Kubernetes Service(NKS)は複数のバージョンをサポートしてい�
 | v1.21.6 | 不可 | 可能 |
 | v1.22.3 | 不可 | 可能 |
 | v1.23.3 | 不可 | 可能 |
-| v1.24.3 | 可能 | 可能 |
+| v1.24.3 | 不可 | 可能 |
 | v1.25.4 | 可能 | 可能 |
 | v1.26.3 | 可能 | 可能 |
 | v1.27.3 | 可能 | 可能 |
+| v1.28.3 | 可能 | 可能 |
 
 NHN Kubernetes Service(NKS)はバージョンによって異なる種類のContainer Network Interface(CNI)を提供します。2023/03/31以降はv1.24.3バージョン以上のクラスタを作成する時、CNIがCalicoで作成されます。 FlannelとCalico CNIのNetwork modeは全てVXLAN方式で作します。
 
@@ -107,10 +135,57 @@ NHN Kubernetes Service(NKS)はバージョンによって異なる種類のConta
 | v1.25.4 | Flannel v0.14.0またはCalico v3.24.1 <sup>(注1)(#footnote_calico_version_1)</sup> | 条件付きで可能 <sup>(注2)(#footnote_calico_version_2)</sup> |
 | v1.26.3 | Flannel v0.14.0またはCalico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 条件付き可能 <sup>[2](#footnote_calico_version_2)</sup> |
 | v1.27.3 | Calico v3.24.1 | 不可|
+| v1.28.3 | Calico v3.24.1 | 不可|
 
 注釈
 * <a name="footnote_calico_version_1">(注1)</a>2023/03/31以前に作成されたクラスタにはFlannelがインストールされています。 2023/03/31以降に作成されるv1.24.3以上のクラスタはCalicoがインストールされます。
 * <a name="footnote_calico_version_2">(注2)</a>CNIの変更はv1.24.3以上のクラスタでのみサポートされ、現在FlannelからCalicoへの変更のみサポートします。
+
+クラスタワーカーノード必須セキュリティルール項目 
+
+| 方向 | IPプロトコル | ポート範囲 | Ether | 遠隔 | 説明 | 特記事項 |
+| :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+| ingress | TCP | 10250 | IPv4 | ワーカーノード | kubeletポート、方向: metrics-server(worker node) -> kubelet(worker node) | |
+| ingress | TCP | 10250 | IPv4 | マスターノード | kubeletポート、方向: kube-apiserver(NKS Control plane) -> kubelet(worker node) | |
+| ingress | TCP | 5473 | IPv4 | ワーカーノード |  calico-typhaポート、方向: calico-node(worker node) -> calico-typha(worker node) | CNIがcalicoの場合に作成 |
+| ingress | UDP | 8472 | IPv4 | ワーカーノード | flannel vxlan overlay networkポート、方向: pod(worker node) -> pod(worker node) | CNIがflannelの場合に作成される |
+| ingress | UDP | 8472 | IPv4 | ワーカーノード | flannel vxlan overlay networkポート、方向: pod(NKS Control plane) -> pod(worker node) | CNIがflannelの場合に作成される |
+| ingress | UDP | 4789 | IPv4 | ワーカーノード | calico-node vxlan overlay networkポート、方向: pod(worker node) -> pod(worker node) | CNIがcalicoの場合に作成される |
+| ingress | UDP | 4789 | IPv4 | マスターノード | calico-node vxlan overlay networkポート、方向: pod(NKS Control plane) -> pod(worker node) | CNIがcalicoの場合に作成される |
+| egress | TCP | 2379 | IPv4 | マスターノード | etcdポート、方向: calico-kube-controller(worker node) -> etcd(NKS Control plane)| |
+| egress | TCP | 6443 | IPv4 | Kubernetes APIエンドポイント | kube-apiserverポート、方向: kubelet, kube-proxy(worker node) -> kube-apiserver(NKS Control plane) | |
+| egress | TCP | 6443 | IPv4 | マスターノード | kube-apiserverポート、方向: default kubernetes service(worker node) -> kube-apiserver(NKS Control plane) | |
+| egress | TCP | 5473 | IPv4 | ワーカーノード | CNIがcalicoの場合に作成される、 calico-typhaポート、方向: calico-node(worker node) -> calico-typha(worker node) | |
+| egress | TCP | 53 | IPv4 | ワーカーノード | DNSポート、方向: worker node -> external | |
+| egress | TCP | 443 | IPv4 | すべて許可 | HTTPSポート、方向: worker node -> external | |
+| egress | TCP | 80 | IPv4 | すべて許可 | HTTPポート、方向: worker node -> external | |
+| egress | UDP | 8472 | IPv4 | ワーカーノード | flannel vxlan overlay networkポート、方向: pod(worker node) -> pod(worker node)| CNIがflannelの場合に作成される |
+| egress | UDP | 8472 | IPv4 | マスターノード | flannel vxlan overlay networkポート、方向: pod(worker node) -> pod(NKS Control plane) | CNIがflannelの場合に作成される |
+| egress | UDP | 4789 | IPv4 | ワーカーノード | calico-node vxlan overlay networkポート、方向: pod(worker node) -> pod(worker node) | CNIがcalicoの場合に作成される |
+| egress | UDP | 4789 | IPv4 | マスターノード | calico-node vxlan overlay networkポート、方向: pod(worker node) -> pod(NKS Control plane) | CNIがcalicoの場合に作成される |
+| egress | UDP | 53 | IPv4 | すべて許可 | DNSポート、方向: worker node -> external | |
+
+強化されたセキュリティルールを使用する場合、NodePortタイプのサービスとNHN Cloud NASサービスで使用するポートに対するセキュリティルールに追加されていません。 必要に応じて以下のセキュリティルールを追加設定する必要があります。
+
+| 方向 | IPプロトコル | ポート範囲 | Ether | 遠隔 | 説明 |
+| :-: | :-: | :-: | :-: | :-: | :-: |
+| ingress | TCP | 30000 - 32767 | IPv4 | すべて許可 | NKS service object NodePort、方向: external -> worker node |
+| egress | TCP | 2049 | IPv4 | NHN Cloud NASサービスIPアドレス | csi-nfs-nodeのrpc nfsポート、方向: csi-nfs-node(worker node) -> NHN Cloud NASサービス |
+| egress | TCP | 111 | IPv4 | NHN Cloud NASサービスIPアドレス | csi-nfs-nodeのrpc portmapperポート、方向: csi-nfs-node(worker node) -> NHN Cloud NASサービス |
+| egress | TCP | 635 | IPv4 | NHN Cloud NASサービスIPアドレス | csi-nfs-nodeのrpc mountdポート、方向: csi-nfs-node(worker node) -> NHN Cloud NASサービス |
+
+強化されたセキュリティルールを使用しない場合、NodePortタイプのサービスと外部ネットワーク通信に必要なセキュリティルールが追加で作成されます。
+
+| 方向 | IPプロトコル | ポート範囲 | Ether | 遠隔 | 説明 | 
+| :-: | :-: | :-: | :-: | :-: | :-: |
+| ingress | TCP | 1 - 65535 | IPv4 | ワーカーノード | すべてのポート、方向: worker node -> worker node |
+| ingress | TCP | 1 - 65535 | IPv4 | マスターノード | すべてのポート、方向: NKS Control plane -> worker node |
+| ingress | TCP | 30000 - 32767 | IPv4 | すべて許可 | NKS service object NodePort、方向: external -> worker node |
+| ingress | UDP | 1 - 65535 | IPv4 | ワーカーノード | すべてのポート、方向: worker node -> worker node |
+| ingress | UDP | 1 - 65535 | IPv4 | マスターノード | すべてのポート、方向: NKS Control plane -> worker node |
+| egress | 任意 | 1 - 65535 | IPv4 | すべて許可 | すべてのポート、方向: worker node - > external |
+| egress | 任意 | 1 - 65535 | IPv6 | すべて許可 | すべてのポート、方向: worker node - > external |
+
 
 必要な情報を入力し、**クラスター作成**を押すと、クラスターの作成が始まります。クラスターリストで状態を確認できます。作成には約10分かかります。クラスターの設定によっては、さらに時間がかかる場合もあります。
 
@@ -468,6 +543,20 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 
 > [参考]
 > GPUが必要ないワークロードがGPUノードに割り当てられることを防ぎたい場合は[TaintおよびTolerationの概要](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)を参照してください。
+
+### ベアメタルインスタンスノードグループ使用
+
+ノードグループでベアメタルインスタンスを使用できます。ベアメタルインスタンスと一般インスタンスの違いは[Bare Metal Instance概要](/Compute/Compute-Baremetal/ko/overview/)を参照してください。
+
+ベアメタルインスタンスで構成されたワーカーノードグループは、一般インスタンスで構成されたワーカーノードグループと比較して以下の制約があります。
+* ブートボリュームのサイズを設定できません。
+* 追加ネットワークを構成できません。
+* インスタンスタイプを変更できません。
+* 追加ブロックストレージを接続できません。
+
+> [参考]
+> ベアメタルインスタンスはパンギョリージョンでのみサポートされます。
+
 
 ### オートスケーラー
 オートスケーラーはノードグループの可用リソースが足りなくてPodをスケジューリングできなかったり、ノードの使用率が一定水準以下で維持する時、ノードの数を自動的に調整する機能です。この機能はノードグループごとに設定することができ、独立して動作します。この機能はKubernetesプロジェクトの公式サポート機能であるcluster-autoscaler機能をベースにします。詳細な事項は[Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler)を参照してください。
@@ -1282,10 +1371,11 @@ NHN CloudのKubernetesクラスタバージョン管理方式とKubernetesバー
 
 * マスターとワーカーノードグループごとにアップグレードコマンドを実行する必要があります。
 * マスターのKubernetesバージョンとすべてのワーカーノードグループのKubernetesバージョンが一致している時のみアップグレードが可能です。
-* マスターが先にアップグレードした後、ワーカーノードグループをアップグレードできます。 
+* マスターを先にアップグレードした後、ワーカーノードグループをアップグレードできます。
 * 現在バージョンの次のバージョン(マーナーバージョン基準 +1)にアップグレード可能です。 
-* ダウングレードはサポートしません。 
+* ダウングレードはサポートしません。
 * 他の機能の動作によりクラスタがアップデート中の状態ではアップグレードができません。
+* クラスタのバージョンをv1.25.4からv1.26.3にアップグレードする際、CNIがFlannelの場合はCalicoに変更する必要があります。
 
 次の例はKubernetesバージョンのアップグレード可否を表にしたものです。例に使用された条件は次のとおりです。 
 
@@ -1426,6 +1516,17 @@ CNIの変更は次の順序で行われます。
 > 3. 既に配布されていたPodのpauseコンテナは全て停止し、kubeletによって再作成されます。Pod名とローカル記憶領域などの設定はそのまま維持されますが、IPはCalico CIDRのIPに変更されます。
 
 
+### クラスタAPIエンドポイントにIPアクセス制御を適用
+クラスタAPIエンドポイントにIPアクセス制御を適用または解除できます。
+IPアクセス制御機能の詳細については、[IPアクセス制御](/Network/Load%20Balancer/ko/overview/#ip)文書を参照してください。
+
+#### IPアクセス制御対象ルール
+クラスタAPIエンドポイントのIPアクセス制御対象を追加する場合、以下のルールが適用されます。
+
+* IP アクセス制御タイプが「許可」に設定されている場合、クラスタ基本サブネット CIDR がアクセス制御対象に自動的に追加されます。
+* IP アクセス制御タイプが「ブロック」に設定されているとき、クラスタ基本サブネットCIDR帯域に重複するIP帯域がアクセス制御対象リストにある場合は要求が拒否されます。
+* 最大設定可能なIPアクセス制御対象数は100個です。
+* IP アクセス制御対象は1つ以上存在する必要があります。
 
 
 ## ワーカーノード管理
@@ -3217,25 +3318,23 @@ NHN Cloudで提供するNASストレージをPVとして活用できます。NAS
 > [参考]
 > NHN Cloud NASサービスは現在(2023年11月基準)、一部リージョンでのみ提供されています。NHN Cloud NASサービスのサポートリージョンの詳細については[NASサービス概要](/Storage/NAS/ko/overview)を参照してください。
 
-#### ワーカーノードにNFSパッケージインストールおよびrpcbindサービス実行
-NASストレージを使用するにはワーカーノードにNFSパッケージをインストールし、rpcbindサービスを実行する必要があります。ワーカーノードに接続した後、以下のコマンドを実行してNFSパッケージをインストールします。
+#### すべてのワーカーノードでrpcbindサービスを実行
+NASストレージを使用するにはすべてのワーカーノードでrpcbindサービスを実行する必要があります。すべてのワーカーノードに接続した後、下記のコマンドでrpcbindサービスを実行します。
 
-Ubuntu、Debianの場合、以下のコマンドでNFSパッケージをインストールできます。
-```
-$ apt-get install -y nfs-common
-```
+rpcbindサービス実行コマンドはイメージの種類に関係なく同じです。
 
 
-CentOSの場合、以下のコマンドでnfsパッケージをインストールできます。
-```
-$ yum install -y nfs-utils
-```
-
-
-nfsパッケージのインストール後、以下のコマンドを実行してrpcbindサービスを実行します。rpcbindサービス実行コマンドはイメージの種類に関係なく同じです。
 ```
 $ systemctl start rpcbind
 ```
+
+強化されたセキュリティルールを使用しているクラスタの場合、セキュリティルールを追加する必要があります。
+
+| 方向 | IPプロトコル | ポート範囲 | Ether | 遠隔 | 説明 | 
+| :-: | :-: | :-: | :-: | :-: | :-: | 
+| egress | TCP | 2049 | IPv4 | NAS IPアドレス | rpcのNFSポート、方向: csi-nfs-node(worker node) -> NAS |
+| egress | TCP | 111 | IPv4 | NAS IPアドレス | rpcのportmapperポート、方向: csi-nfs-node(worker node) -> NAS |
+| egress | TCP | 635 | IPv4 | NAS IPアドレス |  rpcのmountdポート、方向: csi-nfs-node(worker node) -> NAS |
 
 #### csi-driver-nfsのインストール
 NHN Cloud NASサービスを使用するにはクラスタにcsi-driver-nfsコンポーネントを配布する必要があります。
