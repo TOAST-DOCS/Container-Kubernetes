@@ -117,12 +117,15 @@ X-Auth-Token: {tokenId}
 | clusters.labels.external_subnet_id_list | Body | String | インターネットゲートウェイに接続されたサブネットUUIDリスト(コロンで区切る) |
 | clusters.labels.cert_manager_api | Body | String | CSR(Certificate Signing Request)機能を有効にするかどうか。必ず"True"に設定 |
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Kubernetes APIエンドポイントに公認ドメインアドレスを作成するかどうか("True" / "False") |
+| clusters.labels.strict_sg_rules | Body | String | ワーカーノードセキュリティグループに必須セキュリティルールのみ作成("True" / "False"), (2024.02.27. 以降に作成されたクラスタで確認可能) |
 | clusters.labels.additional_network_id_list | Body | String | 基本ワーカーノードグループ適用：追加ネットワークのVPCネットワークUUIDリスト(コロン区切り) |
 | clusters.labels.additional_subnet_id_list | Body | String | 基本ワーカーノードグループ適用：追加ネットワークのVPCサブネットUUIDリスト(コロン区切り) |
 | clusters.labels.cni_driver | Body | String | クラスタCNI(2023.03.31. 以降に作成されたクラスタで確認可能) |
 | clusters.labels.service_cluster_ip_range | Body | String | K8sサービスネットワーク、クラスタでサービス作成時、ClusterIPに割り当てられるIP帯域(2023.05.30. 以降に作成されたクラスタで確認可能) |
 | clusters.labels.pods_network_cidr | Body | String | クラスタPodネットワーク(2023.05.30. 以降に作成されたクラスタで確認可能) |
 | clusters.labels.pods_network_subnet | Body | String | クラスタPodサブネットサイズ(2023.05.30. 以降に作成されたクラスタで確認可能) |
+| clusters.labels.ncr_sgw | Body | String | NCRタイプのサービスゲートウェイUUID |
+| clusters.labels.obs_sgw | Body | String | OBSタイプのサービスゲートウェイUUID |
 
 
 <details><summary>例</summary>
@@ -150,6 +153,7 @@ X-Auth-Token: {tokenId}
                 "kube_tag": "v1.23.3",
                 "login_username": "centos",
                 "master_lb_floating_ip_enabled": "true",
+                "strict_sg_rules": "True",
                 "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
                 "os_arch": "amd64",
                 "os_distro": "CentOS",
@@ -234,12 +238,15 @@ X-Auth-Token: {tokenId}
 | labels.external_subnet_id_list | Body | String | インターネットゲートウェイに接続されたサブネットUUIDリスト(コロンで区切る) |
 | labels.cert_manager_api | Body | String | CSR(Certificate Signing Request)機能を有効にするかどうか。必ず"True"に設定 |
 | labels.master_lb_floating_ip_enabled | Body | String | Kubernetes APIエンドポイントに公認ドメインアドレスを作成するかどうか("True" / "False") |
-| clusters.labels.additional_network_id_list | Body | String | 基本ワーカーノードグループ適用：追加ネットワークのVPCネットワークUUIDリスト(コロン区切り) |
-| clusters.labels.additional_subnet_id_list | Body | String | 基本ワーカーノードグループ適用：追加ネットワークのVPCサブネットUUIDリスト(コロン区切り) |
-| clusters.labels.cni_driver | Body | String | クラスタCNI(2023.03.31. 以降に作成されたクラスタで確認可能) |
-| clusters.labels.service_cluster_ip_range | Body | String | K8sサービスネットワーク、クラスタでサービス作成時、ClusterIPに割り当てられるIP帯域(2023.05.30. 以降に作成されたクラスタで確認可能) |
-| clusters.labels.pods_network_cidr | Body | String | クラスタPodネットワーク(2023.05.30. 以降に作成されたクラスタで確認可能) |
-| clusters.labels.pods_network_subnet | Body | String | クラスタPodサブネットサイズ(2023.05.30. 以降に作成されたクラスタで確認可能) |
+| labels.strict_sg_rules | Body | String | ワーカーノードセキュリティグループに必須セキュリティルールのみ作成("True" / "False"), (2024.02.27. 以降に作成されたクラスタで確認可能) |
+| labels.additional_network_id_list | Body | String | 基本ワーカーノードグループ適用：追加ネットワークのVPCネットワークUUIDリスト(コロンで区切る) |
+| labels.additional_subnet_id_list | Body | String | 基本ワーカーノードグループ適用:追加ネットワークのVPCサブネットUUIDリスト(コロンで区切る) |
+| labels.cni_driver | Body | String | クラスタCNI(2023.03.31. 以降に作成されたクラスタで確認可能) |
+| labels.service_cluster_ip_range | Body | String | K8sサービスネットワーク、クラスタでサービス作成時にClusterIPに割り当てられるIP帯域(2023.05.30. 以降に作成されたクラスタで確認可能) |
+| labels.pods_network_cidr | Body | String | クラスタPodネットワーク(2023.05.30. 以降に作成されたクラスタで確認可能) |
+| labels.pods_network_subnet | Body | String | クラスタPodサブネットサイズ(2023.05.30. 以降に作成されたクラスタで確認可能) |
+| labels.ncr_sgw | Body | String | NCRタイプのサービスゲートウェイUUID |
+| labels.obs_sgw | Body | String | OBSタイプのサービスゲートウェイUUID |
 
 <details><summary>例</summary>
 <p>
@@ -275,6 +282,7 @@ X-Auth-Token: {tokenId}
         "kube_version_status": "NEED_UPGRADE",
         "login_username": "centos",
         "master_lb_floating_ip_enabled": "true",
+        "strict_sg_rules": "True",
         "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
         "os_arch": "amd64",
         "os_distro": "CentOS",
@@ -308,6 +316,146 @@ X-Auth-Token: {tokenId}
     "updated_at": "2021-08-05T04:39:49+00:00",
     "user_id": "12ba32bebc414c4992a2c9be3952a64c",
     "uuid": "2b778d83-8b67-45b1-920e-b0c5ad5c2f30"
+}
+```
+
+</p>
+</details>
+
+---
+
+### 作業履歴リストの表示
+
+クラスタの作業履歴リストを照会します。
+
+```
+GET /v1/clusters/{CLUSTER_UUID}/events
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### リクエスト
+
+このAPIはリクエスト本文を要求しません。
+
+| 名前 | 種類 | 形式 | 必須 | 説明 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | トークンID |
+| CLUSTER_UUID | URL | UUID | O | クラスタUUID |
+
+
+#### レスポンス
+
+| 名前 | 種類 | 形式 | 説明 |
+|---|---|---|---|
+| events | Body | Array | 作業履歴オブジェクトリスト |
+| events.id | Body | Integer | 作業ID |
+| events.uuid | Body | UUID | 作業UUID |
+| events.project_id | Body | String | プロジェクト(テナント) ID |
+| events.cluster_uuid | Body | String | クラスタUUID |
+| events.cluster_name | Body | String | クラスタ名 |
+| events.resource_uuid | Body | String | 作業対象UUID |
+| events.resource_name | Body | String | 作業対象名 |
+| events.resource_type | Body | String | 作業対象の種類("cluster" / "nodegroup") |
+| events.type | Body | String | 作業の種類 |
+| events.state | Body | String | 作業状態("SUCCESS" / "FAIL" / "IN_PROGRESS") |
+| events.contents | Body | String | 作業進行内容(成功時null) |
+| events.created_at | Body | String | 作業開始時間(UTC) |
+| events.updated_at | Body | String | 作業完了時間(UTC) |
+
+
+<details><summary>例</summary>
+<p>
+
+```json
+{
+    "events": [
+        {
+            "id": 3683,
+            "uuid": "868f218a-9446-4500-b6b3-8c1a95e3d7c3",
+            "project_id": "5d8cc67593754d5581f7e8986badf358",
+            "cluster_uuid": "388794e6-14dc-48ee-9a4f-9c40df5d97ec",
+            "cluster_name": "nks-cluster",
+            "resource_uuid": "388794e6-14dc-48ee-9a4f-9c40df5d97ec",
+            "resource_name": "nks-cluster",
+            "resource_type": "cluster",
+            "type": "CLUSTER_CREATE",
+            "state": "SUCCESS",
+            "contents": null,
+            "created_at": "2024-01-30T01:31:06+00:00",
+            "updated_at": "2024-01-30T01:42:39+00:00"
+        }
+    ]
+}
+```
+
+</p>
+</details>
+
+---
+
+### 作業履歴の表示
+
+クラスタの作業履歴を照会します。
+
+```
+GET /v1/clusters/{CLUSTER_UUID}/events/{EVENT_UUID}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### リクエスト
+
+このAPIはリクエスト本文を要求しません。
+
+| 名前 | 種類 | 形式 | 必須 | 説明 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | トークンID |
+| CLUSTER_UUID | URL | UUID | O | クラスタUUID |
+| EVENT_UUID | URL | UUID | O | 作業UUID |
+
+
+#### レスポンス
+
+| 名前 | 種類 | 形式 | 説明 |
+|---|---|---|---|
+| id | Body | Integer | 作業ID |
+| uuid | Body | UUID | 作業UUID |
+| project_id | Body | String | プロジェクト(テナント) ID |
+| cluster_uuid | Body | UUID | クラスタUUID |
+| cluster_name | Body | String | クラスタ名 |
+| resource_uuid | Body | UUID | 作業対象UUID |
+| resource_name | Body | String | 作業対象名 |
+| resource_type | Body | String | 作業対象の種類("cluster" / "nodegroup") |
+| type | Body | String | 作業の種類 |
+| state | Body | String | 作業状態("SUCCESS" / "FAIL" / "IN_PROGRESS") |
+| contents | Body | String | 作業進行内容(成功時null) |
+| created_at | Body | String | 作業開始時間(UTC) |
+| updated_at | Body | String | 作業完了時間(UTC) |
+
+
+<details><summary>例</summary>
+<p>
+
+```json
+{
+    "id": 3683,
+    "uuid": "868f218a-9446-4500-b6b3-8c1a95e3d7c3",
+    "project_id": "5d8cc67593754d5581f7e8986badf358",
+    "cluster_uuid": "388794e6-14dc-48ee-9a4f-9c40df5d97ec",
+    "cluster_name": "nks-cluster",
+    "resource_uuid": "388794e6-14dc-48ee-9a4f-9c40df5d97ec",
+    "resource_name": "nks-cluster",
+    "resource_type": "cluster",
+    "type": "CLUSTER_CREATE",
+    "state": "SUCCESS",
+    "contents": null,
+    "created_at": "2024-01-30T01:31:06+00:00",
+    "updated_at": "2024-01-30T01:42:39+00:00"
 }
 ```
 
@@ -360,12 +508,14 @@ X-Auth-Token: {tokenId}
 | labels.master_lb_floating_ip_enabled | Body | String | O | Kubernetes APIエンドポイントに公認ドメインアドレスを作成するかどうか("True" / "False")<br>labels.external_network_idとexternal_subnet_id_listが設定されている場合にのみ"True"に設定可能 |
 | labels.additional_network_id_list | Body | String | X | 基本ワーカーノードグループ適用：追加ネットワークのVPCネットワークUUIDリスト(コロン区切り) |
 | labels.additional_subnet_id_list | Body | String | X | 基本ワーカーノードグループ適用：追加ネットワークのVPCサブネットUUIDリスト(コロン区切り) |
-| labels.service_cluster_ip_range | Body | String  | X |  K8sサービスネットワーク、クラスタでサービス作作成時、ClusterIPに割り当てられるIP帯域、 pods_network_cidr, service_cluster_ip_range入力ルール参考 |
-| labels.pods_network_cidr | Body | String |  X | クラスタPodネットワーク、 pods_network_cidr, service_cluster_ip_range入力ルール参考 |
-| labels.pods_network_subnet | Body | Integer | X | クラスタPodサブネットサイズ、 pods_network_subnet入力ルール参考 |
+| labels.service_cluster_ip_range | Body | String  | X |  K8sサービスネットワーク、クラスタでサービス作作成時、ClusterIPに割り当てられるIP帯域。 fixed_subnet, pods_network_cidr, service_cluster_ip_range入力ルール参考 |
+| labels.pods_network_cidr | Body | String |  X | クラスタPodネットワーク。 fixed_subnet, pods_network_cidr, service_cluster_ip_range入力ルール参考 |
+| labels.pods_network_subnet | Body | Integer | X | クラスタPodサブネットサイズ。 pods_network_subnet入力ルール参考 |
+| labels.ncr_sgw | Body | String | X | NCRタイプのサービスゲートウェイUUID |
+| labels.obs_sgw | Body | String | X | OBSタイプのサービスゲートウェイUUID |
 | flavor_id | Body | UUID | O | 基本ワーカーノードグループ適用：ノードインスタンスタイプUUID |
 | fixed_network | Body | UUID | O | VPC Network UUID |
-| fixed_subnet | Body | UUID | O | VPC Subnet UUID |
+| fixed_subnet | Body | UUID | O | VPCサブネットUUID. fixed_subnet, pods_network_cidr, service_cluster_ip_range入力ルール参照 |
 > pods_network_cidr, service_cluster_ip_rangeのCIDRは以下のようなルールで入力する必要があります。
 >  - CIDRはリンクローカルアドレス帯域(169.254.0.0/16)と重複することはできません。
 >  - PodネットワークとK8sサービスネットワーク帯域は重複することができません。
@@ -379,10 +529,10 @@ X-Auth-Token: {tokenId}
 
 
 > [注意]
-> fixed_subnet帯域が以下のネットワーク帯域と重ならないように設定する必要があります。
->  - 10.100.0.0/16
->  - 10.254.0.0/16
->  - 198.18.0.0/19
+> fixed_subnet, pods_network_cidr, service_cluster_ip_rangeのCIDRは下記のようなルールで入力する必要があります。
+>  - リンクローカルアドレス帯域(169.254.0.0/16)と重複することはできません。
+>  - fixed_subnet, pods_network_cidr, service_cluster_ip_range帯域は重複することはできません。
+>  - NKS内部で使用しているIP帯域(198.18.0.0/19)と重複することはできません。
 
 <details><summary>例</summary>
 <p>
@@ -412,6 +562,7 @@ X-Auth-Token: {tokenId}
         "external_subnet_id_list": "59ddc195-76b1-431d-9693-f09880747dc6",
         "kube_tag": "v1.23.3",
         "master_lb_floating_ip_enabled": "true",
+        "strict_sg_rules": "True",
         "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
         "user_script_v2": ""
     },
@@ -663,6 +814,141 @@ pod_subnetは以下のようなルールで入力する必要があります。
 </details>
 ---
 
+### クラスタAPIエンドポイントIPアクセス制御適用
+クラスタAPIエンドポイントにIPアクセス制御を適用または解除できます。
+IPアクセス制御機能の詳細については、 [IPアクセス制御](/Network/Load%20Balancer/ko/overview/#ip)文書を参照してください。
+クラスタAPIエンドポイントへのIPアクセス制御ルールに関する詳細については、 [ユーザーガイド](/Container/NKS/ko/user-guide/#_67)を参照してください。
+
+```
+POST /v1/clusters/{CLUSTER_ID_OR_NAME}/api_ep_ipacl
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### リクエスト
+
+| 名前 | 種類 | 形式 | 必須 | 説明 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | トークンID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 |
+| enable | Body | String | O | 'true'、'false'のいずれかに設定可能。デフォルト値: 'false'<br>true:クラスタAPIエンドポイントにIPアクセス制御を適用<br>false:クラスタAPIエンドポイントにIPアクセス制御解除。falseを設定した場合、サブ設定はすべて無視されます。 |
+| action | Body | String | O(enable設定がtrueの場合) | IPアクセス制御タイプ、 ALLOW、DENYのいずれかに設定可能 |
+| ipacl_targets | Body | List of Object | O(enable設定がtrueの場合) | IPアクセス制御対象オブジェクト |
+| ipacl_targets.cidr_address | Body | String | O(enable設定がtrueの場合) | IPアクセス制御対象。 IPアドレスまたはCIDR形式のIPアドレス範囲入力可能 |
+| ipacl_targets.descripion | Body | String | X | IPアクセス制御対象の説明 |
+
+
+<details><summary>例</summary>
+<p>
+
+```json
+{
+    "enable": "True",
+    "action": "ALLOW",
+    "ipacl_targets": [
+        {
+            "cidr_address" : "192.168.0.5"
+        },
+        {
+            "cidr_address" : "10.10.22.3/24",
+            "description": "Your Friends"
+        }
+    ]   
+}
+```
+
+</p>
+</details>
+
+
+#### レスポンス
+
+| 名前 | 種類 | 形式 | 説明 |
+|---|---|---|---|
+| uuid | Body | UUID | クラスタUUID |
+
+<details><summary>例</summary>
+<p>
+
+```json
+{
+    "uuid": "0641db9f-5e71-4df9-9571-089c7964d82e"
+}
+```
+
+</p>
+</details>
+
+
+### クラスタAPIエンドポイントのIPアクセス制御照会
+クラスタAPIエンドポイントに適用されたIPアクセス制御情報を確認できます。
+
+```
+GET /v1/clusters/{CLUSTER_ID_OR_NAME}/api_ep_ipacl
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### リクエスト
+このAPIはリクエスト本文を要求しません。
+
+| 名前 | 種類 | 形式 | 必須 | 説明 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | トークンID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
+
+
+#### レスポンス
+
+| 名前 | 種類 | 形式 | 説明 |
+|---|---|---|---|
+| cluster_uuid | Body | UUID | クラスタUUID |
+| enable | Body | String | true:クラスタAPIエンドポイントにIPアクセス制御が適用されている。false:クラスタAPIエンドポイントにIPアクセス制御が解除されている | 
+| action | Body | String | IPアクセス制御タイプALLOW、DENY確認可能 |
+| ipacl_targets | Body | List of Object | IPアクセス制御対象オブジェクト |
+| ipacl_targets.cidr_address | Body | String | IPアクセス制御対象。 IPアドレスまたはCIDR形式のIPアドレス範囲を入力可能 |
+| ipacl_targets.descripion | Body | String | IPアクセス制御対象の説明 |
+
+<details><summary>enable: true の場合の例</summary>
+<p>
+
+```json
+{
+    "cluster_uuid" : "8be87215-9db7-45ed-a03c-38e6db939915",
+    "enable": "true",
+    "action": "ALLOW",
+    "ipacl_targets": [
+        {
+            "cidr_address" : "192.168.0.5",
+            "description": "My Friend"
+        },
+        {
+            "cidr_address" : "10.10.22.3/24"
+        }
+    ]   
+}
+```
+
+</p>
+</details>
+
+<details><summary>enable: false の場合の例</summary>
+<p>
+
+```json
+{
+    "cluster_uuid" : "8be87215-9db7-45ed-a03c-38e6db939915",
+    "enable": "false"
+}
+```
+
+</p>
+</details>
+
 ## ノードグループ
 
 ### ノードグループリスト表示
@@ -784,6 +1070,7 @@ X-Auth-Token: {tokenId}
 | labels.user_script_v2 | Body | String | ユーザースクリプト |
 | labels.additional_network_id_list | Body | String | ワーカーノードグループ適用：追加ネットワークのVPCネットワークUUIDリスト(コロン区切り) |
 | labels.additional_subnet_id_list | Body | String | ワーカーノードグループ適用：追加ネットワークのVPCサブネットUUIDリスト(コロン区切り) |
+| labels.strict_sg_rules | Body | String | ワーカーノードセキュリティグループに必須セキュリティルールのみ作成("True" / "False"), (2024.02.27. 以降に作成されたクラスタで確認可能) |
 | max_node_count | Body | Integer | 最大ノード数 |
 | min_node_count | Body | Integer | 最小ノード数 |
 | node_addresses | Body | String list | ノードIPアドレスリスト |
@@ -830,6 +1117,7 @@ X-Auth-Token: {tokenId}
         "kube_version_status": "LATEST",
         "login_username": "centos",
         "master_lb_floating_ip_enabled": "true",
+        "strict_sg_rules": "True",
         "node_image": "96aff4ab-d221-4688-8364-2fcf02d50547",
         "os_arch": "amd64",
         "os_distro": "CentOS",
@@ -1452,9 +1740,9 @@ X-Auth-Token: {tokenId}
 
 ## その他機能
 
-### サポートされるKubernetesバージョン表示
+### サポートされるKubernetesバージョン及び作業の種類を表示
 
-NHN Cloud NHN Kubernetes Service(NKS)でサポートするKubernetesバージョンを照会します。
+NHN Kubernetes Service(NKS)でサポートするKubernetesバージョン及び作業タイプを照会します。
 
 ```
 GET /v1/supports
@@ -1479,6 +1767,8 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|
 | supported_k8s | Body | Object | サポートされるKubernetesバージョンオブジェクト |
 | supported_k8s."バージョン名" | Body | String | Kubernetesバージョンの有効性(True/False) |
+| supported_event_type."作業タイプ"| Body | Object | サポートされる作業タイプオブジェクト(cluster_events/nodegroup_events) |
+| supported_event_type."作業タイプ"."作業名"| Body | Object | 作業タイプ及び説明 |
 
 <details><summary>例</summary>
 <p>
@@ -1493,10 +1783,30 @@ X-Auth-Token: {tokenId}
         "v1.21.6": true,
         "v1.22.3": false,
         "v1.23.3": false,
-        "v1.24.3": true
+        "v1.24.3": false
         "v1.25.4": true,
         "v1.26.3": true,
-        "v1.27.3": true
+        "v1.27.3": true,
+        "v1.28.3": true
+    },
+    "supported_event_type": {
+        "cluster_events": {
+            "CLUSTER_CREATE": "クラスタの作成",
+            "CLUSTER_DELETE": "クラスタの削除",
+            "CLUSTER_HANDOVER": "クラスタOWNERの変更",
+            "CLUSTER_CNI_UPDATE": "CNI変更"
+        },
+        "nodegroup_events": {
+            "NODEGROUP_CREATE": "ノードグループの作成",
+            "NODEGROUP_DELETE": "ノードグループの削除",
+            "CLUSTER_RESIZE": "クラスタサイズの調整",
+            "NODEGROUP_UPDATE_FLAVOR": "インスタンスタイプの変更",
+            "NODEGROUP_UPGRADE": "ノードグループのアップグレード",
+            "NODEGROUP_USERSCRIPT_UPDATE": "ユーザースクリプトの変更",
+            "NODEGROUP_SET_CLUSTER_AUTOSCALER": "オートスケーラーの設定変更",
+            "NODEGROUP_NODE_ACTION_NODE_START": "ワーカーノードの起動",
+            "NODEGROUP_NODE_ACTION_NODE_STOP": "ワーカーノードの停止"
+        }
     }
 }
 ```
