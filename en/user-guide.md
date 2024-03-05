@@ -3085,7 +3085,7 @@ spec:
 ```
 
 > [Note]
-Regarding how to use NHN Cloud Container Registry, see [User Guide for Container Registry](/Container/NCR/ko/user-guide).
+Regarding how to use NHN Cloud Container Registry, see [NHN Cloud Container Registry (NCR) User Guide](/Container/NCR/ko/user-guide).
 
 
 ### Integrate with NHN Cloud NAS
@@ -3446,9 +3446,9 @@ Define the name, description, and size of the NAS storage to be created in the *
 
 | Item | Description | Example | Required |
 | ---- | ------- | --------------------------- | --------- |
-| nfs-volume-name | Name of the storage to be created. The NFS access path can be created with the storage name. Storage name is limited to less than 100 alphabetic characters, numbers, and some symbols ('-', '_'). | "nas_sample_volume_100gb" | O |
+| nfs-volume-name | Name of the storage to be created. The NFS access path can be created with the storage name. Storage name is limited to less than 100 alphabetic characters, numbers, and some symbols ('-', '_'). | "nas_sample_volume_300gb" | O |
 | nfs-volume-description | A description of the NAS storage to create. | "nas sample volume" | X |
-| nfs-volume-sizegb | The size of NAS storage to create. It is set in GB unit. | "100" | O |
+| nfs-volume-sizegb | The size of NAS storage to create. It is set in GB unit. It can be entered from a minimum of 300 to a maximum of 10,000. | "300" | O |
 
 Below is an example manifest.
 ```yaml
@@ -3458,9 +3458,9 @@ kind: PersistentVolumeClaim
 metadata:
   name: pvc-nfs
   annotations:
-    nfs-volume-name: "nas_sample_volume_100gb"
+    nfs-volume-name: "nas_sample_volume_300gb"
     nfs-volume-description: "nas sample volume"
-    nfs-volume-sizegb: "100"
+    nfs-volume-sizegb: "300"
 spec:
   accessModes:
     - ReadWriteMany
