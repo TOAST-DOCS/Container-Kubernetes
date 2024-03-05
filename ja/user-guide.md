@@ -3295,7 +3295,7 @@ spec:
 ```
 
 > [参考]
-> NHN Cloud Container Registryの使い方は[Container Registryユーザーガイド](/Container/NCR/ko/user-guide)文書を参照してください。
+> NHN Cloud Container Registryの使い方は[NHN Cloud Container Registry(NCR)ユーザーガイド](/Container/NCR/ko/user-guide)文書を参照してください。
 
 
 ### NASサービス連動
@@ -3651,9 +3651,9 @@ PVCマニフェストの**Annotation**に作成するNASストレージの名前
 
 | 項目 | 説明 | 例 | 必須 |
 | ---- | ------- | --------------------------- | --------- |
-| nfs-volume-name | 作成されるストレージの名前です。ストレージ名を通じてNFSアクセスパスを作成します。名前は100文字以内の英字と数字、一部記号('-', '_')のみ入力できます。 | "nas_sample_volume_100gb" | O |
+| nfs-volume-name | 作成されるストレージの名前です。ストレージ名を通じてNFSアクセスパスを作成します。名前は100文字以内の英字と数字、一部記号('-', '_')のみ入力できます。 | "nas_sample_volume_300gb" | O |
 | nfs-volume-description | 作成するNASストレージの説明です。 | "nas sample volume" | X |
-| nfs-volume-sizegb | 作成するNASストレージのサイズです。GB単位で設定されます。 | "100" | O |
+| nfs-volume-sizegb | 作成するNASストレージのサイズです。GB単位で設定されます。 最小300から最大10,000まで入力できます。 | "300" | O |
 
 以下はマニフェストの例です。
 ```yaml
@@ -3663,9 +3663,9 @@ kind: PersistentVolumeClaim
 metadata:
   name: pvc-nfs
   annotations:
-    nfs-volume-name: "nas_sample_volume_100gb"
+    nfs-volume-name: "nas_sample_volume_300gb"
     nfs-volume-description: "nas sample volume"
-    nfs-volume-sizegb: "100"
+    nfs-volume-sizegb: "300"
 spec:
   accessModes:
     - ReadWriteMany
