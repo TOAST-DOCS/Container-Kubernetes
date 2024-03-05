@@ -3081,7 +3081,7 @@ spec:
 ```
 
 > [참고]
-> NHN Cloud Container Registry 사용 방법은 [Container Registry 사용자 가이드](/Container/NCR/ko/user-guide-ngsc) 문서를 참고하세요.
+> NHN Cloud Container Registry 사용 방법은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/user-guide-ngsc) 문서를 참고하세요.
 
 ### NHN Cloud NAS 서비스 연동
 NHN Cloud에서 제공하는 NAS 스토리지를 PV로 활용할 수 있습니다. NAS 서비스를 사용하기 위해서는 v1.20 이후 버전의 클러스터를 사용해야 합니다. NHN Cloud NAS 사용에 대한 자세한 내용은 [NAS 콘솔 사용 가이드](/Storage/NAS%20(online)/ko/console-guide)를 참고하세요.
@@ -3438,9 +3438,9 @@ PVC 매니페스트의 **Annotation**에 생성할 NAS 스토리지의 이름, �
 
 | 항목 | 설명 | 예시 | 필수 |
 | ---- | ------- | --------------------------- | --------- |
-| nfs-volume-name | 생성될 스토리지의 이름입니다. 스토리지 이름을 통해 NFS 접근 경로를 만듭니다. 이름은 100자 이내의 영문자와 숫자, 일부 기호('-', '_')만 입력할 수 있습니다. | "nas_sample_volume_100gb" | O |
+| nfs-volume-name | 생성될 스토리지의 이름입니다. 스토리지 이름을 통해 NFS 접근 경로를 만듭니다. 이름은 100자 이내의 영문자와 숫자, 일부 기호('-', '_')만 입력할 수 있습니다. | "nas_sample_volume_300gb" | O |
 | nfs-volume-description | 생성할 NAS 스토리지의 설명입니다. | "nas sample volume" | X |
-| nfs-volume-sizegb | 생성할 NAS 스토리지의 크기입니다. GB 단위로 설정됩니다. | "100" | O |
+| nfs-volume-sizegb | 생성할 NAS 스토리지의 크기입니다. GB 단위로 설정됩니다. 최소 300부터 최대 10,000까지 입력할 수 있습니다. | "300" | O |
 
 아래는 매니페스트 예제입니다.
 ```yaml
@@ -3450,9 +3450,9 @@ kind: PersistentVolumeClaim
 metadata:
   name: pvc-nfs
   annotations:
-    nfs-volume-name: "nas_sample_volume_100gb"
+    nfs-volume-name: "nas_sample_volume_300gb"
     nfs-volume-description: "nas sample volume"
-    nfs-volume-sizegb: "100"
+    nfs-volume-sizegb: "300"
 spec:
   accessModes:
     - ReadWriteMany
