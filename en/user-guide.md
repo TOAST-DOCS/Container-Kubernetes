@@ -175,7 +175,7 @@ When using enhanced security rules, the NodePort type of service and the ports u
 
 | Direction | IP protocol | Port range | Ether | Remote | Description |
 | :-: | :-: | :-: | :-: | :-: | :-: |
-| ingress | TCP | 30000 - 32767 | IPv4 | Allow all | NKS service object NodePort, direction: external -> worker node |
+| ingress, egress | TCP | 30000 - 32767 | IPv4 | Allow all | NKS service object NodePort, direction: external -> worker node |
 | egress | TCP | 2049 | IPv4 | NHN Cloud NAS service IP address | RPC NFS port of csi-nfs-node, direction: csi-nfs-node(worker node) -> NHN Cloud NAS service |
 | egress | TCP | 111 | IPv4 | NHN Cloud NAS service IP address | rpc portmapper port of csi-nfs-node, direction: csi-nfs-node(worker node) -> NHN Cloud NAS service |
 | egress | TCP | 635 | IPv4 | NHN Cloud NAS service IP address | rpc mountd port of csi-nfs-node, direction: csi-nfs-node(worker node) -> NHN Cloud NAS service |
@@ -191,6 +191,7 @@ If you don't use enhanced security rules, additional security rules are created 
 | ingress | UDP | 1 - 65535 | IPv4 | Master node | All ports, direction: NKS Control plane -> worker node |
 | egress | Random | 1 - 65535 | IPv4 | Allow all | All ports, direction: worker node - > external |
 | egress | Random | 1 - 65535 | IPv6 | Allow all | All ports, direction: worker node - > external |
+
 
 Enter information as required and click **Create Cluster**, and a cluster begins to be created. You can check the status from the list of clusters. It takes about 10 minutes to create; more time may be required depending on the cluster configuration.
 
@@ -1112,19 +1113,24 @@ Only custom images created based on NHN Cloud instances can be used as worker no
 |  | CentOS 7.9 (2023.05.25)  | 1.1 |
 |  | CentOS 7.9 (2023.08.22)  | 1.2 |
 |  | CentOS 7.9 (2023.11.21)  | 1.3 |
+|  | Rocky Linux 8.9 (2024.02.20)  | 1.4 |
 | Rocky | Rocky Linux 8.6 (2023.03.21)  | 1.0 |
 |  | Rocky Linux 8.7 (2023.05.25)  | 1.1 |
 |  | Rocky Linux 8.8 (2023.08.22)  | 1.2 |
 |  | Rocky Linux 8.8 (2023.11.21)  | 1.3 |
+|  | Rocky Linux 8.9 (2024.02.20)  | 1.4 |
 | Ubuntu | Ubuntu Server 18.04.6 LTS (2023.03.21)  | 1.0 |
 |  | Ubuntu Server 20.04.6 LTS (2023.05.25)  | 1.1 |
 |  | Ubuntu Server 20.04.6 LTS (2023.08.22)  | 1.2 |
 |  | Ubuntu Server 20.04.6 LTS (2023.11.21)  | 1.3 |
 |  | Ubuntu Server 22.04.3 LTS (2023.11.21)  | 1.3 |
+|  | Ubuntu Server 20.04.6 LTS (2024.02.20)  | 1.4 |
+|  | Ubuntu Server 22.04.3 LTS (2024.02.20)  | 1.4 |
 | Debian | Debian 11.6 Bullseye (2023.03.21)  | 1.0 |
 |  | Debian 11.6 Bullseye (2023.05.25)  | 1.1 |
 |  | Debian 11.7 Bullseye (2023.08.22)  | 1.2 |
 |  | Debian 11.8 Bullseye (2023.11.21)  | 1.3 |
+|  | Debian 11.8 Bullseye (2024.02.20)  | 1.4 |
 
 
 > [Notes]
@@ -1314,7 +1320,7 @@ status:
 ```
 
 > [Caution]
-This feature is provided only when the time of cluster creation falls within the following period:
+> This feature is provided only when the time of cluster creation falls within the following period:
 > 
 > * Pangyo region: Cluster created on December 29, 2020 or later
 > * Pyeongchon region: Cluster created on December 24, 2020 or later
@@ -1533,11 +1539,9 @@ For more information about the IP access control feature, see [IP Access Control
 #### IP Access Control Rules
 When you add a Cluster API endpoint to IP access control targets, the rules below apply.
 
-* If the IP access control type is set to ‘Allow’, the cluster default subnet CIDR is automatically added to the access control target.
-* When the IP access control type is set to ‘Block’, requests are denied if an IP band that overlaps the cluster default subnet CIDR band is in the access control target list.
-* The maximum number of IP access control targets you can set is 100.
-* At least one IP access control target must exist.
-
+* If the IP access control type is set to **Allow**, the cluster default subnet CIDR is automatically added to the access control target.
+* If the IP access control type is set to **Allow**, the Dashboard, Namespaces, Workloads, Services & Network, Storage, Settings, and Events tabs in the NKS console are disabled.
+* If the IP access control type is set to **Block**, requests are denied if an IP band that overlaps the cluster default subnet CIDR band is in the access control target list.
 
 ## Manage Worker Node
 
@@ -1643,6 +1647,103 @@ A kubelet is a node agent that runs on all worker nodes. The kubelet receives in
 > * This feature runs on each worker node for which you want to set custom arguments.
 > * The kubelet will not behave correctly when you enter an incorrectly formatted custom argument.
 > * The set custom argument will remain in effect even when the system restarts.
+
+### Custom Containerd Registry Settings
+NKS clusters in v1.24.3 and later use containerd v1.6 as the container runtime. NKS provides the feature to customize several settings in containerd, including those related to the registry, to suit your environment. For registry settings in containerd v1.6, see [Configure Image Registry](https://github.com/containerd/containerd/blob/release/1.6/docs/cri/registry.md).
+
+While initializing worker nodes, if a custom containerd registry configuration file`(``/etc/containerd/registry-config``.json`) exists, the contents of this file are applied to the containerd configuration file`(/etc/containerd/config.toml`). If a custom containerd registry configuration file does not exist, the containerd configuration file applies the default registry settings. The default registry settings include the following
+
+```json
+[
+   {
+      "registry": "docker.io",
+      "endpoint_list": [
+         "https://registry-1.docker.io"
+      ]
+   }
+]
+```
+
+The following key/value formats can be set for one registry
+
+```json
+{
+  "registry": "REGISTRY_NAME",
+  "endpoint_list": [
+     "ENDPOINT1",
+     "ENDPOINT2"
+  ],
+  "tls": {
+     "ca_file": "CA_FILEPATH",
+     "cert_file": "CERT_FILEPATH",
+     "key_file": "KEY_FILEPATH",
+     "insecure_skip_verify": true_or_false
+  },
+  "auth": {
+     "username": "USERNAME",
+     "password": "PASSWORD",
+     "auth": "AUTH",
+     "identitytoken": "IDENTITYTOKEN"
+  }
+}
+```
+
+#### Example 1 
+
+If you want to register additional registries in addition to `docker.io`, you can set up as follows.
+
+```json
+[
+   {
+      "registry": "docker.io",
+      "endpoint_list": [
+         "https://registry-1.docker.io"
+      ]
+   },
+   {
+      "registry": "additional.registry.io",
+      "endpoint_list": [ [
+         "https://additional.registry.io"
+      ]
+   }
+]
+```
+
+#### Example 2 
+
+If you want to remove the `docker.io` registry and only register registries that support HTTP, you can set up as follows.
+```json
+[
+   {
+      "registry": "user-defined.registry.io",
+      "endpoint_list": [
+         "http://user-defined.registry.io"
+      ],
+      "tls": {
+         "insecure_skip_verify": true
+      }
+   }
+]
+```
+
+#### Example 3
+
+To generate a custom containerd registry configuration file with the contents of Example 2 upon node creation, you can set up a user script as follows
+
+```bash
+mkdir -p /etc/containerd
+echo '[ { "registry": "user-defined.registry.io", "endpoint_list": [ "http://user-defined.registry.io" ], "tls": { "insecure_skip_verify": true } } ]' > /etc/containerd/registry-config.json
+```
+
+> [Caution]
+> * The containerd configuration file`(/etc/containerd/config.toml`) is a file that is managed by NKS. Arbitrary modifications to this file can cause errors in the behavior of NKS features or remove the modifications. 
+> * If an incorrect registry is set with the custom containerd registry setup feature, worker nodes can work abnormally. 
+> * The point at which the custom containerd registry settings feature is applied to the containerd configuration file is during worker node initialization. The worker node initialization process is part of the worker node creation process and the worker node group upgrade process.
+>     * To apply the custom container registry settings feature when creating a worker node, you must have your user script generate this configuration file.
+>     * To apply the custom container registry settings feature when upgrading a group of worker nodes, you must manually set this file on all worker nodes before proceeding with the upgrade.
+> * If a custom containerd registry settings file exists, the settings in this file will be applied to containerd.
+>     * To use the `docker.io` registry, you must also include settings for the `docker.io` registry. For settings for the `docker`. `io` registry, see Default registry settings.
+>     * If you do not want to use the `docker.io` registry, you can simply not include any settings for the `docker.io` registry. However, at least one registry setting must exist.
 
 ## LoadBalancer Service
 Pod is a basic execution unit of a Kubernetes application and it is connected to a cluster network via CNI (container network interface). By default, pods are not accessible from outside the cluster. To expose a pod's services to the outside of the cluster, you need to create a path to expose to the outside using the Kubernetes `LoadBalancer` Service object. Creating a LoadBalancer service object creates an NHN Cloud Load Balancer outside the cluster and associates it with the service object.
@@ -3092,7 +3193,7 @@ Regarding how to use NHN Cloud Container Registry, see [NHN Cloud Container Regi
 You can utilize NAS storage provided by NHN Cloud as PV. In order to use NAS services, you must use a cluster of version v1.20 or later. For more information on using NHN Cloud NAS, please refer to the [NAS Console User Guide](/Storage/NAS/en/console-guide).
 
 > [Note]
-The NHN Cloud NAS service is currently (2023.11) only available in some regions. For more information on supported regions for NHN Cloud NAS service, see [NAS Service Overview](/Storage/NAS/en/overview).
+The NHN Cloud NAS service is currently (2024.02) only available in some regions. For more information on supported regions for NHN Cloud NAS service, see [NAS Service Overview](/Storage/NAS/en/overview).
 
 #### Run the rpcbind service on All Worker Nodes
 To use NAS storage, you must run the rpcbind service on all worker nodes. After connecting to all worker nodes, run the rpcbind service with the command below.
