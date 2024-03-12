@@ -1542,6 +1542,9 @@ When you add a Cluster API endpoint to IP access control targets, the rules belo
 * If the IP access control type is set to **Allow**, the cluster default subnet CIDR is automatically added to the access control target.
 * If the IP access control type is set to **Allow**, the Dashboard, Namespaces, Workloads, Services & Network, Storage, Settings, and Events tabs in the NKS console are disabled.
 * If the IP access control type is set to **Block**, requests are denied if an IP band that overlaps the cluster default subnet CIDR band is in the access control target list.
+* The maximum number of IP access control targets you can set is 100.
+* At least one IP access control target must exist.
+
 
 ## Manage Worker Node
 
@@ -1702,7 +1705,7 @@ If you want to register additional registries in addition to `docker.io`, you ca
    },
    {
       "registry": "additional.registry.io",
-      "endpoint_list": [ [
+      "endpoint_list": [
          "https://additional.registry.io"
       ]
    }
