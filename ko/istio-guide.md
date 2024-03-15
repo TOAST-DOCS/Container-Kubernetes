@@ -56,7 +56,7 @@ $ export PATH="/usr/local/bin:$PATH"
 #### 1. ORAS 명령줄 도구를 사용하여 istioctl을 다운로드 및 설치합니다.
 istioctl은 Istio가 제공하는 서비스 메시 배포를 디버깅하고 진단할 수 있게 해주는 구성 명령줄 유틸리티로 Istio 배포 구성 옵션 설정 등 다양한 기능을 제공합니다. istioctl에 대한 자세한 설명은 [istioctl](https://istio.io/latest/docs/reference/commands/istioctl/)을 참고하세요. 
 
-istioctl 배포하려는 Istio 버전에 맞는 istioctl 툴을 다운로드해야합니다. 아래 명령어를 실행하여 istioctl을 다운로드합니다.
+배포하려는 Istio 버전에 맞는 istioctl 툴을 다운로드해야합니다. 아래 명령어를 실행하여 istioctl을 다운로드합니다.
 ```
 $ oras pull ${REGISTRY}/istioctl-tool:${VERSION}
 $ tar -zxvf istio-${VERSION}-linux-amd64.tar.gz
@@ -67,7 +67,7 @@ $ export PATH=$PWD/bin:$PATH
 #### 2. istioctl을 사용해 Istio 구성 요소를 배포합니다.
 프로파일은 Istio 컨트롤 플레인과 데이터 플레인의 사이드카에 대한 사용자 정의 배포 기능을 제공합니다. 설정된 프로파일에 따라 배포 시 활성화되는 구성 요소가 달라집니다. 사용자는 클러스터의 환경 구성에 따라 기본 제공되는 프로파일을 사용하거나 특정 요구에 맞춰 구성을 사용자 정의할 수 있습니다. Istio 프로파일에 대한 자세한 설명은 [Istio 설치 구성 프로파일](https://istio.io/latest/docs/setup/additional-setup/config-profiles/)을 참고하세요. 이 예제에서는 기본으로 제공되는 demo 프로파일을 사용하여 배포합니다.
 
-istioctl install 명령어를 통해 Istio 구성 요소를 배포합니다. 프로파일 생략시에는 default 프로파일이 적용됩니다. 아래는 istioctl install 명령어를 사용하여 istio 구성 요소를 배포하는 예제입니다.
+`istioctl install` 명령어를 통해 Istio 구성 요소를 배포합니다. 프로파일 생략시에는 default 프로파일이 적용됩니다. 아래는 `istioctl install` 명령어를 사용하여 istio 구성 요소를 배포하는 예제입니다.
 ```
 $ istioctl install --set profile=demo --set hub=${REGISTRY} -y
 ✔ Istio core installed
@@ -77,7 +77,7 @@ $ istioctl install --set profile=demo --set hub=${REGISTRY} -y
 ✔ Installation complete
 ```
 
-매니페스트를 생성하여 배포하려면 istioctl manifest generate 명령어를 사용합니다. 아래는 istioctl manifest generate 명령어를 사용하여 istio 구성 요소를 배포하는 예제입니다.
+매니페스트를 생성하여 배포하려면 `istioctl manifest generate` 명령어를 사용합니다. 아래는 `istioctl manifest generate` 명령어를 사용하여 istio 구성 요소를 배포하는 예제입니다.
 ```
 $ istioctl manifest generate --set profile=demo --set hub=${REGISTRY} > istio-manifest-demo.yaml
 $ kubectl apply -f istio-manifest-demo.yaml
@@ -223,14 +223,14 @@ gateway.networking.istio.io/bookinfo-gateway created
 virtualservice.networking.istio.io/bookinfo created
 ```
 
-istioctl analyze 명령어를 통해 인그레스 게이트웨이 구성에 문제가 없는지 확인합니다.
+`istioctl analyze` 명령어를 통해 인그레스 게이트웨이 구성에 문제가 없는지 확인합니다.
 ```
 $ istioctl analyze
 ✔ No validation issues found when analyzing namespace: default.
 ```
 
 #### 서비스 접근하기
-노출된 서비스에 접근하기 위해 게이트웨이 URL 정보를 확인합니다. 게이트웨이 URL은 기본적으로 `인그레스 호스트:인그레스 IP`의 구성으로 되어 있습니다. 클러스터가 인터넷망 또는 폐쇄망 환경에 구성되었는지에 따라 게이트웨이 URL 정보를 확인하는 방법이 달라집니다. 인터넷망에 구성된 클러스터는 로드 밸런서의 EXTERNAL-IP 정보를 기반으로 게이트웨이 URL이 구성되며 폐쇄망 환경에 구성된 클러스터는 노드 포트를 기반으로 게이트웨이 URL이 구성됩니다.
+노출된 서비스에 접근하기 위해 게이트웨이 URL 정보를 확인합니다. 게이트웨이 URL은 기본적으로 `인그레스 호스트:인그레스 IP`의 구성으로 되어 있습니다. 클러스터가 인터넷망 또는 폐쇄망 환경에 구성되었는지에 따라 게이트웨이 URL 정보를 확인하는 방법이 달라집니다. 인터넷망에 구성된 클러스터는 로드 밸런서의 `EXTERNAL-IP` 정보를 기반으로 게이트웨이 URL이 구성되며 폐쇄망 환경에 구성된 클러스터는 노드 포트를 기반으로 게이트웨이 URL이 구성됩니다.
 
 인터넷망에 구성된 클러스터의 경우 아래 명령어 실행을 통해 게이트웨이 URL 정보를 확인할 수 있습니다.
 ```
