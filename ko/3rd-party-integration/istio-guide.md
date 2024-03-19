@@ -168,7 +168,7 @@ namespace/default labeled
 #### 2. 애플리케이션 구성 요소 배포하기
 애플리케이션 구성 요소를 배포하고 정상적으로 배포되었는지 확인합니다.
 
-아래 명령어를 통해 어플리케이션을 배포합니다.
+아래 명령어를 통해 애플리케이션을 배포합니다.
 ```
 $ kubectl apply -f samples/bookinfo/platform/kube/bookinfo.yaml
 service/details created
@@ -206,7 +206,7 @@ pod/reviews-v2-b7dcd98fb-vppzv       2/2     Running   0          13m
 pod/reviews-v3-5c5cc7b6d-4hpr8       2/2     Running   0          13m
 ```
 
-아래 명령어를 통해 어플리케이션이 정상적으로 동작하는지 확인합니다.
+아래 명령어를 통해 애플리케이션이 정상적으로 동작하는지 확인합니다.
 ```
 $ kubectl exec "$(kubectl get pod -l app=ratings -o jsonpath='{.items[0].metadata.name}')" -c ratings -- curl -sS productpage:9080/productpage | grep -o "<title>.*</title>"
 <title>Simple Bookstore App</title>
