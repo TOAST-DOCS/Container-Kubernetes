@@ -1,5 +1,8 @@
 ## Container > NHN Kubernetes Service(NKS) > 외부 서비스 연동 가이드 > Istio
 
+### 개요
+이 문서는 사용자가 NKS(NHN Kubernetes Service) 클러스터에 Istio를 구성하고 테스트할 수 있는 예제에 대해 기술한 가이드 문서입니다. NKS에서는 인터넷에 연결되지 않은 클러스터에서도 Istio를 구성할 수 있도록 가이드 및 NCR 레지스트리를 통한 Istio 이미지를 제공하고 있습니다. 사용자는 이 가이드 문서를 통해 NKS에서 제공하는 이미지를 사용하여 Istio를 구성하거나, Istio 공식 가이드 문서를 참고하여 직접 Istio를 구성할지 선택할 수 있습니다.
+
 ### Istio
 서비스 메시(Service Mesh)는 분산 시스템에서 서비스 간 통신을 제어하고, 효율적으로 관리할 수 있도록 하는 데 특화된 마이크로서비스를 위한 인프라 계층입니다.
 Istio는 많이 사용되는 오픈소스 서비스 메시 중 하나입니다. 이 예제에서는 클러스터에 demo 프로파일의 Istio 서비스를 배포한 후 동작하는 것을 보여줍니다. Istio에 대한 자세한 내용은 [Istio](https://istio.io/latest/about/service-mesh/)를 참고하세요.
