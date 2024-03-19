@@ -21,7 +21,7 @@ $ REGISTRY="{리전 별 레지스트리}"
 | 1.19.0 | 1.25, 1.26, 1.27, 1.28 |
 
 > [참고]
-> NKS(NHN Kubernetes Service)는 Istio의 모든 버전을 제공하지 않습니다. 제공되지 않는 버전을 사용하고자 하는 경우 사용자가 직접 Istio를 구성해야합니다. 지원되는 Istio 버전에 관한 정보는 [istio 지원정책](https://istio.io/latest/docs/releases/supported-releases/)을 참고하세요.
+> NKS는 위 표에 명시된 Istio 버전에 대해서만 설치를 제공합니다. NKS에서 제공하지 않는 버전을 사용하려면 사용자가 직접 Istio를 구성해야합니다. 지원되는 Istio 버전에 관한 정보는 [istio 지원정책](https://istio.io/latest/docs/releases/supported-releases/)을 참고하세요.
 
 
 #### 리전 및 인터넷 환경 별 레지스트리 정보
@@ -33,7 +33,7 @@ $ REGISTRY="{리전 별 레지스트리}"
 | | X | private-6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/istio |
 
 > [참고]
-> 폐쇄망 환경에 구성된 클러스터는 인터넷에 연결되어 있지 않기 때문에 폐쇄망 환경에서 NCR 레지스트리를 사용하기 위해서는 Private URI를 사용하기 위한 환경 구성이 필요합니다. Private URI 사용법에 대한 자세한 내용은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/user-guide/#private-uri)를 참고하세요.
+> 인터넷에 연결되어 있지 않은 클러스터가 NCR 레지스트리를 사용하기 위해서는 Private URI를 사용하기 위한 환경 구성이 필요합니다. Private URI 사용법에 대한 자세한 내용은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/user-guide/#private-uri)를 참고하세요.
 
 
 #### ORAS 명령줄 도구 설치
@@ -42,7 +42,7 @@ $ REGISTRY="{리전 별 레지스트리}"
 
 ```
 $ ORAS_VERSION="1.1.0"
-$ curl -LO "https://github.com/oras-project/oras/releases/download/v${VERSION}/oras_${ORAS_VERSION}_linux_amd64.tar.gz"
+$ curl -LO "https://github.com/oras-project/oras/releases/download/v${ORAS_VERSION}/oras_${ORAS_VERSION}_linux_amd64.tar.gz"
 $ mkdir -p oras-install/
 $ tar -zxf oras_${ORAS_VERSION}_*.tar.gz -C oras-install/
 $ sudo mv oras-install/oras /usr/local/bin/
@@ -56,7 +56,7 @@ $ export PATH="/usr/local/bin:$PATH"
 #### 1. ORAS 명령줄 도구를 사용하여 istioctl을 다운로드 및 설치합니다.
 istioctl은 Istio가 제공하는 서비스 메시 배포를 디버깅하고 진단할 수 있게 해주는 구성 명령줄 유틸리티로 Istio 배포 구성 옵션 설정 등 다양한 기능을 제공합니다. istioctl에 대한 자세한 설명은 [istioctl](https://istio.io/latest/docs/reference/commands/istioctl/)을 참고하세요. 
 
-배포하려는 Istio 버전에 맞는 istioctl 툴을 다운로드해야합니다. 아래 명령어를 실행하여 istioctl을 다운로드합니다.
+배포하려는 Istio 버전에 맞는 istioctl 툴을 다운로드해야 합니다. 아래 명령어를 실행하여 istioctl을 다운로드합니다.
 ```
 $ oras pull ${REGISTRY}/istioctl-tool:${VERSION}
 $ tar -zxvf istio-${VERSION}-linux-amd64.tar.gz
@@ -153,7 +153,8 @@ replicaset.apps/istio-ingressgateway-b8844867c   1         1         1       86s
 replicaset.apps/istiod-8c7fbbdc8                 1         1         1       90s
 ```
 
-### 어플리케이션 배포
+### 애플리케이션 배포
+Istio가 정상적으로 설치되고, 동작하는지 확인하기 위해 애플리케이션을 배포합니다. 이 예제에서는 Istio에서 기본적으로 제공하는 Bookinfo 샘플 애플리케이션을 사용합니다. 샘플 애플리케이션은 productpage, details, reviews, ratings 4개의 마이크로서비스로 구성되어있습니다. Bookinfo 샘플 애플리케이션에 대한 자세한 내용은 [Istio Bookinfo Application](https://istio.io/latest/docs/examples/bookinfo/)을 참고하세요.
 
 #### 1. 네임스페이스에 레이블을 지정하기
 Istio 사이드카 프록시를 사용하기 위해 파드가 생성될 네임스페이스에 레이블을 지정해야합니다. 레이블은 Istio 구성 요소를 배포할 네임스페이스를 식별하는데 사용됩니다. 레이블이 설정되어있는 네임스페이스에 파드가 배포되면 파드에 자동으로 Istio 사이드카 프록시가 배포됩니다.
@@ -164,8 +165,8 @@ $ kubectl label namespace default istio-injection=enabled
 namespace/default labeled
 ```
 
-#### 2. 어플리케이션 구성 요소 배포하기
-이 예제에서는 Istio에서 기본적으로 제공하는 Bookinfo 샘플 어플리케이션을 사용합니다. 샘플 어플리케이션은 productpage, details, reviews, ratings 4개의 마이크로서비스로 구성되어있습니다. Bookinfo 샘플 어플리케이션에 대한 자세한 내용은 [Istio Bookinfo Application](https://istio.io/latest/docs/examples/bookinfo/)을 참고하세요.
+#### 2. 애플리케이션 구성 요소 배포하기
+애플리케이션 구성 요소를 배포하고 정상적으로 배포되었는지 확인합니다.
 
 아래 명령어를 통해 어플리케이션을 배포합니다.
 ```
@@ -212,9 +213,10 @@ $ kubectl exec "$(kubectl get pod -l app=ratings -o jsonpath='{.items[0].metadat
 ```
 
 ### 서비스 노출
+위의 과정까지 수행했을 때, 서비스는 클러스터 내부의 호스트에서만 접속 가능한 `ClusterIP` 형태로 설정되어 있습니다. 쿠버네티스에서는 서비스 노출을 위해 `NodePort`, `LoadBalancer` 등 다양한 타입의 `Service` 오브젝트를 제공하지만, Istio에서는 더 넓은 범위에서의 네트워크 트래픽을 처리하기 위한 gateway 오브젝트를 제공하고 있습니다. 아래 예제에서는 Istio에서 기본적으로 제공하는 샘플 bookinfo gateway를 사용하여 서비스를 노출하는 과정을 보여줍니다. Istio gateway에 대한 자세한 설명은 [Istio Gateway](https://istio.io/latest/docs/concepts/traffic-management/#gateways)를 참고하세요.
 
 #### 인그레스 게이트웨이 구성하기
-서비스를 노출하기 위해 Istio 인그레스 게이트웨이를 추가로 구성합니다.
+서비스를 노출하기 위한 Istio 인그레스 게이트웨이를 추가로 구성합니다.
 
 아래 명령어를 통해 Istio 인그레스 게이트웨이 구성 요소를 배포합니다.
 ```
