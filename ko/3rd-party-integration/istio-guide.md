@@ -264,3 +264,23 @@ $ curl http://114.110.160.79:80/productpage
 <meta charset="utf-8">
 ...
 ```
+
+
+### Istio 제거
+아래 명령어를 수행하여 예제에서 사용되었던 bookinfo 애플리케이션 관련 구성 요소를 제거합니다.
+```
+$ kubectl delete -f samples/bookinfo/networking/bookinfo-gateway.yaml
+$ kubectl delete -f samples/bookinfo/platform/kube/bookinfo.yaml
+```
+
+만약 클러스터에서 Istio의 모든 구성 요소를 제거하려면 아래 명령어를 수행합니다.
+```
+$ istioctl unintall --purge -y
+$ kubectl delete namespace istio-system
+$ kubectl label namespace default istio-injection-
+```
+
+Istio의 모든 구성 요소를 삭제하는 대신 특정 Istio 컨트롤 플레인만 제거하려는 경우 아래 명령어를 수행합니다.
+```
+$ istioctl uninstall <your original installation options>
+```
