@@ -24,7 +24,7 @@ $ REGISTRY="{리전별 레지스트리}"
 | 1.19.0 | 1.25, 1.26, 1.27, 1.28 |
 
 > [참고]
-> NKS는 위 표에 명시된 Istio 버전에 대해서만 설치를 제공합니다. NKS에서 제공하지 않는 버전을 사용하려면 사용자가 직접 Istio를 구성해야합니다. 지원되는 Istio 버전에 관한 정보는 [istio 지원 정책](https://istio.io/latest/docs/releases/supported-releases/)을 참고하세요.
+> NKS는 위 표에 명시된 Istio 버전에 대해서만 설치를 제공합니다. NKS에서 제공하지 않는 버전을 사용하려면 사용자가 직접 Istio를 구성해야 합니다. 지원되는 Istio 버전에 관한 정보는 [istio 지원 정책](https://istio.io/latest/docs/releases/supported-releases/)을 참고하세요.
 
 
 #### 리전 및 인터넷 환경별 레지스트리 정보
