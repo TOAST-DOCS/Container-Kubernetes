@@ -512,8 +512,8 @@ X-Auth-Token: {tokenId}
 | labels.service_cluster_ip_range | Body | String  | X |  K8s 서비스 네트워크, 클러스터에서 서비스 생성 시 ClusterIP에 할당되는 IP 대역. fixed_subnet, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
 | labels.pods_network_cidr | Body | String |  X |  클러스터 파드 네트워크. fixed_subnet, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
 | labels.pods_network_subnet | Body | Integer | X |  클러스터 파드 서브넷 크기. pods_network_subnet 입력 규칙 참고 |
-| labels.ncr_sgw | Body | String | X | NCR 타입의 서비스 게이트웨이 UUID |
-| labels.obs_sgw | Body | String | X | OBS 타입의 서비스 게이트웨이 UUID |
+| labels.ncr_sgw | Body | String | X | NCR 타입의 서비스 게이트웨이 UUID<br>단, 클러스터 VPC와 동일한 VPC에 생성된 것에 한함. |
+| labels.obs_sgw | Body | String | X | OBS 타입의 서비스 게이트웨이 UUID<br>단, 클러스터 VPC와 동일한 VPC에 생성된 것에 한함. |
 | flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
 | fixed_network | Body | UUID | O | VPC 네트워크 UUID |
 | fixed_subnet | Body | UUID | O | VPC 서브넷 UUID. fixed_subnet, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
