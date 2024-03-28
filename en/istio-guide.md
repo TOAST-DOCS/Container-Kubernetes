@@ -1,4 +1,4 @@
-## Container > NHN Kubernetes Service (NKS) > Integration Guide for External Services > Istio
+## Container > NHN Kubernetes Service (NKS) > Application Guide > Istio
 
 ### Overview
 This document is a guide that describes examples of configuring and testing Istio on NHN Kubernetes Service (NKS) clusters. NKS provides guides and Istio images from the NCR registry to help you configure Istio on clusters that are not connected to the internet. You can use this guide to configure Istio using the images provided by NKS, or you can configure Istio yourself by referring to the official Istio document.
