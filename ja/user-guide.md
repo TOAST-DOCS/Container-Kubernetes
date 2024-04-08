@@ -169,7 +169,7 @@ NHN Kubernetes Service(NKS)はバージョンによって異なる種類のConta
 
 | 方向 | IPプロトコル | ポート範囲 | Ether | 遠隔 | 説明 |
 | :-: | :-: | :-: | :-: | :-: | :-: |
-| ingress | TCP | 30000 - 32767 | IPv4 | すべて許可 | NKS service object NodePort、方向: external -> worker node |
+| ingress, egress  | TCP | 30000 - 32767 | IPv4 | すべて許可 | NKS service object NodePort、方向: external -> worker node |
 | egress | TCP | 2049 | IPv4 | NHN Cloud NASサービスIPアドレス | csi-nfs-nodeのrpc nfsポート、方向: csi-nfs-node(worker node) -> NHN Cloud NASサービス |
 | egress | TCP | 111 | IPv4 | NHN Cloud NASサービスIPアドレス | csi-nfs-nodeのrpc portmapperポート、方向: csi-nfs-node(worker node) -> NHN Cloud NASサービス |
 | egress | TCP | 635 | IPv4 | NHN Cloud NASサービスIPアドレス | csi-nfs-nodeのrpc mountdポート、方向: csi-nfs-node(worker node) -> NHN Cloud NASサービス |
@@ -1097,19 +1097,24 @@ NHN Cloudインスタンスをベースに作成したカスタムイメージ�
 |  | CentOS 7.9 (2023.05.25)  | 1.1 |
 |  | CentOS 7.9 (2023.08.22)  | 1.2 |
 |  | CentOS 7.9 (2023.11.21)  | 1.3 |
+|  | CentOS 7.9 (2024.02.20)  | 1.4 |
 | Rocky | Rocky Linux 8.6 (2023.03.21)  | 1.0 |
 |  | Rocky Linux 8.7 (2023.05.25)  | 1.1 |
 |  | Rocky Linux 8.8 (2023.08.22)  | 1.2 |
 |  | Rocky Linux 8.8 (2023.11.21)  | 1.3 |
+|  | Rocky Linux 8.9 (2024.02.20)  | 1.4 |
 | Ubuntu | Ubuntu Server 18.04.6 LTS (2023.03.21)  | 1.0 |
 |  | Ubuntu Server 20.04.6 LTS (2023.05.25)  | 1.1 |
 |  | Ubuntu Server 20.04.6 LTS (2023.08.22)  | 1.2 |
 |  | Ubuntu Server 20.04.6 LTS (2023.11.21)  | 1.3 |
 |  | Ubuntu Server 22.04.3 LTS (2023.11.21)  | 1.3 |
+|  | Ubuntu Server 20.04.6 LTS (2024.02.20)  | 1.4 |
+|  | Ubuntu Server 22.04.3 LTS (2024.02.20)  | 1.4 |
 | Debian | Debian 11.6 Bullseye (2023.03.21)  | 1.0 |
 |  | Debian 11.6 Bullseye (2023.05.25)  | 1.1 |
 |  | Debian 11.7 Bullseye (2023.08.22)  | 1.2 |
 |  | Debian 11.8 Bullseye (2023.11.21)  | 1.3 |
+|  | Debian 11.8 Bullseye (2024.02.20)  | 1.4 |
 
 > [参考]
 > カスタムイメージをワーカーノードイメージに変換する過程で選択したオプションによってGPUドライバーがインストールされます。
@@ -1509,8 +1514,9 @@ IPアクセス制御機能の詳細については、[IPアクセス制御](/Net
 #### IPアクセス制御対象ルール
 クラスタAPIエンドポイントのIPアクセス制御対象を追加する場合、以下のルールが適用されます。
 
-* IP アクセス制御タイプが「許可」に設定されている場合、クラスタ基本サブネット CIDR がアクセス制御対象に自動的に追加されます。
-* IP アクセス制御タイプが「ブロック」に設定されているとき、クラスタ基本サブネットCIDR帯域に重複するIP帯域がアクセス制御対象リストにある場合は要求が拒否されます。
+* IPアクセス制御タイプが**許可**に設定されている場合、クラスタ基本サブネットCIDRがアクセス制御対象に自動的に追加されます。
+* IPアクセス制御タイプが**許可**に設定されている場合、NKSコンソールのダッシュボード、ネームスペース、ワークロード、サービス＆ネットワーク、ストレージ、設定、イベントタブが無効になります。
+* IPアクセス制御タイプが**ブロック**に設定されているとき、クラスタ基本サブネットCIDR帯域に重複するIP帯域がアクセス制御対象リストにある場合は要求が拒否されます。
 * 最大設定可能なIPアクセス制御対象数は100個です。
 * IP アクセス制御対象は1つ以上存在する必要があります。
 
@@ -1619,6 +1625,103 @@ kubeletはすべてのワーカーノードで動作するノードエージェ�
 > * ユーザー定義引数を設定するワーカーノードごとに実行します。
 > * 正しくない形式のユーザー定義アギュメントを入力すると、kubeletが正常に動作しないことがあります。
 > * 設定されたユーザー定義引数はシステム再起動時にもそのまま適用されます。
+
+### ユーザー定義containerdレジストリ設定機能
+v1.24.3以上のNKSクラスタはコンテナランタイムとしてcontainerd v1.6を使用します。NKSではcontainerdの様々な設定のうち、レジストリに関連する項目をユーザーの環境に合わせて設定できる機能を提供します。containerd v1.6のレジストリ設定は[Configure Image Registry](https://github.com/containerd/containerd/blob/release/1.6/docs/cri/registry.md)を参照してください。
+
+ワーカーノードが初期化される過程で、ユーザー定義のcontainerdレジストリ設定ファイル(`/etc/containerd/registry-config.json`)が存在する場合、このファイルの内容をcontainerd設定ファイル(`/etc/containerd/config.toml`)に適用します。ユーザー定義containerdレジストリ設定ファイルが存在しない場合、containerd設定ファイルには基本レジストリ設定が適用されます。基本レジストリ設定の内容は次のとおりです。
+
+```json
+[
+   {
+      "registry": "docker.io",
+      "endpoint_list": [
+         "https://registry-1.docker.io"
+      ]
+   }
+]
+```
+
+1つのレジストリに対して設定できるキー/値の形式は次のとおりです。
+
+```json
+{
+  "registry": "REGISTRY_NAME",
+  "endpoint_list": [
+     "ENDPOINT1",
+     "ENDPOINT2"
+  ],
+  "tls": {
+     "ca_file": "CA_FILEPATH",
+     "cert_file": "CERT_FILEPATH",
+     "key_file": "KEY_FILEPATH",
+     "insecure_skip_verify": true_or_false
+  },
+  "auth": {
+     "username": "USERNAME",
+     "password": "PASSWORD",
+     "auth": "AUTH",
+     "identitytoken": "IDENTITYTOKEN"
+  }
+}
+```
+
+#### 例1 
+
+`docker.io` 以外に追加のレジストリを登録する場合は次のように設定できます。
+
+```json
+[
+   {
+      "registry": "docker.io",
+      "endpoint_list": [
+         "https://registry-1.docker.io"
+      ]
+   },
+   {
+      "registry": "additional.registry.io",
+      "endpoint_list": [
+         "https://additional.registry.io"
+      ]
+   }
+]
+```
+
+#### 例2 
+
+`docker.io` レジストリを削除してHTTPをサポートするレジストリだけ登録する場合は、次のように設定できます。
+```json
+[
+   {
+      "registry": "user-defined.registry.io",
+      "endpoint_list": [
+         "http://user-defined.registry.io"
+      ],
+      "tls": {
+         "insecure_skip_verify": true
+      }
+   }
+]
+```
+
+#### 例3
+
+ノード作成時、ユーザー定義のcontainerdレジストリ設定ファイルを例2の内容で作成するため、ユーザースクリプトを次のように設定できます。
+
+```bash
+mkdir -p /etc/containerd
+echo '[ { "registry": "user-defined.registry.io", "endpoint_list": [ "http://user-defined.registry.io" ], "tls": { "insecure_skip_verify": true } } ]' > /etc/containerd/registry-config.json
+```
+
+> [注意]
+> * containerd設定ファイル(`/etc/containerd/config.toml`)はNKSによって管理されるファイルです。 このファイルを勝手に修正すると、NKSの機能動作に不具合が発生したり、修正された内容が削除されることがあります。
+> * ユーザー定義containerdレジストリ設定機能で正しくないレジストリが設定されると、ワーカーノードが異常動作する可能性があります。
+> * ユーザー定義containerdレジストリ設定機能がcontainerd設定ファイルに適用される時点は、ワーカーノードの初期化過程です。ワーカーノードの初期化過程は、ワーカーノードの作成過程とワーカーノードグループのアップグレード過程に含まれます。
+>     * ワーカーノード作成時、ユーザー定義のcontainerレジストリ設定機能を適用するためには、ユーザースクリプトでこの設定ファイルを作成する必要があります。
+>     * ワーカーノードグループのアップグレード時にユーザー定義のcontainerレジストリ設定機能を適用するためには、すべてのワーカーノードにこのファイルを手動で設定した後、アップグレードを進める必要があります。
+> * ユーザー定義のcontainerdレジストリ設定ファイルが存在する場合、このファイルに設定された内容がそのままcontainerdに適用されます。
+>     * `docker.io`レジストリを使用するには、`docker.io` レジストリの設定も含める必要があります。`docker.io`レジストリの設定は基本レジストリ設定を参照してください。
+>     * `docker.io`レジストリを使用しない場合は、`docker.io` レジストリの設定を含まないようにします。ただし、1つ以上のレジストリ設定が存在する必要があります。
 
 ## LoadBalancerサービス
 Kubernetesアプリケーションの基本実行単位Podは、CNI(container network interface)でクラスターネットワークに接続されます。基本的にクラスターの外部からPodにはアクセスできません。Podのサービスをクラスターの外部に公開するにはKubernetesの`LoadBalancer`サービス(Service)オブジェクト(object)を利用して外部に公開するパスを作成する必要があります。LoadBalancerサービスオブジェクトを作成すると、クラスターの外部にNHN Cloud Load Balancerが作成され、サービスオブジェクトと接続されます。
@@ -3298,11 +3401,11 @@ spec:
 > NHN Cloud Container Registryの使い方は[NHN Cloud Container Registry(NCR)ユーザーガイド](/Container/NCR/ko/user-guide)文書を参照してください。
 
 
-### NASサービス連動
-NHN Cloudで提供するNASストレージをPVとして活用できます。NASサービスを使用するにはv1.20以降のバージョンのクラスタを使用する必要があります。NHN Cloud NASの詳細については[NASコンソール使用ガイド](/Storage/NAS/ko/console-guide)を参照してください。
+### NHN Cloud NASサービス連動
+NHN Cloudで提供するNASストレージをPVとして活用できます。NASサービスを使用するにはv1.20以降のバージョンのクラスタを使用する必要があります。NHN Cloud NASの詳細については[NASコンソール使用ガイド](/Storage/NAS%20(online)/ko/console-guide)を参照してください。
 
 > [参考]
-> NHN Cloud NASサービスは現在(2023年11月基準)、一部リージョンでのみ提供されています。NHN Cloud NASサービスのサポートリージョンの詳細については[NASサービス概要](/Storage/NAS/ko/overview)を参照してください。
+> NHN Cloud NASサービスは現在(2024年02月基準)、一部リージョンでのみ提供されています。NHN Cloud NASサービスのサポートリージョンの詳細については[NASサービス概要](/Storage/NAS%20(online)/ko/overview)を参照してください。
 
 #### すべてのワーカーノードでrpcbindサービスを実行
 NASストレージを使用するにはすべてのワーカーノードでrpcbindサービスを実行する必要があります。すべてのワーカーノードに接続した後、下記のコマンドでrpcbindサービスを実行します。
