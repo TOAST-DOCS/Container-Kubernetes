@@ -61,7 +61,7 @@ Enter the base image UUID to use for creating a node. The base image name and UU
 |  | Ubuntu Server 22.04.3 LTS | 346ec84c-9430-41d5-83f8-05292b74d796 |
 | Korea (Pyeongchon) region | CentOS 7.9 | b8275b50-4c28-45a2-9bf4-9c704b3842b0 |
 |  | Debian 11.8 Bullseye | aadb772b-f568-4d9a-a5a6-e3f3597bc2bb |
-|  | Rocky Linux 8.9 | 8afa64c7-1425-4a0c-b172-33a4aafb0cc7 |
+|  | Rocky Linux 8.9 | c11d7da0-1e55-4898-9953-7cc88f5fe477 |
 |  | Ubuntu Server 20.04.6 LTS | 723797ab-6da6-46f1-abd1-e266531f9ab1 |
 |  | Ubuntu Server 22.04.3 LTS | 0e62b502-c5d8-4d0d-8614-95a5d8795f6a |
 
