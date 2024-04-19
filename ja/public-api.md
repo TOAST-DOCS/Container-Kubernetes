@@ -54,16 +54,16 @@ GET /v2.0/networks?router:external=True
 
 | リージョン | ベースイメージ名 | ベースイメージUUID |
 |---|---|---|
-| 韓国(パンギョ)リージョン | CentOS 7.9 | 78c46d20-84a2-46b0-b858-584c45617f34 |
-|  | Debian 11.8 Bullseye | e8d5ef4a-5b14-4514-9692-23b6a4250af2 |
-|  | Rocky Linux 8.8 | 75fff283-11a4-4800-8a3b-9eca24618b38 |
-|  | Ubuntu Server 20.04.6 LTS | 1213d033-bdf6-4d73-9763-4e8e57c745fb |
-|  | Ubuntu Server 22.04.3 LTS | 542d23aa-8513-4f5b-aa9f-f939f142ae34 |
-| 韓国(ピョンチョン)リージョン | CentOS 7.9 | 0d85da58-1732-4a28-95ac-26bbf5f26ec8 |
-|  | Debian 11.8 Bullseye | d3e6a7ed-8605-4800-8c49-2c991ce76435 |
-|  | Rocky Linux 8.8 | 8afa64c7-1425-4a0c-b172-33a4aafb0cc7 |
-|  | Ubuntu Server 20.04.6 LTS | dabb6d10-937d-4952-9ce0-1e576e9164e8 |
-|  | Ubuntu Server 22.04.3 LTS | 963886af-0b35-4c75-baf1-4e058e983bcc |
+| 韓国(パンギョ)リージョン | CentOS 7.9 | 1b8da49b-c240-4940-a811-85dfdf18e263 |
+|  | Debian 11.8 Bullseye | 29a86d4d-e7c8-42bb-9ee1-4cdb30135432 |
+|  | Rocky Linux 8.9 | be708c35-c94b-4623-9333-fc600025861d |
+|  | Ubuntu Server 20.04.6 LTS | a4ade08e-538b-439e-ba2e-13fccdcb32ae |
+|  | Ubuntu Server 22.04.3 LTS | 346ec84c-9430-41d5-83f8-05292b74d796 |
+| 韓国(ピョンチョン)リージョン | CentOS 7.9 | b8275b50-4c28-45a2-9bf4-9c704b3842b0 |
+|  | Debian 11.8 Bullseye | aadb772b-f568-4d9a-a5a6-e3f3597bc2bb |
+|  | Rocky Linux 8.9 | c11d7da0-1e55-4898-9953-7cc88f5fe477 |
+|  | Ubuntu Server 20.04.6 LTS | 723797ab-6da6-46f1-abd1-e266531f9ab1 |
+|  | Ubuntu Server 22.04.3 LTS | 0e62b502-c5d8-4d0d-8614-95a5d8795f6a |
 
 ### ブロックストレージの種類
 
