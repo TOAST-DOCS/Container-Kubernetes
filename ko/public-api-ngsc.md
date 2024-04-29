@@ -1241,10 +1241,11 @@ X-Auth-Token: {tokenId}
         "v1.22.3": false,
         "v1.23.3": false,
         "v1.24.3": false,
-        "v1.25.4": true,
+        "v1.25.4": false,
         "v1.26.3": true,
         "v1.27.3": true,
-        "v1.28.3": true
+        "v1.28.3": true,
+        "v1.29.4": true
     }
 }
 ```
