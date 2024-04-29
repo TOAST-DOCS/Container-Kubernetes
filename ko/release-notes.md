@@ -5,6 +5,7 @@
 #### 기능 추가
 
 * Kubernetes v1.29.3을 지원합니다.
+* 로드 밸런서의 리스너 프로토콜을 TERMINATED_HTTPS로 설정할 때 Certificate Manager의 인증서를 사용할 수 있습니다.
 
 ### 2024. 03. 26.
 
