@@ -245,3 +245,10 @@ sudo sed -i "s/GRUB_CMDLINE_LINUX=\"\(.*\)\"/GRUB_CMDLINE_LINUX=\"\1 $args\"/" "
 sudo grub2-mkconfig -o /boot/grub2/grub.cfg
 ```
 
+### > NKS PV 사용 시 NHN Cloud NAS 서비스를 연동하면 "rpc.statd is not running but is required for remote locking" 에러가 발생합니다.
+
+워커 노드의 rpc.statd 프로세스가 좀비 프로세스가 되거나 관리자의 명령에 의해 정지되어 발생하는 문제입니다. NAS 서비스와 PV 서비스를 연동하려면 rpcbind와 rpc.statd 프로세스가 정상적으로 실행되고 있어야 합니다. 해결 방안은 다음과 같습니다.
+```
+systemctl restart rpc-statd
+systemctl start rpcbind
+```
