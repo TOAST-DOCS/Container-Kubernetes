@@ -51,20 +51,7 @@ GET /v2.0/networks?router:external=True
 
 ### 베이스 이미지 UUID
 
-노드 생성에 사용할 베이스 이미지 UUID를 입력합니다. 리전별 베이스 이미지 UUID는 다음과 같습니다.
-
-| 리전 | 베이스 이미지 이름 | 베이스 이미지 UUID |
-|---|---|---|
-| 한국(판교) 리전 | CentOS 7.9 | fff9eb21-bfdd-412c-8348-c8d027c22a4b |
-|  | Debian 11.8 Bullseye | adbef2ed-310d-45d8-8832-bb54b7cb9345 |
-|  | Rocky Linux 8.9 | 33a0f73f-455c-465f-9b84-31d2c9873510 |
-|  | Ubuntu Server 20.04.6 LTS | 3e940af1-fb9d-4de2-9807-0c2a723e0937 |
-|  | Ubuntu Server 22.04.3 LTS | f38c3bec-4ccc-46e9-ad9d-0d3addf1fff3 |
-| 한국(평촌) 리전 | CentOS 7.9 | a10ae990-4e5b-4a04-adf2-dcaecdea4e6f |
-|  | Debian 11.8 Bullseye | 7b88d28e-4268-43de-a605-8fa258144c9f |
-|  | Rocky Linux 8.9 | e8ffd022-89fd-4bac-9740-a8aa37636d38 |
-|  | Ubuntu Server 20.04.6 LTS | b6c0b409-f6bb-4907-88ba-ef4d98683797 |
-|  | Ubuntu Server 22.04.3 LTS | d2f69608-3a96-4698-bd5a-e278fc86e4dc |
+노드 생성에 사용할 베이스 이미지 UUID를 입력합니다. 베이스 이미지 목록 조회 API에 대한 좀 더 자세한 내용은 [이미지 목록 조회](/Compute/Image/ko/public-api-gov/#_2)를 참고하세요.
 
 ### 블록 스토리지 종류
 

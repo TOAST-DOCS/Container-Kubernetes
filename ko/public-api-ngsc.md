@@ -50,15 +50,7 @@ GET /v2.0/networks?router:external=True
 
 ### 베이스 이미지 UUID
 
-노드 생성에 사용할 베이스 이미지 UUID를 입력합니다. 리전별 베이스 이미지 이름과 UUID는 다음과 같습니다.
-
-| 리전 | 베이스 이미지 이름 | 베이스 이미지 UUID |
-|---|---|---|
-| 한국(판교) 리전 | CentOS 7.9 | {TO-BE} |
-|  | Debian 11.8 Bullseye | {TO-BE} |
-|  | Rocky Linux 8.8 | {TO-BE} |
-|  | Ubuntu Server 20.04.6 LTS | {TO-BE} |
-|  | Ubuntu Server 22.04.3 LTS | {TO-BE} |
+노드 생성에 사용할 베이스 이미지 UUID를 입력합니다. 베이스 이미지 목록 조회 API에 대한 좀 더 자세한 내용은 [이미지 목록 조회](/Compute/Image/ko/public-api-ngsc/#_2)를 참고하세요.
 
 ### 블록 스토리지 종류
 
