@@ -946,6 +946,60 @@ X-Auth-Token: {tokenId}
 
 ---
 
+### 서비스 게이트웨이 변경하기
+
+클러스터 생성 시 서비스 게이트웨이를 설정한 경우 다른 서비스 게이트웨이로 변경할 수 있습니다. 
+```
+POST /v1/clusters/{CLUSTER_ID_OR_NAME}/actions/update_sgw
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
+| ncr_sgw | Body | UUID | O | 변경하고자 하는 NCR 타입의 서비스 게이트웨이 UUID |
+| obs_sgw | Body | UUID | O | 변경하고자 하는 OBS 타입의 서비스 게이트웨이 UUID |
+
+<details><summary>서비스 게이트웨이 변경 예시</summary>
+<p>
+
+```json
+{
+    "ncr_sgw": "48f4ff38-d14b-4f34-a40c-705524e6a755",
+    "obs_sgw": "23c550cb-6a5b-4eaa-903a-711c13316d91"
+}
+```
+
+</p>
+</details>
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | String | 대상 클러스터 UUID|
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "5bac7acd-58b7-4cf5-95f5-a25d67da13a2"
+}
+
+```
+
+</p>
+</details>
+
+---
+
 ## 노드 그룹
 
 ### 노드 그룹 목록 보기
