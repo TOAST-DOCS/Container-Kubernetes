@@ -123,6 +123,8 @@ X-Auth-Token: {tokenId}
 | clusters.labels.user_script | Body | String | 사용자 스크립트(old) |
 | clusters.labels.user_script_v2 | Body | String | 사용자 스크립트 |
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
+| clusters.labels.term_of_validity | Body | String | 인증서의 유효 기간 |
+| clusters.labels.certificate_expiry | Body | String | 인증서 만료 일자 | 
 
 
 <details><summary>예시</summary>
@@ -605,7 +607,7 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|---|
 | tokenId | Header | String | O | 토큰 ID |
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
-| term_of_validity | Body | Integer | O | 인증서의 유효기간. 최솟값:1, 최댓값: 5 |
+| term_of_validity | Body | Integer | O | 인증서의 유효 기간. 년 단위로 입력 가능. 최솟값: 1, 최댓값: 5 |
 
 <details><summary>예시</summary>
 <p>

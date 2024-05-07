@@ -125,7 +125,8 @@ X-Auth-Token: {tokenId}
 | clusters.labels.service_cluster_ip_range | Body | String | K8s 서비스 네트워크, 클러스터에서 서비스 생성 시 ClusterIP에 할당되는 IP 대역(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
 | clusters.labels.pods_network_cidr | Body | String | 클러스터 파드 네트워크(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
 | clusters.labels.pods_network_subnet | Body | String | 클러스터 파드 서브넷 크기(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
-
+| clusters.labels.term_of_validity | Body | String | 인증서의 유효 기간 |
+| clusters.labels.certificate_expiry | Body | String | 인증서 만료 일자 | 
 
 <details><summary>예시</summary>
 <p>
@@ -956,7 +957,7 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|---|
 | tokenId | Header | String | O | 토큰 ID |
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
-| term_of_validity | Body | Integer | O | 인증서의 유효기간. 최솟값:1, 최댓값: 5 |
+| term_of_validity | Body | Integer | O | 인증서의 유효 기간. 년 단위로 입력 가능. 최솟값: 1, 최댓값: 5 |
 
 <details><summary>예시</summary>
 <p>
