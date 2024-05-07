@@ -605,8 +605,8 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|---|
 | tokenId | Header | String | O | 토큰 ID |
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
-| ncr_sgw | Body | UUID | O | 변경하고자 하는 NCR 타입의 서비스 게이트웨이 |
-| obs_sgw | Body | UUID | O | 변경하고자 하는 OBS 타입의 서비스 게이트웨이 |
+| ncr_sgw | Body | UUID | O | 변경하고자 하는 NCR 타입의 서비스 게이트웨이 UUID |
+| obs_sgw | Body | UUID | O | 변경하고자 하는 OBS 타입의 서비스 게이트웨이 UUID |
 
 <details><summary>서비스 게이트웨이 변경 예시</summary>
 <p>
