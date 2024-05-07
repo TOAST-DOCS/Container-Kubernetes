@@ -245,3 +245,10 @@ sudo sed -i "s/GRUB_CMDLINE_LINUX=\"\(.*\)\"/GRUB_CMDLINE_LINUX=\"\1 $args\"/" "
 sudo grub2-mkconfig -o /boot/grub2/grub.cfg
 ```
 
+### > rpc.statd is not running but is required for remote locking 오류가 발생하며 파드에서 NAS 볼륨 마운트가 실패합니다.
+
+워커 노드의 rpc.statd 프로세스가 좀비 프로세스가 되거나 관리자의 명령에 의해 정지되어 발생하는 문제입니다. 볼륨을 마운트하기 위해서는 워커 노드에 rpcbind 및 rpc.statd 프로세스가 정상적으로 실행되고 있어야 합니다. 해결 방안은 다음과 같습니다.
+```
+systemctl restart rpc-statd
+systemctl restart rpcbind
+```
