@@ -254,10 +254,10 @@ imageGCLowThresholdPercent=80 : 디스크 사용률이 80% 이하일 경우 이�
 ```
 
 #### 증상 발생 시 확인 방법
-2024년 05월 이전에 생성된 클러스터에서 문제가 발생할 수 있습니다. `kubectl get all -n kube-system` 명령 확인 시 calico-kube-controller 또는 calico-typha 파드의 상태가 `ImagePullBackOff` 또는 `ErrImagePull` 로 유지됩니다. calico-node 파드는 `Running` 상태로 보이지만, Ready 항목은 `0/1`로 나타납니다. calico-node 파드는 daemonset으로 배포되므로 kubelet의 GC에 의한 이미지 삭제 대상이 아닙니다. 그러나 calico-typha와의 통신 실패로 인해 정상적으로 동작하지 않아 위와 같은 문제가 발생할 수 있습니다. 2024년 05월 이후에 생성된 클러스터의 경우 calico image 리포지토리 설정이 변경되어 해당 문제가 발생하지 않습니다. 
+2024년 05월 이전에 생성된 클러스터에서 문제가 발생할 수 있습니다. `kubectl get all -n kube-system` 명령 확인 시 calico-kube-controller 또는 calico-typha 파드의 상태가 **ImagePullBackOff** 또는 **ErrImagePull** 로 유지됩니다. calico-node 파드는 **Running** 상태로 보이지만, Ready 항목은 **0/1**로 나타납니다. calico-node 파드는 daemonset으로 배포되므로 kubelet의 GC에 의한 이미지 삭제 대상이 아닙니다. 그러나 calico-typha와의 통신 실패로 인해 정상적으로 동작하지 않아 위와 같은 문제가 발생할 수 있습니다. 2024년 05월 이후에 생성된 클러스터의 경우 calico image 리포지토리 설정이 변경되어 해당 문제가 발생하지 않습니다. 
 
 #### 해결 방안
-calico 관련 image 리포지토리 url을 public 리포지토리로 변경하는 스크립트를 실행하여 해결 할 수 있습니다. 단, 이 해결 방안은 `인터넷 망 클러스터`에만 적용할 수 있으며 스크립트 실행 중 `일시적으로 클러스터 파드 네트워킹이 단절될 수 있으니 작업 진행 시 주의` 부탁드립니다. 문제 해결 스크립트는 아래와 같습니다. 해당 스크립트는 kubectl 명령이 가능한 환경에서 실행할 수 있습니다.
+calico 관련 image 리포지토리 url을 public 리포지토리로 변경하는 스크립트를 실행하여 해결 할 수 있습니다. 단, 이 해결 방안은 **인터넷에 연결 가능한 클러스터**에만 적용할 수 있으며 스크립트 실행 중 **일시적으로 클러스터 파드 네트워킹이 단절될 수 있으니 작업 진행 시 주의** 부탁드립니다. 스크립트를 실행하기 전에, 모든 워커 노드가 'Ready' 상태인지 확인해야 합니다. 문제 해결 스크립트는 아래와 같습니다.
 
 ```
 #!/bin/bash
@@ -265,11 +265,29 @@ calico 관련 image 리포지토리 url을 public 리포지토리로 변경하�
 tag="v3.24.1"
 namespace="kube-system"
 
-calico_cni="calico/cni:$tag"
-calico_node="calico/node:$tag"
-calico_typha="calico/typha:$tag"
-calico_kube_controllers="calico/kube-controllers:$tag"
-images=($calico_cni $calico_node $calico_typha $calico_kube_controllers)
+calico_cni_image="calico/cni:$tag"
+calico_node_image="calico/node:$tag"
+calico_typha_image="calico/typha:$tag"
+calico_kube_controllers_image="calico/kube-controllers:$tag"
+images=($calico_cni_image $calico_node_image $calico_typha_image $calico_kube_controllers_image)
+default_timeout=4
+
+declare -a failed_updates
+
+check_image_match() {
+    local resource_type=$1
+    local resource_name=$2
+    local namespace=$3
+    local expected_image=$4
+
+    current_image=$(kubectl get $resource_type $resource_name -n $namespace -o jsonpath="{.spec.template.spec.containers[*].image}")
+    echo "Current $resource_type $resource_name image: $current_image"
+
+    if [ "$current_image" == "$expected_image" ]; then
+        echo "The image repo is not a target because it does not match the $expected_image"
+        exit 1
+    fi
+}
 
 pull_and_verify_image() {
     local node=$1
@@ -287,6 +305,7 @@ pull_and_verify_image() {
         if [ $elapsed_time -ge $timeout_seconds ]; then
             echo "Timeout reached: $timeout_seconds seconds for node $node, image $image."
             echo "Exiting due to timeout failure."
+            kubectl delete pod $pod_name -n $namespace >/dev/null 2>&1
             exit 1
         fi
 
@@ -313,16 +332,83 @@ pull_and_verify_image() {
     done
 }
 
-update_calico_image() {
+update_image() {
     local resource_type=$1
     local resource_name=$2
-    local new_image=$3
+    local timeout=$3
+    shift 3
 
-    echo "Updating $resource_type $resource_name."
-    kubectl set image $resource_type/$resource_name -n $namespace $resource_name=$new_image
-    kubectl rollout status $resource_type/$resource_name -n $namespace
     echo ""
+    echo "Updating $resource_type $resource_name with timeout ${timeout} minutes..."
+    local update_command="kubectl set image $resource_type/$resource_name"
+    for arg in "$@"; do
+        local container_name=$(echo $arg | cut -d'=' -f1)
+        local image_name=$(echo $arg | cut -d'=' -f2)
+        update_command+=" $container_name=$image_name"
+    done
+    update_command+=" -n $namespace"
+
+    if ! eval $update_command; then
+        echo "Failed to update $resource_type $resource_name"
+        failed_updates+=("$resource_type/$resource_name")
+        return
+    fi
+    check_rollout_status $resource_type $resource_name $timeout
 }
+
+check_rollout_status() {
+    local resource_type=$1
+    local resource_name=$2
+    local timeout=$3
+
+    echo "Checking rollout status for $resource_type $resource_name..."
+    if ! kubectl rollout status $resource_type $resource_name -n $namespace --timeout=${timeout}m; then
+        echo "Rollout status check failed for $resource_type $resource_name"
+        failed_updates+=("$resource_type/$resource_name")
+        return 1
+    fi
+    echo "$resource_type $resource_name updated successfully."
+}
+
+delete_old_pods() {
+    local resource_type=$1
+    local resource_name=$2
+    local old_pods=$3
+
+    for pod in $old_pods; do
+        if kubectl get pods $pod -n $namespace &> /dev/null; then
+            echo "Deleting old pod: $pod"
+            kubectl delete pod $pod -n $namespace
+        fi
+    done
+}
+
+update_calico_node() {
+    local resource_type="daemonset"
+    local resource_name="calico-node"
+    local timeout=$(( $(kubectl get nodes --no-headers | wc -l) * 4 ))
+    update_image $resource_type $resource_name $timeout "$resource_name=$calico_node_image" "install-cni=$calico_cni_image" "mount-bpffs=$calico_node_image"
+}
+
+update_calico_kube_controller() {
+    local resource_type="deployment"
+    local resource_name="calico-kube-controllers"
+    update_image $resource_type $resource_name $default_timeout "$resource_name=$calico_kube_controllers_image"
+}
+
+update_calico_typha_image() {
+    local resource_type="deployment"
+    local resource_name="calico-typha"
+    local old_pods=$(kubectl get pods -n $namespace -l k8s-app="$resource_name" -o jsonpath="{.items[*].metadata.name}")
+    
+    if ! update_image $resource_type $resource_name $default_timeout "$resource_name=$calico_typha_image"; then
+        delete_old_pods $resource_type $resource_name $old_pods
+    fi
+}
+
+check_image_match "daemonset" "calico-node" $namespace $calico_node_image
+check_image_match "deployment" "calico-kube-controllers" $namespace $calico_kube_controllers_image
+check_image_match "deployment" "calico-typha" $namespace $calico_typha_image
 
 for node in $(kubectl get nodes --no-headers | awk '{print $1}'); do
     echo ""
@@ -335,16 +421,30 @@ done
 echo "The calico image pull has been completed!"
 echo ""
 
-update_calico_image "daemonset" "calico-node" $calico_node
-update_calico_image "deployment" "calico-kube-controllers" $calico_kube_controllers
-update_calico_image "deployment" "calico-typha" $calico_typha
+update_calico_node
+update_calico_kube_controller
+update_calico_typha_image
 
 echo ""
-echo "Calico images update completed!"
+
+if [ ${#failed_updates[@]} -eq 0 ]; then
+    echo "Calico images update completed!"
+else
+    echo "[WARNING] Please check to resources status:"
+    for resource in "${failed_updates[@]}"; do
+        echo "- $resource"
+    done
+fi
 ```
 스크립트 과정은 아래와 같습니다.
-
 1. 모든 워커 노드에 calico 관련 이미지를 pull 받습니다.
 2. calico-node daemonset 이미지 리포지토리를 변경하는 롤링 업데이트를 진행합니다.
 3. calico-kube-controllers deployment 이미지 리포지토리를 변경하는 롤링 업데이트를 진행합니다
 4. calico-typha deployment 이미지 리포지토리를 변경하는 롤링 업데이트를 진행합니다
+
+해당 스크립트는 kubectl 명령이 가능한 환경에서 실행할 수 있습니다. 실행 방법은 아래와 같습니다.
+* vim calico_manifest_image_change.sh
+* 본문 스크립트 내용 저장
+* KUBECONFIG 환경 변수에 kubeconfig 설정파일 경로 저장
+* chmod 755 calico_manifest_image_change.sh
+* ./calico_manifest_image_change.sh
