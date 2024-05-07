@@ -1753,6 +1753,11 @@ echo '[ { "registry": "user-defined.registry.io", "endpoint_list": [ "http://use
 >     * `docker.io` 레지스트리를 사용하려면 `docker.io` 레지스트리에 대한 설정도 포함되어야 합니다. `docker.io` 레지스트리의 설정은 기본 레지스트리 설정을 참고하세요.
 >     * `docker.io` 레지스트리를 사용하지 않으려면 `docker.io` 레지스트리에 대한 설정을 포함하지 않으면 됩니다. 단, 하나 이상의 레지스트리 설정이 존재해야 합니다.
 
+### 워커 노드 관리 주의 사항
+* 워커 노드에 pull 되어 있는 container image를 임의로 삭제하면 안됩니다. NKS 클러스터에 필요한 파드가 동작하지 않을 수도 있습니다. 
+* shutdown, halt, poweroff 등의 명령으로 시스템을 임의 중지하면 콘솔을 통해 다시 시작할 수 없습니다. 워커 노드 시작/중지 기능을 사용하시길 바랍니다.
+* 워커 노드 내의 여러 가지 설정 파일을 임의 수정하거나 시스템 서비스를 임의 조작하면 안됩니다. NKS 클러스터에 치명적인 문제가 발생할 수 있습니다.
+
 ## LoadBalancer 서비스
 Kubernetes 애플리케이션의 기본 실행 단위인 파드(pod)는 CNI(container network interface)로 클러스터 네트워크에 연결됩니다. 기본적으로 클러스터 외부에서 파드로는 접근할 수 없습니다. 파드의 서비스를 클러스터 외부에 공개하려면 Kubernetes의 `LoadBalancer` 서비스(Service) 객체(object)를 이용해 외부에 공개할 경로를 만들어야 합니다. LoadBalancer 서비스 객체를 만들면 클러스터 외부에 NHN Cloud Load Balancer가 생성되어 서비스 객체와 연결됩니다.
 
