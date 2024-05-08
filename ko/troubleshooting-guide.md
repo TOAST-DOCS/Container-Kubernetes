@@ -354,6 +354,7 @@ update_image() {
         return
     fi
     check_rollout_status $resource_type $resource_name $timeout
+    return $?
 }
 
 check_rollout_status() {
@@ -368,6 +369,7 @@ check_rollout_status() {
         return 1
     fi
     echo "$resource_type $resource_name updated successfully."
+    return 0
 }
 
 delete_old_pods() {
@@ -429,11 +431,13 @@ echo ""
 
 if [ ${#failed_updates[@]} -eq 0 ]; then
     echo "Calico images update completed!"
+    exit 0
 else
     echo "[WARNING] Please check to resources status:"
     for resource in "${failed_updates[@]}"; do
         echo "- $resource"
     done
+    exit 1
 fi
 ```
 스크립트 과정은 아래와 같습니다.
