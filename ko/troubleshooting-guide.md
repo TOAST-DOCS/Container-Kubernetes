@@ -245,7 +245,6 @@ sudo sed -i "s/GRUB_CMDLINE_LINUX=\"\(.*\)\"/GRUB_CMDLINE_LINUX=\"\1 $args\"/" "
 sudo grub2-mkconfig -o /boot/grub2/grub.cfg
 ```
 
-
 ### > calico-typha, calico-kube-controller 이미지 pull 실패 에러가 발생하고 calico-node 파드가 정상 동작하지 않아서 클러스터 네트워크 장애가 발생합니다.
 Calico 이미지가 Kubelet의 Garbage Collection에 의해 제거된 후, 올바르지 않은 컨테이너 이미지 리포지토리 주소로 인해 재다운로드할 수 없게 되어 발생하는 문제입니다. Kubelet은 노드의 디스크 사용량을 관리하기 위해 사용되지 않는 컨테이너 이미지를 정리하는 Garbage Collection 기능을 제공합니다. 이 기능에 대한 자세한 정보는 [Garbage Collection](https://kubernetes.io/docs/concepts/architecture/garbage-collection/) 문서에서 확인할 수 있습니다. NKS의 경우 Kubelet의 imageGCHighThresholdPercent, imageGCLowThresholdPercent가 기본값으로 설정되어 있습니다.
 ```
@@ -452,3 +451,13 @@ fi
 * KUBECONFIG 환경 변수에 kubeconfig 설정파일 경로 저장
 * chmod 755 calico_manifest_image_change.sh
 * ./calico_manifest_image_change.sh
+
+
+### > rpc.statd is not running but is required for remote locking 오류가 발생하며 파드에서 NAS 볼륨 마운트가 실패합니다.
+
+워커 노드의 rpc.statd 프로세스가 좀비 프로세스가 되거나 관리자의 명령에 의해 정지되어 발생하는 문제입니다. 볼륨을 마운트하기 위해서는 워커 노드에 rpcbind 및 rpc.statd 프로세스가 정상적으로 실행되고 있어야 합니다. 해결 방안은 다음과 같습니다.
+```
+systemctl restart rpc-statd
+systemctl restart rpcbind
+```
+

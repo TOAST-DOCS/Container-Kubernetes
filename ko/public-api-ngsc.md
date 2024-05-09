@@ -50,15 +50,7 @@ GET /v2.0/networks?router:external=True
 
 ### 베이스 이미지 UUID
 
-노드 생성에 사용할 베이스 이미지 UUID를 입력합니다. 리전별 베이스 이미지 이름과 UUID는 다음과 같습니다.
-
-| 리전 | 베이스 이미지 이름 | 베이스 이미지 UUID |
-|---|---|---|
-| 한국(판교) 리전 | CentOS 7.9 | {TO-BE} |
-|  | Debian 11.8 Bullseye | {TO-BE} |
-|  | Rocky Linux 8.8 | {TO-BE} |
-|  | Ubuntu Server 20.04.6 LTS | {TO-BE} |
-|  | Ubuntu Server 22.04.3 LTS | {TO-BE} |
+노드 생성에 사용할 베이스 이미지 UUID를 입력합니다. NKS 노드 생성에 사용되는 베이스 이미지만을 필터링하기 위해 API 호출 시 쿼리 스트링 파라미터에 `nhncloud_product=container&visibility=public` 값을 입력합니다. 베이스 이미지 목록 조회 API에 대한 좀 더 자세한 내용은 [이미지 목록 조회](/Compute/Image/ko/public-api-ngsc/#_2)를 참고하세요.
 
 ### 블록 스토리지 종류
 
@@ -123,6 +115,8 @@ X-Auth-Token: {tokenId}
 | clusters.labels.user_script | Body | String | 사용자 스크립트(old) |
 | clusters.labels.user_script_v2 | Body | String | 사용자 스크립트 |
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
+| clusters.labels.term_of_validity | Body | String | 인증서의 유효 기간 |
+| clusters.labels.certificate_expiry | Body | String | 인증서 만료 일자 | 
 
 
 <details><summary>예시</summary>
@@ -252,6 +246,8 @@ X-Auth-Token: {tokenId}
 | labels.user_script | Body | String | 사용자 스크립트(old) |
 | labels.user_script_v2 | Body | String | 사용자 스크립트 |
 | labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
+| labels.term_of_validity | Body | String | 인증서의 유효 기간 |
+| labels.certificate_expiry | Body | String | 인증서 만료 일자 | 
 
 <details><summary>예시</summary>
 <p>
@@ -581,6 +577,111 @@ X-Auth-Token: {tokenId}
 {
     "config": "apiVersion: v1\nclusters:\n- cluster:\n    certificate-authority-data: LS0tLS1CRU... \n    server: https://96742ac4-kr2-k8s.container.cloud.toast.com:6443\n  name: \"toast-robot-e2e-1-18\"\ncontexts:\n- context:\n    cluster: \"toast-robot-e2e-1-18\"\n    user: admin\n  name: default\ncurrent-context: default\nkind: Config\npreferences: {}\nusers:\n- name: admin\n  user:\n    client-certificate-data: LS0tLS1CRU...\n    client-key-data: LS0tLS1CRU...\n"
 }
+```
+
+</p>
+</details>
+
+---
+### 클러스터 인증서 갱신
+
+클러스터의 인증서를 갱신합니다.
+```
+PATCH /v1/certificates/{CLUSTER_ID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
+| term_of_validity | Body | Integer | O | 인증서의 유효 기간. 년 단위로 입력 가능. 최솟값: 1, 최댓값: 5 |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "term_of_validity": 5
+}
+```
+
+</p>
+</details>
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | String | 대상 클러스터 UUID|
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "5f6af7da-df9b-4edd-8284-02317b11e061"
+}
+
+```
+
+</p>
+</details>
+
+
+---
+
+### 서비스 게이트웨이 변경하기
+
+클러스터 생성 시 서비스 게이트웨이를 설정한 경우 다른 서비스 게이트웨이로 변경할 수 있습니다. 
+```
+POST /v1/clusters/{CLUSTER_ID_OR_NAME}/actions/update_sgw
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
+| ncr_sgw | Body | UUID | O | 변경하고자 하는 NCR 타입의 서비스 게이트웨이 UUID |
+| obs_sgw | Body | UUID | O | 변경하고자 하는 OBS 타입의 서비스 게이트웨이 UUID |
+
+<details><summary>서비스 게이트웨이 변경 예시</summary>
+<p>
+
+```json
+{
+    "ncr_sgw": "48f4ff38-d14b-4f34-a40c-705524e6a755",
+    "obs_sgw": "23c550cb-6a5b-4eaa-903a-711c13316d91"
+}
+```
+
+</p>
+</details>
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | String | 대상 클러스터 UUID|
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "5bac7acd-58b7-4cf5-95f5-a25d67da13a2"
+}
+
 ```
 
 </p>

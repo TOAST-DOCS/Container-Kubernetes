@@ -123,15 +123,45 @@ $ helm repo add vmware-tanzu https://vmware-tanzu.github.io/helm-charts
 
 Velero 서버는 `백업 클러스터`와 `복구 클러스터`에 각각 설치해야 합니다. 동일한 Object Storage를 사용하도록 `두 클러스터에 동일한 helm 명령어`를 사용하여 설치하시길 권장합니다.
 
+1.26 이하 버전의 클러스터에 Velero 서버를 설치하는 경우 아래의 명령어를 실행합니다. 
+
 ```
 $ helm install velero vmware-tanzu/velero \
 --namespace velero \
 --create-namespace \
+--version 2.32.6 \
 --set configuration.provider=community.openstack.org/openstack \
 --set initContainers[0].name=velero-plugin-for-openstack \
 --set initContainers[0].image=lirt/velero-plugin-for-openstack:v0.3.0 \
 --set initContainers[0].volumeMounts[0].mountPath=/target \
 --set initContainers[0].volumeMounts[0].name=plugins \
+--set deployRestic=true \
+--set configuration.defaultVolumesToRestic=true \
+--set configuration.defaultResticPruneFrequency=0h1m0s \
+--set configuration.backupStorageLocation.bucket={Container} \
+--set configuration.backupStorageLocation.config.region={Region} \
+--set configuration.backupStorageLocation.config.resticRepoPrefix=swift:{Container}:/restic \
+--set configuration.extraEnvVars.OS_AUTH_URL={신원 서비스(Identity)} \
+--set configuration.extraEnvVars.OS_TENANT_ID={테넌트 ID} \
+--set configuration.extraEnvVars.OS_USERNAME={NHN Cloud 아이디} \
+--set configuration.extraEnvVars.OS_PASSWORD={API 비밀번호} \
+--set configuration.extraEnvVars.OS_REGION_NAME={Region} \
+--set configuration.extraEnvVars.OS_DOMAIN_ID=default
+```
+
+1.27 이상 버전의 클러스터에 Velero 서버를 설치하는 경우 아래의 명령어를 실행합니다. 
+
+```
+$ helm install velero vmware-tanzu/velero \
+--namespace velero \
+--create-namespace \
+--version 2.32.6 \
+--set configuration.provider=community.openstack.org/openstack \
+--set initContainers[0].name=velero-plugin-for-openstack \
+--set initContainers[0].image=lirt/velero-plugin-for-openstack:v0.3.0 \
+--set initContainers[0].volumeMounts[0].mountPath=/target \
+--set initContainers[0].volumeMounts[0].name=plugins \
+--set kubectl.image.tag=1.26.14-debian-11-r6 \
 --set deployRestic=true \
 --set configuration.defaultVolumesToRestic=true \
 --set configuration.defaultResticPruneFrequency=0h1m0s \
