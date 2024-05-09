@@ -113,6 +113,8 @@ X-Auth-Token: {tokenId}
 | clusters.labels.pods_network_subnet | Body | String | 클러스터 파드 서브넷 크기(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
 | clusters.labels.ncr_sgw | Body | String | NCR 타입의 서비스 게이트웨이 UUID |
 | clusters.labels.obs_sgw | Body | String | OBS 타입의 서비스 게이트웨이 UUID |
+| clusters.labels.term_of_validity | Body | String | 인증서의 유효 기간 |
+| clusters.labels.certificate_expiry | Body | String | 인증서 만료 일자 | 
 
 
 <details><summary>예시</summary>
@@ -234,6 +236,8 @@ X-Auth-Token: {tokenId}
 | labels.pods_network_subnet | Body | String | 클러스터 파드 서브넷 크기(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
 | labels.ncr_sgw | Body | String | NCR 타입의 서비스 게이트웨이 UUID |
 | labels.obs_sgw | Body | String | OBS 타입의 서비스 게이트웨이 UUID |
+| labels.term_of_validity | Body | String | 인증서의 유효 기간 |
+| labels.certificate_expiry | Body | String | 인증서 만료 일자 | 
 
 <details><summary>예시</summary>
 <p>
@@ -926,6 +930,56 @@ X-Auth-Token: {tokenId}
     "cluster_uuid" : "8be87215-9db7-45ed-a03c-38e6db939915",
     "enable": "false"
 }
+```
+
+</p>
+</details>
+
+---
+### 클러스터 인증서 갱신
+
+클러스터의 인증서를 갱신합니다.
+```
+PATCH /v1/certificates/{CLUSTER_ID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
+| term_of_validity | Body | Integer | O | 인증서의 유효 기간. 년 단위로 입력 가능. 최솟값: 1, 최댓값: 5 |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "term_of_validity": 5
+}
+```
+
+</p>
+</details>
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | String | 대상 클러스터 UUID|
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "5f6af7da-df9b-4edd-8284-02317b11e061"
+}
+
 ```
 
 </p>

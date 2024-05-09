@@ -6,6 +6,7 @@
 
 * Kubernetes v1.29.3을 지원합니다.
 * 로드 밸런서의 리스너 프로토콜을 TERMINATED_HTTPS로 설정할 때 Certificate Manager의 인증서를 사용할 수 있습니다.
+* 클러스터의 인증서를 갱신하는 기능이 추가되었습니다.
 * Resource Watcher 서비스를 통해 클러스터에서 발생하는 이벤트에 대한 알림을 받을 수 있습니다.
     * 자세한 내용은 [Resource Watcher](/Governance%20&%20Audit/Resource%20Watcher/ko/overview)를 참고하세요.
 
