@@ -50,20 +50,7 @@ Enter the key pair to use when connecting to the node. For more information abou
 
 ### Base Image UUID
 
-Enter the base image UUID to use for creating a node. The base image name and UUID for each region is as follows:
-
-| Region | Base Image Name | Base Image UUID |
-|---|---|---|
-| Korea (Pangyo) region | CentOS 7.9 | 1b8da49b-c240-4940-a811-85dfdf18e263 |
-|  | Debian 11.8 Bullseye | 29a86d4d-e7c8-42bb-9ee1-4cdb30135432 |
-|  | Rocky Linux 8.9 | be708c35-c94b-4623-9333-fc600025861d |
-|  | Ubuntu Server 20.04.6 LTS | a4ade08e-538b-439e-ba2e-13fccdcb32ae |
-|  | Ubuntu Server 22.04.3 LTS | 346ec84c-9430-41d5-83f8-05292b74d796 |
-| Korea (Pyeongchon) region | CentOS 7.9 | b8275b50-4c28-45a2-9bf4-9c704b3842b0 |
-|  | Debian 11.8 Bullseye | aadb772b-f568-4d9a-a5a6-e3f3597bc2bb |
-|  | Rocky Linux 8.9 | c11d7da0-1e55-4898-9953-7cc88f5fe477 |
-|  | Ubuntu Server 20.04.6 LTS | 723797ab-6da6-46f1-abd1-e266531f9ab1 |
-|  | Ubuntu Server 22.04.3 LTS | 0e62b502-c5d8-4d0d-8614-95a5d8795f6a |
+Enter the base image UUID to use for node creation. To filter only the base images used to create NKS nodes, enter the value `nhncloud_product=container&visibility=public` in the query string parameter when calling the API. For more information on the retrieve base image list API, see [Retrieve Image list](/Compute/Image/ko/public-api/#_2).
 
 ### Block Storage Type
 
@@ -126,7 +113,8 @@ This API does not require a request body.
 | clusters.labels.pods_network_subnet | Body | String | Cluster pod subnet size (Available for clusters created on or after 2023.05.30) |
 | clusters.labels.ncr_sgw | Body | String | Service gateway UUID of NCR type |
 | clusters.labels.obs_sgw | Body | String | Service gateway UUID of OBS type |
-
+| clusters.labels.term_of_validity | Body | String | Certificate validity period |
+| clusters.labels.certificate_expiry | Body | String | Certificate expiration date | 
 
 <details><summary>Example</summary>
 <p>
@@ -247,6 +235,8 @@ This API does not require a request body.
 | labels.pods_network_subnet | Body | String | Cluster pod subnet size (Available for clusters created on or after 2023.05.30) |
 | labels.ncr_sgw | Body | String | Service Gateway UUID of NCR type |
 | labels.obs_sgw | Body | String | Service gateway UUID of OBS type |
+| labels.term_of_validity | Body | String | Certificate validity period |
+| labels.certificate_expiry | Body | String | Certificate expiration date | 
 
 <details><summary>Example</summary>
 <p>
@@ -512,8 +502,8 @@ X-Auth-Token: {tokenId}
 | labels.service_cluster_ip_range | Body | String  | X |  K8s service network, the IP band assigned to the ClusterIP when creating a service in the cluster. See fixed_subnet, pods_network_cidr, and service_cluster_ip_range input rules. |
 | labels.pods_network_cidr | Body | String |  X |  Cluster Pod Network. See fixed_subnet, pods_network_cidr, service_cluster_ip_range input rules |
 | labels.pods_network_subnet | Body | Integer | X |  Cluster Pod subnet size. See pods_network_subnet input rules |
-| labels.ncr_sgw | Body | String | X | Service gateway UUID of NCR type |
-| labels.obs_sgw | Body | String | X | Service gateway UUID of OBS type |
+| labels.ncr_sgw | Body | String | X | Service gateway UUID of NCR type<br>But, only created in the same VPC as the cluster VPC. |
+| labels.obs_sgw | Body | String | X | Service gateway UUID of OBS type<br>But, only created in the same VPC as the cluster VPC. |
 | flavor_id | Body | UUID | O | Applied to the default worker node group: Node instance flavor UUID |
 | fixed_network | Body | UUID | O | VPC Network UUID |
 | fixed_subnet | Body | UUID | O | VPC subnet UUID. Note the rules for entering fixed_subnet, pods_network_cidr, and service_cluster_ip_range. |
@@ -939,6 +929,111 @@ This API does not require a request body.
     "cluster_uuid" : "8be87215-9db7-45ed-a03c-38e6db939915",
     "enable": "false"
 }
+```
+
+</p>
+</details>
+
+
+---
+### Renew Cluster Certificate
+
+Renews the certificate for the cluster.
+```
+PATCH /v1/certificates/{CLUSTER_ID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### Name
+| Format | Type | Format | Required | Description |
+|---|---|---|---|---|
+| tokenId | Header | String | O | Token ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
+| term_of_validity | Body | Integer | O | Validity period of the certificate. Can be entered in years. Minimum: 1, maximum: 5 |
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "term_of_validity": 5
+}
+```
+
+</p>
+</details>
+
+#### Response
+
+| Name | Type | Format | Description |
+|---|---|---|---|
+| UUID | Body | String | Target cluster UUID|
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "uuid": "5f6af7da-df9b-4edd-8284-02317b11e061"
+}
+
+```
+
+</p>
+</details>
+
+---
+
+### Change Service Gateway
+
+If you set a service gateway when you created the cluster, you can change it to a different service gateway. 
+```
+POST /v1/clusters/{CLUSTER_ID_OR_NAME}/actions/update_sgw
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### Request
+
+| Name | Type | Format | Required | Description |
+|---|---|---|---|---|
+| tokenId | Header | String | O | Token ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
+| ncr_sgw | Body | UUID | O | Service Gateway UUID of the NCR type you want to change |
+| obs_sgw | Body | UUID | O | Service Gateway UUID of the OBS type you want to change |
+
+<details><summary>Example of changing the service gateway</summary>
+<p>
+
+```json
+{
+    "ncr_sgw": "48f4ff38-d14b-4f34-a40c-705524e6a755",
+    "obs_sgw": "23c550cb-6a5b-4eaa-903a-711c13316d91"
+}
+```
+
+</p>
+</details>
+
+#### Response
+
+| Name | Type | Format | Description |
+|---|---|---|---|
+| UUID | Body | String | Target cluster UUID|
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "uuid": "5bac7acd-58b7-4cf5-95f5-a25d67da13a2"
+}
+
 ```
 
 </p>
@@ -1780,10 +1875,11 @@ This API does not require a request body.
         "v1.22.3": false,
         "v1.23.3": false,
         "v1.24.3": false,
-        "v1.25.4": true,
+        "v1.25.4": false,
         "v1.26.3": true,
         "v1.27.3": true
-        "v1.28.3": true
+        "v1.28.3": true,
+        "v1.29.3": true,        
     },
     "supported_event_type": {
         "cluster_events": {
