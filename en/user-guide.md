@@ -26,13 +26,13 @@ For each Kubernetes version, here's when you can expect to see additions/deletio
 |:-------:|:-------------------:|:--------------------:|:---------------------:|
 | v1.22.3 | 2022. 01.           | 2023. 05.            | 2023. 08.             |
 | v1.23.3 | 2022. 03.           | 2023. 08.            | 2024. 02.             |
-| v1.24.3 | 2022. 09.           | 2024. 02.            | 2024. 05.(Scheduled)       |
-| v1.25.4 | 2023. 01.           | 2024. 05.(Scheduled)      | 2024. 08.(Scheduled)       |
+| v1.24.3 | 2022. 09.           | 2024. 02.            | 2024. 05.             |
+| v1.25.4 | 2023. 01.           | 2024. 05.            | 2024. 08.(Scheduled)       |
 | v1.26.3 | 2023. 05.           | 2024. 08.(Scheduled)      | 2025. 02.(Scheduled)       |
 | v1.27.3 | 2023. 08.           | 2025. 02.(Scheduled)      | 2025. 05.(Scheduled)       |
 | v1.28.3 | 2024. 02.           | 2025. 05.(Scheduled)      | 2025. 08.(Scheduled)       |
-| v1.29.x | 2024. 05.(Scheduled)     | 2025. 08.(Scheduled)      | 2025. 11.(Scheduled)       |
-
+| v1.29.3 | 2024. 05.           | 2025. 08.(Scheduled)      | 2025. 11.(Scheduled)       |
+| v1.30.x | 2024. 08.(Scheduled)     | 2025. 11.(Scheduled)      | 2026. 02.(Scheduled)       |
 
 ### Creating Clusters
 To use NHN Kubernetes Service (NKS), you must create clusters first.
@@ -123,6 +123,7 @@ NHN Kubernetes Service (NKS) supports several versions of Kubernetes. Some featu
 | v1.26.3 | Available | Available |
 | v1.27.3 | Available | Available |
 | v1.28.3 | Available | Available |
+| v1.29.3 | Available | Available |
 
 NHN Kubernetes Service (NKS) provides different types of Container Network Interface (CNI) according its version. After 31 March 2023, CNI is created with Calico when creating a cluster with version 1.24.3 or higher. Network mode of Flannel and Calico CNI all operate in VXLAN method.
 
@@ -140,6 +141,7 @@ NHN Kubernetes Service (NKS) provides different types of Container Network Inter
 | v1.26.3 | Flannel v0.14.0 or Calico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | Conditionally Available |
 | v1.27.3 | Calico v3.24.1 | Unavailable|
 | v1.28.3 | Calico v3.24.1 | Unavailable|
+| v1.29.3 | Calico v3.24.1 | Unavailable|
 
 Notes
 
@@ -241,6 +243,7 @@ When you select a cluster, cluster information appears at the bottom.
 | Cluster Name | Name and ID of Kubernetes Cluster |
 | Node Count | Number of instances of all nodes comprising a cluster |
 | Kubernetes Version | Kubernetes version in service |
+| Kubernetes Certificate | Expiration date of cluster certificate |
 | CNI | Kubernetes CNI type in service |
 | K8s Service Network | CIDR of the cluster'service object |
 | Pod Network | Kubernetes pod network in service |
@@ -1546,6 +1549,39 @@ When you add a Cluster API endpoint to IP access control targets, the rules belo
 * At least one IP access control target must exist.
 
 
+### Renew Cluster Certificate
+Kubernetes requires a PKI certificate for TLS authentication between components. For more information about PKI certificates, see [PKI Certificates and Requirements](https://kubernetes.io/docs/setup/best-practices/certificates/). When you create an NKS cluster, Kubernetes automatically generates the required certificate for the cluster, which has a default validity of 5 years.
+
+If the certificate expires, key components of the cluster, such as the API server, Controller Manager, etcd, will stop working and the cluster will be unavailable.
+Before a certificate expires, you can use the Renew Certificate feature to renew its validity. You can find the certificate validity for your cluster and the Renew Certificate button on the Cluster View screen > **Basic Information** > **Kubernetes Certificates**.
+
+Here's how to use the certificate renewal feature
+1. Click **Renew Certificate**.
+2. Select a renewal period. 
+    * You can set a certificate validity period of up to 5 years.
+    * Renewal is possible only on a one-year basis.
+3. To proceed with the certificate renewal, click **Confirm**.
+4. Check the status of the target cluster.
+    * A cluster with a certificate renewal in progress has a status of `UPDATE_IN_PROGRESS`, which transitions to `UPDATE_COMPLETE` when the operation completes successfully.
+    * When there is a problem with the change, the status is converted to `UPDATE_FAILED`, and it is not allowed to change cluster configuration until normalization completes.
+        * Perform certificate renewal once again to normalize the cluster health.
+5. On the Cluster Lookup screen, verify that the certificate expiration period has been renewed successfully.
+6. Download the kubeconfig file.
+    * The kubeconfig file for accessing the cluster contains the certificate.
+    * Once the certificate is renewed, you will no longer be able to access the cluster with the kubeconfig you were using.
+7. Restart the Pod that uses the CA certificate.
+    * The certificate renewal process does not include the feature to restart user-created pods.
+    * If a pod with certificate settings exists, a restart is required to apply the updated CA certificate.
+
+> [Note]
+> The certificate renewal feature is available for clusters using 1.24 or later versions of Calico CNI.
+> Clusters using versions prior to 1.24, or clusters with a CNI that is Flannel, require an upgrade and CNI change.
+
+> [Caution]
+> The certificate renewal feature involves a restart of the system components and any kube-system namespace pods initially deployed at cluster creation to reflect the new certificate generation and settings.
+> As a result, the state of nodes in your cluster may temporarily change to Not Ready, or some components of your cluster may not function normally while certificate renewal is in progress.
+> To minimize the impact of these operations, you should avoid performing tasks such as creating new Pods while certificate renewal is in progress.
+
 ## Manage Worker Node
 
 ### Manage Container
@@ -1747,6 +1783,11 @@ echo '[ { "registry": "user-defined.registry.io", "endpoint_list": [ "http://use
 > * If a custom containerd registry settings file exists, the settings in this file will be applied to containerd.
 >     * To use the `docker.io` registry, you must also include settings for the `docker.io` registry. For settings for the `docker`. `io` registry, see Default registry settings.
 >     * If you do not want to use the `docker.io` registry, you can simply not include any settings for the `docker.io` registry. However, at least one registry setting must exist.
+
+### Precautions for Worker Node Management
+* Do not arbitrarily delete container images that are pulled on worker nodes. This may cause the Pods required by the NKS cluster to stop working. 
+* If you arbitrarily stop the system with commands like `shutdown`, `halt`, `poweroff`, etc., you cannot restart it through the console. Use the worker node start/stop feature.
+* You must not modify various configuration files within the worker node or manipulate system services. Critical issues may occur in the NKS cluster.
 
 ## LoadBalancer Service
 Pod is a basic execution unit of a Kubernetes application and it is connected to a cluster network via CNI (container network interface). By default, pods are not accessible from outside the cluster. To expose a pod's services to the outside of the cluster, you need to create a path to expose to the outside using the Kubernetes `LoadBalancer` Service object. Creating a LoadBalancer service object creates an NHN Cloud Load Balancer outside the cluster and associates it with the service object.
@@ -2245,6 +2286,29 @@ metadata:
       u6X+8zlOYDOoS2BuG8d2brfKBLu3As5VAcAPLcJhE//3IVaZHxod
       -----END RSA PRIVATE KEY-----
 ```
+
+Instead of registering certificate and private key information in the manifest, you can create a listener of type TERMINATED_HTTPS with a certificate registered in Certificate Manager.
+* The setting location is loadbalancer.nhncloud/listener-terminated-https-cert-manager-name under .metadata.annotations.
+* The value is the name of the certificate you enrolled in Certificate Manager.
+* Per-listener settings can be applied.
+
+The following is an example manifest that uses a certificate enrolled in Certificate Manager when setting the listener protocol to TERMINATED_HTTPS.
+
+```yaml
+metadata:
+  name: echosvr-svc
+  labels:
+    app: echosvr
+  annotations:
+    loadbalancer.nhncloud/listener-protocol: TERMINATED_HTTPS
+    loadbalancer.nhncloud/listener-terminated-https-tls-version: TLSv1.2
+    loadbalancer.nhncloud/listener-terminated-https-cert-manager-name: test
+```
+
+> [Caution]
+> Using certificates registered in Certificate Manager is available for clusters that were created on or after May 28, 2024, or that have upgraded to the k8s version.
+> Deleting a certificate from Certificate Manager that is associated with a listener might affect the behavior of the load balancer.
+
 
 #### Set the listener proxy protocol
 When the listener protocol is TCP or HTTPS, you set the proxy protocol to the listener. For more information on proxy protocol, see [Load Balancer Proxy Mode](/Network/Load%20Balancer/en/overview/#_4)
