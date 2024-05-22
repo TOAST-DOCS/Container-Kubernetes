@@ -9,7 +9,7 @@
 * Added the feature to renew certificates for a cluster.
 * Added the feature to change the service gateway set when creating a cluster.
 * The Resource Watcher service allows you to receive notifications about events that occur in your cluster.
-    * For more information, see [Resource Watcher](/Governance%20&%20Audit/Resource%20Watcher/ko/overview).
+    * For more information, see [Resource Watcher](/Governance%20&%20Audit/Resource%20Watcher/en/overview).
 
 ### March 26, 2024
 
