@@ -245,18 +245,18 @@ sudo sed -i "s/GRUB_CMDLINE_LINUX=\"\(.*\)\"/GRUB_CMDLINE_LINUX=\"\1 $args\"/" "
 sudo grub2-mkconfig -o /boot/grub2/grub.cfg
 ```
 
-### > calico-typha, calico-kube-controller 이미지 pull 실패 에러가 발생하고 calico-node 파드가 정상 동작하지 않아서 클러스터 네트워크 장애가 발생합니다.
-Calico 이미지가 Kubelet의 Garbage Collection에 의해 제거된 후, 올바르지 않은 컨테이너 이미지 리포지토리 주소로 인해 재다운로드할 수 없게 되어 발생하는 문제입니다. Kubelet은 노드의 디스크 사용량을 관리하기 위해 사용되지 않는 컨테이너 이미지를 정리하는 Garbage Collection 기능을 제공합니다. 이 기능에 대한 자세한 정보는 [Garbage Collection](https://kubernetes.io/docs/concepts/architecture/garbage-collection/) 문서에서 확인할 수 있습니다. NKS의 경우 Kubelet의 imageGCHighThresholdPercent, imageGCLowThresholdPercent가 기본값으로 설정되어 있습니다.
+### > calico-typha, calico-kube-controller 이미지 pull 실패 오류가 발생하고 calico-node 파드가 정상 동작하지 않아서 클러스터 네트워크 장애가 발생합니다.
+Calico 이미지가 Kubelet의 Garbage Collection에 의해 제거된 후, 올바르지 않은 컨테이너 이미지 리포지터리 주소로 인해 재다운로드할 수 없게 되어 발생하는 문제입니다. Kubelet은 노드의 디스크 사용량을 관리하기 위해 사용되지 않는 컨테이너 이미지를 정리하는 Garbage Collection 기능을 제공합니다. 이 기능에 대한 자세한 정보는 [Garbage Collection](https://kubernetes.io/docs/concepts/architecture/garbage-collection/) 문서에서 확인할 수 있습니다. NKS의 경우 Kubelet의 imageGCHighThresholdPercent, imageGCLowThresholdPercent가 기본값으로 설정되어 있습니다.
 ```
 imageGCHighThresholdPercent=85 : 디스크 사용률이 85%를 초과하는 경우 항상 이미지 Garbage Collection을 실행하여 사용하지 않는 이미지를 제거합니다.
 imageGCLowThresholdPercent=80 : 디스크 사용률이 80% 이하일 경우 이미지 Garbage Collection을 실행하지 않습니다.
 ```
 
 #### 증상 발생 시 확인 방법
-2024년 05월 이전에 생성된 클러스터에서 문제가 발생할 수 있습니다. `kubectl get all -n kube-system` 명령 확인 시 calico-kube-controller 또는 calico-typha 파드의 상태가 **ImagePullBackOff** 또는 **ErrImagePull** 로 유지됩니다. calico-node 파드는 **Running** 상태로 보이지만, Ready 항목은 **0/1**로 나타납니다. calico-node 파드는 daemonset으로 배포되므로 kubelet의 GC에 의한 이미지 삭제 대상이 아닙니다. 그러나 calico-typha와의 통신 실패로 인해 정상적으로 동작하지 않아 위와 같은 문제가 발생할 수 있습니다. 2024년 05월 이후에 생성된 클러스터의 경우 calico image 리포지토리 설정이 변경되어 해당 문제가 발생하지 않습니다. 
+2024년 05월 이전에 생성된 클러스터에서 문제가 발생할 수 있습니다. `kubectl get all -n kube-system` 명령 확인 시 calico-kube-controller 또는 calico-typha 파드의 상태가 **ImagePullBackOff** 또는 **ErrImagePull** 로 유지됩니다. calico-node 파드는 **Running** 상태로 보이지만, Ready 항목은 **0/1**로 나타납니다. calico-node 파드는 daemonset으로 배포되므로 kubelet의 GC에 의한 이미지 삭제 대상이 아닙니다. 그러나 calico-typha와의 통신 실패로 인해 정상적으로 동작하지 않아 위와 같은 문제가 발생할 수 있습니다. 2024년 05월 이후에 생성된 클러스터의 경우 calico image 리포지터리 설정이 변경되어 해당 문제가 발생하지 않습니다. 
 
 #### 해결 방안
-calico 관련 image 리포지토리 url을 public 리포지토리로 변경하는 스크립트를 실행하여 해결 할 수 있습니다. 단, 이 해결 방안은 **인터넷에 연결 가능한 클러스터**에만 적용할 수 있으며 스크립트 실행 중 **일시적으로 클러스터 파드 네트워킹이 단절될 수 있으니 작업 진행 시 주의** 부탁드립니다. 스크립트를 실행하기 전에, 모든 워커 노드가 'Ready' 상태인지 확인해야 합니다. 문제 해결 스크립트는 아래와 같습니다.
+calico 관련 image 리포지터리 url을 public 리포지터리로 변경하는 스크립트를 실행하여 해결할 수 있습니다. 단, 이 해결 방안은 **인터넷에 연결 가능한 클러스터**에만 적용할 수 있으며 스크립트 실행 중 **일시적으로 클러스터 파드 네트워킹이 단절될 수 있으므로 작업 진행 시 주의**가 필요합니다. 스크립트를 실행하기 전에, 모든 워커 노드가 'Ready' 상태인지 확인해야 합니다. 문제 해결 스크립트는 아래와 같습니다.
 
 ```
 #!/bin/bash
@@ -441,14 +441,14 @@ fi
 ```
 스크립트 과정은 아래와 같습니다.
 1. 모든 워커 노드에 calico 관련 이미지를 pull 받습니다.
-2. calico-node daemonset 이미지 리포지토리를 변경하는 롤링 업데이트를 진행합니다.
-3. calico-kube-controllers deployment 이미지 리포지토리를 변경하는 롤링 업데이트를 진행합니다
-4. calico-typha deployment 이미지 리포지토리를 변경하는 롤링 업데이트를 진행합니다
+2. calico-node daemonset 이미지 리포지터리를 변경하는 롤링 업데이트를 진행합니다.
+3. calico-kube-controllers deployment 이미지 리포지터리를 변경하는 롤링 업데이트를 진행합니다.
+4. calico-typha deployment 이미지 리포지터리를 변경하는 롤링 업데이트를 진행합니다.
 
 해당 스크립트는 kubectl 명령이 가능한 환경에서 실행할 수 있습니다. 실행 방법은 아래와 같습니다.
 * vim calico_manifest_image_change.sh
 * 본문 스크립트 내용 저장
-* KUBECONFIG 환경 변수에 kubeconfig 설정파일 경로 저장
+* KUBECONFIG 환경 변수에 kubeconfig 설정 파일 경로 저장
 * chmod 755 calico_manifest_image_change.sh
 * ./calico_manifest_image_change.sh
 

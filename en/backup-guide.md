@@ -123,6 +123,8 @@ $ helm repo add vmware-tanzu https://vmware-tanzu.github.io/helm-charts
 
 The Velero server must be installed on a `backup cluster` and a `restore cluster` respectively. We recommend that you install using `the same helm command on both clusters` to use the same Object Storage.
 
+If you are installing Velero Server on a cluster with a version of 1.26 or earlier, run the command below. 
+
 ```
 $ helm install velero vmware-tanzu/velero \
 --namespace velero \
@@ -133,6 +135,33 @@ $ helm install velero vmware-tanzu/velero \
 --set initContainers[0].image=lirt/velero-plugin-for-openstack:v0.3.0 \
 --set initContainers[0].volumeMounts[0].mountPath=/target \
 --set initContainers[0].volumeMounts[0].name=plugins \
+--set deployRestic=true \
+--set configuration.defaultVolumesToRestic=true \
+--set configuration.defaultResticPruneFrequency=0h1m0s \
+--set configuration.backupStorageLocation.bucket={Container} \
+--set configuration.backupStorageLocation.config.region={Region} \
+--set configuration.backupStorageLocation.config.resticRepoPrefix=swift:{Container}:/restic \
+--set configuration.extraEnvVars.OS_AUTH_URL={Identity Service (Identity)} \
+--set configuration.extraEnvVars.OS_TENANT_ID={Tenant ID} \
+--set configuration.extraEnvVars.OS_USERNAME={NHN Cloud ID} \
+--set configuration.extraEnvVars.OS_PASSWORD={API Password} \
+--set configuration.extraEnvVars.OS_REGION_NAME={Region} \
+--set configuration.extraEnvVars.OS_DOMAIN_ID=default
+```
+
+If you are installing a Velero server in a cluster with a version of 1.27 or later, run the command below. 
+
+```
+$ helm install velero vmware-tanzu/velero \
+--namespace velero \
+--create-namespace \
+--version 2.32.6 \
+--set configuration.provider=community.openstack.org/openstack \
+--set initContainers[0].name=velero-plugin-for-openstack \
+--set initContainers[0].image=lirt/velero-plugin-for-openstack:v0.3.0 \
+--set initContainers[0].volumeMounts[0].mountPath=/target \
+--set initContainers[0].volumeMounts[0].name=plugins \
+--set kubectl.image.tag=1.26.14-debian-11-r6 \
 --set deployRestic=true \
 --set configuration.defaultVolumesToRestic=true \
 --set configuration.defaultResticPruneFrequency=0h1m0s \
