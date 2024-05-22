@@ -141,10 +141,10 @@ $ helm install velero vmware-tanzu/velero \
 --set configuration.backupStorageLocation.bucket={Container} \
 --set configuration.backupStorageLocation.config.region={Region} \
 --set configuration.backupStorageLocation.config.resticRepoPrefix=swift:{Container}:/restic \
---set configuration.extraEnvVars.OS_AUTH_URL={신원 서비스(Identity)} \
---set configuration.extraEnvVars.OS_TENANT_ID={테넌트 ID} \
---set configuration.extraEnvVars.OS_USERNAME={NHN Cloud 아이디} \
---set configuration.extraEnvVars.OS_PASSWORD={API 비밀번호} \
+--set configuration.extraEnvVars.OS_AUTH_URL={Identity Service (Identity)} \
+--set configuration.extraEnvVars.OS_TENANT_ID={Tenant ID} \
+--set configuration.extraEnvVars.OS_USERNAME={NHN Cloud ID} \
+--set configuration.extraEnvVars.OS_PASSWORD={API Password} \
 --set configuration.extraEnvVars.OS_REGION_NAME={Region} \
 --set configuration.extraEnvVars.OS_DOMAIN_ID=default
 ```
