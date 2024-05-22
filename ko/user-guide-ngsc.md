@@ -157,46 +157,46 @@ NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Netwo
 
 | 방향 | IP 프로토콜 | 포트 범위 | Ether | 원격 | 설명 | 특이 사항 |
 | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| ingress | TCP | 10250 | IPv4 | 워커 노드 | kubelet 포트, 방향: metrics-server(worker node) -> kubelet(worker node) | |
-| ingress | TCP | 10250 | IPv4 | 마스터 노드 | kubelet 포트, 방향: kube-apiserver(NKS Control plane) -> kubelet(worker node) | |
-| ingress | TCP | 5473 | IPv4 | 워커 노드 |  calico-typha 포트, 방향: calico-node(worker node) -> calico-typha(worker node) | CNI가 calico인 경우 생성 |
-| ingress | UDP | 8472 | IPv4 | 워커 노드 | flannel vxlan overlay network 포트, 방향: pod(worker node) -> pod(worker node) | CNI가 flannel인 경우 생성됨 |
-| ingress | UDP | 8472 | IPv4 | 워커 노드 | flannel vxlan overlay network 포트, 방향: pod(NKS Control plane) -> pod(worker node) | CNI가 flannel인 경우 생성됨 |
-| ingress | UDP | 4789 | IPv4 | 워커 노드 | calico-node vxlan overlay network 포트, 방향: pod(worker node) -> pod(worker node) | CNI가 calico인 경우 생성됨 |
-| ingress | UDP | 4789 | IPv4 | 마스터 노드 | calico-node vxlan overlay network 포트, 방향: pod(NKS Control plane) -> pod(worker node) | CNI가 calico인 경우 생성됨 |
-| egress | TCP | 2379 | IPv4 | 마스터 노드 | etcd 포트, 방향: calico-kube-controller(worker node) -> etcd(NKS Control plane)| |
-| egress | TCP | 6443 | IPv4 | Kubernetes API 엔드포인트 | kube-apiserver 포트, 방향: kubelet, kube-proxy(worker node) -> kube-apiserver(NKS Control plane) | |
-| egress | TCP | 6443 | IPv4 | 마스터 노드 | kube-apiserver 포트, 방향: default kubernetes service(worker node) -> kube-apiserver(NKS Control plane) | |
-| egress | TCP | 5473 | IPv4 | 워커 노드 | CNI가 calico인 경우 생성됨, calico-typha 포트, 방향: calico-node(worker node) -> calico-typha(worker node) | |
-| egress | TCP | 53 | IPv4 | 워커 노드 | DNS 포트, 방향: worker node -> external | |
-| egress | TCP | 443 | IPv4 | 모두 허용 | HTTPS 포트, 방향: worker node -> external | |
-| egress | TCP | 80 | IPv4 | 모두 허용 | HTTP 포트, 방향: worker node -> external | |
-| egress | UDP | 8472 | IPv4 | 워커 노드 | flannel vxlan overlay network 포트, 방향: pod(worker node) -> pod(worker node)| CNI가 flannel인 경우 생성됨 |
-| egress | UDP | 8472 | IPv4 | 마스터 노드 | flannel vxlan overlay network 포트, 방향: pod(worker node) -> pod(NKS Control plane) | CNI가 flannel인 경우 생성됨 |
-| egress | UDP | 4789 | IPv4 | 워커 노드 | calico-node vxlan overlay network 포트, 방향: pod(worker node) -> pod(worker node) | CNI가 calico인 경우 생성됨 |
-| egress | UDP | 4789 | IPv4 | 마스터 노드 | calico-node vxlan overlay network 포트, 방향: pod(worker node) -> pod(NKS Control plane) | CNI가 calico인 경우 생성됨 |
-| egress | UDP | 53 | IPv4 | 모두 허용 | DNS 포트, 방향: worker node -> external | |
+| ingress | TCP | 10250 | IPv4 | 워커 노드 | kubelet 포트, 방향: metrics-server(워커 노드) -> kubelet(워커 노드) | |
+| ingress | TCP | 10250 | IPv4 | NKS Control Plane | kubelet 포트, 방향: kube-apiserver(NKS Control plane) -> kubelet(워커 노드) | |
+| ingress | TCP | 5473 | IPv4 | 워커 노드 |  calico-typha 포트, 방향: calico-node(워커 노드) -> calico-typha(워커 노드) | CNI가 calico인 경우 생성됨 |
+| ingress | UDP | 8472 | IPv4 | 워커 노드 | flannel vxlan overlay network 포트, 방향: pod(워커 노드) -> pod(워커 노드) | CNI가 flannel인 경우 생성됨 |
+| ingress | UDP | 8472 | IPv4 | 워커 노드 | flannel vxlan overlay network 포트, 방향: pod(NKS Control plane) -> pod(워커 노드) | CNI가 flannel인 경우 생성됨 |
+| ingress | UDP | 4789 | IPv4 | 워커 노드 | calico-node vxlan overlay network 포트, 방향: pod(워커 노드) -> pod(워커 노드) | CNI가 calico인 경우 생성됨 |
+| ingress | UDP | 4789 | IPv4 | NKS Control Plane | calico-node vxlan overlay network 포트, 방향: pod(NKS Control plane) -> pod(워커 노드) | CNI가 calico인 경우 생성됨 |
+| egress | TCP | 2379 | IPv4 | NKS Control Plane | etcd 포트, 방향: calico-kube-controller(워커 노드) -> etcd(NKS Control plane)| |
+| egress | TCP | 6443 | IPv4 | Kubernetes API 엔드포인트 | kube-apiserver 포트, 방향: kubelet, kube-proxy(워커 노드) -> kube-apiserver(NKS Control plane) | |
+| egress | TCP | 6443 | IPv4 | NKS Control Plane | kube-apiserver 포트, 방향: default kubernetes service(워커 노드) -> kube-apiserver(NKS Control plane) | |
+| egress | TCP | 5473 | IPv4 | 워커 노드 | CNI가 calico인 경우 생성됨, calico-typha 포트, 방향: calico-node(워커 노드) -> calico-typha(워커 노드) | |
+| egress | TCP | 53 | IPv4 | 워커 노드 | DNS 포트, 방향: 워커 노드 -> 외부 | |
+| egress | TCP | 443 | IPv4 | 모두 허용 | HTTPS 포트, 방향: 워커 노드 -> 외부 | |
+| egress | TCP | 80 | IPv4 | 모두 허용 | HTTP 포트, 방향: 워커 노드 -> 외부 | |
+| egress | UDP | 8472 | IPv4 | 워커 노드 | flannel vxlan overlay network 포트, 방향: pod(워커 노드) -> pod(워커 노드)| CNI가 flannel인 경우 생성됨 |
+| egress | UDP | 8472 | IPv4 | NKS Control Plane | flannel vxlan overlay network 포트, 방향: pod(워커 노드) -> pod(NKS Control plane) | CNI가 flannel인 경우 생성됨 |
+| egress | UDP | 4789 | IPv4 | 워커 노드 | calico-node vxlan overlay network 포트, 방향: pod(워커 노드) -> pod(워커 노드) | CNI가 calico인 경우 생성됨 |
+| egress | UDP | 4789 | IPv4 | NKS Control Plane | calico-node vxlan overlay network 포트, 방향: pod(워커 노드) -> pod(NKS Control plane) | CNI가 calico인 경우 생성됨 |
+| egress | UDP | 53 | IPv4 | 모두 허용 | DNS 포트, 방향: 워커 노드 -> 외부 | |
 
 강화된 보안 규칙 사용 시 NodePort 타입의 서비스와 NHN Cloud NAS 서비스에서 사용하는 포트에 대한 보안 규칙에 추가되어 있지 않습니다. 필요에 따라 아래 보안 규칙을 추가 설정해야 합니다. 
 
 | 방향 | IP 프로토콜 | 포트 범위 | Ether | 원격 | 설명 |
 | :-: | :-: | :-: | :-: | :-: | :-: |
-| ingress, egress | TCP | 30000 - 32767 | IPv4 | 모두 허용 | NKS service object NodePort, 방향: external -> worker node |
-| egress | TCP | 2049 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc nfs 포트, 방향: csi-nfs-node(worker node) -> NHN Cloud NAS 서비스 |
-| egress | TCP | 111 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc portmapper 포트, 방향: csi-nfs-node(worker node) -> NHN Cloud NAS 서비스 |
-| egress | TCP | 635 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc mountd 포트, 방향: csi-nfs-node(worker node) -> NHN Cloud NAS 서비스 |
+| ingress, egress | TCP | 30000 - 32767 | IPv4 | 모두 허용 | NKS service object NodePort, 방향: 외부 -> 워커 노드 |
+| egress | TCP | 2049 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc nfs 포트, 방향: csi-nfs-node(워커 노드) -> NHN Cloud NAS 서비스 |
+| egress | TCP | 111 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc portmapper 포트, 방향: csi-nfs-node(워커 노드) -> NHN Cloud NAS 서비스 |
+| egress | TCP | 635 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc mountd 포트, 방향: csi-nfs-node(워커 노드) -> NHN Cloud NAS 서비스 |
 
 강화된 보안 규칙을 사용하지 않는 경우 NodePort 타입의 서비스와 외부 네트워크 통신에 필요한 보안 규칙이 추가로 생성됩니다.
 
 | 방향 | IP 프로토콜 | 포트 범위 | Ether | 원격 | 설명 | 
 | :-: | :-: | :-: | :-: | :-: | :-: |
-| ingress | TCP | 1 - 65535 | IPv4 | 워커 노드 | 모든 포트, 방향: worker node -> worker node |
-| ingress | TCP | 1 - 65535 | IPv4 | 마스터 노드 | 모든 포트, 방향: NKS Control plane -> worker node |
-| ingress | TCP | 30000 - 32767 | IPv4 | 모두 허용 | NKS service object NodePort, 방향: external -> worker node |
-| ingress | UDP | 1 - 65535 | IPv4 | 워커 노드 | 모든 포트, 방향: worker node -> worker node |
-| ingress | UDP | 1 - 65535 | IPv4 | 마스터 노드 | 모든 포트, 방향: NKS Control plane -> worker node |
-| egress | 임의 | 1 - 65535 | IPv4 | 모두 허용 | 모든 포트, 방향: worker node - > external |
-| egress | 임의 | 1 - 65535 | IPv6 | 모두 허용 | 모든 포트, 방향: worker node - > external |
+| ingress | TCP | 1 - 65535 | IPv4 | 워커 노드 | 모든 포트, 방향: 워커 노드 -> 워커 노드 |
+| ingress | TCP | 1 - 65535 | IPv4 | NKS Control Plane | 모든 포트, 방향: NKS Control plane -> 워커 노드 |
+| ingress | TCP | 30000 - 32767 | IPv4 | 모두 허용 | NKS service object NodePort, 방향: 외부 -> 워커 노드 |
+| ingress | UDP | 1 - 65535 | IPv4 | 워커 노드 | 모든 포트, 방향: 워커 노드 -> 워커 노드 |
+| ingress | UDP | 1 - 65535 | IPv4 | NKS Control Plane | 모든 포트, 방향: NKS Control plane -> 워커 노드 |
+| egress | 임의 | 1 - 65535 | IPv4 | 모두 허용 | 모든 포트, 방향: 워커 노드 - > 외부 |
+| egress | 임의 | 1 - 65535 | IPv6 | 모두 허용 | 모든 포트, 방향: 워커 노드 - > 외부 |
 
 
 필요한 정보를 입력하고 **클러스터 생성**을 클릭하면 클러스터 생성이 시작됩니다. 클러스터 목록에서 상태를 확인할 수 있습니다. 생성하는 데는 약 10분 정도 걸립니다. 클러스터 설정에 따라 더 오래 걸릴 수도 있습니다.
@@ -347,7 +347,6 @@ k8s Node 상태의 아이콘 별 의미는 다음과 같습니다.
 
 노드 그룹을 선택하면 하단에 노드 그룹 정보가 나타납니다.
 
-* 기본 정보
 **기본 정보** 탭에서는 다음과 정보를 확인할 수 있습니다.
 
 | 항목 | 설명 |
@@ -3147,9 +3146,9 @@ $ systemctl start rpcbind
 
 | 방향 | IP 프로토콜 | 포트 범위 | Ether | 원격 | 설명 | 
 | :-: | :-: | :-: | :-: | :-: | :-: | 
-| egress | TCP | 2049 | IPv4 | NAS IP 주소 | rpc의 NFS 포트, 방향: csi-nfs-node(worker node) -> NAS |
-| egress | TCP | 111 | IPv4 | NAS IP 주소 | rpc의 portmapper 포트, 방향: csi-nfs-node(worker node) -> NAS |
-| egress | TCP | 635 | IPv4 | NAS IP 주소 |  rpc의 mountd 포트, 방향: csi-nfs-node(worker node) -> NAS |
+| egress | TCP | 2049 | IPv4 | NAS IP 주소 | rpc의 NFS 포트, 방향: csi-nfs-node(워커 노드) -> NAS |
+| egress | TCP | 111 | IPv4 | NAS IP 주소 | rpc의 portmapper 포트, 방향: csi-nfs-node(워커 노드) -> NAS |
+| egress | TCP | 635 | IPv4 | NAS IP 주소 |  rpc의 mountd 포트, 방향: csi-nfs-node(워커 노드) -> NAS |
 
 #### csi-driver-nfs 설치
 NHN Cloud NAS 서비스를 사용하기 위해 클러스터에 csi-driver-nfs 컴포넌트를 배포해야 합니다.
