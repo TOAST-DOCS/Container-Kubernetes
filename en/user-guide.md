@@ -1116,12 +1116,14 @@ Only custom images created based on NHN Cloud instances can be used as worker no
 |  | CentOS 7.9 (2023.05.25)  | 1.1 |
 |  | CentOS 7.9 (2023.08.22)  | 1.2 |
 |  | CentOS 7.9 (2023.11.21)  | 1.3 |
-|  | Rocky Linux 8.9 (2024.02.20)  | 1.4 |
+|  | CentOS 7.9 (2024.02.20)  | 1.4 |
+|  | CentOS 7.9 (2024.05.21)  | 1.5 |
 | Rocky | Rocky Linux 8.6 (2023.03.21)  | 1.0 |
 |  | Rocky Linux 8.7 (2023.05.25)  | 1.1 |
 |  | Rocky Linux 8.8 (2023.08.22)  | 1.2 |
 |  | Rocky Linux 8.8 (2023.11.21)  | 1.3 |
 |  | Rocky Linux 8.9 (2024.02.20)  | 1.4 |
+|  | Rocky Linux 8.9 (2024.05.21)  | 1.5 |
 | Ubuntu | Ubuntu Server 18.04.6 LTS (2023.03.21)  | 1.0 |
 |  | Ubuntu Server 20.04.6 LTS (2023.05.25)  | 1.1 |
 |  | Ubuntu Server 20.04.6 LTS (2023.08.22)  | 1.2 |
@@ -1129,11 +1131,14 @@ Only custom images created based on NHN Cloud instances can be used as worker no
 |  | Ubuntu Server 22.04.3 LTS (2023.11.21)  | 1.3 |
 |  | Ubuntu Server 20.04.6 LTS (2024.02.20)  | 1.4 |
 |  | Ubuntu Server 22.04.3 LTS (2024.02.20)  | 1.4 |
+|  | Ubuntu Server 20.04.6 LTS (2024.05.21)  | 1.5 |
+|  | Ubuntu Server 22.04.3 LTS (2024.05.21)  | 1.5 |
 | Debian | Debian 11.6 Bullseye (2023.03.21)  | 1.0 |
 |  | Debian 11.6 Bullseye (2023.05.25)  | 1.1 |
 |  | Debian 11.7 Bullseye (2023.08.22)  | 1.2 |
 |  | Debian 11.8 Bullseye (2023.11.21)  | 1.3 |
 |  | Debian 11.8 Bullseye (2024.02.20)  | 1.4 |
+|  | Debian 11.9 Bullseye (2024.05.21)  | 1.5 |
 
 
 > [Notes]
