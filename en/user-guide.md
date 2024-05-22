@@ -1550,7 +1550,7 @@ When you add a Cluster API endpoint to IP access control targets, the rules belo
 
 
 ### Renew Cluster Certificate
-Kubernetes requires a PKI certificate for TLS authentication between components. For more information about PKI certificates, see [PKI Certificates and Requirements](https://kubernetes.io/ko/docs/setup/best-practices/certificates/). When you create an NKS cluster, Kubernetes automatically generates the required certificate for the cluster, which has a default validity of 5 years.
+Kubernetes requires a PKI certificate for TLS authentication between components. For more information about PKI certificates, see [PKI Certificates and Requirements](https://kubernetes.io/docs/setup/best-practices/certificates/). When you create an NKS cluster, Kubernetes automatically generates the required certificate for the cluster, which has a default validity of 5 years.
 
 If the certificate expires, key components of the cluster, such as the API server, Controller Manager, etcd, will stop working and the cluster will be unavailable.
 Before a certificate expires, you can use the Renew Certificate feature to renew its validity. You can find the certificate validity for your cluster and the Renew Certificate button on the Cluster View screen > **Basic Information** > **Kubernetes Certificates**.
