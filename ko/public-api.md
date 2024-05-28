@@ -50,20 +50,7 @@ GET /v2.0/networks?router:external=True
 
 ### 베이스 이미지 UUID
 
-노드 생성에 사용할 베이스 이미지 UUID를 입력합니다. 리전별 베이스 이미지 이름과 UUID는 다음과 같습니다.
-
-| 리전 | 베이스 이미지 이름 | 베이스 이미지 UUID |
-|---|---|---|
-| 한국(판교) 리전 | CentOS 7.9 | 1b8da49b-c240-4940-a811-85dfdf18e263 |
-|  | Debian 11.8 Bullseye | 29a86d4d-e7c8-42bb-9ee1-4cdb30135432 |
-|  | Rocky Linux 8.9 | be708c35-c94b-4623-9333-fc600025861d |
-|  | Ubuntu Server 20.04.6 LTS | a4ade08e-538b-439e-ba2e-13fccdcb32ae |
-|  | Ubuntu Server 22.04.3 LTS | 346ec84c-9430-41d5-83f8-05292b74d796 |
-| 한국(평촌) 리전 | CentOS 7.9 | b8275b50-4c28-45a2-9bf4-9c704b3842b0 |
-|  | Debian 11.8 Bullseye | aadb772b-f568-4d9a-a5a6-e3f3597bc2bb |
-|  | Rocky Linux 8.9 | c11d7da0-1e55-4898-9953-7cc88f5fe477 |
-|  | Ubuntu Server 20.04.6 LTS | 723797ab-6da6-46f1-abd1-e266531f9ab1 |
-|  | Ubuntu Server 22.04.3 LTS | 0e62b502-c5d8-4d0d-8614-95a5d8795f6a |
+노드 생성에 사용할 베이스 이미지 UUID를 입력합니다. NKS 노드 생성에 사용되는 베이스 이미지만을 필터링하기 위해 API 호출 시 쿼리 스트링 파라미터에 `nhncloud_product=container&visibility=public` 값을 입력합니다. 베이스 이미지 목록 조회 API에 대한 좀 더 자세한 내용은 [이미지 목록 조회](/Compute/Image/ko/public-api/#_2)를 참고하세요.
 
 ### 블록 스토리지 종류
 
@@ -126,6 +113,8 @@ X-Auth-Token: {tokenId}
 | clusters.labels.pods_network_subnet | Body | String | 클러스터 파드 서브넷 크기(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
 | clusters.labels.ncr_sgw | Body | String | NCR 타입의 서비스 게이트웨이 UUID |
 | clusters.labels.obs_sgw | Body | String | OBS 타입의 서비스 게이트웨이 UUID |
+| clusters.labels.term_of_validity | Body | String | 인증서의 유효 기간 |
+| clusters.labels.certificate_expiry | Body | String | 인증서 만료 일자 | 
 
 
 <details><summary>예시</summary>
@@ -247,6 +236,8 @@ X-Auth-Token: {tokenId}
 | labels.pods_network_subnet | Body | String | 클러스터 파드 서브넷 크기(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
 | labels.ncr_sgw | Body | String | NCR 타입의 서비스 게이트웨이 UUID |
 | labels.obs_sgw | Body | String | OBS 타입의 서비스 게이트웨이 UUID |
+| labels.term_of_validity | Body | String | 인증서의 유효 기간 |
+| labels.certificate_expiry | Body | String | 인증서 만료 일자 | 
 
 <details><summary>예시</summary>
 <p>
@@ -939,6 +930,110 @@ X-Auth-Token: {tokenId}
     "cluster_uuid" : "8be87215-9db7-45ed-a03c-38e6db939915",
     "enable": "false"
 }
+```
+
+</p>
+</details>
+
+---
+### 클러스터 인증서 갱신
+
+클러스터의 인증서를 갱신합니다.
+```
+PATCH /v1/certificates/{CLUSTER_ID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
+| term_of_validity | Body | Integer | O | 인증서의 유효 기간. 년 단위로 입력 가능. 최솟값: 1, 최댓값: 5 |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "term_of_validity": 5
+}
+```
+
+</p>
+</details>
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | String | 대상 클러스터 UUID|
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "5f6af7da-df9b-4edd-8284-02317b11e061"
+}
+
+```
+
+</p>
+</details>
+
+---
+
+### 서비스 게이트웨이 변경하기
+
+클러스터 생성 시 서비스 게이트웨이를 설정한 경우 다른 서비스 게이트웨이로 변경할 수 있습니다. 
+```
+POST /v1/clusters/{CLUSTER_ID_OR_NAME}/actions/update_sgw
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
+| ncr_sgw | Body | UUID | O | 변경하고자 하는 NCR 타입의 서비스 게이트웨이 UUID |
+| obs_sgw | Body | UUID | O | 변경하고자 하는 OBS 타입의 서비스 게이트웨이 UUID |
+
+<details><summary>서비스 게이트웨이 변경 예시</summary>
+<p>
+
+```json
+{
+    "ncr_sgw": "48f4ff38-d14b-4f34-a40c-705524e6a755",
+    "obs_sgw": "23c550cb-6a5b-4eaa-903a-711c13316d91"
+}
+```
+
+</p>
+</details>
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | String | 대상 클러스터 UUID|
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "5bac7acd-58b7-4cf5-95f5-a25d67da13a2"
+}
+
 ```
 
 </p>
@@ -1780,10 +1875,11 @@ X-Auth-Token: {tokenId}
         "v1.22.3": false,
         "v1.23.3": false,
         "v1.24.3": false,
-        "v1.25.4": true,
+        "v1.25.4": false,
         "v1.26.3": true,
         "v1.27.3": true,
-        "v1.28.3": true
+        "v1.28.3": true,
+        "v1.29.3": true
     },
     "supported_event_type": {
         "cluster_events": {

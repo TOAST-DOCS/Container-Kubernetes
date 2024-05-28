@@ -51,20 +51,7 @@ GET /v2.0/networks?router:external=True
 
 ### 베이스 이미지 UUID
 
-노드 생성에 사용할 베이스 이미지 UUID를 입력합니다. 리전별 베이스 이미지 UUID는 다음과 같습니다.
-
-| 리전 | 베이스 이미지 이름 | 베이스 이미지 UUID |
-|---|---|---|
-| 한국(판교) 리전 | CentOS 7.9 | fff9eb21-bfdd-412c-8348-c8d027c22a4b |
-|  | Debian 11.8 Bullseye | adbef2ed-310d-45d8-8832-bb54b7cb9345 |
-|  | Rocky Linux 8.9 | 33a0f73f-455c-465f-9b84-31d2c9873510 |
-|  | Ubuntu Server 20.04.6 LTS | 3e940af1-fb9d-4de2-9807-0c2a723e0937 |
-|  | Ubuntu Server 22.04.3 LTS | f38c3bec-4ccc-46e9-ad9d-0d3addf1fff3 |
-| 한국(평촌) 리전 | CentOS 7.9 | a10ae990-4e5b-4a04-adf2-dcaecdea4e6f |
-|  | Debian 11.8 Bullseye | 7b88d28e-4268-43de-a605-8fa258144c9f |
-|  | Rocky Linux 8.9 | e8ffd022-89fd-4bac-9740-a8aa37636d38 |
-|  | Ubuntu Server 20.04.6 LTS | b6c0b409-f6bb-4907-88ba-ef4d98683797 |
-|  | Ubuntu Server 22.04.3 LTS | d2f69608-3a96-4698-bd5a-e278fc86e4dc |
+노드 생성에 사용할 베이스 이미지 UUID를 입력합니다. NKS 노드 생성에 사용되는 베이스 이미지만을 필터링하기 위해 API 호출 시 쿼리 스트링 파라미터에 `nhncloud_product=container&visibility=public` 값을 입력합니다. 베이스 이미지 목록 조회 API에 대한 좀 더 자세한 내용은 [이미지 목록 조회](/Compute/Image/ko/public-api-gov/#_2)를 참고하세요.
 
 ### 블록 스토리지 종류
 
@@ -125,7 +112,8 @@ X-Auth-Token: {tokenId}
 | clusters.labels.service_cluster_ip_range | Body | String | K8s 서비스 네트워크, 클러스터에서 서비스 생성 시 ClusterIP에 할당되는 IP 대역(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
 | clusters.labels.pods_network_cidr | Body | String | 클러스터 파드 네트워크(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
 | clusters.labels.pods_network_subnet | Body | String | 클러스터 파드 서브넷 크기(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
-
+| clusters.labels.term_of_validity | Body | String | 인증서의 유효 기간 |
+| clusters.labels.certificate_expiry | Body | String | 인증서 만료 일자 | 
 
 <details><summary>예시</summary>
 <p>
@@ -244,6 +232,8 @@ X-Auth-Token: {tokenId}
 | labels.service_cluster_ip_range | Body | String | K8s 서비스 네트워크, 클러스터에서 서비스 생성 시 ClusterIP에 할당되는 IP 대역(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
 | labels.pods_network_cidr | Body | String | 클러스터 파드 네트워크(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
 | labels.pods_network_subnet | Body | String | 클러스터 파드 서브넷 크기(2023.05.30. 이후에 생성된 클러스터에서 확인 가능) |
+| labels.term_of_validity | Body | String | 인증서의 유효 기간 |
+| labels.certificate_expiry | Body | String | 인증서 만료 일자 | 
 
 <details><summary>예시</summary>
 <p>
@@ -932,6 +922,56 @@ X-Auth-Token: {tokenId}
     "cluster_uuid" : "8be87215-9db7-45ed-a03c-38e6db939915",
     "enable": "false"
 }
+```
+
+</p>
+</details>
+
+---
+### 클러스터 인증서 갱신
+
+클러스터의 인증서를 갱신합니다.
+```
+PATCH /v1/certificates/{CLUSTER_ID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
+| term_of_validity | Body | Integer | O | 인증서의 유효 기간. 년 단위로 입력 가능. 최솟값: 1, 최댓값: 5 |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "term_of_validity": 5
+}
+```
+
+</p>
+</details>
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | String | 대상 클러스터 UUID|
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "5f6af7da-df9b-4edd-8284-02317b11e061"
+}
+
 ```
 
 </p>
@@ -1770,10 +1810,11 @@ X-Auth-Token: {tokenId}
         "v1.22.3": false,
         "v1.23.3": false,
         "v1.24.3": false,
-        "v1.25.4": true,
+        "v1.25.4": false,
         "v1.26.3": true,
         "v1.27.3": true,
-        "v1.28.3": true
+        "v1.28.3": true,
+        "v1.29.3": true
     },
     "supported_event_type": {
         "cluster_events": {

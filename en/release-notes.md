@@ -1,5 +1,23 @@
 ## Container > NHN Kubernetes Service (NKS) > Release Notes
 
+### May 28, 2024
+
+#### Added Features
+
+* Support for Kubernetes v1.29.3.
+* You can use a certificate from Certificate Manager when you set the load balancer's listener protocol to TERMINATED_HTTPS.
+* Added the feature to renew certificates for a cluster.
+* Added the feature to change the service gateway set when creating a cluster.
+* The Resource Watcher service allows you to receive notifications about events that occur in your cluster.
+    * For more information, see [Resource Watcher](/Governance%20&%20Audit/Resource%20Watcher/en/overview).
+
+### March 26, 2024
+
+#### Feature Updates
+* Changed the valid range for the service gateway you enter when creating a cluster.
+    * Previous: A service gateway created on the same subnet as the cluster's subnet.
+    * Current: A service gateway created on a subnet that is included in a VPC in the cluster.
+    
 ### February 27, 2024
 
 #### Added Features
