@@ -2220,7 +2220,7 @@ spec:
 >     * eth0: Subnet#1
 >     * eth1: Subnet#2 (member)
 > 
-> In this case, the IP address of instance eth1 is registered as a member. Healthcheck packets sent by the load balancer are received by instance eth1 and attempted to be sent through eth0. Please note that the source IP address of the packet to eth0 is different from the IP address of eth0. If source/destination check is enabled on eth0's network interface, this packet will not be sent and discarded. In a configuration like this, you must disable source/destination check on eth0's network interface for the member to function properly. For more information on the source/destination check feature, see [Change source/target check](/Network/Network%20Interface/en/console-guide/#_4).
+> In this case, the IP address of instance eth1 is registered as a member. Healthcheck packets sent by the load balancer are received by instance eth1 and attempted to be sent through eth0. Please note that the source IP address of the packet to eth0 is different from the IP address of eth0. If source/destination check is enabled on eth0's network interface, this packet will not be sent and discarded. In a configuration like this, you must disable source/destination check on eth0's network interface for the member to function properly. For more information on the source/destination check feature, see [Change source/target check](/Network/Network%20Interface/en/console-guide/).
 > 
 > **Example 2.**
 > 
@@ -2233,7 +2233,7 @@ spec:
 > In this case, the IP address of instance eth1 is registered as a member. Healthcheck packets sent by the load balancer are received by instance eth1.The response packets must be sent to the VIP of the load balancer, but, since subnet#1 is not a directly connected network, the egress interface is determined by the routing table. To enable communication without setting up the source/destination verification feature on the network interface, you must set up routing to allow the traffic destined for the load balancer's VIP to be sent through eth1. 
 
 > [Caution]
-Member subnets can be set up on clusters that have been upgraded to v1.24.3 or later after November 28, 2023, or are newly created.
+> Member subnets can be set up on clusters that have been upgraded to v1.24.3 or later after November 28, 2023, or are newly created.
 
 #### Set the listener connection limit
 You can set the connection limit for a listener.
