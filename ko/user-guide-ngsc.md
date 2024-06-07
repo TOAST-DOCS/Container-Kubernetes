@@ -3155,7 +3155,7 @@ spec:
 NHN Cloud에서 제공하는 NAS 스토리지를 PV로 활용할 수 있습니다. NAS 서비스를 사용하기 위해서는 v1.20 이후 버전의 클러스터를 사용해야 합니다. NHN Cloud NAS 사용에 대한 자세한 내용은 [NAS 콘솔 사용 가이드](/Storage/NAS%20(online)/ko/console-guide)를 참고하세요.
 
 > [참고]
-> NHN Cloud NAS 서비스는 현재(2024. 02.) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS%20(online)/ko/overview)를 참고하세요.
+> NHN Cloud NAS 서비스는 현재(2024. 08.) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS%20(online)/ko/overview)를 참고하세요.
 
 #### 모든 워커 노드에서 rpcbind 서비스 실행
 NAS 스토리지를 사용하려면 모든 워커 노드에서 rpcbind 서비스를 실행해야 합니다. 모든 워커 노드에 접속한 뒤 아래 명령어를 통해 rpcbind 서비스를 실행합니다.
@@ -3200,23 +3200,28 @@ ORAS(OCI Registry As Storage)는 OCI 레지스트리에서 OCI 아티팩트를 p
 
 | 리전 | 인터넷 연결 | 다운로드 커맨드 |
 | --- | --- | --- |
-| 한국(판교) 리전 | O | oras pull 4019c2fb-kr1-registry.container.gncloud.go.kr/container_service/oci/nfs-deploy-tool:v1 |
-| | X | oras pull private-4019c2fb-kr1-registry.container.gncloud.go.kr/container_service/oci/nfs-deploy-tool:v1 |
-
-##### 3. 설치 패키지를 압축 해제한 후 **install-driver.sh {mode}** 명령어를 사용하여 csi-driver-nfs 구성 요소를 설치합니다.
-install-driver.sh 명령 실행 시 인터넷 연결이 가능한 클러스터는 **public**, 그렇지 않은 클러스터는 **private**을 입력해야 합니다.
-
+| 한국(판교) 리전 | O | oras pull 4019c2fb-kr1-registry.container.gncloud.go.kr/container_service/oci/nfs-deploy-tool:v2 |
+| | X | oras pull private-4019c2fb-kr1-registry.container.gncloud.go.kr/container_service/oci/nfs-deploy-tool:v2 |
 
 > [참고]
-> csi-driver-nfs 컨테이너 이미지는 NHN Cloud NCR에서 관리되고 있습니다. 폐쇄망 환경에 구성된 클러스터는 인터넷에 연결되어 있지 않기 때문에 이미지를 정상적으로 받아오기 위해서는 Private URI를 사용하기 위한 환경 구성이 필요합니다. Private URI 사용법에 대한 자세한 내용은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/user-guide-ngsc/#private-uri)를 참고하세요.
+> csi-driver-nfs 컨테이너 이미지 및 아티팩트는 NHN Cloud NCR에서 관리되고 있습니다. 폐쇄망 환경에 구성된 클러스터는 인터넷에 연결되어 있지 않기 때문에 이미지 및 아티팩트를 정상적으로 받아오기 위해서는 Private URI를 사용하기 위한 환경 구성이 필요합니다. Private URI 사용법에 대한 자세한 내용은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/user-guide-ngsc/#private-uri)를 참고하세요.
 
-아래는 인터넷망 환경에 구성된 클러스터에 설치 패키지를 이용하여 csi-driver-nfs를 설치하는 예시입니다.
+##### 3. 설치 패키지를 압축 해제한 후 **./install-driver.sh {REGISTRY} {INTERNET_USAGE}** 명령어를 사용하여 csi-driver-nfs 구성 요소를 설치합니다.
+클러스터가 생성된 리전 및 인터넷 연결 가능 여부에 따라 올바른 {REGISTRY} 및 {INTERNET_USAGE} 값을 입력합니다. 
+* {REGISTRY}
+  * 한국(판교) 리전: **4019c2fb-kr1-registry.container.gncloud.go.kr**
+* {INTERNET_USAGE}
+  * 인터넷 연결 가능한 클러스터: **true**
+  * 인터넷 연결 불가능한 클러스터: **false**
+
+아래는 한국(판교) 리전에 생성된 인터넷 연결이 가능한 클러스터에 csi-driver-nfs를 설치하는 예시입니다.
 
 ```
 $ tar -xvf nfs-deploy-tool.tar
 
-$ ./install-driver.sh public
-Installing NFS CSI driver, mode: public ...
+$ ./install-driver.sh 4019c2fb-kr1-registry.container.gncloud.go.kr public
+INTERNET_USAGE set to true. Container image registry set with value 4019c2fb-kr1-registry.container.gncloud.go.kr
+Installing NFS CSI driver
 serviceaccount/csi-nfs-controller-sa created
 serviceaccount/csi-nfs-node-sa created
 clusterrole.rbac.authorization.k8s.io/nfs-external-provisioner-role created
