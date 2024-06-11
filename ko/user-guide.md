@@ -3482,9 +3482,15 @@ pv-onas   300Gi      RWX            Retain           Bound    default/pvc-onas  
 StorageClass 매니페스트 작성 시 스토리지 제공자 정보 및 NHN Cloud NAS 스토리지 정보를 정의합니다.
 
 * provisioner: **nfs.csi.k8s.io**를 입력합니다.
-* parameters: NAS 스토리지의 연결 정보를 입력합니다.
-  * server: NAS 스토리지의 연결 정보 중 **ip** 부분의 값을 입력합니다.
-  * share: NAS 스토리지의 연결 정보 중 **볼륨 이름** 부분의 값을 입력합니다.
+* parameters: 입력 항목은 아래 표를 참고하세요.
+
+| 항목 | 설명 | 예시 |  필수 | 기본값 |
+| ------- |------- | --------------------------- | ---------------------------- | ------------- |
+| server | NAS 스토리지의 연결 정보 중 **ip**를 의미합니다. | 192.168.0.81 | O |  |
+| reservepercent | NAS 스토리지의 연결 정보 중 **볼륨 이름**을 의미합니다. | /onas_300gb | O |  |
+| mountPermissions | NAS 스토리지 마운트포인트 디렉토리에 설정할 권한을 지정합니다. | "0700" | X | 0741 |
+| uid | NAS 스토리지 마운트포인트 디렉토리에 설정할 UID를 입력합니다. | 1000 | X | root(0) |
+| gid | NAS 스토리지 마운트포인트 디렉토리에 설정할 GID를 입력합니다. | 1000 | X | root(0) |
 
 아래는 매니페스트 예제입니다.
 ``` yaml
@@ -3497,6 +3503,9 @@ provisioner: nfs.csi.k8s.io
 parameters:
   server: 192.168.0.81
   share: /onas_300gb
+  mountPermissions: "0700"
+  uid: 1000
+  gid: 1000
 reclaimPolicy: Retain
 volumeBindingMode: Immediate
 ```
@@ -3610,6 +3619,9 @@ StorageClass 매니페스트에 스토리지 제공자 정보 및 생성할 NAS 
 | subnet | 스토리지에 접근할 서브넷입니다. 선택된 VPC의 서브넷만 선택할 수 있습니다. | "59526f1c-c089-4517-86fd-2d3dac369210" | X | O |  |
 | acl | 읽기, 쓰기 권한을 허용할 IP 또는 IP 대역 목록입니다. | "0.0.0.0/0" | O | X | 0.0.0.0/0 |
 | onDelete | PVC 삭제 시 NAS 볼륨 삭제 여부입니다. | "delete" / "retain" | X | X | delete |
+| mountPermissions | NAS 스토리지 마운트포인트 디렉토리에 설정할 권한을 지정합니다. | "0700"| X | X | 0741 |
+| uid | NAS 스토리지 마운트포인트 디렉토리에 설정할 UID를 입력합니다. | 1000 | X | X | root(0) |
+| gid | NAS 스토리지 마운트포인트 디렉토리에 설정할 GID를 입력합니다. | 1000 | X | X | root(0) |
 
 > [참고]
 > 스냅숏 파라미터 사용 시 관련된 모든 파라미터 값을 정의해야 합니다. 스냅숏 관련 파라미터는 아래와 같습니다.
@@ -3644,6 +3656,9 @@ parameters:
   scheduleweekdays : "6"
   subnet : "59526f1c-c089-4517-86fd-2d3dac369210"
   acl : ""
+  mountPermissions: "0700"
+  uid: 1000
+  gid: 1000
 ```
 
 PVC 매니페스트의 **Annotation**에 생성할 NAS 스토리지의 이름, 설명, 크기를 정의합니다. 입력 항목은 아래 표를 참고하세요.
