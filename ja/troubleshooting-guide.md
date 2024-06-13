@@ -154,10 +154,10 @@ NKSのワーカーノードでdockerhubからコンテナイメージをダウ�
 * kubernetesui/metrics-scraper
 * quay.io/coreos/flannel
 * quay.io/coreos/flannel-cni
-* docker.io/calico/kube-controllers
-* docker.io/calico/typha
-* docker.io/calico/cni
-* docker.io/calico/node
+* calico-kube-controllers
+* calico-typha
+* calico-cni
+* calico-node
 * coredns/coredns
 * k8s.gcr.io/metrics-server-amd64
 * k8s.gcr.io/metrics-server/metrics-server
@@ -179,8 +179,8 @@ NKSのワーカーノードでdockerhubからコンテナイメージをダウ�
 
 基本イメージはkubeletのImage garbage collectionによって削除されることがあります。 kubelet garbage collection関連情報は[Garbage Collection](https://kubernetes.io/docs/concepts/architecture/garbage-collection/)をご覧ください。NKSの場合、imageGCHighThresholdPercent, imageGCLowThresholdPercentがデフォルト値に設定されています。
 ```
-imageGCHighThresholdPercent : 85
-imageGCLowThresholdPercent : 80
+imageGCHighThresholdPercent=85 : ディスク使用率が85%を超える場合、常にイメージGarbage Collectionを実行して未使用のイメージを削除します。
+imageGCLowThresholdPercent=80 : ディスク使用率が80%以下の場合、イメージGarbage Collectionを実行しません。
 ```
 
 解決策は次のとおりです。
@@ -238,4 +238,192 @@ args="cgroup.memory=nokmem"
 grub_file="/etc/default/grub"
 sudo sed -i "s/GRUB_CMDLINE_LINUX=\"\(.*\)\"/GRUB_CMDLINE_LINUX=\"\1 $args\"/" "$grub_file"
 sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+```
+
+### > calico-typha, calico-kube-controllerイメージpull失敗エラーが発生し、calico-node Podが正常に動作しないため、クラスタネットワーク障害が発生します。
+CalicoイメージがKubeletのGarbage Collectionによって削除された後、正しくないコンテナイメージリポジトリアドレスにより再ダウンロードができないため発生する問題です。 Kubeletはノードのディスク使用量を管理するために、未使用のコンテナイメージを整理するGarbage Collection機能を提供します。この機能の詳細は[Garbage Collection](https://kubernetes.io/docs/concepts/architecture/garbage-collection/)文書で確認できます。NKSの場合KubeletのimageGCHighThresholdPercent, imageGCLowThresholdPercentがデフォルト値に設定されています。
+```
+imageGCHighThresholdPercent=85 :ディスク使用率が85%を超える場合、常にイメージGarbage Collectionを実行して使用しないイメージを削除します。
+imageGCLowThresholdPercent=80 :ディスク使用率が80%以下の場合、イメージGarbage Collectionを実行しません。
+```
+
+#### 症状発生時の確認方法
+2024年05月以前に作成されたクラスタで問題が発生する可能性があります。 `kubectl get all -n kube-system`コマンドを確認すると、calico-kube-controllerまたはcalico-typha Podの状態が **ImagePullBackOff**または **ErrImagePull**に維持されます。 calico-node Podは **Running** 状態に見えますが、Ready項目は**0/1**と表示されます。calico-node Podはdaemonsetとして配布されるため、kubeletのGCによるイメージ削除対象ではありません。しかし、calico-typhaとの通信失敗により正常に動作せず、上記のような問題が発生する可能性があります。 2024年05月以降に作成されたクラスタの場合、calico imageリポジトリ設定が変更され、この問題は発生しません。
+
+#### 解決方法
+calico関連imageリポジトリのurlをpublicリポジトリに変更するスクリプトを実行して解決できます。ただし、この解方法策は**インターネットに接続可能なクラスタ**にのみ適用することができ、スクリプト実行中に**一時的にクラスタPodドネットワーキングが切断される可能性があるため、作業進行時に注意が必要です。スクリプトを実行する前に、すべてのワーカーノードが'Ready'状態であることを確認する必要があります。 問題解決スクリプトは以下の通りです。
+
+```
+#!/bin/bash
+tag="v3.24.1"
+namespace="kube-system"
+calico_cni_image="calico/cni:$tag"
+calico_node_image="calico/node:$tag"
+calico_typha_image="calico/typha:$tag"
+calico_kube_controllers_image="calico/kube-controllers:$tag"
+images=($calico_cni_image $calico_node_image $calico_typha_image $calico_kube_controllers_image)
+default_timeout=4
+declare -a failed_updates
+check_image_match() {
+    local resource_type=$1
+    local resource_name=$2
+    local namespace=$3
+    local expected_image=$4
+    current_image=$(kubectl get $resource_type $resource_name -n $namespace -o jsonpath="{.spec.template.spec.containers[*].image}")
+    echo "Current $resource_type $resource_name image: $current_image"
+    if [ "$current_image" == "$expected_image" ]; then
+        echo "The image repo is not a target because it does not match the $expected_image"
+        exit 1
+    fi
+}
+pull_and_verify_image() {
+    local node=$1
+    local image=$2
+    local pod_name=$(kubectl debug node/"$node" --image="$image" --namespace=$namespace -- sleep 1 --quiet | awk '{print $4}')
+    echo "Created pod $pod_name in $namespace namespace"
+    local start_time=$(date +%s)
+    local timeout_seconds=360
+    while :; do
+        local current_time=$(date +%s)
+        local elapsed_time=$((current_time - start_time))
+        if [ $elapsed_time -ge $timeout_seconds ]; then
+            echo "Timeout reached: $timeout_seconds seconds for node $node, image $image."
+            echo "Exiting due to timeout failure."
+            kubectl delete pod $pod_name -n $namespace >/dev/null 2>&1
+            exit 1
+        fi
+        local container_state=$(kubectl get pod $pod_name -n $namespace -o jsonpath='{.status.containerStatuses[0].state}' 2>/dev/null)
+        if echo "$container_state" | grep -q "terminated"; then
+            echo "Container has terminated, deleting pod $pod_name from $namespace namespace"
+            kubectl delete pod $pod_name -n $namespace >/dev/null 2>&1
+            break
+        elif echo "$container_state" | grep -q "running"; then
+            echo "Container is running, deleting pod $pod_name from $namespace namespace"
+            kubectl delete pod $pod_name -n $namespace >/dev/null 2>&1
+            break
+        elif echo "$container_state" | grep -q "waiting"; then
+            local reason=$(kubectl get pod $pod_name -n $namespace -o jsonpath='{.status.containerStatuses[0].state.waiting.reason}' 2>/dev/null)
+            if [[ "$reason" == "ImagePullBackOff" || "$reason" == "ErrImagePull" ]]; then
+                echo "Failed to pull image $image on node $node due to $reason. Exiting."
+                kubectl delete pod $pod_name -n $namespace >/dev/null 2>&1
+                exit 1
+            fi
+        fi
+        sleep 5
+    done
+}
+update_image() {
+    local resource_type=$1
+    local resource_name=$2
+    local timeout=$3
+    shift 3
+    echo ""
+    echo "Updating $resource_type $resource_name with timeout ${timeout} minutes..."
+    local update_command="kubectl set image $resource_type/$resource_name"
+    for arg in "$@"; do
+        local container_name=$(echo $arg | cut -d'=' -f1)
+        local image_name=$(echo $arg | cut -d'=' -f2)
+        update_command+=" $container_name=$image_name"
+    done
+    update_command+=" -n $namespace"
+    if ! eval $update_command; then
+        echo "Failed to update $resource_type $resource_name"
+        failed_updates+=("$resource_type/$resource_name")
+        return
+    fi
+    check_rollout_status $resource_type $resource_name $timeout
+    return $?
+}
+check_rollout_status() {
+    local resource_type=$1
+    local resource_name=$2
+    local timeout=$3
+    echo "Checking rollout status for $resource_type $resource_name..."
+    if ! kubectl rollout status $resource_type $resource_name -n $namespace --timeout=${timeout}m; then
+        echo "Rollout status check failed for $resource_type $resource_name"
+        failed_updates+=("$resource_type/$resource_name")
+        return 1
+    fi
+    echo "$resource_type $resource_name updated successfully."
+    return 0
+}
+delete_old_pods() {
+    local resource_type=$1
+    local resource_name=$2
+    local old_pods=$3
+    for pod in $old_pods; do
+        if kubectl get pods $pod -n $namespace &> /dev/null; then
+            echo "Deleting old pod: $pod"
+            kubectl delete pod $pod -n $namespace
+        fi
+    done
+}
+update_calico_node() {
+    local resource_type="daemonset"
+    local resource_name="calico-node"
+    local timeout=$(( $(kubectl get nodes --no-headers | wc -l) * 4 ))
+    update_image $resource_type $resource_name $timeout "$resource_name=$calico_node_image" "install-cni=$calico_cni_image" "mount-bpffs=$calico_node_image"
+}
+update_calico_kube_controller() {
+    local resource_type="deployment"
+    local resource_name="calico-kube-controllers"
+    update_image $resource_type $resource_name $default_timeout "$resource_name=$calico_kube_controllers_image"
+}
+update_calico_typha_image() {
+    local resource_type="deployment"
+    local resource_name="calico-typha"
+    local old_pods=$(kubectl get pods -n $namespace -l k8s-app="$resource_name" -o jsonpath="{.items[*].metadata.name}")
+    
+    if ! update_image $resource_type $resource_name $default_timeout "$resource_name=$calico_typha_image"; then
+        delete_old_pods $resource_type $resource_name $old_pods
+    fi
+}
+check_image_match "daemonset" "calico-node" $namespace $calico_node_image
+check_image_match "deployment" "calico-kube-controllers" $namespace $calico_kube_controllers_image
+check_image_match "deployment" "calico-typha" $namespace $calico_typha_image
+for node in $(kubectl get nodes --no-headers | awk '{print $1}'); do
+    echo ""
+    echo "Worker node : [$node] calico images pull start!!"
+    for image in "${images[@]}"; do
+        echo "Pulling $image"
+        pull_and_verify_image $node $image
+    done
+done
+echo "The calico image pull has been completed!"
+echo ""
+update_calico_node
+update_calico_kube_controller
+update_calico_typha_image
+echo ""
+if [ ${#failed_updates[@]} -eq 0 ]; then
+    echo "Calico images update completed!"
+    exit 0
+else
+    echo "[WARNING] Please check to resources status:"
+    for resource in "${failed_updates[@]}"; do
+        echo "- $resource"
+    done
+    exit 1
+fi
+```
+スクリプトの流れは次のとおりです。
+1. 全てのワーカーノードにcalico関連イメージをpullします。
+2. calico-node daemonsetイメージリポジトリを変更するローリングアップデートを進行します。
+3. calico-kube-controllers deploymentイメージリポジトリを変更するローリングアップデートを行います。
+4. calico-typha deploymentイメージリポジトリを変更するローリングアップデートを行います。
+
+このスクリプトはkubectlコマンドが使える環境で実行できます。実行方法は次の通りです。
+* vim calico_manifest_image_change.sh
+* 本文スクリプト内容保存
+* KUBECONFIG環境変数にkubeconfig設定ファイルのパスを保存
+* chmod 755 calico_manifest_image_change.sh
+* ./calico_manifest_image_change.sh
+
+
+### > rpc.statd is not running but is required for remote lockingエラーが発生し、PodでNASボリュームマウントが失敗します。
+
+ワーカーノードのrpc.statdプロセスがゾンビプロセスになったり、管理者のコマンドによって停止して発生する問題です。ボリュームをマウントするには、ワーカーノードにrpcbind及びrpc.statdプロセスが正常に実行されている必要があります。解決方法は次のとおりです。
+```
+systemctl restart rpc-statd
+systemctl restart rpcbind
 ```

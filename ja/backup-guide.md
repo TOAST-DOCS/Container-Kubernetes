@@ -123,6 +123,8 @@ $ helm repo add vmware-tanzu https://vmware-tanzu.github.io/helm-charts
 
 Veleroサーバーは`バックアップクラスタ`と`復元クラスタ`にそれぞれインストールする必要があります。同じObject Storageを使用するには`2つのクラスタに同じhelmコマンド`を使用してインストールすることを推奨します。
 
+1.26以下バージョンのクラスタにVeleroサーバーをインストールする場合、下記のコマンドを実行します。 
+
 ```
 $ helm install velero vmware-tanzu/velero \
 --namespace velero \
@@ -133,6 +135,33 @@ $ helm install velero vmware-tanzu/velero \
 --set initContainers[0].image=lirt/velero-plugin-for-openstack:v0.3.0 \
 --set initContainers[0].volumeMounts[0].mountPath=/target \
 --set initContainers[0].volumeMounts[0].name=plugins \
+--set deployRestic=true \
+--set configuration.defaultVolumesToRestic=true \
+--set configuration.defaultResticPruneFrequency=0h1m0s \
+--set configuration.backupStorageLocation.bucket={Container} \
+--set configuration.backupStorageLocation.config.region={Region} \
+--set configuration.backupStorageLocation.config.resticRepoPrefix=swift:{Container}:/restic \
+--set configuration.extraEnvVars.OS_AUTH_URL={IDサービス(Identity)} \
+--set configuration.extraEnvVars.OS_TENANT_ID={テナントID} \
+--set configuration.extraEnvVars.OS_USERNAME={NHN Cloud ID} \
+--set configuration.extraEnvVars.OS_PASSWORD={APIパスワード} \
+--set configuration.extraEnvVars.OS_REGION_NAME={Region} \
+--set configuration.extraEnvVars.OS_DOMAIN_ID=default
+```
+
+1.27以上バージョンのクラスタにVeleroサーバーをインストールする場合、下記のコマンドを実行します。 
+
+```
+$ helm install velero vmware-tanzu/velero \
+--namespace velero \
+--create-namespace \
+--version 2.32.6 \
+--set configuration.provider=community.openstack.org/openstack \
+--set initContainers[0].name=velero-plugin-for-openstack \
+--set initContainers[0].image=lirt/velero-plugin-for-openstack:v0.3.0 \
+--set initContainers[0].volumeMounts[0].mountPath=/target \
+--set initContainers[0].volumeMounts[0].name=plugins \
+--set kubectl.image.tag=1.26.14-debian-11-r6 \
 --set deployRestic=true \
 --set configuration.defaultVolumesToRestic=true \
 --set configuration.defaultResticPruneFrequency=0h1m0s \
