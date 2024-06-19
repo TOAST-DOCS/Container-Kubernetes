@@ -1,7 +1,7 @@
 ## Container > NHN Kubernetes Service(NKS) > API v2ガイド
 
 Kubernetesクラスタを構成するためのAPIを記述します。
-APIを使用するにはAPIエンドポイントとトークンなどが必要です。 [API使用準備](/Compute/Compute/ko/identity-api/)を参照してAPIの使用に必要な情報を準備します。
+APIを使用するにはAPIエンドポイントとトークンなどが必要です。 [API使用準備](/Compute/Compute/ja/identity-api/)を参照してAPIの使用に必要な情報を準備します。
 
 すべてのAPIは`kubernetes`タイプエンドポイントを利用して呼び出します。
 
@@ -24,41 +24,41 @@ NHN Kubernetes Service(NKS)APIは、クラスタおよびノードグループ�
 GET /v2.0/networks?router:external=True
 ```
 
-ネットワークリスト照会APIの詳細については、[ネットワークリスト表示](/Network/VPC/ko/public-api/#_2)を参照してください。
+ネットワークリスト照会APIの詳細については、[ネットワークリスト表示](/Network/VPC/ja/public-api/#_2)を参照してください。
 
 
 ### インターネットゲートウェイに接続されたサブネットUUIDリスト
 
-インターネットゲートウェイに接続されたVPCネットワークに接続されたサブネットUUIDを入力します。複数のサブネットが検索された場合はコロン(`:`)でつなげて入力します。サブネットリスト照会APIの詳細については、[サブネットリスト表示](/Network/VPC/ko/public-api/#vpc_7)を参照してください。
+インターネットゲートウェイに接続されたVPCネットワークに接続されたサブネットUUIDを入力します。複数のサブネットが検索された場合はコロン(`:`)でつなげて入力します。サブネットリスト照会APIの詳細については、[サブネットリスト表示](/Network/VPC/ja/public-api/#vpc_7)を参照してください。
 
 
 ### VPCネットワークUUID
 
-ノードと接続する内部VPCネットワークUUIDを入力します。ネットワークリスト照会APIの詳細については[ネットワークリスト表示](/Network/VPC/ko/public-api/#vpc_1)を参照してください。
+ノードと接続する内部VPCネットワークUUIDを入力します。ネットワークリスト照会APIの詳細については[ネットワークリスト表示](/Network/VPC/ja/public-api/#vpc_1)を参照してください。
 
 ### VPCサブネットUUID
 
-ノードと接続する内部VPCネットワークに接続されたサブネットUUIDを入力します。サブネットリスト照会APIの詳細については[サブネットリスト表示](/Network/VPC/ko/public-api/#vpc_7)を参照してください。
+ノードと接続する内部VPCネットワークに接続されたサブネットUUIDを入力します。サブネットリスト照会APIの詳細については[サブネットリスト表示](/Network/VPC/ja/public-api/#vpc_7)を参照してください。
 
 ### アベイラビリティゾーンUUID
 
-ノードを作成するアベイラビリティゾーンUUIDを入力します。アベイラビリティゾーンリスト照会APIの詳細については[可用性リスト表示](/Compute/Instance/ko/public-api/#_9)を参照してください。
+ノードを作成するアベイラビリティゾーンUUIDを入力します。アベイラビリティゾーンリスト照会APIの詳細については[可用性リスト表示](/Compute/Instance/ja/public-api/#_9)を参照してください。
 
 ### キーペアUUID
 
-ノード接続時に使用するキーペアを入力します。キーペアリスト照会APIの詳細については[キーペアリスト表示](/Compute/Instance/ko/public-api/#_13)を参照してください。
+ノード接続時に使用するキーペアを入力します。キーペアリスト照会APIの詳細については[キーペアリスト表示](/Compute/Instance/ja/public-api/#_13)を参照してください。
 
 ### ベースイメージUUID
 
-ノードの作成に使用するベースイメージのUUIDを入力します。NKSノードの作成に使用されるベースイメージだけをフィルタリングするため、API呼び出し時にクエリ文字列パラメータに`nhncloud_product=container&visibility=public`を入力します。ベースイメージリスト照会APIの詳細については、[イメージリスト照会](/Compute/Image/ko/public-api/#_2)を参照してください。
+ノードの作成に使用するベースイメージのUUIDを入力します。NKSノードの作成に使用されるベースイメージだけをフィルタリングするため、API呼び出し時にクエリ文字列パラメータに`nhncloud_product=container&visibility=public`を入力します。ベースイメージリスト照会APIの詳細については、[イメージリスト照会](/Compute/Image/ja/public-api/#_2)を参照してください。
 
 ### ブロックストレージの種類
 
-ノードに使用するブロックストレージUUIDを入力します。ブロックストレージタイプリスト照会APIの詳細については[ボリュームタイプリスト表示](/Storage/Block%20Storage/ko/public-api/#_2)を参照してください。
+ノードに使用するブロックストレージUUIDを入力します。ブロックストレージタイプリスト照会APIの詳細については[ボリュームタイプリスト表示](/Storage/Block%20Storage/ja/public-api/#_2)を参照してください。
 
 ### インスタンスタイプUUID
 
-作成するノードのインスタンスタイプUUIDを入力します。インスタンスタイプリスト照会APIの詳細については[インスタンスタイプリスト表示](/Compute/Instance/ko/public-api/#_2)を参照してください。
+作成するノードのインスタンスタイプUUIDを入力します。インスタンスタイプリスト照会APIの詳細については[インスタンスタイプリスト表示](/Compute/Instance/ja/public-api/#_2)を参照してください。
 
 
 
@@ -734,7 +734,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 ### クラスタCNIの変更
-クラスタCNI(container network interface)を変更します。Flannel CNIを他のCNIに変更できます。変更できるCNIの種類と変更可能条件については[ユーザーガイド](/Container/NKS/ko/user-guide/#cni)を参照してください。
+クラスタCNI(container network interface)を変更します。Flannel CNIを他のCNIに変更できます。変更できるCNIの種類と変更可能条件については[ユーザーガイド](/Container/NKS/ja/user-guide/#cni)を参照してください。
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/actions/cni_update
@@ -807,8 +807,8 @@ pod_subnetは以下のようなルールで入力する必要があります。
 
 ### クラスタAPIエンドポイントIPアクセス制御適用
 クラスタAPIエンドポイントにIPアクセス制御を適用または解除できます。
-IPアクセス制御機能の詳細については、 [IPアクセス制御](/Network/Load%20Balancer/ko/overview/#ip)文書を参照してください。
-クラスタAPIエンドポイントへのIPアクセス制御ルールに関する詳細については、 [ユーザーガイド](/Container/NKS/ko/user-guide/#_67)を参照してください。
+IPアクセス制御機能の詳細については、 [IPアクセス制御](/Network/Load%20Balancer/ja/overview/#ip)文書を参照してください。
+クラスタAPIエンドポイントへのIPアクセス制御ルールに関する詳細については、 [ユーザーガイド](/Container/NKS/ja/user-guide/#_67)を参照してください。
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/api_ep_ipacl
