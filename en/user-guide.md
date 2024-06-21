@@ -1108,7 +1108,7 @@ Conversion to NKS worker node involves installing packages and changing settings
 You may be charged for using the Image Builder service.
 
 #### Constraints
-Only custom images created based on NHN Cloud instances can be used as worker node images. This feature is only available for specific instance images. You must select the correct version of application for the conversion wok to match the image of the base instance you are creating your custom image from. See the table below for information on the application version to choose for each instance image.
+The supported OS images and the application versions you must select for each OS image are shown in the table below. You must select the correct version of application to match the image of the base instance from which your custom image is created.
 
 | OS | Image | Application name |
 | --- | --- | --- |
@@ -1118,14 +1118,9 @@ Only custom images created based on NHN Cloud instances can be used as worker no
 |  | CentOS 7.9 (2023.11.21)  | 1.3 |
 |  | CentOS 7.9 (2024.02.20)  | 1.4 |
 |  | CentOS 7.9 (2024.05.21)  | 1.5 |
-| Rocky | Rocky Linux 8.6 (2023.03.21)  | 1.0 |
-|  | Rocky Linux 8.7 (2023.05.25)  | 1.1 |
-|  | Rocky Linux 8.8 (2023.08.22)  | 1.2 |
-|  | Rocky Linux 8.8 (2023.11.21)  | 1.3 |
-|  | Rocky Linux 8.9 (2024.02.20)  | 1.4 |
+| Rocky | Rocky Linux 8.9 (2024.02.20)  | 1.4 |
 |  | Rocky Linux 8.9 (2024.05.21)  | 1.5 |
-| Ubuntu | Ubuntu Server 18.04.6 LTS (2023.03.21)  | 1.0 |
-|  | Ubuntu Server 20.04.6 LTS (2023.05.25)  | 1.1 |
+| Ubuntu | Ubuntu Server 20.04.6 LTS (2023.05.25)  | 1.1 |
 |  | Ubuntu Server 20.04.6 LTS (2023.08.22)  | 1.2 |
 |  | Ubuntu Server 20.04.6 LTS (2023.11.21)  | 1.3 |
 |  | Ubuntu Server 22.04.3 LTS (2023.11.21)  | 1.3 |
