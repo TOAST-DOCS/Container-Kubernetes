@@ -1108,7 +1108,7 @@ Conversion to NKS worker node involves installing packages and changing settings
 You may be charged for using the Image Builder service.
 
 #### Constraints
-Only custom images created based on NHN Cloud instances can be used as worker node images. This feature is only available for specific instance images. You must select the correct version of application for the conversion wok to match the image of the base instance you are creating your custom image from. See the table below for information on the application version to choose for each instance image.
+The supported OS images and the application versions you must select for each OS image are shown in the table below. You must select the correct version of application to match the image of the base instance from which your custom image is created.
 
 | OS | Image | Application name |
 | --- | --- | --- |
@@ -1118,14 +1118,9 @@ Only custom images created based on NHN Cloud instances can be used as worker no
 |  | CentOS 7.9 (2023.11.21)  | 1.3 |
 |  | CentOS 7.9 (2024.02.20)  | 1.4 |
 |  | CentOS 7.9 (2024.05.21)  | 1.5 |
-| Rocky | Rocky Linux 8.6 (2023.03.21)  | 1.0 |
-|  | Rocky Linux 8.7 (2023.05.25)  | 1.1 |
-|  | Rocky Linux 8.8 (2023.08.22)  | 1.2 |
-|  | Rocky Linux 8.8 (2023.11.21)  | 1.3 |
-|  | Rocky Linux 8.9 (2024.02.20)  | 1.4 |
+| Rocky | Rocky Linux 8.9 (2024.02.20)  | 1.4 |
 |  | Rocky Linux 8.9 (2024.05.21)  | 1.5 |
-| Ubuntu | Ubuntu Server 18.04.6 LTS (2023.03.21)  | 1.0 |
-|  | Ubuntu Server 20.04.6 LTS (2023.05.25)  | 1.1 |
+| Ubuntu | Ubuntu Server 20.04.6 LTS (2023.05.25)  | 1.1 |
 |  | Ubuntu Server 20.04.6 LTS (2023.08.22)  | 1.2 |
 |  | Ubuntu Server 20.04.6 LTS (2023.11.21)  | 1.3 |
 |  | Ubuntu Server 22.04.3 LTS (2023.11.21)  | 1.3 |
@@ -2210,7 +2205,30 @@ spec:
 ```
 
 > [Caution]
-Member subnets can be set up on clusters that have been upgraded to v1.24.3 or later after November 28, 2023, or are newly created.
+> If you set the load balancer's subnet and member subnets to be different, you must be careful with your network settings. Refer to the following examples.
+>
+> **Example 1.**
+> 
+> * Subnet of the load balancer: Subnet#1
+> * Member subnet of the load balancer: Subnet#2
+> * Set the subnet of the instance's network interface
+>     * eth0: Subnet#1
+>     * eth1: Subnet#2 (member)
+> 
+> In this case, the IP address of instance eth1 is registered as a member. Healthcheck packets sent by the load balancer are received by instance eth1 and attempted to be sent through eth0. Please note that the source IP address of the packet to eth0 is different from the IP address of eth0. If source/destination check is enabled on eth0's network interface, this packet will not be sent and discarded. In a configuration like this, you must disable source/destination check on eth0's network interface for the member to function properly. For more information on the source/destination check feature, see [Change source/target check](/Network/Network%20Interface/en/console-guide/#change-sourcetarget-check).
+> 
+> **Example 2.**
+> 
+> * Subnet of the load balancer: Subnet#1
+> * Member subnet of the load balancer: Subnet#2
+> * Set the subnet of the instance's network interface
+>     * eth0: Subnet#3
+>     * eth1: Subnet#2 (member)
+> 
+> In this case, the IP address of instance eth1 is registered as a member. Healthcheck packets sent by the load balancer are received by instance eth1.The response packets must be sent to the VIP of the load balancer, but, since subnet#1 is not a directly connected network, the egress interface is determined by the routing table. To enable communication without setting up the source/destination verification feature on the network interface, you must set up routing to allow the traffic destined for the load balancer's VIP to be sent through eth1. 
+
+> [Caution]
+> Member subnets can be set up on clusters that have been upgraded to v1.24.3 or later after November 28, 2023, or are newly created.
 
 #### Set the listener connection limit
 You can set the connection limit for a listener.
