@@ -729,7 +729,7 @@ This API does not require a request body.
 </details>
 
 ### Change Cluster CNI
-Changes the cluster CNI (container network interface). You can change Flannel CNI to a different CNI. For more information on the types of CNIs you can change and the conditions under which they can be changed, see [User Guide](/Container/NKS/ko/user-guide/#cni).
+Changes the cluster CNI (container network interface). You can change Flannel CNI to a different CNI. For more information on the types of CNIs you can change and the conditions under which they can be changed, see [User Guide](/Container/NKS/en/user-guide/#cni).
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/actions/cni_update
@@ -801,8 +801,8 @@ pod_subnet must be entered in the following rules.
 
 ### Enforce IP Access Control to Cluster API Endpoints
 You can enforce or disable IP access control to cluster API endpoints.
-For more information about IP access control features, see [IP access control](/Network/Load%20Balancer/ko/overview/#ip).
-For more information about IP access control rules for Cluster API endpoints, see the [user guide](/Container/NKS/ko/user-guide/#_67).
+For more information about IP access control features, see [IP access control](/Network/Load%20Balancer/en/overview/#ip).
+For more information about IP access control rules for Cluster API endpoints, see the [user guide](/Container/NKS/en/user-guide/#_67).
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/api_ep_ipacl
