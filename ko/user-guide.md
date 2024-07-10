@@ -1948,6 +1948,7 @@ Kubernetes의 서비스 객체를 정의할 때 로드 밸런서의 여러 가�
 * 상태 확인 주기 설정
 * 상태 확인 최대 응답 시간 설정
 * 상태 확인 최대 재시도 횟수 설정
+* L7 규칙 및 조건
 
 #### 전역 설정과 리스너별 설정
 설정 항목별로 전역 설정과 리스너별 설정이 가능합니다. 전역 설정과 리스너별 설정 모두 없는 경우 설정별 기본값을 사용합니다.
@@ -2426,6 +2427,116 @@ keep-alive 타임아웃 값을 설정할 수 있습니다.
 
 > [주의]
 > keep-alive 타임아웃은 2023년 11월 28일 이후 v1.24.3 이상의 버전으로 업그레이드됐거나 신규 생성된 클러스터에서 설정 가능합니다.
+
+#### L7 규칙
+리스너 별로 L7 규칙을 설정할 수 있습니다. 하나의 리스너에 L7 규칙을 최대 10개까지 설정 가능합니다. 각 L7 규칙을 식별하기 위해 설정 위치에 `l7policy-%d`의 형식을 사용합니다. 여기에서 `%d`는 0부터 시작하는 인덱스입니다. 이 인덱스의 값이 작을수록 작업 유형 내의 우선 순위가 높게 설정됩니다.
+
+| 설정 위치 | 의미 | 필수 여부 | 값 |
+| --- | --- | :-: | --- |
+| {LISTENER_SPEC}.{L7POLICY}.loadbalancer.nhncloud/name | 이름 | O | 255자 이하 문자열 |
+| {LISTENER_SPEC}.{L7POLICY}.loadbalancer.nhncloud/description | 설명 | X | 255자 이하 문자열 |
+| {LISTENER_SPEC}.{L7POLICY}.loadbalancer.nhncloud/action | 작업 유형 | O | REDIRECT_TO_POOL(멤버 그룹으로 전달), REDIRECT_TO_URL(URL로 전달), REJECT(차단) 중 하나 |
+| {LISTENER_SPEC}.{L7POLICY}.loadbalancer.nhncloud/redirect-url | redirect할 URL | X (단, 작업 유형이 REDIRECT_TO_URL인 경우에는 필수) | `HTTP://` 혹은 `HTTPS://`로 시작하는 URL |
+
+> [참고]
+> * {LISTENER_SPEC}은 `[TCP|UDP]-%d`의 형식으로 `%d`는 포트 번호입니다. (예: TCP-80)
+> * {L7POLICY}는 `l7policy-%d`의 형식으로 `%d`는 0부터 시작하는 인덱스입니다. (예: l7policy-0)
+
+다음의 제약사항을 갖습니다.
+* L7 규칙은 리스너의 프로토콜이 HTTP 혹은 TERMINATED_HTTPS인 경우에만 생성 가능합니다.
+* 한 리스너 내에서 같은 이름을 갖는 L7 규칙을 생성할 수 없습니다.
+* L7 규칙 이름은 변경할 수 없습니다.
+* 멤버 서브넷에 연결된 노드를 포함하는 멤버 그룹이 생성되고, 이 멤버 그룹은 리스너의 기본 멤버 그룹으로 설정됩니다.
+
+#### L7 조건
+L7 규칙 별로 L7 조건을 설정할 수 있습니다. 하나의 L7 규칙에 L7 조건을 최대 10개까지 설정 가능합니다. 각 L7 조건을 식별하기 위해 `rule-%d`의 형식을 사용합니다. 여기에서 `%d`는 0부터 시작하는 인덱스입니다. L7 조건들 간에는 우선 순위가 없습니다.
+
+| 설정 위치 | 의미 | 필수 여부 | 값 |
+| --- | --- | :-: | --- |
+| {LISTENER_SPEC}.{L7POLICY}.{RULE}.loadbalancer.nhncloud/type | 유형 | O | HOST_NAME(호스트명), PATH(경로), FILE_TYPE(파일 타입), HEADER(헤더), COOKIE(쿠키) 중 하나 |
+| {LISTENER_SPEC}.{L7POLICY}.{RULE}.loadbalancer.nhncloud/compare-type | 비교 방식| O |REGEX, STARTS_WITH, ENDS_WITH, CONTAINS, EQUAL_TO 중 하나 <br>(단, 유형이 FILE_TYPE인 경우에는 EQUAL_TO, REGEX만 사용 가능)|
+| {LISTENER_SPEC}.{L7POLICY}.{RULE}.loadbalancer.nhncloud/key | 키 | X(단, 유형이 HEADER, COOKIE인 경우에는 필수) | 255자 이하 문자열 |
+| {LISTENER_SPEC}.{L7POLICY}.{RULE}.loadbalancer.nhncloud/value | 값 | O | 255자 이하 문자열 |
+
+> [참고]
+> * {Rule}은 `rule-%d`의 형식으로 `%d`는 0부터 시작하는 인덱스입니다. (예: rule-0)
+
+다음의 제약사항을 갖습니다.
+* 하나의 L7 규칙 내에서 동일한 조건(유형, 비교 방식, 키, 값이 모두 같은 조건)은 추가될 수 없습니다.
+
+> [주의]
+> L7 규칙 및 L7 조건은 2024년 7월 23일 이후 v1.24.3 이상의 버전으로 업그레이드됐거나 신규 생성된 클러스터에서 설정 가능합니다.
+
+다음은 L7 규칙 및 조건을 설정하는 예제입니다.
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: echosvr-svc
+  labels:
+    app: echosvr
+  annotations:
+    TCP-80.loadbalancer.nhncloud/listener-protocol: "HTTP"
+
+    TCP-80.l7policy-0.loadbalancer.nhncloud/name: "reject-policy"
+    TCP-80.l7policy-0.loadbalancer.nhncloud/description: "default reject policy"
+    TCP-80.l7policy-0.loadbalancer.nhncloud/action: "REJECT"
+
+    TCP-80.l7policy-0.rule-0.loadbalancer.nhncloud/type: "PATH"
+    TCP-80.l7policy-0.rule-0.loadbalancer.nhncloud/compare-type: "CONTAINS"
+    TCP-80.l7policy-0.rule-0.loadbalancer.nhncloud/value: "temp"
+
+    TCP-80.l7policy-1.loadbalancer.nhncloud/name: "redirect-policy"
+    TCP-80.l7policy-1.loadbalancer.nhncloud/description: "basic redirection policy"
+    TCP-80.l7policy-1.loadbalancer.nhncloud/action: "REDIRECT_TO_POOL"
+
+    TCP-80.l7policy-1.rule-0.loadbalancer.nhncloud/type: "PATH"
+    TCP-80.l7policy-1.rule-0.loadbalancer.nhncloud/compare-type: "CONTAINS"
+    TCP-80.l7policy-1.rule-0.loadbalancer.nhncloud/value: "incoming"
+
+    TCP-80.l7policy-1.rule-1.loadbalancer.nhncloud/type: "HOST_NAME"
+    TCP-80.l7policy-1.rule-1.loadbalancer.nhncloud/compare-type: "STARTS_WITH"
+    TCP-80.l7policy-1.rule-1.loadbalancer.nhncloud/value: "Ubuntu"
+
+    TCP-443.loadbalancer.nhncloud/listener-protocol: "TERMINATED_HTTPS"
+    TCP-443.loadbalancer.nhncloud/listener-terminated-https-tls-version: TLSv1.2
+    TCP-443.loadbalancer.nhncloud/listener-terminated-https-cert-manager-name: test
+
+    TCP-443.l7policy-0.loadbalancer.nhncloud/name: "reject-policy"
+    TCP-443.l7policy-0.loadbalancer.nhncloud/description: "default reject policy"
+    TCP-443.l7policy-0.loadbalancer.nhncloud/action: "REJECT"
+
+    TCP-443.l7policy-0.rule-0.loadbalancer.nhncloud/type: "PATH"
+    TCP-443.l7policy-0.rule-0.loadbalancer.nhncloud/compare-type: "CONTAINS"
+    TCP-443.l7policy-0.rule-0.loadbalancer.nhncloud/value: "temp"
+
+    TCP-443.l7policy-1.loadbalancer.nhncloud/name: "redirect-policy"
+    TCP-443.l7policy-1.loadbalancer.nhncloud/description: "basic redirection policy"
+    TCP-443.l7policy-1.loadbalancer.nhncloud/action: "REDIRECT_TO_POOL"
+
+    TCP-443.l7policy-1.rule-0.loadbalancer.nhncloud/type: "PATH"
+    TCP-443.l7policy-1.rule-0.loadbalancer.nhncloud/compare-type: "CONTAINS"
+    TCP-443.l7policy-1.rule-0.loadbalancer.nhncloud/value: "incoming"
+
+    TCP-443.l7policy-1.rule-1.loadbalancer.nhncloud/type: "HOST_NAME"
+    TCP-443.l7policy-1.rule-1.loadbalancer.nhncloud/compare-type: "STARTS_WITH"
+    TCP-443.l7policy-1.rule-1.loadbalancer.nhncloud/value: "Ubuntu"
+
+spec:
+  ports:
+  - name: tcp-80
+    port: 80
+    targetPort: 8080
+    protocol: TCP
+  - name: tcp-443
+    port: 443
+    targetPort: 8443
+    protocol: TCP
+  selector:
+    app: echosvr
+  type: LoadBalancer
+```
 
 ## 인그레스 컨트롤러
 인그레스 컨트롤러(ingress controller)는 인그레스(Ingress) 객체에 정의된 규칙을 참조하여 클러스터 외부에서 내부 서비스로 HTTP와 HTTPS 요청을 라우팅하고 SSL/TSL 종료, 가상 호스팅 등을 제공합니다. 인그레스 컨트롤러와 인그레스에 대한 자세한 내용은 [인그레스 컨트롤러](https://kubernetes.io/ko/docs/concepts/services-networking/ingress-controllers/), [인그레스](https://kubernetes.io/ko/docs/concepts/services-networking/ingress/) 문서를 참고하세요.
