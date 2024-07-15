@@ -1492,6 +1492,7 @@ NHN Cloud의 Kubernetes 클러스터 CNI 변경 기능에 적용되는 규칙은
 * 마스터의 Kubernetes 버전과 모든 워커 노드 그룹의 Kubernetes 버전이 일치해야 CNI 변경이 가능합니다.
 * Calico-VXLAN, Calico-eBPF에서 Flannel로 CNI 변경은 지원하지 않습니다.
 * Flannel에서 Calico-eBPF로 CNI 변경은 지원하지 않습니다.
+* Calico-VXLAN에서 Calico-eBPF로 CNI 변경은 지원하지 않습니다.
 * 다른 기능의 동작으로 인해 클러스터가 업데이트 중인 상태에서는 CNI 변경이 불가능합니다.
 
 다음 예시는 Kubernetes CNI 변경 과정에서 변경 가능 여부를 표로 나타낸 것입니다. 예시에 사용된 조건은 다음과 같습니다. 
