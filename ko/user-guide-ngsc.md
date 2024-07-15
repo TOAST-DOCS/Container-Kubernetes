@@ -123,15 +123,13 @@ NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전�
 | v1.22.3 | 불가능 | 가능 |
 | v1.23.3 | 불가능 | 가능 |
 | v1.24.3 | 불가능 | 가능 |
-| v1.25.4 | 불가능 | 가능 |
+| v1.25.4 | 가능 | 가능 |
 | v1.26.3 | 가능 | 가능 |
 | v1.27.3 | 가능 | 가능 |
 | v1.28.3 | 가능 | 가능 |
 | v1.29.3 | 가능 | 가능 |
 
-NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Network Interface(CNI)를 제공합니다. 2023/04/04 이후에는 v1.24.3 버전 이상의 클러스터 생성 시 CNI가 Calico로 생성됩니다. Calico의 경우 Calico-VXLAN과 Calico-eBPF CNI 중에서 선택할 수 있습니다. 기본 설정은 Calico-VXLAN입니다. Flannel과 Calico-VXLAN CNI는 VXLAN 방식을 사용하고, Calico-eBPF CNI는 eBPF 방식을 사용합니다.
-
-또한, Calico-eBPF CNI를 선택할 수 있는 OS는 Rocky와 Ubuntu이며, Flannel과 Calico-VXLAN은 모든 OS(Centos, Rocky, Red Hat, Ubuntu)를 지원합니다.
+NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Network Interface(CNI)를 제공합니다. 2023/04/04 이후에는 v1.24.3 버전 이상의 클러스터 생성 시 CNI가 Calico로 생성됩니다. Flannel과 Calico CNI의 Network mode는 모두 VXLAN 방식으로 동작합니다.
 
 | 버전 | 클러스터 생성 시 설치한 CNI 종류 및 버전 | CNI 변경 가능 여부 |
 | :-: | :-: | :-: |
@@ -145,14 +143,14 @@ NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Netwo
 | v1.24.3 | Flannel v0.14.0 혹은 Calico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
 | v1.25.4 | Flannel v0.14.0 혹은 Calico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
 | v1.26.3 | Flannel v0.14.0 혹은 Calico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
-| v1.27.3 | Calico v3.28.0 | 불가|
-| v1.28.3 | Calico v3.28.0 | 불가|
-| v1.29.3 | Calico v3.28.0 | 불가|
+| v1.27.3 | Calico v3.24.1 | 불가|
+| v1.28.3 | Calico v3.24.1 | 불가|
+| v1.29.3 | Calico v3.24.1 | 불가|
 
 주석
 
 * <a name="footnote_calico_version_1">1</a>: 2023/03/31 이전에 생성된 클러스터에는 Flannel이 설치되어 있습니다. 2023/03/31 이후에 생성되는 v1.24.3 이상의 클러스터는 Calico가 설치됩니다.
-* <a name="footnote_calico_version_2">2</a>: CNI 변경은 v1.24.3 이상의 클러스터에서만 지원되며, 현재 Flannel에서 Calico-VXLAN으로의 변경만 지원합니다.
+* <a name="footnote_calico_version_2">2</a>: CNI 변경은 v1.24.3 이상의 클러스터에서만 지원되며, 현재 Flannel에서 Calico로의 변경만 지원합니다.
 
 
 클러스터 워커 노드 필수 보안 규칙 항목 
@@ -161,26 +159,22 @@ NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Netwo
 | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | ingress | TCP | 10250 | IPv4 | 워커 노드 | kubelet 포트, 방향: metrics-server(워커 노드) -> kubelet(워커 노드) | |
 | ingress | TCP | 10250 | IPv4 | NKS Control Plane | kubelet 포트, 방향: kube-apiserver(NKS Control plane) -> kubelet(워커 노드) | |
-| ingress | TCP | 5473 | IPv4 | 워커 노드 |  calico-typha 포트, 방향: calico-node(워커 노드) -> calico-typha(워커 노드) | CNI가 calico, calico-eBPF인 경우 생성됨 |
-| ingress | TCP | 179 | IPv4 |  워커 노드 | calico-node BGP 포트, 방향: pod(워커 노드) -> pod(워커 노드) | CNI가 calico-eBPF인 경우 생성됨 |
-| ingress | TCP | 179 | IPv4 | NKS Control Plane | calico-node BGP 포트, 방향: pod(NKS Control plane) -> pod(워커 노드) | CNI가 calico-eBPF인 경우 생성됨 |
+| ingress | TCP | 5473 | IPv4 | 워커 노드 |  calico-typha 포트, 방향: calico-node(워커 노드) -> calico-typha(워커 노드) | CNI가 calico인 경우 생성됨 |
 | ingress | UDP | 8472 | IPv4 | 워커 노드 | flannel vxlan overlay network 포트, 방향: pod(워커 노드) -> pod(워커 노드) | CNI가 flannel인 경우 생성됨 |
 | ingress | UDP | 8472 | IPv4 | 워커 노드 | flannel vxlan overlay network 포트, 방향: pod(NKS Control plane) -> pod(워커 노드) | CNI가 flannel인 경우 생성됨 |
-| ingress | UDP | 4789 | IPv4 | 워커 노드 | calico-node vxlan overlay network 포트, 방향: pod(워커 노드) -> pod(워커 노드) | CNI가 calico, calico-eBPF인 경우 생성됨 |
-| ingress | UDP | 4789 | IPv4 | NKS Control Plane | calico-node vxlan overlay network 포트, 방향: pod(NKS Control plane) -> pod(워커 노드) | CNI가 calico, calico-eBPF인 경우 생성됨 |
+| ingress | UDP | 4789 | IPv4 | 워커 노드 | calico-node vxlan overlay network 포트, 방향: pod(워커 노드) -> pod(워커 노드) | CNI가 calico인 경우 생성됨 |
+| ingress | UDP | 4789 | IPv4 | NKS Control Plane | calico-node vxlan overlay network 포트, 방향: pod(NKS Control plane) -> pod(워커 노드) | CNI가 calico인 경우 생성됨 |
 | egress | TCP | 2379 | IPv4 | NKS Control Plane | etcd 포트, 방향: calico-kube-controller(워커 노드) -> etcd(NKS Control plane)| |
 | egress | TCP | 6443 | IPv4 | Kubernetes API 엔드포인트 | kube-apiserver 포트, 방향: kubelet, kube-proxy(워커 노드) -> kube-apiserver(NKS Control plane) | |
 | egress | TCP | 6443 | IPv4 | NKS Control Plane | kube-apiserver 포트, 방향: default kubernetes service(워커 노드) -> kube-apiserver(NKS Control plane) | |
-| egress | TCP | 5473 | IPv4 | 워커 노드 | calico-typha 포트, 방향: calico-node(워커 노드) -> calico-typha(워커 노드) | CNI가 calico, calico-eBPF인 경우 생성됨 |
+| egress | TCP | 5473 | IPv4 | 워커 노드 | CNI가 calico인 경우 생성됨, calico-typha 포트, 방향: calico-node(워커 노드) -> calico-typha(워커 노드) | |
 | egress | TCP | 53 | IPv4 | 워커 노드 | DNS 포트, 방향: 워커 노드 -> 외부 | |
 | egress | TCP | 443 | IPv4 | 모두 허용 | HTTPS 포트, 방향: 워커 노드 -> 외부 | |
 | egress | TCP | 80 | IPv4 | 모두 허용 | HTTP 포트, 방향: 워커 노드 -> 외부 | |
-| egress | TCP | 179 | IPv4 |  워커 노드 | calico-node BGP 포트, 방향: pod(워커 노드) -> pod(워커 노드) | CNI가 calico-eBPF인 경우 생성됨 |
-| egress | TCP | 179 | IPv4 | NKS Control Plane | calico-node BGP 포트, 방향: pod(NKS Control plane) -> pod(워커 노드) | CNI가 calico-eBPF인 경우 생성됨 |
 | egress | UDP | 8472 | IPv4 | 워커 노드 | flannel vxlan overlay network 포트, 방향: pod(워커 노드) -> pod(워커 노드)| CNI가 flannel인 경우 생성됨 |
 | egress | UDP | 8472 | IPv4 | NKS Control Plane | flannel vxlan overlay network 포트, 방향: pod(워커 노드) -> pod(NKS Control plane) | CNI가 flannel인 경우 생성됨 |
-| egress | UDP | 4789 | IPv4 | 워커 노드 | calico-node vxlan overlay network 포트, 방향: pod(워커 노드) -> pod(워커 노드) | CNI가 calico, calico-eBPF인 경우 생성됨 |
-| egress | UDP | 4789 | IPv4 | NKS Control Plane | calico-node vxlan overlay network 포트, 방향: pod(워커 노드) -> pod(NKS Control plane) | CNI가 calico, calico-eBPF인 경우 생성됨 |
+| egress | UDP | 4789 | IPv4 | 워커 노드 | calico-node vxlan overlay network 포트, 방향: pod(워커 노드) -> pod(워커 노드) | CNI가 calico인 경우 생성됨 |
+| egress | UDP | 4789 | IPv4 | NKS Control Plane | calico-node vxlan overlay network 포트, 방향: pod(워커 노드) -> pod(NKS Control plane) | CNI가 calico인 경우 생성됨 |
 | egress | UDP | 53 | IPv4 | 모두 허용 | DNS 포트, 방향: 워커 노드 -> 외부 | |
 
 강화된 보안 규칙 사용 시 NodePort 타입의 서비스와 NHN Cloud NAS 서비스에서 사용하는 포트에 대한 보안 규칙에 추가되어 있지 않습니다. 필요에 따라 아래 보안 규칙을 추가 설정해야 합니다. 
@@ -191,11 +185,6 @@ NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Netwo
 | egress | TCP | 2049 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc nfs 포트, 방향: csi-nfs-node(워커 노드) -> NHN Cloud NAS 서비스 |
 | egress | TCP | 111 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc portmapper 포트, 방향: csi-nfs-node(워커 노드) -> NHN Cloud NAS 서비스 |
 | egress | TCP | 635 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc mountd 포트, 방향: csi-nfs-node(워커 노드) -> NHN Cloud NAS 서비스 |
-
-> [주의] 
-> calico-eBPF CNI를 사용할 경우, 파드 간 통신과 노드에서 파드로의 통신은 파드에 설정된 포트를 통해 이루어집니다.
-> 강화된 보안 규칙을 사용하는 경우, 해당 파드 포트에 대한 ingress, egress 보안 규칙을 수동으로 추가해야 합니다.
-
 
 강화된 보안 규칙을 사용하지 않는 경우 NodePort 타입의 서비스와 외부 네트워크 통신에 필요한 보안 규칙이 추가로 생성됩니다.
 

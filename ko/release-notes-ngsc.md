@@ -1,12 +1,5 @@
 ## Container > NHN Kubernetes Service(NKS) > 릴리스 노트
 
-### 2024. 07. 23.
-
-#### 기능 추가
-
-* 로드 밸런서 상세 옵션 설정으로 L7 규칙과 조건을 적용할 수 있습니다.
-* 클러스터 생성 시 Calico-VXLAN과 Calico-eBPF CNI를 선택할 수 있습니다.
-
 ### 2024. 06. 04.
 
 #### 기능 추가
