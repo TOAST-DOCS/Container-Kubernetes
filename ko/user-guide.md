@@ -1726,7 +1726,7 @@ echo '[ { "registry": "user-defined.registry.io", "endpoint_list": [ "http://use
 
 
 ## CNI(Container Network Interface)
-NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Network Interface(CNI)를 제공합니다. 2024/07/23 이후에는 클러스터 생성 시 Calico-VXLAN과 Calico-eBPF CNI를 선택할 수 있으며, 기본 설정은 Calico-VXLAN입니다. Flannel과 Calico-VXLAN CNI는 VXLAN 방식을 사용하고, Calico-eBPF CNI는 eBPF 방식을 사용합니다.
+NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Network Interface(CNI)를 제공합니다. 2024/07/23 이후에는 클러스터 생성 시 Calico-VXLAN과 Calico-eBPF CNI를 선택할 수 있으며, 기본 설정은 Calico-VXLAN입니다. Flannel과 Calico-VXLAN CNI는 컨테이너 워크로드를 오버레이 네트워크에 구성하고, VXLAN을 이용해 통신합니다. Calico-eBPF는 컨테이너 워크로드를 BGP 라우팅 프로토콜로 구성하고, eBPF 기술을 기반으로 직접 통신하며 일부 구간은 VXLAN을 이용해 통신합니다. Calico의 eBPF 관련한 내용은 [about eBPF](https://docs.tigera.io/calico/latest/about/kubernetes-training/about-ebpf)를 참고하세요.
 
 또한, Calico-eBPF CNI를 선택할 수 있는 OS는 Rocky와 Ubuntu이며, Flannel과 Calico-VXLAN은 모든 OS(Centos, Rocky, Red Hat, Ubuntu)를 지원합니다.
 
@@ -1739,12 +1739,12 @@ NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Netwo
 | v1.21.6 | Flannel v0.14.0 | 불가 |
 | v1.22.3 | Flannel v0.14.0 | 불가 |
 | v1.23.3 | Flannel v0.14.0 | 불가 |
-| v1.24.3 | Flannel v0.14.0 혹은 Calico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
-| v1.25.4 | Flannel v0.14.0 혹은 Calico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
-| v1.26.3 | Flannel v0.14.0 혹은 Calico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
-| v1.27.3 | Calico v3.28.0 | 불가|
-| v1.28.3 | Calico v3.28.0 | 불가|
-| v1.29.3 | Calico v3.28.0 | 불가|
+| v1.24.3 | Flannel v0.14.0 혹은 Calico-VXLAN v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
+| v1.25.4 | Flannel v0.14.0 혹은 Calico-VXLAN v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
+| v1.26.3 | Flannel v0.14.0 혹은 Calico-VXLAN, Calico-eBPF v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
+| v1.27.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 불가|
+| v1.28.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 불가|
+| v1.29.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 불가|
 
 주석
 
@@ -1757,19 +1757,18 @@ NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Netwo
 NHN Kubernetes Service(NKS)가 제공하는 Calico-VXLAN, Calic-eBPF는 아래와 같은 차이점이 있습니다.
 |  | Calico-VXLAN | Calico-eBPF |
 | :-: | :-: | :-: |
-| BPF 사용 여부 | 사용 안 함 | 사용 |
+| 컨테이너 네트워크 처리 모듈 | 리눅스 커널 네트워크 스택 | eBPF + 리눅스 커널 네트워크 스택 |
 | kube-proxy | 활성화 | 비활성화 (eBPF가 kube-proxy 대체) |
-| 네트워크 방식| VXLAN | Direct (BGP 기반) |
-| 파드 to 파드 통신| VXLAN 캡슐화 되어 통신 | 직접 통신 (BGP 라우팅)<sup>[1](#footnote_calico_1) |
-| 외부 네트워크 to 파드 통신 | VXLAN 캡슐화 되어 통신 | 직접 통신 (eBPF로 정책 적용)<sup>[2](#footnote_calico_2) |
+| 네트워크 방식| VXLAN | 직접 통신 |
+| 파드 to 파드 통신| VXLAN 캡슐화 되어 통신 | 직접 통신<sup>[1](#footnote_calico_1) |
+| 외부 네트워크 to 파드 통신 | VXLAN 캡슐화 되어 통신 | 직접 통신<sup>[2](#footnote_calico_2) |
 | 네트워크 정책 적용 | iptables 기반 | eBPF 기반 (커널 수준) |
-| 라우팅 정보 교환 | VXLAN 터널 통해 교환 | BGP 통해 교환 (Bird 사용) |
-| 네트워크 성능 | VXLAN 캡슐화로 인한 성능 저하 | Direct 기반으로 인한 높은 성능 (낮은 지연 시간) |
+| 네트워크 성능 | VXLAN 캡슐화로 인한 성능 저하 | 직접 통신으로 인한 높은 성능 (낮은 지연 시간) |
 
 주석
 
-* <a name="footnote_calico_1">1</a>: 출발지, 목적지가 파드 IP로 설정됩니다. 강화된 보안 규칙 사용 시 파드 포트에 대한 ingress, egress 보안 규칙을 수동으로 추가해야합니다.
-* <a name="footnote_calico_2">2</a>: 통신은 eBPF로 생성된 정책에 의해 관리됩니다. NodePort 서비스로 접근하는 경우, 목적지 파드가 접근한 노드가 아닌 다른 노드에 있다면, 노드 간 이동 시 패킷은 VXLAN 캡슐화되어 전달됩니다.
+* <a name="footnote_calico_1">1</a>: 패킷의 출발지 IP, 목적지 IP가 파드 IP로 설정됩니다. 강화된 보안 규칙 사용 시 이 트래픽에 대한 보안 규칙을 별도로 설정해야 합니다. 
+* <a name="footnote_calico_2">2</a>: 파드에서 외부 네트워크로 통신 시, 출발지는 노드의 IP가 됩니다.
 
 
 ## 보안 그룹
