@@ -505,7 +505,7 @@ X-Auth-Token: {tokenId}
 | labels.pods_network_subnet | Body | Integer | X |  클러스터 파드 서브넷 크기. pods_network_subnet 입력 규칙 참고 |
 | labels.ncr_sgw | Body | String | X | NCR 타입의 서비스 게이트웨이 UUID<br>단, 클러스터 VPC와 동일한 VPC에 생성된 것에 한함. |
 | labels.obs_sgw | Body | String | X | OBS 타입의 서비스 게이트웨이 UUID<br>단, 클러스터 VPC와 동일한 VPC에 생성된 것에 한함. |
-| labels.cni_driver | Body | String | X | CNI 설정, 선택 가능 CNI 목록: calico(기본), calico-ebpf<br>calico : Calico-VXLAN으로 생성<br>calico-ebpf : Calico-eBPF로 생성 |
+| labels.cni_driver | Body | String | X | CNI 설정, 선택 가능 CNI 목록: calico(기본), calico-ebpf<br>calico: Calico-VXLAN으로 생성<br>calico-ebpf: Calico-eBPF로 생성 |
 | flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
 | fixed_network | Body | UUID | O | VPC 네트워크 UUID |
 | fixed_subnet | Body | UUID | O | VPC 서브넷 UUID. fixed_subnet, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
@@ -747,7 +747,7 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|---|
 | tokenId | Header | String | O | 토큰 ID |
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
-| cni | Body | String | O | 변경할 CNI를 설정(선택 가능 CNI 목록: calico)<br>calico : Calico-VXLAN으로 변경 | 
+| cni | Body | String | O | 변경할 CNI를 설정(선택 가능 CNI 목록: calico)<br>calico: Calico-VXLAN으로 변경 | 
 | num_buffer_nodes | Body | Integer | X | 버퍼 노드 수. 기본값: 1, 최솟값: 0, 최댓값: 각 워커 노드 그룹에서 추가로 생성 가능한 노드 수(워커 노드 그룹당 최대 노드 수 쿼터 - 해당 워커 노드 그룹의 현재 노드 수) 중 최솟값 |
 | num_max_unavailable_nodes | Body |  Integer | X | 최대 서비스 불가 노드 수. 최솟값: 1, 최댓값: 해당 cluster의 현재 노드 수, 기본값: 1 |
 | pod_cidr | Body | String | O | calico pod cidr 설정, pod_cidr 입력 규칙 참고 |

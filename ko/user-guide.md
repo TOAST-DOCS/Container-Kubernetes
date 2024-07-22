@@ -1320,7 +1320,7 @@ NHN Cloud의 Kubernetes 클러스터 버전 관리 방식과 Kubernetes 버전 �
 * 현재 버전의 다음 버전(마이너 버전 기준 +1)으로 업그레이드 가능합니다.
 * 다운그레이드는 지원하지 않습니다.
 * 다른 기능의 동작으로 인해 클러스터가 업데이트 중인 상태에서는 업그레이드가 불가능합니다.
-* 클러스터 버전을 v1.25.4에서 v1.26.3으로 업그레이드할 때, CNI가 Flannel인 경우 Calico-VXLAN으로 변경해야 합니다.
+* 클러스터 버전을 v1.25.4에서 v1.26.3으로 업그레이드할 때 CNI가 Flannel인 경우 Calico-VXLAN으로 변경해야 합니다.
 
 다음 예시는 Kubernetes 버전을 업그레이드 과정에서 업그레이드 가능 여부를 표로 나타낸 것입니다. 예시에 사용된 조건은 다음과 같습니다. 
 
@@ -1430,7 +1430,7 @@ NHN Cloud가 지원하는 Kubernetes 버전 목록: v1.23.3, v1.24.3, v1.25.4
 
 * <a name="footnote_calico_change_rule_1">1</a>: 클러스터 버전이 1.24.3 미만이기 때문에 CNI 변경 불가능
 * <a name="footnote_calico_change_rule_2">2</a>: 클러스터 버전이 1.24.3 이상이기 때문에 CNI 변경 가능
-* <a name="footnote_calico_change_rule_3">3</a>: CNI가 이미 Calico-VXLAN 이므로 CNI 변경 불가능
+* <a name="footnote_calico_change_rule_3">3</a>: CNI가 이미 Calico-VXLAN이므로 CNI 변경 불가능
 
 #### Flannel에서 Calico-VXLAN CNI로 변경 진행 과정
 CNI 변경은 다음 순서로 진행됩니다.
@@ -1454,7 +1454,7 @@ CNI 변경은 다음 순서로 진행됩니다.
 * <a name="footnote_calico_change_step_3">3</a>: 클러스터에 Calico-VXLAN CNI가 배포되면 Flannel과 Calico-VXLAN CNI가 공존하게 됩니다. 이 상태에서 새로운 파드가 배포되면 파드 IP는 Flannel CNI로 설정되어 배포됩니다. Flannel CIDR IP를 가진 파드와 Calico-VXLAN CIDR IP를 가진 파드는 서로 통신할 수 있습니다.
 * <a name="footnote_calico_change_step_4">4</a>: 이 단계는 업그레이드 기능 시작 전 클러스터 오토스케일러 기능이 활성화되어 있는 경우에만 유효합니다.
 * <a name="footnote_calico_change_step_5">5</a>: CNI 변경 시 설정한 최대 서비스 불가 노드 수만큼씩 작업을 수행합니다. 기본값은 1입니다. 최솟값은 1이고, 최댓값은 현재 클러스터의 모든 노드 수입니다.
-* <a name="footnote_calico_change_step_6">6</a>: 기존에 배포되어 있는 파드의 IP는 모두 Flannel CIDR로 할당되어있습니다. Calico-VXLAN CNI로 변경하기 위해 Flannel CIDR의 IP가 할당되어 있는 파드들을 모두 재배포하여 Calico-VXLAN CIDR IP를 할당합니다. 새로운 파드가 배포되면 파드 IP는 Calico-VXLAN CNI로 설정되어 배포됩니다.
+* <a name="footnote_calico_change_step_6">6</a>: 기존에 배포된 파드의 IP는 모두 Flannel CIDR로 할당되어 있습니다. Calico-VXLAN CNI로 변경하기 위해 Flannel CIDR의 IP가 할당되어 있는 파드들을 모두 재배포하여 Calico-VXLAN CIDR IP를 할당합니다. 새로운 파드가 배포되면 파드 IP는 Calico-VXLAN CNI로 설정되어 배포됩니다.
 
 이 과정에서 아래와 같은 일들이 발생할 수 있습니다.
 
@@ -1465,8 +1465,8 @@ CNI 변경은 다음 순서로 진행됩니다.
 
 > [파드 재배포 주의 사항]
 > 1. 파드 축출 과정을 통해 다른 노드로 옮겨지지 않은 파드에 대해 진행됩니다.
-> 2. CNI 변경 과정 중에 Flannel CIDR와 Calico-VXLAN CIDR 간 정상 통신을 위해 CNI 변경 파드 네트워크 값은 기존 Flannel CIDR값과 동일하면 안됩니다.
-> 3. 기존에 배포되어 있던 파드들의 pause 컨테이너는 모두 stop 되어졌다가 kubelet에 의해 다시 재생성됩니다. 파드 이름과 로컬 저장 공간 등 설정은 그대로 유지되지만 IP는 Calico-VXLAN CIDR의 IP로 변경됩니다.
+> 2. CNI 변경 과정 중에 Flannel CIDR와 Calico-VXLAN CIDR 간 정상 통신을 위해 CNI 변경 파드 네트워크 값은 기존 Flannel CIDR 값과 동일하면 안 됩니다.
+> 3. 기존에 배포되어 있던 파드들의 pause 컨테이너는 모두 stop 되었다가 kubelet에 의해 다시 재생성됩니다. 파드 이름과 로컬 저장 공간 등 설정은 그대로 유지되지만 IP는 Calico-VXLAN CIDR의 IP로 변경됩니다.
 
 
 ### 클러스터 API 엔드포인트 IP 접근 제어 적용
@@ -1735,14 +1735,14 @@ NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Netwo
 NHN Kubernetes Service(NKS)가 제공하는 Calico-VXLAN, Calic-eBPF는 아래와 같은 차이점이 있습니다.
 |  | Calico-VXLAN | Calico-eBPF |
 | :-: | :-: | :-: |
-| 컨테이너 네트워크 처리 모듈 | 리눅스 커널 네트워크 스택 | eBPF + 리눅스 커널 네트워크 스택 |
-| kube-proxy | 활성화 | 비활성화 (eBPF가 kube-proxy 대체) |
+| 컨테이너 네트워크 처리 모듈 | Linux 커널 네트워크 스택 | eBPF+Linux 커널 네트워크 스택 |
+| kube-proxy | 활성화 | 비활성화(eBPF가 kube-proxy 대체) |
 | 네트워크 방식| VXLAN | 직접 통신 |
-| 파드 to 파드 통신| VXLAN 캡슐화 되어 통신 | 직접 통신<sup>[1](#footnote_calico_1) |
-| Service ClusterIP to 파드 통신 | VXLAN 캡슐화 되어 통신 | 직접 통신 |
-| Service NodePort to 파드 통신 | VXLAN 캡슐화 되어 통신 | VXLAN 캡슐화 되어 통신 |
-| 네트워크 정책 적용 | iptables 기반 | eBPF 기반 (커널 수준) |
-| 네트워크 성능 | VXLAN 캡슐화로 인한 성능 저하 | 직접 통신으로 인한 높은 성능 (낮은 지연 시간) |
+| 파드 to 파드 통신| VXLAN 캡슐화되어 통신 | 직접 통신<sup>[1](#footnote_calico_1) |
+| Service ClusterIP to 파드 통신 | VXLAN 캡슐화되어 통신 | 직접 통신 |
+| Service NodePort to 파드 통신 | VXLAN 캡슐화되어 통신 | VXLAN 캡슐화되어 통신 |
+| 네트워크 정책 적용 | iptables 기반 | eBPF 기반(커널 수준) |
+| 네트워크 성능 | VXLAN 캡슐화로 인한 성능 저하 | 직접 통신으로 인한 높은 성능(낮은 지연 시간) |
 
 주석
 
@@ -1750,7 +1750,7 @@ NHN Kubernetes Service(NKS)가 제공하는 Calico-VXLAN, Calic-eBPF는 아래�
 
 
 
-### 클러스터 생성 시 설정한 CNI 별 CNI 변경 가능 여부
+### 클러스터 생성 시 설정한 CNI별 CNI 변경 가능 여부
 
 | 버전 | 클러스터 생성 시 설치한 CNI 종류 및 버전 | CNI 변경 가능 여부 |
 | :-: | :-: | :-: |
@@ -1782,42 +1782,42 @@ NHN Kubernetes Service(NKS)가 제공하는 Calico-VXLAN, Calic-eBPF는 아래�
 
 | 방향 | IP 프로토콜 | 포트 범위 | Ether | 원격 | 설명 | 특이 사항 |
 | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| ingress | TCP | 10250 | IPv4 | 워커 노드 | kubelet 포트, 방향: metrics-server(워커 노드) -> kubelet(워커 노드) | |
-| ingress | TCP | 10250 | IPv4 | NKS Control Plane | kubelet 포트, 방향: kube-apiserver(NKS Control plane) -> kubelet(워커 노드) | |
-| ingress | TCP | 5473 | IPv4 | 워커 노드 |  calico-typha 포트, 방향: calico-node(워커 노드) -> calico-typha(워커 노드) | CNI가 Calico-VXLAN, Calico-eBPF인 경우 생성됨 |
-| ingress | TCP | 179 | IPv4 |  워커 노드 | calico-node BGP 포트, 방향: pod(워커 노드) -> pod(워커 노드) | CNI가 Calico-eBPF인 경우 생성됨 |
-| ingress | TCP | 179 | IPv4 | NKS Control Plane | calico-node BGP 포트, 방향: pod(NKS Control plane) -> pod(워커 노드) | CNI가 Calico-eBPF인 경우 생성됨 |
-| ingress | UDP | 8472 | IPv4 | 워커 노드 | flannel vxlan overlay network 포트, 방향: pod(워커 노드) -> pod(워커 노드) | CNI가 flannel인 경우 생성됨 |
-| ingress | UDP | 8472 | IPv4 | 워커 노드 | flannel vxlan overlay network 포트, 방향: pod(NKS Control plane) -> pod(워커 노드) | CNI가 flannel인 경우 생성됨 |
-| ingress | UDP | 4789 | IPv4 | 워커 노드 | calico-node vxlan overlay network 포트, 방향: pod(워커 노드) -> pod(워커 노드) | CNI가 Calico-VXLAN, Calico-eBPF인 경우 생성됨 |
-| ingress | UDP | 4789 | IPv4 | NKS Control Plane | calico-node vxlan overlay network 포트, 방향: pod(NKS Control plane) -> pod(워커 노드) | CNI가 Calico-VXLAN, Calico-eBPF인 경우 생성됨 |
-| egress | TCP | 2379 | IPv4 | NKS Control Plane | etcd 포트, 방향: calico-kube-controller(워커 노드) -> etcd(NKS Control plane)| |
-| egress | TCP | 6443 | IPv4 | Kubernetes API 엔드포인트 | kube-apiserver 포트, 방향: kubelet, kube-proxy(워커 노드) -> kube-apiserver(NKS Control plane) | |
-| egress | TCP | 6443 | IPv4 | NKS Control Plane | kube-apiserver 포트, 방향: default kubernetes service(워커 노드) -> kube-apiserver(NKS Control plane) | |
-| egress | TCP | 5473 | IPv4 | 워커 노드 | calico-typha 포트, 방향: calico-node(워커 노드) -> calico-typha(워커 노드) | CNI가 Calico-VXLAN, Calico-eBPF인 경우 생성됨 |
-| egress | TCP | 53 | IPv4 | 워커 노드 | DNS 포트, 방향: 워커 노드 -> 외부 | |
-| egress | TCP | 443 | IPv4 | 모두 허용 | HTTPS 포트, 방향: 워커 노드 -> 외부 | |
-| egress | TCP | 80 | IPv4 | 모두 허용 | HTTP 포트, 방향: 워커 노드 -> 외부 | |
-| egress | TCP | 179 | IPv4 |  워커 노드 | calico-node BGP 포트, 방향: pod(워커 노드) -> pod(워커 노드) | CNI가 Calico-eBPF인 경우 생성됨 |
-| egress | TCP | 179 | IPv4 | NKS Control Plane | calico-node BGP 포트, 방향: pod(NKS Control plane) -> pod(워커 노드) | CNI가 Calico-eBPF인 경우 생성됨 |
-| egress | UDP | 8472 | IPv4 | 워커 노드 | flannel vxlan overlay network 포트, 방향: pod(워커 노드) -> pod(워커 노드)| CNI가 flannel인 경우 생성됨 |
-| egress | UDP | 8472 | IPv4 | NKS Control Plane | flannel vxlan overlay network 포트, 방향: pod(워커 노드) -> pod(NKS Control plane) | CNI가 flannel인 경우 생성됨 |
-| egress | UDP | 4789 | IPv4 | 워커 노드 | calico-node vxlan overlay network 포트, 방향: pod(워커 노드) -> pod(워커 노드) | CNI가 Calico-VXLAN, Calico-eBPF인 경우 생성됨 |
-| egress | UDP | 4789 | IPv4 | NKS Control Plane | calico-node vxlan overlay network 포트, 방향: pod(워커 노드) -> pod(NKS Control plane) | CNI가 Calico-VXLAN, Calico-eBPF인 경우 생성됨 |
-| egress | UDP | 53 | IPv4 | 모두 허용 | DNS 포트, 방향: 워커 노드 -> 외부 | |
+| ingress | TCP | 10250 | IPv4 | 워커 노드 | kubelet 포트, 방향: metrics-server(워커 노드) → kubelet(워커 노드) | |
+| ingress | TCP | 10250 | IPv4 | NKS Control Plane | kubelet 포트, 방향: kube-apiserver(NKS Control plane) → kubelet(워커 노드) | |
+| ingress | TCP | 5473 | IPv4 | 워커 노드 |  calico-typha 포트, 방향: calico-node(워커 노드) → calico-typha(워커 노드) | CNI가 Calico-VXLAN, Calico-eBPF인 경우 생성됨 |
+| ingress | TCP | 179 | IPv4 |  워커 노드 | calico-node BGP 포트, 방향: pod(워커 노드) → pod(워커 노드) | CNI가 Calico-eBPF인 경우 생성됨 |
+| ingress | TCP | 179 | IPv4 | NKS Control Plane | calico-node BGP 포트, 방향: pod(NKS Control plane) → pod(워커 노드) | CNI가 Calico-eBPF인 경우 생성됨 |
+| ingress | UDP | 8472 | IPv4 | 워커 노드 | flannel vxlan overlay network 포트, 방향: pod(워커 노드) → pod(워커 노드) | CNI가 flannel인 경우 생성됨 |
+| ingress | UDP | 8472 | IPv4 | 워커 노드 | flannel vxlan overlay network 포트, 방향: pod(NKS Control plane) → pod(워커 노드) | CNI가 flannel인 경우 생성됨 |
+| ingress | UDP | 4789 | IPv4 | 워커 노드 | calico-node vxlan overlay network 포트, 방향: pod(워커 노드) → pod(워커 노드) | CNI가 Calico-VXLAN, Calico-eBPF인 경우 생성됨 |
+| ingress | UDP | 4789 | IPv4 | NKS Control Plane | calico-node vxlan overlay network 포트, 방향: pod(NKS Control plane) → pod(워커 노드) | CNI가 Calico-VXLAN, Calico-eBPF인 경우 생성됨 |
+| egress | TCP | 2379 | IPv4 | NKS Control Plane | etcd 포트, 방향: calico-kube-controller(워커 노드) → etcd(NKS Control plane)| |
+| egress | TCP | 6443 | IPv4 | Kubernetes API 엔드포인트 | kube-apiserver 포트, 방향: kubelet, kube-proxy(워커 노드) → kube-apiserver(NKS Control plane) | |
+| egress | TCP | 6443 | IPv4 | NKS Control Plane | kube-apiserver 포트, 방향: default kubernetes service(워커 노드) → kube-apiserver(NKS Control plane) | |
+| egress | TCP | 5473 | IPv4 | 워커 노드 | calico-typha 포트, 방향: calico-node(워커 노드) → calico-typha(워커 노드) | CNI가 Calico-VXLAN, Calico-eBPF인 경우 생성됨 |
+| egress | TCP | 53 | IPv4 | 워커 노드 | DNS 포트, 방향: 워커 노드 → 외부 | |
+| egress | TCP | 443 | IPv4 | 모두 허용 | HTTPS 포트, 방향: 워커 노드 → 외부 | |
+| egress | TCP | 80 | IPv4 | 모두 허용 | HTTP 포트, 방향: 워커 노드 → 외부 | |
+| egress | TCP | 179 | IPv4 |  워커 노드 | calico-node BGP 포트, 방향: pod(워커 노드) → pod(워커 노드) | CNI가 Calico-eBPF인 경우 생성됨 |
+| egress | TCP | 179 | IPv4 | NKS Control Plane | calico-node BGP 포트, 방향: pod(NKS Control plane) → pod(워커 노드) | CNI가 Calico-eBPF인 경우 생성됨 |
+| egress | UDP | 8472 | IPv4 | 워커 노드 | flannel vxlan overlay network 포트, 방향: pod(워커 노드) → pod(워커 노드)| CNI가 flannel인 경우 생성됨 |
+| egress | UDP | 8472 | IPv4 | NKS Control Plane | flannel vxlan overlay network 포트, 방향: pod(워커 노드) → pod(NKS Control plane) | CNI가 flannel인 경우 생성됨 |
+| egress | UDP | 4789 | IPv4 | 워커 노드 | calico-node vxlan overlay network 포트, 방향: pod(워커 노드) → pod(워커 노드) | CNI가 Calico-VXLAN, Calico-eBPF인 경우 생성됨 |
+| egress | UDP | 4789 | IPv4 | NKS Control Plane | calico-node vxlan overlay network 포트, 방향: pod(워커 노드) → pod(NKS Control plane) | CNI가 Calico-VXLAN, Calico-eBPF인 경우 생성됨 |
+| egress | UDP | 53 | IPv4 | 모두 허용 | DNS 포트, 방향: 워커 노드 → 외부 | |
 
 강화된 보안 규칙 사용 시 NodePort 타입의 서비스와 NHN Cloud NAS 서비스에서 사용하는 포트에 대한 보안 규칙에 추가되어 있지 않습니다. 필요에 따라 아래 보안 규칙을 추가 설정해야 합니다. 
 
 | 방향 | IP 프로토콜 | 포트 범위 | Ether | 원격 | 설명 |
 | :-: | :-: | :-: | :-: | :-: | :-: |
-| ingress, egress | TCP | 30000 - 32767 | IPv4 | 모두 허용 | NKS service object NodePort, 방향: 외부 -> 워커 노드 |
-| egress | TCP | 2049 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc nfs 포트, 방향: csi-nfs-node(워커 노드) -> NHN Cloud NAS 서비스 |
-| egress | TCP | 111 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc portmapper 포트, 방향: csi-nfs-node(워커 노드) -> NHN Cloud NAS 서비스 |
-| egress | TCP | 635 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc mountd 포트, 방향: csi-nfs-node(워커 노드) -> NHN Cloud NAS 서비스 |
+| ingress, egress | TCP | 30000 - 32767 | IPv4 | 모두 허용 | NKS service object NodePort, 방향: 외부 → 워커 노드 |
+| egress | TCP | 2049 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc nfs 포트, 방향: csi-nfs-node(워커 노드) → NHN Cloud NAS 서비스 |
+| egress | TCP | 111 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc portmapper 포트, 방향: csi-nfs-node(워커 노드) → NHN Cloud NAS 서비스 |
+| egress | TCP | 635 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc mountd 포트, 방향: csi-nfs-node(워커 노드) → NHN Cloud NAS 서비스 |
 
 > [Calico-eBPF CNI 사용 시 주의] 
-> Calico-eBPF CNI를 사용할 경우, 파드 간 통신과 노드에서 파드로의 통신은 파드에 설정된 포트를 통해 이루어집니다.
-> 강화된 보안 규칙을 사용하는 경우, 해당 파드 포트에 대한 ingress, egress 보안 규칙을 수동으로 추가해야 합니다.
+> Calico-eBPF CNI를 사용할 경우 파드 간 통신과 노드에서 파드로의 통신은 파드에 설정된 포트를 통해 이루어집니다.
+> 강화된 보안 규칙을 사용하는 경우 해당 파드 포트에 대한 ingress, egress 보안 규칙을 수동으로 추가해야 합니다.
 
 ### 강화된 보안 규칙을 사용하지 않는 경우 생성되는 규칙
 
@@ -1825,13 +1825,13 @@ NHN Kubernetes Service(NKS)가 제공하는 Calico-VXLAN, Calic-eBPF는 아래�
 
 | 방향 | IP 프로토콜 | 포트 범위 | Ether | 원격 | 설명 | 
 | :-: | :-: | :-: | :-: | :-: | :-: |
-| ingress | TCP | 1 - 65535 | IPv4 | 워커 노드 | 모든 포트, 방향: 워커 노드 -> 워커 노드 |
-| ingress | TCP | 1 - 65535 | IPv4 | NKS Control Plane | 모든 포트, 방향: NKS Control plane -> 워커 노드 |
-| ingress | TCP | 30000 - 32767 | IPv4 | 모두 허용 | NKS service object NodePort, 방향: 외부 -> 워커 노드 |
-| ingress | UDP | 1 - 65535 | IPv4 | 워커 노드 | 모든 포트, 방향: 워커 노드 -> 워커 노드 |
-| ingress | UDP | 1 - 65535 | IPv4 | NKS Control Plane | 모든 포트, 방향: NKS Control plane -> 워커 노드 |
-| egress | 임의 | 1 - 65535 | IPv4 | 모두 허용 | 모든 포트, 방향: 워커 노드 - > 외부 |
-| egress | 임의 | 1 - 65535 | IPv6 | 모두 허용 | 모든 포트, 방향: 워커 노드 - > 외부 |
+| ingress | TCP | 1 - 65535 | IPv4 | 워커 노드 | 모든 포트, 방향: 워커 노드 → 워커 노드 |
+| ingress | TCP | 1 - 65535 | IPv4 | NKS Control Plane | 모든 포트, 방향: NKS Control plane → 워커 노드 |
+| ingress | TCP | 30000 - 32767 | IPv4 | 모두 허용 | NKS service object NodePort, 방향: 외부 → 워커 노드 |
+| ingress | UDP | 1 - 65535 | IPv4 | 워커 노드 | 모든 포트, 방향: 워커 노드 → 워커 노드 |
+| ingress | UDP | 1 - 65535 | IPv4 | NKS Control Plane | 모든 포트, 방향: NKS Control plane → 워커 노드 |
+| egress | 임의 | 1 - 65535 | IPv4 | 모두 허용 | 모든 포트, 방향: 워커 노드 → 외부 |
+| egress | 임의 | 1 - 65535 | IPv6 | 모두 허용 | 모든 포트, 방향: 워커 노드 → 외부 |
 
 
 ## LoadBalancer 서비스
@@ -2471,11 +2471,11 @@ keep-alive 타임아웃 값을 설정할 수 있습니다.
 > keep-alive 타임아웃은 2023년 11월 28일 이후 v1.24.3 이상의 버전으로 업그레이드됐거나 신규 생성된 클러스터에서 설정 가능합니다.
 
 #### L7 규칙
-리스너 별로 L7 규칙을 설정할 수 있습니다.  L7 규칙은 다음과 같이 동작합니다.
+리스너별로 L7 규칙을 설정할 수 있습니다.  L7 규칙은 다음과 같이 동작합니다.
 
-* L7 규칙은 리스너의 프로토콜이 HTTP 혹은 TERMINATED_HTTPS인 경우에만 생성 가능합니다.
-* L7 규칙은 작업 유형에 따라 차단, URL로 전달, 멤버 그룹으로 전달 순으로 적용됩니다.
-* 같은 작업 유형 내에서 인덱스 값이 작을 수록 우선 순위가 높게 설정됩니다.
+* L7 규칙은 리스너의 프로토콜이 HTTP 또는 TERMINATED_HTTPS인 경우에만 생성 가능합니다.
+* L7 규칙은 작업 유형에 따라 차단, URL로 전달, 멤버 그룹으로 전달순으로 적용됩니다.
+* 같은 작업 유형 내에서 인덱스 값이 작을수록 우선 순위가 높게 설정됩니다.
 * 멤버 서브넷에 연결된 노드를 포함하는 멤버 그룹이 생성되고, 이 멤버 그룹은 리스너의 기본 멤버 그룹으로 설정됩니다.
 
 L7 규칙은 다음과 같이 설정할 수 있습니다.
@@ -2488,7 +2488,7 @@ L7 규칙은 다음과 같이 설정할 수 있습니다.
 | {LISTENER_SPEC}.{L7POLICY}.loadbalancer.nhncloud/name | 이름 | O | 255자 이하 문자열 |
 | {LISTENER_SPEC}.{L7POLICY}.loadbalancer.nhncloud/description | 설명 | X | 255자 이하 문자열 |
 | {LISTENER_SPEC}.{L7POLICY}.loadbalancer.nhncloud/action | 작업 유형 | O | REDIRECT_TO_POOL(멤버 그룹으로 전달), REDIRECT_TO_URL(URL로 전달), REJECT(차단) 중 하나 |
-| {LISTENER_SPEC}.{L7POLICY}.loadbalancer.nhncloud/redirect-url | redirect할 URL | X (단, 작업 유형이 REDIRECT_TO_URL인 경우에는 필수) | `HTTP://` 혹은 `HTTPS://`로 시작하는 URL |
+| {LISTENER_SPEC}.{L7POLICY}.loadbalancer.nhncloud/redirect-url | redirect할 URL | X (단, 작업 유형이 REDIRECT_TO_URL인 경우에는 필수) | `HTTP://` 또는 `HTTPS://`로 시작하는 URL |
 
 > [참고]
 > * {LISTENER_SPEC}은 `[TCP|UDP]-%d`의 형식으로 `%d`는 포트 번호입니다. (예: TCP-80)
@@ -2501,10 +2501,10 @@ L7 규칙 설정에는 다음의 제약 사항이 있습니다.
 * 한 리스너에 설정되는 L7 규칙들은 서로 다른 이름으로 설정해야 합니다.
 
 #### L7 조건
-L7 규칙 별로 L7 조건을 설정할 수 있습니다. L7 조건은 다음과 같이 동작합니다.
+L7 규칙별로 L7 조건을 설정할 수 있습니다. L7 조건은 다음과 같이 동작합니다.
 
 * L7 규칙에 속한 모든 L7 조건이 만족해야 해당 L7 규칙이 적용됩니다.
-* L7 조건들 간에는 우선 순위가 없습니다.
+* L7 조건들 간에는 우선순위가 없습니다.
 
 L7 조건은 다음과 같이 설정할 수 있습니다.
 
@@ -3476,9 +3476,9 @@ $ systemctl start rpcbind
 
 | 방향 | IP 프로토콜 | 포트 범위 | Ether | 원격 | 설명 | 
 | :-: | :-: | :-: | :-: | :-: | :-: | 
-| egress | TCP | 2049 | IPv4 | NAS IP 주소 | rpc의 NFS 포트, 방향: csi-nfs-node(워커 노드) -> NAS |
-| egress | TCP | 111 | IPv4 | NAS IP 주소 | rpc의 portmapper 포트, 방향: csi-nfs-node(워커 노드) -> NAS |
-| egress | TCP | 635 | IPv4 | NAS IP 주소 |  rpc의 mountd 포트, 방향: csi-nfs-node(워커 노드) -> NAS |
+| egress | TCP | 2049 | IPv4 | NAS IP 주소 | rpc의 NFS 포트, 방향: csi-nfs-node(워커 노드) → NAS |
+| egress | TCP | 111 | IPv4 | NAS IP 주소 | rpc의 portmapper 포트, 방향: csi-nfs-node(워커 노드) → NAS |
+| egress | TCP | 635 | IPv4 | NAS IP 주소 |  rpc의 mountd 포트, 방향: csi-nfs-node(워커 노드) → NAS |
 
 #### csi-driver-nfs 설치
 NHN Cloud NAS 서비스를 사용하기 위해 클러스터에 csi-driver-nfs 컴포넌트를 배포해야 합니다.
