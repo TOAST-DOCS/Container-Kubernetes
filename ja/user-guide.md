@@ -1708,12 +1708,13 @@ NHN Kubernetes Service(NKS)はバージョンによって異なる種類のCNI(C
 
 ### Calico CNIの種類
 NHN Kubernetes Service(NKS)が提供するCalico-VXLAN、Calic-eBPFは下記のような違いがあります。
+
 |  | Calico-VXLAN | Calico-eBPF |
 | :-: | :-: | :-: |
 | コンテナネットワーク処理モジュール | Linuxカーネルネットワークスタック | eBPF+Linuxカーネルネットワークスタック |
 | kube-proxy | 有効 | 無効(eBPFがkube-proxy代替) |
 | ネットワーク方式| VXLAN | 直接通信 |
-| Pod to Pod通信| VXLANカプセル化されて通信 | 直接通信<sup>[1](#footnote_calico_1) |
+| Pod to Pod通信| VXLANカプセル化されて通信 | 直接通信<sup>[1](#footnote_calico_1)</sup> |
 | Service ClusterIP to Pod通信 | VXLANカプセル化されて通信 | 直接通信 |
 | Service NodePort to Pod通信 | VXLANカプセル化されて通信 | VXLANカプセル化されて通信 |
 | ネットワークポリシー適用 | iptablesベース | eBPFベース(カーネル水準) |
