@@ -1733,12 +1733,13 @@ NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Netwo
 
 ### Calico CNI 종류
 NHN Kubernetes Service(NKS)가 제공하는 Calico-VXLAN, Calic-eBPF는 아래와 같은 차이점이 있습니다.
+
 |  | Calico-VXLAN | Calico-eBPF |
 | :-: | :-: | :-: |
 | 컨테이너 네트워크 처리 모듈 | Linux 커널 네트워크 스택 | eBPF+Linux 커널 네트워크 스택 |
 | kube-proxy | 활성화 | 비활성화(eBPF가 kube-proxy 대체) |
 | 네트워크 방식| VXLAN | 직접 통신 |
-| 파드 to 파드 통신| VXLAN 캡슐화되어 통신 | 직접 통신<sup>[1](#footnote_calico_1) |
+| 파드 to 파드 통신| VXLAN 캡슐화되어 통신 | 직접 통신<sup>[1](#footnote_calico_1)</sup> |
 | Service ClusterIP to 파드 통신 | VXLAN 캡슐화되어 통신 | 직접 통신 |
 | Service NodePort to 파드 통신 | VXLAN 캡슐화되어 통신 | VXLAN 캡슐화되어 통신 |
 | 네트워크 정책 적용 | iptables 기반 | eBPF 기반(커널 수준) |
@@ -2510,7 +2511,6 @@ L7 조건은 다음과 같이 설정할 수 있습니다.
 
 * 하나의 L7 규칙에 L7 조건을 최대 10개까지 설정 가능합니다.
 * 각 L7 조건을 식별하기 위해 설정 위치에 `rule-%d`(`%d`는 0부터 시작하는 인덱스)의 형식을 사용합니다.
-*
 
 | 설정 위치 | 의미 | 필수 여부 | 값 |
 | --- | --- | :-: | --- |
