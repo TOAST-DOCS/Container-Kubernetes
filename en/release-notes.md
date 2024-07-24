@@ -1,5 +1,12 @@
 ## Container > NHN Kubernetes Service (NKS) > Release Notes
 
+### July 23, 2024
+
+#### Added Features
+
+* You can apply L7 rules and conditions by setting the load balancer details options.
+* You can select Calico-VXLAN and Calico-eBPF CNIs when creating a cluster.
+
 ### May 28, 2024
 
 #### Added Features
