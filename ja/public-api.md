@@ -504,6 +504,7 @@ X-Auth-Token: {tokenId}
 | labels.pods_network_subnet | Body | Integer | X | クラスタPodサブネットサイズ。 pods_network_subnet入力ルール参考 |
 | labels.ncr_sgw | Body | String | X | NCRタイプのサービスゲートウェイUUID<br>ただし、クラスタVPCと同じVPCに作成されたものに限る。 |
 | labels.obs_sgw | Body | String | X | OBSタイプのサービスゲートウェイUUID<br>ただし、クラスタVPCと同じVPCに作成されたものに限る。 |
+| labels.cni_driver | Body | String | X | CNI設定、選択可能CNIリスト: calico(基本), calico-ebpf<br>calico: Calico-VXLANで作成<br>calico-ebpf: Calico-eBPFで作成 |
 | flavor_id | Body | UUID | O | 基本ワーカーノードグループ適用：ノードインスタンスタイプUUID |
 | fixed_network | Body | UUID | O | VPC Network UUID |
 | fixed_subnet | Body | UUID | O | VPCサブネットUUID. fixed_subnet, pods_network_cidr, service_cluster_ip_range入力ルール参照 |
@@ -750,7 +751,7 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|---|
 | tokenId | Header | String | O | トークンID |
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
-| cni | Body | String | O | 変更するCNIを設定(選択可能CNIリスト：calico) | 
+| cni | Body | String | O | 変更するCNIを設定(選択可能CNIリスト：calico)<br>calico: Calico-VXLANに変更 | 
 | num_buffer_nodes | Body | Integer | X | バッファノード数。デフォルト値：1、最小値：0、最大値：各ワーカーノードグループにて追加で作成可能なノード数(ワーカーノードグループあたりの最大ノード数クォーター - 該当ワーカーノードグループの現在のノード数)うち最小値。 |
 | num_max_unavailable_nodes | Body |  Integer | X | 最大サービス不可ノード数。最小値：1、最大値：該当clusterの現在ノード数、デフォルト値：1 |
 | pod_cidr | Body | String | O | calico pod cidr設定、 pod_cidr入力ルール参考 |
