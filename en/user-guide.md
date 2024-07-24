@@ -119,81 +119,11 @@ NHN Kubernetes Service (NKS) supports several versions of Kubernetes. Some featu
 | v1.22.3 | Unavailable | Available |
 | v1.23.3 | Unavailable | Available |
 | v1.24.3 | Unavailable | Available |
-| v1.25.4 | Available | Available |
+| v1.25.4 | Unavailable | Available |
 | v1.26.3 | Available | Available |
 | v1.27.3 | Available | Available |
 | v1.28.3 | Available | Available |
 | v1.29.3 | Available | Available |
-
-NHN Kubernetes Service (NKS) provides different types of Container Network Interface (CNI) according its version. After 31 March 2023, CNI is created with Calico when creating a cluster with version 1.24.3 or higher. Network mode of Flannel and Calico CNI all operate in VXLAN method.
-
-| Version | CNI Type and Version Installed when creating Cluster | CNI Change Available |
-| :-: | :-: | :-: |
-| v1.17.6 | Flannel v0.12.0 | Unavailable |
-| v1.18.19 | Flannel v0.12.0 | Unavailable |
-| v1.19.13 | Flannel v0.14.0 | Unavailable |
-| v1.20.12 | Flannel v0.14.0 | Unavailable |
-| v1.21.6 | Flannel v0.14.0 | Unavailable |
-| v1.22.3 | Flannel v0.14.0 | Unavailable |
-| v1.23.3 | Flannel v0.14.0 | Unavailable |
-| v1.24.3 | Flannel v0.14.0 or Calico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | Conditionally Available |
-| v1.25.4 | Flannel v0.14.0 or Calico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | Conditionally Available |
-| v1.26.3 | Flannel v0.14.0 or Calico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | Conditionally Available |
-| v1.27.3 | Calico v3.24.1 | Unavailable|
-| v1.28.3 | Calico v3.24.1 | Unavailable|
-| v1.29.3 | Calico v3.24.1 | Unavailable|
-
-Notes
-
-* <a name="footnote_calico_version_1">1</a>: Flannel is installed in clusters created before 31 March 2023. For clusters of v1.24.3 or higher created after that date, Calico is installed.
-* <a name="footnote_calico_version_2">2</a>: CNI change is only supported on clusters of v1.24.3 or higher, and currently changing from Flannel to Calico is only supported.
-
-
-Required Security Rules for Cluster Worker Nodes 
-
-| Direction | IP protocol | Port range | Ether | Remote | Description | Considerations |
-| :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| ingress | TCP | 10250 | IPv4 | Worker node | kubelet port, direction: metrics-server(worker node) -> kubelet(worker node) | |
-| ingress | TCP | 10250 | IPv4 | Master node | kubelet port, direction: kube-apiserver(NKS Control plane) -> kubelet(worker node) | |
-| ingress | TCP | 5473 | IPv4 | Worker node |  calico-typha port, direction: calico-node(worker node) -> calico-typha(worker node) | Created when CNI is calico |
-| ingress | UDP | 8472 | IPv4 | Worker node | flannel vxlan overlay network port, direction: pod(worker node) -> pod(worker node) | Created when CNI is flannel |
-| ingress | UDP | 8472 | IPv4 | Worker node | flannel vxlan overlay network port, direction: pod(NKS Control plane) -> pod(worker node) | Created when CNI is flannel |
-| ingress | UDP | 4789 | IPv4 | Worker node | calico-node vxlan overlay network port, direction: pod(worker node) -> pod(worker node) | Created when CNI is calico |
-| ingress | UDP | 4789 | IPv4 | Master node | Calico-node vxlan overlay network port, direction: pod(NKS Control plane) -> pod(worker node) | Created when CNI is calico |
-| egress | TCP | 2379 | IPv4 | Master node | etcd port, direction: calico-kube-controller(worker node) -> etcd(NKS Control plane)| |
-| egress | TCP | 6443 | IPv4 | Kubernetes API endpoint | kube-apiserver port, direction: kubelet, kube-proxy(worker node) -> kube-apiserver(NKS Control plane) | |
-| egress | TCP | 6443 | IPv4 | Master node | kube-apiserver port, direction: default kubernetes service(worker node) -> kube-apiserver(NKS Control plane) | |
-| egress | TCP | 5473 | IPv4 | Worker node | Created when CNI is calico, calico-typha port, direction: calico-node(worker node) -> calico-typha(worker node) | |
-| egress | TCP | 53 | IPv4 | Worker node | DNS port, direction: worker node -> external | |
-| egress | TCP | 443 | IPv4 | Allow all | HTTPS port, direction: worker node -> external | |
-| egress | TCP | 80 | IPv4 | Allow all | HTTP port, direction: worker node -> external | |
-| egress | UDP | 8472 | IPv4 | Worker node | flannel vxlan overlay network port, direction: pod(worker node) -> pod(worker node)| Created when CNI is flannel |
-| egress | UDP | 8472 | IPv4 | Master node | flannel vxlan overlay network port, direction: pod (worker node) -> pod (NKS Control plane) | Created when CNI is flannel |
-| egress | UDP | 4789 | IPv4 | Worker node | calico-node vxlan overlay network port, direction: pod(worker node) -> pod(worker node) | Created when CNI is calico |
-| egress | UDP | 4789 | IPv4 | Master node | calico-node vxlan overlay network port, direction: pod(worker node) -> pod(NKS Control plane) | Created when CNI is calico |
-| egress | UDP | 53 | IPv4 | Allow all | DNS port, direction: worker node -> external | |
-
-When using enhanced security rules, the NodePort type of service and the ports used by the NHN Cloud NAS service are not added to the security rules. You need to set the following security rules as needed. 
-
-| Direction | IP protocol | Port range | Ether | Remote | Description |
-| :-: | :-: | :-: | :-: | :-: | :-: |
-| ingress, egress | TCP | 30000 - 32767 | IPv4 | Allow all | NKS service object NodePort, direction: external -> worker node |
-| egress | TCP | 2049 | IPv4 | NHN Cloud NAS service IP address | RPC NFS port of csi-nfs-node, direction: csi-nfs-node(worker node) -> NHN Cloud NAS service |
-| egress | TCP | 111 | IPv4 | NHN Cloud NAS service IP address | rpc portmapper port of csi-nfs-node, direction: csi-nfs-node(worker node) -> NHN Cloud NAS service |
-| egress | TCP | 635 | IPv4 | NHN Cloud NAS service IP address | rpc mountd port of csi-nfs-node, direction: csi-nfs-node(worker node) -> NHN Cloud NAS service |
-
-If you don't use enhanced security rules, additional security rules are created for services of type NodePort and for external network communication.
-
-| Direction | IP protocol | Port range | Ether | Remote | Description | 
-| :-: | :-: | :-: | :-: | :-: | :-: |
-| ingress | TCP | 1 - 65535 | IPv4 | Worker node | All ports, direction: worker node -> worker node |
-| ingress | TCP | 1 - 65535 | IPv4 | Master node | All ports, direction: NKS Control plane -> worker node |
-| ingress | TCP | 30000 - 32767 | IPv4 | Allow all | NKS service object NodePort, direction: external -> worker node |
-| ingress | UDP | 1 - 65535 | IPv4 | Worker node | All ports, direction: worker node -> worker node |
-| ingress | UDP | 1 - 65535 | IPv4 | Master node | All ports, direction: NKS Control plane -> worker node |
-| egress | Random | 1 - 65535 | IPv4 | Allow all | All ports, direction: worker node - > external |
-| egress | Random | 1 - 65535 | IPv6 | Allow all | All ports, direction: worker node - > external |
-
 
 Enter information as required and click **Create Cluster**, and a cluster begins to be created. You can check the status from the list of clusters. It takes about 10 minutes to create; more time may be required depending on the cluster configuration.
 
@@ -1389,6 +1319,7 @@ When upgrading, NHN Cloud's Kubernetes Cluster version control and Kubernetes ve
 * Can be upgraded to the next version of the current version (minor version+1). 
 * Downgrade is not supported. 
 * If the cluster is being updated due to the operation of other features, upgrade cannot be proceeded. 
+* When upgrading the cluster version from v1.25.4 to v1.26.3, if the CNI is Flannel, it must be changed to Calico-VXLAN.
 
 The following table shows whether upgrade is possible while upgrading the Kubernetes version. The following conditions are used for the example: 
 
@@ -1468,7 +1399,7 @@ If you do not upgrade the worker node group after upgrading the master, some pod
 
 ### Change Cluster CNI
 NHN Kubernetes Service (NKS) supports changing the container network interface (CNI) of a running Kubernetes cluster.
-The Change Cluster CNI feature allows you to change the CNI of the NHN Kubernetes Service (NKS) from Flannel CNI to Calico CNI.
+The Change Cluster CNI feature allows you to change the CNI of the NHN Kubernetes Service (NKS) from Flannel CNI to Calico-VXLAN CNI.
 
 #### CNI Change Rules
 The following rules apply to the Kubernetes Cluster CNI change feature in the NHN Cloud.
@@ -1477,7 +1408,10 @@ The following rules apply to the Kubernetes Cluster CNI change feature in the NH
 * The CNI change is only available if the CNI being used by the existing NHN Kubernetes Service (NKS) is Flannel.
 * At the start of the CNI change, the task is collectively done on the master and all worker node groups.
 * The CNI change is possible only when the Kubernetes version of the master matches the Kubernetes version of all worker node groups.
-* CNI change from Calico to Flannel is not supported.
+* The CNI change from Calico-VXLAN, Calico-eBPF to Flannel is not supported 
+* The CNI change from Flannel to Calico-eBPF is not supported 
+* The CNI change from Calico-VXLAN to Calico-eBPF is not supported 
+* The CNI change from Calico-VXLAN to Calico-eBPF is not supported.
 * CNI change is not possible when the cluster is being updated due to other features being operated.
 
 The following example shows a table of possible changes during the Kubernetes CNI change process. The conditions used in the example are as follows. 
@@ -1489,24 +1423,24 @@ Clusters are created as v1.23.3
 | --- | :-: | :-: | :-: |
 | Initial state| v1.23.3 | Flannel | Unavailable<sup>[1](#footnote_calico_change_rule_1)</sup> |
 | Status after cluster upgrade | v1.24.3 | Flannel | Available<sup>[2](#footnote_calico_change_rule_2)</sup> |
-| Status after CNI change | v1.24.3 | Calico | Unavailable<sup>[3](#footnote_calico_change_rule_3)</sup> |
+| Status after CNI change | v1.24.3 | Calico-VXLAN | Unavailable<sup>[3](#footnote_calico_change_rule_3)</sup> |
 
 
 Notes
 
 * <a name="footnote_calico_change_rule_1">1</a>: CNI change is unavailable because the cluster version is below 1.24.3
 * <a name="footnote_calico_change_rule_2">2</a>: CNI change is available because the cluster version is 1.24.3 or higher.
-* <a name="footnote_calico_change_rule_3">3</a>: CNI change is unavailable because CNI is already Calico
+* <a name="footnote_calico_change_rule_3">3</a>: CNI change is unavailable because CNI is already Calico-VXLAN.
 
-#### Change Process from Flannel to Calico CNI
+#### Change Process from Flannel to Calico-VXLAN CNI
 CNI change proceeds in the following order.
 
 1. Add buffer nodes <sup>[1](#footnote_calico_change_step_1)</sup> to all worker node groups.<sup>[2](#footnote_calico_change_step_2)</sup>
-2. Calico CNI is deployed on the cluster.<sup>[3](#footnote_calico_change_step_3)</sup>
+2. Calico-VXLAN CNI is deployed on the cluster.<sup>[3](#footnote_calico_change_step_3)</sup>
 3. Disable the cluster Auto scale feature.<sup>[4](#footnote_calico_change_step_4)</sup>
 3. Perform the following jobs sequentially for all worker nodes in all worker node groups. <sup>[5](#footnote_calico_change_step_5)</sup>
     1. Evict working pods from the worker node, and make the node not schedulable.
-    2. Reassign the worker node's pod IPs to Calico CIDR. Any pod deployed on the node is to be redeployed. <sup>[6](#footnote_calico_change_step_6)</sup>
+    2. Reassign the worker node's pod IPs to Calico-VXLAN CIDR. Any pod deployed on the node is to be redeployed. <sup>[6](#footnote_calico_change_step_6)</sup>
     3. Make the node schedulable.
 5. Evict working pods from the buffer node, and delete the buffer node.
 6. Re-enables cluster Auto scale feature <sup>[4](#footnote_calico_change_step_4)</sup>.
@@ -1517,10 +1451,10 @@ Notes
 
 * <a name="footnote_calico_change_step_1">1</a>: A buffer node is a free node that is created so that the pod evicted from the existing worker node can be rescheduled during the CNI change process. It is created as a node of the same specification as the worker node defined in the corresponding worker node group and is automatically deleted at the end of the upgrade process. This node is charged in accordance with the Instance pricing policy. 
 * <a name="footnote_calico_change_step_2">2</a>: You can set the number of buffer nodes when changing CNI. Defaults to 1. If set to 0, no buffer nodes are added. The minimum is 0 and the maximum is (maximum number of nodes per node group - the current number of nodes in that worker node group).
-* <a name="footnote_calico_change_step_3">3</a>: When Calico CNI is deployed in a cluster, the Flannel and Calico CNI coexist. In this state, when a new pod is deployed, the pod IP is set to Flannel CNI and then deployed. A pod with Flannel CIDR IP and a pod with Calico CIDR IP can communicate with each other.
+* <a name="footnote_calico_change_step_3">3</a>: When Calico-VXLAN CNI is deployed in a cluster, the Flannel and Calico-VXLAN CNI coexist. In this state, when a new pod is deployed, the pod IP is set to Flannel CNI and then deployed. A pod with Flannel CIDR IP and a pod with Calico-VXLAN CIDR IP can communicate with each other.
 * <a name="footnote_calico_change_step_4">4</a>: This step is valid only if the cluster Auto scale feature is enabled before starting upgrade features.
 * <a name="footnote_calico_change_step_5">5</a>: Perform jobs as many as the maximum number of unavailable nodes set when changing the CNI. Default value is 1. Minimum value is 1, and maximum value is the number of all nodes in the current cluster.
-* <a name="footnote_calico_change_step_6">6</a>: The IPs of the existing deployed Pods are all assigned with Flannel CIDRs. To change to Calico CNI, redeploy all the pods that have IP assigned to the Flannel CIDR to reassign Calico CIDR IP. When a new pod is deployed, the pod IP is set to Calico CNI and deployed.
+* <a name="footnote_calico_change_step_6">6</a>: The IPs of the existing deployed Pods are all assigned with Flannel CIDRs. To change to Calico-VXLAN CNI, redeploy all the pods that have IP assigned to the Flannel CIDR to reassign Calico-VXLAN CIDR IP. When a new pod is deployed, the pod IP is set to Calico-VXLAN CNI and deployed.
 
 The following can happen in this process.
 
@@ -1531,8 +1465,8 @@ The following can happen in this process.
 
 > [Precautions for pod redeployment]
 > 1. It proceeds for the pod that has not been transferred to another node through the evicting process.
-> 2. For normal communication between Flannel CIDR and Calico CIDR during the CNI change process, CNI change pod network value should not be the same as the existing Flannel CIDR value.
-> 3. Pause containers of the previously distributed pod are all stopped and then regenerated by kubelet. The settings, such as the pod name and local storage space, remain unchanged, but the IP is changed to the IP of Calico CIDR.
+> 2. For normal communication between Flannel CIDR and Calico-VXLAN CIDR during the CNI change process, CNI change pod network value should not be the same as the existing Flannel CIDR value.
+> 3. Pause containers of the previously distributed pod are all stopped and then regenerated by kubelet. The settings, such as the pod name and local storage space, remain unchanged, but the IP is changed to the IP of Calico-VXLAN CIDR.
 
 
 ### Enforce IP Access Control to Cluster API Endpoints
@@ -1574,8 +1508,8 @@ Here's how to use the certificate renewal feature
     * If a pod with certificate settings exists, a restart is required to apply the updated CA certificate.
 
 > [Note]
-> The certificate renewal feature is available for clusters using 1.24 or later versions of Calico CNI.
-> Clusters using versions prior to 1.24, or clusters with a CNI that is Flannel, require an upgrade and CNI change.
+> The certificate renewal feature is available for clusters using 1.24 or later versions of Calico-VXLAN CNI.
+> If your cluster version is 1.23 or lower, or if your CNI is Flannel, you can renew certificates after version upgrades and CNI changes.
 
 > [Caution]
 > The certificate renewal feature involves a restart of the system components and any kube-system namespace pods initially deployed at cluster creation to reflect the new certificate generation and settings.
@@ -1789,6 +1723,117 @@ echo '[ { "registry": "user-defined.registry.io", "endpoint_list": [ "http://use
 * If you arbitrarily stop the system with commands like `shutdown`, `halt`, `poweroff`, etc., you cannot restart it through the console. Use the worker node start/stop feature.
 * You must not modify various configuration files within the worker node or manipulate system services. Critical issues may occur in the NKS cluster.
 
+
+## Container Network Interface (CNI)
+NHN Kubernetes Service (NKS) provides different types of Container Network Interfaces (CNI) depending on the version. After 7/23/2024, you can choose between Calico-VXLAN and Calico-eBPF CNIs when creating a cluster, with Calico-VXLAN being the default setting. Flannel and Calico-VXLAN CNIs organize container workload into an overlay network and communicate using VXLAN. Calico-eBPF organizes container workloads into BGP routing protocols, communicating directly based on eBPF technology, with some segments communicating using VXLAN. For more information about eBPF in Calico, see [about eBPF](https://docs.tigera.io/calico/latest/about/kubernetes-training/about-ebpf).
+
+In addition, Rocky and Ubuntu are the only OSes for which you can choose Calico-eBPF CNI, while Flannel and Calico-VXLAN support all OSes (Centos, Rocky, Red Hat, Ubuntu).
+
+
+### Calico CNI Types
+Calico-VXLAN and Calic-eBPF provided by the NHN Kubernetes Service (NKS) have the following differences
+
+|  | Calico-VXLAN | Calico-eBPF |
+| :-: | :-: | :-: |
+| Container Network Processing Module | Linux Kernel Network Stack | eBPF+Linux Kernel Network Stack |
+| kube-proxy | Enabled | Disabled (eBPF replaces kube-proxy) |
+| Network Method| VXLAN | Direct communication |
+| Pod to Pod communication| VXLAN Encapsulated Communication | Direct communication<sup>[1](#footnote_calico_1)</sup> |
+| Service ClusterIP to Pod Communication | VXLAN Encapsulated Communication | Direct communication |
+| Service NodePort to Pod Communication | VXLAN Encapsulated Communication | VXLAN Encapsulated Communication |
+| Apply Network Policies | ptables-based | eBPF-based (kernel-level) |
+| Network Performance | Low Performance due to VXLAN encapsulation | High Performance (low latency) due to direct communication |
+
+Notes
+
+* <a name="footnote_calico_1">1</a>: The packet's source IP and destination IP are set to the Pod IP. When using enhanced security rules, you must set a security rule for this traffic separately. 
+
+
+
+### Whether to change the CNI per CNI set at cluster creation
+
+| Version | CNI Type and Version Installed when creating Cluster | CNI Change Available |
+| :-: | :-: | :-: |
+| v1.17.6 | Flannel v0.12.0 | Unavailable |
+| v1.18.19 | Flannel v0.12.0 | Unavailable |
+| v1.19.13 | Flannel v0.14.0 | Unavailable |
+| v1.20.12 | Flannel v0.14.0 | Unavailable |
+| v1.21.6 | Flannel v0.14.0 | Unavailable |
+| v1.22.3 | Flannel v0.14.0 | Unavailable |
+| v1.23.3 | Flannel v0.14.0 | Unavailable |
+| v1.24.3 | Flannel v0.14.0 or Calico-VXLAN v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | Conditionally Available<sup>[2](#footnote_calico_version_2)</sup> |
+| v1.25.4 | Flannel v0.14.0 or Calico-VXLAN v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | Conditionally Available<sup>[2](#footnote_calico_version_2)</sup> |
+| v1.26.3 | Flannel v0.14.0 or Calico-VXLAN, Calico-eBPF v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | Conditionally Available<sup>[2](#footnote_calico_version_2)</sup> |
+| v1.27.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | Unavailable|
+| v1.28.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | Unavailable|
+| v1.29.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | Unavailable|
+
+Notes
+
+* <a name="footnote_calico_version_1">1</a>: Flannel is installed in clusters created before 31 March 2023. For clusters of v1.24.3 or higher created after that date, Calico is installed.
+* <a name="footnote_calico_version_2">2</a>: CNI change is only supported on clusters of v1.24.3 or higher, and currently changing from Flannel to Calico-VXLAN is only supported.
+
+
+
+## Security Group
+If you set enhanced security rules to True at cluster creation, only mandatory security rules are created at worker node security group creation.
+
+### Required Security Rules for Cluster Worker Nodes
+
+| Direction | IP protocol | Port range | Ether | Remote | Description | Considerations |
+| :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+| ingress | TCP | 10250 | IPv4 | Worker node | kubelet port, direction: metrics-server (worker node) → kubelet (worker node) | |
+| ingress | TCP | 10250 | IPv4 | NKS Control Plane | kubelet port, direction: kube-apiserver (NKS Control plane) → kubelet (worker node) | |
+| ingress | TCP | 5473 | IPv4 | Worker node |  calico-typha port, direction: calico-node (worker node) → calico-typha (worker node) | Created when CNI is Calico-VXLAN, Calico-eBPF |
+| ingress | TCP | 179 | IPv4 |  Worker node | calico-node BGP port, direction: pod (worker node) → pod (worker node) | Created when CNI is Calico-eBPF |
+| ingress | TCP | 179 | IPv4 | NKS Control Plane | calico-node BGP port, direction: pod (NKS Control plane) → pod (worker node) | Created when CNI is Calico-eBPF |
+| ingress | UDP | 8472 | IPv4 | Worker node | flannel vxlan overlay network port, direction: pod (worker node) → pod (worker node) | Created when CNI is flannel |
+| ingress | UDP | 8472 | IPv4 | Worker node | flannel vxlan overlay network port, direction: pod (NKS Control plane) → pod (worker node) | Created when CNI is flannel |
+| ingress | UDP | 4789 | IPv4 | Worker node | calico-node vxlan overlay network port, direction: pod (worker node) → pod (worker node) | Created when CNI is Calico-VXLAN, Calico-eBPF |
+| ingress | UDP | 4789 | IPv4 | NKS Control Plane | calico-node vxlan overlay network port, direction: pod (NKS Control plane) → pod (worker node) | Created when CNI is Calico-VXLAN, Calico-eBPF |
+| egress | TCP | 2379 | IPv4 | NKS Control Plane | etcd port, direction: calico-kube-controller (worker node) → etcd (NKS Control plane)| |
+| egress | TCP | 6443 | IPv4 | Kubernetes API endpoint | kube-apiserver port, direction: kubelet, kube-proxy (worker node) → kube-apiserver (NKS Control plane) | |
+| egress | TCP | 6443 | IPv4 | NKS Control Plane | kube-apiserver port, direction: default kubernetes service (worker node) → kube-apiserver (NKS Control plane) | |
+| egress | TCP | 5473 | IPv4 | Worker node | calico-typha port, direction: calico-node (worker node) → calico-typha (worker node) | Created when CNI is Calico-VXLAN, Calico-eBPF |
+| egress | TCP | 53 | IPv4 | Worker node | DNS port, direction: Worker node → External | |
+| egress | TCP | 443 | IPv4 | Allow all | HTTPS port, direction: Worker node → External | |
+| egress | TCP | 80 | IPv4 | Allow all | HTTP port, direction: Worker node → External | |
+| egress | TCP | 179 | IPv4 |  Worker node | calico-node BGP port, direction: pod (worker node) → pod (worker node) | Created when CNI is Calico-eBPF |
+| egress | TCP | 179 | IPv4 | NKS Control Plane | calico-node BGP port, direction: pod (NKS Control plane) → pod (worker node) | Created when CNI is Calico-eBPF |
+| egress | UDP | 8472 | IPv4 | Worker node | flannel vxlan overlay network port, direction: pod (worker node) → pod (worker node)| Created when CNI is flannel |
+| egress | UDP | 8472 | IPv4 | NKS Control Plane | flannel vxlan overlay network port, direction: pod (worker node) → pod (NKS Control plane) | Created when CNI is flannel |
+| egress | UDP | 4789 | IPv4 | Worker node | calico-node vxlan overlay network port, direction: pod (worker node) → pod (worker node) | Created when CNI is Calico-VXLAN, Calico-eBPF |
+| egress | UDP | 4789 | IPv4 | NKS Control Plane | calico-node vxlan overlay network port, direction: pod (worker node) → pod (NKS Control plane) | Created when CNI is Calico-VXLAN, Calico-eBPF |
+| egress | UDP | 53 | IPv4 | Allow all | DNS port, direction: Worker node → External | |
+
+When using enhanced security rules, the NodePort type of service and the ports used by the NHN Cloud NAS service are not added to the security rules. You need to set the following security rules as needed. 
+
+| Direction | IP protocol | Port range | Ether | Remote | Description |
+| :-: | :-: | :-: | :-: | :-: | :-: |
+| ingress, egress | TCP | 30000 - 32767 | IPv4 | Allow all | NKS service object NodePort, direction: external → worker node |
+| egress | TCP | 2049 | IPv4 | NHN Cloud NAS service IP address | RPC NFS port of csi-nfs-node, direction: csi-nfs-node (worker node) → NHN Cloud NAS service |
+| egress | TCP | 111 | IPv4 | NHN Cloud NAS service IP address | rpc portmapper port of csi-nfs-node, direction: csi-nfs-node (worker node) → NHN Cloud NAS service |
+| egress | TCP | 635 | IPv4 | NHN Cloud NAS service IP address | rpc mountd port of csi-nfs-node, direction: csi-nfs-node (worker node) → NHN Cloud NAS service |
+
+> [Caution when using Calico-eBPF CNI].
+When using Calico-eBPF CNI, communication between pods and communication from nodes to pods is done through the ports set on the pods.
+If you are using enhanced security rules, you must manually add ingress and egress security rules for those pod ports.
+
+### Rules that are generated when you don't use enhanced security rules
+
+If you don't use enhanced security rules, additional security rules are created for services of type NodePort and for external network communication.
+
+| Direction | IP protocol | Port range | Ether | Remote | Description | 
+| :-: | :-: | :-: | :-: | :-: | :-: |
+| ingress | TCP | 1 - 65535 | IPv4 | Worker node | All ports, direction: Worker node → Worker node |
+| ingress | TCP | 1 - 65535 | IPv4 | NKS Control Plane | All ports, direction: NKS Control plane → Worker node |
+| ingress | TCP | 30000 - 32767 | IPv4 | Allow all | NKS service object NodePort, direction: external → worker node |
+| ingress | UDP | 1 - 65535 | IPv4 | Worker node | All ports, direction: Worker node → Worker node |
+| ingress | UDP | 1 - 65535 | IPv4 | NKS Control Plane | All ports, direction: NKS Control plane → Worker node |
+| egress | Random | 1 - 65535 | IPv4 | Allow all | All ports, direction: Worker node → External |
+| egress | Random | 1 - 65535 | IPv6 | Allow all | All ports, direction: Worker node → External |
+
+
 ## LoadBalancer Service
 Pod is a basic execution unit of a Kubernetes application and it is connected to a cluster network via CNI (container network interface). By default, pods are not accessible from outside the cluster. To expose a pod's services to the outside of the cluster, you need to create a path to expose to the outside using the Kubernetes `LoadBalancer` Service object. Creating a LoadBalancer service object creates an NHN Cloud Load Balancer outside the cluster and associates it with the service object.
 
@@ -1945,6 +1990,7 @@ When defining service objects in Kubernetes, you can set several options for the
 * Set the health check interval
 * Set the health check maximum response time
 * Set the maximum number of retries for a health check
+* L7 rules and condtions
 
 #### Global Setting and Per-Listener Setting
 For each setting item, global setting or per-listener setting is supported. If neither global nor per-listener setting is available, the default value for each setting is used.
@@ -2422,6 +2468,137 @@ You can set a keep-alive timeout value.
 
 > [Caution]
 > The keep-alive timeout can be set up on clusters that have been upgraded to v1.24.3 or later after November 28, 2023, or are newly created.
+
+#### L7 Rules
+You can set L7 rules on a per-listener basis.  L7 rules work as follows
+
+* L7 rules can only be created when the protocol of the listener is HTTP or TERMINATED_HTTPS.
+* L7 rules are applied in the following order based on the action type: block, forward to URL, forward to member group.
+* Within the same task type, smaller index values are prioritized higher.
+* A member group is created that contains nodes connected to the member subnet, and this member group is set as the default member group for the listener.
+
+L7 rules can be set up as follows
+
+* You can set up to 10 L7 rules on a single listener.
+* To identify each L7 rule, use the format `l7policy-%d`(where`%d is`an index starting at 0) in the settings location.
+
+| Set up location | Meaning | Required | Value |
+| --- | --- | :-: | --- |
+| {LISTENER_SPEC}.{L7POLICY}.loadbalancer.nhncloud/name | Name | O | String of 255 characters or less |
+| {LISTENER_SPEC}.{L7POLICY}.loadbalancer.nhncloud/description | Description | X | String of 255 characters or less |
+| {LISTENER_SPEC}.{L7POLICY}.loadbalancer.nhncloud/action | Task type | O | One of REDIRECT_TO_POOL (forward to a member group), REDIRECT_TO_URL (forward to a URL), or REJECT (block). |
+| {LISTENER_SPEC}.{L7POLICY}.loadbalancer.nhncloud/redirect-url | URL to redirect | X (but required if the action type is REDIRECT_TO_URL) | URLs that start with `HTTP://` or `HTTPS://` |
+
+> [Note]
+> * {LISTENER_SPEC} is in the form `[TCP|UDP]-%d`, ` where %d`is the port number (e.g., TCP-80).
+> * {L7POLICY} is in the form `l7policy-%d`, ` where %d`is an index starting at 0. (For example, l7policy-0)
+
+L7 rule settings have the following limitations
+
+* The index used for setting L7 rules can be any integer value between 0-9.
+* L7 rules that are set on one listener must be set to different index values.
+* L7 rules that are set on one listener must be set to different names.
+
+#### L7 Conditions
+You can set L7 conditions per L7 rule. L7 conditions work as follows
+
+* All L7 conditions in an L7 rule must be satisfied for that L7 rule to take effect.
+* No priority among L7 conditions.
+
+L7 conditions can be set as follows:
+
+* You can set up to 10 L7 conditions in a single L7 rule.
+* To identify each L7 condition, we use the format of `rule-%d``(where %d is`an index starting at 0) in the configuration location.
+
+| Set up location | Meaning | Required | Value |
+| --- | --- | :-: | --- |
+| {LISTENER_SPEC}.{L7POLICY}.{RULE}.loadbalancer.nhncloud/type | Type | O | One of the following: HOST_NAME, PATH, FILE_TYPE, HEADER, or COOKIE |
+| {LISTENER_SPEC}.{L7POLICY}.{RULE}.loadbalancer.nhncloud/compare-type | Comparison method| O |One of REGEX, STARTS_WITH, ENDS_WITH, CONTAINS, EQUAL_TO <br>(However, if the type is FILE_TYPE, only EQUAL_TO and REGEX are available)|
+| {LISTENER_SPEC}.{L7POLICY}.{RULE}.loadbalancer.nhncloud/key | Key | X (but required if type is HEADER, COOKIE) | String of 255 characters or less |
+| {LISTENER_SPEC}.{L7POLICY}.{RULE}.loadbalancer.nhncloud/value | Value | O | String of 255 characters or less |
+
+> [Note]
+> * {RULE} is in the form of `rule-%d`, ` where %d`is an index starting at 0. (For example, rule-0)
+
+L7 conditions have the following limitations
+
+* The index used to set the L7 condition can be any integer value between 0-9.
+* L7 conditions that are set in one L7 rule must be set to different index values.
+* L7 conditions with the same specification (conditions that have the same type, comparison method, key, and value) cannot be added to a single L7 rule.
+
+> [Caution]
+L7 rules and L7 conditions can be set on clusters upgraded to v1.24.3 or later after July 23, 2024 or newly created.
+
+The following is an example of setting up L7 rules and conditions.
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: echosvr-svc
+  labels:
+    app: echosvr
+  annotations:
+    TCP-80.loadbalancer.nhncloud/listener-protocol: "HTTP"
+
+    TCP-80.l7policy-0.loadbalancer.nhncloud/name: "reject-policy"
+    TCP-80.l7policy-0.loadbalancer.nhncloud/description: "default reject policy"
+    TCP-80.l7policy-0.loadbalancer.nhncloud/action: "REJECT"
+
+    TCP-80.l7policy-0.rule-0.loadbalancer.nhncloud/type: "PATH"
+    TCP-80.l7policy-0.rule-0.loadbalancer.nhncloud/compare-type: "CONTAINS"
+    TCP-80.l7policy-0.rule-0.loadbalancer.nhncloud/value: "temp"
+
+    TCP-80.l7policy-1.loadbalancer.nhncloud/name: "redirect-policy"
+    TCP-80.l7policy-1.loadbalancer.nhncloud/description: "basic redirection policy"
+    TCP-80.l7policy-1.loadbalancer.nhncloud/action: "REDIRECT_TO_POOL"
+
+    TCP-80.l7policy-1.rule-0.loadbalancer.nhncloud/type: "PATH"
+    TCP-80.l7policy-1.rule-0.loadbalancer.nhncloud/compare-type: "CONTAINS"
+    TCP-80.l7policy-1.rule-0.loadbalancer.nhncloud/value: "incoming"
+
+    TCP-80.l7policy-1.rule-1.loadbalancer.nhncloud/type: "HOST_NAME"
+    TCP-80.l7policy-1.rule-1.loadbalancer.nhncloud/compare-type: "STARTS_WITH"
+    TCP-80.l7policy-1.rule-1.loadbalancer.nhncloud/value: "Ubuntu"
+
+    TCP-443.loadbalancer.nhncloud/listener-protocol: "TERMINATED_HTTPS"
+    TCP-443.loadbalancer.nhncloud/listener-terminated-https-tls-version: TLSv1.2
+    TCP-443.loadbalancer.nhncloud/listener-terminated-https-cert-manager-name: test
+
+    TCP-443.l7policy-0.loadbalancer.nhncloud/name: "reject-policy"
+    TCP-443.l7policy-0.loadbalancer.nhncloud/description: "default reject policy"
+    TCP-443.l7policy-0.loadbalancer.nhncloud/action: "REJECT"
+
+    TCP-443.l7policy-0.rule-0.loadbalancer.nhncloud/type: "PATH"
+    TCP-443.l7policy-0.rule-0.loadbalancer.nhncloud/compare-type: "CONTAINS"
+    TCP-443.l7policy-0.rule-0.loadbalancer.nhncloud/value: "temp"
+
+    TCP-443.l7policy-1.loadbalancer.nhncloud/name: "redirect-policy"
+    TCP-443.l7policy-1.loadbalancer.nhncloud/description: "basic redirection policy"
+    TCP-443.l7policy-1.loadbalancer.nhncloud/action: "REDIRECT_TO_POOL"
+
+    TCP-443.l7policy-1.rule-0.loadbalancer.nhncloud/type: "PATH"
+    TCP-443.l7policy-1.rule-0.loadbalancer.nhncloud/compare-type: "CONTAINS"
+    TCP-443.l7policy-1.rule-0.loadbalancer.nhncloud/value: "incoming"
+
+    TCP-443.l7policy-1.rule-1.loadbalancer.nhncloud/type: "HOST_NAME"
+    TCP-443.l7policy-1.rule-1.loadbalancer.nhncloud/compare-type: "STARTS_WITH"
+    TCP-443.l7policy-1.rule-1.loadbalancer.nhncloud/value: "Ubuntu"
+
+spec:
+  ports:
+  - name: tcp-80
+    port: 80
+    targetPort: 8080
+    protocol: TCP
+  - name: tcp-443
+    port: 443
+    targetPort: 8443
+    protocol: TCP
+  selector:
+    app: echosvr
+  type: LoadBalancer
+```
 
 ## Ingress Controller
 Ingress Controller routes HTTP and HTTPS requests from cluster externals to internal services, in reference of the rules that are defined at ingress object so as to provide SSL/TSL closure and virtual hosting. For more details on Ingress Controller and Ingress, see [Ingress Controller](https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/), [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/).
@@ -3298,9 +3475,9 @@ For clusters that are using enforced security rules, you must add security rules
 
 | Direction | IP protocol | Port range | Ether | Remote | Description | 
 | :-: | :-: | :-: | :-: | :-: | :-: | 
-| egress | TCP | 2049 | IPv4 | NAS IP address | NFS port in rpc, direction: csi-nfs-node(worker node) -> NAS |
-| egress | TCP | 111 | IPv4 | NAS IP address | portmapper port in rpc, direction: csi-nfs-node(worker node) -> NAS |
-| egress | TCP | 635 | IPv4 | NAS IP address |  rpc's mountd port, direction: csi-nfs-node(worker node) -> NAS |
+| egress | TCP | 2049 | IPv4 | NAS IP address | NFS port in rpc, direction: csi-nfs-node(worker node) → NAS |
+| egress | TCP | 111 | IPv4 | NAS IP address | portmapper port in rpc, direction: csi-nfs-node(worker node) → NAS |
+| egress | TCP | 635 | IPv4 | NAS IP address |  rpc's mountd port, direction: csi-nfs-node(worker node) → NAS |
 
 #### Install csi-driver-nfs
 To use the NHN Cloud NAS service, you must deploy the csi-driver-nfs components.

@@ -118,79 +118,11 @@ NHN Kubernetes Service(NKS)は複数のバージョンをサポートしてい�
 | v1.22.3 | 不可 | 可能 |
 | v1.23.3 | 不可 | 可能 |
 | v1.24.3 | 不可 | 可能 |
-| v1.25.4 | 可能 | 可能 |
+| v1.25.4 | 不可 | 可能 |
 | v1.26.3 | 可能 | 可能 |
 | v1.27.3 | 可能 | 可能 |
 | v1.28.3 | 可能 | 可能 |
 | v1.29.3 | 可能 | 可能 |
-
-NHN Kubernetes Service(NKS)はバージョンによって異なる種類のContainer Network Interface(CNI)を提供します。2023/03/31以降はv1.24.3バージョン以上のクラスタを作成する時、CNIがCalicoで作成されます。 FlannelとCalico CNIのNetwork modeは全てVXLAN方式で作します。
-
-| バージョン | クラスタ作成時にインストールしたCNIの種類およびバージョン | CNI変更可否 |
-| :-: | :-: | :-: |
-| v1.17.6 | Flannel v0.12.0 | 不可 |
-| v1.18.19 | Flannel v0.12.0 | 不可 |
-| v1.19.13 | Flannel v0.14.0 | 不可 |
-| v1.20.12 | Flannel v0.14.0 | 不可 |
-| v1.21.6 | Flannel v0.14.0 | 不可 |
-| v1.22.3 | Flannel v0.14.0 | 不可 |
-| v1.23.3 | Flannel v0.14.0 | 不可 |
-| v1.24.3 | Flannel v0.14.0またはCalico v3.24.1 <sup>(注1)(#footnote_calico_version_1)</sup> | 条件付きで可能 <sup>(注2)(#footnote_calico_version_2)</sup> |
-| v1.25.4 | Flannel v0.14.0またはCalico v3.24.1 <sup>(注1)(#footnote_calico_version_1)</sup> | 条件付きで可能 <sup>(注2)(#footnote_calico_version_2)</sup> |
-| v1.26.3 | Flannel v0.14.0またはCalico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 条件付き可能 <sup>[2](#footnote_calico_version_2)</sup> |
-| v1.27.3 | Calico v3.24.1 | 不可|
-| v1.28.3 | Calico v3.24.1 | 不可|
-| v1.29.3 | Calico v3.24.1 | 不可|
-
-注釈
-* <a name="footnote_calico_version_1">(注1)</a>2023/03/31以前に作成されたクラスタにはFlannelがインストールされています。 2023/03/31以降に作成されるv1.24.3以上のクラスタはCalicoがインストールされます。
-* <a name="footnote_calico_version_2">(注2)</a>CNIの変更はv1.24.3以上のクラスタでのみサポートされ、現在FlannelからCalicoへの変更のみサポートします。
-
-クラスタワーカーノード必須セキュリティルール項目 
-
-| 方向 | IPプロトコル | ポート範囲 | Ether | 遠隔 | 説明 | 特記事項 |
-| :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| ingress | TCP | 10250 | IPv4 | ワーカーノード | kubeletポート、方向: metrics-server(worker node) -> kubelet(worker node) | |
-| ingress | TCP | 10250 | IPv4 | マスターノード | kubeletポート、方向: kube-apiserver(NKS Control plane) -> kubelet(worker node) | |
-| ingress | TCP | 5473 | IPv4 | ワーカーノード |  calico-typhaポート、方向: calico-node(worker node) -> calico-typha(worker node) | CNIがcalicoの場合に作成 |
-| ingress | UDP | 8472 | IPv4 | ワーカーノード | flannel vxlan overlay networkポート、方向: pod(worker node) -> pod(worker node) | CNIがflannelの場合に作成される |
-| ingress | UDP | 8472 | IPv4 | ワーカーノード | flannel vxlan overlay networkポート、方向: pod(NKS Control plane) -> pod(worker node) | CNIがflannelの場合に作成される |
-| ingress | UDP | 4789 | IPv4 | ワーカーノード | calico-node vxlan overlay networkポート、方向: pod(worker node) -> pod(worker node) | CNIがcalicoの場合に作成される |
-| ingress | UDP | 4789 | IPv4 | マスターノード | calico-node vxlan overlay networkポート、方向: pod(NKS Control plane) -> pod(worker node) | CNIがcalicoの場合に作成される |
-| egress | TCP | 2379 | IPv4 | マスターノード | etcdポート、方向: calico-kube-controller(worker node) -> etcd(NKS Control plane)| |
-| egress | TCP | 6443 | IPv4 | Kubernetes APIエンドポイント | kube-apiserverポート、方向: kubelet, kube-proxy(worker node) -> kube-apiserver(NKS Control plane) | |
-| egress | TCP | 6443 | IPv4 | マスターノード | kube-apiserverポート、方向: default kubernetes service(worker node) -> kube-apiserver(NKS Control plane) | |
-| egress | TCP | 5473 | IPv4 | ワーカーノード | CNIがcalicoの場合に作成される、 calico-typhaポート、方向: calico-node(worker node) -> calico-typha(worker node) | |
-| egress | TCP | 53 | IPv4 | ワーカーノード | DNSポート、方向: worker node -> external | |
-| egress | TCP | 443 | IPv4 | すべて許可 | HTTPSポート、方向: worker node -> external | |
-| egress | TCP | 80 | IPv4 | すべて許可 | HTTPポート、方向: worker node -> external | |
-| egress | UDP | 8472 | IPv4 | ワーカーノード | flannel vxlan overlay networkポート、方向: pod(worker node) -> pod(worker node)| CNIがflannelの場合に作成される |
-| egress | UDP | 8472 | IPv4 | マスターノード | flannel vxlan overlay networkポート、方向: pod(worker node) -> pod(NKS Control plane) | CNIがflannelの場合に作成される |
-| egress | UDP | 4789 | IPv4 | ワーカーノード | calico-node vxlan overlay networkポート、方向: pod(worker node) -> pod(worker node) | CNIがcalicoの場合に作成される |
-| egress | UDP | 4789 | IPv4 | マスターノード | calico-node vxlan overlay networkポート、方向: pod(worker node) -> pod(NKS Control plane) | CNIがcalicoの場合に作成される |
-| egress | UDP | 53 | IPv4 | すべて許可 | DNSポート、方向: worker node -> external | |
-
-強化されたセキュリティルールを使用する場合、NodePortタイプのサービスとNHN Cloud NASサービスで使用するポートに対するセキュリティルールに追加されていません。 必要に応じて以下のセキュリティルールを追加設定する必要があります。
-
-| 方向 | IPプロトコル | ポート範囲 | Ether | 遠隔 | 説明 |
-| :-: | :-: | :-: | :-: | :-: | :-: |
-| ingress, egress  | TCP | 30000 - 32767 | IPv4 | すべて許可 | NKS service object NodePort、方向: external -> worker node |
-| egress | TCP | 2049 | IPv4 | NHN Cloud NASサービスIPアドレス | csi-nfs-nodeのrpc nfsポート、方向: csi-nfs-node(worker node) -> NHN Cloud NASサービス |
-| egress | TCP | 111 | IPv4 | NHN Cloud NASサービスIPアドレス | csi-nfs-nodeのrpc portmapperポート、方向: csi-nfs-node(worker node) -> NHN Cloud NASサービス |
-| egress | TCP | 635 | IPv4 | NHN Cloud NASサービスIPアドレス | csi-nfs-nodeのrpc mountdポート、方向: csi-nfs-node(worker node) -> NHN Cloud NASサービス |
-
-強化されたセキュリティルールを使用しない場合、NodePortタイプのサービスと外部ネットワーク通信に必要なセキュリティルールが追加で作成されます。
-
-| 方向 | IPプロトコル | ポート範囲 | Ether | 遠隔 | 説明 | 
-| :-: | :-: | :-: | :-: | :-: | :-: |
-| ingress | TCP | 1 - 65535 | IPv4 | ワーカーノード | すべてのポート、方向: worker node -> worker node |
-| ingress | TCP | 1 - 65535 | IPv4 | マスターノード | すべてのポート、方向: NKS Control plane -> worker node |
-| ingress | TCP | 30000 - 32767 | IPv4 | すべて許可 | NKS service object NodePort、方向: external -> worker node |
-| ingress | UDP | 1 - 65535 | IPv4 | ワーカーノード | すべてのポート、方向: worker node -> worker node |
-| ingress | UDP | 1 - 65535 | IPv4 | マスターノード | すべてのポート、方向: NKS Control plane -> worker node |
-| egress | 任意 | 1 - 65535 | IPv4 | すべて許可 | すべてのポート、方向: worker node - > external |
-| egress | 任意 | 1 - 65535 | IPv6 | すべて許可 | すべてのポート、方向: worker node - > external |
-
 
 必要な情報を入力し、**クラスター作成**を押すと、クラスターの作成が始まります。クラスターリストで状態を確認できます。作成には約10分かかります。クラスターの設定によっては、さらに時間がかかる場合もあります。
 
@@ -1372,7 +1304,7 @@ NHN CloudのKubernetesクラスタバージョン管理方式とKubernetesバー
 * 現在バージョンの次のバージョン(マーナーバージョン基準 +1)にアップグレード可能です。 
 * ダウングレードはサポートしません。
 * 他の機能の動作によりクラスタがアップデート中の状態ではアップグレードができません。
-* クラスタのバージョンをv1.25.4からv1.26.3にアップグレードする際、CNIがFlannelの場合はCalicoに変更する必要があります。
+* クラスタのバージョンをv1.25.4からv1.26.3にアップグレードする際、CNIがFlannelの場合はCalico-VXLANに変更する必要があります。
 
 次の例はKubernetesバージョンのアップグレード可否を表にしたものです。例に使用された条件は次のとおりです。 
 
@@ -1446,7 +1378,7 @@ NHN CloudのKubernetesクラスタマスターは高可用性を保障するた�
 
 ### クラスタCNIの変更
 NHN Kubernetes Service(NKS)は動作中のKubernetesクラスタのCNI(container network interface)変更をサポートします。 
-クラスタCNI変更機能を使用するとNHN Kubernetes Service(NKS)のCNIがFlannel CNIからCalico CNIに変更されます。
+クラスタCNI変更機能を使用するとNHN Kubernetes Service(NKS)のCNIがFlannel CNIからCalico CNI-VXLANに変更されます。
 
 #### CNI変更ルール
 NHN CloudのKubernetesクラスタCNI変更機能に適用されるルールは次のとおりです。
@@ -1454,8 +1386,11 @@ NHN CloudのKubernetesクラスタCNI変更機能に適用されるルールは�
 * CNI変更機能はNHN Kubernetes Service(NKS)バージョン1.24.3以上の場合に使用できます。
 * 既存NHN Kubernetes Service(NKS)で使用しているCNIがFlannelの場合にのみCNI変更を使用できます。
 * CNI変更開始時、マスターとすべてのワーカーノードグループに対して一括で作業を行います。
+* Calico-VXLAN、Calico-eBPFからFlannelへのCNI変更はサポートしません。
+* FlannelからCalico-eBPFへのCNI変更はサポートしません。
+* Calico-VXLANからCalico-eBPFへのCNI変更はサポートしません。
 * マスターのKubernetesバージョンとすべてのワーカーノードグループのKubernetesバージョンが一致すればCNI変更が可能です。
-* CalicoからFlannelへのCNI変更はサポートしません。
+
 * 他の機能の動作により、クラスタがアップデート中の状態ではCNIの変更ができません。
 
 次の例は、Kubernetes CNI変更過程で変更できるかどうかを表で示したものです。例に使用された条件は次のとおりです。 
@@ -1467,24 +1402,24 @@ NHN CloudがサポートするKubernetesバージョンリスト：v1.23.3、v1.
 | --- | :-: | :-: | :-: | :-: |
 | 初期状態| v1.23.3 | Flannel | 不可 <sup>(注1)(#footnote_calico_change_rule_1)</sup> |
 | クラスタアップグレード後の状態 | v1.24.3 | Flannel | 可能 <sup>(注2)(#footnote_calico_change_rule_2)</sup> | 
-| CNI変更後の状態 | v1.24.3 | Calico | 不可 <sup>(注3)(#footnote_calico_change_rule_3)</sup> |
+| CNI変更後の状態 | v1.24.3 | Calico-VXLAN | 不可 <sup>(注3)(#footnote_calico_change_rule_3)</sup> |
 
 
 注釈
 
 * <a name="footnote_calico_change_rule_1">(注1)</a>クラスタバージョンが1.24.3未満のためCNI変更不可
 * <a name="footnote_calico_change_rule_2">(注2)</a>クラスタバージョンが1.24.3以上のためCNI変更可能
-* <a name="footnote_calico_change_rule_3">(注3)</a>CNIがすでにCalicoのためCNI変更不可
+* <a name="footnote_calico_change_rule_3">(注3)</a>CNIがすでにCalico-VXLANのためCNI変更不可
 
-#### FlannelからCalico CNIへの変更進行プロセス
+#### FlannelからCalico-VXLAN CNIへの変更進行プロセス
 CNIの変更は次の順序で行われます。
 
 1. すべてのワーカーノードグループにバッファノード<sup>(注1)(#footnote_calico_change_step_1)</sup>を追加します。<sup>(注2)(#footnote_calico_change_step_2)</sup>
-2. クラスタにCalico CNIが配布されます。<sup>(注3)(#footnote_calico_change_step_3)</sup>
+2. クラスタにCalico-VXLAN CNIが配布されます。<sup>(注3)(#footnote_calico_change_step_3)</sup>
 3. クラスタオートスケーラ機能を無効化します。<sup>(注4)(#footnote_calico_change_step_4)</sup>
 3. すべてのワーカーノードグループ内のすべてのワーカーノードに対して以下の作業を順次実行します。<sup>(注5)(#footnote_calico_change_step_5)</sup>
     1. 該当ワーカーノードで動作中のPodを追放し、ノードをスケジュール不可能な状態に切り替えます。
-    2. ワーカーノードのPod IPをCalico CIDRに再割当てします。該当ノードに配布されているすべてのPodは再配布されます。<sup>(注6)(#footnote_calico_change_step_6)</sup>
+    2. ワーカーノードのPod IPをCalico-VXLAN CIDRに再割当てします。該当ノードに配布されているすべてのPodは再配布されます。<sup>(注6)(#footnote_calico_change_step_6)</sup>
     3. ノードをスケジュール可能な状態に切り替えます。
 5. バッファノードで動作中のPodを追放し、バッファノードを削除します。
 6. クラスタオートスケーラ機能を再度有効にします。<sup>(注4)(#footnote_calico_change_step_4)</sup>
@@ -1495,10 +1430,10 @@ CNIの変更は次の順序で行われます。
 
 * <a name="footnote_calico_change_step_1">(注1)</a>バッファノードとは、CNI変更過程で既存ワーカーノードから追放されたPodが再びスケジューリングできるように作成しておく空きノードを指します。該当ワーカーノードグループで定義したワーカーノードと同じ規格のノードとして作成され、アップグレードプロセスが終了すると自動的に削除されます。このノードはInstance料金ポリシーに基づいて費用が請求されます。 
 * <a name="footnote_calico_change_step_2">(注2)</a>CNI変更時にバッファノード数を設定できます。デフォルト値は1で、0に設定するとバッファノードを追加しません。最小値は0で、最大値は(ノードグループあたりの最大ノード数クォーター - 該当ワーカーノードグループの現在ノード数)です。
-* <a name="footnote_calico_change_step_3">(注3)</a>クラスタにCalico CNIが配布されると、FlannelとCalico CNIが共存します。この状態で新しいPodが配布されるとPod IPはFlannel CNIに設定されて配布されます。Flannel CIDR IPを持つPodとCalico CIDR IPを持つPodはお互いに通信できます。
+* <a name="footnote_calico_change_step_3">(注3)</a>クラスタにCalico-VXLAN CNIが配布されると、FlannelとCalico-VXLAN CNIが共存します。この状態で新しいPodが配布されるとPod IPはFlannel CNIに設定されて配布されます。Flannel CIDR IPを持つPodとCalico-VXLAN CIDR IPを持つPodはお互いに通信できます。
 * <a name="footnote_calico_change_step_4">(注4)</a>このステップはアップグレード機能開始前にクラスタオートスケーラ機能が有効になっている場合にのみ有効です。
 * <a name="footnote_calico_change_step_5">(注5)</a>CNI変更時に設定した最大サービス不可ノードの数だけ作業を実行します。デフォルト値は1です。最小値は1で、最大値は現在クラスタのすべてのノード数です。
-* <a name="footnote_calico_change_step_6">(注6)</a>既に配布されているPodのIPは全てFlannel CIDRに割り当てられています。Calico CNIに変更するためにFlannel CIDRのIPが割り当てられてているPodを全て再配布してCalico CIDR IPを割り当てます。新しいPodが配布されるとPod IPはCalico CNIに設定されて配布されます。
+* <a name="footnote_calico_change_step_6">(注6)</a>既に配布されているPodのIPは全てFlannel CIDRに割り当てられています。Calico-VXLAN CNIに変更するためにFlannel CIDRのIPが割り当てられてているPodを全て再配布してCalico-VXLAN CIDR IPを割り当てます。新しいPodが配布されるとPod IPはCalico-VXLAN CNIに設定されて配布されます。
 
 この過程で以下のようなことが発生することがあります。
 
@@ -1509,8 +1444,8 @@ CNIの変更は次の順序で行われます。
 
 > [Pod再配布注意事項]
 > 1. Pod追放プロセスによって他のノードに移されなかったPodに対して行われます。
-> 2. CNI変更プロセス中にFlannel CIDRとCalico CIDR間の正常な通信のためにCNI変更Podネットワーク値は既存Flannel CIDR値と同じであってはいけません。
-> 3. 既に配布されていたPodのpauseコンテナは全て停止し、kubeletによって再作成されます。Pod名とローカル記憶領域などの設定はそのまま維持されますが、IPはCalico CIDRのIPに変更されます。
+> 2. CNI変更プロセス中にFlannel CIDRとCalico-VXLAN CIDR間の正常な通信のためにCNI変更Podネットワーク値は既存Flannel CIDR値と同じであってはいけません。
+> 3. 既に配布されていたPodのpauseコンテナは全て停止し、kubeletによって再作成されます。Pod名とローカル記憶領域などの設定はそのまま維持されますが、IPはCalico-VXLAN CIDRのIPに変更されます。
 
 
 ### クラスタAPIエンドポイントにIPアクセス制御を適用
@@ -1551,8 +1486,8 @@ Kubernetesはコンポーネント間のTLS認証のためにPKI証明書が必�
     * 証明書設定が含まれているPodの場合、更新されたCA証明書を適用するために再起動が必要です。
 
 > [参考]
-> 証明書更新機能は、1.24以上のバージョンのCalico CNIを使用するクラスタで使用可能です。
-> 1.24以前のバージョンのクラスタを使用しているか、CNIがFlannelのクラスタは、アップグレードとCNIの変更が必要です。
+> 証明書更新機能は、1.24以上のバージョンのCalico-VXLAN CNIを使用するクラスタで使用可能です。
+> クラスタのバージョンが1.23以下、またはCNIがFlannelの場合、バージョンアップグレードおよびCNI変更後に証明書の更新が可能です。
 > [注意]
 > 証明書の更新機能には、新規証明書の作成と設定を反映するために、システムコンポーネントとクラスタの作成時に初期配布されたすべてのkube-system名前空間Podの再起動が伴います。
 > したがって、証明書の更新が進行中、クラスタのノードの状態が一時的にNot Readyに変更されたり、クラスタの一部のコンポーネントが正常に動作しない場合があります。
@@ -1765,6 +1700,114 @@ echo '[ { "registry": "user-defined.registry.io", "endpoint_list": [ "http://use
 * `shutdown`, `halt`, `poweroff`などのコマンドでシステムを停止させると、コンソールから再起動できません。ワーカーノードの開始/停止機能を使ってください。
 * ワーカーノード内の様々な設定ファイルを勝手に修正したり、システムサービスを操作してはいけません。NKSクラスタに致命的な問題が発生する可能性があります。
 
+## CNI(Container Network Interface)
+NHN Kubernetes Service(NKS)はバージョンによって異なる種類のCNI(Container Network Interface)を提供します。2024/07/23以降は、クラスタ作成時、Calico-VXLANとCalico-eBPF CNIを選択することができ、基本設定はCalico-VXLANです。FlannelとCalico-VXLAN CNIはコンテナワークロードをオーバーレイネットワークに構成し、VXLANを利用して通信します。 Calico-eBPFはコンテナワークロードをBGPルーティングプロトコルで構成し、eBPF技術に基づいて直接通信し、一部区間はVXLANを利用して通信します。 CalicoのeBPFに関する内容は[about eBPF](https://docs.tigera.io/calico/latest/about/kubernetes-training/about-ebpf)を参照してください。
+
+また、Calico-eBPF CNIを選択できるOSはRockyとUbuntuであり、FlannelとCalico-VXLANは全てのOS(Centos, Rocky, Red Hat, Ubuntu)をサポートします。
+
+
+### Calico CNIの種類
+NHN Kubernetes Service(NKS)が提供するCalico-VXLAN、Calic-eBPFは下記のような違いがあります。
+
+|  | Calico-VXLAN | Calico-eBPF |
+| :-: | :-: | :-: |
+| コンテナネットワーク処理モジュール | Linuxカーネルネットワークスタック | eBPF+Linuxカーネルネットワークスタック |
+| kube-proxy | 有効 | 無効(eBPFがkube-proxy代替) |
+| ネットワーク方式| VXLAN | 直接通信 |
+| Pod to Pod通信| VXLANカプセル化されて通信 | 直接通信<sup>[1](#footnote_calico_1)</sup> |
+| Service ClusterIP to Pod通信 | VXLANカプセル化されて通信 | 直接通信 |
+| Service NodePort to Pod通信 | VXLANカプセル化されて通信 | VXLANカプセル化されて通信 |
+| ネットワークポリシー適用 | iptablesベース | eBPFベース(カーネル水準) |
+| ネットワーク性能 | VXLANカプセル化による性能低下｜直接通信による高い性能(少ない遅延時間) |
+
+注釈
+
+* <a name="footnote_calico_1">1</a>:パケットの送信元IP、宛先IPがPod IPに設定されます。強化されたセキュリティルールを使用する場合、このトラフィックに対するセキュリティルールを別途設定する必要があります。
+
+
+
+### クラスタ作成時に設定したCNIごとにCNIを変更できるかどうか。
+
+| バージョン | クラスタ作成時にインストールしたCNIの種類及びバージョン | CNIの変更可否 |
+| :-: | :-: | :-: |
+| v1.17.6 | Flannel v0.12.0 | 不可 |
+| v1.18.19 | Flannel v0.12.0 | 不可 |
+| v1.19.13 | Flannel v0.14.0 | 不可 |
+| v1.20.12 | Flannel v0.14.0 | 不可 |
+| v1.21.6 | Flannel v0.14.0 | 不可 |
+| v1.22.3 | Flannel v0.14.0 | 不可 |
+| v1.23.3 | Flannel v0.14.0 | 不可 |
+| v1.24.3 | Flannel v0.14.0またはCalico-VXLAN v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 条件付きで可能 <sup>[2](#footnote_calico_version_2)</sup> |
+| v1.25.4 | Flannel v0.14.0またはCalico-VXLAN v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 条件付きで可能 <sup>[2](#footnote_calico_version_2)</sup> |
+| v1.26.3 | Flannel v0.14.0またはCalico-VXLAN, Calico-eBPF v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 条件付きで可能 <sup>[2](#footnote_calico_version_2)</sup> |
+| v1.27.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 不可|
+| v1.28.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 不可|
+| v1.29.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 不可|
+
+注釈
+
+* <a name="footnote_calico_version_1">1</a>: 2023/03/31以前に作成されたクラスタにはFlannelがインストールされています。 2023/03/31以降に作成されたv1.24.3以上のクラスタはCalicoがインストールされます。
+* <a name="footnote_calico_version_2">2</a>: CNIの変更はv1.24.3以降のクラスタでのみサポートされ、現在はFlannelからCalico-VXLANへの変更のみをサポートしています。
+
+
+
+## セキュリティグループ
+クラスタ作成時に強化されたセキュリティルールをTrueに設定すると、ワーカーノードセキュリティグループの作成時に必須のセキュリティルールだけが作成されます。
+
+### クラスタワーカーノード必須セキュリティルール
+
+| 方向 | IPプロトコル | ポート範囲 | Ether | 遠隔 | 説明 | 特記事項 |
+| :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+| ingress | TCP | 10250 | IPv4 | ワーカーノード | kubeletポート、方向: metrics-server(ワーカーノード) → kubelet(ワーカーノード) | |
+| ingress | TCP | 10250 | IPv4 | NKS Control Plane | kubeletポート、方向: kube-apiserver(NKS Control plane) → kubelet(ワーカーノード) | |
+| ingress | TCP | 5473 | IPv4 | ワーカーノード |  calico-typhaポート、方向: calico-node(ワーカーノード) → calico-typha(ワーカーノード) | CNIがCalico-VXLAN, Calico-eBPFの場合に作成される |
+| ingress | TCP | 179 | IPv4 | ワーカーノード | calico-node BGPポート、方向: pod(ワーカーノード) → pod(ワーカーノード) | CNIがCalico-eBPFの場合に作成される |
+| ingress | TCP | 179 | IPv4 | NKS Control Plane | calico-node BGPポート、方向: pod(NKS Control plane) → pod(ワーカーノード) | CNIがCalico-eBPFの場合に作成される |
+| ingress | UDP | 8472 | IPv4 | ワーカーノード | flannel vxlan overlay networkポート、方向: pod(ワーカーノード) → pod(ワーカーノード) | CNIがflannel場合に作成される |
+| ingress | UDP | 8472 | IPv4 | ワーカーノード | flannel vxlan overlay networkポート、方向: pod(NKS Control plane) → pod(ワーカーノード) | CNIがflannel場合に作成される |
+| ingress | UDP | 4789 | IPv4 | ワーカーノード | calico-node vxlan overlay networkポート、方向: pod(ワーカーノード) → pod(ワーカーノード) | CNIがCalico-VXLAN, Calico-eBPFの場合に作成される |
+| ingress | UDP | 4789 | IPv4 | NKS Control Plane | calico-node vxlan overlay networkポート、方向: pod(NKS Control plane) → pod(ワーカーノード) | CNIがCalico-VXLAN, Calico-eBPFの場合に作成される |
+| egress | TCP | 2379 | IPv4 | NKS Control Plane | etcdポート、方向: calico-kube-controller(ワーカーノード) → etcd(NKS Control plane)| |
+| egress | TCP | 6443 | IPv4 | Kubernetes APIエンドポイント | kube-apiserverポート、方向: kubelet, kube-proxy(ワーカーノード) → kube-apiserver(NKS Control plane) | |
+| egress | TCP | 6443 | IPv4 | NKS Control Plane | kube-apiserverポート、方向: default kubernetes service(ワーカーノード) → kube-apiserver(NKS Control plane) | |
+| egress | TCP | 5473 | IPv4 | ワーカーノード | calico-typhaポート、方向: calico-node(ワーカーノード) → calico-typha(ワーカーノード) | CNIがCalico-VXLAN, Calico-eBPFの場合に作成される |
+| egress | TCP | 53 | IPv4 | ワーカーノード | DNSポート、方向:ワーカーノード→外部 | |
+| egress | TCP | 443 | IPv4 | すべて許可 | HTTPSポート、方向:ワーカーノード→外部 | |
+| egress | TCP | 80 | IPv4 | すべて許可 | HTTPポート、方向:ワーカーノード→外部 | |
+| egress | TCP | 179 | IPv4 | ワーカーノード | calico-node BGPポート、方向: pod(ワーカーノード) → pod(ワーカーノード) | CNIがCalico-eBPFの場合に作成される |
+| egress | TCP | 179 | IPv4 | NKS Control Plane | calico-node BGPポート、方向: pod(NKS Control plane) → pod(ワーカーノード) | CNIがCalico-eBPFの場合に作成される |
+| egress | UDP | 8472 | IPv4 | ワーカーノード | flannel vxlan overlay networkポート、方向: pod(ワーカーノード) → pod(ワーカーノード)| CNIがflannel場合に作成される |
+| egress | UDP | 8472 | IPv4 | NKS Control Plane | flannel vxlan overlay networkポート、方向: pod(ワーカーノード) → pod(NKS Control plane) | CNIがflannel場合に作成される |
+| egress | UDP | 4789 | IPv4 | ワーカーノード | calico-node vxlan overlay networkポート、方向: pod(ワーカーノード) → pod(ワーカーノード) | CNIがCalico-VXLAN, Calico-eBPFの場合に作成される |
+| egress | UDP | 4789 | IPv4 | NKS Control Plane | calico-node vxlan overlay networkポート、方向: pod(ワーカーノード) → pod(NKS Control plane) | CNIがCalico-VXLAN, Calico-eBPFの場合に作成される |
+| egress | UDP | 53 | IPv4 | すべて許可 | DNSポート、方向:ワーカーノード→外部 | |
+
+強化されたセキュリティルールを使用する場合、NodePortタイプのサービスとNHN Cloud NASサービスで使用するポートに対するセキュリティルールに追加されていません。必要に応じて以下のセキュリティルールを追加設定する必要があります。
+
+| 方向 | IPプロトコル | ポート範囲 | Ether | 遠隔 | 説明 |
+| :-: | :-: | :-: | :-: | :-: | :-: |
+| ingress, egress | TCP | 30000 - 32767 | IPv4 | すべて許可 | NKS service object NodePort、方向:外部→ワーカーノード |
+| egress | TCP | 2049 | IPv4 | NHN Cloud NASサービスIPアドレス | csi-nfs-nodeのrpc nfsポート、方向: csi-nfs-node(ワーカーノード) → NHN Cloud NASサービス |
+| egress | TCP | 111 | IPv4 | NHN Cloud NASサービスIPアドレス | csi-nfs-nodeのrpc portmapperポート、方向: csi-nfs-node(ワーカーノード) → NHN Cloud NASサービス |
+| egress | TCP | 635 | IPv4 | NHN Cloud NASサービスIPアドレス | csi-nfs-nodeのrpc mountdポート、方向: csi-nfs-node(ワーカーノード) → NHN Cloud NASサービス |
+
+> [Calico-eBPF CNI使用時の注意] 
+> > Calico-eBPF CNIを使用する場合、Pod間の通信とノードからPodへの通信は、Podに設定されたポートを介して行われます。
+> 強化されたセキュリティルールを使用する場合、該当Podのポートに対するingress、egressセキュリティルールを手動で追加する必要があります。
+### 強化されたセキュリティールールを使用しない場合に作成されるルール
+
+強化されたセキュリティルールを使用しない場合、NodePortタイプのサービスと外部ネットワーク通信に必要なセキュリティルールが追加で作成されます。
+
+| 方向 | IPプロトコル | ポート範囲 | Ether | 遠隔 | 説明 | 
+| :-: | :-: | :-: | :-: | :-: | :-: |
+| ingress | TCP | 1 - 65535 | IPv4 | ワーカーノード | 全てのポート、方向:ワーカーノード→ワーカーノード |
+| ingress | TCP | 1 - 65535 | IPv4 | NKS Control Plane | 全てのポート、方向: NKS Control plane →ワーカーノード |
+| ingress | TCP | 30000 - 32767 | IPv4 | すべて許可 | NKS service object NodePort、方向:外部→ワーカーノード |
+| ingress | UDP | 1 - 65535 | IPv4 | ワーカーノード | 全てのポート、方向:ワーカーノード→ワーカーノード |
+| ingress | UDP | 1 - 65535 | IPv4 | NKS Control Plane | 全てのポート、方向: NKS Control plane →ワーカーノード |
+| egress | 任意 | 1 - 65535 | IPv4 | すべて許可 | 全てのポート、方向:ワーカーノード→外部 |
+| egress | 任意 | 1 - 65535 | IPv6 | すべて許可 | 全てのポート、方向:ワーカーノード→外部 |
+
 ## LoadBalancerサービス
 Kubernetesアプリケーションの基本実行単位Podは、CNI(container network interface)でクラスターネットワークに接続されます。基本的にクラスターの外部からPodにはアクセスできません。Podのサービスをクラスターの外部に公開するにはKubernetesの`LoadBalancer`サービス(Service)オブジェクト(object)を利用して外部に公開するパスを作成する必要があります。LoadBalancerサービスオブジェクトを作成すると、クラスターの外部にNHN Cloud Load Balancerが作成され、サービスオブジェクトと接続されます。
 
@@ -1921,6 +1964,7 @@ Kubernetesのサービスオブジェクトを定義する時、ロードバラ�
 * ヘルスチェック周期設定
 * ヘルスチェック最大レスポンス時間設定
 * ヘルスチェック最大再試行回数設定
+* L7ルール及び条件
 
 #### グローバル設定とリスナー別設定
 設定項目ごとにグローバル設定とリスナー別設定が可能です。グローバル設定とリスナー別設定がどちらもない場合、設定別デフォルト値を使用します。
@@ -2397,6 +2441,135 @@ keep-aliveタイムアウト値を設定できます。
 
 > [注意]
 > keep-alive timeoutは2023年11月28日以降にv1.24.3以上のバージョンにアップグレードされたか、新規に作成されたクラスタで設定可能です。
+
+#### L7ルール
+リスナーごとにL7ルールを設定できます。 L7ルールは次のように動作します。
+
+* L7ルールはリスナーのプロトコルがHTTPまたはTERMINATED_HTTPSの場合にのみ作成可能です。
+* L7ルールは作業タイプに応じて、ブロック、URLへの転送、メンバーグループへの転送の順に適用されます。
+* 同じ作業タイプ内では、インデックス値が小さいほど優先順位が高く設定されます。
+* メンバーサブネットに接続されたノードを含むメンバーグループが作成され、このメンバーグループはリスナーの基本メンバーグループとして設定されます。
+
+L7ルールは次のように設定できます。
+
+* 一つのリスナーにL7ルールを最大10個まで設定可能です。
+* 各L7ルールを識別するために、設定位置に`l7policy-%d`(`%d`は0から始まるインデックス)の形式を使用します。
+
+| 設定位置 | 意味 | 必須かどうか | 値 |
+| --- | --- | :-: | --- |
+| {LISTENER_SPEC}.{L7POLICY}.loadbalancer.nhncloud/name | 名前 | O | 255文字以下の文字列 |
+| {LISTENER_SPEC}.{L7POLICY}.loadbalancer.nhncloud/description | 説明 | X | 255文字以下の文字列 |
+| {LISTENER_SPEC}.{L7POLICY}.loadbalancer.nhncloud/action | 作業タイプ | O | REDIRECT_TO_POOL(メンバーグループに伝達), REDIRECT_TO_URL(URLに伝達), REJECT(ブロック)のうちいずれか |
+| {LISTENER_SPEC}.{L7POLICY}.loadbalancer.nhncloud/redirect-url | redirectするURL | X (ただし、作業タイプがREDIRECT_TO_URLの場合には必須) | `HTTP://`または`HTTPS://`で始まるURL |
+
+> [参考]
+> * {LISTENER_SPEC}は`[TCP|UDP]-%d`の形式で`%d`はポート番号です。 (例：TCP-80)
+> * {L7POLICY}は`l7policy-%d`の形式で`%d`は0から始まるインデックスです。 (例：l7policy-0)
+L7ルール設定には以下の制約があります。
+
+* L7ルール設定に使用されるインデックスは、0-9の間の整数値を使用できます。
+* 一つのリスナーに設定されるL7ルールは、異なるインデックス値で設定する必要があります。
+* 一つのリスナーに設定されるL7ルールは、異なる名前で設定する必要があります。
+
+#### L7条件
+L7ルールごとにL7条件を設定できます。L7条件は次のように動作します。
+
+* L7ルールに属するすべてのL7条件を満たすと、そのL7ルールが適用されます。
+* L7条件間には優先順位がありません。
+
+L7条件は次のように設定できます。
+
+* 一つのL7ルールにL7条件を最大10個まで設定可能です。
+* 各L7条件を識別するために、設定位置に`rule-%d`(`%d`は0から始まるインデックス)の形式を使用します。
+*
+
+| 設定位置 | 意味 | 必須かどうか | 値 |
+| --- | --- | :-: | --- |
+| {LISTENER_SPEC}.{L7POLICY}.{RULE}.loadbalancer.nhncloud/type | タイプ | O | HOST_NAME(ホスト名), PATH(パス), FILE_TYPE(ファイルタイプ), HEADER(ヘッダ), COOKIE(Cookie)のいずれか |
+| {LISTENER_SPEC}.{L7POLICY}.{RULE}.loadbalancer.nhncloud/compare-type | 比較方式| O |REGEX, STARTS_WITH, ENDS_WITH, CONTAINS, EQUAL_TOのいずれか<br>(ただし、タイプがFILE_TYPEの場合にはEQUAL_TO, REGEXのみ使用可能)|
+| {LISTENER_SPEC}.{L7POLICY}.{RULE}.loadbalancer.nhncloud/key | キー | X(ただし、タイプがHEADER, COOKIEの場合には必須) | 255文字以下の文字列 |
+| {LISTENER_SPEC}.{L7POLICY}.{RULE}.loadbalancer.nhncloud/value | 値 | O | 255文字以下の文字列 |
+
+> [参考]
+> * {RULE}は`rule-%d`の形式で`%d`は0から始まるインデックスです。 (例：rule-0)
+L7条件には以下の制約があります。
+
+* L7条件の設定に使用されるインデックスは、0-9の間の整数値を使用できます。
+* 一つのL7ルールに設定されるL7条件は、異なるインデックス値で設定する必要があります。
+* 一つのL7ルールに同じ仕様のL7条件(タイプ、比較方式、キー、値がすべて同じ条件)を追加することはできません。
+
+> [注意]
+> L7ルールおよびL7条件は、2024年7月23日以降にv1.24.3以上のバージョンにアップグレードされた、または新規に作成されたクラスタで設定可能です。
+以下はL7ルール及び条件を設定する例です。
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: echosvr-svc
+  labels:
+    app: echosvr
+  annotations:
+    TCP-80.loadbalancer.nhncloud/listener-protocol: "HTTP"
+
+    TCP-80.l7policy-0.loadbalancer.nhncloud/name: "reject-policy"
+    TCP-80.l7policy-0.loadbalancer.nhncloud/description: "default reject policy"
+    TCP-80.l7policy-0.loadbalancer.nhncloud/action: "REJECT"
+
+    TCP-80.l7policy-0.rule-0.loadbalancer.nhncloud/type: "PATH"
+    TCP-80.l7policy-0.rule-0.loadbalancer.nhncloud/compare-type: "CONTAINS"
+    TCP-80.l7policy-0.rule-0.loadbalancer.nhncloud/value: "temp"
+
+    TCP-80.l7policy-1.loadbalancer.nhncloud/name: "redirect-policy"
+    TCP-80.l7policy-1.loadbalancer.nhncloud/description: "basic redirection policy"
+    TCP-80.l7policy-1.loadbalancer.nhncloud/action: "REDIRECT_TO_POOL"
+
+    TCP-80.l7policy-1.rule-0.loadbalancer.nhncloud/type: "PATH"
+    TCP-80.l7policy-1.rule-0.loadbalancer.nhncloud/compare-type: "CONTAINS"
+    TCP-80.l7policy-1.rule-0.loadbalancer.nhncloud/value: "incoming"
+
+    TCP-80.l7policy-1.rule-1.loadbalancer.nhncloud/type: "HOST_NAME"
+    TCP-80.l7policy-1.rule-1.loadbalancer.nhncloud/compare-type: "STARTS_WITH"
+    TCP-80.l7policy-1.rule-1.loadbalancer.nhncloud/value: "Ubuntu"
+
+    TCP-443.loadbalancer.nhncloud/listener-protocol: "TERMINATED_HTTPS"
+    TCP-443.loadbalancer.nhncloud/listener-terminated-https-tls-version: TLSv1.2
+    TCP-443.loadbalancer.nhncloud/listener-terminated-https-cert-manager-name: test
+
+    TCP-443.l7policy-0.loadbalancer.nhncloud/name: "reject-policy"
+    TCP-443.l7policy-0.loadbalancer.nhncloud/description: "default reject policy"
+    TCP-443.l7policy-0.loadbalancer.nhncloud/action: "REJECT"
+
+    TCP-443.l7policy-0.rule-0.loadbalancer.nhncloud/type: "PATH"
+    TCP-443.l7policy-0.rule-0.loadbalancer.nhncloud/compare-type: "CONTAINS"
+    TCP-443.l7policy-0.rule-0.loadbalancer.nhncloud/value: "temp"
+
+    TCP-443.l7policy-1.loadbalancer.nhncloud/name: "redirect-policy"
+    TCP-443.l7policy-1.loadbalancer.nhncloud/description: "basic redirection policy"
+    TCP-443.l7policy-1.loadbalancer.nhncloud/action: "REDIRECT_TO_POOL"
+
+    TCP-443.l7policy-1.rule-0.loadbalancer.nhncloud/type: "PATH"
+    TCP-443.l7policy-1.rule-0.loadbalancer.nhncloud/compare-type: "CONTAINS"
+    TCP-443.l7policy-1.rule-0.loadbalancer.nhncloud/value: "incoming"
+
+    TCP-443.l7policy-1.rule-1.loadbalancer.nhncloud/type: "HOST_NAME"
+    TCP-443.l7policy-1.rule-1.loadbalancer.nhncloud/compare-type: "STARTS_WITH"
+    TCP-443.l7policy-1.rule-1.loadbalancer.nhncloud/value: "Ubuntu"
+
+spec:
+  ports:
+  - name: tcp-80
+    port: 80
+    targetPort: 8080
+    protocol: TCP
+  - name: tcp-443
+    port: 443
+    targetPort: 8443
+    protocol: TCP
+  selector:
+    app: echosvr
+  type: LoadBalancer
+```
 
 ## イングレスコントローラー
 イングレスコントローラー(Ingress Controller)は、イングレスオブジェクトに定義されているルールを参照してクラスタ外部から内部サービスにHTTPとHTTPSリクエストをルーティングし、SSL/TSL終了、仮想ホスティングなどを提供します。イングレスコントローラーとイングレスの詳細については[イングレスコントローラー](https://kubernetes.io/ko/docs/concepts/services-networking/ingress-controllers/)、[イングレス](https://kubernetes.io/ko/docs/concepts/services-networking/ingress/)文書を参照してください。
@@ -3509,9 +3682,9 @@ $ systemctl start rpcbind
 
 | 方向 | IPプロトコル | ポート範囲 | Ether | 遠隔 | 説明 | 
 | :-: | :-: | :-: | :-: | :-: | :-: | 
-| egress | TCP | 2049 | IPv4 | NAS IPアドレス | rpcのNFSポート、方向: csi-nfs-node(worker node) -> NAS |
-| egress | TCP | 111 | IPv4 | NAS IPアドレス | rpcのportmapperポート、方向: csi-nfs-node(worker node) -> NAS |
-| egress | TCP | 635 | IPv4 | NAS IPアドレス |  rpcのmountdポート、方向: csi-nfs-node(worker node) -> NAS |
+| egress | TCP | 2049 | IPv4 | NAS IPアドレス | rpcのNFSポート、方向: csi-nfs-node(worker node) → NAS |
+| egress | TCP | 111 | IPv4 | NAS IPアドレス | rpcのportmapperポート、方向: csi-nfs-node(worker node) → NAS |
+| egress | TCP | 635 | IPv4 | NAS IPアドレス |  rpcのmountdポート、方向: csi-nfs-node(worker node) → NAS |
 
 #### csi-driver-nfsのインストール
 NHN Cloud NASサービスを使用するにはクラスタにcsi-driver-nfsコンポーネントを配布する必要があります。

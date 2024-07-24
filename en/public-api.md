@@ -504,6 +504,7 @@ X-Auth-Token: {tokenId}
 | labels.pods_network_subnet | Body | Integer | X |  Cluster Pod subnet size. See pods_network_subnet input rules |
 | labels.ncr_sgw | Body | String | X | Service gateway UUID of NCR type<br>But, only created in the same VPC as the cluster VPC. |
 | labels.obs_sgw | Body | String | X | Service gateway UUID of OBS type<br>But, only created in the same VPC as the cluster VPC. |
+| labels.cni_driver | Body | String | X | Set up CNI, Selectable CNI list: calico (default),calico-ebpf<br>calico: Created as Calico-VXLAN<br>calico-ebpf: Created as Calico-eBPF |
 | flavor_id | Body | UUID | O | Applied to the default worker node group: Node instance flavor UUID |
 | fixed_network | Body | UUID | O | VPC Network UUID |
 | fixed_subnet | Body | UUID | O | VPC subnet UUID. Note the rules for entering fixed_subnet, pods_network_cidr, and service_cluster_ip_range. |
@@ -745,7 +746,7 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|---|
 | tokenId | Header | String | O | Token ID |
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
-| cni | Body | String | O | Configure a CNI to change (Selectable CNI list: calico) | 
+| cni | Body | String | O | Configure a CNI to change (Selectable CNI list: calico)<br>calico: Changed to Calico-VXLAN | 
 | num_buffer_nodes | Body | Integer | X | Number of buffer nodes. Default: 1, minimum: 0, maximum: number of additional nodes that can be created in each worker node group (maximum number of nodes per worker node group - current number of nodes in that worker node group) |
 | num_max_unavailable_nodes | Body |  Integer | X | Maximum number of unavailable nodes. minimum: 1, maximum: current number of nodes for the cluster, default: 1 |
 | pod_cidr | Body | String | O | calico pod cidr settings, see the input rules of pod_cidr |
