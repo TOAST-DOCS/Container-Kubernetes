@@ -461,3 +461,38 @@ systemctl restart rpc-statd
 systemctl restart rpcbind
 ```
 
+### > PV 용량 증설 후에도 파드의 파일 시스템에 증설된 용량이 반영되지 않습니다.
+2024년 8월 이전에 생성된 1.20 이상 버전의 클러스터에서 발생할 수 있는 문제입니다. 아래 스크립트 실행을 통해 클러스터에 배포된 cinder-csi-driver를 업데이트하여 문제를 해결할 수 있습니다. 스크립트 실행 이후 새로 생성하거나 용량 증설된 PV에만 설정 업데이트가 반영됩니다.
+
+kubeconfig_file_path 변수에 클러스터의 kubeconfig 파일이 위치한 절대경로 값을 정의한 후 스크립트를 실행합니다.
+```
+#!/bin/bash
+kubeconfig_file_path={kubeconfig 파일 절대 경로}
+SECRET_NAME="cinder-csi-cloud-config"
+NAMESPACE="kube-system"
+# Fetch the secret using kubectl and parse the JSON output with jq
+secret_data=$(kubectl --kubeconfig=$kubeconfig_file_path get secret "$SECRET_NAME" -n "$NAMESPACE" -o json)
+# Extract the 'cloud-config' key and decode its value
+cloud_config_base64=$(echo "$secret_data" | jq -r '.data["cloud-config"]')
+if [[ "$cloud_config_base64" != "null" ]]; then
+    # Decode the base64 value
+    cloud_config=$(echo "$cloud_config_base64" | base64 --decode)
+    # Add the [BlockStorage] section with rescan-on-resize=true
+    modified_cloud_config=$(cat <<EOF
+$cloud_config
+[BlockStorage]
+rescan-on-resize=true
+EOF
+)
+    # Encode the modified cloud-config back to base64
+    modified_cloud_config_base64=$(echo "$modified_cloud_config" | base64 | tr -d '\n')
+    # Update the Kubernetes secret with the new base64-encoded data
+    kubectl --kubeconfig=$kubeconfig_file_path patch secret "$SECRET_NAME" -n "$NAMESPACE" --type=json \
+        -p="[{'op': 'replace', 'path': '/data/cloud-config', 'value':'$modified_cloud_config_base64'}]"
+    echo "Secret $SECRET_NAME updated successfully."
+else
+    echo "cloud-config key not found in secret $SECRET_NAME"
+fi
+kubectl -n kube-system rollout restart daemonet cinder-csi-nodeplugin
+kubectl -n kube-system rollout restart statefulset cinder-csi-controllerplugin
+```
