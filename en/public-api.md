@@ -504,6 +504,7 @@ X-Auth-Token: {tokenId}
 | labels.pods_network_subnet | Body | Integer | X |  Cluster Pod subnet size. See pods_network_subnet input rules |
 | labels.ncr_sgw | Body | String | X | Service gateway UUID of NCR type<br>But, only created in the same VPC as the cluster VPC. |
 | labels.obs_sgw | Body | String | X | Service gateway UUID of OBS type<br>But, only created in the same VPC as the cluster VPC. |
+| labels.cni_driver | Body | String | X | Set up CNI, Selectable CNI list: calico (default),calico-ebpf<br>calico: Created as Calico-VXLAN<br>calico-ebpf: Created as Calico-eBPF |
 | flavor_id | Body | UUID | O | Applied to the default worker node group: Node instance flavor UUID |
 | fixed_network | Body | UUID | O | VPC Network UUID |
 | fixed_subnet | Body | UUID | O | VPC subnet UUID. Note the rules for entering fixed_subnet, pods_network_cidr, and service_cluster_ip_range. |
@@ -729,7 +730,7 @@ This API does not require a request body.
 </details>
 
 ### Change Cluster CNI
-Changes the cluster CNI (container network interface). You can change Flannel CNI to a different CNI. For more information on the types of CNIs you can change and the conditions under which they can be changed, see [User Guide](/Container/NKS/ko/user-guide/#cni).
+Changes the cluster CNI (container network interface). You can change Flannel CNI to a different CNI. For more information on the types of CNIs you can change and the conditions under which they can be changed, see [User Guide](/Container/NKS/en/user-guide/#cni).
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/actions/cni_update
@@ -745,7 +746,7 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|---|
 | tokenId | Header | String | O | Token ID |
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
-| cni | Body | String | O | Configure a CNI to change (Selectable CNI list: calico) | 
+| cni | Body | String | O | Configure a CNI to change (Selectable CNI list: calico)<br>calico: Changed to Calico-VXLAN | 
 | num_buffer_nodes | Body | Integer | X | Number of buffer nodes. Default: 1, minimum: 0, maximum: number of additional nodes that can be created in each worker node group (maximum number of nodes per worker node group - current number of nodes in that worker node group) |
 | num_max_unavailable_nodes | Body |  Integer | X | Maximum number of unavailable nodes. minimum: 1, maximum: current number of nodes for the cluster, default: 1 |
 | pod_cidr | Body | String | O | calico pod cidr settings, see the input rules of pod_cidr |
@@ -801,8 +802,8 @@ pod_subnet must be entered in the following rules.
 
 ### Enforce IP Access Control to Cluster API Endpoints
 You can enforce or disable IP access control to cluster API endpoints.
-For more information about IP access control features, see [IP access control](/Network/Load%20Balancer/ko/overview/#ip).
-For more information about IP access control rules for Cluster API endpoints, see the [user guide](/Container/NKS/ko/user-guide/#_67).
+For more information about IP access control features, see [IP access control](/Network/Load%20Balancer/en/overview/#ip).
+For more information about IP access control rules for Cluster API endpoints, see the [user guide](/Container/NKS/en/user-guide/#_67).
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/api_ep_ipacl

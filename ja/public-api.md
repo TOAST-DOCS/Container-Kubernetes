@@ -1,7 +1,7 @@
 ## Container > NHN Kubernetes Service(NKS) > API v2ガイド
 
 Kubernetesクラスタを構成するためのAPIを記述します。
-APIを使用するにはAPIエンドポイントとトークンなどが必要です。 [API使用準備](/Compute/Compute/ko/identity-api/)を参照してAPIの使用に必要な情報を準備します。
+APIを使用するにはAPIエンドポイントとトークンなどが必要です。 [API使用準備](/Compute/Compute/ja/identity-api/)を参照してAPIの使用に必要な情報を準備します。
 
 すべてのAPIは`kubernetes`タイプエンドポイントを利用して呼び出します。
 
@@ -24,54 +24,41 @@ NHN Kubernetes Service(NKS)APIは、クラスタおよびノードグループ�
 GET /v2.0/networks?router:external=True
 ```
 
-ネットワークリスト照会APIの詳細については、[ネットワークリスト表示](/Network/VPC/ko/public-api/#_2)を参照してください。
+ネットワークリスト照会APIの詳細については、[ネットワークリスト表示](/Network/VPC/ja/public-api/#_2)を参照してください。
 
 
 ### インターネットゲートウェイに接続されたサブネットUUIDリスト
 
-インターネットゲートウェイに接続されたVPCネットワークに接続されたサブネットUUIDを入力します。複数のサブネットが検索された場合はコロン(`:`)でつなげて入力します。サブネットリスト照会APIの詳細については、[サブネットリスト表示](/Network/VPC/ko/public-api/#vpc_7)を参照してください。
+インターネットゲートウェイに接続されたVPCネットワークに接続されたサブネットUUIDを入力します。複数のサブネットが検索された場合はコロン(`:`)でつなげて入力します。サブネットリスト照会APIの詳細については、[サブネットリスト表示](/Network/VPC/ja/public-api/#vpc_7)を参照してください。
 
 
 ### VPCネットワークUUID
 
-ノードと接続する内部VPCネットワークUUIDを入力します。ネットワークリスト照会APIの詳細については[ネットワークリスト表示](/Network/VPC/ko/public-api/#vpc_1)を参照してください。
+ノードと接続する内部VPCネットワークUUIDを入力します。ネットワークリスト照会APIの詳細については[ネットワークリスト表示](/Network/VPC/ja/public-api/#vpc_1)を参照してください。
 
 ### VPCサブネットUUID
 
-ノードと接続する内部VPCネットワークに接続されたサブネットUUIDを入力します。サブネットリスト照会APIの詳細については[サブネットリスト表示](/Network/VPC/ko/public-api/#vpc_7)を参照してください。
+ノードと接続する内部VPCネットワークに接続されたサブネットUUIDを入力します。サブネットリスト照会APIの詳細については[サブネットリスト表示](/Network/VPC/ja/public-api/#vpc_7)を参照してください。
 
 ### アベイラビリティゾーンUUID
 
-ノードを作成するアベイラビリティゾーンUUIDを入力します。アベイラビリティゾーンリスト照会APIの詳細については[可用性リスト表示](/Compute/Instance/ko/public-api/#_9)を参照してください。
+ノードを作成するアベイラビリティゾーンUUIDを入力します。アベイラビリティゾーンリスト照会APIの詳細については[可用性リスト表示](/Compute/Instance/ja/public-api/#_9)を参照してください。
 
 ### キーペアUUID
 
-ノード接続時に使用するキーペアを入力します。キーペアリスト照会APIの詳細については[キーペアリスト表示](/Compute/Instance/ko/public-api/#_13)を参照してください。
+ノード接続時に使用するキーペアを入力します。キーペアリスト照会APIの詳細については[キーペアリスト表示](/Compute/Instance/ja/public-api/#_13)を参照してください。
 
 ### ベースイメージUUID
 
-ノードの作成に使用するベースイメージUUIDを入力します。各リージョンのベースイメージ名とUUIDは次のとおりです。
-
-| リージョン | ベースイメージ名 | ベースイメージUUID |
-|---|---|---|
-| 韓国(パンギョ)リージョン | CentOS 7.9 | 1b8da49b-c240-4940-a811-85dfdf18e263 |
-|  | Debian 11.8 Bullseye | 29a86d4d-e7c8-42bb-9ee1-4cdb30135432 |
-|  | Rocky Linux 8.9 | be708c35-c94b-4623-9333-fc600025861d |
-|  | Ubuntu Server 20.04.6 LTS | a4ade08e-538b-439e-ba2e-13fccdcb32ae |
-|  | Ubuntu Server 22.04.3 LTS | 346ec84c-9430-41d5-83f8-05292b74d796 |
-| 韓国(ピョンチョン)リージョン | CentOS 7.9 | b8275b50-4c28-45a2-9bf4-9c704b3842b0 |
-|  | Debian 11.8 Bullseye | aadb772b-f568-4d9a-a5a6-e3f3597bc2bb |
-|  | Rocky Linux 8.9 | c11d7da0-1e55-4898-9953-7cc88f5fe477 |
-|  | Ubuntu Server 20.04.6 LTS | 723797ab-6da6-46f1-abd1-e266531f9ab1 |
-|  | Ubuntu Server 22.04.3 LTS | 0e62b502-c5d8-4d0d-8614-95a5d8795f6a |
+ノードの作成に使用するベースイメージのUUIDを入力します。NKSノードの作成に使用されるベースイメージだけをフィルタリングするため、API呼び出し時にクエリ文字列パラメータに`nhncloud_product=container&visibility=public`を入力します。ベースイメージリスト照会APIの詳細については、[イメージリスト照会](/Compute/Image/ja/public-api/#_2)を参照してください。
 
 ### ブロックストレージの種類
 
-ノードに使用するブロックストレージUUIDを入力します。ブロックストレージタイプリスト照会APIの詳細については[ボリュームタイプリスト表示](/Storage/Block%20Storage/ko/public-api/#_2)を参照してください。
+ノードに使用するブロックストレージUUIDを入力します。ブロックストレージタイプリスト照会APIの詳細については[ボリュームタイプリスト表示](/Storage/Block%20Storage/ja/public-api/#_2)を参照してください。
 
 ### インスタンスタイプUUID
 
-作成するノードのインスタンスタイプUUIDを入力します。インスタンスタイプリスト照会APIの詳細については[インスタンスタイプリスト表示](/Compute/Instance/ko/public-api/#_2)を参照してください。
+作成するノードのインスタンスタイプUUIDを入力します。インスタンスタイプリスト照会APIの詳細については[インスタンスタイプリスト表示](/Compute/Instance/ja/public-api/#_2)を参照してください。
 
 
 
@@ -126,6 +113,8 @@ X-Auth-Token: {tokenId}
 | clusters.labels.pods_network_subnet | Body | String | クラスタPodサブネットサイズ(2023.05.30. 以降に作成されたクラスタで確認可能) |
 | clusters.labels.ncr_sgw | Body | String | NCRタイプのサービスゲートウェイUUID |
 | clusters.labels.obs_sgw | Body | String | OBSタイプのサービスゲートウェイUUID |
+| clusters.labels.term_of_validity | Body | String | 証明書の有効期間 |
+| clusters.labels.certificate_expiry | Body | String | 証明書の有効期限 | 
 
 
 <details><summary>例</summary>
@@ -247,6 +236,8 @@ X-Auth-Token: {tokenId}
 | labels.pods_network_subnet | Body | String | クラスタPodサブネットサイズ(2023.05.30. 以降に作成されたクラスタで確認可能) |
 | labels.ncr_sgw | Body | String | NCRタイプのサービスゲートウェイUUID |
 | labels.obs_sgw | Body | String | OBSタイプのサービスゲートウェイUUID |
+| labels.term_of_validity | Body | String | 証明書の有効期間 |
+| labels.certificate_expiry | Body | String | 証明書の有効期限 | 
 
 <details><summary>例</summary>
 <p>
@@ -511,8 +502,9 @@ X-Auth-Token: {tokenId}
 | labels.service_cluster_ip_range | Body | String  | X |  K8sサービスネットワーク、クラスタでサービス作作成時、ClusterIPに割り当てられるIP帯域。 fixed_subnet, pods_network_cidr, service_cluster_ip_range入力ルール参考 |
 | labels.pods_network_cidr | Body | String |  X | クラスタPodネットワーク。 fixed_subnet, pods_network_cidr, service_cluster_ip_range入力ルール参考 |
 | labels.pods_network_subnet | Body | Integer | X | クラスタPodサブネットサイズ。 pods_network_subnet入力ルール参考 |
-| labels.ncr_sgw | Body | String | X | NCRタイプのサービスゲートウェイUUID |
-| labels.obs_sgw | Body | String | X | OBSタイプのサービスゲートウェイUUID |
+| labels.ncr_sgw | Body | String | X | NCRタイプのサービスゲートウェイUUID<br>ただし、クラスタVPCと同じVPCに作成されたものに限る。 |
+| labels.obs_sgw | Body | String | X | OBSタイプのサービスゲートウェイUUID<br>ただし、クラスタVPCと同じVPCに作成されたものに限る。 |
+| labels.cni_driver | Body | String | X | CNI設定、選択可能CNIリスト: calico(基本), calico-ebpf<br>calico: Calico-VXLANで作成<br>calico-ebpf: Calico-eBPFで作成 |
 | flavor_id | Body | UUID | O | 基本ワーカーノードグループ適用：ノードインスタンスタイプUUID |
 | fixed_network | Body | UUID | O | VPC Network UUID |
 | fixed_subnet | Body | UUID | O | VPCサブネットUUID. fixed_subnet, pods_network_cidr, service_cluster_ip_range入力ルール参照 |
@@ -743,7 +735,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 ### クラスタCNIの変更
-クラスタCNI(container network interface)を変更します。Flannel CNIを他のCNIに変更できます。変更できるCNIの種類と変更可能条件については[ユーザーガイド](/Container/NKS/ko/user-guide/#cni)を参照してください。
+クラスタCNI(container network interface)を変更します。Flannel CNIを他のCNIに変更できます。変更できるCNIの種類と変更可能条件については[ユーザーガイド](/Container/NKS/ja/user-guide/#cni)を参照してください。
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/actions/cni_update
@@ -759,7 +751,7 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|---|
 | tokenId | Header | String | O | トークンID |
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
-| cni | Body | String | O | 変更するCNIを設定(選択可能CNIリスト：calico) | 
+| cni | Body | String | O | 変更するCNIを設定(選択可能CNIリスト：calico)<br>calico: Calico-VXLANに変更 | 
 | num_buffer_nodes | Body | Integer | X | バッファノード数。デフォルト値：1、最小値：0、最大値：各ワーカーノードグループにて追加で作成可能なノード数(ワーカーノードグループあたりの最大ノード数クォーター - 該当ワーカーノードグループの現在のノード数)うち最小値。 |
 | num_max_unavailable_nodes | Body |  Integer | X | 最大サービス不可ノード数。最小値：1、最大値：該当clusterの現在ノード数、デフォルト値：1 |
 | pod_cidr | Body | String | O | calico pod cidr設定、 pod_cidr入力ルール参考 |
@@ -816,8 +808,8 @@ pod_subnetは以下のようなルールで入力する必要があります。
 
 ### クラスタAPIエンドポイントIPアクセス制御適用
 クラスタAPIエンドポイントにIPアクセス制御を適用または解除できます。
-IPアクセス制御機能の詳細については、 [IPアクセス制御](/Network/Load%20Balancer/ko/overview/#ip)文書を参照してください。
-クラスタAPIエンドポイントへのIPアクセス制御ルールに関する詳細については、 [ユーザーガイド](/Container/NKS/ko/user-guide/#_67)を参照してください。
+IPアクセス制御機能の詳細については、 [IPアクセス制御](/Network/Load%20Balancer/ja/overview/#ip)文書を参照してください。
+クラスタAPIエンドポイントへのIPアクセス制御ルールに関する詳細については、 [ユーザーガイド](/Container/NKS/ja/user-guide/#_67)を参照してください。
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/api_ep_ipacl
@@ -944,6 +936,110 @@ X-Auth-Token: {tokenId}
     "cluster_uuid" : "8be87215-9db7-45ed-a03c-38e6db939915",
     "enable": "false"
 }
+```
+
+</p>
+</details>
+
+---
+### クラスタ証明書の更新
+
+クラスタの証明書を更新します。
+```
+PATCH /v1/certificates/{CLUSTER_ID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### リクエスト
+| 名前 | 種類 | 形式 | 必須 | 説明 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | トークンID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
+| term_of_validity | Body | Integer | O | 証明書の有効期間。年単位で入力可能。最小値: 1、最大値: 5 |
+
+<details><summary>例</summary>
+<p>
+
+```json
+{
+    "term_of_validity": 5
+}
+```
+
+</p>
+</details>
+
+#### レスポンス
+
+| 名前 | 種類 | 形式 | 説明 |
+|---|---|---|---|
+| uuid | Body | String | 対象クラスタUUID|
+
+<details><summary>例</summary>
+<p>
+
+```json
+{
+    "uuid": "5f6af7da-df9b-4edd-8284-02317b11e061"
+}
+
+```
+
+</p>
+</details>
+
+---
+
+### サービスゲートウェイを変更する
+
+クラスタ作成時、サービスゲートウェイを設定した場合、他のサービスゲートウェイに変更できます。
+```
+POST /v1/clusters/{CLUSTER_ID_OR_NAME}/actions/update_sgw
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### リクエスト
+
+| 名前 | 種類 | 形式 | 必須 | 説明 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | トークンID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
+| ncr_sgw | Body | UUID | O | 変更したいNCRタイプのサービスゲートウェイUUID |
+| obs_sgw | Body | UUID | O | 変更したいOBSタイプのサービスゲートウェイUUID |
+
+<details><summary>サービスゲートウェイ変更例</summary>
+<p>
+
+```json
+{
+    "ncr_sgw": "48f4ff38-d14b-4f34-a40c-705524e6a755",
+    "obs_sgw": "23c550cb-6a5b-4eaa-903a-711c13316d91"
+}
+```
+
+</p>
+</details>
+
+#### レスポンス
+
+| 名前 | 種類 | 形式 | 説明 |
+|---|---|---|---|
+| uuid | Body | String | 対象クラスタUUID|
+
+<details><summary>例</summary>
+<p>
+
+```json
+{
+    "uuid": "5bac7acd-58b7-4cf5-95f5-a25d67da13a2"
+}
+
 ```
 
 </p>
@@ -1784,10 +1880,11 @@ X-Auth-Token: {tokenId}
         "v1.22.3": false,
         "v1.23.3": false,
         "v1.24.3": false
-        "v1.25.4": true,
+        "v1.25.4": false,
         "v1.26.3": true,
         "v1.27.3": true,
-        "v1.28.3": true
+        "v1.28.3": true,
+        "v1.29.3": true
     },
     "supported_event_type": {
         "cluster_events": {
