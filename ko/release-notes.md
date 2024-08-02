@@ -1,6 +1,8 @@
 ## Container > NHN Kubernetes Service(NKS) > 릴리스 노트
 
 ### 2024. 08. 27.
+* 노드 그룹에 추가 블록 스토리지를 지정하는 기능이 추가되었습니다.
+    * 자세한 내용은 [사용 가이드 - 추가 블록 스토리지](/Container/NKS/ko/user-guide/#_26)를 참고하세요.
 
 ### 2024. 07. 23.
 
