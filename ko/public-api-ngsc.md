@@ -371,6 +371,12 @@ X-Auth-Token: {tokenId}
 | labels.user_script | Body | String | X | 사용자 스크립트(old) |
 | labels.user_script_v2 | Body | String | X | 사용자 스크립트 |
 | labels.master_lb_floating_ip_enabled | Body | String | O | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False")<br>labels.external_network_id와 external_subnet_id_list가 설정된 경우에만 "True"로 설정 가능 |
+| labels.extra_volumes | Body | Array | X | 추가 블록 스토리지 객체 목록 |
+| labels.extra_volumes[].volume_type | Body | String | X | 추가 블록 스토리지 종류 |
+| labels.extra_volumes[].volume_size | Body | Integer | X | 추가 블록 스토리지 사이즈(GB) |
+| labels.extra_volumes[].volume_key_id | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키 ID |
+| labels.extra_volumes[].volume_appkey | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키의 앱키 |
+| labels.extra_volumes[].volume_mount_path | Body | String | X | 추가 블록 스토리지가 마운트 될 경로 |
 | flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
 | fixed_network | Body | UUID | O | VPC 네트워크 UUID |
 | fixed_subnet | Body | UUID | O | VPC 서브넷 UUID |
@@ -404,7 +410,13 @@ X-Auth-Token: {tokenId}
         "kube_tag": "v1.23.3",
         "master_lb_floating_ip_enabled": "true",
         "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
-        "user_script_v2": ""
+        "user_script_v2": "",
+        "extra_volumes": [
+            {
+                "volume_type": "General HDD",
+                "volume_size": 100
+            }
+        ]
     },
     "name": "test-k8s",
     "node_count": 1
@@ -927,6 +939,12 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_delay_after_add | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 증설 후 감축 지연 시간 |
 | labels.user_script | Body | String | X | 사용자 스크립트(old) |
 | labels.user_script_v2 | Body | String | X | 사용자 스크립트 |
+| labels.extra_volumes | Body | Array | X | 추가 블록 스토리지 객체 목록 |
+| labels.extra_volumes[].volume_type | Body | String | X | 추가 블록 스토리지 종류 |
+| labels.extra_volumes[].volume_size | Body | Integer | X | 추가 블록 스토리지 사이즈(GB) |
+| labels.extra_volumes[].volume_key_id | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키 ID |
+| labels.extra_volumes[].volume_appkey | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키의 앱키 |
+| labels.extra_volumes[].volume_mount_path | Body | String | X | 추가 블록 스토리지가 마운트 될 경로 |
 | name | BODY | String | O | 노드 그룹 이름 |
 | node_count | Body | Integer | X | 노드 수(기본값: 1) |
 
