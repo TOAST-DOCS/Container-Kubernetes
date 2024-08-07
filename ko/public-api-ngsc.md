@@ -371,6 +371,9 @@ X-Auth-Token: {tokenId}
 | labels.user_script | Body | String | X | 사용자 스크립트(old) |
 | labels.user_script_v2 | Body | String | X | 사용자 스크립트 |
 | labels.master_lb_floating_ip_enabled | Body | String | O | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False")<br>labels.external_network_id와 external_subnet_id_list가 설정된 경우에만 "True"로 설정 가능 |
+| labels.extra_security_groups | Body | Array | X | 추가 보안 그룹 객체 목록 |
+| labels.extra_security_groups[].target_subnet | Body | String | X | 추가 보안 그룹 지정 대상 서브넷 UUID |
+| labels.extra_security_groups[].security_group_ids | Body | String | X | 추가 보안 그룹 UUID 목록(콤마로 구분) |
 | flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
 | fixed_network | Body | UUID | O | VPC 네트워크 UUID |
 | fixed_subnet | Body | UUID | O | VPC 서브넷 UUID |
@@ -404,7 +407,13 @@ X-Auth-Token: {tokenId}
         "kube_tag": "v1.23.3",
         "master_lb_floating_ip_enabled": "true",
         "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
-        "user_script_v2": ""
+        "user_script_v2": "",
+        "extra_security_groups": [
+            {
+                "target_subnet": "4fdf5b80-3d35-43f5-a5c1-010a3b6c8e90",
+                "security_group_ids": "8669cca4-7904-4dc6-b1be-db49661cedb6, fa69d78d-bd04-4ab0-9ce6-c92a84b899c2"
+            }
+        ]
     },
     "name": "test-k8s",
     "node_count": 1
@@ -927,6 +936,9 @@ X-Auth-Token: {tokenId}
 | labels.ca_scale_down_delay_after_add | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 증설 후 감축 지연 시간 |
 | labels.user_script | Body | String | X | 사용자 스크립트(old) |
 | labels.user_script_v2 | Body | String | X | 사용자 스크립트 |
+| labels.extra_security_groups | Body | Array | X | 추가 보안 그룹 객체 목록 |
+| labels.extra_security_groups[].target_subnet | Body | String | X | 추가 보안 그룹 지정 대상 서브넷 UUID |
+| labels.extra_security_groups[].security_group_ids | Body | String | X | 추가 보안 그룹 UUID 목록(콤마로 구분) |
 | name | BODY | String | O | 노드 그룹 이름 |
 | node_count | Body | Integer | X | 노드 수(기본값: 1) |
 
