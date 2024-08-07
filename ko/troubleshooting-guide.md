@@ -496,3 +496,8 @@ fi
 kubectl -n kube-system rollout restart daemonet cinder-csi-nodeplugin
 kubectl -n kube-system rollout restart statefulset cinder-csi-controllerplugin
 ```
+
+### > timed out waiting for condition 오류가 발생하며 파드에 볼륨 마운트가 실패합니다.
+파드에 큰 사이즈의 볼륨을 마운트하는 경우 발생할 수 있는 문제입니다. 기본적으로 쿠버네티스는 볼륨을 마운트할 때 파드의 SecurityContext에 지정된 fsGroup과 일치하도록 각 볼륨의 내용에 대한 소유 및 권한을 변경합니다. 볼륨이 큰 경우 소유 및 권한을 확인하고 변경하는 데 많은 시간이 소요되어 타임 아웃이 발생할 수 있습니다. 
+
+타임 아웃이 발생하는 것을 막기 위해 securityContext의 fsGroupChangePolicy 필드를 사용하여 쿠버네티스가 볼륨에 대한 소유 및 권한을 확인하고 관리하는 방식을 변경할 수 있습니다. 자세한 내용은 [Configure volume permission and ownership change policy for pods](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#configure-volume-permission-and-ownership-change-policy-for-pods)를 참고하세요.
