@@ -497,6 +497,9 @@ X-Auth-Token: {tokenId}
 | labels.service_cluster_ip_range | Body | String  | X |  K8s 서비스 네트워크, 클러스터에서 서비스 생성 시 ClusterIP에 할당되는 IP 대역. fixed_subnet, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
 | labels.pods_network_cidr | Body | String |  X |  클러스터 파드 네트워크. fixed_subnet, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
 | labels.pods_network_subnet | Body | Integer | X |  클러스터 파드 서브넷 크기. pods_network_subnet 입력 규칙 참고 |
+| labels.extra_security_groups | Body | Array | X | 추가 보안 그룹 객체 목록 |
+| labels.extra_security_groups[].target_subnet | Body | String | X | 추가 보안 그룹 지정 대상 서브넷 UUID |
+| labels.extra_security_groups[].security_group_ids | Body | String | X | 추가 보안 그룹 UUID 목록(콤마로 구분) |
 | labels.extra_volumes | Body | Array | X | 추가 블록 스토리지 객체 목록 |
 | labels.extra_volumes[].volume_type | Body | String | X | 추가 블록 스토리지 종류 |
 | labels.extra_volumes[].volume_size | Body | Integer | X | 추가 블록 스토리지 사이즈(GB) |
@@ -550,6 +553,12 @@ X-Auth-Token: {tokenId}
         "strict_sg_rules": "True",
         "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
         "user_script_v2": "",
+        "extra_security_groups": [
+            {
+                "target_subnet": "4fdf5b80-3d35-43f5-a5c1-010a3b6c8e90",
+                "security_group_ids": "8669cca4-7904-4dc6-b1be-db49661cedb6,fa69d78d-bd04-4ab0-9ce6-c92a84b899c2"
+            }
+        ],
         "extra_volumes": [
             {
                 "volume_type": "General HDD",
@@ -1236,6 +1245,9 @@ X-Auth-Token: {tokenId}
 | labels.user_script_v2 | Body | String | X | 사용자 스크립트 |
 | labels.additional_network_id_list | Body | String | X | 워커 노드 그룹 적용: 추가 네트워크의 VPC 네트워크 UUID 목록(콜론으로 구분) |
 | labels.additional_subnet_id_list | Body | String | X | 워커 노드 그룹 적용: 추가 네트워크의 VPC 서브넷 UUID 목록(콜론으로 구분) |
+| labels.extra_security_groups | Body | Array | X | 추가 보안 그룹 객체 목록 |
+| labels.extra_security_groups[].target_subnet | Body | String | X | 추가 보안 그룹 지정 대상 서브넷 UUID |
+| labels.extra_security_groups[].security_group_ids | Body | String | X | 추가 보안 그룹 UUID 목록(콤마로 구분) |
 | labels.extra_volumes | Body | Array | X | 추가 블록 스토리지 객체 목록 |
 | labels.extra_volumes[].volume_type | Body | String | X | 추가 블록 스토리지 종류 |
 | labels.extra_volumes[].volume_size | Body | Integer | X | 추가 블록 스토리지 사이즈(GB) |
