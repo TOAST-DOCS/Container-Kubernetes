@@ -374,6 +374,12 @@ X-Auth-Token: {tokenId}
 | labels.extra_security_groups | Body | Array | X | 추가 보안 그룹 객체 목록 |
 | labels.extra_security_groups[].target_subnet | Body | String | X | 추가 보안 그룹 지정 대상 서브넷 UUID |
 | labels.extra_security_groups[].security_group_ids | Body | String | X | 추가 보안 그룹 UUID 목록(콤마로 구분) |
+| labels.extra_volumes | Body | Array | X | 추가 블록 스토리지 객체 목록 |
+| labels.extra_volumes[].volume_type | Body | String | X | 추가 블록 스토리지 종류 |
+| labels.extra_volumes[].volume_size | Body | Integer | X | 추가 블록 스토리지 사이즈(GB) |
+| labels.extra_volumes[].volume_key_id | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키 ID |
+| labels.extra_volumes[].volume_appkey | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키의 앱키 |
+| labels.extra_volumes[].volume_mount_path | Body | String | X | 추가 블록 스토리지가 마운트 될 경로 |
 | flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
 | fixed_network | Body | UUID | O | VPC 네트워크 UUID |
 | fixed_subnet | Body | UUID | O | VPC 서브넷 UUID |
@@ -412,6 +418,12 @@ X-Auth-Token: {tokenId}
             {
                 "target_subnet": "4fdf5b80-3d35-43f5-a5c1-010a3b6c8e90",
                 "security_group_ids": "8669cca4-7904-4dc6-b1be-db49661cedb6,fa69d78d-bd04-4ab0-9ce6-c92a84b899c2"
+            }
+        ],
+        "extra_volumes": [
+            {
+                "volume_type": "General HDD",
+                "volume_size": 100
             }
         ]
     },
@@ -939,6 +951,12 @@ X-Auth-Token: {tokenId}
 | labels.extra_security_groups | Body | Array | X | 추가 보안 그룹 객체 목록 |
 | labels.extra_security_groups[].target_subnet | Body | String | X | 추가 보안 그룹 지정 대상 서브넷 UUID |
 | labels.extra_security_groups[].security_group_ids | Body | String | X | 추가 보안 그룹 UUID 목록(콤마로 구분) |
+| labels.extra_volumes | Body | Array | X | 추가 블록 스토리지 객체 목록 |
+| labels.extra_volumes[].volume_type | Body | String | X | 추가 블록 스토리지 종류 |
+| labels.extra_volumes[].volume_size | Body | Integer | X | 추가 블록 스토리지 사이즈(GB) |
+| labels.extra_volumes[].volume_key_id | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키 ID |
+| labels.extra_volumes[].volume_appkey | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키의 앱키 |
+| labels.extra_volumes[].volume_mount_path | Body | String | X | 추가 블록 스토리지가 마운트 될 경로 |
 | name | BODY | String | O | 노드 그룹 이름 |
 | node_count | Body | Integer | X | 노드 수(기본값: 1) |
 
@@ -1355,10 +1373,11 @@ X-Auth-Token: {tokenId}
         "v1.23.3": false,
         "v1.24.3": false,
         "v1.25.4": false,
-        "v1.26.3": true,
+        "v1.26.3": false,
         "v1.27.3": true,
         "v1.28.3": true,
-        "v1.29.4": true
+        "v1.29.3": true,
+        "v1.30.3": true
     }
 }
 ```
