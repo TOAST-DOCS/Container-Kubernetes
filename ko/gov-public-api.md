@@ -550,7 +550,7 @@ X-Auth-Token: {tokenId}
         "extra_security_groups": [
             {
                 "target_subnet": "4fdf5b80-3d35-43f5-a5c1-010a3b6c8e90",
-                "security_group_ids": "8669cca4-7904-4dc6-b1be-db49661cedb6, fa69d78d-bd04-4ab0-9ce6-c92a84b899c2"
+                "security_group_ids": "8669cca4-7904-4dc6-b1be-db49661cedb6,fa69d78d-bd04-4ab0-9ce6-c92a84b899c2"
             }
         ]
     },
