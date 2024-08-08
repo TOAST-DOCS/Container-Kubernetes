@@ -147,8 +147,7 @@ NKS의 워커 노드에서 dockerhub로부터 컨테이너 이미지를 내려�
 
 
 ### > 폐쇄망 환경에서 failed to pull image "k8s.gcr.io/pause:3.2"가 발생합니다.
-
-폐쇄망 환경의 NKS는 Public registry로부터 이미지를 받아 오지 못하기 때문에 발생하는 문제입니다. "k8s.gcr.io/pause:3.2" 이미지처럼 기본으로 배포되어 있는 이미지는 워커 노드 생성 시 NHN Cloud 내부 레지스트리로부터 pull 받습니다. 클러스터 생성 시 기본으로 배포되는 이미지 목록은 아래와 같습니다.
+폐쇄망 환경의 클러스터가 Public 레지스트리로부터 이미지를 받아 오지 못하기 때문에 발생하는 문제로, 2024년 8월 이전에 생성된 클러스터에서 발생할 수 있습니다. "k8s.gcr.io/pause:3.2" 이미지처럼 기본으로 배포되어 있는 이미지는 워커 노드 생성 시 NHN Cloud 내부 레지스트리로부터 pull 받습니다. 하지만, 최초 이미지를 pull 받은 이후 이미지가 삭제되는 경우 문제가 발생할 수 있습니다. 클러스터 생성 시 기본으로 배포되는 이미지 목록은 아래와 같습니다.
 
 * kubernetesui/dashboard
 * k8s.gcr.io/pause
@@ -187,15 +186,9 @@ imageGCHighThresholdPercent=85 : 디스크 사용률이 85%를 초과하는 경�
 imageGCLowThresholdPercent=80 : 디스크 사용률이 80% 이하일 경우 이미지 Garbage Collection을 실행하지 않습니다.
 ```
 
-해결 방안은 다음과 같습니다.
-이미지 pull에 실패한 경우 아래 명령을 통해 NHN Cloud 내부 레지스트리에서 이미지를 pull 받을 수 있습니다. NKS 1.24.3 version 이상인 경우 docker가 아닌 nerdctl로 사용해야 합니다.
-```
-TARGET_IMAGE="failed to pull 발생한 image"
-INFRA_REGISTRY="harbor-kr1.cloud.toastoven.net/container_service/$(basename $TARGET_IMAGE)"
-docker pull $INFRA_REGISTRY
-docker tag $INFRA_REGISTRY $TARGET_IMAGE
-docker rmi $INFRA_REGISTRY
-```
+#### 해결 방안
+NKS 레지스트리를 활성화하면 폐쇄망 환경에서 컨테이너 이미지를 Public 레지스트리로부터 받아오지 않고, NHN Cloud 내부 레지스트리에서 받아오도록 클러스터 설정을 변경할 수 있습니다. NKS 레지스트리는 클러스터 조회 화면에서 활성화 할 수 있습니다.
+
 
 ### > k8s v1.24 이상의 버전에서 `pulling from host docker.pkg.github.com failed` 오류가 발생하며 이미지 pull이 실패합니다. 
 
@@ -496,3 +489,8 @@ fi
 kubectl -n kube-system rollout restart daemonet cinder-csi-nodeplugin
 kubectl -n kube-system rollout restart statefulset cinder-csi-controllerplugin
 ```
+
+### > timed out waiting for condition 오류가 발생하며 파드에 볼륨 마운트가 실패합니다.
+파드에 큰 사이즈의 볼륨을 마운트하는 경우 발생할 수 있는 문제입니다. 기본적으로 Kubernetes는 볼륨을 마운트할 때 파드의 SecurityContext에 지정된 fsGroup과 일치하도록 각 볼륨의 내용에 대한 소유 및 권한을 변경합니다. 볼륨이 큰 경우 소유 및 권한을 확인하고 변경하는 데 많은 시간이 소요되어 타임아웃이 발생할 수 있습니다. 
+
+타임아웃이 발생하는 것을 막기 위해 securityContext의 fsGroupChangePolicy 필드를 사용하여 Kubernetes가 볼륨에 대한 소유 및 권한을 확인하고 관리하는 방식을 변경할 수 있습니다. 자세한 내용은 [Configure volume permission and ownership change policy for pods](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#configure-volume-permission-and-ownership-change-policy-for-pods)를 참고하세요.
