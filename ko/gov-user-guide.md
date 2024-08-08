@@ -1025,8 +1025,10 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 |  | CentOS 7.9 (2023.11.21)  | 1.3 |
 |  | CentOS 7.9 (2024.02.20)  | 1.4 |
 |  | CentOS 7.9 (2024.05.21)  | 1.5 |
+|  | CentOS 7.9 (2024.08.20)  | 1.6 |
 | Rocky | Rocky Linux 8.9 (2024.02.20)  | 1.4 |
 |  | Rocky Linux 8.9 (2024.05.21)  | 1.5 |
+|  | Rocky Linux 8.10 (2024.08.20)  | 1.6 |
 | Ubuntu | Ubuntu Server 20.04.6 LTS (2023.05.25)  | 1.1 |
 |  | Ubuntu Server 20.04.6 LTS (2023.08.22)  | 1.2 |
 |  | Ubuntu Server 20.04.6 LTS (2023.11.21)  | 1.3 |
@@ -1035,12 +1037,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 |  | Ubuntu Server 22.04.3 LTS (2024.02.20)  | 1.4 |
 |  | Ubuntu Server 20.04.6 LTS (2024.05.21)  | 1.5 |
 |  | Ubuntu Server 22.04.3 LTS (2024.05.21)  | 1.5 |
-| Debian | Debian 11.6 Bullseye (2023.03.21)  | 1.0 |
-|  | Debian 11.6 Bullseye (2023.05.25)  | 1.1 |
-|  | Debian 11.7 Bullseye (2023.08.22)  | 1.2 |
-|  | Debian 11.8 Bullseye (2023.11.21)  | 1.3 |
-|  | Debian 11.8 Bullseye (2024.02.20)  | 1.4 |
-|  | Debian 11.9 Bullseye (2024.05.21)  | 1.5 |
+|  | Ubuntu Server 20.04.6 LTS (2024.08.20)  | 1.6 |
 
 
 > [참고]
