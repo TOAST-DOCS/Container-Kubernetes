@@ -1304,19 +1304,20 @@ NHN Cloud의 Kubernetes 클러스터 버전 관리 방식과 Kubernetes 버전 �
 * 다운그레이드는 지원하지 않습니다.
 * 다른 기능의 동작으로 인해 클러스터가 업데이트 중인 상태에서는 업그레이드가 불가능합니다.
 * 클러스터 버전을 v1.25.4에서 v1.26.3으로 업그레이드할 때 CNI가 Flannel인 경우 Calico-VXLAN으로 변경해야 합니다.
+* NKS 레지스트리가 활성화되지 않은 클러스터는 업그레이드가 불가능합니다.
 
 다음 예시는 Kubernetes 버전을 업그레이드 과정에서 업그레이드 가능 여부를 표로 나타낸 것입니다. 예시에 사용된 조건은 다음과 같습니다. 
 
-* NHN Cloud가 지원하는 Kubernetes 버전 목록: v1.21.6, v1.22.3, v1.23.3
-* 클러스터는 v1.21.6으로 생성
+* NHN Cloud가 지원하는 Kubernetes 버전 목록: v1.28.3, v1.29.3, v1.30.3
+* 클러스터는 v1.28.3으로 생성
 
 | 상태 | 마스터 버전 | 마스터 업그레이드 가능 여부 | 워커 노드 그룹 버전 | 워커 노드 그룹 업그레이드 가능 여부
 | --- | :-: | :-: | :-: | :-: |
-| 초기 상태| v1.21.6 | 가능 <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.21.6 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> | 
-| 마스터 업그레이드 후 상태 | v1.22.3 | 불가능 <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.21.6 | 가능 <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
-| 워커 노드 그룹 업그레이드 후 상태 | v1.22.3 | 가능 <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.22.3 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
-| 마스터 업그레이드 후 상태 | v1.23.3 | 불가능 <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.22.3 | 가능 <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
-| 워커 노드 그룹 업그레이드 후 상태 | v1.23.3 | 불가능 <sup>[5](#footnote_cluster_upgrade_rule_5)</sup> | v1.23.3 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
+| 초기 상태| v1.28.3 | 가능 <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.28.3 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> | 
+| 마스터 업그레이드 후 상태 | v1.29.3 | 불가능 <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.28.3 | 가능 <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
+| 워커 노드 그룹 업그레이드 후 상태 | v1.29.3 | 가능 <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.29.3 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
+| 마스터 업그레이드 후 상태 | v1.30.3 | 불가능 <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.29.3 | 가능 <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
+| 워커 노드 그룹 업그레이드 후 상태 | v1.30.3 | 불가능 <sup>[5](#footnote_cluster_upgrade_rule_5)</sup> | v1.30.3 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
 
 주석
 
