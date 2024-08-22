@@ -144,9 +144,8 @@ NKSのワーカーノードでdockerhubからコンテナイメージをダウ�
 * dockerhubにログインしていない状況で独立したパブリックIPによる制約を受けたい場合は、ワーカーノードにFloating IPを割り当てます。
 
 
-### > 閉鎖ネットワーク環境でfailed to pull image "k8s.gcr.io/pause:3.2"が発生します。
-
-閉鎖ネットワーク環境のNKSはPublic registryからイメージを取得できないため発生する問題です。 "k8s.gcr.io/pause:3.2"イメージのようにデフォルトで配布されているイメージはワーカーノード作成時、NHN Cloud内部レジストリからpullします。クラスタ作成時にデフォルトで配布されるイメージリストは次のとおりです。
+### > クローズドネットワーク環境でfailed to pull image `k8s.gcr.io/pause:3.2`が発生します。
+クローズドネットワーク環境のクラスターがパブリックレジストリからイメージを取得できないため発生する問題であり、2024年8月以前に作成されたクラスターで発生する可能性があります。k8s.gcr.io/pause:3.2`イメージのように、デフォルトで配布されているイメージは、ワーカーノード作成時にNHN Cloud内部レジストリからプルされます。しかし、最初にイメージをプルされた後、イメージが削除された場合、問題が発生する可能性があります。クラスター作成時、基本的に配布されるイメージのリストは次のとおりです。
 * kubernetesui/dashboard
 * k8s.gcr.io/pause
 * k8s.gcr.io/kube-proxy
@@ -183,15 +182,9 @@ imageGCHighThresholdPercent=85 :ディスク使用率が85%を超える場合、
 imageGCLowThresholdPercent=80 :ディスク使用率が80%以下の場合、イメージGarbage Collectionを実行しません。
 ```
 
-解決策は次のとおりです。
-イメージpullに失敗した場合、次のコマンドを使用してNHN Cloud内部レジストリからイメージをpullできます。NKS 1.24.3 version以上の場合はdockerではなくnerdctlとして使用する必要があります。
-```
-TARGET_IMAGE="failed to pullが発生したimage"
-INFRA_REGISTRY="harbor-kr1.cloud.toastoven.net/container_service/$(basename $TARGET_IMAGE)"
-docker pull $INFRA_REGISTRY
-docker tag $INFRA_REGISTRY $TARGET_IMAGE
-docker rmi $INFRA_REGISTRY
-```
+#### 解決策
+NKSレジストリを有効にすると、クローズドネットワーク環境でコンテナイメージをパブリックレジストリから取得せず、NHN Cloud内部レジストリから取得するようにクラスター設定を変更できます。NKSレジストリは、クラスター照会画面で有効化できます。
+
 
 ### > k8s v1.24 以上のバージョンで `pulling from host docker.pkg.github.com failed` エラーが発生し、イメージpullが失敗します。
 
@@ -427,3 +420,44 @@ fi
 systemctl restart rpc-statd
 systemctl restart rpcbind
 ```
+
+### > PV容量を増設しても、Podのファイルシステムに増設された容量が反映されません。
+2024年8月以前に作成された1.20以上のバージョンのクラスターで発生する可能性がある問題です。下記のスクリプトを実行してクラスターに配布されたcinder-csi-driverをアップデートして問題を解決できます。スクリプトの実行後、新しく作成されたPVまたは容量が増設されたPVにのみ設定の更新が反映されます。
+
+kubeconfig_file_path変数にクラスターのkubeconfigファイルが位置する絶対パス値を定義した後、スクリプトを実行します。
+```
+#!/bin/bash
+kubeconfig_file_path={kubeconfigファイルの絶対パス}
+SECRET_NAME="cinder-csi-cloud-config"
+NAMESPACE="kube-system"
+# Fetch the secret using kubectl and parse the JSON output with jq
+secret_data=$(kubectl --kubeconfig=$kubeconfig_file_path get secret "$SECRET_NAME" -n "$NAMESPACE" -o json)
+# Extract the 'cloud-config' key and decode its value
+cloud_config_base64=$(echo "$secret_data" | jq -r '.data["cloud-config"]')
+if [[ "$cloud_config_base64" != "null" ]]; then
+    # Decode the base64 value
+    cloud_config=$(echo "$cloud_config_base64" | base64 --decode)
+    # Add the [BlockStorage] section with rescan-on-resize=true
+    modified_cloud_config=$(cat <<EOF
+$cloud_config
+[BlockStorage]
+rescan-on-resize=true
+EOF
+)
+    # Encode the modified cloud-config back to base64
+    modified_cloud_config_base64=$(echo "$modified_cloud_config" | base64 | tr -d '\n')
+    # Update the Kubernetes secret with the new base64-encoded data
+    kubectl --kubeconfig=$kubeconfig_file_path patch secret "$SECRET_NAME" -n "$NAMESPACE" --type=json \
+        -p="[{'op': 'replace', 'path': '/data/cloud-config', 'value':'$modified_cloud_config_base64'}]"
+    echo "Secret $SECRET_NAME updated successfully."
+else
+    echo "cloud-config key not found in secret $SECRET_NAME"
+fi
+kubectl -n kube-system rollout restart daemonet cinder-csi-nodeplugin
+kubectl -n kube-system rollout restart statefulset cinder-csi-controllerplugin
+```
+
+### > timed out waiting for conditionエラーが発生し、Podのボリュームマウントが失敗します。
+これは、大きなサイズのボリュームをPodにマウントする場合に発生する可能性のある問題です。基本的に、Kubernetesはボリュームをマウントする際、各ボリュームの内容に対する所有権と権限を変更し、PodのSecurityContextに指定されたfsGroupと一致するようにします。ボリュームが大きい場合、所有権と権限を確認して変更するのに時間がかかり、タイムアウトが発生する可能性があります。
+
+タイムアウトの発生を防ぐために、securityContextのfsGroupChangePolicyフィールドを使用して、Kubernetesがボリュームの所有権と権限を確認して管理する方法を変更できます。詳細は[Configure volume permission and ownership change policy for pods](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#configure-volume-permission-and-ownership-change-policy-for-pods)を参照してください。
