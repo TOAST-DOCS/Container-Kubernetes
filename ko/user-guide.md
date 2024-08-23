@@ -1052,9 +1052,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 |  | CentOS 7.9 (2024.02.20)  | 1.4 |
 |  | CentOS 7.9 (2024.05.21)  | 1.5 |
 |  | CentOS 7.9 (2024.08.20)  | 1.6 |
-| Rocky | Rocky Linux 8.9 (2024.02.20)  | 1.4 |
-|  | Rocky Linux 8.9 (2024.05.21)  | 1.5 |
-|  | Rocky Linux 8.10 (2024.08.20)  | 1.6 |
+| Rocky | Rocky Linux 8.10 (2024.08.20)  | 1.6 |
 | Ubuntu | Ubuntu Server 20.04.6 LTS (2023.05.25)  | 1.1 |
 |  | Ubuntu Server 20.04.6 LTS (2023.08.22)  | 1.2 |
 |  | Ubuntu Server 20.04.6 LTS (2023.11.21)  | 1.3 |
