@@ -20,19 +20,20 @@ NKSのKubernetesバージョンサポートポリシーは次のとおりです�
     * 従って、作成可能なバージョンが一つ追加されると、既存のサービスサポート可能バージョンリストから最も低いバージョンが削除されます。
 
 Kubernetesバージョン別の作成可能バージョンに追加/削除する時点と、サービスサポート終了時点は以下の通りです。
-(ただし、この表は2023年9月26日基準で作成されたもので、新規作成可能バージョンのバージョン名と提供時期は弊社内部事情により変更される場合があります)
+(ただし、この表は2024年8月27日基準で作成されたもので、新規作成可能バージョンのバージョン名と提供時期は弊社内部事情により変更される場合があります)
 
 | バージョン   | 作成可能バージョンに追加 | 作成可能バージョンから削除 | サービスサポート終了 |
 |:-------:|:-------------------:|:--------------------:|:---------------------:|
 | v1.22.3 | 2022. 01.           | 2023. 05.            | 2023. 08.             |
 | v1.23.3 | 2022. 03.           | 2023. 08.            | 2024. 02.       |
 | v1.24.3 | 2022. 09.           | 2024. 02.            | 2024. 05.             |
-| v1.25.4 | 2023. 01.           | 2024. 05.            | 2024. 08.(予定)       |
-| v1.26.3 | 2023. 05.           | 2024. 08.(予定)      | 2025. 02.(予定)       |
+| v1.25.4 | 2023. 01.           | 2024. 05.            | 2024. 08.             |
+| v1.26.3 | 2023. 05.           | 2024. 08.            | 2025. 02.(予定)       |
 | v1.27.3 | 2023. 08.           | 2025. 02.(予定)      | 2025. 05.(予定)       |
 | v1.28.3 | 2024. 02.           | 2025. 05.(予定)      | 2025. 08.(予定)       |
-| v1.29.3 | 2024. 05.           | 2025. 08.(予定)      | 2025. 11.(予定)       |
-| v1.30.x | 2024. 08.(予定)     | 2025. 11.(予定)      | 2026. 02.(予定)       |
+| v1.29.3 | 2024. 05.           | 2025. 08.(予定)      | 2026. 02.(予定)       |
+| v1.30.3 | 2024. 08.           | 2026. 02.(予定)      | 2026. 05.(予定)       |
+| v1.31.x | 2025. 02.(予定)     | 2026. 05.(予定)      | 2026. 08.(予定)       |
 
 
 ### クラスター作成
@@ -119,10 +120,11 @@ NHN Kubernetes Service(NKS)は複数のバージョンをサポートしてい�
 | v1.23.3 | 不可 | 可能 |
 | v1.24.3 | 不可 | 可能 |
 | v1.25.4 | 不可 | 可能 |
-| v1.26.3 | 可能 | 可能 |
+| v1.26.3 | 不可 | 可能 |
 | v1.27.3 | 可能 | 可能 |
 | v1.28.3 | 可能 | 可能 |
 | v1.29.3 | 可能 | 可能 |
+| v1.30.3 | 可能 | 可能 |
 
 必要な情報を入力し、**クラスター作成**を押すと、クラスターの作成が始まります。クラスターリストで状態を確認できます。作成には約10分かかります。クラスターの設定によっては、さらに時間がかかる場合もあります。
 
@@ -1037,8 +1039,10 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 |  | CentOS 7.9 (2023.11.21)  | 1.3 |
 |  | CentOS 7.9 (2024.02.20)  | 1.4 |
 |  | CentOS 7.9 (2024.05.21)  | 1.5 |
+|  | CentOS 7.9 (2024.08.20)  | 1.6 |
 | Rocky | Rocky Linux 8.9 (2024.02.20)  | 1.4 |
 |  | Rocky Linux 8.9 (2024.05.21)  | 1.5 |
+|  | Rocky Linux 8.10 (2024.08.20)  | 1.6 |
 | Ubuntu | Ubuntu Server 20.04.6 LTS (2023.05.25)  | 1.1 |
 |  | Ubuntu Server 20.04.6 LTS (2023.08.22)  | 1.2 |
 |  | Ubuntu Server 20.04.6 LTS (2023.11.21)  | 1.3 |
@@ -1047,12 +1051,8 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 |  | Ubuntu Server 22.04.3 LTS (2024.02.20)  | 1.4 |
 |  | Ubuntu Server 20.04.6 LTS (2024.05.21)  | 1.5 |
 |  | Ubuntu Server 22.04.3 LTS (2024.05.21)  | 1.5 |
-| Debian | Debian 11.6 Bullseye (2023.03.21)  | 1.0 |
-|  | Debian 11.6 Bullseye (2023.05.25)  | 1.1 |
-|  | Debian 11.7 Bullseye (2023.08.22)  | 1.2 |
-|  | Debian 11.8 Bullseye (2023.11.21)  | 1.3 |
-|  | Debian 11.8 Bullseye (2024.02.20)  | 1.4 |
-|  | Debian 11.9 Bullseye (2024.05.21)  | 1.5 |
+|  | Ubuntu Server 20.04.6 LTS (2024.08.20)  | 1.6 |
+
 
 > [参考]
 > カスタムイメージをワーカーノードイメージに変換する過程で選択したオプションによってGPUドライバーがインストールされます。
@@ -1077,7 +1077,35 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 
 ![nkscustom_image_3.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nkscustom_image_3.png)
 
+### 追加ブロックストレージ
+ノードグループに追加ブロックストレージを使用できます。クラスターおよびノードグループを作成する際に追加ブロックストレージを指定して作成したり、既存のノードグループに追加ブロックストレージを作成して使用できます。追加ブロックストレージには次のような特徴があります。
 
+* 追加ブロックストレージは、ノードグループごとに最大3つまで設定することができ、ブロックストレージのサイズは1～2048GBの範囲で指定可能です。
+* ノードグループの追加ブロックストレージの設定は、ノードグループに属するすべてのワーカーノードに同じように適用されます。
+    * 追加ブロックストレージを変更すると、ノードグループのすべてのワーカーノードに変更が反映されます。
+* 追加ブロックストレージの変更は、サイズ調整とマウントパスの変更のみをサポートします。
+    * 作成された追加ブロックストレージの削除はできません。
+    * 既存の設定値より小さいサイズに調整することはできません。
+* 追加ブロックストレージの名前は`{クラスター名}-{ノードグループ名}-{ノード名}-extra-volume-{インデックス}`の形で指定されます。
+* マウントパスを入力した場合、追加ブロックストレージが作成された後、指定されたパスにマウントを試みます。
+    * 未入力の場合、マウントは行われません。
+    * 正しくないマウントパスを入力してマウントに失敗した場合、機能が動作しません。
+
+[注意]
+> 追加ブロックストレージの設定変更は、既存ボリュームのマウント解除を含むため、使用中のサービスに影響を与える可能性があります。
+### 追加セキュリティグループ
+ノードグループに追加セキュリティグループを設定できます。クラスター及びノードグループを作成する際に追加セキュリティグループを指定して作成したり、既存のノードグループに追加セキュリティグループを設定できます。追加セキュリティグループの特徴は次のとおりです。
+
+* 追加セキュリティグループは、サブネットごとに最大8つまで設定できます。
+* ノードグループの追加セキュリティグループの設定は、ノードグループに属する全てのワーカーノードに同じように適用されます。
+* 追加セキュリティグループを入力しない場合、クラスターの基本セキュリティグループのみ適用されます。
+* ユーザーが個別ノードに直接設定したセキュリティグループは、ノードグループの追加セキュリティグループ項目で照会されません。
+
+[参考]
+> コンソールでノードグループ作成時に指定した追加セキュリティグループは、基本ネットワークと全ての追加ネットワークに適用されます。個別ネットワークの追加セキュリティグループに対する変更は、ノードグループ作成後に可能です。
+[注意]
+> ノードグループに追加セキュリティグループを設定すると、既存のインスタンスに割り当てられたセキュリティグループのうち、追加セキュリティグループに定義されていない対象は削除されます。
+> 追加セキュリティグループを変更すると、ネットワーク設定が変更されるため、設定が適用される間、一時的に通信に影響が出る可能性があります。
 
 ## クラスター管理
 遠隔のホストからクラスターを操作し、管理するには、Kubernetesが提供するコマンドラインツール(CLI)、`kubectl`が必要です。
@@ -1293,41 +1321,42 @@ Kubernetesクラスタは、動作中の状態でKubernetesコンポーネント
 NHN CloudでサポートするKubernetesクラスタアップグレード機能の動作方式を説明します。 
 
 ##### Kubernetesバージョン管理
-NHN CloudのKubernetesクラスタはクラスタマスターとワーカーノードグループごとにKubernetesバージョンを管理します。マスターのKubernetesバージョンはクラスタ照会画面で確認することができ、ワーカーノードグループのKubernetesバージョンは各ワーカーノードグループ照会画面で確認できます。 
+NHN CloudのKubernetesクラスターは、クラスターコントロールプレーンとワーカーノードグループごとにKubernetesバージョンを管理します。コントロールプレーンのKubernetesバージョンはクラスター照会画面で確認することができ、ワーカーノードグループのKubernetesバージョンは各ワーカーノードグループ照会画面で確認できます。
 
 ##### アップグレードルール
 NHN CloudのKubernetesクラスタバージョン管理方式とKubernetesバージョン違いサポートポリシーによりコンポーネントごとに順序に合わせてアップグレードする必要があります。NHN CloudのKubernetesクラスタアップグレード機能に適用されるルールは次のとおりです。
 
-* マスターとワーカーノードグループごとにアップグレードコマンドを実行する必要があります。
-* マスターのKubernetesバージョンとすべてのワーカーノードグループのKubernetesバージョンが一致している時のみアップグレードが可能です。
-* マスターを先にアップグレードした後、ワーカーノードグループをアップグレードできます。
+* コントロールプレーンとワーカーノードグループごとにアップグレードコマンドを実行する必要があります。
+* コントロールプレーンのKubernetesバージョンとすべてのワーカーノードグループのKubernetesバージョンが一致している時のみアップグレードが可能です。
+* コントロールプレーンを先にアップグレードした後、ワーカーノードグループをアップグレードできます。
 * 現在バージョンの次のバージョン(マーナーバージョン基準 +1)にアップグレード可能です。 
 * ダウングレードはサポートしません。
 * 他の機能の動作によりクラスタがアップデート中の状態ではアップグレードができません。
 * クラスタのバージョンをv1.25.4からv1.26.3にアップグレードする際、CNIがFlannelの場合はCalico-VXLANに変更する必要があります。
+* NKSレジストリが有効化されていないクラスターはアップグレードができません。
 
 次の例はKubernetesバージョンのアップグレード可否を表にしたものです。例に使用された条件は次のとおりです。 
 
-* NHN CloudがサポートするKubernetesバージョンリスト：v1.21.6, v1.22.3, v1.23.3
-* クラスタはv1.21.6で作成
+* NHN CloudがサポートするKubernetesバージョンリスト: v1.28.3, v1.29.3, v1.30.3
+* クラスターはv1.28.3で作成
 
-|状態 | マスターバージョン | マスターアップグレード可否 | ワーカーノードグループバージョン | ワーカーノードグループアップグレード可否
- | --- | :-: | :-: | :-: | :-: |
-| 初期状態| v1.21.6 | 可能 <sup>[(注1)](#footnote_cluster_upgrade_rule_1)</sup> | v1.21.6 | 不可 <sup>[(注2)](#footnote_cluster_upgrade_rule_2)</sup> | 
-| マスターアップグレード後の状態 | v1.22.3 | 不可 <sup>[(注3)](#footnote_cluster_upgrade_rule_3)</sup> | v1.21.6 | 可能 <sup>[(注4)](#footnote_cluster_upgrade_rule_4)</sup> | 
-| ワーカーノードグループアップグレード後の状態 | v1.22.3 | 可能 <sup>[(注1)](#footnote_cluster_upgrade_rule_1)</sup> | v1.22.3 | 不可 <sup>[(注2)](#footnote_cluster_upgrade_rule_2)</sup> |
-| マスターアップグレード後の状態 | v1.23.3 | 不可 <sup>[(注3)](#footnote_cluster_upgrade_rule_3)</sup> | v1.22.3 | 可能 <sup>[(注4)](#footnote_cluster_upgrade_rule_4)</sup> | 
-| ワーカーノードグループアップグレード後の状態 | v1.23.3 | 不可 <sup>[(注5)](#footnote_cluster_upgrade_rule_5)</sup> | v1.23.3 | 不可 <sup>[(注2)](#footnote_cluster_upgrade_rule_2)</sup> |
+| 状態 | コントロールプレーンバージョン | コントロールプレーンのアップグレード可否 | ワーカーノードグループバージョン | ワーカーノードグループアップグレード可否
+| --- | :-: | :-: | :-: | :-: |
+| 初期状態| v1.28.3 | 可能 <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.28.3 | 不可 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> | 
+| コントロールプレーンのアップグレード後の状態 | v1.29.3 | 不可 <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.28.3 | 可能 <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
+| ワーカーノードグループのアップグレード後の状態 | v1.29.3 | 可能 <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.29.3 | 不可 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
+| コントロールプレーンのアップグレード後の状態 | v1.30.3 | 不可 <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.29.3 | 可能 <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
+| ワーカーノードグループのアップグレード後の状態 | v1.30.3 | 不可 <sup>[5](#footnote_cluster_upgrade_rule_5)</sup> | v1.30.3 | 不可 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
 
-* <a name="footnote_cluster_upgrade_rule_1">(注1)</a>マスターとすべてのワーカーノードグループのバージョンが一致する状態のためアップグレード可能
-* <a name="footnote_cluster_upgrade_rule_1">(注2)</a>ワーカーノードグループはマスターがアップグレードされた後にアップグレード可能
-* <a name="footnote_cluster_upgrade_rule_1">(注3)</a>マスターとすべてのワーカーノードグループのバージョンが一致する時のみアップグレード可能
-* <a name="footnote_cluster_upgrade_rule_1">(注4)</a>マスターがアップグレードされたためアップグレード可能
+* <a name="footnote_cluster_upgrade_rule_1">(注1)</a>コントロールプレーンとすべてのワーカーノードグループのバージョンが一致する状態のためアップグレード可能
+* <a name="footnote_cluster_upgrade_rule_1">(注2)</a>ワーカーノードグループはコントロールプレーンがアップグレードされた後にアップグレード可能
+* <a name="footnote_cluster_upgrade_rule_1">(注3)</a>コントロールプレーンとすべてのワーカーノードグループのバージョンが一致する時のみアップグレード可能
+* <a name="footnote_cluster_upgrade_rule_1">(注4)</a>コントロールプレーンがアップグレードされたためアップグレード可能
 * <a name="footnote_cluster_upgrade_rule_1">(注5)</a> NHN Cloudでサポートする最新バージョンを使用しているためアップグレード不可
 
 
-##### マスターコンポーネントアップグレード
-NHN CloudのKubernetesクラスタマスターは高可用性を保障するために多数のマスターで構成されています。マスターに対してローリングアップデート方式でアップグレードされるため、クラスタの可用性が保障されます。 
+##### コントロールプレーンコンポーネントアップグレード
+NHN CloudのKubernetesクラスターのコントロールプレーンは高可用性を保証します。コントロールプレーンに対してローリングアップデート方式でアップグレードされるため、クラスターの可用性が保証されます。
 
 この過程で以下のようなことが発生することがあります。
 
@@ -1370,10 +1399,10 @@ NHN CloudのKubernetesクラスタマスターは高可用性を保障するた�
 安全なPod追放については[こちら](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)を参照してください。
 
 ##### システムPodアップグレード
-マスターとすべてのワーカーノードグループをアップグレードしてバージョンが一致すると、Kubernetesクラスタ構成のために動作するシステムPodがアップグレードされます。
+コントロールプレーンと全てのワーカーノードグループをアップグレードしてバージョンが一致すると、Kubernetesクラスター構成のために動作するシステムPodがアップグレードされます。
 
 > [注意]
-> マスターアップグレード後にワーカーノードグループをアップグレードしなかった場合、一部Podが正常に動作しない可能性があります。
+> コントロールプレーンのアップグレード後にワーカーノードグループをアップグレードしなかった場合、一部Podが正常に動作しない可能性があります。
 
 
 ### クラスタCNIの変更
@@ -1385,11 +1414,11 @@ NHN CloudのKubernetesクラスタCNI変更機能に適用されるルールは�
 
 * CNI変更機能はNHN Kubernetes Service(NKS)バージョン1.24.3以上の場合に使用できます。
 * 既存NHN Kubernetes Service(NKS)で使用しているCNIがFlannelの場合にのみCNI変更を使用できます。
-* CNI変更開始時、マスターとすべてのワーカーノードグループに対して一括で作業を行います。
+* CNI変更開始時、コントロールプレーンとすべてのワーカーノードグループに対して一括で作業を行います。
 * Calico-VXLAN、Calico-eBPFからFlannelへのCNI変更はサポートしません。
 * FlannelからCalico-eBPFへのCNI変更はサポートしません。
 * Calico-VXLANからCalico-eBPFへのCNI変更はサポートしません。
-* マスターのKubernetesバージョンとすべてのワーカーノードグループのKubernetesバージョンが一致すればCNI変更が可能です。
+* コントロールプレーンのKubernetesバージョンとすべてのワーカーノードグループのKubernetesバージョンが一致すればCNI変更が可能です。
 
 * 他の機能の動作により、クラスタがアップデート中の状態ではCNIの変更ができません。
 
@@ -1508,7 +1537,7 @@ Kubernetes v1.24.3以降のバージョンのクラスタはcontainerdを利用�
 ### ネットワーク管理
 
 #### 基本ネットワークインタフェース
-すべてのワーカーノードはクラスタ作成時に入力したVPC/サブネットに接続されるネットワークインタフェースを持っています。この基本ネットワークインタフェースの名前は"eth0"で、ワーカーノードはこのネットワークインタフェースを介してマスターと接続されます。
+すべてのワーカーノードはクラスター作成時に入力したVPC/サブネットに接続されるネットワークインタフェースを持っています。この基本ネットワークインタフェースの名前は"eth0"で、ワーカーノードはこのネットワークインタフェースを介してコントロールプレーンと接続されます。
 
 #### 追加ネットワークインタフェース
 クラスタまたはワーカーノードグループ作成時に追加ネットワークを設定すると、該当ワーカーノードグループのワーカーノードに追加ネットワークインタフェースが作成されます。追加ネットワークインタフェースは追加ネットワーク設定に入力した順序通りにインタフェース名が設定されます(eth1, eth2, ...)。
@@ -1743,6 +1772,7 @@ NHN Kubernetes Service(NKS)が提供するCalico-VXLAN、Calic-eBPFは下記の�
 | v1.27.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 不可|
 | v1.28.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 不可|
 | v1.29.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 不可|
+| v1.30.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 不可|
 
 注釈
 
@@ -1949,6 +1979,7 @@ Kubernetesのサービスオブジェクトを定義する時、ロードバラ�
 * ロードバランサー名設定
 * keep-aliveタイムアウト設定
 * ロードバランサータイプ設定
+* 静的ルート設定
 * セッション持続性設定
 * ロードバランサー削除時にFloating IPアドレスを保存するかどうかの設定
 * ロードバランサーIP設定
@@ -2054,6 +2085,18 @@ spec:
 > 物理ロードバランサーは韓国(ピョンチョン)リージョンにのみ提供されます。
 > 物理ロードバランサーはFloating IPを接続できません。その代わり、物理ロードバランサー作成時に自動で割り当てられたパブリックIP1つをバランシング対象トラフィックを受信するIPとして使用します。このパブリックIPはサービスIPという名前でコンソールに表示されます。
 > このような特性によりKubernetesサービスオブジェクトを通じてロードバランサーの正確な状態(接続されたFloating IPなど)を取得できません。物理ロードバランサーの状態などはコンソールでご確認ください。
+
+#### 静的ルート設定
+ロードバランサーの静的ルートを適用するかどうかを設定できます。
+
+* 設定位置は .metadata.annotaions下位のloadbalancer.nhncloud/apply-subnet-host-routesです。
+* **リスナーごとの設定は適用できません。**
+* 次のいずれかを設定できます。
+    * true：静的ルートを適用します。
+    * false：静的ルートを適用しません。未設定時のデフォルト値です。
+
+> [注意]
+> 静的ルート設定は、2024年8月27日以降に作成されたクラスター、またはk8sバージョンをアップグレードしたクラスターで設定可能です。
 
 #### セッション持続性設定
 ロードバランサーのセッション持続性を設定できます。
@@ -3666,7 +3709,7 @@ spec:
 NHN Cloudで提供するNASストレージをPVとして活用できます。NASサービスを使用するにはv1.20以降のバージョンのクラスタを使用する必要があります。NHN Cloud NASの詳細については[NASコンソール使用ガイド](/Storage/NAS%20(online)/ko/console-guide)を参照してください。
 
 > [参考]
-> NHN Cloud NASサービスは現在(2024年02月基準)、一部リージョンでのみ提供されています。NHN Cloud NASサービスのサポートリージョンの詳細については[NASサービス概要](/Storage/NAS%20(online)/ko/overview)を参照してください。
+> NHN Cloud NASサービスは現在(2024年08月基準)、一部リージョンでのみ提供されています。NHN Cloud NASサービスのサポートリージョンの詳細については[NASサービス概要](/Storage/NAS%20(online)/ko/overview)を参照してください。
 
 #### すべてのワーカーノードでrpcbindサービスを実行
 NASストレージを使用するにはすべてのワーカーノードでrpcbindサービスを実行する必要があります。すべてのワーカーノードに接続した後、下記のコマンドでrpcbindサービスを実行します。
@@ -3712,25 +3755,31 @@ ORAS(OCI Registry As Storage)はOCIレジストリからOCIアーティファク
 
 | リージョン | インターネット接続 | ダウンロードコマンド |
 | --- | --- | --- |
-| 韓国(パンギョ)リージョン | O | oras pull dfe965c3-kr1-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v1 |
-| | X | oras pull private-dfe965c3-kr1-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v1 |
-| 韓国(ピョンチョン)リージョン | O | oras pull 6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/oci/nfs-deploy-tool:v1 |
-| | X | oras pull private-6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/oci/nfs-deploy-tool:v1 |
-
-##### 3. インストールパッケージを解凍した後、**install-driver.sh {mode}**コマンドを使用してcsi-driver-nfsコンポーネントをインストールします。 
-install-driver.shコマンド実行時、インターネット接続が可能なクラスタは**public**、そうでないクラスタは**private**を入力する必要があります。
-
+| 韓国(パンギョ)リージョン | O | oras pull dfe965c3-kr1-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v2 |
+| | X | oras pull private-dfe965c3-kr1-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v2 |
+| 韓国(ピョンチョン)リージョン | O | oras pull 6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/oci/nfs-deploy-tool:v2 |
+| | X | oras pull private-6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/oci/nfs-deploy-tool:v2 |
 
 > [参考]
-> csi-driver-nfsコンテナイメージはNHN Cloud NCRで管理されています。クローズドネットワーク環境で構成されたクラスタはインターネットに接続されていないため、イメージを正常に受け取るためにはPrivate URIを使用するための環境設定が必要です。Private URIの使い方については、[NHN Cloud Container Registry(NCR)ユーザーガイド](Container/NCR/ja/user-guide/#private-uri)を参照してください。
+> csi-driver-nfsコンテナイメージとアーティファクトはNHN Cloud NCRで管理されています。クローズドネットワーク環境で構成されたクラスターはインターネットに接続されていないため、イメージやアーティファクトを正常に受け取るためにはPrivate URIを使用するための環境設定が必要です。Private URIの使用方法の詳細は、[NHN Cloud Container Registry(NCR)ユーザーガイド](/Container/NCR/ja/user-guide/#private-uri)を参照してください。
 
-以下はインターネットネットワーク環境に構成されたクラスタにインストールパッケージを利用してcsi-driver-nfsをインストールする例です。
+##### 3.インストールパッケージを解凍した後、**./install-driver.sh {REGISTRY} {INTERNET_USAGE}**コマンドを使用してcsi-driver-nfsコンポーネントをインストールします。
+クラスターが作成されたリージョン及びインターネット接続可否に応じて、正しい{REGISTRY}及び{INTERNET_USAGE}値を入力します。 
+* {REGISTRY}
+  * 韓国(パンギョ)リージョン: **dfe965c3-kr1-registry.container.nhncloud.com**
+  * 韓国(ピョンチョン)リージョン: **6e7f43c6-kr2-registry.container.cloud.toast.com**
+* {INTERNET_USAGE}
+  * インターネット接続可能なクラスター： **true**
+  * インターネット接続できないクラスター： **false**
+
+以下は、韓国(パンギョ)リージョンに作成されたインターネット接続が可能なクラスターにcsi-driver-nfsをインストールする例です。
 
 ```
 $ tar -xvf nfs-deploy-tool.tar
 
-$ ./install-driver.sh public
-Installing NFS CSI driver, mode: public ...
+$ ./install-driver.sh dfe965c3-kr1-registry.container.nhncloud.com public
+INTERNET_USAGE set to true. Container image registry set with value dfe965c3-kr1-registry.container.nhncloud.com
+Installing NFS CSI driver
 serviceaccount/csi-nfs-controller-sa created
 serviceaccount/csi-nfs-node-sa created
 clusterrole.rbac.authorization.k8s.io/nfs-external-provisioner-role created
@@ -3851,9 +3900,15 @@ pv-onas   300Gi      RWX            Retain           Bound    default/pvc-onas  
 StorageClassマニフェスト作成時、ストレージプロバイダー情報およびNHN Cloud NASストレージ情報を定義します。
 
 * provisioner：**nfs.csi.k8s.io**を入力します。
-* parameters：NASストレージの接続情報を入力します。
-  * server：NASストレージの接続情報の**ip**部分の値を入力します。
-  * share：NASストレージの接続情報の**ボリューム名**部分の値を入力します。
+* parameters：入力項目は下表を参照してください。
+
+| 項目 | 説明 | 例 | 必須 | デフォルト値 |
+| ------- |------- | --------------------------- | ---------------------------- | ------------- |
+| server | NASストレージの接続情報のうち、**ip**を意味します。 | 192.168.0.81 | O |  |
+| share | NASストレージの接続情報のうち、**ボリューム名**を意味します。 | /onas_300gb | O |  |
+| mountPermissions | NASストレージのマウントポイントディレクトリに設定する権限を指定します。 | "0700" | X | 0741 |
+| uid | NASストレージのマウントポイントディレクトリに設定するUIDを入力します。 | 1000 | X | root(0) |
+| gid | NASストレージのマウントポイントディレクトリに設定するGIDを入力します。 | 1000 | X | root(0) |
 
 以下はマニフェストの例です。
 ``` yaml
@@ -3866,6 +3921,9 @@ provisioner: nfs.csi.k8s.io
 parameters:
   server: 192.168.0.81
   share: /onas_300gb
+  mountPermissions: "0700"
+  uid: 1000
+  gid: 1000
 reclaimPolicy: Retain
 volumeBindingMode: Immediate
 ```
@@ -3975,6 +4033,9 @@ StorageClassマニフェストにストレージプロバイダー情報と作�
 | subnet | ストレージにアクセスするサブネットです。選択されたVPCのサブネットのみ選択できます。 | "59526f1c-c089-4517-86fd-2d3dac369210" | X | O |  |
 | acl | 読み取り、書き込み権限を許可するIPまたはIP帯域のリストです。 | "0.0.0.0/0" | O | X | 0.0.0.0/0 |
 | onDelete | PVC削除時にNASボリュームを削除するかどうかです。 | "delete" / "retain" | X | X | delete |
+| mountPermissions | NASストレージのマウントポイントディレクトリに設定する権限を指定します。 | "0700"| X | X | 0741 |
+| uid | NASストレージのマウントポイントディレクトリに設定するUIDを入力します。 | 1000 | X | X | root(0) |
+| gid | NASストレージのマウントポイントディレクトリに設定するGIDを入力します。 | 1000 | X | X | root(0) |
 
 > [参考]
 > スナップショットパラメータを使用する場合、関連するすべてのパラメータ値を定義する必要があります。スナップショット関連パラメータは次のとおりです。
@@ -4009,6 +4070,9 @@ parameters:
   scheduleweekdays : "6"
   subnet : "59526f1c-c089-4517-86fd-2d3dac369210"
   acl : ""
+  mountPermissions: "0700"
+  uid: 1000
+  gid: 1000
 ```
 
 PVCマニフェストの**Annotation**に作成するNASストレージの名前、説明、サイズを定義します。入力項目は下表を参照してください。
