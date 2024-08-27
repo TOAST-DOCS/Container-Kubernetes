@@ -94,10 +94,10 @@ X-Auth-Token: {tokenId}
 | clusters.flavor_id | Body | UUID | 基本ワーカーノードのインスタンスタイプUUID|
 | clusters.keypair | Body | UUID | 基本ワーカーノードグループに適用されたキーペアUUID |
 | clusters.node_count | Body | Integer| ワーカーノードの総数 |
-| clusters.stack_id | Body | UUID | マスターノードグループと接続されたheat stack UUID |
+| clusters.stack_id | Body | UUID | コントロールプレーンと接続されたheat stack UUID |
 | clusters.status | Body | String | クラスタの状態 |
 | clusters.labels | Body | Object | クラスタのラベル |
-| clusters.labels.kube_tag | Body |String | マスターノードグループのKubernetesバージョン |
+| clusters.labels.kube_tag | Body |String | コントロールプレーンのKubernetesバージョン |
 | clusters.labels.availability_zone | Body | String | 基本ワーカーノードグループ適用：アベイラビリティゾーン |
 | clusters.labels.node_image | Body | UUID | 基本ワーカーノードグループ適用：ベースイメージuuid |
 | clusters.labels.external_network_id | Body | String | インターネットゲートウェイに接続されたVPC network UUID |
@@ -209,7 +209,7 @@ X-Auth-Token: {tokenId}
 | flavor_id | Body | UUID | 基本ワーカーノードのインスタンスタイプUUID|
 | keypair | Body | UUID | 基本ワーカーノードグループに適用されたキーペアUUID |
 | node_count | Body | Integer| ワーカーノードの総数 |
-| stack_id | Body | UUID | マスターノードグループと接続されたheat stack UUID |
+| stack_id | Body | UUID | コントロールプレーンと接続されたheat stack UUID |
 | status | Body | String | クラスタの状態 |
 | status_reason | Body | String | クラスタ状態理由(null可能) |
 | api_address | Body | String | Kubernetes APIエンドポイント |
@@ -220,7 +220,7 @@ X-Auth-Token: {tokenId}
 | created_at | Body | String | 作成時間(UTC) |
 | updated_at | Body | String | 最終更新日(UTC) |
 | labels | Body | Object | クラスタラベル |
-| labels.kube_tag | Body |String | マスターノードグループKubernetesバージョン |
+| labels.kube_tag | Body |String | コントロールプレーンKubernetesバージョン |
 | labels.availability_zone | Body | String | 基本ワーカーノードグループ適用：アベイラビリティゾーン |
 | labels.node_image | Body | UUID | 基本ワーカーノードグループ適用：ベースイメージUUID |
 | labels.external_network_id | Body | String | インターネットゲートウェイに接続されたVPC network UUID |
@@ -505,6 +505,15 @@ X-Auth-Token: {tokenId}
 | labels.ncr_sgw | Body | String | X | NCRタイプのサービスゲートウェイUUID<br>ただし、クラスタVPCと同じVPCに作成されたものに限る。 |
 | labels.obs_sgw | Body | String | X | OBSタイプのサービスゲートウェイUUID<br>ただし、クラスタVPCと同じVPCに作成されたものに限る。 |
 | labels.cni_driver | Body | String | X | CNI設定、選択可能CNIリスト: calico(基本), calico-ebpf<br>calico: Calico-VXLANで作成<br>calico-ebpf: Calico-eBPFで作成 |
+| labels.extra_security_groups | Body | Array | X | 追加セキュリティグループオブジェクトリスト |
+| labels.extra_security_groups[].target_subnet | Body | String | X | 追加セキュリティグループ指定対象サブネットUUID |
+| labels.extra_security_groups[].security_group_ids | Body | String | X | 追加セキュリティグループUUIDリスト(カンマ区切り) |
+| labels.extra_volumes | Body | Array | X | 追加ブロックストレージオブジェクトリスト |
+| labels.extra_volumes[].volume_type | Body | String | X | 追加ブロックストレージの種類 |
+| labels.extra_volumes[].volume_size | Body | Integer | X | 追加ブロックストレージサイズ(GB) |
+| labels.extra_volumes[].volume_key_id | Body | String | X | (暗号化されたブロックストレージを使用する場合)暗号化されたブロックストレージに適用する対称鍵ID |
+| labels.extra_volumes[].volume_appkey | Body | String | X | (暗号化されたブロックストレージを使用する場合)暗号化されたブロックストレージに適用する対称鍵のアプリキー |
+| labels.extra_volumes[].volume_mount_path | Body | String | X | 追加ブロックストレージがマウントされるパス |
 | flavor_id | Body | UUID | O | 基本ワーカーノードグループ適用：ノードインスタンスタイプUUID |
 | fixed_network | Body | UUID | O | VPC Network UUID |
 | fixed_subnet | Body | UUID | O | VPCサブネットUUID. fixed_subnet, pods_network_cidr, service_cluster_ip_range入力ルール参照 |
@@ -556,7 +565,19 @@ X-Auth-Token: {tokenId}
         "master_lb_floating_ip_enabled": "true",
         "strict_sg_rules": "True",
         "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
-        "user_script_v2": ""
+        "user_script_v2": "",
+        "extra_security_groups": [
+            {
+                "target_subnet": "4fdf5b80-3d35-43f5-a5c1-010a3b6c8e90",
+                "security_group_ids": "8669cca4-7904-4dc6-b1be-db49661cedb6,fa69d78d-bd04-4ab0-9ce6-c92a84b899c2"
+            }
+        ],
+        "extra_volumes": [
+            {
+                "volume_type": "General HDD",
+                "volume_size": 100
+            }
+        ]
     },
     "name": "test-k8s",
     "node_count": 1
@@ -1293,6 +1314,15 @@ X-Auth-Token: {tokenId}
 | labels.user_script_v2 | Body | String | X | ユーザースクリプト |
 | labels.additional_network_id_list | Body | String | X | ワーカーノードグループ適用：追加ネットワークのVPCネットワークUUIDリスト(コロン区切り) |
 | labels.additional_subnet_id_list | Body | String | X | ワーカーノードグループ適用：追加ネットワークのVPCサブネットUUIDリスト(コロン区切り) |
+| labels.extra_security_groups | Body | Array | X | 追加セキュリティグループオブジェクトリスト |
+| labels.extra_security_groups[].target_subnet | Body | String | X | 追加セキュリティグループ指定対象サブネットUUID |
+| labels.extra_security_groups[].security_group_ids | Body | String | X | 追加セキュリティグループUUIDリスト(カンマ区切り) |
+| labels.extra_volumes | Body | Array | X | 追加ブロックストレージオブジェクトリスト |
+| labels.extra_volumes[].volume_type | Body | String | X | 追加ブロックストレージの種類 |
+| labels.extra_volumes[].volume_size | Body | Integer | X | 追加ブロックストレージサイズ(GB) |
+| labels.extra_volumes[].volume_key_id | Body | String | X | (暗号化されたブロックストレージを使用する場合)暗号化されたブロックストレージに適用する対称鍵ID |
+| labels.extra_volumes[].volume_appkey | Body | String | X | (暗号化されたブロックストレージを使用する場合)暗号化されたブロックストレージに適用する対称鍵のアプリキー |
+| labels.extra_volumes[].volume_mount_path | Body | String | X | 追加ブロックストレージがマウントされるパス |
 | name | BODY | String | O | ノードグループ名 |
 | node_count | Body | Integer | X | ノード数(デフォルト値: 1) |
 
@@ -1671,14 +1701,14 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|---|
 | tokenId | Header | String | O | トークンID |
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
-| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | ノードグループUUIDまたはノードグループ名<br>マスターコンポーネントのアップグレード時には**default-master**と指定 |  | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | ノードグループUUIDまたはノードグループ名<br>コントロールプレーンのアップグレード時には**default-master**と指定 |  | 
 | version | Body | String | O | Kubernetesバージョン |
 | num_buffer_nodes | Body | Integer | X | バッファノード数。最小値：0、最大値：(ワーカーノードグループ当たりの最大ノード数クォーター - 該当ワーカーノードグループの現在のノード数)、デフォルト値: 1 |
 | num_max_unavailable_nodes | Body |  Integer | X | 最大サービス不可ノード数。最小値：1、最大値：該当ワーカーノードグループの現在ノード数、デフォルト値：1 |
 
-クラスタをアップグレードするには、マスターコンポーネントをアップグレードした後、ワーカーコンポーネントをアップグレードする必要があります。マスターとワーカーコンポーネントのアップグレードはノードグループ単位で行われます。
+クラスターをアップグレードするには、コントロールプレーンをアップグレードした後、ワーカーコンポーネントをアップグレードする必要があります。コントロールプレーンとワーカーコンポーネントのアップグレードはノードグループ単位で行われます。
 
-* マスターコンポーネントのアップグレード
+* コントロールプレーンコンポーネントのアップグレード
     * ノードグループ名を**default-master**と指定します。
 
 * ワーカーコンポーネントのアップグレード
@@ -1736,7 +1766,7 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|---|
 | tokenId | Header | String | O | トークンID |
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
-| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | ノードグループUUIDまたはノードグループ名<br>マスターコンポーネントのアップグレード時には**default-master**に指定 | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | ノードグループUUIDまたはノードグループ名<br>コントロールプレーンコンポーネントのアップグレード時には**default-master**に指定 | 
 | contents | Body | String | O | ユーザースクリプト内容 |
 
 
@@ -1876,15 +1906,18 @@ X-Auth-Token: {tokenId}
         "v1.18.19": false,
         "v1.19.13": false,
         "v1.20.12": false,
-        "v1.21.6": true,
+        "v1.21.6": false,
         "v1.22.3": false,
         "v1.23.3": false,
-        "v1.24.3": false
+        "v1.24.3": false,
         "v1.25.4": false,
         "v1.26.3": true,
+        "v1.26.3": false,
         "v1.27.3": true,
         "v1.28.3": true,
         "v1.29.3": true
+        "v1.29.3": true,
+        "v1.30.3": true
     },
     "supported_event_type": {
         "cluster_events": {

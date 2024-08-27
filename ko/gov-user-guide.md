@@ -111,76 +111,8 @@ NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전�
 | v1.25.4 | 가능 | 가능 |
 | v1.26.3 | 가능 | 가능 |
 | v1.27.3 | 가능 | 가능 |
-
-NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Network Interface(CNI)를 제공합니다. 2023/04/04 이후에는 v1.24.3 버전 이상의 클러스터 생성 시 CNI가 Calico로 생성됩니다. Flannel과 Calico CNI의 Network mode는 모두 VXLAN 방식으로 동작합니다.
-
-| 버전 | 클러스터 생성 시 설치한 CNI 종류 및 버전 | CNI 변경 가능 여부 |
-| :-: | :-: | :-: |
-| v1.17.6 | Flannel v0.12.0 | 불가 |
-| v1.18.19 | Flannel v0.12.0 | 불가 |
-| v1.19.13 | Flannel v0.14.0 | 불가 |
-| v1.20.12 | Flannel v0.14.0 | 불가 |
-| v1.21.6 | Flannel v0.14.0 | 불가 |
-| v1.22.3 | Flannel v0.14.0 | 불가 |
-| v1.23.3 | Flannel v0.14.0 | 불가 |
-| v1.24.3 | Flannel v0.14.0 혹은 Calico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
-| v1.25.4 | Flannel v0.14.0 혹은 Calico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
-| v1.26.3 | Flannel v0.14.0 혹은 Calico v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
-| v1.27.3 | Calico v3.24.1 | 불가|
-| v1.28.3 | Calico v3.24.1 | 불가|
-| v1.29.3 | Calico v3.24.1 | 불가|
-
-주석
-
-* <a name="footnote_calico_version_1">1</a>: 2023/03/31 이전에 생성된 클러스터에는 Flannel이 설치되어 있습니다. 2023/03/31 이후에 생성되는 v1.24.3 이상의 클러스터는 Calico가 설치됩니다.
-* <a name="footnote_calico_version_2">2</a>: CNI 변경은 v1.24.3 이상의 클러스터에서만 지원되며, 현재 Flannel에서 Calico로의 변경만 지원합니다.
-
-
-클러스터 워커 노드 필수 보안 규칙 항목 
-
-| 방향 | IP 프로토콜 | 포트 범위 | Ether | 원격 | 설명 | 특이 사항 |
-| :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| ingress | TCP | 10250 | IPv4 | 워커 노드 | kubelet 포트, 방향: metrics-server(워커 노드) -> kubelet(워커 노드) | |
-| ingress | TCP | 10250 | IPv4 | NKS Control Plane | kubelet 포트, 방향: kube-apiserver(NKS Control plane) -> kubelet(워커 노드) | |
-| ingress | TCP | 5473 | IPv4 | 워커 노드 |  calico-typha 포트, 방향: calico-node(워커 노드) -> calico-typha(워커 노드) | CNI가 calico인 경우 생성됨 |
-| ingress | UDP | 8472 | IPv4 | 워커 노드 | flannel vxlan overlay network 포트, 방향: pod(워커 노드) -> pod(워커 노드) | CNI가 flannel인 경우 생성됨 |
-| ingress | UDP | 8472 | IPv4 | 워커 노드 | flannel vxlan overlay network 포트, 방향: pod(NKS Control plane) -> pod(워커 노드) | CNI가 flannel인 경우 생성됨 |
-| ingress | UDP | 4789 | IPv4 | 워커 노드 | calico-node vxlan overlay network 포트, 방향: pod(워커 노드) -> pod(워커 노드) | CNI가 calico인 경우 생성됨 |
-| ingress | UDP | 4789 | IPv4 | NKS Control Plane | calico-node vxlan overlay network 포트, 방향: pod(NKS Control plane) -> pod(워커 노드) | CNI가 calico인 경우 생성됨 |
-| egress | TCP | 2379 | IPv4 | NKS Control Plane | etcd 포트, 방향: calico-kube-controller(워커 노드) -> etcd(NKS Control plane)| |
-| egress | TCP | 6443 | IPv4 | Kubernetes API 엔드포인트 | kube-apiserver 포트, 방향: kubelet, kube-proxy(워커 노드) -> kube-apiserver(NKS Control plane) | |
-| egress | TCP | 6443 | IPv4 | NKS Control Plane | kube-apiserver 포트, 방향: default kubernetes service(워커 노드) -> kube-apiserver(NKS Control plane) | |
-| egress | TCP | 5473 | IPv4 | 워커 노드 | CNI가 calico인 경우 생성됨, calico-typha 포트, 방향: calico-node(워커 노드) -> calico-typha(워커 노드) | |
-| egress | TCP | 53 | IPv4 | 워커 노드 | DNS 포트, 방향: 워커 노드 -> 외부 | |
-| egress | TCP | 443 | IPv4 | 모두 허용 | HTTPS 포트, 방향: 워커 노드 -> 외부 | |
-| egress | TCP | 80 | IPv4 | 모두 허용 | HTTP 포트, 방향: 워커 노드 -> 외부 | |
-| egress | UDP | 8472 | IPv4 | 워커 노드 | flannel vxlan overlay network 포트, 방향: pod(워커 노드) -> pod(워커 노드)| CNI가 flannel인 경우 생성됨 |
-| egress | UDP | 8472 | IPv4 | NKS Control Plane | flannel vxlan overlay network 포트, 방향: pod(워커 노드) -> pod(NKS Control plane) | CNI가 flannel인 경우 생성됨 |
-| egress | UDP | 4789 | IPv4 | 워커 노드 | calico-node vxlan overlay network 포트, 방향: pod(워커 노드) -> pod(워커 노드) | CNI가 calico인 경우 생성됨 |
-| egress | UDP | 4789 | IPv4 | NKS Control Plane | calico-node vxlan overlay network 포트, 방향: pod(워커 노드) -> pod(NKS Control plane) | CNI가 calico인 경우 생성됨 |
-| egress | UDP | 53 | IPv4 | 모두 허용 | DNS 포트, 방향: 워커 노드 -> 외부 | |
-
-강화된 보안 규칙 사용 시 NodePort 타입의 서비스와 NHN Cloud NAS 서비스에서 사용하는 포트에 대한 보안 규칙에 추가되어 있지 않습니다. 필요에 따라 아래 보안 규칙을 추가 설정해야 합니다. 
-
-| 방향 | IP 프로토콜 | 포트 범위 | Ether | 원격 | 설명 |
-| :-: | :-: | :-: | :-: | :-: | :-: |
-| ingress, egress | TCP | 30000 - 32767 | IPv4 | 모두 허용 | NKS service object NodePort, 방향: 외부 -> 워커 노드 |
-| egress | TCP | 2049 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc nfs 포트, 방향: csi-nfs-node(워커 노드) -> NHN Cloud NAS 서비스 |
-| egress | TCP | 111 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc portmapper 포트, 방향: csi-nfs-node(워커 노드) -> NHN Cloud NAS 서비스 |
-| egress | TCP | 635 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc mountd 포트, 방향: csi-nfs-node(워커 노드) -> NHN Cloud NAS 서비스 |
-
-강화된 보안 규칙을 사용하지 않는 경우 NodePort 타입의 서비스와 외부 네트워크 통신에 필요한 보안 규칙이 추가로 생성됩니다.
-
-| 방향 | IP 프로토콜 | 포트 범위 | Ether | 원격 | 설명 | 
-| :-: | :-: | :-: | :-: | :-: | :-: |
-| ingress | TCP | 1 - 65535 | IPv4 | 워커 노드 | 모든 포트, 방향: 워커 노드 -> 워커 노드 |
-| ingress | TCP | 1 - 65535 | IPv4 | NKS Control Plane | 모든 포트, 방향: NKS Control plane -> 워커 노드 |
-| ingress | TCP | 30000 - 32767 | IPv4 | 모두 허용 | NKS service object NodePort, 방향: 외부 -> 워커 노드 |
-| ingress | UDP | 1 - 65535 | IPv4 | 워커 노드 | 모든 포트, 방향: 워커 노드 -> 워커 노드 |
-| ingress | UDP | 1 - 65535 | IPv4 | NKS Control Plane | 모든 포트, 방향: NKS Control plane -> 워커 노드 |
-| egress | 임의 | 1 - 65535 | IPv4 | 모두 허용 | 모든 포트, 방향: 워커 노드 - > 외부 |
-| egress | 임의 | 1 - 65535 | IPv6 | 모두 허용 | 모든 포트, 방향: 워커 노드 - > 외부 |
-
+| v1.28.3 | 가능 | 가능 |
+| v1.29.3 | 가능 | 가능 |
 
 필요한 정보를 입력하고 **클러스터 생성**을 클릭하면 클러스터 생성이 시작됩니다. 클러스터 목록에서 상태를 확인할 수 있습니다. 생성하는 데는 약 10분 정도 걸립니다. 클러스터 설정에 따라 더 오래 걸릴 수도 있습니다.
 
@@ -1049,6 +981,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 워커 노드 그룹의 인스턴스 타입을 변경합니다. 워커 노드 그룹에 속한 모든 워커 노드의 인스턴스 타입이 변경됩니다.
 
 
+
 #### 진행 과정
 
 인스턴스 타입 변경은 다음 순서로 진행됩니다.
@@ -1092,8 +1025,8 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 |  | CentOS 7.9 (2023.11.21)  | 1.3 |
 |  | CentOS 7.9 (2024.02.20)  | 1.4 |
 |  | CentOS 7.9 (2024.05.21)  | 1.5 |
-| Rocky | Rocky Linux 8.9 (2024.02.20)  | 1.4 |
-|  | Rocky Linux 8.9 (2024.05.21)  | 1.5 |
+|  | CentOS 7.9 (2024.08.20)  | 1.6 |
+| Rocky | Rocky Linux 8.10 (2024.08.20)  | 1.6 |
 | Ubuntu | Ubuntu Server 20.04.6 LTS (2023.05.25)  | 1.1 |
 |  | Ubuntu Server 20.04.6 LTS (2023.08.22)  | 1.2 |
 |  | Ubuntu Server 20.04.6 LTS (2023.11.21)  | 1.3 |
@@ -1102,12 +1035,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 |  | Ubuntu Server 22.04.3 LTS (2024.02.20)  | 1.4 |
 |  | Ubuntu Server 20.04.6 LTS (2024.05.21)  | 1.5 |
 |  | Ubuntu Server 22.04.3 LTS (2024.05.21)  | 1.5 |
-| Debian | Debian 11.6 Bullseye (2023.03.21)  | 1.0 |
-|  | Debian 11.6 Bullseye (2023.05.25)  | 1.1 |
-|  | Debian 11.7 Bullseye (2023.08.22)  | 1.2 |
-|  | Debian 11.8 Bullseye (2023.11.21)  | 1.3 |
-|  | Debian 11.8 Bullseye (2024.02.20)  | 1.4 |
-|  | Debian 11.9 Bullseye (2024.05.21)  | 1.5 |
+|  | Ubuntu Server 20.04.6 LTS (2024.08.20)  | 1.6 |
 
 
 > [참고]
@@ -1126,13 +1054,46 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 4. 생성된 이미지 템플릿을 선택한 후 **이미지 빌드**를 선택합니다.
 5. **이미지 빌드** 화면에서 **개인 이미지** 탭을 선택한 뒤 NKS 워커 노드화를 진행할 커스텀 이미지를 선택합니다.
 6. **확인**을 클릭하면 NKS 워커 노드화가 진행된 후 새로운 이미지를 생성합니다.
-7. **클러스터 생성** 화면 또는 **노드 그룹 생성** 화면에서 생성된 커스텀 이미지를 선택합니다.
+7. **클러스터 생성** 또는 **노드 그룹 생성** 화면에서 생성된 커스텀 이미지를 선택합니다.
 
 ![nkscustom_image_1.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nkscustom_image_1.png)
 
 ![nkscustom_image_2.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nkscustom_image_2.png)
 
 ![nkscustom_image_3.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nkscustom_image_3.png)
+
+### 추가 보안 그룹
+노드 그룹에 추가 보안 그룹을 설정할 수 있습니다. 클러스터 및 노드 그룹 생성 시 추가 보안 그룹을 지정하여 생성하거나, 기존의 노드 그룹에 추가 보안 그룹을 설정할 수 있습니다. 추가 보안 그룹의 특징은 다음과 같습니다.
+
+* 추가 보안 그룹은 서브넷당 최대 8개까지 설정할 수 있습니다.
+* 노드 그룹의 추가 보안 그룹 설정은 노드 그룹에 속한 모든 워커 노드에 동일하게 적용됩니다.
+* 추가 보안 그룹 미입력 시 클러스터의 기본 보안 그룹만 적용됩니다.
+* 사용자가 개별 노드에 직접 설정한 보안 그룹은 노드 그룹의 추가 보안 그룹 항목에서 조회되지 않습니다.
+
+[참고]
+> 콘솔에서 노드 그룹 생성 시 지정한 추가 보안 그룹은 기본 네트워크 및 모든 추가 네트워크에 적용됩니다. 개별 네트워크의 추가 보안 그룹에 대한 변경은 노드 그룹 생성 이후에 가능합니다.
+
+[주의]
+> 노드 그룹에 추가 보안 그룹 설정 시 기존 인스턴스에 할당된 보안 그룹 중 추가 보안 그룹에 정의되지 않은 대상은 제거됩니다.
+> 추가 보안 그룹 변경 시 네트워크 설정이 변경되므로 설정이 적용되는 동안 일시적으로 통신에 영향이 있을 수 있습니다.
+
+### 추가 블록 스토리지
+노드 그룹에 추가 블록 스토리지를 사용할 수 있습니다. 클러스터 및 노드 그룹 생성 시 추가 블록 스토리지를 지정하여 생성하거나, 기존의 노드 그룹에 추가 블록 스토리지를 생성하여 사용할 수 있습니다. 추가 블록 스토리지는 다음과 같은 특징을 가집니다.
+
+* 추가 블록 스토리지는 노드 그룹당 최대 3개까지 설정할 수 있으며, 블록 스토리지의 크기는 1~2048GB 범위에서 지정 가능합니다.
+* 노드 그룹의 추가 블록 스토리지 설정은 노드 그룹에 속한 모든 워커 노드에 동일하게 적용됩니다.
+    * 추가 블록 스토리지 변경 시 노드 그룹의 모든 워커 노드에 변경 사항이 반영됩니다.
+* 추가 블록 스토리지 변경은 크기 조정 및 마운트 경로 변경만 지원합니다.
+    * 생성된 추가 블록 스토리지 삭제는 불가능합니다.
+    * 기존 설정된 값보다 작은 크기로 조정할 수 없습니다.
+* 추가 블록 스토리지의 이름은 `{클러스터 이름}-{노드 그룹 이름}-{노드 이름}-extra-volume-{인덱스}` 형태로 지정됩니다.
+* 마운트 경로를 입력한 경우 추가 블록 스토리지가 생성된 이후 지정된 경로에 마운트를 시도합니다.
+    * 미입력 시 마운트를 진행하지 않습니다.
+    * 올바르지 않은 마운트 경로를 입력하여 마운트를 실패하면 기능이 동작하지 않습니다.
+
+[주의]
+> 추가 블록 스토리지의 설정 변경은 기존 볼륨의 마운트 해제를 포함하므로 사용 중인 서비스에 영향을 미칠 수 있습니다.
+
 
 ## 클러스터 관리
 원격의 호스트에서 클러스터를 조작하고 관리하려면 Kubernetes가 제공하는 명령줄 도구(CLI)인 `kubectl`이 필요합니다.
@@ -1329,43 +1290,44 @@ Kubernetes 클러스터는 동작 중인 상태에서 Kubernetes 구성 요소�
 NHN Cloud에서 지원하는 Kubernetes 클러스터 업그레이드 기능의 동작 방식에 대해 설명합니다. 
 
 ##### Kubernetes 버전 관리
-NHN Cloud의 Kubernetes 클러스터는 클러스터 마스터와 워커 노드 그룹별로 Kubernetes 버전을 관리합니다. 마스터의 Kubernetes 버전은 클러스터 조회 화면에서 확인할 수 있고, 워커 노드 그룹의 Kubernetes 버전은 각 워커 노드 그룹 조회 화면에서 확인할 수 있습니다. 
+NHN Cloud의 Kubernetes 클러스터는 클러스터 컨트롤 플레인과 워커 노드 그룹별로 Kubernetes 버전을 관리합니다. 컨트롤 플레인의 Kubernetes 버전은 클러스터 조회 화면에서 확인할 수 있고, 워커 노드 그룹의 Kubernetes 버전은 각 워커 노드 그룹 조회 화면에서 확인할 수 있습니다. 
 
 ##### 업그레이드 규칙
 NHN Cloud의 Kubernetes 클러스터 버전 관리 방식과 Kubernetes 버전 차이 지원 정책에 의해 구성 요소별로 순서에 맞게 업그레이드해야 합니다. NHN Cloud의 Kubernetes 클러스터 업그레이드 기능에 적용되는 규칙은 다음과 같습니다.
 
-* 마스터와 각 워커 노드 그룹별로 업그레이드 명령을 실행해야 합니다.
-* 마스터의 Kubernetes 버전과 모든 워커 노드 그룹의 Kubernetes 버전이 일치해야 업그레이드가 가능합니다.
-* 마스터를 먼저 업그레이드한 후 워커 노드 그룹을 업그레이드할 수 있습니다.
+* 컨트롤 플레인과 각 워커 노드 그룹별로 업그레이드 명령을 실행해야 합니다.
+* 컨트롤 플레인의 Kubernetes 버전과 모든 워커 노드 그룹의 Kubernetes 버전이 일치해야 업그레이드가 가능합니다.
+* 컨트롤 플레인을 먼저 업그레이드한 후 워커 노드 그룹을 업그레이드할 수 있습니다.
 * 현재 버전의 다음 버전(마이너 버전 기준 +1)으로 업그레이드 가능합니다.
 * 다운그레이드는 지원하지 않습니다.
 * 다른 기능의 동작으로 인해 클러스터가 업데이트 중인 상태에서는 업그레이드가 불가능합니다.
-* 클러스터 버전을 v1.25.4에서 v1.26.3으로 업그레이드할 때, CNI가 Flannel인 경우 Calico로 변경해야 합니다.
+* 클러스터 버전을 v1.25.4에서 v1.26.3으로 업그레이드할 때 CNI가 Flannel인 경우 Calico-VXLAN으로 변경해야 합니다.
+* NKS 레지스트리가 활성화되지 않은 클러스터는 업그레이드가 불가능합니다.
 
 다음 예시는 Kubernetes 버전을 업그레이드 과정에서 업그레이드 가능 여부를 표로 나타낸 것입니다. 예시에 사용된 조건은 다음과 같습니다. 
 
-* NHN Cloud가 지원하는 Kubernetes 버전 목록: v1.21.6, v1.22.3, v1.23.3
-* 클러스터는 v1.21.6으로 생성
+* NHN Cloud가 지원하는 Kubernetes 버전 목록: v1.28.3, v1.29.3, v1.30.3
+* 클러스터는 v1.28.3으로 생성
 
-| 상태 | 마스터 버전 | 마스터 업그레이드 가능 여부 | 워커 노드 그룹 버전 | 워커 노드 그룹 업그레이드 가능 여부
+| 상태 | 컨트롤 플레인 버전 | 컨트롤 플레인 업그레이드 가능 여부 | 워커 노드 그룹 버전 | 워커 노드 그룹 업그레이드 가능 여부
 | --- | :-: | :-: | :-: | :-: |
-| 초기 상태| v1.21.6 | 가능 <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.21.6 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> | 
-| 마스터 업그레이드 후 상태 | v1.22.3 | 불가능 <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.21.6 | 가능 <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
-| 워커 노드 그룹 업그레이드 후 상태 | v1.22.3 | 가능 <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.22.3 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
-| 마스터 업그레이드 후 상태 | v1.23.3 | 불가능 <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.22.3 | 가능 <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
-| 워커 노드 그룹 업그레이드 후 상태 | v1.23.3 | 불가능 <sup>[5](#footnote_cluster_upgrade_rule_5)</sup> | v1.23.3 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
+| 초기 상태| v1.28.3 | 가능 <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.28.3 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> | 
+| 컨트롤 플레인 업그레이드 후 상태 | v1.29.3 | 불가능 <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.28.3 | 가능 <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
+| 워커 노드 그룹 업그레이드 후 상태 | v1.29.3 | 가능 <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.29.3 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
+| 컨트롤 플레인 업그레이드 후 상태 | v1.30.3 | 불가능 <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.29.3 | 가능 <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
+| 워커 노드 그룹 업그레이드 후 상태 | v1.30.3 | 불가능 <sup>[5](#footnote_cluster_upgrade_rule_5)</sup> | v1.30.3 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
 
 주석
 
-* <a name="footnote_cluster_upgrade_rule_1">1</a>: 마스터와 모든 워커 노드 그룹의 버전이 일치하는 상태이기 때문에 업그레이드 가능
-* <a name="footnote_cluster_upgrade_rule_2">2</a>: 워커 노드 그룹은 마스터가 업그레이드된 후 업그레이드 가능
-* <a name="footnote_cluster_upgrade_rule_3">3</a>: 마스터와 모든 워커 노드 그룹의 버전이 일치해야 업그레이드 가능
-* <a name="footnote_cluster_upgrade_rule_4">4</a>: 마스터가 업그레이드됐기 때문에 업그레이드 가능
-* <a name="footnote_cluster_upgrade_rule_5">5</a>: NHN Cloud에서 지원하는 가장 최신 버전을 사용하고 있기 때문에 업그레이드 불가능
+* <a name="footnote_cluster_upgrade_rule_1">1</a>: 컨트롤 플레인과 모든 워커 노드 그룹의 버전이 일치하는 상태이기 때문에 업그레이드 가능
+* <a name="footnote_cluster_upgrade_rule_1">2</a>: 워커 노드 그룹은 컨트롤 플레인이 업그레이드된 후 업그레이드 가능
+* <a name="footnote_cluster_upgrade_rule_1">3</a>: 컨트롤 플레인과 모든 워커 노드 그룹의 버전이 일치해야 업그레이드 가능
+* <a name="footnote_cluster_upgrade_rule_1">4</a>: 컨트롤 플레인이 업그레이드됐기 때문에 업그레이드 가능
+* <a name="footnote_cluster_upgrade_rule_1">5</a>: NHN Cloud에서 지원하는 가장 최신 버전을 사용하고 있기 때문에 업그레이드 불가능
 
 
-##### 마스터 구성 요소 업그레이드
-NHN Cloud의 Kubernetes 클러스터 마스터는 고가용성 보장을 위해 다수의 마스터로 구성되어 있습니다. 마스터에 대해 롤링 업데이트 방식으로 업그레이드되기 때문에 클러스터의 가용성이 보장됩니다. 
+##### 컨트롤 플레인 구성 요소 업그레이드
+NHN Cloud의 Kubernetes 클러스터 컨트롤 플레인은 고가용성을 보장합니다. 컨트롤 플레인에 대해 롤링 업데이트 방식으로 업그레이드되기 때문에 클러스터의 가용성이 보장됩니다. 
 
 이 과정에서 아래와 같은 일들이 발생할 수 있습니다.
 
@@ -1375,14 +1337,14 @@ NHN Cloud의 Kubernetes 클러스터 마스터는 고가용성 보장을 위해 
 ##### 워커 구성 요소 업그레이드
 워커 노드 그룹별로 워커 구성 요소를 업그레이드할 수 있습니다. 워커 구성 요소 업그레이드는 다음 순서로 진행됩니다.
 
-1. 클러스터 오토스케일러 기능을 비활성화 합니다.<sup>[1](#footnote_worker_component_upgrade_1)</sup> 
+1. 클러스터 오토스케일러 기능을 비활성화합니다.<sup>[1](#footnote_worker_component_upgrade_1)</sup> 
 2. 해당 워커 노드 그룹에 버퍼 노드<sup>[2](#footnote_worker_component_upgrade_2)</sup>를 추가합니다.<sup>[3](#footnote_worker_component_upgrade_3)</sup> 
 3. 워커 노드 그룹 내의 모든 워커 노드에 대해 순차적으로 아래 작업을 수행합니다.<sup>[4](#footnote_worker_component_upgrade_4)</sup> 
     1. 해당 워커 노드에서 동작 중인 파드를 축출하고, 노드를 스케줄 불가능한 상태로 전환합니다.
     2. 워커 구성 요소를 업그레이드합니다.
     3. 노드를 스케줄 가능한 상태로 전환합니다.
 4. 버퍼 노드에서 동작 중인 파드를 축출하고 버퍼 노드를 삭제합니다.
-5. 클러스터 오토스케일러 기능을 다시 활성화 합니다.<sup>[1](#footnote_worker_component_upgrade_1)</sup> 
+5. 클러스터 오토스케일러 기능을 다시 활성화합니다.<sup>[1](#footnote_worker_component_upgrade_1)</sup> 
 
 
 주석
@@ -1412,24 +1374,26 @@ NHN Cloud의 Kubernetes 클러스터 마스터는 고가용성 보장을 위해 
 안전한 파드 축출에 대한 좀 더 상세한 설명은 [Safely Drain a Node](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)를 참고하세요
 
 ##### 시스템 파드 업그레이드
-마스터와 모든 워커 노드 그룹을 업그레이드하여 버전이 일치하게 되면 Kubernetes 클러스터 구성을 위해 동작하는 시스템 파드가 업그레이드 됩니다.
+컨트롤 플레인과 모든 워커 노드 그룹을 업그레이드하여 버전이 일치하게 되면 Kubernetes 클러스터 구성을 위해 동작하는 시스템 파드가 업그레이드 됩니다.
 
 > [주의]
-> 마스터 업그레이드 후 워커 노드 그룹을 업그레이드하지 않으면 일부 파드가 정상적으로 동작하지 않을 수 있습니다.
+> 컨트롤 플레인 업그레이드 후 워커 노드 그룹을 업그레이드하지 않으면 일부 파드가 정상적으로 동작하지 않을 수 있습니다.
 
 
 ### 클러스터 CNI 변경
 NHN Kubernetes Service(NKS)는 동작 중인 Kubernetes 클러스터의 CNI(container network interface) 변경을 지원합니다. 
-클러스터 CNI 변경 기능을 사용하면 NHN Kubernetes Service(NKS)의 CNI가 Flannel CNI에서 Calico CNI로 변경됩니다.
+클러스터 CNI 변경 기능을 사용하면 NHN Kubernetes Service(NKS)의 CNI가 Flannel CNI에서 Calico-VXLAN CNI로 변경됩니다.
 
 #### CNI 변경 규칙
 NHN Cloud의 Kubernetes 클러스터 CNI 변경 기능에 적용되는 규칙은 다음과 같습니다.
 
 * CNI 변경 기능은 NHN Kubernetes Service(NKS) 버전 1.24.3 이상인 경우에 사용할 수 있습니다.
 * 기존 NHN Kubernetes Service(NKS)에서 사용하고 있는 CNI가 Flannel인 경우에만 CNI 변경을 사용할 수 있습니다.
-* CNI 변경 시작 시 마스터와 모든 워커 노드 그룹에 대해 일괄적으로 작업을 진행합니다.
-* 마스터의 Kubernetes 버전과 모든 워커 노드 그룹의 Kubernetes 버전이 일치해야 CNI 변경이 가능합니다.
-* Calico에서 Flannel로 CNI 변경은 지원하지 않습니다.
+* CNI 변경 시작 시 컨트롤 플레인과 모든 워커 노드 그룹에 대해 일괄적으로 작업을 진행합니다.
+* 컨트롤 플레인의 Kubernetes 버전과 모든 워커 노드 그룹의 Kubernetes 버전이 일치해야 CNI 변경이 가능합니다.
+* Calico-VXLAN, Calico-eBPF에서 Flannel로 CNI 변경은 지원하지 않습니다.
+* Flannel에서 Calico-eBPF로 CNI 변경은 지원하지 않습니다.
+* Calico-VXLAN에서 Calico-eBPF로 CNI 변경은 지원하지 않습니다.
 * 다른 기능의 동작으로 인해 클러스터가 업데이트 중인 상태에서는 CNI 변경이 불가능합니다.
 
 다음 예시는 Kubernetes CNI 변경 과정에서 변경 가능 여부를 표로 나타낸 것입니다. 예시에 사용된 조건은 다음과 같습니다. 
@@ -1437,28 +1401,28 @@ NHN Cloud의 Kubernetes 클러스터 CNI 변경 기능에 적용되는 규칙은
 NHN Cloud가 지원하는 Kubernetes 버전 목록: v1.23.3, v1.24.3, v1.25.4
 클러스터는 v1.23.3으로 생성
 
-| 상태 | 클러스터 버전 | 현재 CNI | CNI 변경 가능 여부|
+| 상태 | 클러스터 버전 | 현재 CNI | CNI 변경 가능 여부 |
 | --- | :-: | :-: | :-: |
 | 초기 상태| v1.23.3 | Flannel | 불가능 <sup>[1](#footnote_calico_change_rule_1)</sup> |
-| 클러스터 업그레이드 후 상태 | v1.24.3 | Flannel | 가능 <sup>[2](#footnote_calico_change_rule_2)</sup> | 
-| CNI 변경 후 상태 | v1.24.3 | Calico | 불가능 <sup>[3](#footnote_calico_change_rule_3)</sup> |
+| 클러스터 업그레이드 후 상태 | v1.24.3 | Flannel | 가능 <sup>[2](#footnote_calico_change_rule_2)</sup> |
+| CNI 변경 후 상태 | v1.24.3 | Calico-VXLAN | 불가능 <sup>[3](#footnote_calico_change_rule_3)</sup> |
 
 
 주석
 
 * <a name="footnote_calico_change_rule_1">1</a>: 클러스터 버전이 1.24.3 미만이기 때문에 CNI 변경 불가능
 * <a name="footnote_calico_change_rule_2">2</a>: 클러스터 버전이 1.24.3 이상이기 때문에 CNI 변경 가능
-* <a name="footnote_calico_change_rule_3">3</a>: CNI가 이미 Calico이므로 CNI 변경 불가능
+* <a name="footnote_calico_change_rule_3">3</a>: CNI가 이미 Calico-VXLAN이므로 CNI 변경 불가능
 
-#### Flannel에서 Calico CNI로 변경 진행 과정
+#### Flannel에서 Calico-VXLAN CNI로 변경 진행 과정
 CNI 변경은 다음 순서로 진행됩니다.
 
 1. 모든 워커 노드 그룹에 버퍼 노드<sup>[1](#footnote_calico_change_step_1)</sup>를 추가합니다.<sup>[2](#footnote_calico_change_step_2)</sup>
-2. 클러스터에 Calico CNI가 배포됩니다.<sup>[3](#footnote_calico_change_step_3)</sup>
+2. 클러스터에 Calico-VXLAN CNI가 배포됩니다.<sup>[3](#footnote_calico_change_step_3)</sup>
 3. 클러스터 오토스케일러 기능을 비활성화합니다.<sup>[4](#footnote_calico_change_step_4)</sup>
 3. 모든 워커 노드 그룹 내의 모든 워커 노드에 대해 순차적으로 아래 작업을 수행합니다.<sup>[5](#footnote_calico_change_step_5)</sup>
     1. 해당 워커 노드에서 동작 중인 파드를 축출하고, 노드를 스케줄 불가능한 상태로 전환합니다.
-    2. 워커 노드의 파드 IP를 Calico CIDR로 재할당합니다. 해당 노드에 배포되어 있는 모든 파드는 재배포됩니다.<sup>[6](#footnote_calico_change_step_6)</sup>
+    2. 워커 노드의 파드 IP를 Calico-VXLAN CIDR로 재할당합니다. 해당 노드에 배포되어 있는 모든 파드는 재배포됩니다.<sup>[6](#footnote_calico_change_step_6)</sup>
     3. 노드를 스케줄 가능한 상태로 전환합니다.
 5. 버퍼 노드에서 동작 중인 파드를 축출하고 버퍼 노드를 삭제합니다.
 6. 클러스터 오토스케일러 기능을 다시 활성화합니다.<sup>[4](#footnote_calico_change_step_4)</sup>
@@ -1469,10 +1433,10 @@ CNI 변경은 다음 순서로 진행됩니다.
 
 * <a name="footnote_calico_change_step_1">1</a>: 버퍼 노드란 CNI 변경 과정 중 기존 워커 노드에서 축출된 파드가 다시 스케줄링될 수 있도록 생성해 두는 여유 노드를 말합니다. 해당 워커 노드 그룹에서 정의한 워커 노드와 동일한 규격의 노드로 생성되며, 업그레이드 과정이 종료될 때 자동으로 삭제됩니다. 이 노드는 Instance 요금 정책에 따라 비용이 청구됩니다. 
 * <a name="footnote_calico_change_step_2">2</a>: CNI 변경 시 버퍼 노드 수를 설정할 수 있습니다. 기본값은 1이며, 0으로 설정하면 버퍼 노드를 추가하지 않습니다. 최솟값은 0이고, 최댓값은 (노드 그룹당 최대 노드 수 쿼터-해당 워커 노드 그룹의 현재 노드 수)입니다.
-* <a name="footnote_calico_change_step_3">3</a>: 클러스터에 Calico CNI가 배포되면 Flannel과 Calico CNI가 공존하게 됩니다. 이 상태에서 새로운 파드가 배포되면 파드 IP는 Flannel CNI로 설정되어 배포됩니다. Flannel CIDR IP를 가진 파드와 Calico CIDR IP를 가진 파드는 서로 통신할 수 있습니다.
+* <a name="footnote_calico_change_step_3">3</a>: 클러스터에 Calico-VXLAN CNI가 배포되면 Flannel과 Calico-VXLAN CNI가 공존하게 됩니다. 이 상태에서 새로운 파드가 배포되면 파드 IP는 Flannel CNI로 설정되어 배포됩니다. Flannel CIDR IP를 가진 파드와 Calico-VXLAN CIDR IP를 가진 파드는 서로 통신할 수 있습니다.
 * <a name="footnote_calico_change_step_4">4</a>: 이 단계는 업그레이드 기능 시작 전 클러스터 오토스케일러 기능이 활성화되어 있는 경우에만 유효합니다.
 * <a name="footnote_calico_change_step_5">5</a>: CNI 변경 시 설정한 최대 서비스 불가 노드 수만큼씩 작업을 수행합니다. 기본값은 1입니다. 최솟값은 1이고, 최댓값은 현재 클러스터의 모든 노드 수입니다.
-* <a name="footnote_calico_change_step_6">6</a>: 기존에 배포되어 있는 파드의 IP는 모두 Flannel CIDR로 할당되어있습니다. Calico CNI로 변경하기 위해 Flannel CIDR의 IP가 할당되어 있는 파드들을 모두 재배포하여 Calico CIDR IP를 할당합니다. 새로운 파드가 배포되면 파드 IP는 Calico CNI로 설정되어 배포됩니다.
+* <a name="footnote_calico_change_step_6">6</a>: 기존에 배포된 파드의 IP는 모두 Flannel CIDR로 할당되어 있습니다. Calico-VXLAN CNI로 변경하기 위해 Flannel CIDR의 IP가 할당되어 있는 파드들을 모두 재배포하여 Calico-VXLAN CIDR IP를 할당합니다. 새로운 파드가 배포되면 파드 IP는 Calico-VXLAN CNI로 설정되어 배포됩니다.
 
 이 과정에서 아래와 같은 일들이 발생할 수 있습니다.
 
@@ -1483,8 +1447,8 @@ CNI 변경은 다음 순서로 진행됩니다.
 
 > [파드 재배포 주의 사항]
 > 1. 파드 축출 과정을 통해 다른 노드로 옮겨지지 않은 파드에 대해 진행됩니다.
-> 2. CNI 변경 과정 중에 Flannel CIDR와 Calico CIDR 간 정상 통신을 위해 CNI 변경 파드 네트워크 값은 기존 Flannel CIDR값과 동일하면 안됩니다.
-> 3. 기존에 배포되어 있던 파드들의 pause 컨테이너는 모두 stop 되어졌다가 kubelet에 의해 다시 재생성됩니다. 파드 이름과 로컬 저장 공간 등 설정은 그대로 유지되지만 IP는 Calico CIDR의 IP로 변경됩니다.
+> 2. CNI 변경 과정 중에 Flannel CIDR와 Calico-VXLAN CIDR 간 정상 통신을 위해 CNI 변경 파드 네트워크 값은 기존 Flannel CIDR 값과 동일하면 안 됩니다.
+> 3. 기존에 배포되어 있던 파드들의 pause 컨테이너는 모두 stop 되었다가 kubelet에 의해 다시 재생성됩니다. 파드 이름과 로컬 저장 공간 등 설정은 그대로 유지되지만 IP는 Calico-VXLAN CIDR의 IP로 변경됩니다.
 
 
 ### 클러스터 API 엔드포인트 IP 접근 제어 적용
@@ -1526,8 +1490,8 @@ Kubernetes는 구성 요소 간의 TLS 인증을 위해 PKI 인증서가 필요�
     * 인증서 설정이 포함된 파드가 존재하는 경우 갱신된 CA 인증서 적용을 위해 재시작이 필요합니다.
 
 > [참고]
-> 인증서 갱신 기능은 1.24 이상 버전의 Calico CNI를 사용하는 클러스터에서 사용 가능합니다.
-> 1.24 이전 버전의 클러스터를 사용 중이거나, CNI가 Flannel인 클러스터는 업그레이드 및 CNI 변경이 필요합니다.
+> 인증서 갱신 기능은 1.24 이상 버전의 Calico-VXLAN CNI를 사용하는 클러스터에서 사용 가능합니다.
+> 클러스터 버전이 1.23 이하거나, CNI가 Flannel인 경우 버전 업그레이드 및 CNI 변경 이후 인증서 갱신이 가능합니다.
 
 > [주의]
 > 인증서 갱신 기능에는 신규 인증서 생성 및 설정 반영을 위해 시스템 구성 요소 및 클러스터 생성 시 초기 배포된 모든 kube-system 네임스페이스 파드의 재시작이 동반됩니다.
@@ -1550,7 +1514,7 @@ Kubernetes v1.24.3 이후 버전의 클러스터는 containerd를 이용해 컨�
 ### 네트워크 관리
 
 #### 기본 네트워크 인터페이스
-모든 워커 노드는 클러스터 생성 시 입력한 VPC/서브넷에 연결되는 네트워크 인터페이스를 가지고 있습니다. 이 기본 네트워크 인터페이스의 이름은 "eth0"이며, 워커 노드는 이 네트워크 인터페이스를 통해 마스터와 연결됩니다.
+모든 워커 노드는 클러스터 생성 시 입력한 VPC/서브넷에 연결되는 네트워크 인터페이스를 가지고 있습니다. 이 기본 네트워크 인터페이스의 이름은 "eth0"이며, 워커 노드는 이 네트워크 인터페이스를 통해 컨트롤 플레인과 연결됩니다.
 
 #### 추가 네트워크 인터페이스
 클러스터 또는 워커 노드 그룹 생성 시 추가 네트워크를 설정하면 해당 워커 노드 그룹의 워커 노드에 추가 네트워크 인터페이스가 생성됩니다. 추가 네트워크 인터페이스는 추가 네트워크 설정에 입력한 순서대로 인터페이스 이름이 설정됩니다(eth1, eth2, ...).
@@ -1739,8 +1703,119 @@ echo '[ { "registry": "user-defined.registry.io", "endpoint_list": [ "http://use
 
 ### 워커 노드 관리 주의 사항
 * 워커 노드에 pull되어 있는 container image를 임의로 삭제하면 안 됩니다. NKS 클러스터에 필요한 파드가 동작하지 않을 수도 있습니다. 
-* `shutdown`, `halt`, `poweroff` 등의 명령으로 시스템을 임의 중지하면 콘솔을 통해 다시 시작할 수 없습니다. 워커 노드 시작/중지 기능을 사용하세요.
+* `shutdown`, `halt`, `poweroff` 등의 명령으로 시스템을 임의 중지하면 콘솔에서 다시 시작할 수 없습니다. 워커 노드 시작/중지 기능을 사용하세요.
 * 워커 노드 내의 여러 가지 설정 파일을 임의 수정하거나 시스템 서비스를 임의 조작하면 안 됩니다. NKS 클러스터에 치명적인 문제가 발생할 수 있습니다.
+
+
+## CNI(Container Network Interface)
+NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Network Interface(CNI)를 제공합니다. 2024/07/23 이후에는 클러스터 생성 시 Calico-VXLAN과 Calico-eBPF CNI를 선택할 수 있으며, 기본 설정은 Calico-VXLAN입니다. Flannel과 Calico-VXLAN CNI는 컨테이너 워크로드를 오버레이 네트워크에 구성하고, VXLAN을 이용해 통신합니다. Calico-eBPF는 컨테이너 워크로드를 BGP 라우팅 프로토콜로 구성하고, eBPF 기술을 기반으로 직접 통신하며 일부 구간은 VXLAN을 이용해 통신합니다. Calico의 eBPF 관련한 내용은 [about eBPF](https://docs.tigera.io/calico/latest/about/kubernetes-training/about-ebpf)를 참고하세요.
+
+또한, Calico-eBPF CNI를 선택할 수 있는 OS는 Rocky와 Ubuntu이며, Flannel과 Calico-VXLAN은 모든 OS(Centos, Rocky, Red Hat, Ubuntu)를 지원합니다.
+
+
+### Calico CNI 종류
+NHN Kubernetes Service(NKS)가 제공하는 Calico-VXLAN, Calic-eBPF는 아래와 같은 차이점이 있습니다.
+
+|  | Calico-VXLAN | Calico-eBPF |
+| :-: | :-: | :-: |
+| 컨테이너 네트워크 처리 모듈 | Linux 커널 네트워크 스택 | eBPF+Linux 커널 네트워크 스택 |
+| kube-proxy | 활성화 | 비활성화(eBPF가 kube-proxy 대체) |
+| 네트워크 방식| VXLAN | 직접 통신 |
+| 파드 to 파드 통신| VXLAN 캡슐화되어 통신 | 직접 통신<sup>[1](#footnote_calico_1)</sup> |
+| Service ClusterIP to 파드 통신 | VXLAN 캡슐화되어 통신 | 직접 통신 |
+| Service NodePort to 파드 통신 | VXLAN 캡슐화되어 통신 | VXLAN 캡슐화되어 통신 |
+| 네트워크 정책 적용 | iptables 기반 | eBPF 기반(커널 수준) |
+| 네트워크 성능 | VXLAN 캡슐화로 인한 성능 저하 | 직접 통신으로 인한 높은 성능(낮은 지연 시간) |
+
+주석
+
+* <a name="footnote_calico_1">1</a>: 패킷의 출발지 IP, 목적지 IP가 파드 IP로 설정됩니다. 강화된 보안 규칙 사용 시 이 트래픽에 대한 보안 규칙을 별도로 설정해야 합니다. 
+
+
+
+### 클러스터 생성 시 설정한 CNI별 CNI 변경 가능 여부
+
+| 버전 | 클러스터 생성 시 설치한 CNI 종류 및 버전 | CNI 변경 가능 여부 |
+| :-: | :-: | :-: |
+| v1.17.6 | Flannel v0.12.0 | 불가 |
+| v1.18.19 | Flannel v0.12.0 | 불가 |
+| v1.19.13 | Flannel v0.14.0 | 불가 |
+| v1.20.12 | Flannel v0.14.0 | 불가 |
+| v1.21.6 | Flannel v0.14.0 | 불가 |
+| v1.22.3 | Flannel v0.14.0 | 불가 |
+| v1.23.3 | Flannel v0.14.0 | 불가 |
+| v1.24.3 | Flannel v0.14.0 혹은 Calico-VXLAN v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
+| v1.25.4 | Flannel v0.14.0 혹은 Calico-VXLAN v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
+| v1.26.3 | Flannel v0.14.0 혹은 Calico-VXLAN, Calico-eBPF v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
+| v1.27.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 불가|
+| v1.28.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 불가|
+| v1.29.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 불가|
+
+주석
+
+* <a name="footnote_calico_version_1">1</a>: 2023/03/31 이전에 생성된 클러스터에는 Flannel이 설치되어 있습니다. 2023/03/31 이후에 생성되는 v1.24.3 이상의 클러스터는 Calico가 설치됩니다.
+* <a name="footnote_calico_version_2">2</a>: CNI 변경은 v1.24.3 이상의 클러스터에서만 지원되며, 현재 Flannel에서 Calico-VXLAN으로의 변경만 지원합니다.
+
+
+
+## 보안 그룹
+클러스터 생성 시 강화된 보안 규칙을 True로 설정하면 워커 노드 보안 그룹 생성 시 필수 보안 규칙만 생성됩니다.
+
+### 클러스터 워커 노드 필수 보안 규칙
+
+| 방향 | IP 프로토콜 | 포트 범위 | Ether | 원격 | 설명 | 특이 사항 |
+| :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+| ingress | TCP | 10250 | IPv4 | 워커 노드 | kubelet 포트, 방향: metrics-server(워커 노드) → kubelet(워커 노드) | |
+| ingress | TCP | 10250 | IPv4 | NKS Control Plane | kubelet 포트, 방향: kube-apiserver(NKS Control plane) → kubelet(워커 노드) | |
+| ingress | TCP | 5473 | IPv4 | 워커 노드 |  calico-typha 포트, 방향: calico-node(워커 노드) → calico-typha(워커 노드) | CNI가 Calico-VXLAN, Calico-eBPF인 경우 생성됨 |
+| ingress | TCP | 179 | IPv4 |  워커 노드 | calico-node BGP 포트, 방향: pod(워커 노드) → pod(워커 노드) | CNI가 Calico-eBPF인 경우 생성됨 |
+| ingress | TCP | 179 | IPv4 | NKS Control Plane | calico-node BGP 포트, 방향: pod(NKS Control plane) → pod(워커 노드) | CNI가 Calico-eBPF인 경우 생성됨 |
+| ingress | UDP | 8472 | IPv4 | 워커 노드 | flannel vxlan overlay network 포트, 방향: pod(워커 노드) → pod(워커 노드) | CNI가 flannel인 경우 생성됨 |
+| ingress | UDP | 8472 | IPv4 | 워커 노드 | flannel vxlan overlay network 포트, 방향: pod(NKS Control plane) → pod(워커 노드) | CNI가 flannel인 경우 생성됨 |
+| ingress | UDP | 4789 | IPv4 | 워커 노드 | calico-node vxlan overlay network 포트, 방향: pod(워커 노드) → pod(워커 노드) | CNI가 Calico-VXLAN, Calico-eBPF인 경우 생성됨 |
+| ingress | UDP | 4789 | IPv4 | NKS Control Plane | calico-node vxlan overlay network 포트, 방향: pod(NKS Control plane) → pod(워커 노드) | CNI가 Calico-VXLAN, Calico-eBPF인 경우 생성됨 |
+| egress | TCP | 2379 | IPv4 | NKS Control Plane | etcd 포트, 방향: calico-kube-controller(워커 노드) → etcd(NKS Control plane)| |
+| egress | TCP | 6443 | IPv4 | Kubernetes API 엔드포인트 | kube-apiserver 포트, 방향: kubelet, kube-proxy(워커 노드) → kube-apiserver(NKS Control plane) | |
+| egress | TCP | 6443 | IPv4 | NKS Control Plane | kube-apiserver 포트, 방향: default kubernetes service(워커 노드) → kube-apiserver(NKS Control plane) | |
+| egress | TCP | 5473 | IPv4 | 워커 노드 | calico-typha 포트, 방향: calico-node(워커 노드) → calico-typha(워커 노드) | CNI가 Calico-VXLAN, Calico-eBPF인 경우 생성됨 |
+| egress | TCP | 53 | IPv4 | 워커 노드 | DNS 포트, 방향: 워커 노드 → 외부 | |
+| egress | TCP | 443 | IPv4 | 모두 허용 | HTTPS 포트, 방향: 워커 노드 → 외부 | |
+| egress | TCP | 80 | IPv4 | 모두 허용 | HTTP 포트, 방향: 워커 노드 → 외부 | |
+| egress | TCP | 179 | IPv4 |  워커 노드 | calico-node BGP 포트, 방향: pod(워커 노드) → pod(워커 노드) | CNI가 Calico-eBPF인 경우 생성됨 |
+| egress | TCP | 179 | IPv4 | NKS Control Plane | calico-node BGP 포트, 방향: pod(NKS Control plane) → pod(워커 노드) | CNI가 Calico-eBPF인 경우 생성됨 |
+| egress | UDP | 8472 | IPv4 | 워커 노드 | flannel vxlan overlay network 포트, 방향: pod(워커 노드) → pod(워커 노드)| CNI가 flannel인 경우 생성됨 |
+| egress | UDP | 8472 | IPv4 | NKS Control Plane | flannel vxlan overlay network 포트, 방향: pod(워커 노드) → pod(NKS Control plane) | CNI가 flannel인 경우 생성됨 |
+| egress | UDP | 4789 | IPv4 | 워커 노드 | calico-node vxlan overlay network 포트, 방향: pod(워커 노드) → pod(워커 노드) | CNI가 Calico-VXLAN, Calico-eBPF인 경우 생성됨 |
+| egress | UDP | 4789 | IPv4 | NKS Control Plane | calico-node vxlan overlay network 포트, 방향: pod(워커 노드) → pod(NKS Control plane) | CNI가 Calico-VXLAN, Calico-eBPF인 경우 생성됨 |
+| egress | UDP | 53 | IPv4 | 모두 허용 | DNS 포트, 방향: 워커 노드 → 외부 | |
+
+강화된 보안 규칙 사용 시 NodePort 타입의 서비스와 NHN Cloud NAS 서비스에서 사용하는 포트에 대한 보안 규칙에 추가되어 있지 않습니다. 필요에 따라 아래 보안 규칙을 추가 설정해야 합니다. 
+
+| 방향 | IP 프로토콜 | 포트 범위 | Ether | 원격 | 설명 |
+| :-: | :-: | :-: | :-: | :-: | :-: |
+| ingress, egress | TCP | 30000 - 32767 | IPv4 | 모두 허용 | NKS service object NodePort, 방향: 외부 → 워커 노드 |
+| egress | TCP | 2049 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc nfs 포트, 방향: csi-nfs-node(워커 노드) → NHN Cloud NAS 서비스 |
+| egress | TCP | 111 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc portmapper 포트, 방향: csi-nfs-node(워커 노드) → NHN Cloud NAS 서비스 |
+| egress | TCP | 635 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc mountd 포트, 방향: csi-nfs-node(워커 노드) → NHN Cloud NAS 서비스 |
+
+> [Calico-eBPF CNI 사용 시 주의] 
+> Calico-eBPF CNI를 사용할 경우 파드 간 통신과 노드에서 파드로의 통신은 파드에 설정된 포트를 통해 이루어집니다.
+> 강화된 보안 규칙을 사용하는 경우 해당 파드 포트에 대한 ingress, egress 보안 규칙을 수동으로 추가해야 합니다.
+
+### 강화된 보안 규칙을 사용하지 않는 경우 생성되는 규칙
+
+강화된 보안 규칙을 사용하지 않는 경우 NodePort 타입의 서비스와 외부 네트워크 통신에 필요한 보안 규칙이 추가로 생성됩니다.
+
+| 방향 | IP 프로토콜 | 포트 범위 | Ether | 원격 | 설명 | 
+| :-: | :-: | :-: | :-: | :-: | :-: |
+| ingress | TCP | 1 - 65535 | IPv4 | 워커 노드 | 모든 포트, 방향: 워커 노드 → 워커 노드 |
+| ingress | TCP | 1 - 65535 | IPv4 | NKS Control Plane | 모든 포트, 방향: NKS Control plane → 워커 노드 |
+| ingress | TCP | 30000 - 32767 | IPv4 | 모두 허용 | NKS service object NodePort, 방향: 외부 → 워커 노드 |
+| ingress | UDP | 1 - 65535 | IPv4 | 워커 노드 | 모든 포트, 방향: 워커 노드 → 워커 노드 |
+| ingress | UDP | 1 - 65535 | IPv4 | NKS Control Plane | 모든 포트, 방향: NKS Control plane → 워커 노드 |
+| egress | 임의 | 1 - 65535 | IPv4 | 모두 허용 | 모든 포트, 방향: 워커 노드 → 외부 |
+| egress | 임의 | 1 - 65535 | IPv6 | 모두 허용 | 모든 포트, 방향: 워커 노드 → 외부 |
+
 
 ## LoadBalancer 서비스
 Kubernetes 애플리케이션의 기본 실행 단위인 파드(pod)는 CNI(container network interface)로 클러스터 네트워크에 연결됩니다. 기본적으로 클러스터 외부에서 파드로는 접근할 수 없습니다. 파드의 서비스를 클러스터 외부에 공개하려면 Kubernetes의 `LoadBalancer` 서비스(Service) 객체(object)를 이용해 외부에 공개할 경로를 만들어야 합니다. LoadBalancer 서비스 객체를 만들면 클러스터 외부에 NHN Cloud Load Balancer가 생성되어 서비스 객체와 연결됩니다.
@@ -1883,6 +1958,7 @@ Kubernetes의 서비스 객체를 정의할 때 로드 밸런서의 여러 가�
 * 로드 밸런서 이름 설정
 * keep-alive 타임아웃 설정
 * 로드 밸런서 타입 설정
+* 정적 라우트 설정
 * 세션 지속성 설정
 * 로드 밸런서 삭제 시 플로팅 IP 주소 보존 여부 설정
 * 로드 밸런서 IP 설정
@@ -1898,6 +1974,7 @@ Kubernetes의 서비스 객체를 정의할 때 로드 밸런서의 여러 가�
 * 상태 확인 주기 설정
 * 상태 확인 최대 응답 시간 설정
 * 상태 확인 최대 재시도 횟수 설정
+* L7 규칙 및 조건
 
 #### 전역 설정과 리스너별 설정
 설정 항목별로 전역 설정과 리스너별 설정이 가능합니다. 전역 설정과 리스너별 설정 모두 없는 경우 설정별 기본값을 사용합니다.
@@ -1980,6 +2057,18 @@ spec:
 * 다음 중 하나로 설정할 수 있습니다.
     * shared: '일반' 타입의 로드 밸런서를 생성합니다. 미설정 시 기본값입니다.
     * dedicated: '전용' 타입의 로드 밸런서를 생성합니다.
+
+#### 정적 라우트 설정
+로드 밸런서의 정적 라우트 적용 여부를 설정할 수 있습니다. 
+
+* 설정 위치는 .metadata.annotaions 하위의 loadbalancer.nhncloud/apply-subnet-host-routes입니다.
+* **리스너별 설정을 적용할 수 없습니다.**
+* 다음 중 하나로 설정할 수 있습니다.
+    * true: 정적 라우트를 적용합니다.
+    * false: 정적 라우트를 적용하지 않습니다. 미설정 시 기본값입니다.
+
+> [주의]
+> 정적 라우트 설정은 2024년 9월 5일 이후에 생성됐거나 k8s 버전을 업그레이드한 클러스터에서 설정 가능합니다.
 
 #### 세션 지속성 설정
 로드 밸런서의 세션 지속성을 설정할 수 있습니다.
@@ -2085,7 +2174,7 @@ spec:
 * 설정하지 않으면 클러스터 생성 시 설정한 VPC로 설정합니다.
 
 #### 서브넷 설정
-로드 밸런서 생성 시 로드 밸런서가 연결될 서브넷을 설정할 수 있습니다. 설정된 서브넷에 로드 밸런서의 사설 IP가 연결됩니다. 멤버 서브넷 설정이 없는 경우 이 서브넷에 연결된 워커 노드가 로드 밸런서 멤버로 추가됩니다.
+로드 밸런서 생성 시 로드 밸런서가 연결될 서브넷을 설정할 수 있습니다. 설정된 서브넷에 로드 밸런서의 프라이빗 IP가 연결됩니다. 멤버 서브넷 설정이 없는 경우 이 서브넷에 연결된 워커 노드가 로드 밸런서 멤버로 추가됩니다.
 
 * 설정 위치는 .metadata.annotaions 하위의 loadbalancer.openstack.org/subnet-id입니다.
 * **리스너별 설정을 적용할 수 없습니다.**
@@ -2363,6 +2452,137 @@ keep-alive 타임아웃 값을 설정할 수 있습니다.
 
 > [주의]
 > keep-alive 타임아웃은 2023년 11월 30일 이후 v1.24.3 이상의 버전으로 업그레이드됐거나 신규 생성된 클러스터에서 설정 가능합니다.
+
+#### L7 규칙
+리스너별로 L7 규칙을 설정할 수 있습니다. L7 규칙은 다음과 같이 동작합니다.
+
+* L7 규칙은 리스너의 프로토콜이 HTTP 또는 TERMINATED_HTTPS인 경우에만 생성 가능합니다.
+* L7 규칙은 작업 유형에 따라 차단, URL로 전달, 멤버 그룹으로 전달순으로 적용됩니다.
+* 같은 작업 유형 내에서 인덱스 값이 작을수록 우선 순위가 높게 설정됩니다.
+* 멤버 서브넷에 연결된 노드를 포함하는 멤버 그룹이 생성되고, 이 멤버 그룹은 리스너의 기본 멤버 그룹으로 설정됩니다.
+
+L7 규칙은 다음과 같이 설정할 수 있습니다.
+
+* 하나의 리스너에 L7 규칙을 최대 10개까지 설정 가능합니다.
+* 각 L7 규칙을 식별하기 위해 설정 위치에 `l7policy-%d`(`%d`는 0부터 시작하는 인덱스)의 형식을 사용합니다.
+
+| 설정 위치 | 의미 | 필수 여부 | 값 |
+| --- | --- | :-: | --- |
+| {LISTENER_SPEC}.{L7POLICY}.loadbalancer.nhncloud/name | 이름 | O | 255자 이하 문자열 |
+| {LISTENER_SPEC}.{L7POLICY}.loadbalancer.nhncloud/description | 설명 | X | 255자 이하 문자열 |
+| {LISTENER_SPEC}.{L7POLICY}.loadbalancer.nhncloud/action | 작업 유형 | O | REDIRECT_TO_POOL(멤버 그룹으로 전달), REDIRECT_TO_URL(URL로 전달), REJECT(차단) 중 하나 |
+| {LISTENER_SPEC}.{L7POLICY}.loadbalancer.nhncloud/redirect-url | redirect할 URL | X (단, 작업 유형이 REDIRECT_TO_URL인 경우에는 필수) | `HTTP://` 또는 `HTTPS://`로 시작하는 URL |
+
+> [참고]
+> * {LISTENER_SPEC}은 `[TCP|UDP]-%d`의 형식으로 `%d`는 포트 번호입니다. (예: TCP-80)
+> * {L7POLICY}는 `l7policy-%d`의 형식으로 `%d`는 0부터 시작하는 인덱스입니다. (예: l7policy-0)
+
+L7 규칙 설정에는 다음의 제약 사항이 있습니다.
+
+* L7 규칙 설정에 사용되는 인덱스는 0-9 사이의 정수값을 사용할 수 있습니다.
+* 한 리스너에 설정되는 L7 규칙들은 서로 다른 인덱스 값으로 설정해야 합니다.
+* 한 리스너에 설정되는 L7 규칙들은 서로 다른 이름으로 설정해야 합니다.
+
+#### L7 조건
+L7 규칙별로 L7 조건을 설정할 수 있습니다. L7 조건은 다음과 같이 동작합니다.
+
+* L7 규칙에 속한 모든 L7 조건이 만족해야 해당 L7 규칙이 적용됩니다.
+* L7 조건들 간에는 우선순위가 없습니다.
+
+L7 조건은 다음과 같이 설정할 수 있습니다.
+
+* 하나의 L7 규칙에 L7 조건을 최대 10개까지 설정 가능합니다.
+* 각 L7 조건을 식별하기 위해 설정 위치에 `rule-%d`(`%d`는 0부터 시작하는 인덱스)의 형식을 사용합니다.
+
+| 설정 위치 | 의미 | 필수 여부 | 값 |
+| --- | --- | :-: | --- |
+| {LISTENER_SPEC}.{L7POLICY}.{RULE}.loadbalancer.nhncloud/type | 유형 | O | HOST_NAME(호스트명), PATH(경로), FILE_TYPE(파일 타입), HEADER(헤더), COOKIE(쿠키) 중 하나 |
+| {LISTENER_SPEC}.{L7POLICY}.{RULE}.loadbalancer.nhncloud/compare-type | 비교 방식| O |REGEX, STARTS_WITH, ENDS_WITH, CONTAINS, EQUAL_TO 중 하나 <br>(단, 유형이 FILE_TYPE인 경우에는 EQUAL_TO, REGEX만 사용 가능)|
+| {LISTENER_SPEC}.{L7POLICY}.{RULE}.loadbalancer.nhncloud/key | 키 | X(단, 유형이 HEADER, COOKIE인 경우에는 필수) | 255자 이하 문자열 |
+| {LISTENER_SPEC}.{L7POLICY}.{RULE}.loadbalancer.nhncloud/value | 값 | O | 255자 이하 문자열 |
+
+> [참고]
+> * {RULE}은 `rule-%d`의 형식으로 `%d`는 0부터 시작하는 인덱스입니다. (예: rule-0)
+
+L7 조건은 다음의 제약 사항이 있습니다.
+
+* L7 조건 설정에 사용되는 인덱스는 0-9 사이의 정수값을 사용할 수 있습니다.
+* 한 L7 규칙에 설정되는 L7 조건들은 서로 다른 인덱스 값으로 설정해야 합니다.
+* 한 L7 규칙에 동일한 사양의 L7 조건(유형, 비교 방식, 키, 값이 모두 같은 조건)은 추가될 수 없습니다.
+
+> [주의]
+> L7 규칙 및 L7 조건은 2024년 7월 23일 이후 v1.24.3 이상의 버전으로 업그레이드됐거나 신규 생성된 클러스터에서 설정 가능합니다.
+
+다음은 L7 규칙 및 조건을 설정하는 예제입니다.
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: echosvr-svc
+  labels:
+    app: echosvr
+  annotations:
+    TCP-80.loadbalancer.nhncloud/listener-protocol: "HTTP"
+
+    TCP-80.l7policy-0.loadbalancer.nhncloud/name: "reject-policy"
+    TCP-80.l7policy-0.loadbalancer.nhncloud/description: "default reject policy"
+    TCP-80.l7policy-0.loadbalancer.nhncloud/action: "REJECT"
+
+    TCP-80.l7policy-0.rule-0.loadbalancer.nhncloud/type: "PATH"
+    TCP-80.l7policy-0.rule-0.loadbalancer.nhncloud/compare-type: "CONTAINS"
+    TCP-80.l7policy-0.rule-0.loadbalancer.nhncloud/value: "temp"
+
+    TCP-80.l7policy-1.loadbalancer.nhncloud/name: "redirect-policy"
+    TCP-80.l7policy-1.loadbalancer.nhncloud/description: "basic redirection policy"
+    TCP-80.l7policy-1.loadbalancer.nhncloud/action: "REDIRECT_TO_POOL"
+
+    TCP-80.l7policy-1.rule-0.loadbalancer.nhncloud/type: "PATH"
+    TCP-80.l7policy-1.rule-0.loadbalancer.nhncloud/compare-type: "CONTAINS"
+    TCP-80.l7policy-1.rule-0.loadbalancer.nhncloud/value: "incoming"
+
+    TCP-80.l7policy-1.rule-1.loadbalancer.nhncloud/type: "HOST_NAME"
+    TCP-80.l7policy-1.rule-1.loadbalancer.nhncloud/compare-type: "STARTS_WITH"
+    TCP-80.l7policy-1.rule-1.loadbalancer.nhncloud/value: "Ubuntu"
+
+    TCP-443.loadbalancer.nhncloud/listener-protocol: "TERMINATED_HTTPS"
+    TCP-443.loadbalancer.nhncloud/listener-terminated-https-tls-version: TLSv1.2
+    TCP-443.loadbalancer.nhncloud/listener-terminated-https-cert-manager-name: test
+
+    TCP-443.l7policy-0.loadbalancer.nhncloud/name: "reject-policy"
+    TCP-443.l7policy-0.loadbalancer.nhncloud/description: "default reject policy"
+    TCP-443.l7policy-0.loadbalancer.nhncloud/action: "REJECT"
+
+    TCP-443.l7policy-0.rule-0.loadbalancer.nhncloud/type: "PATH"
+    TCP-443.l7policy-0.rule-0.loadbalancer.nhncloud/compare-type: "CONTAINS"
+    TCP-443.l7policy-0.rule-0.loadbalancer.nhncloud/value: "temp"
+
+    TCP-443.l7policy-1.loadbalancer.nhncloud/name: "redirect-policy"
+    TCP-443.l7policy-1.loadbalancer.nhncloud/description: "basic redirection policy"
+    TCP-443.l7policy-1.loadbalancer.nhncloud/action: "REDIRECT_TO_POOL"
+
+    TCP-443.l7policy-1.rule-0.loadbalancer.nhncloud/type: "PATH"
+    TCP-443.l7policy-1.rule-0.loadbalancer.nhncloud/compare-type: "CONTAINS"
+    TCP-443.l7policy-1.rule-0.loadbalancer.nhncloud/value: "incoming"
+
+    TCP-443.l7policy-1.rule-1.loadbalancer.nhncloud/type: "HOST_NAME"
+    TCP-443.l7policy-1.rule-1.loadbalancer.nhncloud/compare-type: "STARTS_WITH"
+    TCP-443.l7policy-1.rule-1.loadbalancer.nhncloud/value: "Ubuntu"
+
+spec:
+  ports:
+  - name: tcp-80
+    port: 80
+    targetPort: 8080
+    protocol: TCP
+  - name: tcp-443
+    port: 443
+    targetPort: 8443
+    protocol: TCP
+  selector:
+    app: echosvr
+  type: LoadBalancer
+```
 
 ## 인그레스 컨트롤러
 인그레스 컨트롤러(ingress controller)는 인그레스(Ingress) 객체에 정의된 규칙을 참조하여 클러스터 외부에서 내부 서비스로 HTTP와 HTTPS 요청을 라우팅하고 SSL/TSL 종료, 가상 호스팅 등을 제공합니다. 인그레스 컨트롤러와 인그레스에 대한 자세한 내용은 [인그레스 컨트롤러](https://kubernetes.io/ko/docs/concepts/services-networking/ingress-controllers/), [인그레스](https://kubernetes.io/ko/docs/concepts/services-networking/ingress/) 문서를 참고하세요.
@@ -2692,7 +2912,6 @@ NHN Kubernetes Service(NKS)는 기본 웹 UI 대시보드(dashboard)를 제공�
 > * Kubernetes 대시보드는 NKS v1.25.4까지만 기본 제공합니다.
 > * NKS 클러스터 버전을 v1.25.4에서 v1.26.3으로 업그레이드해도 동작 중이던 Kubernetes 대시보드 파드와 관련 리소스는 그대로 유지됩니다.
 > * NHN Cloud 콘솔에서 Kubernetes 리소스를 조회할 수 있습니다.
-
 
 ### 대시보드 서비스 공개
 사용자 Kubernetes에는 대시보드를 공개하기 위한 `kubernetes-dashboard` 서비스 객체가 미리 생성되어 있습니다.
@@ -3218,11 +3437,12 @@ spec:
 > [참고]
 > NHN Cloud Container Registry 사용 방법은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/gov-user-guide) 문서를 참고하세요.
 
+
 ### NHN Cloud NAS 서비스 연동
 NHN Cloud에서 제공하는 NAS 스토리지를 PV로 활용할 수 있습니다. NAS 서비스를 사용하기 위해서는 v1.20 이후 버전의 클러스터를 사용해야 합니다. NHN Cloud NAS 사용에 대한 자세한 내용은 [NAS 콘솔 사용 가이드](/Storage/NAS%20(online)/ko/console-guide-gov)를 참고하세요.
 
 > [참고]
-> NHN Cloud NAS 서비스는 현재(2024. 02.) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS%20(online)/ko/overview-gov)를 참고하세요.
+> NHN Cloud NAS 서비스는 현재(2024. 08.) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS%20(online)/ko/overview-gov)를 참고하세요.
 
 #### 모든 워커 노드에서 rpcbind 서비스 실행
 NAS 스토리지를 사용하려면 모든 워커 노드에서 rpcbind 서비스를 실행해야 합니다. 모든 워커 노드에 접속한 뒤 아래 명령어를 통해 rpcbind 서비스를 실행합니다.
@@ -3237,9 +3457,9 @@ $ systemctl start rpcbind
 
 | 방향 | IP 프로토콜 | 포트 범위 | Ether | 원격 | 설명 | 
 | :-: | :-: | :-: | :-: | :-: | :-: | 
-| egress | TCP | 2049 | IPv4 | NAS IP 주소 | rpc의 NFS 포트, 방향: csi-nfs-node(워커 노드) -> NAS |
-| egress | TCP | 111 | IPv4 | NAS IP 주소 | rpc의 portmapper 포트, 방향: csi-nfs-node(워커 노드) -> NAS |
-| egress | TCP | 635 | IPv4 | NAS IP 주소 |  rpc의 mountd 포트, 방향: csi-nfs-node(워커 노드) -> NAS |
+| egress | TCP | 2049 | IPv4 | NAS IP 주소 | rpc의 NFS 포트, 방향: csi-nfs-node(워커 노드) → NAS |
+| egress | TCP | 111 | IPv4 | NAS IP 주소 | rpc의 portmapper 포트, 방향: csi-nfs-node(워커 노드) → NAS |
+| egress | TCP | 635 | IPv4 | NAS IP 주소 |  rpc의 mountd 포트, 방향: csi-nfs-node(워커 노드) → NAS |
 
 #### csi-driver-nfs 설치
 NHN Cloud NAS 서비스를 사용하기 위해 클러스터에 csi-driver-nfs 컴포넌트를 배포해야 합니다.
@@ -3266,24 +3486,28 @@ ORAS(OCI Registry As Storage)는 OCI 레지스트리에서 OCI 아티팩트를 p
 
 | 리전 | 인터넷 연결 | 다운로드 커맨드 |
 | --- | --- | --- |
-| 한국(평촌) 리전 | O | oras pull ca6dde7d-kr2-registry.container.gov-nhncloud.com/container_service/oci/nfs-deploy-tool:v1 |
-| | X | oras pull private-ca6dde7d-kr2-registry.container.gov-nhncloud.com/container_service/oci/nfs-deploy-tool:v1 |
-
-##### 3. 설치 패키지를 압축 해제한 후 **install-driver.sh {mode}** 명령어를 사용하여 csi-driver-nfs 구성 요소를 설치합니다.
-install-driver.sh 명령 실행 시 인터넷 연결이 가능한 클러스터는 **public**, 그렇지 않은 클러스터는 **private**을 입력해야 합니다.
-
-
+| 한국(판교) 리전 | O | oras pull af80e8b3-kr-registry.container.gov-nhncloud.com/container_service/oci/nfs-deploy-tool:v2 |
+| | X | oras pull private-af80e8b3-kr-registry.container.gov-nhncloud.com/container_service/oci/nfs-deploy-tool:v2 |
 
 > [참고]
-> csi-driver-nfs 컨테이너 이미지는 사내 NCR 레지스트리에서 관리되고 있습니다. 폐쇄망 환경에 구성된 클러스터는 인터넷에 연결되어 있지 않기 때문에 이미지를 정상적으로 받아오기 위해서는 Private URI를 사용하기 위한 환경 구성이 필요합니다. Private URI 사용법에 대한 자세한 내용은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/gov-user-guide/#private-uri)를 참고하세요.
+> csi-driver-nfs 컨테이너 이미지 및 아티팩트는 NHN Cloud NCR에서 관리되고 있습니다. 폐쇄망 환경에 구성된 클러스터는 인터넷에 연결되어 있지 않기 때문에 이미지 및 아티팩트를 정상적으로 받아오기 위해서는 Private URI를 사용하기 위한 환경 구성이 필요합니다. Private URI 사용법에 대한 자세한 내용은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/gov-user-guide/#private-uri)를 참고하세요.
 
-아래는 인터넷망 환경에 구성된 클러스터에 설치 패키지를 이용하여 csi-driver-nfs를 설치하는 예시입니다.
+##### 3. 설치 패키지를 압축 해제한 후 **./install-driver.sh {REGISTRY} {INTERNET_USAGE}** 명령어를 사용하여 csi-driver-nfs 구성 요소를 설치합니다.
+클러스터가 생성된 리전 및 인터넷 연결 가능 여부에 따라 올바른 {REGISTRY} 및 {INTERNET_USAGE} 값을 입력합니다. 
+* {REGISTRY}
+  * 한국(판교) 리전: **af80e8b3-kr-registry.container.gov-nhncloud.com**
+* {INTERNET_USAGE}
+  * 인터넷 연결 가능한 클러스터: **true**
+  * 인터넷 연결 불가능한 클러스터: **false**
+
+아래는 한국(판교) 리전에 생성된 인터넷 연결이 가능한 클러스터에 csi-driver-nfs를 설치하는 예시입니다.
 
 ```
 $ tar -xvf nfs-deploy-tool.tar
 
-$ ./install-driver.sh public
-Installing NFS CSI driver, mode: public ...
+$ ./install-driver.sh  af80e8b3-kr-registry.container.gov-nhncloud.com public
+INTERNET_USAGE set to true. Container image registry set with value af80e8b3-kr-registry.container.gov-nhncloud.com
+Installing NFS CSI driver
 serviceaccount/csi-nfs-controller-sa created
 serviceaccount/csi-nfs-node-sa created
 clusterrole.rbac.authorization.k8s.io/nfs-external-provisioner-role created
@@ -3405,9 +3629,15 @@ pv-onas   300Gi      RWX            Retain           Bound    default/pvc-onas  
 StorageClass 매니페스트 작성 시 스토리지 제공자 정보 및 NHN Cloud NAS 스토리지 정보를 정의합니다.
 
 * provisioner: **nfs.csi.k8s.io**를 입력합니다.
-* parameters: NAS 스토리지의 연결 정보를 입력합니다.
-  * server: NAS 스토리지의 연결 정보 중 **ip** 부분의 값을 입력합니다.
-  * share: NAS 스토리지의 연결 정보 중 **볼륨 이름** 부분의 값을 입력합니다.
+* parameters: 입력 항목은 아래 표를 참고하세요.
+
+| 항목 | 설명 | 예시 |  필수 | 기본값 |
+| ------- |------- | --------------------------- | ---------------------------- | ------------- |
+| server | NAS 스토리지의 연결 정보 중 **ip**를 의미합니다. | 192.168.0.81 | O |  |
+| share | NAS 스토리지의 연결 정보 중 **볼륨 이름**을 의미합니다. | /onas_300gb | O |  |
+| mountPermissions | NAS 스토리지 마운트 포인트 디렉터리에 설정할 권한을 지정합니다. | "0700" | X | 0741 |
+| uid | NAS 스토리지 마운트 포인트 디렉터리에 설정할 UID를 입력합니다. | 1000 | X | root(0) |
+| gid | NAS 스토리지 마운트 포인트 디렉터리에 설정할 GID를 입력합니다. | 1000 | X | root(0) |
 
 아래는 매니페스트 예제입니다.
 ``` yaml
@@ -3420,6 +3650,9 @@ provisioner: nfs.csi.k8s.io
 parameters:
   server: 192.168.0.81
   share: /onas_300gb
+  mountPermissions: "0700"
+  uid: 1000
+  gid: 1000
 reclaimPolicy: Retain
 volumeBindingMode: Immediate
 ```
@@ -3533,6 +3766,9 @@ StorageClass 매니페스트에 스토리지 제공자 정보 및 생성할 NAS 
 | subnet | 스토리지에 접근할 서브넷입니다. 선택된 VPC의 서브넷만 선택할 수 있습니다. | "59526f1c-c089-4517-86fd-2d3dac369210" | X | O |  |
 | acl | 읽기, 쓰기 권한을 허용할 IP 또는 IP 대역 목록입니다. | "0.0.0.0/0" | O | X | 0.0.0.0/0 |
 | onDelete | PVC 삭제 시 NAS 볼륨 삭제 여부입니다. | "delete" / "retain" | X | X | delete |
+| mountPermissions | NAS 스토리지 마운트 포인트 디렉터리에 설정할 권한을 지정합니다. | "0700"| X | X | 0741 |
+| uid | NAS 스토리지 마운트 포인트 디렉터리에 설정할 UID를 입력합니다. | 1000 | X | X | root(0) |
+| gid | NAS 스토리지 마운트 포인트 디렉터리에 설정할 GID를 입력합니다. | 1000 | X | X | root(0) |
 
 > [참고]
 > 스냅숏 파라미터 사용 시 관련된 모든 파라미터 값을 정의해야 합니다. 스냅숏 관련 파라미터는 아래와 같습니다.
@@ -3567,6 +3803,9 @@ parameters:
   scheduleweekdays : "6"
   subnet : "59526f1c-c089-4517-86fd-2d3dac369210"
   acl : ""
+  mountPermissions: "0700"
+  uid: 1000
+  gid: 1000
 ```
 
 PVC 매니페스트의 **Annotation**에 생성할 NAS 스토리지의 이름, 설명, 크기를 정의합니다. 입력 항목은 아래 표를 참고하세요.

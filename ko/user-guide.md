@@ -20,19 +20,20 @@ NKS의 Kubernetes 버전 지원 정책은 다음과 같습니다.
     * 따라서 생성 가능한 버전이 하나 추가되면 기존의 서비스 지원 가능 버전 목록에서 가장 낮은 버전이 제거됩니다.
 
 각 Kubernetes 버전별 생성 가능 버전에 추가/삭제하는 시점과 서비스 지원 종료 시점은 다음과 같습니다.
-(단, 이 표는 2023년 9월 26일 기준으로 작성되었으며, 신규 생성 가능 버전의 버전명과 제공 시기는 당사 내부 사정에 의해 변경될 수 있습니다)
+(단, 이 표는 2024년 8월 27일 기준으로 작성되었으며, 신규 생성 가능 버전의 버전명과 제공 시기는 당사 내부 사정에 의해 변경될 수 있습니다)
 
 | 버전    | 생성 가능 버전에 추가 | 생성 가능 버전에서 제거 | 서비스 지원 종료 |
 |:-------:|:-------------------:|:--------------------:|:---------------------:|
 | v1.22.3 | 2022. 01.           | 2023. 05.            | 2023. 08.             |
 | v1.23.3 | 2022. 03.           | 2023. 08.            | 2024. 02.             |
 | v1.24.3 | 2022. 09.           | 2024. 02.            | 2024. 05.             |
-| v1.25.4 | 2023. 01.           | 2024. 05.            | 2024. 08.(예정)       |
-| v1.26.3 | 2023. 05.           | 2024. 08.(예정)      | 2025. 02.(예정)       |
+| v1.25.4 | 2023. 01.           | 2024. 05.            | 2024. 08.             |
+| v1.26.3 | 2023. 05.           | 2024. 08.            | 2025. 02.(예정)       |
 | v1.27.3 | 2023. 08.           | 2025. 02.(예정)      | 2025. 05.(예정)       |
 | v1.28.3 | 2024. 02.           | 2025. 05.(예정)      | 2025. 08.(예정)       |
-| v1.29.3 | 2024. 05.           | 2025. 08.(예정)      | 2025. 11.(예정)       |
-| v1.30.x | 2024. 08.(예정)     | 2025. 11.(예정)      | 2026. 02.(예정)       |
+| v1.29.3 | 2024. 05.           | 2025. 08.(예정)      | 2026. 02.(예정)       |
+| v1.30.3 | 2024. 08.           | 2026. 02.(예정)      | 2026. 05.(예정)       |
+| v1.31.x | 2025. 02.(예정)     | 2026. 05.(예정)      | 2026. 08.(예정)       |
 
 
 ### 클러스터 생성
@@ -123,10 +124,11 @@ NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전�
 | v1.23.3 | 불가능 | 가능 |
 | v1.24.3 | 불가능 | 가능 |
 | v1.25.4 | 불가능 | 가능 |
-| v1.26.3 | 가능 | 가능 |
+| v1.26.3 | 불가능 | 가능 |
 | v1.27.3 | 가능 | 가능 |
 | v1.28.3 | 가능 | 가능 |
 | v1.29.3 | 가능 | 가능 |
+| v1.30.3 | 가능 | 가능 |
 
 필요한 정보를 입력하고 **클러스터 생성**을 클릭하면 클러스터 생성이 시작됩니다. 클러스터 목록에서 상태를 확인할 수 있습니다. 생성하는 데는 약 10분 정도 걸립니다. 클러스터 설정에 따라 더 오래 걸릴 수도 있습니다.
 
@@ -1049,8 +1051,8 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 |  | CentOS 7.9 (2023.11.21)  | 1.3 |
 |  | CentOS 7.9 (2024.02.20)  | 1.4 |
 |  | CentOS 7.9 (2024.05.21)  | 1.5 |
-| Rocky | Rocky Linux 8.9 (2024.02.20)  | 1.4 |
-|  | Rocky Linux 8.9 (2024.05.21)  | 1.5 |
+|  | CentOS 7.9 (2024.08.20)  | 1.6 |
+| Rocky | Rocky Linux 8.10 (2024.08.20)  | 1.6 |
 | Ubuntu | Ubuntu Server 20.04.6 LTS (2023.05.25)  | 1.1 |
 |  | Ubuntu Server 20.04.6 LTS (2023.08.22)  | 1.2 |
 |  | Ubuntu Server 20.04.6 LTS (2023.11.21)  | 1.3 |
@@ -1059,12 +1061,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 |  | Ubuntu Server 22.04.3 LTS (2024.02.20)  | 1.4 |
 |  | Ubuntu Server 20.04.6 LTS (2024.05.21)  | 1.5 |
 |  | Ubuntu Server 22.04.3 LTS (2024.05.21)  | 1.5 |
-| Debian | Debian 11.6 Bullseye (2023.03.21)  | 1.0 |
-|  | Debian 11.6 Bullseye (2023.05.25)  | 1.1 |
-|  | Debian 11.7 Bullseye (2023.08.22)  | 1.2 |
-|  | Debian 11.8 Bullseye (2023.11.21)  | 1.3 |
-|  | Debian 11.8 Bullseye (2024.02.20)  | 1.4 |
-|  | Debian 11.9 Bullseye (2024.05.21)  | 1.5 |
+|  | Ubuntu Server 20.04.6 LTS (2024.08.20)  | 1.6 |
 
 
 > [참고]
@@ -1091,7 +1088,37 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 
 ![nkscustom_image_3.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nkscustom_image_3.png)
 
+### 추가 블록 스토리지
+노드 그룹에 추가 블록 스토리지를 사용할 수 있습니다. 클러스터 및 노드 그룹 생성 시 추가 블록 스토리지를 지정하여 생성하거나, 기존의 노드 그룹에 추가 블록 스토리지를 생성하여 사용할 수 있습니다. 추가 블록 스토리지는 다음과 같은 특징을 가집니다.
 
+* 추가 블록 스토리지는 노드 그룹당 최대 3개까지 설정할 수 있으며, 블록 스토리지의 크기는 1~2048GB 범위에서 지정 가능합니다.
+* 노드 그룹의 추가 블록 스토리지 설정은 노드 그룹에 속한 모든 워커 노드에 동일하게 적용됩니다.
+    * 추가 블록 스토리지 변경 시 노드 그룹의 모든 워커 노드에 변경 사항이 반영됩니다.
+* 추가 블록 스토리지 변경은 크기 조정 및 마운트 경로 변경만 지원합니다.
+    * 생성된 추가 블록 스토리지 삭제는 불가능합니다.
+    * 기존 설정된 값보다 작은 크기로 조정할 수 없습니다.
+* 추가 블록 스토리지의 이름은 `{클러스터 이름}-{노드 그룹 이름}-{노드 이름}-extra-volume-{인덱스}` 형태로 지정됩니다.
+* 마운트 경로를 입력한 경우 추가 블록 스토리지가 생성된 이후 지정된 경로에 마운트를 시도합니다.
+    * 미입력 시 마운트를 진행하지 않습니다.
+    * 올바르지 않은 마운트 경로를 입력하여 마운트를 실패하면 기능이 동작하지 않습니다.
+
+[주의]
+> 추가 블록 스토리지의 설정 변경은 기존 볼륨의 마운트 해제를 포함하므로 사용 중인 서비스에 영향을 미칠 수 있습니다.
+
+### 추가 보안 그룹
+노드 그룹에 추가 보안 그룹을 설정할 수 있습니다. 클러스터 및 노드 그룹 생성 시 추가 보안 그룹을 지정하여 생성하거나, 기존의 노드 그룹에 추가 보안 그룹을 설정할 수 있습니다. 추가 보안 그룹의 특징은 다음과 같습니다.
+
+* 추가 보안 그룹은 서브넷당 최대 8개까지 설정할 수 있습니다.
+* 노드 그룹의 추가 보안 그룹 설정은 노드 그룹에 속한 모든 워커 노드에 동일하게 적용됩니다.
+* 추가 보안 그룹 미입력 시 클러스터의 기본 보안 그룹만 적용됩니다.
+* 사용자가 개별 노드에 직접 설정한 보안 그룹은 노드 그룹의 추가 보안 그룹 항목에서 조회되지 않습니다.
+
+[참고]
+> 콘솔에서 노드 그룹 생성 시 지정한 추가 보안 그룹은 기본 네트워크 및 모든 추가 네트워크에 적용됩니다. 개별 네트워크의 추가 보안 그룹에 대한 변경은 노드 그룹 생성 이후에 가능합니다.
+
+[주의]
+> 노드 그룹에 추가 보안 그룹 설정 시 기존 인스턴스에 할당된 보안 그룹 중 추가 보안 그룹에 정의되지 않은 대상은 제거됩니다.
+> 추가 보안 그룹 변경 시 네트워크 설정이 변경되므로 설정이 적용되는 동안 일시적으로 통신에 영향이 있을 수 있습니다.
 
 ## 클러스터 관리
 원격의 호스트에서 클러스터를 조작하고 관리하려면 Kubernetes가 제공하는 명령줄 도구(CLI)인 `kubectl`이 필요합니다.
@@ -1309,43 +1336,44 @@ Kubernetes 클러스터는 동작 중인 상태에서 Kubernetes 구성 요소�
 NHN Cloud에서 지원하는 Kubernetes 클러스터 업그레이드 기능의 동작 방식에 대해 설명합니다. 
 
 ##### Kubernetes 버전 관리
-NHN Cloud의 Kubernetes 클러스터는 클러스터 마스터와 워커 노드 그룹별로 Kubernetes 버전을 관리합니다. 마스터의 Kubernetes 버전은 클러스터 조회 화면에서 확인할 수 있고, 워커 노드 그룹의 Kubernetes 버전은 각 워커 노드 그룹 조회 화면에서 확인할 수 있습니다. 
+NHN Cloud의 Kubernetes 클러스터는 클러스터 컨트롤 플레인과 워커 노드 그룹별로 Kubernetes 버전을 관리합니다. 컨트롤 플레인의 Kubernetes 버전은 클러스터 조회 화면에서 확인할 수 있고, 워커 노드 그룹의 Kubernetes 버전은 각 워커 노드 그룹 조회 화면에서 확인할 수 있습니다. 
 
 ##### 업그레이드 규칙
 NHN Cloud의 Kubernetes 클러스터 버전 관리 방식과 Kubernetes 버전 차이 지원 정책에 의해 구성 요소별로 순서에 맞게 업그레이드해야 합니다. NHN Cloud의 Kubernetes 클러스터 업그레이드 기능에 적용되는 규칙은 다음과 같습니다.
 
-* 마스터와 각 워커 노드 그룹별로 업그레이드 명령을 실행해야 합니다.
-* 마스터의 Kubernetes 버전과 모든 워커 노드 그룹의 Kubernetes 버전이 일치해야 업그레이드가 가능합니다.
-* 마스터를 먼저 업그레이드한 후 워커 노드 그룹을 업그레이드할 수 있습니다.
+* 컨트롤 플레인과 각 워커 노드 그룹별로 업그레이드 명령을 실행해야 합니다.
+* 컨트롤 플레인의 Kubernetes 버전과 모든 워커 노드 그룹의 Kubernetes 버전이 일치해야 업그레이드가 가능합니다.
+* 컨트롤 플레인을 먼저 업그레이드한 후 워커 노드 그룹을 업그레이드할 수 있습니다.
 * 현재 버전의 다음 버전(마이너 버전 기준 +1)으로 업그레이드 가능합니다.
 * 다운그레이드는 지원하지 않습니다.
 * 다른 기능의 동작으로 인해 클러스터가 업데이트 중인 상태에서는 업그레이드가 불가능합니다.
 * 클러스터 버전을 v1.25.4에서 v1.26.3으로 업그레이드할 때 CNI가 Flannel인 경우 Calico-VXLAN으로 변경해야 합니다.
+* NKS 레지스트리가 활성화되지 않은 클러스터는 업그레이드가 불가능합니다.
 
 다음 예시는 Kubernetes 버전을 업그레이드 과정에서 업그레이드 가능 여부를 표로 나타낸 것입니다. 예시에 사용된 조건은 다음과 같습니다. 
 
-* NHN Cloud가 지원하는 Kubernetes 버전 목록: v1.21.6, v1.22.3, v1.23.3
-* 클러스터는 v1.21.6으로 생성
+* NHN Cloud가 지원하는 Kubernetes 버전 목록: v1.28.3, v1.29.3, v1.30.3
+* 클러스터는 v1.28.3으로 생성
 
-| 상태 | 마스터 버전 | 마스터 업그레이드 가능 여부 | 워커 노드 그룹 버전 | 워커 노드 그룹 업그레이드 가능 여부
+| 상태 | 컨트롤 플레인 버전 | 컨트롤 플레인 업그레이드 가능 여부 | 워커 노드 그룹 버전 | 워커 노드 그룹 업그레이드 가능 여부
 | --- | :-: | :-: | :-: | :-: |
-| 초기 상태| v1.21.6 | 가능 <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.21.6 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> | 
-| 마스터 업그레이드 후 상태 | v1.22.3 | 불가능 <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.21.6 | 가능 <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
-| 워커 노드 그룹 업그레이드 후 상태 | v1.22.3 | 가능 <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.22.3 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
-| 마스터 업그레이드 후 상태 | v1.23.3 | 불가능 <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.22.3 | 가능 <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
-| 워커 노드 그룹 업그레이드 후 상태 | v1.23.3 | 불가능 <sup>[5](#footnote_cluster_upgrade_rule_5)</sup> | v1.23.3 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
+| 초기 상태| v1.28.3 | 가능 <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.28.3 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> | 
+| 컨트롤 플레인 업그레이드 후 상태 | v1.29.3 | 불가능 <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.28.3 | 가능 <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
+| 워커 노드 그룹 업그레이드 후 상태 | v1.29.3 | 가능 <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.29.3 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
+| 컨트롤 플레인 업그레이드 후 상태 | v1.30.3 | 불가능 <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.29.3 | 가능 <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
+| 워커 노드 그룹 업그레이드 후 상태 | v1.30.3 | 불가능 <sup>[5](#footnote_cluster_upgrade_rule_5)</sup> | v1.30.3 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
 
 주석
 
-* <a name="footnote_cluster_upgrade_rule_1">1</a>: 마스터와 모든 워커 노드 그룹의 버전이 일치하는 상태이기 때문에 업그레이드 가능
-* <a name="footnote_cluster_upgrade_rule_1">2</a>: 워커 노드 그룹은 마스터가 업그레이드된 후 업그레이드 가능
-* <a name="footnote_cluster_upgrade_rule_1">3</a>: 마스터와 모든 워커 노드 그룹의 버전이 일치해야 업그레이드 가능
-* <a name="footnote_cluster_upgrade_rule_1">4</a>: 마스터가 업그레이드됐기 때문에 업그레이드 가능
+* <a name="footnote_cluster_upgrade_rule_1">1</a>: 컨트롤 플레인과 모든 워커 노드 그룹의 버전이 일치하는 상태이기 때문에 업그레이드 가능
+* <a name="footnote_cluster_upgrade_rule_1">2</a>: 워커 노드 그룹은 컨트롤 플레인이 업그레이드된 후 업그레이드 가능
+* <a name="footnote_cluster_upgrade_rule_1">3</a>: 컨트롤 플레인과 모든 워커 노드 그룹의 버전이 일치해야 업그레이드 가능
+* <a name="footnote_cluster_upgrade_rule_1">4</a>: 컨트롤 플레인이 업그레이드됐기 때문에 업그레이드 가능
 * <a name="footnote_cluster_upgrade_rule_1">5</a>: NHN Cloud에서 지원하는 가장 최신 버전을 사용하고 있기 때문에 업그레이드 불가능
 
 
-##### 마스터 구성 요소 업그레이드
-NHN Cloud의 Kubernetes 클러스터 마스터는 고가용성 보장을 위해 다수의 마스터로 구성되어 있습니다. 마스터에 대해 롤링 업데이트 방식으로 업그레이드되기 때문에 클러스터의 가용성이 보장됩니다. 
+##### 컨트롤 플레인 구성 요소 업그레이드
+NHN Cloud의 Kubernetes 클러스터 컨트롤 플레인은 고가용성을 보장합니다. 컨트롤 플레인에 대해 롤링 업데이트 방식으로 업그레이드되기 때문에 클러스터의 가용성이 보장됩니다. 
 
 이 과정에서 아래와 같은 일들이 발생할 수 있습니다.
 
@@ -1392,10 +1420,10 @@ NHN Cloud의 Kubernetes 클러스터 마스터는 고가용성 보장을 위해 
 안전한 파드 축출에 대한 좀 더 상세한 설명은 [Safely Drain a Node](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)를 참고하세요
 
 ##### 시스템 파드 업그레이드
-마스터와 모든 워커 노드 그룹을 업그레이드하여 버전이 일치하게 되면 Kubernetes 클러스터 구성을 위해 동작하는 시스템 파드가 업그레이드 됩니다.
+컨트롤 플레인과 모든 워커 노드 그룹을 업그레이드하여 버전이 일치하게 되면 Kubernetes 클러스터 구성을 위해 동작하는 시스템 파드가 업그레이드 됩니다.
 
 > [주의]
-> 마스터 업그레이드 후 워커 노드 그룹을 업그레이드하지 않으면 일부 파드가 정상적으로 동작하지 않을 수 있습니다.
+> 컨트롤 플레인 업그레이드 후 워커 노드 그룹을 업그레이드하지 않으면 일부 파드가 정상적으로 동작하지 않을 수 있습니다.
 
 
 ### 클러스터 CNI 변경
@@ -1407,8 +1435,8 @@ NHN Cloud의 Kubernetes 클러스터 CNI 변경 기능에 적용되는 규칙은
 
 * CNI 변경 기능은 NHN Kubernetes Service(NKS) 버전 1.24.3 이상인 경우에 사용할 수 있습니다.
 * 기존 NHN Kubernetes Service(NKS)에서 사용하고 있는 CNI가 Flannel인 경우에만 CNI 변경을 사용할 수 있습니다.
-* CNI 변경 시작 시 마스터와 모든 워커 노드 그룹에 대해 일괄적으로 작업을 진행합니다.
-* 마스터의 Kubernetes 버전과 모든 워커 노드 그룹의 Kubernetes 버전이 일치해야 CNI 변경이 가능합니다.
+* CNI 변경 시작 시 컨트롤 플레인과 모든 워커 노드 그룹에 대해 일괄적으로 작업을 진행합니다.
+* 컨트롤 플레인의 Kubernetes 버전과 모든 워커 노드 그룹의 Kubernetes 버전이 일치해야 CNI 변경이 가능합니다.
 * Calico-VXLAN, Calico-eBPF에서 Flannel로 CNI 변경은 지원하지 않습니다.
 * Flannel에서 Calico-eBPF로 CNI 변경은 지원하지 않습니다.
 * Calico-VXLAN에서 Calico-eBPF로 CNI 변경은 지원하지 않습니다.
@@ -1532,7 +1560,7 @@ Kubernetes v1.24.3 이후 버전의 클러스터는 containerd를 이용해 컨�
 ### 네트워크 관리
 
 #### 기본 네트워크 인터페이스
-모든 워커 노드는 클러스터 생성 시 입력한 VPC/서브넷에 연결되는 네트워크 인터페이스를 가지고 있습니다. 이 기본 네트워크 인터페이스의 이름은 "eth0"이며, 워커 노드는 이 네트워크 인터페이스를 통해 마스터와 연결됩니다.
+모든 워커 노드는 클러스터 생성 시 입력한 VPC/서브넷에 연결되는 네트워크 인터페이스를 가지고 있습니다. 이 기본 네트워크 인터페이스의 이름은 "eth0"이며, 워커 노드는 이 네트워크 인터페이스를 통해 컨트롤 플레인과 연결됩니다.
 
 #### 추가 네트워크 인터페이스
 클러스터 또는 워커 노드 그룹 생성 시 추가 네트워크를 설정하면 해당 워커 노드 그룹의 워커 노드에 추가 네트워크 인터페이스가 생성됩니다. 추가 네트워크 인터페이스는 추가 네트워크 설정에 입력한 순서대로 인터페이스 이름이 설정됩니다(eth1, eth2, ...).
@@ -1721,7 +1749,7 @@ echo '[ { "registry": "user-defined.registry.io", "endpoint_list": [ "http://use
 
 ### 워커 노드 관리 주의 사항
 * 워커 노드에 pull되어 있는 container image를 임의로 삭제하면 안 됩니다. NKS 클러스터에 필요한 파드가 동작하지 않을 수도 있습니다. 
-* `shutdown`, `halt`, `poweroff` 등의 명령으로 시스템을 임의 중지하면 콘솔을 통해 다시 시작할 수 없습니다. 워커 노드 시작/중지 기능을 사용하세요.
+* `shutdown`, `halt`, `poweroff` 등의 명령으로 시스템을 임의 중지하면 콘솔에서 다시 시작할 수 없습니다. 워커 노드 시작/중지 기능을 사용하세요.
 * 워커 노드 내의 여러 가지 설정 파일을 임의 수정하거나 시스템 서비스를 임의 조작하면 안 됩니다. NKS 클러스터에 치명적인 문제가 발생할 수 있습니다.
 
 
@@ -1768,6 +1796,7 @@ NHN Kubernetes Service(NKS)가 제공하는 Calico-VXLAN, Calic-eBPF는 아래�
 | v1.27.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 불가|
 | v1.28.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 불가|
 | v1.29.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 불가|
+| v1.30.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 불가|
 
 주석
 
@@ -1976,6 +2005,7 @@ Kubernetes의 서비스 객체를 정의할 때 로드 밸런서의 여러 가�
 * 로드 밸런서 이름 설정
 * keep-alive 타임아웃 설정
 * 로드 밸런서 타입 설정
+* 정적 라우트 설정
 * 세션 지속성 설정
 * 로드 밸런서 삭제 시 플로팅 IP 주소 보존 여부 설정
 * 로드 밸런서 IP 설정
@@ -2082,6 +2112,18 @@ spec:
 > 물리 로드 밸런서는 한국(평촌) 리전에만 제공됩니다.
 > 물리 로드 밸런서는 플로팅 IP를 연결할 수 없습니다. 대신 물리 로드 밸런서 생성 시 자동 할당된 퍼블릭 IP 하나를 밸런싱 대상 트래픽을 수신하는 IP로 사용합니다. 이 퍼블릭 IP는 서비스 IP라는 이름으로 콘솔에 노출됩니다.
 > 이런 특성으로 인해 Kubernetes 서비스 객체를 통해 로드 밸런서의 정확한 상태(연결된 플로팅 IP 등)를 얻을 수 없습니다. 물리 로드 밸런서에 대한 상태 등은 콘솔에서 확인하시길 바랍니다.
+
+#### 정적 라우트 설정
+로드 밸런서의 정적 라우트 적용 여부를 설정할 수 있습니다. 
+
+* 설정 위치는 .metadata.annotaions 하위의 loadbalancer.nhncloud/apply-subnet-host-routes입니다.
+* **리스너별 설정을 적용할 수 없습니다.**
+* 다음 중 하나로 설정할 수 있습니다.
+    * true: 정적 라우트를 적용합니다.
+    * false: 정적 라우트를 적용하지 않습니다. 미설정 시 기본값입니다.
+
+> [주의]
+> 정적 라우트 설정은 2024년 8월 27일 이후에 생성됐거나 k8s 버전을 업그레이드한 클러스터에서 설정 가능합니다.
 
 #### 세션 지속성 설정
 로드 밸런서의 세션 지속성을 설정할 수 있습니다.
@@ -2191,7 +2233,7 @@ spec:
 * 설정하지 않으면 클러스터 생성 시 설정한 VPC로 설정합니다.
 
 #### 서브넷 설정
-로드 밸런서 생성 시 로드 밸런서가 연결될 서브넷을 설정할 수 있습니다. 설정된 서브넷에 로드 밸런서의 사설IP가 연결됩니다. 멤버 서브넷 설정이 없는 경우 이 서브넷에 연결된 워커 노드가 로드 밸런서 멤버로 추가됩니다.
+로드 밸런서 생성 시 로드 밸런서가 연결될 서브넷을 설정할 수 있습니다. 설정된 서브넷에 로드 밸런서의 프라이빗 IP가 연결됩니다. 멤버 서브넷 설정이 없는 경우 이 서브넷에 연결된 워커 노드가 로드 밸런서 멤버로 추가됩니다.
 
 * 설정 위치는 .metadata.annotaions 하위의 loadbalancer.openstack.org/subnet-id입니다.
 * **리스너별 설정을 적용할 수 없습니다.**
@@ -2472,7 +2514,7 @@ keep-alive 타임아웃 값을 설정할 수 있습니다.
 > keep-alive 타임아웃은 2023년 11월 28일 이후 v1.24.3 이상의 버전으로 업그레이드됐거나 신규 생성된 클러스터에서 설정 가능합니다.
 
 #### L7 규칙
-리스너별로 L7 규칙을 설정할 수 있습니다.  L7 규칙은 다음과 같이 동작합니다.
+리스너별로 L7 규칙을 설정할 수 있습니다. L7 규칙은 다음과 같이 동작합니다.
 
 * L7 규칙은 리스너의 프로토콜이 HTTP 또는 TERMINATED_HTTPS인 경우에만 생성 가능합니다.
 * L7 규칙은 작업 유형에 따라 차단, URL로 전달, 멤버 그룹으로 전달순으로 적용됩니다.
@@ -3461,7 +3503,7 @@ spec:
 NHN Cloud에서 제공하는 NAS 스토리지를 PV로 활용할 수 있습니다. NAS 서비스를 사용하기 위해서는 v1.20 이후 버전의 클러스터를 사용해야 합니다. NHN Cloud NAS 사용에 대한 자세한 내용은 [NAS 콘솔 사용 가이드](/Storage/NAS%20(online)/ko/console-guide)를 참고하세요.
 
 > [참고]
-> NHN Cloud NAS 서비스는 현재(2024. 02.) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS%20(online)/ko/overview)를 참고하세요.
+> NHN Cloud NAS 서비스는 현재(2024. 08.) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS%20(online)/ko/overview)를 참고하세요.
 
 #### 모든 워커 노드에서 rpcbind 서비스 실행
 NAS 스토리지를 사용하려면 모든 워커 노드에서 rpcbind 서비스를 실행해야 합니다. 모든 워커 노드에 접속한 뒤 아래 명령어를 통해 rpcbind 서비스를 실행합니다.
@@ -3506,25 +3548,31 @@ ORAS(OCI Registry As Storage)는 OCI 레지스트리에서 OCI 아티팩트를 p
 
 | 리전 | 인터넷 연결 | 다운로드 커맨드 |
 | --- | --- | --- |
-| 한국(판교) 리전 | O | oras pull dfe965c3-kr1-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v1 |
-| | X | oras pull private-dfe965c3-kr1-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v1 |
-| 한국(평촌) 리전 | O | oras pull 6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/oci/nfs-deploy-tool:v1 |
-| | X | oras pull private-6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/oci/nfs-deploy-tool:v1 |
-
-##### 3. 설치 패키지를 압축 해제한 후 **install-driver.sh {mode}** 명령어를 사용하여 csi-driver-nfs 구성 요소를 설치합니다.
-install-driver.sh 명령 실행 시 인터넷 연결이 가능한 클러스터는 **public**, 그렇지 않은 클러스터는 **private**을 입력해야 합니다.
-
+| 한국(판교) 리전 | O | oras pull dfe965c3-kr1-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v2 |
+| | X | oras pull private-dfe965c3-kr1-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v2 |
+| 한국(평촌) 리전 | O | oras pull 6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/oci/nfs-deploy-tool:v2 |
+| | X | oras pull private-6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/oci/nfs-deploy-tool:v2 |
 
 > [참고]
-> csi-driver-nfs 컨테이너 이미지는 NHN Cloud NCR에서 관리되고 있습니다. 폐쇄망 환경에 구성된 클러스터는 인터넷에 연결되어 있지 않기 때문에 이미지를 정상적으로 받아오기 위해서는 Private URI를 사용하기 위한 환경 구성이 필요합니다. Private URI 사용법에 대한 자세한 내용은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/user-guide/#private-uri)를 참고하세요.
+> csi-driver-nfs 컨테이너 이미지 및 아티팩트는 NHN Cloud NCR에서 관리되고 있습니다. 폐쇄망 환경에 구성된 클러스터는 인터넷에 연결되어 있지 않기 때문에 이미지 및 아티팩트를 정상적으로 받아오기 위해서는 Private URI를 사용하기 위한 환경 구성이 필요합니다. Private URI 사용법에 대한 자세한 내용은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/user-guide/#private-uri)를 참고하세요.
 
-아래는 인터넷망 환경에 구성된 클러스터에 설치 패키지를 이용하여 csi-driver-nfs를 설치하는 예시입니다.
+##### 3. 설치 패키지를 압축 해제한 후 **./install-driver.sh {REGISTRY} {INTERNET_USAGE}** 명령어를 사용하여 csi-driver-nfs 구성 요소를 설치합니다.
+클러스터가 생성된 리전 및 인터넷 연결 가능 여부에 따라 올바른 {REGISTRY} 및 {INTERNET_USAGE} 값을 입력합니다. 
+* {REGISTRY}
+  * 한국(판교) 리전: **dfe965c3-kr1-registry.container.nhncloud.com**
+  * 한국(평촌) 리전: **6e7f43c6-kr2-registry.container.cloud.toast.com**
+* {INTERNET_USAGE}
+  * 인터넷 연결 가능한 클러스터: **true**
+  * 인터넷 연결 불가능한 클러스터: **false**
+
+아래는 한국(판교) 리전에 생성된 인터넷 연결이 가능한 클러스터에 csi-driver-nfs를 설치하는 예시입니다.
 
 ```
 $ tar -xvf nfs-deploy-tool.tar
 
-$ ./install-driver.sh public
-Installing NFS CSI driver, mode: public ...
+$ ./install-driver.sh dfe965c3-kr1-registry.container.nhncloud.com public
+INTERNET_USAGE set to true. Container image registry set with value dfe965c3-kr1-registry.container.nhncloud.com
+Installing NFS CSI driver
 serviceaccount/csi-nfs-controller-sa created
 serviceaccount/csi-nfs-node-sa created
 clusterrole.rbac.authorization.k8s.io/nfs-external-provisioner-role created
@@ -3646,9 +3694,15 @@ pv-onas   300Gi      RWX            Retain           Bound    default/pvc-onas  
 StorageClass 매니페스트 작성 시 스토리지 제공자 정보 및 NHN Cloud NAS 스토리지 정보를 정의합니다.
 
 * provisioner: **nfs.csi.k8s.io**를 입력합니다.
-* parameters: NAS 스토리지의 연결 정보를 입력합니다.
-  * server: NAS 스토리지의 연결 정보 중 **ip** 부분의 값을 입력합니다.
-  * share: NAS 스토리지의 연결 정보 중 **볼륨 이름** 부분의 값을 입력합니다.
+* parameters: 입력 항목은 아래 표를 참고하세요.
+
+| 항목 | 설명 | 예시 |  필수 | 기본값 |
+| ------- |------- | --------------------------- | ---------------------------- | ------------- |
+| server | NAS 스토리지의 연결 정보 중 **ip**를 의미합니다. | 192.168.0.81 | O |  |
+| share | NAS 스토리지의 연결 정보 중 **볼륨 이름**을 의미합니다. | /onas_300gb | O |  |
+| mountPermissions | NAS 스토리지 마운트 포인트 디렉터리에 설정할 권한을 지정합니다. | "0700" | X | 0741 |
+| uid | NAS 스토리지 마운트 포인트 디렉터리에 설정할 UID를 입력합니다. | 1000 | X | root(0) |
+| gid | NAS 스토리지 마운트 포인트 디렉터리에 설정할 GID를 입력합니다. | 1000 | X | root(0) |
 
 아래는 매니페스트 예제입니다.
 ``` yaml
@@ -3661,6 +3715,9 @@ provisioner: nfs.csi.k8s.io
 parameters:
   server: 192.168.0.81
   share: /onas_300gb
+  mountPermissions: "0700"
+  uid: 1000
+  gid: 1000
 reclaimPolicy: Retain
 volumeBindingMode: Immediate
 ```
@@ -3774,6 +3831,9 @@ StorageClass 매니페스트에 스토리지 제공자 정보 및 생성할 NAS 
 | subnet | 스토리지에 접근할 서브넷입니다. 선택된 VPC의 서브넷만 선택할 수 있습니다. | "59526f1c-c089-4517-86fd-2d3dac369210" | X | O |  |
 | acl | 읽기, 쓰기 권한을 허용할 IP 또는 IP 대역 목록입니다. | "0.0.0.0/0" | O | X | 0.0.0.0/0 |
 | onDelete | PVC 삭제 시 NAS 볼륨 삭제 여부입니다. | "delete" / "retain" | X | X | delete |
+| mountPermissions | NAS 스토리지 마운트 포인트 디렉터리에 설정할 권한을 지정합니다. | "0700"| X | X | 0741 |
+| uid | NAS 스토리지 마운트 포인트 디렉터리에 설정할 UID를 입력합니다. | 1000 | X | X | root(0) |
+| gid | NAS 스토리지 마운트 포인트 디렉터리에 설정할 GID를 입력합니다. | 1000 | X | X | root(0) |
 
 > [참고]
 > 스냅숏 파라미터 사용 시 관련된 모든 파라미터 값을 정의해야 합니다. 스냅숏 관련 파라미터는 아래와 같습니다.
@@ -3808,6 +3868,9 @@ parameters:
   scheduleweekdays : "6"
   subnet : "59526f1c-c089-4517-86fd-2d3dac369210"
   acl : ""
+  mountPermissions: "0700"
+  uid: 1000
+  gid: 1000
 ```
 
 PVC 매니페스트의 **Annotation**에 생성할 NAS 스토리지의 이름, 설명, 크기를 정의합니다. 입력 항목은 아래 표를 참고하세요.

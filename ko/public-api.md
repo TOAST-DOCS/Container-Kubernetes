@@ -94,10 +94,10 @@ X-Auth-Token: {tokenId}
 | clusters.flavor_id | Body | UUID | 기본 워커 노드의 인스턴스 타입 UUID|
 | clusters.keypair | Body | UUID | 기본 워커 노드 그룹에 적용된 키페어 UUID |
 | clusters.node_count | Body | Integer| 전체 워커 노드 수 |
-| clusters.stack_id | Body | UUID | 마스터 노드 그룹과 연결된 heat stack UUID |
+| clusters.stack_id | Body | UUID | 컨트롤 플레인과 연결된 heat stack UUID |
 | clusters.status | Body | String | 클러스터 상태 |
 | clusters.labels | Body | Object | 클러스터 레이블 |
-| clusters.labels.kube_tag | Body |String | 마스터 노드 그룹 Kubernetes 버전 |
+| clusters.labels.kube_tag | Body |String | 컨트롤 플레인 Kubernetes 버전 |
 | clusters.labels.availability_zone | Body | String | 기본 워커 노드 그룹 적용 : 가용성 영역 |
 | clusters.labels.node_image | Body | UUID | 기본 워커 노드 그룹 적용 : 베이스 이미지 UUID |
 | clusters.labels.external_network_id | Body | String | 인터넷 게이트웨이에 연결된 VPC 네트워크 UUID |
@@ -209,7 +209,7 @@ X-Auth-Token: {tokenId}
 | flavor_id | Body | UUID | 기본 워커 노드의 인스턴스 타입 UUID|
 | keypair | Body | UUID | 기본 워커 노드 그룹에 적용된 키페어 UUID |
 | node_count | Body | Integer| 전체 워커 노드 수 |
-| stack_id | Body | UUID | 마스터 노드 그룹과 연결된 heat stack UUID |
+| stack_id | Body | UUID | 컨트롤 플레인과 연결된 heat stack UUID |
 | status | Body | String | 클러스터 상태 |
 | status_reason | Body | String | 클러스터 상태 이유(null 가능) |
 | api_address | Body | String | Kubernetes API 엔드포인트 |
@@ -220,7 +220,7 @@ X-Auth-Token: {tokenId}
 | created_at | Body | String | 생성 시간(UTC) |
 | updated_at | Body | String | 최근 업데이트 시간(UTC) |
 | labels | Body | Object | 클러스터 레이블 |
-| labels.kube_tag | Body |String | 마스터 노드 그룹 Kubernetes 버전 |
+| labels.kube_tag | Body |String | 컨트롤 플레인 Kubernetes 버전 |
 | labels.availability_zone | Body | String | 기본 워커 노드 그룹 적용 : 가용성 영역 |
 | labels.node_image | Body | UUID | 기본 워커 노드 그룹 적용 : 베이스 이미지 UUID |
 | labels.external_network_id | Body | String | 인터넷 게이트웨이에 연결된 VPC 네트워크 UUID |
@@ -506,6 +506,15 @@ X-Auth-Token: {tokenId}
 | labels.ncr_sgw | Body | String | X | NCR 타입의 서비스 게이트웨이 UUID<br>단, 클러스터 VPC와 동일한 VPC에 생성된 것에 한함. |
 | labels.obs_sgw | Body | String | X | OBS 타입의 서비스 게이트웨이 UUID<br>단, 클러스터 VPC와 동일한 VPC에 생성된 것에 한함. |
 | labels.cni_driver | Body | String | X | CNI 설정, 선택 가능 CNI 목록: calico(기본), calico-ebpf<br>calico: Calico-VXLAN으로 생성<br>calico-ebpf: Calico-eBPF로 생성 |
+| labels.extra_security_groups | Body | Array | X | 추가 보안 그룹 객체 목록 |
+| labels.extra_security_groups[].target_subnet | Body | String | X | 추가 보안 그룹 지정 대상 서브넷 UUID |
+| labels.extra_security_groups[].security_group_ids | Body | String | X | 추가 보안 그룹 UUID 목록(쉼표로 구분) |
+| labels.extra_volumes | Body | Array | X | 추가 블록 스토리지 객체 목록 |
+| labels.extra_volumes[].volume_type | Body | String | X | 추가 블록 스토리지 종류 |
+| labels.extra_volumes[].volume_size | Body | Integer | X | 추가 블록 스토리지 사이즈(GB) |
+| labels.extra_volumes[].volume_key_id | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키 ID |
+| labels.extra_volumes[].volume_appkey | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키의 앱키 |
+| labels.extra_volumes[].volume_mount_path | Body | String | X | 추가 블록 스토리지가 마운트될 경로 |
 | flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
 | fixed_network | Body | UUID | O | VPC 네트워크 UUID |
 | fixed_subnet | Body | UUID | O | VPC 서브넷 UUID. fixed_subnet, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
@@ -552,7 +561,19 @@ X-Auth-Token: {tokenId}
         "master_lb_floating_ip_enabled": "true",
         "strict_sg_rules": "True",
         "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
-        "user_script_v2": ""
+        "user_script_v2": "",
+        "extra_security_groups": [
+            {
+                "target_subnet": "4fdf5b80-3d35-43f5-a5c1-010a3b6c8e90",
+                "security_group_ids": "8669cca4-7904-4dc6-b1be-db49661cedb6,fa69d78d-bd04-4ab0-9ce6-c92a84b899c2"
+            }
+        ],
+        "extra_volumes": [
+            {
+                "volume_type": "General HDD",
+                "volume_size": 100
+            }
+        ]
     },
     "name": "test-k8s",
     "node_count": 1
@@ -1290,6 +1311,15 @@ X-Auth-Token: {tokenId}
 | labels.user_script_v2 | Body | String | X | 사용자 스크립트 |
 | labels.additional_network_id_list | Body | String | X | 워커 노드 그룹 적용: 추가 네트워크의 VPC 네트워크 UUID 목록(콜론으로 구분) |
 | labels.additional_subnet_id_list | Body | String | X | 워커 노드 그룹 적용: 추가 네트워크의 VPC 서브넷 UUID 목록(콜론으로 구분) |
+| labels.extra_security_groups | Body | Array | X | 추가 보안 그룹 객체 목록 |
+| labels.extra_security_groups[].target_subnet | Body | String | X | 추가 보안 그룹 지정 대상 서브넷 UUID |
+| labels.extra_security_groups[].security_group_ids | Body | String | X | 추가 보안 그룹 UUID 목록(쉼표로 구분) |
+| labels.extra_volumes | Body | Array | X | 추가 블록 스토리지 객체 목록 |
+| labels.extra_volumes[].volume_type | Body | String | X | 추가 블록 스토리지 종류 |
+| labels.extra_volumes[].volume_size | Body | Integer | X | 추가 블록 스토리지 사이즈(GB) |
+| labels.extra_volumes[].volume_key_id | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키 ID |
+| labels.extra_volumes[].volume_appkey | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키의 앱키 |
+| labels.extra_volumes[].volume_mount_path | Body | String | X | 추가 블록 스토리지가 마운트될 경로 |
 | name | BODY | String | O | 노드 그룹 이름 |
 | node_count | Body | Integer | X | 노드 수(기본값: 1) |
 
@@ -1667,14 +1697,14 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|---|
 | tokenId | Header | String | O | 토큰 ID |
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
-| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | 노드 그룹 UUID 또는 노드 그룹 이름<br>마스터 구성 요소 업그레이드 시에는 **default-master**로 지정 | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | 노드 그룹 UUID 또는 노드 그룹 이름<br>컨트롤 플레인 업그레이드 시에는 **default-master**로 지정 | 
 | version | Body | String | O | Kubernetes 버전 |
 | num_buffer_nodes | Body | Integer | X | 버퍼 노드 수. 최솟값: 0, 최댓값: (워커 노드 그룹당 최대 노드 수 쿼터-해당 워커 노드 그룹의 현재 노드 수), 기본값: 1 |
 | num_max_unavailable_nodes | Body |  Integer | X | 최대 서비스 불가 노드 수. 최솟값: 1, 최댓값: 해당 워커 노드 그룹의 현재 노드 수, 기본값: 1 |
 
-클러스터를 업그레이드하기 위해서는 마스터 구성 요소를 업그레이드한 후 워커 구성 요소를 업그레이드해야 합니다. 마스터와 워커 구성 요소 업그레이드는 노드 그룹 단위로 이루어집니다. 
+클러스터를 업그레이드하기 위해서는 컨트롤 플레인을 업그레이드한 후 워커 구성 요소를 업그레이드해야 합니다. 컨트롤 플레인과 워커 구성 요소 업그레이드는 노드 그룹 단위로 이루어집니다. 
 
-* 마스터 구성 요소 업그레이드
+* 컨트롤 플레인 구성 요소 업그레이드
     * 노드 그룹 이름을 **default-master**로 지정합니다.
 
 * 워커 구성 요소 업그레이드
@@ -1732,7 +1762,7 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|---|
 | tokenId | Header | String | O | 토큰 ID |
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
-| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | 노드 그룹 UUID 또는 노드 그룹 이름<br>마스터 구성 요소 업그레이드 시에는 **default-master**로 지정 | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | 노드 그룹 UUID 또는 노드 그룹 이름<br>컨트롤 플레인 구성 요소 업그레이드 시에는 **default-master**로 지정 | 
 | contents | Body | String | O | 사용자 스크립트 내용 |
 
 
@@ -1877,10 +1907,11 @@ X-Auth-Token: {tokenId}
         "v1.23.3": false,
         "v1.24.3": false,
         "v1.25.4": false,
-        "v1.26.3": true,
+        "v1.26.3": false,
         "v1.27.3": true,
         "v1.28.3": true,
-        "v1.29.3": true
+        "v1.29.3": true,
+        "v1.30.3": true
     },
     "supported_event_type": {
         "cluster_events": {
