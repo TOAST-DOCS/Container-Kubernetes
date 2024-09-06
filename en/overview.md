@@ -19,17 +19,17 @@ For more details, see the following documents on Kubernetes:
 A Kubernetes cluster is a computer cluster connected to each other and run as one unit. Features provided by Kubernetes operate on a cluster-by-cluster basis and can be configured on a cluster-by-cluster basis.
 
 ### Configuration 
-A Kubernetes cluster consists of a master and nodes.  
+A Kubernetes cluster consists of a control plane and nodes.  
 
-#### Master 
-A master is in charge of cluster management. A master manages all activities of a cluster, such as application scheduling, scaling, or updating. In general, the components of master run on separate machines (virtual or physical machines). To ensure high availability, multiple masters can be configured on a cluster. 
+#### Control Plane 
+A control plane is in charge of cluster management. A control plane manages all activities of a cluster, such as application scheduling, scaling, or updating. In general, the components of control plane run on separate machines (virtual or physical machines). To ensure high availability, multiple control planes can be configured on a cluster. 
 
 #### Node
-A node is a worker machine where user's application runs. One cluster may contain many nodes. The nodes can run when connected to the master. Nodes follow the commands of a master and perform the operations, such as running or suspending applications.
+A node is a worker machine where user's application runs. One cluster may contain many nodes. The nodes can run when connected to the control plane. Nodes follow the commands of a control plane and perform the operations, such as running or suspending applications.
 
 
 ## NHN Kubernetes Service (NKS)
-NHN Kubernetes Service (NKS) is a service that allows users to create and manage Kubernetes clusters to run Kubernetes in the cloud properly and safely. Users can use the web console to create and manage Kubernetes clusters that are suitable for NHN Cloud. For safe and efficient operations, masters are managed by NHN Cloud, while nodes, services, and pods are managed by users.
+NHN Kubernetes Service (NKS) is a service that allows users to create and manage Kubernetes clusters to run Kubernetes in the cloud properly and safely. Users can use the web console to create and manage Kubernetes clusters that are suitable for NHN Cloud. For safe and efficient operations, control planes are managed by NHN Cloud, while nodes, services, and pods are managed by users.
 
 The main features of NKS are as follows: 
 
@@ -38,7 +38,7 @@ The main features of NKS are as follows:
     * Open services using load balancer 
     * Support persistent volume (PV) by integrating with block storage
 
-* Managing masters to ensure high availability 
+* Managing control planes to ensure high availability 
 
 * Easy Operations on Web Console 
     * Create, delete, and query clusters
