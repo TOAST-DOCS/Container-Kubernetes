@@ -146,9 +146,8 @@ The workaround is as follows.
 * If you want to be limited by an independent public IP without logging in to dockerhub, assign a floating IP to the worker node. 
 
 
-### > Failed to pull image "k8s.gcr.io/pause:3.2" occurs in a closed network environment.
-
-This problem occurs because NKS in a closed network environment cannot receive images from public registries. Images distributed by default, such as the "k8s.gcr.io/pause:3.2" image, are pulled from NHN Cloud's internal registry when creating a worker node. The list of images distributed by default when creating a cluster is as follows.
+### > Failed to pull image `k8s.gcr.io/pause:3.2` in a closed network environment.
+This issue is caused by clusters in a closed network environment not receiving images from the public registry, and can occur in clusters created before August 2024. Images that are deployed by default, such as the `k8s.gcr.io/pause:3.2` image, are pulled from the NHN Cloud internal registry when a worker node is created. However, if the image is deleted after the initial image is pulled, the problem may occur. The list of images that are deployed by default when creating a cluster is shown below.
 
 * kubernetesui/dashboard
 * k8s.gcr.io/pause
@@ -187,15 +186,8 @@ imageGCHighThresholdPercent=85: Always run image Garbage Collection to remove un
 imageGCLowThresholdPercent=80: Do not run image Garbage Collection when disk utilization is 80% or less.
 ```
 
-The workaround is as follows.
-If the image pull fails, you can pull the image from the NHN Cloud internal registry using the command below. For NKS 1.24.3 version or higher, you must use nerdctl, not docker.
-```
-TARGET_IMAGE="image with failed to pull occurred"
-INFRA_REGISTRY="harbor-kr1.cloud.toastoven.net/container_service/$(basename $TARGET_IMAGE)"
-docker pull $INFRA_REGISTRY
-docker tag $INFRA_REGISTRY $TARGET_IMAGE
-docker rmi $INFRA_REGISTRY
-```
+#### Workaround
+By enabling NKS registry, you can change the cluster settings to receive container images from the NHN Cloud internal registry instead of from a public registry in a closed network environment. You can enable the NKS registry from the Cluster inquiry screen.
 
 
 ### > In k8s v1.24 and later, the `pull from host docker.pkg.github.com failed` error occurs and the image pull fails. 
@@ -435,3 +427,44 @@ This issue is caused by the rpc.statd process on the worker node becoming a zomb
 systemctl restart rpc-statd
 systemctl restart rpcbind
 ```
+
+### > The Pod's file system does not reflect the increased capacity after the PV capacity is increased.
+This is an issue that can occur in clusters with version 1.20 or later that were created before August 2024. You can run the script below to update the cinder-csi-driver deployed in your cluster to resolve the issue. Only newly created or increased capacity PVs after running the script will reflect the configuration update.
+
+Define the absolute path value where the cluster's kubeconfig file is located in the kubeconfig_file_path variable, and then run the script.
+```
+#!/bin/bash
+kubeconfig_file_path={kubeconfig file absolute path}
+SECRET_NAME="cinder-csi-cloud-config"
+NAMESPACE="kube-system"
+# Fetch the secret using kubectl and parse the JSON output with jq
+secret_data=$(kubectl --kubeconfig=$kubeconfig_file_path get secret "$SECRET_NAME" -n "$NAMESPACE" -o json)
+# Extract the 'cloud-config' key and decode its value
+cloud_config_base64=$(echo "$secret_data" | jq -r '.data["cloud-config"]')
+if [[ "$cloud_config_base64" != "null" ]]; then
+    # Decode the base64 value
+    cloud_config=$(echo "$cloud_config_base64" | base64 --decode)
+    # Add the [BlockStorage] section with rescan-on-resize=true
+    modified_cloud_config=$(cat <<EOF
+$cloud_config
+[BlockStorage]
+rescan-on-resize=true
+EOF
+)
+    # Encode the modified cloud-config back to base64
+    modified_cloud_config_base64=$(echo "$modified_cloud_config" | base64 | tr -d '\n')
+    # Update the Kubernetes secret with the new base64-encoded data
+    kubectl --kubeconfig=$kubeconfig_file_path patch secret "$SECRET_NAME" -n "$NAMESPACE" --type=json \
+        -p="[{'op': 'replace', 'path': '/data/cloud-config', 'value':'$modified_cloud_config_base64'}]"
+    echo "Secret $SECRET_NAME updated successfully."
+else
+    echo "cloud-config key not found in secret $SECRET_NAME"
+fi
+kubectl -n kube-system rollout restart daemonet cinder-csi-nodeplugin
+kubectl -n kube-system rollout restart statefulset cinder-csi-controllerplugin
+```
+
+### > Error of timed out waiting for condition occurs and the volume mount to the Pod fails.
+This is an issue that can occur when you mount large volumes in a Pod. By default, when Kubernetes mounts a volume, it changes the ownership and permissions on the contents of each volume to match the fsGroup specified in the SecurityContext of the Pod. If the volume is large, it can take a lot of time to check and change ownership and permissions, which can cause a timeout. 
+
+To prevent timeouts from occurring, you can use the fsGroupChangePolicy field of the securityContext to change the way Kubernetes checks and manages ownership and permissions for volumes. For more information, see [Configure volume permission and ownership change policy for pods](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#configure-volume-permission-and-ownership-change-policy-for-pods).

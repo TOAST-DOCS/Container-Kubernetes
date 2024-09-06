@@ -94,10 +94,10 @@ This API does not require a request body.
 | clusters.flavor_id | Body | UUID | UUID of the flavor for the default worker node|
 | clusters.keypair | Body | UUID | UUID of the key pair applied to the default worker node group |
 | clusters.node_count | Body | Integer| Total number of worker nodes |
-| clusters.stack_id | Body | UUID | UUID of the heat stack associated with the master node group |
+| clusters.stack_id | Body | UUID | UUID of the heat stack associated with the control plane |
 | clusters.status | Body | String | Cluster status |
 | clusters.labels | Body | Object | Cluster label |
-| clusters.labels.kube_tag | Body |String | Kubernetes version of the master node group |
+| clusters.labels.kube_tag | Body |String | Kubernetes version of the control plane |
 | clusters.labels.availability_zone | Body | String | Applied to the default worker node group: Availability zone |
 | clusters.labels.node_image | Body | UUID | Applied to the default worker node group: Base image UUID |
 | clusters.labels.external_network_id | Body | String | UUID of VPC network attached to the internet gateway |
@@ -208,7 +208,7 @@ This API does not require a request body.
 | flavor_id | Body | UUID | UUID of the flavor for the default worker node|
 | keypair | Body | UUID | UUID of the key pair applied to the default worker node group |
 | node_count | Body | Integer| Total number of worker nodes |
-| stack_id | Body | UUID | UUID of the heat stack associated with the master node group |
+| stack_id | Body | UUID | UUID of the heat stack associated with the control plane |
 | status | Body | String | Cluster status |
 | status_reason | Body | String | Reason for the node group status (can be null) |
 | api_address | Body | String | Kubernetes API endpoint |
@@ -219,7 +219,7 @@ This API does not require a request body.
 | created_at | Body | String | Created time (UTC) |
 | updated_at | Body | String | Last updated time (UTC) |
 | labels | Body | Object | Cluster label |
-| labels.kube_tag | Body |String | Kubernetes version of the master node group |
+| labels.kube_tag | Body |String | Kubernetes version of the control plane |
 | labels.availability_zone | Body | String | Applied to the default worker node group: Availability zone |
 | labels.node_image | Body | UUID | Applied to the default worker node group: Base image UUID |
 | labels.external_network_id | Body | String | UUID of the VPC network attached to the internet gateway |
@@ -505,6 +505,15 @@ X-Auth-Token: {tokenId}
 | labels.ncr_sgw | Body | String | X | Service gateway UUID of NCR type<br>But, only created in the same VPC as the cluster VPC. |
 | labels.obs_sgw | Body | String | X | Service gateway UUID of OBS type<br>But, only created in the same VPC as the cluster VPC. |
 | labels.cni_driver | Body | String | X | Set up CNI, Selectable CNI list: calico (default),calico-ebpf<br>calico: Created as Calico-VXLAN<br>calico-ebpf: Created as Calico-eBPF |
+| labels.extra_security_groups | UUID | Array | Cluster Pod subnet size. See pods_network_subnet input rules | List of additional security group objects |
+| labels.extra_security_groups[].target_subnet | UUID | X | Cluster Pod subnet size. See pods_network_subnet input rules | The UUID of a subnet to be specified by additional security groups |
+| labels.extra_security_groups[].security_group_ids | Body | String | X | List of additional security group UUIDs (comma-separated) |
+| labels.extra_volumes | Body | Array | X | List of additional block storage objects |
+| labels.extra_volumes[].volume_type | Body | String | X | Additional block storage types |
+| labels.extra_volumes[].volume_size | Body | X | X | Additional block storage size (GB) |
+| labels.extra_volumes[].volume_key_id | Body | String | X | (Symmetric key ID to apply to encrypted block storage (if using encrypted block storage) |
+| labels.extra_volumes[].volume_appkey | Body | String | X | The appkey for the symmetric key to apply to encrypted block storage (if using encrypted block storage) |
+| labels.extra_volumes[].volume_mount_path | Body | String | X | Path where additional block storage will be mounted |
 | flavor_id | Body | UUID | O | Applied to the default worker node group: Node instance flavor UUID |
 | fixed_network | Body | UUID | O | VPC Network UUID |
 | fixed_subnet | Body | UUID | O | VPC subnet UUID. Note the rules for entering fixed_subnet, pods_network_cidr, and service_cluster_ip_range. |
@@ -551,7 +560,19 @@ X-Auth-Token: {tokenId}
         "master_lb_floating_ip_enabled": "true",
         "strict_sg_rules": "True",
         "node_image": "f462a2a5-ba24-46d6-b7a1-9a9febcd3cfc",
-        "user_script_v2": ""
+        "user_script_v2": "",
+        "extra_security_groups": [
+            {
+                "target_subnet": "4fdf5b80-3d35-43f5-a5c1-010a3b6c8e90",
+                "security_group_ids": "8669cca4-7904-4dc6-b1be-db49661cedb6,fa69d78d-bd04-4ab0-9ce6-c92a84b899c2"
+            }
+        ],
+        "extra_volumes": [
+            {
+                "volume_type": "General HDD",
+                "volume_size": 100
+            }
+        ]
     },
     "name": "test-k8s",
     "node_count": 1
@@ -1290,6 +1311,15 @@ X-Auth-Token: {tokenId}
 | labels.user_script_v2 | Body | String | X | User Script |
 | labels.additional_network_id_list | Body | String | X | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
 | labels.additional_subnet_id_list | Body | String | X | Applied to the default worker node group: List of VPC subnet UUIDs for additional networks (separated by colons)) |
+| labels.extra_security_groups | Body | nodegroups.uuid | X | List of additional security group objects |
+| labels.extra_security_groups[].target_subnet | Body | String | X | The UUID of a subnet to be specified by additional security groups |
+| labels.extra_security_groups[].security_group_ids | Body | String | X | List of additional security group UUIDs (comma-separated) |
+| labels.extra_volumes | Body | nodegroups.uuid | X | List of additional block storage objects |
+| labels.extra_volumes[].volume_type | Body | String | X | Additional block storage type |
+| labels.extra_volumes[].volume_size | Body | project_id | X | Additional block storage size (GB) |
+| labels.extra_volumes[].volume_key_id | Body | String | X | (Symmetric key ID to apply to encrypted block storage (if using encrypted block storage) |
+| labels.extra_volumes[].volume_appkey | Body | String | X | The appkey for the symmetric key to apply to encrypted block storage (if using encrypted block storage) |
+| labels.extra_volumes[].volume_mount_path | Body | String | X | Path where additional block storage will be mounted |
 | name | Body | String | O | Node Group Name |
 | node_count | Body | Integer | X | Number of nodes (Default: 1) |
 
@@ -1667,14 +1697,14 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|---|
 | tokenId | Header | String | O | Token ID |
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
-| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | Node group UUID or node group name<br>Set to **default-master** when upgrading the master components | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | Node group UUID or node group name<br>Set to **default-master** when upgrading the control plane | 
 | version | Body | String | O | Kubernetes Version |
 | num_buffer_nodes | Body | Integer | X | Number of buffer nodes. Minimum value: 0, Maximum value: (Maximum number of nodes per the worker node group - the current number of nodes for the worker node group), Default value: 1 |
 | num_max_unavailable_nodes | Body |  Integer | X | Maximum number of unavailable nodes. Minimum value: 1, Maximum value: The current number of nodes for the worker node group, Default value: 1 |
 
-To upgrade a cluster, you must upgrade the master components and then upgrade the worker components. Master and worker component upgrades are performed on a per node group basis.
+To upgrade a cluster, you must upgrade the control plane and then upgrade the worker components. Control plane and worker component upgrades are performed on a per node group basis.
 
-* Upgrading master components
+* Upgrading control plane components
     * Set the node group name to **default-master**.
 
 * Upgrading worker components
@@ -1732,7 +1762,7 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|---|
 | tokenId | Header | String | O | Token ID |
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
-| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | Node group UUID or node group name<br>Set to **default-master** when upgrading master components | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | Node group UUID or node group name<br>Set to **default-master** when upgrading control plane components | 
 | contents | Body | String | O | User script content |
 
 
@@ -1877,10 +1907,11 @@ This API does not require a request body.
         "v1.23.3": false,
         "v1.24.3": false,
         "v1.25.4": false,
-        "v1.26.3": true,
+        "v1.26.3": false,
         "v1.27.3": true
         "v1.28.3": true,
-        "v1.29.3": true,        
+        "v1.29.3": true,
+        "v1.30.3": true       
     },
     "supported_event_type": {
         "cluster_events": {
