@@ -1,5 +1,10 @@
 ## Container > NHN Kubernetes Service(NKS) > 릴리스 노트
 
+### 2024. 10. 15.
+
+#### 기능 추가
+* Kubernetes v1.27.3 이상 클러스터의 Calico version이 v3.28.2로 변경되었습니다.
+
 ### 2024. 08. 27.
 
 #### 기능 추가
