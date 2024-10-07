@@ -499,7 +499,12 @@ kubectl -n kube-system rollout restart statefulset cinder-csi-controllerplugin
 Calico v3.28.0 버전에서 Datastore를 etcd로 사용 시 발생하는 문제입니다. eBPF를 사용하는 경우 TCP는 CTLB(Connect-Time Load Balancing) 방식으로 통신되고 UDP는 BPF가 관리하는 NAT 테이블에 의해 통신됩니다. 이때 Calico의 Datastore가 etcd인 경우 파드에 `hostnetwork: true`, `dnsPolicy: ClusterFirstWithHostNet` 옵션이 적용되어있다면 UDP통신 시 BPF NAT 과정에서 네트워크 패킷을 정상 처리하지 못하는 문제가 확인되었습니다. 이 문제는 UDP 통신도 CTLB 방식으로 변경하면 해결이 가능합니다.
 
 해결 방안은 다음과 같습니다.
-calico-node Daemonset의 spec/template/spec/containers/env 항목에 아래의 설정 추가 후 calico-node 파드 재기동이 필요합니다.
+calico-node Daemonset에 UDP CTLB 설정 후 calico-node 파드 재기동이 필요합니다.
+명령어는 다음과 같습니다.
+```
+kubectl edit daemonset.apps/calico-node -n kube-system
+```
+spec/template/spec/containers/env 항목에 아래와 같은 설정 추가가 필요합니다.
 ```
 - name: FELIX_BPFCONNECTTIMELOADBALANCING
     value: "Enabled"
