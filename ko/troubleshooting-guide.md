@@ -496,6 +496,6 @@ kubectl -n kube-system rollout restart statefulset cinder-csi-controllerplugin
 타임아웃이 발생하는 것을 막기 위해 securityContext의 fsGroupChangePolicy 필드를 사용하여 Kubernetes가 볼륨에 대한 소유 및 권한을 확인하고 관리하는 방식을 변경할 수 있습니다. 자세한 내용은 [Configure volume permission and ownership change policy for pods](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#configure-volume-permission-and-ownership-change-policy-for-pods)를 참고하세요.
 
 ### > Calico-eBPF CNI를 사용하는 클러스터에서 노드 감축 후 증설 시 네트워크 장애가 발생합니다.
-Calico v3.28.0 버전의 calico/kube-controllers에서 발견된 버그로 인해 발생하는 문제입니다. 노드 감축 진행 시 calico/kube-controllers 파드가 배포된 노드가 제거되면 해당 파드는 다른 노드로 스케줄링되어 실행됩니다. 이 과정에서 calico/kube-controllers가 초기화되는 동안 etcd와 동기화하지 못하는 버그가 확인되었습니다. 문제가 발생한 이후, 제거했던 노드와 동일한 이름의 노드가 추가되면 네트워크 장애가 발생할 수 있습니다.
+Calico v3.28.0 버전의 calico/kube-controllers에서 발견된 버그로 인해 발생하는 문제입니다. 노드 감축 진행 시 calico/kube-controllers 파드가 배포된 노드가 제거되면 해당 파드는 다른 노드로 스케줄링되어 실행됩니다. calico/kube-controllers가 재실행되는 동안 노드 정보가 동기화되지 않습니다. 이 상태에서 제거했던 노드와 동일한 이름의 노드가 추가되면 네트워크 장애가 발생할 수 있습니다.
 
-이 문제는 Calico v3.28.2에서 패치되었습니다. 2024년 10월 15일 이후에 생성되는 v1.27.3 버전 이상의 클러스터에는 Calico v3.28.2가 배포됩니다. 해당 문제가 발생한 클러스터의 정상화 작업이 필요하시면 고객 센터로 문의 부탁드립니다. 이 문제에 대한 워크라운드는 클러스터 업그레이드 또는 NKS v1.27.3 이상으로 클러스터를 재생성하는 방법이 있습니다.
+이 문제는 Calico v3.28.2에서 해결되었습니다. Calico v3.28.2를 사용하기 위해서는 Kubernetes 버전을 업그레이드하거나 클러스터를 다시 생성해야 합니다. 
