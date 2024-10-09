@@ -496,7 +496,9 @@ kubectl -n kube-system rollout restart statefulset cinder-csi-controllerplugin
 타임아웃이 발생하는 것을 막기 위해 securityContext의 fsGroupChangePolicy 필드를 사용하여 Kubernetes가 볼륨에 대한 소유 및 권한을 확인하고 관리하는 방식을 변경할 수 있습니다. 자세한 내용은 [Configure volume permission and ownership change policy for pods](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#configure-volume-permission-and-ownership-change-policy-for-pods)를 참고하세요.
 
 ### > Calico-eBPF CNI를 사용하는 클러스터의 파드에 hostnetwork: true, dnsPolicy: ClusterFirstWithHostNet 옵션을 설정하면 UDP 통신 문제가 발생합니다.
-Calico v3.28.0 버전에서 Datastore를 etcd로 사용 시 발생하는 문제입니다. eBPF를 사용하는 경우 TCP는 CTLB(Connect-Time Load Balancing) 방식으로 통신되고 UDP는 BPF가 관리하는 NAT 테이블에 의해 통신됩니다. 이때 Calico의 Datastore가 etcd인 경우 파드에 `hostnetwork: true`, `dnsPolicy: ClusterFirstWithHostNet` 옵션이 적용되어있다면 UDP통신 시 BPF NAT 과정에서 네트워크 패킷을 정상 처리하지 못하는 문제가 확인되었습니다. 이 문제는 UDP 통신도 CTLB 방식으로 변경하면 해결이 가능합니다.
+Calico v3.28.0에서 eBPF를 사용할 때 파드에 hostNetwork: true 및 dnsPolicy: ClusterFirstWithHostNet 옵션이 적용된 경우 UDP 통신 중 `BPF NAT 테이블`이 네트워크 패킷을 올바르게 처리하지 못하는 문제가 확인되었습니다. eBPF를 사용하는 경우 TCP는 `CTLB(Connect-Time Load Balancing)` 방식으로 통신되며 UDP는 BPF가 관리하는 `NAT 테이블`을 통해 통신이 이루어집니다. 이 문제는 UDP 통신도 CTLB 방식으로 변경하면 해결이 가능합니다.
+
+`CTLB(Connect-Time Load Balancing)`는 네트워크 로드 밸런싱 기술 중 하나로 클라이언트가 서버에 처음 연결할 때 첫 번째 패킷에서 백엔드 서버를 선택하고 이후의 모든 트래픽은 선택된 백엔드 서버로 직접 전달됩니다. 이를 통해 세션 지속성이 보장되며, 매번 로드 밸런싱을 수행하는 오버헤드를 줄일 수 있습니다.
 
 해결 방안은 다음과 같습니다.
 calico-node Daemonset에 UDP CTLB 설정 후 calico-node 파드 재기동이 필요합니다.
@@ -505,6 +507,7 @@ calico-node Daemonset에 UDP CTLB 설정 후 calico-node 파드 재기동이 필
 kubectl edit daemonset.apps/calico-node -n kube-system
 ```
 spec/template/spec/containers/env 항목에 아래와 같은 설정 추가가 필요합니다.
+파드 템플릿이 수정되면 롤링 업데이트 방식으로 calico-node가 재시작됩니다.
 ```
 - name: FELIX_BPFCONNECTTIMELOADBALANCING
     value: "Enabled"
