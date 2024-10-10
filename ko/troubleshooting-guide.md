@@ -494,3 +494,8 @@ kubectl -n kube-system rollout restart statefulset cinder-csi-controllerplugin
 파드에 큰 사이즈의 볼륨을 마운트하는 경우 발생할 수 있는 문제입니다. 기본적으로 Kubernetes는 볼륨을 마운트할 때 파드의 SecurityContext에 지정된 fsGroup과 일치하도록 각 볼륨의 내용에 대한 소유 및 권한을 변경합니다. 볼륨이 큰 경우 소유 및 권한을 확인하고 변경하는 데 많은 시간이 소요되어 타임아웃이 발생할 수 있습니다. 
 
 타임아웃이 발생하는 것을 막기 위해 securityContext의 fsGroupChangePolicy 필드를 사용하여 Kubernetes가 볼륨에 대한 소유 및 권한을 확인하고 관리하는 방식을 변경할 수 있습니다. 자세한 내용은 [Configure volume permission and ownership change policy for pods](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#configure-volume-permission-and-ownership-change-policy-for-pods)를 참고하세요.
+
+### > Calico-eBPF CNI를 사용하는 클러스터에서 노드 감축 후 증설 시 네트워크 장애가 발생합니다.
+Calico v3.28.0 버전의 calico/kube-controllers에서 발견된 버그로 인해 발생하는 문제입니다. 노드 감축 진행 시 calico/kube-controllers 파드가 배포된 노드가 제거되면 해당 파드는 다른 노드로 스케줄링되어 실행됩니다. calico/kube-controllers가 재실행되는 동안 노드 정보가 동기화되지 않습니다. 이 상태에서 제거했던 노드와 동일한 이름의 노드가 추가되면 네트워크 장애가 발생할 수 있습니다.
+
+이 문제는 Calico v3.28.2에서 해결되었습니다. Calico v3.28.2를 사용하기 위해서는 Kubernetes 버전을 업그레이드하거나 클러스터를 다시 생성해야 합니다. 
