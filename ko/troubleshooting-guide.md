@@ -524,3 +524,7 @@ eBPF가 활성화되면, `CTLB(Connect-Time Load Balancing)`를 통해 연결 �
 CTLB가 활성화된 경우 패킷은 BPF MAP에서 목적지 Pod로 직접 전달되며 이 과정에서 패킷이 변조됩니다. 따라서 Istio의 프록시를 거치지 않고, 패킷이 바로 목적지 Pod로 전달됩니다. 이와 같은 eBPF 네트워킹 구조로 인해 Istio 기능이 정상적으로 동작하지 않을 수 있습니다. istio를 사용한 클러스터 관리가 필요한 경우 Calico-VXLAN 클러스터 사용을 고려해야 합니다.
 
 
+### > Calico-eBPF CNI를 사용하는 클러스터에서 노드 감축 후 증설 시 네트워크 장애가 발생합니다.
+Calico v3.28.0 버전의 calico/kube-controllers에서 발견된 버그로 인해 발생하는 문제입니다. 노드 감축 진행 시 calico/kube-controllers 파드가 배포된 노드가 제거되면 해당 파드는 다른 노드로 스케줄링되어 실행됩니다. calico/kube-controllers가 재실행되는 동안 노드 정보가 동기화되지 않습니다. 이 상태에서 제거했던 노드와 동일한 이름의 노드가 추가되면 네트워크 장애가 발생할 수 있습니다.
+
+이 문제는 Calico v3.28.2에서 해결되었습니다. Calico v3.28.2를 사용하기 위해서는 Kubernetes 버전을 업그레이드하거나 클러스터를 다시 생성해야 합니다. 
