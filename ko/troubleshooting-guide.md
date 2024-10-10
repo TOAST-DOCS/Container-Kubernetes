@@ -494,3 +494,37 @@ kubectl -n kube-system rollout restart statefulset cinder-csi-controllerplugin
 파드에 큰 사이즈의 볼륨을 마운트하는 경우 발생할 수 있는 문제입니다. 기본적으로 Kubernetes는 볼륨을 마운트할 때 파드의 SecurityContext에 지정된 fsGroup과 일치하도록 각 볼륨의 내용에 대한 소유 및 권한을 변경합니다. 볼륨이 큰 경우 소유 및 권한을 확인하고 변경하는 데 많은 시간이 소요되어 타임아웃이 발생할 수 있습니다. 
 
 타임아웃이 발생하는 것을 막기 위해 securityContext의 fsGroupChangePolicy 필드를 사용하여 Kubernetes가 볼륨에 대한 소유 및 권한을 확인하고 관리하는 방식을 변경할 수 있습니다. 자세한 내용은 [Configure volume permission and ownership change policy for pods](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#configure-volume-permission-and-ownership-change-policy-for-pods)를 참고하세요.
+
+### > Calico-eBPF CNI를 사용하는 클러스터의 파드에 hostnetwork: true, dnsPolicy: ClusterFirstWithHostNet 옵션을 설정하면 UDP 통신 문제가 발생합니다.
+Calico v3.28.0 버전에서 UDP 통신 중 BPF NAT 테이블이 네트워크 패킷을 올바르게 처리하지 못하여 발생하는 문제입니다. eBPF를 사용하는 경우 TCP는 `CTLB(Connect-Time Load Balancing)` 방식으로 통신되며 UDP는 BPF가 관리하는 `NAT 테이블`을 통해 통신이 이루어집니다. 이 문제는 UDP 통신도 CTLB 방식으로 변경하면 해결이 가능합니다.
+
+`CTLB(Connect-Time Load Balancing)`는 네트워크 로드 밸런싱 기술 중 하나로 클라이언트가 서버에 처음 연결할 때 첫 번째 패킷에서 백엔드 서버를 선택하고 이후의 모든 트래픽은 선택된 백엔드 서버로 직접 전달됩니다. 이를 통해 세션 지속성이 보장되며, 매번 로드 밸런싱을 수행하는 오버헤드를 줄일 수 있습니다.
+
+calico-node daemonset의 UDP CTLB 설정을 변경하여 문제를 해결할 수 있습니다.
+아래는 설정을 변경하는 과정입니다.
+```
+kubectl edit daemonset.apps/calico-node -n kube-system
+```
+spec.template.spec.containers.env 항목에 아래와 같은 설정 추가가 필요합니다.
+파드 템플릿이 수정되면 롤링 업데이트 방식으로 calico-node가 재시작됩니다.
+```
+- name: FELIX_BPFCONNECTTIMELOADBALANCING
+    value: "Enabled"
+- name: FELIX_BPFHOSTNETWORKEDNATWITHOUTCTLB
+    value: "Disabled"
+```
+
+#### 해결 방안 적용 후 UDP 통신 설정 시 주의 사항
+UDP는 비연결형 프로토콜로 서버/클라이언트 통신 시 별도 세션을 설정하거나 연결을 유지하지 않고 데이터를 전송합니다. 그러나 Golang `net.DialUDP()` 함수와 같은 UDP의 `connect()`함수를 사용하면 UDP 소켓을 특정 주소와 연결 시켜서 지정된 주소로만 데이터를 전송하고 수신할 수 있습니다. 
+Calico의 eBPF 사용하며 UDP에 CTLB(Connect-Time Load Balancing)가 활성화된 클러스터에 UDP`connect()`함수를 사용하는 파드를 배포한 경우 서버 역할을 하는 파드가 재배포되면 통신 문제가 발생할 수 있습니다. 이는 UDP 소켓이 초기 연결된 서버 주소에만 데이터 전송을 시도하기 때문입니다. 서버 파드가 재배포되면 IP 주소나 네트워크 경로가 변경될 수 있는데 UDP connect() 소켓은 이전 서버 주소에만 데이터를 보내므로 통신에 실패할 가능성이 있습니다.
+이 문제는 UDP connect()의 동작 방식과 CTLB 환경에서 발생하는 알려진 문제임으로 Calico eBPF와 UDP CTLB를 사용하는 클러스터에서 UDP의 connect() 함수를 사용할 경우 이러한 통신 문제가 발생할 수 있음을 인지하고 주의가 필요합니다.
+
+### > Calico-eBPF 클러스터에서 istio가 오동작합니다.
+eBPF가 활성화되면, `CTLB(Connect-Time Load Balancing)`를 통해 연결 시점에 로드 밸런싱을 수행하여 클라이언트가 서비스에 연결을 시도할 때 첫 번째 패킷에서 백엔드 파드를 선택하고 이후의 모든 패킷은 해당 백엔드로 직접 전달됩니다. 한편, Istio는 서비스 메시를 구성하기 위해 사이드카 프록시를 배포하고 프록시는 애플리케이션 트래픽을 가로채어 제어 및 모니터링 역할을 합니다. 
+CTLB가 활성화된 경우 패킷은 BPF MAP에서 목적지 Pod로 직접 전달되며 이 과정에서 패킷이 변조됩니다. 따라서 Istio의 프록시를 거치지 않고, 패킷이 바로 목적지 Pod로 전달됩니다. 이와 같은 eBPF 네트워킹 구조로 인해 Istio 기능이 정상적으로 동작하지 않을 수 있습니다. istio를 사용한 클러스터 관리가 필요한 경우 Calico-VXLAN 클러스터 사용을 고려해야 합니다.
+
+
+### > Calico-eBPF CNI를 사용하는 클러스터에서 노드 감축 후 증설 시 네트워크 장애가 발생합니다.
+Calico v3.28.0 버전의 calico/kube-controllers에서 발견된 버그로 인해 발생하는 문제입니다. 노드 감축 진행 시 calico/kube-controllers 파드가 배포된 노드가 제거되면 해당 파드는 다른 노드로 스케줄링되어 실행됩니다. calico/kube-controllers가 재실행되는 동안 노드 정보가 동기화되지 않습니다. 이 상태에서 제거했던 노드와 동일한 이름의 노드가 추가되면 네트워크 장애가 발생할 수 있습니다.
+
+이 문제는 Calico v3.28.2에서 해결되었습니다. Calico v3.28.2를 사용하기 위해서는 Kubernetes 버전을 업그레이드하거나 클러스터를 다시 생성해야 합니다. 
