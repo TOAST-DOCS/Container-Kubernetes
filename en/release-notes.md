@@ -1,5 +1,13 @@
 ## Container > NHN Kubernetes Service (NKS) > Release Notes
 
+
+### October 15, 2024
+
+#### Feature Updates
+
+* CNI Updates
+    * Changed the Calico CNI version for Kubernetes v1.27.3 and later clusters from v3.28.0 to v3.28.2.
+
 ### July 23, 2024
 
 #### Added Features
