@@ -1,6 +1,6 @@
 ## Container > NHN Kubernetes Service (NKS) > Release Notes
 
-### October 15, 2024
+### October 29, 2024
 
 #### Feature Updates
 
