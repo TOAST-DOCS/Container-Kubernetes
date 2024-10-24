@@ -20,19 +20,21 @@ NKS's Kubernetes version support policy is as follows.
     * So when a new version is added to the createable versions, the lowest version among the serviceable versions is removed.
 
 For each Kubernetes version, here's when you can expect to see additions/deletions to the createable versions and when versions are listed as end of service.
-(Note that this table is current as of September 26, 2023, and the version names of createable versions and when they are provided are subject to change due to our internal circumstances)
+(Note that this table is current as of August 27, 2024, and the version names of createable versions and when they are provided are subject to change due to our internal circumstances)
 
 | Version    | Add to Createable Versions | Remove from Createable Versions | End of Service Support |
 |:-------:|:-------------------:|:--------------------:|:---------------------:|
 | v1.22.3 | 2022. 01.           | 2023. 05.            | 2023. 08.             |
 | v1.23.3 | 2022. 03.           | 2023. 08.            | 2024. 02.             |
 | v1.24.3 | 2022. 09.           | 2024. 02.            | 2024. 05.             |
-| v1.25.4 | 2023. 01.           | 2024. 05.            | 2024. 08.(Scheduled)       |
-| v1.26.3 | 2023. 05.           | 2024. 08.(Scheduled)      | 2025. 02.(Scheduled)       |
+| v1.25.4 | 2023. 01.           | 2024. 05.            | 2024. 08.             |
+| v1.26.3 | 2023. 05.           | 2024. 08.            | 2025. 02.(Scheduled)    |
 | v1.27.3 | 2023. 08.           | 2025. 02.(Scheduled)      | 2025. 05.(Scheduled)       |
 | v1.28.3 | 2024. 02.           | 2025. 05.(Scheduled)      | 2025. 08.(Scheduled)       |
-| v1.29.3 | 2024. 05.           | 2025. 08.(Scheduled)      | 2025. 11.(Scheduled)       |
-| v1.30.x | 2024. 08.(Scheduled)     | 2025. 11.(Scheduled)      | 2026. 02.(Scheduled)       |
+| v1.29.3 | 2024. 05.           | 2025. 08.(Scheduled)      | 2026. 02.(Scheduled)       |
+| v1.30.3 | 2024. 08.           | 2026. 02.(Scheduled)      | 2026. 05.(Scheduled)       |
+| v1.31.x | 2025. 02.(Scheduled)     | 2026. 05.(Scheduled)      | 2026. 08.(Scheduled)       |
+
 
 ### Creating Clusters
 To use NHN Kubernetes Service (NKS), you must create clusters first.
@@ -120,10 +122,11 @@ NHN Kubernetes Service (NKS) supports several versions of Kubernetes. Some featu
 | v1.23.3 | Unavailable | Available |
 | v1.24.3 | Unavailable | Available |
 | v1.25.4 | Unavailable | Available |
-| v1.26.3 | Available | Available |
+| v1.26.3 | Unavailable | Available |
 | v1.27.3 | Available | Available |
 | v1.28.3 | Available | Available |
 | v1.29.3 | Available | Available |
+| v1.30.3 | Available | Available |
 
 Enter information as required and click **Create Cluster**, and a cluster begins to be created. You can check the status from the list of clusters. It takes about 10 minutes to create; more time may be required depending on the cluster configuration.
 
@@ -1048,6 +1051,7 @@ The supported OS images and the application versions you must select for each OS
 |  | CentOS 7.9 (2023.11.21)  | 1.3 |
 |  | CentOS 7.9 (2024.02.20)  | 1.4 |
 |  | CentOS 7.9 (2024.05.21)  | 1.5 |
+|  | CentOS 7.9 (2024.08.20)  | 1.6 |
 | Rocky | Rocky Linux 8.10 (2024.08.20)  | 1.6 |
 | Ubuntu | Ubuntu Server 20.04.6 LTS (2023.05.25)  | 1.1 |
 |  | Ubuntu Server 20.04.6 LTS (2023.08.22)  | 1.2 |
@@ -1057,12 +1061,7 @@ The supported OS images and the application versions you must select for each OS
 |  | Ubuntu Server 22.04.3 LTS (2024.02.20)  | 1.4 |
 |  | Ubuntu Server 20.04.6 LTS (2024.05.21)  | 1.5 |
 |  | Ubuntu Server 22.04.3 LTS (2024.05.21)  | 1.5 |
-| Debian | Debian 11.6 Bullseye (2023.03.21)  | 1.0 |
-|  | Debian 11.6 Bullseye (2023.05.25)  | 1.1 |
-|  | Debian 11.7 Bullseye (2023.08.22)  | 1.2 |
-|  | Debian 11.8 Bullseye (2023.11.21)  | 1.3 |
-|  | Debian 11.8 Bullseye (2024.02.20)  | 1.4 |
-|  | Debian 11.9 Bullseye (2024.05.21)  | 1.5 |
+|  | Ubuntu Server 20.04.6 LTS (2024.08.20)  | 1.6 |
 
 
 > [Notes]
@@ -1090,6 +1089,37 @@ To use a custom image as a worker node image, perform the following process in t
 ![nkscustom_image_3.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nkscustom_image_3.png)
 
 
+### Additional Block Storage
+You can use additional block storage for node groups. You can specify and create additional block storage when creating clusters and node groups, or you can create and use additional block storage in an existing node group. Additional block storage has the following characteristics
+
+* You can set up to three additional block stores per node group, and the size of the block stores can range from 1 to 2048 GB.
+* The additional block storage settings for a node group apply equally to all worker nodes in the node group.
+    * Additional block storage changes will reflect the changes to all worker nodes in the node group.
+* Additional block storage changes only support resizing and changing the mount path.
+    * You cannot delete the additional block storage created.
+    * It cannot be resized to a smaller size than the value already set.
+* The additional block storage is named in the form `{cluster name}-{node group name}-{node name}-extra-volume-{index}`.
+* If you enter a mount path, additional block storage is created and then attempts to mount to the specified path.
+    * If not entered, the mount will not proceed.
+    * If you enter an invalid mount path and the mount fails, the feature does not work.
+
+[Caution]
+> Changing the settings for additional block storage might affect the services you are using because it involves unmounting existing volumes.
+
+### Additional Security Groups
+You can set additional security groups on node groups. You can specify and create additional security groups when you create clusters and node groups, or you can set additional security groups on existing node groups. Additional security groups have the following characteristics
+
+* You can set up up to eight additional security groups per subnet.
+* Additional security group settings in a node group apply equally to all worker nodes in the node group.
+* If no additional security groups are entered, only the cluster's default security group is applied.
+* Security groups that users set directly on individual nodes are not viewed in the additional security groups in the node group.
+
+[Note]
+> The additional security groups specified when creating a node group in the console apply to the primary network and all additional networks. Changes to the additional security groups for individual networks can be made after the node group is created.
+
+[Caution]
+> When you set an additional security group on a node group, any security groups assigned to existing instances that are not defined in the additional security group are removed.
+Changing additional security groups changes network settings, so communication might be temporarily affected while the settings take effect.
 
 ## Cluster Management
 To run and manage clusters from a remote host, `kubectl` is required, which is the command-line tool (CLI) provided by Kubernetes.
@@ -1307,43 +1337,44 @@ Kubernetes clusters can upgrade the Kubernetes components while in operation. To
 Explains how the Kubernetes cluster upgrade feature supported by NHN Cloud works. 
 
 ##### Kubernetes Version Control
-NHN Cloud's Kubernetes cluster controls the Kubernetes versions per cluster master and worker node group. Master's Kubernetes version can be checked in the cluster view screen, and the Kubernetes version of the worker node group can be checked in the screen view of each worker node group. 
+NHN Cloud's Kubernetes cluster controls the Kubernetes versions per cluster control plane and worker node group. Control plane's Kubernetes version can be checked in the cluster view screen, and the Kubernetes version of the worker node group can be checked in the screen view of each worker node group. 
 
 ##### Upgrade Rules
 When upgrading, NHN Cloud's Kubernetes Cluster version control and Kubernetes versioning support policy must be followed to keep the proper sequence. The following rules are applied to NHN Cloud's Kubernetes cluster upgrade features.
 
-* Upgrade commands must be given to each master and worker node group. 
-* In order to upgrade, the Kubernetes version of the master and all worker node groups must match.
-* Master must be upgraded first in order to upgrade the worker node group. 
+* Upgrade commands must be given to each control plane and worker node group. 
+* In order to upgrade, the Kubernetes version of the control plane  and all worker node groups must match.
+* Control plane must be upgraded first in order to upgrade the worker node group. 
 * Can be upgraded to the next version of the current version (minor version+1). 
 * Downgrade is not supported. 
 * If the cluster is being updated due to the operation of other features, upgrade cannot be proceeded. 
 * When upgrading the cluster version from v1.25.4 to v1.26.3, if the CNI is Flannel, it must be changed to Calico-VXLAN.
+* Cannot upgrate clusters where NKS registry is not enabled.
 
 The following table shows whether upgrade is possible while upgrading the Kubernetes version. The following conditions are used for the example: 
 
-* List of Kubernetes versions supported by NHN Cloud: v1.21.6, v1.22.3, v1.23.3
-* Clusters are created as v1.21.6
+* List of Kubernetes versions supported by NHN Cloud: v1.28.3, v1.29.3, v1.30.3
+* Clusters are created as v1.28.3
 
-| Status | Master version | Whether master can be upgraded | Worker node group version | Whether worker node group can be upgraded
+| Status | Control plane version | Whether control plane can be upgraded | Worker node group version | Whether worker node group can be upgraded
 | --- | :-: | :-: | :-: | :-: |
-| Initial state| v1.21.6 | Available <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.21.6 | Unavailable  <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> | 
-| State after master upgrade | v1.22.3 | Unavailable <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.21.6 | Available <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
-| State after worker node group upgrade | v1.22.3 | Available <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.22.3 | Unavailable  <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
-| State after master upgrade | v1.23.3 | Unavailable <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.22.3 | Available <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
-| State after worker node group upgrade | v1.23.3 | Unavailable <sup>[5](#footnote_cluster_upgrade_rule_5)</sup> | v1.23.3 | Unavailable  <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
+| Initial state| v1.28.3  | Available <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.28.3  | Unavailable  <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> | 
+| State after control plane upgrade | v1.29.3 | Unavailable <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.28.3 | Available <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
+| State after worker node group upgrade | v1.29.3 | Available <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> |v1.29.3 | Unavailable  <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
+| State after control plane upgrade | v1.30.3 | Unavailable <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.29.3 | Available <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
+| State after worker node group upgrade | v1.30.3  | Unavailable <sup>[5](#footnote_cluster_upgrade_rule_5)</sup> | v1.30.3  | Unavailable  <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
 
 Notes
 
-* <a name="footnote_cluster_upgrade_rule_1">1</a>: Upgrade is possible because the versions of the master and all worker node groups are matching
-* <a name="footnote_cluster_upgrade_rule_1">2</a>: Worker node groups can be upgraded once the master is upgraded
-* <a name="footnote_cluster_upgrade_rule_1">3</a>: The versions of the master and all worker node groups must match in order to upgrade
-* <a name="footnote_cluster_upgrade_rule_1">4</a>: Upgrade is possible because the master is upgraded
+* <a name="footnote_cluster_upgrade_rule_1">1</a>: Upgrade is possible because the versions of the control plane and all worker node groups are matching
+* <a name="footnote_cluster_upgrade_rule_1">2</a>: Worker node groups can be upgraded once the control plane is upgraded
+* <a name="footnote_cluster_upgrade_rule_1">3</a>: The versions of the control plane and all worker node groups must match in order to upgrade
+* <a name="footnote_cluster_upgrade_rule_1">4</a>: Upgrade is possible because the control plane is upgraded
 * <a name="footnote_cluster_upgrade_rule_1">5</a>: Upgrade is not possible because the latest version supported by NHN Cloud is being used
 
 
-##### Upgrading master components
-NHN Cloud's Kubernetes cluster master consists of a number of masters to ensure high availability. Since upgrade is carried out by taking the rolling update method for the master, the availability of the clusters is guaranteed. 
+##### Upgrading control plane components
+NHN Cloud's Kubernetes cluster control plane consists of a number of control planes to ensure high availability. Since upgrade is carried out by taking the rolling update method for the control plane, the availability of the clusters is guaranteed. 
 
 The following can happen in this process.
 
@@ -1390,10 +1421,10 @@ You can define the number of pods to maintain with the PodDisruptionBudgets(PDB)
 To find out more about safely evicting pods, see [Safely Drain a Node](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/).
 
 ##### System Pod Upgrade
-If the versions match after upgrading the versions of the master and all worker node groups, the system pod which runs for Kubernetes cluster configuration will be upgraded.
+If the versions match after upgrading the versions of the control plane and all worker node groups, the system pod which runs for Kubernetes cluster configuration will be upgraded.
 
 > [Caution]
-If you do not upgrade the worker node group after upgrading the master, some pods might not work properly.
+If you do not upgrade the worker node group after upgrading the control plane, some pods might not work properly.
 
 
 ### Change Cluster CNI
@@ -1405,8 +1436,8 @@ The following rules apply to the Kubernetes Cluster CNI change feature in the NH
 
 * The CNI change feature is available for the NHN Kubernetes Service (NKS) v1.24.3 and above.
 * The CNI change is only available if the CNI being used by the existing NHN Kubernetes Service (NKS) is Flannel.
-* At the start of the CNI change, the task is collectively done on the master and all worker node groups.
-* The CNI change is possible only when the Kubernetes version of the master matches the Kubernetes version of all worker node groups.
+* At the start of the CNI change, the task is collectively done on the control plane and all worker node groups.
+* The CNI change is possible only when the Kubernetes version of the control plane matches the Kubernetes version of all worker node groups.
 * The CNI change from Calico-VXLAN, Calico-eBPF to Flannel is not supported 
 * The CNI change from Flannel to Calico-eBPF is not supported 
 * The CNI change from Calico-VXLAN to Calico-eBPF is not supported 
@@ -1530,7 +1561,7 @@ Clusters of Kubernetes v1.24.3 or later use containerd to comprise the container
 ### Manage Network
 
 #### Default Network Interface
-Every worker node has a network interface that connects to the VPC/subnet entered when creating the cluster. This default network interface is named "eth0", and worker nodes connect to the master through this network interface.
+Every worker node has a network interface that connects to the VPC/subnet entered when creating the cluster. This default network interface is named "eth0", and worker nodes connect to the control plane through this network interface.
 
 #### Additional Network Interface
 If you set additional networks when creating a cluster or worker node group, additional network interfaces are created on the worker nodes of that worker node group. Additional network interfaces are named eth1, eth2, ... in the order entered in the additional network settings.
@@ -1719,7 +1750,7 @@ echo '[ { "registry": "user-defined.registry.io", "endpoint_list": [ "http://use
 
 ### Precautions for Worker Node Management
 * Do not arbitrarily delete container images that are pulled on worker nodes. This may cause the Pods required by the NKS cluster to stop working. 
-* If you arbitrarily stop the system with commands like `shutdown`, `halt`, `poweroff`, etc., you cannot restart it through the console. Use the worker node start/stop feature.
+* If you arbitrarily stop the system with commands like `shutdown`, `halt`, `poweroff`, etc., you cannot restart it on the console. Use the worker node start/stop feature.
 * You must not modify various configuration files within the worker node or manipulate system services. Critical issues may occur in the NKS cluster.
 
 
@@ -1766,6 +1797,7 @@ Notes
 | v1.27.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | Unavailable|
 | v1.28.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | Unavailable|
 | v1.29.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | Unavailable|
+| v1.30.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | Unavailable|
 
 Notes
 
@@ -1974,6 +2006,7 @@ When defining service objects in Kubernetes, you can set several options for the
 * Setting Load Balancer Name
 * Setting keep-alive timeout
 * Set load balancer type
+* Set static routes
 * Set the session affinity
 * Set whether to keep a floating IP address when deleting the load balancer
 * Set the load balancer IP
@@ -2080,6 +2113,18 @@ You can set the load balancer type. For more information, see [Load Balancer Con
 Physical load balancer is only provided in Korea (Pyeongchon) region.
 You cannot attach physical load balancers to floating IPs. Instead, a public IP that is automatically assigned when creating the physical load balancer is used as an IP to receive traffic targeted for balancing. This public IP is shown as a service IP in the console.
 For the above characteristics, you cannot see the exact status of the load balancer (including the associated floating IP) through Kubernetes service objects. Please check the status of physical load balancers in the console.
+
+#### Set Static Routes
+You can set whether the load balancer applies static routes. 
+
+* The setting is located in loadbalancer.nhncloud/apply-subnet-host-routes under .metadata.annotaions.
+* **Per-listener settings cannot be applied.**
+* It can be set to one of the following.
+    * true: Apply a static route.
+    * false: Do not apply static routes. Default when not set.
+
+> [Caution]
+Static route settings are available for clusters created on or after August 27, 2024 or that have upgraded their version of K8s.
 
 #### Set the session affinity
 You can set the session affinity for the load balancer.
@@ -2469,7 +2514,7 @@ You can set a keep-alive timeout value.
 > The keep-alive timeout can be set up on clusters that have been upgraded to v1.24.3 or later after November 28, 2023, or are newly created.
 
 #### L7 Rules
-You can set L7 rules on a per-listener basis.  L7 rules work as follows
+You can set L7 rules on a per-listener basis. L7 rules work as follows
 
 * L7 rules can only be created when the protocol of the listener is HTTP or TERMINATED_HTTPS.
 * L7 rules are applied in the following order based on the action type: block, forward to URL, forward to member group.
@@ -3459,7 +3504,7 @@ Regarding how to use NHN Cloud Container Registry, see [NHN Cloud Container Regi
 You can utilize NAS storage provided by NHN Cloud as PV. In order to use NAS services, you must use a cluster of version v1.20 or later. For more information on using NHN Cloud NAS, please refer to the [NAS Console User Guide](/Storage/NAS/en/console-guide).
 
 > [Note]
-The NHN Cloud NAS service is currently (2024.02) only available in some regions. For more information on supported regions for NHN Cloud NAS service, see [NAS Service Overview](/Storage/NAS/en/overview).
+The NHN Cloud NAS service is currently (2024.08) only available in some regions. For more information on supported regions for NHN Cloud NAS service, see [NAS Service Overview](/Storage/NAS/en/overview).
 
 #### Run the rpcbind service on All Worker Nodes
 To use NAS storage, you must run the rpcbind service on all worker nodes. After connecting to all worker nodes, run the rpcbind service with the command below.
@@ -3509,21 +3554,27 @@ Refer to [](https://oras.land/docs/installation)ORAS installation[](https://oras
 | Korea (Pyengchon) region | O | oras pull 6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/oci/nfs-deploy-tool:v1 |
 | | X | oras pull private-6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/oci/nfs-deploy-tool:v1 |
 
-##### 3. After unzipping the installation package, install the csi-driver-nfs component using the **install-driver.sh {mode}** command.
-When you run the install-driver.sh command, you must enter **public** for clusters that can connect to the Internet, and **private** for clusters that do not.
-
-
 
 > [Note]
-The csi-driver-nfs container image is maintained in NHN Cloud NCR. Since the cluster configured in a closed network environment is not connected to the Internet, it is necessary to configure the environment to use a private URI in order to receive images normally. For information on how to use Private URI, refer to the [NHN Cloud Container Registry (NCR) User Guide](Container/NCR/ko/user-guide/#private-uri).
+The csi-driver-nfs container images and artifacts are maintained in NHN Cloud NCR. Since the cluster configured in a closed network environment is not connected to the Internet, it is necessary to configure the environment to use a private URI in order to receive images and artifacts normally. For information on how to use Private URI, refer to the [NHN Cloud Container Registry (NCR) User Guide](Container/NCR/ko/user-guide/#private-uri).
 
-Below is an example of installing csi-driver-nfs using the installation package in the cluster configured in the Internet network environment.
+##### 3. Unzip the installation package and run **./install-driver.sh {REGISTRY} {INTERNET_USAGE}** command to install the csi-driver-nfs component.
+Enter the correct {REGISTRY} and {INTERNET_USAGE} values based on the region where the cluster was created and the availability of internet connectivity. 
+* {REGISTRY}
+  * Korea (Pangyo) Region: **dfe965c3-kr1-registry.container.nhncloud.com**
+  * Korea (Pyeongchon) Region: **6e7f43c6-kr2-registry.container.cloud.toast.com**
+* {INTERNET_USAGE}
+  * Cluster available for internet connection: **true**
+  * Cluster unavailable for internet connection: **false**
+
+The following is an example of installing csi-driver-nfs on an internet-connected cluster created in the Korea (Pangyo) region.
 
 ```
 $ tar -xvf nfs-deploy-tool.tar
 
-$ ./install-driver.sh public
-Installing NFS CSI driver, mode: public ...
+$ ./install-driver.sh dfe965c3-kr1-registry.container.nhncloud.com public
+INTERNET_USAGE set to true. Container image registry set with value dfe965c3-kr1-registry.container.nhncloud.com
+Installing NFS CSI driver
 serviceaccount/csi-nfs-controller-sa created
 serviceaccount/csi-nfs-node-sa created
 clusterrole.rbac.authorization.k8s.io/nfs-external-provisioner-role created
@@ -3645,9 +3696,15 @@ pv-onas   300Gi      RWX            Retain           Bound    default/pvc-onas  
 Define Storage provider information and NHN Cloud NAS storage information when the StorageClass manifest is created.
 
 * provisioner: Enter**nfs.csi.k8s.io**.
-* parameters: Enter the connection information of the NAS storage.
-  * server: Enter the value of the **ip** part of the NAS storage connection information.
-  * share: Enter the value of the **volume name** part of the NAS storage connection information.
+* parameters: See the table below for input.
+
+| Item | Description | Example |  Required | Default value |
+| ------- |------- | --------------------------- | ---------------------------- | ------------- |
+| server | The connection information for the NAS storage, which is **the IP**. | 192.168.0.81 | O |  |
+| share | The **name of the volume** in the connection information for the NAS storage. | /onas_300gb | O |  |
+| mountPermissions | Specify the permissions to set on the NAS storage mount point directory. | "0700" | X | 0741 |
+| uid | Enter the UID you want to set in the NAS storage mount point directory. | 1000 | X | root(0) |
+| gid | Enter the GID you want to set for the NAS storage mount point directory. | 1000 | X | root(0) |
 
 Below is an example manifest.
 ``` yaml
@@ -3660,6 +3717,9 @@ provisioner: nfs.csi.k8s.io
 parameters:
   server: 192.168.0.81
   share: /onas_300gb
+  mountPermissions: "0700"
+  uid: 1000
+  gid: 1000
 reclaimPolicy: Retain
 volumeBindingMode: Immediate
 ```
@@ -3807,6 +3867,9 @@ parameters:
   scheduleweekdays : "6"
   subnet : "59526f1c-c089-4517-86fd-2d3dac369210"
   acl : ""
+  mountPermissions: "0700"
+  uid: 1000
+  gid: 1000
 ```
 
 Define the name, description, and size of the NAS storage to be created in the **Annotation** of the PVC manifest. Refer to the table below for input items.
