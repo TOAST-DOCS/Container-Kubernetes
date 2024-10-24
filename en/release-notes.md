@@ -1,12 +1,23 @@
 ## Container > NHN Kubernetes Service (NKS) > Release Notes
 
-
 ### October 15, 2024
 
 #### Feature Updates
 
 * CNI Updates
     * Changed the Calico CNI version for Kubernetes v1.27.3 and later clusters from v3.28.0 to v3.28.2.
+
+### August 27, 2024
+
+#### Added Features
+* Added the feature to specify additional security groups to a node group.
+* Added the feature to specify additional block storage for a group of nodes.
+* Support for Kubernetes v1.30.3.
+* You can set whether the load balancer applies static routes.
+* You can enable the NKS registry.
+
+#### Deprecated Image Support
+* You can't create new clusters and node groups using Debian images.
 
 ### July 23, 2024
 
