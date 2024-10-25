@@ -468,3 +468,40 @@ kubectl -n kube-system rollout restart statefulset cinder-csi-controllerplugin
 This is an issue that can occur when you mount large volumes in a Pod. By default, when Kubernetes mounts a volume, it changes the ownership and permissions on the contents of each volume to match the fsGroup specified in the SecurityContext of the Pod. If the volume is large, it can take a lot of time to check and change ownership and permissions, which can cause a timeout. 
 
 To prevent timeouts from occurring, you can use the fsGroupChangePolicy field of the securityContext to change the way Kubernetes checks and manages ownership and permissions for volumes. For more information, see [Configure volume permission and ownership change policy for pods](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#configure-volume-permission-and-ownership-change-policy-for-pods).
+
+
+### > Setting the hostnetwork: true, dnsPolicy: ClusterFirstWithHostNet option on a Pod in a cluster with Calico-eBPF CNI causes UDP communication issues.
+This is caused by the BPF NAT table not handling network packets correctly during UDP communication in Calico v3.28.0. When using eBPF, TCP communicates `in a connect-time load balancing (CTLB)` method and UDP communicates over `a NAT table`managed by BPF. This issue can be resolved by changing UDP communication to CTLB as well.
+
+`Connect-time load balancing (CTLB)` is a network load balancing technique in which a backend server is selected in the first packet when a client first connects to a server, and all subsequent traffic is directed to the selected backend server. This ensures session persistence and reduces the overhead of performing load balancing every time.
+
+You can resolve the issue by changing the UDP CTLB setting in the calico-node daemonset.
+Below is how to change the setting.
+```
+kubectl edit daemonset.apps/calico-node -n kube-system
+```
+The following settings need to be added to the spec.template.spec.containers.env entry.
+When the Pod template is modified, calico-node will resume on a rolling update basis.
+```
+- name: FELIX_BPFCONNECTTIMELOADBALANCING
+    value: "Enabled"
+- name: FELIX_BPFHOSTNETWORKEDNATWITHOUTCTLB
+    value: "Disabled"
+```
+
+#### Cautions for setting up UDP communication after applying the workaround
+UDP is a connectionless protocol, meaning that server/client communication transfers data without establishing or maintaining a separate session. However, UDP's `connect(` ) function, like the Golang `net.DialUDP(` ) function, allows you to associate a UDP socket with a specific address to send and receive data only to the specified address.
+With Calico's eBPF, if you deploy a Pod that uses the UD `connect()` function in a cluster with connect-time load balancing (CTLB) enabled for UDP, you might experience communication issues when the Pod acting as a server is redeployed. This is because the UDP socket only attempts to send data to the initially connected server address. When a server Pod is redeployed, its IP address or network path might change, and because the UDP connect() socket only sends data to the old server address, communication might fail.
+This is a known issue that occurs in CTLB environments due to the way UDP connect() works and the CTLB environment, you should be aware and careful when using UDP's connect() function in a cluster with Calico eBPF and UDP CTLB that you might encounter this communication issue.
+
+### > istio is not working properly in a Calico-eBPF cluster.
+When eBPF is enabled, it performs `connect-time` load balancing `(CTLB)`, which means that when a client tries to connect to a service, it selects a backend pod on the first packet and all subsequent packets are forwarded directly to that backend. Meanwhile, Istio deploys sidecar proxies to organize the service mesh, and the proxies intercept application traffic to act as control and monitoring.
+When CTLB is enabled, packets are forwarded directly from the BPF MAP to the destination Pod, and the packets are tampered with in the process. As a result, packets are forwarded directly to the destination Pod, bypassing Istio's proxy. Because of this eBPF networking structure, Istio might not work properly. If you need to manage a cluster with istio, you must consider using a Calico-VXLAN cluster.
+
+
+### > In a cluster using Calico-eBPF CNI, network failures occur when scaling up after node reduction.
+This issue is caused by a bug found in calico/kube-controllers in Calico v3.28.0. During a node reduction, if the node on which the calico/kube-controllers pod is deployed is removed, the pod is scheduled and run on a different node. While calico/kube-controllers is being rerun, the node information is out of sync. In this state, if a node with the same name as the node that was removed is added, a network failure can occur.
+
+This issue has been resolved in Calico v3.28.2. To use Calico v3.28.2, you must upgrade your Kubernetes version or recreate your cluster. 
+
+
