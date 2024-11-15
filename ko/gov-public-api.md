@@ -51,7 +51,7 @@ GET /v2.0/networks?router:external=True
 
 ### 베이스 이미지 UUID
 
-노드 생성에 사용할 베이스 이미지 UUID를 입력합니다. NKS 노드 생성에 사용되는 베이스 이미지만을 필터링하기 위해 API 호출 시 쿼리 스트링 파라미터에 `nhncloud_product=container&visibility=public` 값을 입력합니다. 베이스 이미지 목록 조회 API에 대한 좀 더 자세한 내용은 [이미지 목록 조회](/Compute/Image/ko/public-api-gov/#_2)를 참고하세요.
+노드 생성에 사용할 베이스 이미지 UUID를 입력합니다. NKS 노드 생성에 사용되는 베이스 이미지만을 필터링하기 위해 API 호출 시 쿼리 스트링 파라미터에 `nhncloud_allow_nks_cpu_flavor=true&visibility=public` 값을 입력합니다. 베이스 이미지 목록 조회 API에 대한 좀 더 자세한 내용은 [이미지 목록 조회](/Compute/Image/ko/public-api-gov/#_2)를 참고하세요.
 
 ### 블록 스토리지 종류
 
