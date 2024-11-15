@@ -1,5 +1,13 @@
 ## Container > NHN Kubernetes Service (NKS) > Release Notes
 
+### November 26, 2024
+
+#### Added Features
+* Changed to automatically set the maximum number of Pods that can be created per node based on the pod subnet size.
+
+#### Deprecated Image Support
+* You can't create new clusters and node groups using CentOS images.
+
 ### October 29, 2024
 
 #### Feature Updates
