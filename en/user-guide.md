@@ -1542,6 +1542,23 @@ Here's how to use the certificate renewal feature
 > As a result, the state of nodes in your cluster may temporarily change to Not Ready, or some components of your cluster may not function normally while certificate renewal is in progress.
 > To minimize the impact of these operations, you should avoid performing tasks such as creating new Pods while certificate renewal is in progress.
 
+### Set Kubernetes Component
+
+You can set a number of options for Kubernetes components. You can set these options at cluster creation time, and you can also change them after cluster creation is complete. This applies to the following components and options.
+
+| Component | Behavior Arear | Option | Description |
+| --- | --- | --- | --- |
+| kube-apiserver | Control plane | default-not-ready-toleration-seconds | Defines how long pods running on a node will be allowed when the node is in the NotReady state:<br>(unit: seconds, default: 300, minimum: 0, maximum: 86400) |
+| kube-apiserver | Control plane | default-unreachable-toleration-seconds | Defines how long pods running on a node will be allowed when the node is not connected to the network:<br>(unit: seconds, default: 300, minimum: 0, maximum: 86400) |
+| kube-controller-manager | Control plane | node-monitor-grace-period | Defines how long to wait when a node is in an unhealthy state before considering it unhealthy.<br>(unit: seconds, default: 40, minimum: 0, maximum: 86400) |
+| kubelet | Worker node | node-status-update-frequency | Defines how often the kubelet should report the node state of the kubelet:<br>(unit: seconds, default: 10, minimum: 0, maximum: 86400) |
+
+For more information on each item, see the [Kubernetes official documents](https://kubernetes.io/docs/).
+
+> [Caution]
+> * If you change the settings of a component running in the control plane, the component in the control plane will restart.
+> * If you change the settings of a component running on a worker node, the component on the worker node will restart.
+
 ## Manage Worker Node
 
 ### Manage Container
