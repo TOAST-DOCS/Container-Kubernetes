@@ -50,7 +50,7 @@ Enter the key pair to use when connecting to the node. For more information abou
 
 ### Base Image UUID
 
-Enter the base image UUID to use for node creation. To filter only the base images used to create NKS nodes, enter the value `nhncloud_product=container&visibility=public` in the query string parameter when calling the API. For more information on the retrieve base image list API, see [Retrieve Image list](/Compute/Image/en/public-api/#_2).
+Enter the base image UUID to use for node creation. To filter only the base images used to create NKS nodes, enter the value `nhncloud_allow_nks_cpu_flavor=true&visibility=public` in the query string parameter when calling the API. For more information on the retrieve base image list API, see [Retrieve Image list](/Compute/Image/en/public-api/#_2).
 
 ### Block Storage Type
 

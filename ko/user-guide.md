@@ -1045,14 +1045,8 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 
 | OS | 이미지 | 애플리케이션 버전 |
 | --- | --- | --- |
-| CentOS | CentOS 7.9 (2022.11.22)  | 1.0 |
-|  | CentOS 7.9 (2023.05.25)  | 1.1 |
-|  | CentOS 7.9 (2023.08.22)  | 1.2 |
-|  | CentOS 7.9 (2023.11.21)  | 1.3 |
-|  | CentOS 7.9 (2024.02.20)  | 1.4 |
-|  | CentOS 7.9 (2024.05.21)  | 1.5 |
-|  | CentOS 7.9 (2024.08.20)  | 1.6 |
 | Rocky | Rocky Linux 8.10 (2024.08.20)  | 1.6 |
+|  | Rocky Linux 8.10 (2024.11.19)  | 1.7 |
 | Ubuntu | Ubuntu Server 20.04.6 LTS (2023.05.25)  | 1.1 |
 |  | Ubuntu Server 20.04.6 LTS (2023.08.22)  | 1.2 |
 |  | Ubuntu Server 20.04.6 LTS (2023.11.21)  | 1.3 |
@@ -1062,6 +1056,8 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 |  | Ubuntu Server 20.04.6 LTS (2024.05.21)  | 1.5 |
 |  | Ubuntu Server 22.04.3 LTS (2024.05.21)  | 1.5 |
 |  | Ubuntu Server 20.04.6 LTS (2024.08.20)  | 1.6 |
+|  | Ubuntu Server 20.04.6 LTS (2024.11.19)  | 1.7 |
+|  | Ubuntu Server 22.04.6 LTS (2024.11.19)  | 1.7 |
 
 
 > [참고]
@@ -1544,6 +1540,22 @@ Kubernetes는 구성 요소 간의 TLS 인증을 위해 PKI 인증서가 필요�
 > 따라서 인증서 갱신이 진행 중인 동안에는 일시적으로 클러스터의 노드 상태가 Not Ready로 변경되거나, 클러스터의 일부 구성 요소들이 정상 동작하지 않을 수 있습니다.
 > 이러한 작업 영향도를 최소화하려면 인증서 갱신 작업이 진행되는 동안에는 신규 파드 생성 등의 작업을 수행하지 않아야 합니다.
 
+### Kubernetes 컴포넌트 설정 기능
+
+Kubernetes 컴포넌트의 여러 가지 옵션을 설정할 수 있습니다. 클러스터 생성 시 설정할 수 있으며, 설정한 옵션은 클러스터 생성 완료 후에 변경할 수도 있습니다. 설정을 지원하는 컴포넌트와 옵션은 다음과 같습니다.
+
+| 컴포넌트 | 동작 영역 | 옵션 | 설명 |
+| --- | --- | --- | --- |
+| kube-apiserver | 컨트롤 플레인 | default-not-ready-toleration-seconds | 노드가 NotReady 상태일 때, 해당 노드에서 실행 중인 파드가 얼마나 오랫동안 허용될지 정의합니다.<br>(단위: 초, 기본값: 300, 최솟값: 0, 최댓값: 86400) |
+| kube-apiserver | 컨트롤 플레인 | default-unreachable-toleration-seconds | 노드가 네트워크에 연결되지 않았을 때, 해당 노드에서 실행 중인 파드가 얼마나 오랫동안 허용될지 정의합니다.<br>(단위: 초, 기본값: 300, 최솟값: 0, 최댓값: 86400) |
+| kube-controller-manager | 컨트롤 플레인 | node-monitor-grace-period | 노드가 비정상 상태일 때 해당 노드를 비정상으로 간주하기까지 기다리는 시간을 정의합니다.<br>(단위: 초, 기본값: 40, 최솟값: 0, 최댓값: 86400) |
+| kubelet | 워커 노드 | node-status-update-frequency | kubelet의 노드 상태 보고 주기를 정의합니다.<br>(단위: 초, 기본값: 10, 최솟값: 0, 최댓값: 86400) |
+
+각 항목에 대한 자세한 설명은 [Kubernetes 공식 문서](https://kubernetes.io/docs/)를 참고하세요.
+
+> [주의]
+> * 컨트롤 플레인에서 동작하는 컴포넌트의 설정을 변경한 경우 컨트롤 플레인의 컴포넌트들이 재시작됩니다.
+> * 워커 노드에서 동작하는 컴포넌트의 설정을 변경한 경우 워커 노드의 컴포넌트가 재시작됩니다.
 
 ## 워커 노드 관리
 
