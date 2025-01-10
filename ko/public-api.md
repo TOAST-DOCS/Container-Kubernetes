@@ -487,6 +487,7 @@ X-Auth-Token: {tokenId}
 | labels.external_subnet_id_list | Body | String | X | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분)<br>VPC 서브넷이 연동된 라우터가 인터넷 게이트웨이에 연결된 경우 반드시 설정 |
 | labels.cert_manager_api | Body | String | O | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
 | labels.ca_enable | Body | String | O | 기본 워커 노드 그룹 적용 : 오토 스케일러: 기능 활성화 여부 ("True" / "False") |
+| labels.ca_pod_replicas | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 파드 수 |
 | labels.ca_max_node_count | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최대 노드 수 |
 | labels.ca_min_node_count | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최소 노드 수 |
 | labels.ca_scale_down_enable | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 감축 활성 여부 ("True" / "False") |
@@ -547,6 +548,7 @@ X-Auth-Token: {tokenId}
         "boot_volume_size": "20",
         "boot_volume_type": "General HDD",
         "ca_enable": "false",
+        "ca_pod_replicas": "1",
         "ca_max_node_count": "10",
         "ca_min_node_count": "1",
         "ca_scale_down_delay_after_add": "3",
@@ -1173,6 +1175,7 @@ X-Auth-Token: {tokenId}
 | labels.external_subnet_id_list | Body | String | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분) |
 | labels.cert_manager_api | Body | String | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
 | labels.ca_enable | Body | String | 워커 노드 그룹 적용 : 오토 스케일러: 기능 활성화 여부 ("True" / "False") |
+| labels.ca_pod_replicas | Body | String | 워커 노드 그룹 적용 : 오토 스케일러: 파드 수 |
 | labels.ca_max_node_count | Body | String | 워커 노드 그룹 적용 : 오토 스케일러: 최대 노드 수 |
 | labels.ca_min_node_count | Body | String | 워커 노드 그룹 적용 : 오토 스케일러: 최소 노드 수 |
 | labels.ca_scale_down_enable | Body | String | 워커 노드 그룹 적용 : 오토 스케일러: 감축 활성 여부 ("True" / "False") |
@@ -1214,7 +1217,7 @@ X-Auth-Token: {tokenId}
         "boot_volume_size": "20",
         "boot_volume_type": "General HDD",
         "ca_enable": "True",
-        "ca_image": "k8s.gcr.io/autoscaling/cluster-autoscaler:v1.19.0",
+        "ca_pod_replicas": "1",
         "ca_max_node_count": "10",
         "ca_min_node_count": "2",
         "ca_scale_down_delay_after_add": "10",
@@ -1301,6 +1304,7 @@ X-Auth-Token: {tokenId}
 | labels.boot_volume_key_id | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 블록 스토리지에 적용할 대칭키 ID |
 | labels.boot_volume_appkey | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 블록 스토리지에 적용할 대칭키의 앱키 |
 | labels.ca_enable | Body | String | O | 기본 워커 노드 그룹 적용 : 오토 스케일러: 기능 활성화 여부 ("True" / "False") |
+| labels.ca_pod_replicas | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 파드 수 |
 | labels.ca_max_node_count | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최대 노드 수 |
 | labels.ca_min_node_count | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최소 노드 수 |
 | labels.ca_scale_down_enable | Body | String | X | 기본 워커 노드 그룹 적용 : 오토 스케일러: 감축 활성 여부 ("True" / "False") |
@@ -1358,6 +1362,7 @@ X-Auth-Token: {tokenId}
 | labels.boot_volume_type | Body | String | 기본 워커 노드 그룹 적용 : 블록 스토리지 종류|
 | labels.boot_volume_size | Body | String | 기본 워커 노드 그룹 적용 : 블록 스토리지 사이즈(GB) |
 | labels.ca_enable | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 기능 활성화 여부 ("True" / "False") |
+| labels.ca_pod_replicas | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 파드 수 |
 | labels.ca_max_node_count | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최대 노드 수 |
 | labels.ca_min_node_count | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 최소 노드 수 |
 | labels.ca_scale_down_enable | Body | String | 기본 워커 노드 그룹 적용 : 오토 스케일러: 감축 활성 여부 ("True" / "False") |
@@ -1388,6 +1393,7 @@ X-Auth-Token: {tokenId}
         "boot_volume_size": "20",
         "boot_volume_type": "General HDD",
         "ca_enable": "false",
+        "ca_pod_replicas": "1",
         "ca_max_node_count": "10",
         "ca_min_node_count": "1",
         "ca_scale_down_enable": "true",
@@ -1583,6 +1589,7 @@ X-Auth-Token: {tokenId}
 | 이름 | 종류 | 형식 | 설명 |
 |---|---|---|---|
 | ca_enable | Body | String | 기능 활성화 여부 ("True" / "False") |
+| ca_pod_replicas | Body | String | 파드 수 |
 | ca_max_node_count | Body | String | 최대 노드 수 |
 | ca_min_node_count | Body | String | 최소 노드 수 |
 | ca_scale_down_enable | Body | String | 감축 활성 여부 ("True" / "False") |
@@ -1596,7 +1603,7 @@ X-Auth-Token: {tokenId}
 ```json
 {
     "ca_enable": true,
-    "ca_image": "k8s.gcr.io/autoscaling/cluster-autoscaler:v1.19.0",
+    "ca_pod_replicas": 1,
     "ca_max_node_count": 10,
     "ca_min_node_count": 2,
     "ca_scale_down_delay_after_add": 10,
@@ -1632,6 +1639,7 @@ X-Auth-Token: {tokenId}
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
 | NODEGROUP_ID_OR_NAME | URL | UUID or String | O | 노드 그룹 UUID 또는 노드 그룹 이름 | 
 | ca_enable | Body | String | O | 기능 활성화 여부 ("True" / "False") |
+| ca_pod_replicas | Body | String | X | 파드 수 |
 | ca_max_node_count | Body | String |X| 최대 노드 수 |
 | ca_min_node_count | Body | String |X| 최소 노드 수 |
 | ca_scale_down_enable | Body | String |X| 감축 활성 여부 ("True" / "False") |
@@ -1645,6 +1653,7 @@ X-Auth-Token: {tokenId}
 ```json
 {
     "ca_enable": true,
+    "ca_pod_replicas": 1,
     "ca_max_node_count": 10,
     "ca_min_node_count": 1,
     "ca_scale_down_delay_after_add": 30,
