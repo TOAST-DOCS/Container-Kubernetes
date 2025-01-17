@@ -528,3 +528,31 @@ CTLB가 활성화된 경우 패킷은 BPF MAP에서 목적지 Pod로 직접 전�
 Calico v3.28.0의 calico/kube-controllers에서 발견된 버그로 인해 발생하는 문제입니다. 노드 감축 진행 시 calico/kube-controllers 파드가 배포된 노드가 제거되면 해당 파드는 다른 노드로 스케줄링되어 실행됩니다. calico/kube-controllers가 재실행되는 동안 노드 정보가 동기화되지 않습니다. 이 상태에서 제거했던 노드와 동일한 이름의 노드가 추가되면 네트워크 장애가 발생할 수 있습니다.
 
 이 문제는 Calico v3.28.2에서 해결되었습니다. Calico v3.28.2를 사용하기 위해서는 Kubernetes 버전을 업그레이드하거나 클러스터를 다시 생성해야 합니다. 
+
+
+### > 마지막 노드 그룹의 클러스터 업그레이드가 실패하고 Calico 리소스가 제거되어있습니다.
+마지막 노드 그룹의 클러스터 업그레이드가 완료되면 Calico CNI가 재배포됩니다. 그러나 Calico CNI 리소스에 finalizers 설정이 적용되어 있는 경우, Calico CNI 리소스의 제거가 실패하며 무한 대기 상태에 빠질 수 있습니다. 이로 인해 timeout으로 클러스터 업그레이드가 실패하게 됩니다. 이러한 문제를 해결하기 위해서는 Calico CNI 관련 리소스에서 finalizers 설정을 제거해야 합니다. 
+
+finalizers 설정 제거 명령어는 다음과 같습니다.
+```
+kubectl patch {리소스 유형} {리소스 이름} -n {네임스페이스} --type=json -p='[{"op": "remove", "path": "/metadata/finalizers"}]'
+```
+예시
+```
+kubectl patch clusterrole calico-kube-controllers --type=json -p='[{"op": "remove", "path": "/metadata/finalizers"}]'
+```
+
+#### finalizers를 지원하는 Calico CNI리소스 목록
+  * ClusterRole
+    * calico-kube-controllers
+    * calico-cni-plugin
+    * calico-node
+  * ClusterRoleBinding
+    * calico-kube-controllers
+    * calico-cni-plugin
+    * calico-node
+  * Deployment
+    * calico-kube-controllers (Namespace: kube-system)
+    * calico-typha (Namespace: kube-system)
+  * DaemonSet
+    * calico-node (Namespace: kube-system)
