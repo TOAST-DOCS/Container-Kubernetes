@@ -530,5 +530,6 @@ Calico v3.28.0의 calico/kube-controllers에서 발견된 버그로 인해 발�
 이 문제는 Calico v3.28.2에서 해결되었습니다. Calico v3.28.2를 사용하기 위해서는 Kubernetes 버전을 업그레이드하거나 클러스터를 다시 생성해야 합니다. 
 
 
-### > Prometheus Adapter가 배포된 환경에서 v1.26.3에서 v1.27.3으로 워커 노드 업그레이드가 실패합니다.
-Prometheus Adapter(prometheus-rancher-monitoring-prometheus) StatefulSet은 CPU, 메모리 등의 지표 정보를 custom.metrics.k8s.io API로 노출합니다. 이 과정에서 반환된 API 리소스에 group/version 필드가 누락되는 문제가 발생할 수 있습니다. 이러한 특이 사항은 클러스터의 마스터 노드가 v1.27.3으로 업그레이드된 상태이고, 워커 노드가 v1.26.3에 머물러 있는 경우, Kubernetes 버전 간 호환성 문제로 인해 에러가 발생할 수 있습니다. 문제를 해결하고 정상적으로 워커 노드를 업그레이드하기 위해서는 custom.metrics.k8s.io API를 비활성화해야 하며 이를 위해 Prometheus Adapter 리소스를 제거해야 합니다. 이와 같은 오류는 Kubernetes v1.26.3에서 v1.27.3으로 업그레이드하는 과정에서만 발생합니다.
+### > custom.metrics.k8s.io가 배포된 환경에서 v1.26.3에서 v1.27.3으로 워커 노드 업그레이드가 실패합니다.
+Custom Metrics API(custom.metrics.k8s.io)가 배포된 환경에서 Kubernetes 버전 간 호환성 문제로 인해 발생한 문제입니다. 이 문제는 custom.metrics.k8s.io의 알려진 문제로, 클라이언트와 kube-apiserver 간의 불완전한 데이터 처리로 인해 오류가 발생합니다. 마스터 노드가 v1.27.3으로 업그레이드된 상태에서 워커 노드가 v1.26.3에 머물러 있는 경우, 이와 같은 문제로 인해 업그레이드가 실패할 수 있습니다.
+이 문제를 해결하려면 custom.metrics.k8s.io API를 비활성화해야 하며, 이를 호출하는 CRD 또는 관련 리소스를 제거해야 합니다. 해당 문제는 Kubernetes v1.26.3에서 v1.27.3으로 업그레이드하는 과정에서만 발생합니다.
