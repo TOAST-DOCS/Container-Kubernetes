@@ -529,7 +529,13 @@ Calico v3.28.0의 calico/kube-controllers에서 발견된 버그로 인해 발�
 
 이 문제는 Calico v3.28.2에서 해결되었습니다. Calico v3.28.2를 사용하기 위해서는 Kubernetes 버전을 업그레이드하거나 클러스터를 다시 생성해야 합니다. 
 
+### > 클러스터 업그레이드에 실패합니다.
 
-### > custom.metrics.k8s.io가 배포된 환경에서 v1.26.3에서 v1.27.3으로 워커 노드 업그레이드가 실패합니다.
+#### v1.26.3에서 v1.27.3으로 워커 노드 업그레이드 실패 시, 클러스터에 custom.metrics.k8s.io가 배포되어있는지 확인이 필요합니다.
 Custom Metrics API(custom.metrics.k8s.io)가 배포된 환경에서 Kubernetes 버전 간 호환성 문제로 인해 발생한 문제입니다. 이 문제는 custom.metrics.k8s.io의 알려진 문제로, 클라이언트와 kube-apiserver 간의 불완전한 데이터 처리로 인해 오류가 발생합니다. 마스터 노드가 v1.27.3으로 업그레이드된 상태에서 워커 노드가 v1.26.3에 머물러 있는 경우, 이와 같은 문제로 인해 업그레이드가 실패할 수 있습니다.
 이 문제를 해결하려면 custom.metrics.k8s.io API를 비활성화해야 하며, 이를 호출하는 CRD 또는 관련 리소스를 제거해야 합니다. 해당 문제는 Kubernetes v1.26.3에서 v1.27.3으로 업그레이드하는 과정에서만 발생합니다.
+
+custom.metrics.k8s.io 리소스 확인 명령어는 다음과 같습니다.
+```
+kubectl api-versions | grep custom.metrics.k8s.io
+```
