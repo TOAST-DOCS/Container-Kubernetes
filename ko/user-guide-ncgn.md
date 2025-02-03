@@ -20,19 +20,21 @@ NKS의 Kubernetes 버전 지원 정책은 다음과 같습니다.
     * 따라서 생성 가능한 버전이 하나 추가되면 기존의 서비스 지원 가능 버전 목록에서 가장 낮은 버전이 제거됩니다.
 
 각 Kubernetes 버전별 생성 가능 버전에 추가/삭제하는 시점과 서비스 지원 종료 시점은 다음과 같습니다.
-(단, 이 표는 2023년 9월 26일 기준으로 작성되었으며, 신규 생성 가능 버전의 버전명과 제공 시기는 당사 내부 사정에 의해 변경될 수 있습니다)
+(단, 이 표는 2025년 3월 6일 기준으로 작성되었으며, 신규 생성 가능 버전의 버전명과 제공 시기는 당사 내부 사정에 의해 변경될 수 있습니다)
 
 | 버전    | 생성 가능 버전에 추가 | 생성 가능 버전에서 제거 | 서비스 지원 종료 |
 |:-------:|:-------------------:|:--------------------:|:---------------------:|
 | v1.22.3 | 2022. 01.           | 2023. 05.            | 2023. 08.             |
 | v1.23.3 | 2022. 03.           | 2023. 08.            | 2024. 02.             |
 | v1.24.3 | 2022. 09.           | 2024. 02.            | 2024. 05.             |
-| v1.25.4 | 2023. 01.           | 2024. 05.            | 2024. 08.(예정)       |
-| v1.26.3 | 2023. 05.           | 2024. 08.(예정)      | 2025. 02.(예정)       |
-| v1.27.3 | 2023. 08.           | 2025. 02.(예정)      | 2025. 05.(예정)       |
+| v1.25.4 | 2023. 01.           | 2024. 05.            | 2024. 08.             |
+| v1.26.3 | 2023. 05.           | 2024. 08.            | 2025. 02.             |
+| v1.27.3 | 2023. 08.           | 2025. 02.            | 2025. 05.(예정)       |
 | v1.28.3 | 2024. 02.           | 2025. 05.(예정)      | 2025. 08.(예정)       |
 | v1.29.3 | 2024. 05.           | 2025. 08.(예정)      | 2025. 11.(예정)       |
-| v1.30.x | 2024. 08.(예정)     | 2025. 11.(예정)      | 2026. 02.(예정)       |
+| v1.30.3 | 2024. 08.           | 2025. 11.(예정)      | 2026. 02.(예정)       |
+| v1.31.4 | 2025. 02.           | 2025. 11.(예정)      | 2026. 02.(예정)       |
+| v1.32.x | 2025. 05.(예정)     | 2025. 11.(예정)      | 2026. 02.(예정)       |
 
 
 ### 클러스터 생성
@@ -124,10 +126,12 @@ NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전�
 | v1.23.3 | 불가능 | 가능 |
 | v1.24.3 | 불가능 | 가능 |
 | v1.25.4 | 불가능 | 가능 |
-| v1.26.3 | 가능 | 가능 |
-| v1.27.3 | 가능 | 가능 |
+| v1.26.3 | 불가능 | 가능 |
+| v1.27.3 | 불가능 | 가능 |
 | v1.28.3 | 가능 | 가능 |
 | v1.29.3 | 가능 | 가능 |
+| v1.30.3 | 가능 | 가능 |
+| v1.31.4 | 가능 | 가능 |
 
 필요한 정보를 입력하고 **클러스터 생성**을 클릭하면 클러스터 생성이 시작됩니다. 클러스터 목록에서 상태를 확인할 수 있습니다. 생성하는 데는 약 10분 정도 걸립니다. 클러스터 설정에 따라 더 오래 걸릴 수도 있습니다.
 
@@ -369,124 +373,6 @@ k8s Node 상태의 아이콘 별 의미는 다음과 같습니다.
 * 회색: 중지 상태의 노드
 * 빨간색: 비정상 상태의 노드
 
-
-### GPU 노드 그룹 사용 
-Kubernetes를 통한 GPU 기반 워크로드 실행이 필요한 경우, GPU 인스턴스로 구성된 노드 그룹을 생성할 수 있습니다.
-클러스터 혹은 노드 그룹 생성 과정에서 인스턴스 타입 선택 시, `g2` 타입을 선택하면 GPU 노드 그룹을 만들 수 있습니다.
-
-> [참고]
-> NHN Cloud GPU 인스턴스에서 제공되는 GPU는 NVIDIA 계열입니다. ([사용 가능한 GPU 제원 확인하기](/Compute/GPU%20Instance/ko/overview-ngsc/#gpu))
-> NVIDIA GPU 이용을 위해 Kubernetes에 필요한 nvidia-device-plugin은 GPU 노드 그룹 생성 시 자동으로 설치됩니다.
-
-생성된 GPU 노드에 대한 기본적인 설정 상태 확인 및 간단한 동작 테스트는 다음과 같은 방법을 이용하면 됩니다.
-
-#### 노드 수준의 상태 확인
-GPU 노드에 접속한 후, `nvidia-smi` 명령을 실행합니다.
-다음과 같은 내용이 출력되면 GPU driver가 정상적으로 동작하는 것입니다.
-
-```
-$ nvidia-smi
-Mon Jul 27 14:38:07 2020
-+-----------------------------------------------------------------------------+
-| NVIDIA-SMI 418.152.00   Driver Version: 418.152.00   CUDA Version: 10.1     |
-|-------------------------------+----------------------+----------------------+
-| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
-| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
-|===============================+======================+======================|
-|   0  Tesla T4            Off  | 00000000:00:05.0 Off |                    0 |
-| N/A   30C    P8     9W /  70W |      0MiB / 15079MiB |      0%      Default |
-+-------------------------------+----------------------+----------------------+
-
-+-----------------------------------------------------------------------------+
-| Processes:                                                       GPU Memory |
-|  GPU       PID   Type   Process name                             Usage      |
-|=============================================================================|
-|  No running processes found                                                 |
-+-----------------------------------------------------------------------------+ 
-```
-
-#### Kubernetes 수준의 상태 확인
-`kubectl` 명령을 사용해 클러스터 수준에서 사용 가능한 GPU 리소스 정보를 확인합니다.
-아래는 각 노드에서 사용 가능한 GPU 코어의 개수를 출력하도록 하는 명령 및 수행 결과입니다.
-
-```
-$ kubectl get nodes -A -o custom-columns='NAME:.metadata.name,GPU Allocatable:.status.allocatable.nvidia\.com/gpu,GPU Capacity:.status.capacity.nvidia\.com/gpu'
-NAME                                       GPU Allocatable   GPU Capacity
-my-cluster-default-w-vdqxpwisjjsk-node-1   1                 1
-```
-
-#### GPU 테스트를 위한 샘플 워크로드 실행
-Kubernetes 클러스터에 속한 GPU 노드들은 CPU와 메모리 이외에 `nvidia.com/gpu`와 같은 이름의 리소스를 제공합니다.
-GPU를 사용하고 싶다면 `nvidia.com/gpu` 리소스를 할당받도록 아래의 샘플 파일처럼 입력하면 됩니다.
-
-* resnet.yaml
-```
-apiVersion: v1
-kind: Pod
-metadata:
-  name: resnet-gpu-pod
-spec:
-  imagePullSecrets:
-    - name: nvcr.dgxkey
-  containers:
-    - name: resnet
-      image: nvcr.io/nvidia/tensorflow:18.07-py3
-      command: ["mpiexec"]
-      args: ["--allow-run-as-root", "--bind-to", "socket", "-np", "1", "python", "/opt/tensorflow/nvidia-examples/cnn/resnet.py", "--layers=50", "--precision=fp16", "--batch_size=64", "--num_iter=90"]
-      resources:
-        limits:
-          nvidia.com/gpu: 1
-``` 
-
-위 파일을 실행하면 다음과 같은 결과를 확인할 수 있습니다.
-
-```
-$ kubectl create -f resnet.yaml
-pod/resnet-gpu-pod created
-
-$ kubectl get pods resnet-gpu-pod
-NAME             READY   STATUS    RESTARTS   AGE
-resnet-gpu-pod   0/1     Running   0          17s 
-
-$ kubectl logs resnet-gpu-pod -n default -f
-PY 3.5.2 (default, Nov 23 2017, 16:37:01)
-[GCC 5.4.0 20160609]
-TF 1.8.0
-Script arguments:
-  --layers 50
-  --display_every 10
-  --iter_unit epoch
-  --batch_size 64
-  --num_iter 100
-  --precision fp16
-Training
-WARNING:tensorflow:Using temporary folder as model directory: /tmp/tmpjw90ypze
-2020-07-31 00:57:23.020712: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:898] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
-2020-07-31 00:57:23.023190: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1356] Found device 0 with properties:
-name: Tesla T4 major: 7 minor: 5 memoryClockRate(GHz): 1.59
-pciBusID: 0000:00:05.0
-totalMemory: 14.73GiB freeMemory: 14.62GiB
-2020-07-31 00:57:23.023226: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1435] Adding visible gpu devices: 0
-2020-07-31 00:57:23.846680: I tensorflow/core/common_runtime/gpu/gpu_device.cc:923] Device interconnect StreamExecutor with strength 1 edge matrix:
-2020-07-31 00:57:23.846743: I tensorflow/core/common_runtime/gpu/gpu_device.cc:929]      0
-2020-07-31 00:57:23.846753: I tensorflow/core/common_runtime/gpu/gpu_device.cc:942] 0:   N
-2020-07-31 00:57:23.847023: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1053] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14151 MB memory) -> physical GPU (device: 0, name: Tesla T4, pci bus id: 0000:00:05.0, compute capability: 7.5)
-  Step Epoch Img/sec   Loss  LR
-     1   1.0     3.1  7.936  8.907 2.00000
-    10  10.0    68.3  1.989  2.961 1.65620
-    20  20.0   214.0  0.002  0.978 1.31220
-    30  30.0   213.8  0.008  0.979 1.00820
-    40  40.0   210.8  0.095  1.063 0.74420
-    50  50.0   211.9  0.261  1.231 0.52020
-    60  60.0   211.6  0.104  1.078 0.33620
-    70  70.0   211.3  0.340  1.317 0.19220
-    80  80.0   206.7  0.168  1.148 0.08820
-    90  90.0   210.4  0.092  1.073 0.02420
-   100 100.0   210.4  0.001  0.982 0.00020
-```
-
-> [참고]
-> GPU가 필요없는 워크로드가 GPU 노드에 할당되는 것을 막고 싶다면 [Taint 및 Toleration 개요](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)를 참고하세요.
 
 ### 오토 스케일러
 오토 스케일러는 노드 그룹의 가용 리소스가 부족해 파드(pod)를 스케줄링할 수 없거나 노드의 사용률이 일정 수준 이하로 유지되는 경우 노드의 수를 자동으로 조정하는 기능입니다. 이 기능은 노드 그룹별로 설정할 수 있고, 서로 독립적으로 동작합니다. 이 기능은 Kubernetes 프로젝트의 공식 지원 기능인 cluster-autoscaler 기능을 기반으로 합니다. 자세한 사항은 [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler)를 참고하세요.
@@ -1724,9 +1610,12 @@ NHN Kubernetes Service(NKS)가 제공하는 Calico-VXLAN, Calic-eBPF는 아래�
 | v1.24.3 | Flannel v0.14.0 혹은 Calico-VXLAN v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
 | v1.25.4 | Flannel v0.14.0 혹은 Calico-VXLAN v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
 | v1.26.3 | Flannel v0.14.0 혹은 Calico-VXLAN, Calico-eBPF v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
-| v1.27.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 불가|
-| v1.28.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 불가|
-| v1.29.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 불가|
+| v1.27.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | 불가|
+| v1.28.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | 불가|
+| v1.29.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | 불가|
+| v1.30.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | 불가|
+| v1.31.4 | Calico-VXLAN, Calico-eBPF v3.28.2 | 불가|
+
 
 주석
 
