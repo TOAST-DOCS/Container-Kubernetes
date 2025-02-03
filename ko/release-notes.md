@@ -1,5 +1,11 @@
 ## Container > NHN Kubernetes Service(NKS) > 릴리스 노트
 
+### 2025. 03. 04
+
+#### 기능 추가
+
+* Kubernetes v1.31.4를 지원합니다.
+
 ### 2024. 11. 26.
 
 #### 기능 추가
