@@ -40,7 +40,7 @@ NKS의 Kubernetes 버전 지원 정책은 다음과 같습니다.
 NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해야 합니다.
 
 > [주의] 클러스터 사용을 위한 권한 설정<br>
-> 클러스터를 만들고자 하는 사용자는 대상 프로젝트에 대해 반드시 기본 인프라 서비스의 **Infrastructure ADMIN** 또는 **Infrastructure LoadBalancer ADMIN** 권한을 가져야 합니다.
+> 클러스터를 만들고자 하는 사용자는 대상 프로젝트에 대해 반드시 기본 인프라 서비스의 **Infrastructure ADMIN** 또는 **Infrastructure LoadBalancer ADMIN** 또는 **Infrastructure LoadBalancer ADMIN** 권한을 가져야 합니다.
 > 해당 권한이 있어야만 기본 인프라 서비스를 기반으로 하는 클러스터를 정상적으로 생성하고 활용할 수 있으며, 이 중 하나의 권한을 가진 상태에서 다른 권한이 추가되는 것은 사용에 문제가 없습니다.
 > 권한 설정에 대해서는 [프로젝트 멤버 관리](/TOAST/ko/console-guide-gov/#_22)를 참고하세요.
 
