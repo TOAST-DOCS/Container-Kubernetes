@@ -71,6 +71,8 @@ NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해�
 | 블록 스토리지 크기 | 기본 노드 그룹 인스턴스의 블록 스토리지 크기 |
 | 추가 네트워크 | 기본 워커 노드 그룹에 생성할 추가 네트워크/서브넷 |
 
+필요한 정보를 입력하고 **클러스터 생성**을 클릭하면 클러스터 생성이 시작됩니다. 클러스터 목록에서 상태를 확인할 수 있습니다. 생성하는 데는 약 10분 정도 걸립니다. 클러스터 설정에 따라 더 오래 걸릴 수도 있습니다.
+
 > [주의]
 > VPC 네트워크 서브넷과 K8s 서비스 네트워크, 파드 네트워크의 CIDR은 경우 아래의 제약 사항에 해당하지 않도록 설정해야 합니다.
 >  - 링크 로컬 주소 대역(169.254.0.0/16)과 중첩될 수 없습니다.
@@ -112,26 +114,6 @@ NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해�
 >  - 파드 네트워크 = 10.100.0.0/16
 >  - 계산 : 254(각 노드 당 파드에 할당 가능한 최대 IP 수) * 253(최대 생성 가능한 노드 수) = 최대 64,262개 IP 사용 가능
 
-
-NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전에 따라 일부 기능에 제약이 있을 수 있습니다.
-
-| 버전 | 클러스터 신규 생성 | 생성된 클러스터 사용|
-| :-: | :-: | :-: |
-| v1.17.6 | 불가능 | 가능 |
-| v1.18.19 | 불가능 | 가능 |
-| v1.19.13 | 불가능 | 가능 |
-| v1.20.12 | 불가능 | 가능 |
-| v1.21.6 | 불가능 | 가능 |
-| v1.22.3 | 불가능 | 가능 |
-| v1.23.3 | 불가능 | 가능 |
-| v1.24.3 | 불가능 | 가능 |
-| v1.25.4 | 불가능 | 가능 |
-| v1.26.3 | 가능 | 가능 |
-| v1.27.3 | 가능 | 가능 |
-| v1.28.3 | 가능 | 가능 |
-| v1.29.3 | 가능 | 가능 |
-
-필요한 정보를 입력하고 **클러스터 생성**을 클릭하면 클러스터 생성이 시작됩니다. 클러스터 목록에서 상태를 확인할 수 있습니다. 생성하는 데는 약 10분 정도 걸립니다. 클러스터 설정에 따라 더 오래 걸릴 수도 있습니다.
 
 
 ### 클러스터 조회
@@ -1726,9 +1708,11 @@ NHN Kubernetes Service(NKS)가 제공하는 Calico-VXLAN, Calic-eBPF는 아래�
 | v1.24.3 | Flannel v0.14.0 혹은 Calico-VXLAN v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
 | v1.25.4 | Flannel v0.14.0 혹은 Calico-VXLAN v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
 | v1.26.3 | Flannel v0.14.0 혹은 Calico-VXLAN, Calico-eBPF v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
-| v1.27.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 불가|
-| v1.28.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 불가|
-| v1.29.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 불가|
+| v1.27.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | 불가|
+| v1.28.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | 불가|
+| v1.29.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | 불가|
+| v1.30.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | 불가|
+| v1.31.4 | Calico-VXLAN, Calico-eBPF v3.28.2 | 불가|
 
 주석
 
