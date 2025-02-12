@@ -1374,7 +1374,6 @@ NHN Cloud의 Kubernetes 클러스터 버전 관리 방식과 Kubernetes 버전 �
 #### 업그레이드 전략
 NHN Cloud의 Kubernetes 클러스터는 Rolling Upgrade, Blue/Green Upgrade 2가지 방식의 업그레이드 전략을 제공합니다.
 사용자는 운영 정책에 따라 적절한 전략을 선택하여 클러스터를 업그레이드할 수 있습니다.
-<!-- 각 업그레이드 방식은 다음과 같은 특징과 수행 과정을 가집니다. -->
 
 <br>
 
