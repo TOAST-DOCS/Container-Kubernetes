@@ -1323,7 +1323,7 @@ NHN Cloud의 Kubernetes 클러스터 버전 관리 방식과 Kubernetes 버전 �
 
 
 ##### 컨트롤 플레인 구성 요소 업그레이드
-NHN Cloud의 Kubernetes 클러스터 컨트롤 플레인은 고가용성을 보장합니다. 컨트롤 플레인에 대해 롤링 업데이트 방식으로 업그레이드되기 때문에 클러스터의 가용성이 보장됩니다.
+NHN Cloud의 Kubernetes 클러스터 컨트롤 플레인은 고가용성을 보장합니다. 컨트롤 플레인에 대해 롤링 업데이트 방식으로 업그레이드되기 때문에 클러스터의 가용성이 보장됩니다. 
 
 이 과정에서 아래와 같은 일들이 발생할 수 있습니다.
 
@@ -1368,7 +1368,6 @@ NHN Cloud의 Kubernetes 클러스터 컨트롤 플레인은 고가용성을 보�
 
 
 안전한 파드 축출에 대한 좀 더 상세한 설명은 [Safely Drain a Node](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)를 참고하세요
-
 
 ##### 시스템 파드 업그레이드
 컨트롤 플레인과 모든 워커 노드 그룹을 업그레이드하여 버전이 일치하게 되면 Kubernetes 클러스터 구성을 위해 동작하는 시스템 파드가 업그레이드 됩니다.
