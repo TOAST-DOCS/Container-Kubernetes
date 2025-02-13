@@ -1235,10 +1235,10 @@ Kubernetes 클러스터는 동작 중인 상태에서 Kubernetes 구성 요소�
 NHN Cloud에서 지원하는 Kubernetes 클러스터 업그레이드 기능의 동작 방식에 대해 설명합니다. 
 
 ##### Kubernetes 버전 관리
-NHN Cloud의 Kubernetes 클러스터는 클러스터 컨트롤 플레인과 워커 노드 그룹별로 Kubernetes 버전을 관리합니다. 컨트롤 플레인의 Kubernetes 버전은 클러스터 조회 화면에서 확인할 수 있고, 워커 노드 그룹의 Kubernetes 버전은 각 워커 노드 그룹 조회 화면에서 확인할 수 있습니다. 
+NKS 클러스터는 클러스터 컨트롤 플레인과 워커 노드 그룹별로 Kubernetes 버전을 관리합니다. 컨트롤 플레인의 Kubernetes 버전은 클러스터 조회 화면에서 확인할 수 있고, 워커 노드 그룹의 Kubernetes 버전은 각 워커 노드 그룹 조회 화면에서 확인할 수 있습니다. 
 
 ##### 업그레이드 규칙
-NHN Cloud의 Kubernetes 클러스터 버전 관리 방식과 Kubernetes 버전 차이 지원 정책에 의해 구성 요소별로 순서에 맞게 업그레이드해야 합니다. NHN Cloud의 Kubernetes 클러스터 업그레이드 기능에 적용되는 규칙은 다음과 같습니다.
+NKS 클러스터 버전 관리 방식과 Kubernetes 버전 차이 지원 정책에 의해 구성 요소별로 순서에 맞게 업그레이드해야 합니다. NKS 클러스터 업그레이드 기능에 적용되는 규칙은 다음과 같습니다.
 
 * 컨트롤 플레인과 각 워커 노드 그룹별로 업그레이드 명령을 실행해야 합니다.
 * 컨트롤 플레인의 Kubernetes 버전과 모든 워커 노드 그룹의 Kubernetes 버전이 일치해야 업그레이드가 가능합니다.
@@ -1272,7 +1272,7 @@ NHN Cloud의 Kubernetes 클러스터 버전 관리 방식과 Kubernetes 버전 �
 
 
 ##### 컨트롤 플레인 구성 요소 업그레이드
-NHN Cloud의 Kubernetes 클러스터 컨트롤 플레인은 고가용성을 보장합니다. 컨트롤 플레인에 대해 롤링 업데이트 방식으로 업그레이드되기 때문에 클러스터의 가용성이 보장됩니다. 
+NKS 클러스터 컨트롤 플레인은 고가용성을 보장합니다. 컨트롤 플레인에 대해 롤링 업데이트 방식으로 업그레이드되기 때문에 클러스터의 가용성이 보장됩니다. 
 
 이 과정에서 아래와 같은 일들이 발생할 수 있습니다.
 
@@ -1330,7 +1330,7 @@ NHN Kubernetes Service(NKS)는 동작 중인 Kubernetes 클러스터의 CNI(cont
 클러스터 CNI 변경 기능을 사용하면 NHN Kubernetes Service(NKS)의 CNI가 Flannel CNI에서 Calico-VXLAN CNI로 변경됩니다.
 
 #### CNI 변경 규칙
-NHN Cloud의 Kubernetes 클러스터 CNI 변경 기능에 적용되는 규칙은 다음과 같습니다.
+NKS 클러스터 CNI 변경 기능에 적용되는 규칙은 다음과 같습니다.
 
 * CNI 변경 기능은 NHN Kubernetes Service(NKS) 버전 1.24.3 이상인 경우에 사용할 수 있습니다.
 * 기존 NHN Kubernetes Service(NKS)에서 사용하고 있는 CNI가 Flannel인 경우에만 CNI 변경을 사용할 수 있습니다.
