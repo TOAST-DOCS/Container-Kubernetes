@@ -1496,6 +1496,24 @@ Kubernetes 컴포넌트의 여러 가지 옵션을 설정할 수 있습니다. �
 > * 컨트롤 플레인에서 동작하는 컴포넌트의 설정을 변경한 경우 컨트롤 플레인의 컴포넌트들이 재시작됩니다.
 > * 워커 노드에서 동작하는 컴포넌트의 설정을 변경한 경우 워커 노드의 컴포넌트가 재시작됩니다.
 
+### OIDC 인증 설정 기능
+
+OIDC(OpenID Connect)는 OAuth 2.0 프레임워크를 기반으로 한 상호 운용 가능한 인증 프로토콜입니다. OIDC를 이용하면 외부 인증 서비스를 통해 사용자를 인증할 수 있습니다. OIDC의 자세한 동작 방식은 [What is OpenID Connect](https://openid.net/developers/how-connect-works/)를 참고하세요.
+
+NKS 클러스터는 OIDC를 이용한 인증을 처리하도록 설정할 수 있습니다. OIDC 인증 관련한 설정 항목은 다음과 같습니다.
+
+| 항목 | 필수 여부 | 설명 |
+| --- | --- | --- |
+| Issuer URL | O | 'https://'로 시작하는 OIDC 제공자 URL |
+| Client ID | O | OIDC 제공자의 클라이언트 ID |
+| Username claim | X | username으로 사용할 claim. 기본값: 'sub'<br>email이 아닌 claim에는 제공자 URL이 접두사로 연결됩니다. |
+| Groups claim | X | groups로 사용할 claim |
+| Username prefix | X | 충돌을 방지하기 위해 username claim에 붙일 접두사(prefix).<br>설정하지 않으면 email을 제외한 username claim은 제공자 URL이 접두사로 연결됩니다.<br>접두사를 사용하지 않으려면 '-'를 입력합니다. |
+| Groups prefix | X | 충돌을 방지하기 위해 groups claim에 붙일 접두사(prefix) |
+| Required claim | X | ID 토큰에서 확인이 필요한 키/값 쌍 |
+| CA File | X | OIDC 제공자의 웹 인증서에 서명한 CA의 인증서 파일 |
+| Signing Algs| X | 허용된 JOSE 비대칭 서명 알고리즘 목록. 기본값: 'RS256' |
+
 ## 워커 노드 관리
 
 ### 컨테이너 관리
