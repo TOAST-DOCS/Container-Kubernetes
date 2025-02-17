@@ -1287,7 +1287,7 @@ NHN Kubernetes Service(NKS)는 동작 중인 Kubernetes 클러스터의 CNI(cont
 클러스터 CNI 변경 기능을 사용하면 NHN Kubernetes Service(NKS)의 CNI가 Flannel CNI에서 Calico-VXLAN CNI로 변경됩니다.
 
 #### CNI 변경 규칙
-NHN Cloud의 Kubernetes 클러스터 CNI 변경 기능에 적용되는 규칙은 다음과 같습니다.
+NKS 클러스터 CNI 변경 기능에 적용되는 규칙은 다음과 같습니다.
 
 * CNI 변경 기능은 NHN Kubernetes Service(NKS) 버전 1.24.3 이상인 경우에 사용할 수 있습니다.
 * 기존 NHN Kubernetes Service(NKS)에서 사용하고 있는 CNI가 Flannel인 경우에만 CNI 변경을 사용할 수 있습니다.
@@ -1409,6 +1409,7 @@ Kubernetes 컴포넌트의 여러 가지 옵션을 설정할 수 있습니다. �
 | kube-apiserver | 컨트롤 플레인 | default-not-ready-toleration-seconds | 노드가 NotReady 상태일 때, 해당 노드에서 실행 중인 파드가 얼마나 오랫동안 허용될지 정의합니다.<br>(단위: 초, 기본값: 300, 최솟값: 0, 최댓값: 86400) |
 | kube-apiserver | 컨트롤 플레인 | default-unreachable-toleration-seconds | 노드가 네트워크에 연결되지 않았을 때, 해당 노드에서 실행 중인 파드가 얼마나 오랫동안 허용될지 정의합니다.<br>(단위: 초, 기본값: 300, 최솟값: 0, 최댓값: 86400) |
 | kube-controller-manager | 컨트롤 플레인 | node-monitor-grace-period | 노드가 비정상 상태일 때 해당 노드를 비정상으로 간주하기까지 기다리는 시간을 정의합니다.<br>(단위: 초, 기본값: 40, 최솟값: 0, 최댓값: 86400) |
+| kube-controller-manager | 컨트롤 플레인 | unhealthy-zone-threshold | 가용 영역(zone)을 비정상으로 간주하는 NotReady 노드 비율의 임계값을 정의합니다.<br>(단위: 백분율, 기본값: 55, 최솟값: 0, 최댓값: 100) |
 | kubelet | 워커 노드 | node-status-update-frequency | kubelet의 노드 상태 보고 주기를 정의합니다.<br>(단위: 초, 기본값: 10, 최솟값: 0, 최댓값: 86400) |
 
 각 항목에 대한 자세한 설명은 [Kubernetes 공식 문서](https://kubernetes.io/docs/)를 참고하세요.
