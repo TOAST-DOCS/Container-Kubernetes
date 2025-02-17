@@ -1359,7 +1359,7 @@ NKS 클러스터는 Rolling Upgrade, Blue/Green Upgrade 2가지 방식의 업그
 
 **Rolling Upgrade**
 
-<Rolling Upgrade 이미지>
+![Rolling_Upgrade.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/Rolling_Upgrade.png)
 
 Rolling Upgrade는 컨트롤 플레인과 워커 노드 그룹들을 순차적으로 업그레이드하여 전체 클러스터를 신규 버전으로 전환하는 방식의 업그레이드 전략입니다. 아래는 Rolling Upgrade 전략을 통한 클러스터 업그레이드 수행 과정 및 각 과정에 대한 설명입니다.
 
@@ -1414,7 +1414,7 @@ NKS 클러스터 컨트롤 플레인은 고가용성을 보장합니다. 컨트�
 
 **Blue/Green Upgrade**
 
-<Blue/Green Upgrade 이미지>
+![Blue_Green.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/Blue_Green.png)
 
 Blue/Green Upgrade는 업그레이드 과정에서 클러스터 내에 두 개의 서로 다른 버전의 환경을 구성하여 응용 프로그램 가용성을 높이고 배포 실패 시 롤백 프로세스를 단순화하여 업그레이드 위험을 줄일 수 있도록 하는 업그레이드 전략입니다. 하나의 환경(Blue)은 업그레이드 이전 버전의 노드 그룹으로 구성되고, 다른 하나의 환경(Green)은 업그레이드 할 버전의 노드 그룹으로 구성됩니다. Green 환경에서 테스트가 완료되면 애플리케이션 트래픽을 Green 환경으로 이동하고, Blue 환경을 폐기합니다. 이 과정을 통해 전체 클러스터를 다음 버전으로 업그레이드 할 수 있습니다. 아래는 Blue/Green Upgrade 전략을 통한 클러스터 업그레이드 수행 과정 및 각 과정에 대한 설명입니다.
 
