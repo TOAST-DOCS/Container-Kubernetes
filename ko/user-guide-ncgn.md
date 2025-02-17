@@ -1114,14 +1114,11 @@ Kubernetes 버전은 `x.y.z`로 표현됩니다. `x`는 메이저 버전, `y`는
 Kubernetes 클러스터는 동작 중인 상태에서 Kubernetes 구성 요소를 업그레이드할 수 있습니다. 이를 위해 Kubernetes 구성 요소별로 Kubernetes 버전 차이에 따른 기능 지원 여부를 정의하고 있습니다. 마이너 버전을 기준으로 한 단계의 버전 차이는 상호 기능 호환을 지원함으로써 동작 중인 클러스터의 Kubernetes 구성 요소 업그레이드를 지원합니다. 또 구성 요소 종류 별로 업그레이드 순서를 정의하고 있습니다. 좀 더 자세한 내용은 [Version Skew Policy](https://kubernetes.io/releases/version-skew-policy/)를 참고하세요.
 
 
-<br>
 
-#### NKS 클러스터의 버전 관리
+##### Kubernetes 버전 관리
 NKS 클러스터는 클러스터 컨트롤 플레인과 워커 노드 그룹별로 Kubernetes 버전을 관리합니다. 컨트롤 플레인의 Kubernetes 버전은 클러스터 조회 화면에서 확인할 수 있고, 워커 노드 그룹의 Kubernetes 버전은 각 워커 노드 그룹 조회 화면에서 확인할 수 있습니다. 
 
-<br>
-
-#### 업그레이드 규칙
+##### 업그레이드 규칙
 NKS 클러스터 버전 관리 방식과 Kubernetes 버전 차이 지원 정책에 의해 구성 요소별로 순서에 맞게 업그레이드해야 합니다. NKS 클러스터 업그레이드 기능에 적용되는 규칙은 다음과 같습니다.
 
 * 컨트롤 플레인과 각 워커 노드 그룹별로 업그레이드 명령을 실행해야 합니다.
@@ -1297,7 +1294,7 @@ NHN Kubernetes Service(NKS)는 동작 중인 Kubernetes 클러스터의 CNI(cont
 클러스터 CNI 변경 기능을 사용하면 NHN Kubernetes Service(NKS)의 CNI가 Flannel CNI에서 Calico-VXLAN CNI로 변경됩니다.
 
 #### CNI 변경 규칙
-NHN Cloud의 Kubernetes 클러스터 CNI 변경 기능에 적용되는 규칙은 다음과 같습니다.
+NKS 클러스터 CNI 변경 기능에 적용되는 규칙은 다음과 같습니다.
 
 * CNI 변경 기능은 NHN Kubernetes Service(NKS) 버전 1.24.3 이상인 경우에 사용할 수 있습니다.
 * 기존 NHN Kubernetes Service(NKS)에서 사용하고 있는 CNI가 Flannel인 경우에만 CNI 변경을 사용할 수 있습니다.
