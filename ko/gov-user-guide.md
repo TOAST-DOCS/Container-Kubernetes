@@ -1231,10 +1231,10 @@ Kubernetes 클러스터는 동작 중인 상태에서 Kubernetes 구성 요소�
 NHN Cloud에서 지원하는 Kubernetes 클러스터 업그레이드 기능의 동작 방식에 대해 설명합니다. 
 
 ##### Kubernetes 버전 관리
-NHN Cloud의 Kubernetes 클러스터는 클러스터 컨트롤 플레인과 워커 노드 그룹별로 Kubernetes 버전을 관리합니다. 컨트롤 플레인의 Kubernetes 버전은 클러스터 조회 화면에서 확인할 수 있고, 워커 노드 그룹의 Kubernetes 버전은 각 워커 노드 그룹 조회 화면에서 확인할 수 있습니다. 
+NKS 클러스터는 클러스터 컨트롤 플레인과 워커 노드 그룹별로 Kubernetes 버전을 관리합니다. 컨트롤 플레인의 Kubernetes 버전은 클러스터 조회 화면에서 확인할 수 있고, 워커 노드 그룹의 Kubernetes 버전은 각 워커 노드 그룹 조회 화면에서 확인할 수 있습니다. 
 
 ##### 업그레이드 규칙
-NHN Cloud의 Kubernetes 클러스터 버전 관리 방식과 Kubernetes 버전 차이 지원 정책에 의해 구성 요소별로 순서에 맞게 업그레이드해야 합니다. NHN Cloud의 Kubernetes 클러스터 업그레이드 기능에 적용되는 규칙은 다음과 같습니다.
+NKS 클러스터 버전 관리 방식과 Kubernetes 버전 차이 지원 정책에 의해 구성 요소별로 순서에 맞게 업그레이드해야 합니다. NKS 클러스터 업그레이드 기능에 적용되는 규칙은 다음과 같습니다.
 
 * 컨트롤 플레인과 각 워커 노드 그룹별로 업그레이드 명령을 실행해야 합니다.
 * 컨트롤 플레인의 Kubernetes 버전과 모든 워커 노드 그룹의 Kubernetes 버전이 일치해야 업그레이드가 가능합니다.
@@ -1268,7 +1268,7 @@ NHN Cloud의 Kubernetes 클러스터 버전 관리 방식과 Kubernetes 버전 �
 
 
 ##### 컨트롤 플레인 구성 요소 업그레이드
-NHN Cloud의 Kubernetes 클러스터 컨트롤 플레인은 고가용성을 보장합니다. 컨트롤 플레인에 대해 롤링 업데이트 방식으로 업그레이드되기 때문에 클러스터의 가용성이 보장됩니다. 
+NKS 클러스터 컨트롤 플레인은 고가용성을 보장합니다. 컨트롤 플레인에 대해 롤링 업데이트 방식으로 업그레이드되기 때문에 클러스터의 가용성이 보장됩니다. 
 
 이 과정에서 아래와 같은 일들이 발생할 수 있습니다.
 
@@ -1326,7 +1326,7 @@ NHN Kubernetes Service(NKS)는 동작 중인 Kubernetes 클러스터의 CNI(cont
 클러스터 CNI 변경 기능을 사용하면 NHN Kubernetes Service(NKS)의 CNI가 Flannel CNI에서 Calico-VXLAN CNI로 변경됩니다.
 
 #### CNI 변경 규칙
-NHN Cloud의 Kubernetes 클러스터 CNI 변경 기능에 적용되는 규칙은 다음과 같습니다.
+NKS 클러스터 CNI 변경 기능에 적용되는 규칙은 다음과 같습니다.
 
 * CNI 변경 기능은 NHN Kubernetes Service(NKS) 버전 1.24.3 이상인 경우에 사용할 수 있습니다.
 * 기존 NHN Kubernetes Service(NKS)에서 사용하고 있는 CNI가 Flannel인 경우에만 CNI 변경을 사용할 수 있습니다.
@@ -1456,6 +1456,24 @@ Kubernetes 컴포넌트의 여러 가지 옵션을 설정할 수 있습니다. �
 > [주의]
 > * 컨트롤 플레인에서 동작하는 컴포넌트의 설정을 변경한 경우 컨트롤 플레인의 컴포넌트들이 재시작됩니다.
 > * 워커 노드에서 동작하는 컴포넌트의 설정을 변경한 경우 워커 노드의 컴포넌트가 재시작됩니다.
+
+### OIDC 인증 설정 기능
+
+OIDC(OpenID Connect)는 OAuth 2.0 프레임워크를 기반으로 한 상호 운용 가능한 인증 프로토콜입니다. OIDC를 이용하면 외부 인증 서비스를 통해 사용자를 인증할 수 있습니다. OIDC의 자세한 동작 방식은 [What is OpenID Connect](https://openid.net/developers/how-connect-works/)를 참고하세요.
+
+NKS 클러스터는 OIDC를 이용한 인증을 처리하도록 설정할 수 있습니다. OIDC 인증 관련한 설정 항목은 다음과 같습니다.
+
+| 항목 | 필수 여부 | 설명 |
+| --- | --- | --- |
+| Issuer URL | O | 'https://'로 시작하는 OIDC 제공자 URL |
+| Client ID | O | OIDC 제공자의 클라이언트 ID |
+| Username claim | X | username으로 사용할 claim. 기본값: 'sub'<br>email이 아닌 claim에는 제공자 URL이 접두사로 연결됩니다. |
+| Groups claim | X | groups로 사용할 claim |
+| Username prefix | X | 충돌을 방지하기 위해 username claim에 붙일 접두사(prefix).<br>설정하지 않으면 email을 제외한 username claim은 제공자 URL이 접두사로 연결됩니다.<br>접두사를 사용하지 않으려면 '-'를 입력합니다. |
+| Groups prefix | X | 충돌을 방지하기 위해 groups claim에 붙일 접두사(prefix) |
+| Required claim | X | ID 토큰에서 확인이 필요한 키/값 쌍 |
+| CA File | X | OIDC 제공자의 웹 인증서에 서명한 CA의 인증서 파일 |
+| Signing Algs| X | 허용된 JOSE 비대칭 서명 알고리즘 목록. 기본값: 'RS256' |
 
 ## 워커 노드 관리
 
