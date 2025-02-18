@@ -963,7 +963,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 4. 버퍼 노드에서 동작 중인 파드를 축출하고 버퍼 노드를 삭제합니다.
 5. 클러스터 오토스케일러 기능을 다시 활성화합니다.
 
-인스턴스 타입 변경은 워커 구성 요소 업그레이드와 유사한 방법으로 진행됩니다. 버퍼 노드의 생성과 삭제, 파드의 축출에 대해서는 [클러스터 업그레이드](/Container/NKS/ko/user-guide/#_30)를 참고하세요.
+인스턴스 타입 변경은 워커 구성 요소 업그레이드와 유사한 방법으로 진행됩니다. 버퍼 노드의 생성과 삭제, 파드의 축출에 대해서는 [클러스터 업그레이드](/Container/NKS/ko/user-guide/#cluster-upgrade)를 참고하세요.
 
 
 #### 제약 사항
@@ -1261,7 +1261,7 @@ Kubernetes 버전 별 기본 활성 승인 컨트롤러는 모두 활성화됩�
 * NodeRestriction
 * PodSecurityPolicy
 
-
+<a id="cluster-upgrade"></a>
 ### 클러스터 업그레이드
 NHN Kubernetes Service(NKS)는 동작 중인 Kubernetes 클러스터의 Kubernetes 구성 요소 업그레이드를 지원합니다. 
 
