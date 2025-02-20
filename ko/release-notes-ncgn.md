@@ -180,7 +180,7 @@
 #### 기능 추가
 
 * 클러스터 CNI 변경 기능이 추가되었습니다.
-    * 자세한 내용은 [사용 가이드](/Container/NKS/ko/gov-user-guide/#cni)를 참고하세요.
+    * 자세한 내용은 [사용 가이드](/Container/NKS/ko/user-guide-gov/#cni)를 참고하세요.
 * 노드 그룹의 인스턴스 타입을 변경할 수 있습니다.
 * 콘솔에서 Kubernetes 자원 조회 기능을 사용할 수 있습니다.
 
