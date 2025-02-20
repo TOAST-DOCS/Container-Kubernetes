@@ -2564,7 +2564,7 @@ spec:
   type: LoadBalancer
 ```
 
-<a id="ingress-controller">></a>
+<a id="ingress-controller"></a>
 ## 인그레스 컨트롤러
 인그레스 컨트롤러(ingress controller)는 인그레스(Ingress) 객체에 정의된 규칙을 참조하여 클러스터 외부에서 내부 서비스로 HTTP와 HTTPS 요청을 라우팅하고 SSL/TSL 종료, 가상 호스팅 등을 제공합니다. 인그레스 컨트롤러와 인그레스에 대한 자세한 내용은 [인그레스 컨트롤러](https://kubernetes.io/ko/docs/concepts/services-networking/ingress-controllers/), [인그레스](https://kubernetes.io/ko/docs/concepts/services-networking/ingress/) 문서를 참고하세요.
 
@@ -3004,7 +3004,7 @@ k8s-dashboard-ingress   nginx   *       123.123.123.44   80, 443   34s
 
 웹 브라우저에서 `https://{ADDRESS}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 엑세스 토큰](/Container/NKS/ko/user-guide-gov/#dashboard-access-token)을 참고하세요.
 
-<a id="dashboard-access-token">></a>
+<a id="dashboard-access-token"></a>
 ### 대시보드 엑세스 토큰
 Kubernetes 대시보드에 로그인하려면 토큰이 필요합니다. 토큰은 다음 명령으로 얻을 수 있습니다.
 
@@ -3128,7 +3128,7 @@ csi-storageclass   cinder.csi.openstack.org   Delete          WaitForFirstConsum
 ```
 
 
-<a id="static-provisioning">></a>
+<a id="static-provisioning"></a>
 ### 정적 프로비저닝
 
 정적 프로비저닝(static provisioning)은 사용자가 직접 블록 스토리지를 준비해야 합니다. NHN Cloud 웹 콘솔의 **Storage > Block Storage** 서비스 페이지에서 **블록 스토리지 생성** 버튼을 클릭해 PV와 연결할 블록 스토리지를 생성합니다. 블록 스토리지 가이드의 [블록 스토리지 생성](/Storage/Block%20Storage/ko/console-guide/#_2)을 참고하세요.
@@ -3214,7 +3214,7 @@ pv-static-001   10Gi       RWO            Delete           Bound    default/pvc-
 ```
 
 
-<a id="dynamic-provisioning">></a>
+<a id="dynamic-provisioning"></a>
 ### 동적 프로비저닝
 
 동적 프로비저닝(dynamic provisioning)은 스토리지 클래스에 정의된 속성을 참조하여 자동으로 블록 스토리지를 생성합니다. 동적 프로비저닝을 사용하기 위해서는 스토리지 클래스의 볼륨 바인딩 모드를 설정하지 않거나 **Immediate**로 설정해야 합니다.
