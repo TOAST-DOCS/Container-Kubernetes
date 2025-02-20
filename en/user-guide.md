@@ -1028,6 +1028,7 @@ The supported OS images and the application versions you must select for each OS
 | --- | --- | --- |
 | Rocky | Rocky Linux 8.10 (2024.08.20)  | 1.6 |
 |  | Rocky Linux 8.10 (2024.11.19)  | 1.7 |
+|  | Rocky Linux 8.10 (2025.02.25)  | 1.8 |
 | Ubuntu | Ubuntu Server 20.04.6 LTS (2023.05.25)  | 1.1 |
 |  | Ubuntu Server 20.04.6 LTS (2023.08.22)  | 1.2 |
 |  | Ubuntu Server 20.04.6 LTS (2023.11.21)  | 1.3 |
@@ -1039,6 +1040,8 @@ The supported OS images and the application versions you must select for each OS
 |  | Ubuntu Server 20.04.6 LTS (2024.08.20)  | 1.6 |
 |  | Ubuntu Server 20.04.6 LTS (2024.11.19)  | 1.7 |
 |  | Ubuntu Server 22.04.6 LTS (2024.11.19)  | 1.7 |
+|  | Ubuntu Server 20.04.6 LTS (2025.02.25)  | 1.8 |
+|  | Ubuntu Server 22.04.6 LTS (2025.02.25)  | 1.8 |
 
 
 > [Notes]
