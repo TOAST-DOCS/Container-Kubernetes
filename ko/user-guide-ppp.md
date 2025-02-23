@@ -120,7 +120,7 @@ NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해�
 | k8s API 상태 | Kubernetes API 엔드포인트의 동작 상태 |
 | k8s Node 상태 | Kubernetes Node 리소스의 상태 |
 
-작업 상태의 아이콘 별 의미는 다음과 같습니다.
+작업 상태의 아이콘별 의미는 다음과 같습니다.
 
 | 아이콘 | 의미 |
 | --- | --- |
@@ -129,7 +129,7 @@ NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해�
 | 빨간색 솔리드 아이콘 | 작업 실패 |
 | 회색 솔리드 아이콘 | 클러스터 사용 불가능 |
 
-k8s API 상태의 아이콘 별 의미는 다음과 같습니다.
+k8s API 상태의 아이콘별 의미는 다음과 같습니다.
 
 | 아이콘 | 의미 |
 | --- | --- |
@@ -137,7 +137,7 @@ k8s API 상태의 아이콘 별 의미는 다음과 같습니다.
 | 노란색 솔리드 아이콘 | 정보의 유효 기간(5분)이 얼마 남지 않아 정보가 정확하지 않음 |
 | 빨간색 솔리드 아이콘 | Kubernetes API 엔드포인트가 정상 동작하지 않거나 정보의 유효 기간이 만료됐음 |
 
-k8s Node 상태의 아이콘 별 의미는 다음과 같습니다.
+k8s Node 상태의 아이콘별 의미는 다음과 같습니다.
 
 | 아이콘 | 의미 |
 | --- | --- |
@@ -177,7 +177,7 @@ k8s Node 상태의 아이콘 별 의미는 다음과 같습니다.
 
 > [주의]
 > * 일반 사용자가 오너로 설정된 클러스터는 키페어 변경 기능을 통해 서비스 사용자의 권한으로 동작하도록 변경할 수 있습니다.
-> * 클러스터 오너 변경 기능은 더 이상 제공되지 않습니다. 키페어 변경 기능으로 클러스터가 서비스 사용자의 권한으로 동작할 수 있도록 해주십시오.
+> * 클러스터 오너 변경 기능은 더 이상 제공되지 않습니다. 클러스터가 서비스 사용자의 권한으로 동작할 수 있도록 하려면 키페어 변경 기능을 이용하세요.
 
 ## 노드 그룹
 노드 그룹은 Kubernetes를 구성하는 워커 노드 인스턴스들의 그룹입니다.
@@ -196,7 +196,7 @@ k8s Node 상태의 아이콘 별 의미는 다음과 같습니다.
 | 작업 상태 | 노드 그룹에 내린 명령에 대한 작업 상태 |
 | k8s Node 상태 | 노드 그룹에 속한 Kubernetes Node 리소스의 상태 |
 
-작업 상태의 아이콘 별 의미는 다음과 같습니다.
+작업 상태의 아이콘별 의미는 다음과 같습니다.
 
 | 아이콘 | 의미 |
 | --- | --- |
@@ -205,7 +205,7 @@ k8s Node 상태의 아이콘 별 의미는 다음과 같습니다.
 | 빨간색 솔리드 아이콘 | 작업 실패 |
 | 회색 솔리드 아이콘 | 클러스터 및 노드 그룹 사용 불가능 |
 
-k8s Node 상태의 아이콘 별 의미는 다음과 같습니다.
+k8s Node 상태의 아이콘별 의미는 다음과 같습니다.
 
 | 아이콘 | 의미 |
 | --- | --- |
@@ -264,7 +264,7 @@ k8s Node 상태의 아이콘 별 의미는 다음과 같습니다.
 동작 중인 노드 그룹에서 노드를 삭제할 수 있습니다. 노드 그룹 정보 조회 페이지의 노드 목록 탭을 클릭하면 현재 노드 목록이 나타납니다. 노드 목록 중 삭제할 노드를 선택하고 노드 삭제 버튼을 클릭하면 확인 대화 상자가 나타납니다. 삭제할 노드 이름을 다시 한번 확인하고 확인 버튼을 클릭하면 노드가 삭제됩니다.
 
 >[주의]
->삭제되는 노드에서 동작하고 있던 파드는 강제 종료 됩니다. 삭제될 노드에서 동작 중인 파드를 안전하게 다른 노드로 옮기기 위해서는 drain 명령을 내려야 합니다. 노드가 drain 된 후에도 새로운 파드는 이 노드에 스케줄링 될 수 있습니다. 새로운 파드가 삭제될 노드에 스케줄링되는 것을 방지하기 위해서는 cordon 명령을 내려야 합니다. 안전한 노드 관리에 대한 좀 더 자세한 내용은 아래 문서를 참고하세요.
+>삭제되는 노드에서 동작하고 있던 파드는 강제 종료됩니다. 삭제될 노드에서 동작 중인 파드를 안전하게 다른 노드로 옮기기 위해서는 drain 명령을 내려야 합니다. 노드가 drain 된 후에도 새로운 파드는 이 노드에 스케줄링될 수 있습니다. 새로운 파드가 삭제될 노드에 스케줄링되는 것을 방지하기 위해서는 cordon 명령을 내려야 합니다. 안전한 노드 관리에 대한 좀 더 자세한 내용은 아래 문서를 참고하세요.
 
 >[주의]
 >오토 스케일러가 활성화된 노드 그룹은 수동으로 노드를 삭제할 수 없습니다.
@@ -369,7 +369,7 @@ k8s Node 상태의 아이콘 별 의미는 다음과 같습니다.
 
 ##### 1. 오토 스케일러 활성화
 
-대상 클러스터의 기본 노드 그룹의 오토 스케일러 기능을 활성화 합니다. 이 예시에서는 기본 노드 그룹의 노드 수를 1로 생성하였고, 오토 스케일러 설정 항목은 아래와 같이 설정했습니다.
+대상 클러스터의 기본 노드 그룹의 오토 스케일러 기능을 활성화합니다. 이 예시에서는 기본 노드 그룹의 노드 수를 1로 생성하였고, 오토 스케일러 설정 항목은 아래와 같이 설정했습니다.
 
 | 설정 항목 | 설정값 |
 | --- | --- |
@@ -446,7 +446,7 @@ NAME                                            STATUS   ROLES    AGE   VERSION
 autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   45m   v1.28.3
 ```
 
-약5~10분 후 아래와 같이 노드가 증설된 것을 확인할 수 있습니다.
+약 5~10분 후 아래와 같이 노드가 증설된 것을 확인할 수 있습니다.
 
 ```
 # kubectl get nodes
@@ -590,7 +590,7 @@ metadata:
 HPA(Horizontal Pod Autoscaler) 기능은 CPU 사용량 등의 리소스 사용량을 관찰하여 레플리케이션 컨트롤러(ReplicationController), 디플로이먼트(Deployment), 레플리카셋(ReplicaSet), 스테이트풀셋(StatefulSet)의 파드 개수를 자동으로 스케일합니다. 파드 개수를 조절하다 보면 노드에 가용 리소스가 부족하거나 리소스가 많이 남는 상황이 발생할 수 있습니다. 이때 오토 스케일러 기능과 연동하여 노드의 수를 늘이거나 줄일 수 있습니다. 이 예제에서는 HPA 기능과 오토 스케일러 기능을 연동해 동작하는 것을 보여줍니다. HPA에 대한 자세한 설명은 [Horizontal Pod Autoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) 문서를 참고하세요. 
 
 ##### 1. 오토 스케일러 활성화
-위의 예제와 같이 오토 스케일러를 활성화 합니다.
+위의 예제와 같이 오토 스케일러를 활성화합니다.
 
 ##### 2. HPA 설정
 웹 요청을 받으면 일정 시간동안 CPU 부하를 생성하는 컨테이너를 배포합니다. 그리고 서비스를 노출시킵니다. 다음은 `php-apache.yaml` 파일의 내용입니다.
@@ -647,7 +647,7 @@ service/php-apache created
 horizontalpodautoscaler.autoscaling/php-apache autoscaled
 ```
 
-HPA의 상태를 조회해보면 설정값과 현재 상태를 볼 수 있습니다. 아직 CPU 부하를 일으키는 web request를 보내지 않았기 때문에 CPU load가 0% 입니다.
+HPA의 상태를 조회해 보면 설정값과 현재 상태를 볼 수 있습니다. 아직 CPU 부하를 일으키는 web request를 보내지 않았기 때문에 CPU load가 0%입니다.
 
 ```
 # kubectl get hpa
@@ -678,7 +678,7 @@ NAME                                            CPU(cores)   CPU%   MEMORY(bytes
 autoscaler-test-default-w-ohw5ab5wpzug-node-0   574m         57%    1013Mi          58%
 ```
 
-HPA의 상태를 조회해보면 CPU load가 증가했고, 이를 맞추기 위해 REPLICAS(=파드 수)가 수가 늘어난 것을 확인할 수 있습니다.
+HPA의 상태를 조회해 보면 CPU load가 증가했고, 이를 맞추기 위해 REPLICAS(=파드 수)가 수가 늘어난 것을 확인할 수 있습니다.
 
 ```
 # kubectl get hpa
@@ -687,7 +687,7 @@ php-apache   Deployment/php-apache   250%/50%   1         30        5          2
 ```
 
 ##### 4. 오토 스케일러 동작 확인
-파드를 조회해보면 파드의 수가 늘어나면서 일부 파드는 `node-0`에 스케줄링되어 Running 상태가 됐지만 일부는 Pending 상태인 것을 확인할 수 있습니다
+파드를 조회해 보면 파드의 수가 늘어나면서 일부 파드는 `node-0`에 스케줄링되어 Running 상태가 됐지만 일부는 Pending 상태인 것을 확인할 수 있습니다
 
 ```
 # kubectl get pods -o wide
@@ -701,7 +701,7 @@ php-apache-79544c9bd9-mplnn   0/1     Pending   0          19s     <none>       
 php-apache-79544c9bd9-t2knw   1/1     Running   0          80s     10.100.8.40   autoscaler-test-default-w-ohw5ab5wpzug-node-0   <none>           <none>
 ```
 
-파드를 스케줄링하지 못하는 상황이 바로 오토 스케일러의 노드 증설 조건입니다. Cluster Autoscaler 파드가 제공하는 상태 정보를 조회해보면 ScaleUp이 InProgress 상태가 된 것을 확인할 수 있습니다.
+파드를 스케줄링하지 못하는 상황이 바로 오토 스케일러의 노드 증설 조건입니다. Cluster Autoscaler 파드가 제공하는 상태 정보를 조회해 보면 ScaleUp이 InProgress 상태가 된 것을 확인할 수 있습니다.
 
 ```
 # kubectl get cm/cluster-autoscaler-status -n nhn-ng-default-worker -o yaml
@@ -757,7 +757,7 @@ php-apache-79544c9bd9-mplnn   1/1     Running   0          3m51s   10.100.42.4  
 php-apache-79544c9bd9-t2knw   1/1     Running   0          4m52s   10.100.8.40   autoscaler-test-default-w-ohw5ab5wpzug-node-0   <none>           <none>
 ```
 
-부하를 위해 실행해두었던 파드(`load-generator`)를 `Ctrl+C`로 중단시키면 잠시 후 부하가 줄어들게 됩니다. 부하가 줄면 파드가 점유하던 CPU 사용량이 줄어들어 파드의 수가 줄어들게 됩니다.
+부하를 위해 실행해 두었던 파드(`load-generator`)를 `Ctrl+C`로 중단시키면 잠시 후 부하가 줄어듭니다. 부하가 줄면 파드가 점유하던 CPU 사용량이 줄어들어 파드의 수가 줄어들게 됩니다.
 
 ```
 # kubectl get hpa
@@ -765,7 +765,7 @@ NAME         REFERENCE               TARGETS   MINPODS   MAXPODS   REPLICAS   AG
 php-apache   Deployment/php-apache   0%/50%    1         30        1          31m
 ```
 
-파드의 수가 줄어들어 노드의 리소스 사용량이 줄어들면 결국 노드 감축이 발생합니다. 새로 추가되었던 node-8이 감축된 것을 확인할 수 있습니다.
+파드의 수가 줄어 노드의 리소스 사용량이 줄면 결국 노드 감축이 발생합니다. 새로 추가되었던 node-8이 감축된 것을 확인할 수 있습니다.
 
 ```
 # kubectl get nodes
@@ -786,7 +786,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.28.3
     * 사용자 스크립트는 워커 노드 초기화 과정 중 인스턴스 초기화 과정에서 실행됩니다.
     * 사용자 스크립트가 실행된 후, 해당 인스턴스를 '워커 노드 그룹'의 워커 노드로 설정하고 등록합니다.
 * 스크립트 내용
-    * 사용자 스크립트의 첫번째 줄은 반드시 #! 으로 시작해야 합니다.
+    * 사용자 스크립트의 첫 번째 줄은 반드시 #! 으로 시작해야 합니다.
     * 스크립트 최대 크기는 64KB입니다.
     * 스크립트는 root 권한으로 실행됩니다.
     * 스크립트 실행 기록은 아래 위치에 저장됩니다.
@@ -1052,7 +1052,7 @@ status:
 * ServiceAccount
 * ValidatingAdmissionWebhook
 
-Kubernetes 버전 별 기본 활성 승인 컨트롤러는 모두 활성화됩니다. 기본 활성 승인 컨트롤러에 아래의 컨트롤러가 추가 활성화됩니다.
+Kubernetes 버전별 기본 활성 승인 컨트롤러는 모두 활성화됩니다. 기본 활성 승인 컨트롤러에 아래의 컨트롤러가 추가 활성화됩니다.
 
 * NodeRestriction
 * PodSecurityPolicy
@@ -1064,7 +1064,7 @@ NHN Kubernetes Service(NKS)는 동작 중인 Kubernetes 클러스터의 Kubernet
 #### Kubernetes 버전 차이 지원 정책
 Kubernetes 버전은 `x.y.z`로 표현됩니다. `x`는 메이저 버전, `y`는 마이너 버전, `z`는 패치 버전입니다. 기능이 추가되면 메이저 버전 혹은 마이너 버전을 올리고, 버그 수정과 같이 이전 버전과 호환되는 기능을 제공하면 패치 버전을 올립니다. 좀 더 자세한 내용은 [Semantic Versioning 2.0.0](https://semver.org/)을 참고하세요.
 
-Kubernetes 클러스터는 동작 중인 상태에서 Kubernetes 구성 요소를 업그레이드할 수 있습니다. 이를 위해 Kubernetes 구성 요소별로 Kubernetes 버전 차이에 따른 기능 지원 여부를 정의하고 있습니다. 마이너 버전을 기준으로 한 단계의 버전 차이는 상호 기능 호환을 지원함으로써 동작 중인 클러스터의 Kubernetes 구성 요소 업그레이드를 지원합니다. 또 구성 요소 종류 별로 업그레이드 순서를 정의하고 있습니다. 좀 더 자세한 내용은 [Version Skew Policy](https://kubernetes.io/releases/version-skew-policy/)를 참고하세요.
+Kubernetes 클러스터는 동작 중인 상태에서 Kubernetes 구성 요소를 업그레이드할 수 있습니다. 이를 위해 Kubernetes 구성 요소별로 Kubernetes 버전 차이에 따른 기능 지원 여부를 정의하고 있습니다. 마이너 버전을 기준으로 한 단계의 버전 차이는 상호 기능 호환을 지원함으로써 동작 중인 클러스터의 Kubernetes 구성 요소 업그레이드를 지원합니다. 또 구성 요소 종류별로 업그레이드 순서를 정의하고 있습니다. 좀 더 자세한 내용은 [Version Skew Policy](https://kubernetes.io/releases/version-skew-policy/)를 참고하세요.
 
 
 <br>
@@ -1114,7 +1114,7 @@ NHN Kubernetes Service(NKS)는 동작 중인 Kubernetes 클러스터의 Kubernet
 #### Kubernetes 버전 차이 지원 정책
 Kubernetes 버전은 `x.y.z`로 표현됩니다. `x`는 메이저 버전, `y`는 마이너 버전, `z`는 패치 버전입니다. 기능이 추가되면 메이저 버전 혹은 마이너 버전을 올리고, 버그 수정과 같이 이전 버전과 호환되는 기능을 제공하면 패치 버전을 올립니다. 좀 더 자세한 내용은 [Semantic Versioning 2.0.0](https://semver.org/)을 참고하세요.
 
-Kubernetes 클러스터는 동작 중인 상태에서 Kubernetes 구성 요소를 업그레이드할 수 있습니다. 이를 위해 Kubernetes 구성 요소별로 Kubernetes 버전 차이에 따른 기능 지원 여부를 정의하고 있습니다. 마이너 버전을 기준으로 한 단계의 버전 차이는 상호 기능 호환을 지원함으로써 동작 중인 클러스터의 Kubernetes 구성 요소 업그레이드를 지원합니다. 또 구성 요소 종류 별로 업그레이드 순서를 정의하고 있습니다. 좀 더 자세한 내용은 [Version Skew Policy](https://kubernetes.io/releases/version-skew-policy/)를 참고하세요.
+Kubernetes 클러스터는 동작 중인 상태에서 Kubernetes 구성 요소를 업그레이드할 수 있습니다. 이를 위해 Kubernetes 구성 요소별로 Kubernetes 버전 차이에 따른 기능 지원 여부를 정의하고 있습니다. 마이너 버전을 기준으로 한 단계의 버전 차이는 상호 기능 호환을 지원함으로써 동작 중인 클러스터의 Kubernetes 구성 요소 업그레이드를 지원합니다. 또 구성 요소 종류별로 업그레이드 순서를 정의하고 있습니다. 좀 더 자세한 내용은 [Version Skew Policy](https://kubernetes.io/releases/version-skew-policy/)를 참고하세요.
 
 
 <br>
@@ -1193,7 +1193,7 @@ NKS 클러스터 컨트롤 플레인은 고가용성을 보장합니다. 컨트�
 주석
 
 * <a name="footnote_worker_component_upgrade_1">1</a>: 이 단계는 업그레이드 기능 시작 전 클러스터 오토스케일러 기능이 활성화 되어 있는 경우에만 유효합니다.
-* <a name="footnote_worker_component_upgrade_2">2</a>: 버퍼 노드란 업그레이드 과정 중 기존 워커 노드에서 축출당한 파드가 다시 스케줄링 가능하도록 생성해놓는 여유 노드를 말합니다. 해당 워커 노드 그룹에서 정의한 워커 노드와 동일한 규격의 노드로 생성되며, 업그레이드 과정이 종료될 때 자동으로 삭제됩니다. 이 노드는 Instance 요금 정책에 따라 비용이 청구됩니다. 
+* <a name="footnote_worker_component_upgrade_2">2</a>: 버퍼 노드란 업그레이드 과정 중 기존 워커 노드에서 축출당한 파드가 다시 스케줄링 가능하도록 생성해 놓는 여유 노드를 말합니다. 해당 워커 노드 그룹에서 정의한 워커 노드와 동일한 규격의 노드로 생성되며, 업그레이드 과정이 종료될 때 자동으로 삭제됩니다. 이 노드는 Instance 요금 정책에 따라 비용이 청구됩니다. 
 * <a name="footnote_worker_component_upgrade_3">3</a>: 업그레이드 시 버퍼 노드 수를 설정할 수 있습니다. 기본값은 1이며, 0으로 설정하면 버퍼 노드를 추가하지 않습니다. 최솟값은 0이고, 최댓값은 (노드 그룹당 최대 노드 수 쿼터-해당 워커 노드 그룹의 현재 노드 수)입니다.
 * <a name="footnote_worker_component_upgrade_4">4</a>: 업그레이드 시 설정한 최대 서비스 불가 노드 수만큼씩 작업을 수행합니다. 기본값은 1입니다. 최솟값은 1이고, 최댓값은 해당 워커 노드 그룹의 현재 노드 수입니다.
 
@@ -1205,16 +1205,16 @@ NKS 클러스터 컨트롤 플레인은 고가용성을 보장합니다. 컨트�
 
 > [파드 축출 관련 유의 사항]
 > 1. 데몬셋(daemonset) 컨트롤러에 의한 파드는 축출되지 않습니다.
-> 데몬셋 컨트롤러는 각 워커 노드 별로 파드를 실행하기 떄문에 데몬셋 컨트롤러에 의해 실행된 파드는 축출되더라도 다른 노드에서 실행될 수 없습니다. 워커 노드 그룹 업그레이드 과정에서 데몬셋 컨트롤러에 의해 실행된 파드는 축출하지 않습니다. 
+> 데몬셋 컨트롤러는 각 워커 노드별로 파드를 실행하기 때문에 데몬셋 컨트롤러에 의해 실행된 파드는 축출되더라도 다른 노드에서 실행될 수 없습니다. 워커 노드 그룹 업그레이드 과정에서 데몬셋 컨트롤러에 의해 실행된 파드는 축출하지 않습니다. 
 > 2. 로컬 저장 공간을 사용하는 파드는 축출되면서 사용하던 데이터를 잃게 됩니다.
 > `emptyDir`을 이용해 노드의 로컬 저장 공간을 사용하는 파드는 축출되면서 사용하던 데이터를 잃게 됩니다. 노드의 로컬에 저장된 저장 공간이 다른 노드로 옮겨갈 수 없기 때문입니다. 
 > 3. 다른 노드로 복제가 불가능한 파드는 다른 노드로 옮겨지지 않습니다.
-> 리플리케이션 컨트롤러(ReplicationController), 레플리카셋(ReplicaSet), 잡(Job), 데몬셋(Daemonset), 스테이트풀(StatefulSet)와 같은 컨트롤러에 의해 실행된 파드가 축출되면 컨트롤러에 의해 다른 노드로 스케줄링 됩니다. 하지만 이와 같은 컨트롤러를 이용하지 않은 파드는 축출된 후 다른 노드로 스케줄링되지 않습니다. 
+> 리플리케이션 컨트롤러(ReplicationController), 레플리카셋(ReplicaSet), 잡(Job), 데몬셋(Daemonset), 스테이트풀(StatefulSet)과 같은 컨트롤러에 의해 실행된 파드가 축출되면 컨트롤러에 의해 다른 노드로 스케줄링됩니다. 하지만 이와 같은 컨트롤러를 이용하지 않은 파드는 축출된 후 다른 노드로 스케줄링되지 않습니다. 
 > 4. PodDisruptionBudgets(PDB) 설정에 의해 축출에 실패하거나 느려질 수 있습니다.
 > PodDisruptionBudgets(PDB) 설정으로 유지해야 할 파드 수를 정의할 수 있습니다. 이 기능 설정으로 인해 업그레이드 과정에서 파드 축출이 불가능할 수도 있고, 파드 축출 시간이 길어질 수 있습니다. 파드 축출에 실패하면 업그레이드가 실패합니다. 따라서 PDB 설정이 되어 있는 경우 적절한 PDB 설정으로 파드 축출이 원활히 동작할 수 있도록 설정해야 합니다. PDB 설정에 대한 더 자세한 내용은 [여기](https://kubernetes.io/docs/tasks/run-application/configure-pdb/)를 참고하세요.
 
 
-안전한 파드 축출에 대한 좀 더 상세한 설명은 [Safely Drain a Node](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)를 참고하세요
+안전한 파드 축출에 대한 좀 더 상세한 설명은 [Safely Drain a Node](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)를 참고하세요.
 
 
 <br>
@@ -1223,7 +1223,7 @@ NKS 클러스터 컨트롤 플레인은 고가용성을 보장합니다. 컨트�
 
 ![Blue_Green.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/Blue_Green.png)
 
-Blue/Green Upgrade는 업그레이드 과정에서 클러스터 내에 두 개의 서로 다른 버전의 환경을 구성하여 응용 프로그램 가용성을 높이고 배포 실패 시 롤백 프로세스를 단순화하여 업그레이드 위험을 줄일 수 있도록 하는 업그레이드 전략입니다. 하나의 환경(Blue)은 업그레이드 이전 버전의 노드 그룹으로 구성되고, 다른 하나의 환경(Green)은 업그레이드 할 버전의 노드 그룹으로 구성됩니다. Green 환경에서 테스트가 완료되면 애플리케이션 트래픽을 Green 환경으로 이동하고, Blue 환경을 폐기합니다. 이 과정을 통해 전체 클러스터를 다음 버전으로 업그레이드 할 수 있습니다. 아래는 Blue/Green Upgrade 전략을 통한 클러스터 업그레이드 수행 과정 및 각 과정에 대한 설명입니다.
+Blue/Green Upgrade는 업그레이드 과정에서 클러스터 내에 두 개의 서로 다른 버전의 환경을 구성하여 응용 프로그램 가용성을 높이고 배포 실패 시 롤백 프로세스를 단순화하여 업그레이드 위험을 줄일 수 있도록 하는 업그레이드 전략입니다. 하나의 환경(Blue)은 업그레이드 이전 버전의 노드 그룹으로 구성되고, 다른 하나의 환경(Green)은 업그레이드 할 버전의 노드 그룹으로 구성됩니다. Green 환경에서 테스트가 완료되면 애플리케이션 트래픽을 Green 환경으로 이동하고, Blue 환경을 폐기합니다. 이 과정을 통해 전체 클러스터를 다음 버전으로 업그레이드할 수 있습니다. 아래는 Blue/Green Upgrade 전략을 통한 클러스터 업그레이드 수행 과정 및 각 과정에 대한 설명입니다.
 
 <br>
 
@@ -1234,7 +1234,7 @@ NKS 클러스터 컨트롤 플레인은 고가용성을 보장합니다. 컨트�
 신규 노드 그룹을 생성하여 테스트를 위한 Green 환경을 생성합니다. 컨트롤 플레인 구성 요소 업그레이드 이후 생성되는 신규 노드 그룹은 컨트롤 플레인의 Kubernetes 버전과 동일한 버전으로 생성됩니다. Green 환경에 Blue 환경(기존 노드 그룹)과 동일한 리소스를 배포하여 업그레이드 이후 환경의 검증을 수행할 수 있습니다. 이 때, Blue 환경이 기존 클러스터의 운영에 영향을 주지 않도록 애플리케이션 트래픽을 분리해야 합니다.
 
 ##### 3. Green 환경(신규 노드 그룹)에 대한 검증 후 애플리케이션 트래픽을 Green 환경으로 전환합니다.
-새로 구축한 Green 환경에서 기존 사용자가 운영중이던 리소스가 다음 버전의 쿠버네티스와 정상적으로 호환되는지에 대해 검증하고, 검증이 완료되면 애플리케이션 트래픽을 기존의 Blue 환경에서 새로 구축한 Green 환경으로 전환합니다. 만약 Green 환경에서의 검증 단계에서 문제가 발생하는 경우, 트래픽을 전환하지 않고 Blue 환경을 삭제함으로써 간단하게 롤백할 수 있습니다.
+새로 구축한 Green 환경에서 기존 사용자가 운영 중이던 리소스가 다음 버전의 쿠버네티스와 정상적으로 호환되는지에 대해 검증하고, 검증이 완료되면 애플리케이션 트래픽을 기존의 Blue 환경에서 새로 구축한 Green 환경으로 전환합니다. 만약 Green 환경에서의 검증 단계에서 문제가 발생하는 경우, 트래픽을 전환하지 않고 Blue 환경을 삭제함으로써 간단하게 롤백할 수 있습니다.
 
 ##### 4. Blue 환경(이전 버전의 모든 워커 노드 그룹)을 폐기합니다.
 컨트롤 플레인과 모든 워커 노드 그룹의 버전이 일치하지 않으면 다음 단계인 시스템 파드 업그레이드 수행이 불가능합니다. 클러스터의 모든 노드 그룹을 업그레이드 버전으로 맞추기 위해 Blue 환경을 폐기합니다.
@@ -1307,13 +1307,13 @@ CNI 변경은 다음 순서로 진행됩니다.
 이 과정에서 아래와 같은 일들이 발생할 수 있습니다.
 
 * 서비스 중인 파드가 축출되어 다른 노드로 스케줄링됩니다. (파드 축출에 대한 더 자세한 내용은 [클러스터 업그레이드](/NKS/ko/user-guide-ppp/#cluster-upgrade)를 참고하시길 바랍니다.)
-* 클러스터에 배포되어있는 모든 파드가 재배포 됩니다. (파드 재배포에 대한 더 자세한 내용은 아래 파드 재배포 주의 사항을 참고하시길 바랍니다.)
+* 클러스터에 배포되어 있는 모든 파드가 재배포됩니다. (파드 재배포에 대한 더 자세한 내용은 아래 파드 재배포 주의 사항을 참고하시길 바랍니다.)
 * 오토스케일러 기능이 동작하지 않습니다. 
 
 
 > [파드 재배포 주의 사항]
 > 1. 파드 축출 과정을 통해 다른 노드로 옮겨지지 않은 파드에 대해 진행됩니다.
-> 2. CNI 변경 과정 중에 Flannel CIDR와 Calico-VXLAN CIDR 간 정상 통신을 위해 CNI 변경 파드 네트워크 값은 기존 Flannel CIDR 값과 동일하면 안됩니다.
+> 2. CNI 변경 과정 중에 Flannel CIDR와 Calico-VXLAN CIDR 간 정상 통신을 위해 CNI 변경 파드 네트워크 값은 기존 Flannel CIDR 값과 동일하면 안 됩니다.
 > 3. 기존에 배포되어 있던 파드들의 pause 컨테이너는 모두 stop 되었다가 kubelet에 의해 다시 재생성됩니다. 파드 이름과 로컬 저장 공간 등 설정은 그대로 유지되지만 IP는 Calico-VXLAN CIDR의 IP로 변경됩니다.
 
 
@@ -2795,7 +2795,7 @@ Events:            <none>
 
 #### LoadBalancer 서비스 객체로 변경
 
-`LoadBalancer` 유형으로 서비스 객체를 변경하면 클러스터 외부에 NHN Cloud Load Balancer가 생성되고, 로드 밸런서와 서비스 객체와 연결됩니다. 로드 밸런서와 연결된 서비스 객체를 조회하면 **EXTERNAL-IP** 필드에 로드 밸런서의 IP가 표시됩니다. `LoadBalancer` 유형의 서비스 객체에 대한 설명은 [LoadBalancer 서비스](/Container/NKS/ko/user-guide-ppp/#loadbalancer)를 참고하세요. 아래 그림은 `LoadBalancer` 유형의 서비스를 이용해 대시보드를 외부에 공개하는 구조를 나타냅니다.
+`LoadBalancer` 유형으로 서비스 객체를 변경하면 클러스터 외부에 NHN Cloud Load Balancer가 생성되고, 로드 밸런서와 서비스 객체가 연결됩니다. 로드 밸런서와 연결된 서비스 객체를 조회하면 **EXTERNAL-IP** 필드에 로드 밸런서의 IP가 표시됩니다. `LoadBalancer` 유형의 서비스 객체에 대한 설명은 [LoadBalancer 서비스](/Container/NKS/ko/user-guide-ppp/#loadbalancer)를 참고하세요. 아래 그림은 `LoadBalancer` 유형의 서비스를 이용해 대시보드를 외부에 공개하는 구조를 나타냅니다.
 
 ![dashboard-01.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-01.png)
 
@@ -2819,7 +2819,7 @@ kubernetes-dashboard   LoadBalancer   10.254.95.176   123.123.123.81   443:30963
 > 생성된 로드 밸런서는 **Network > Load Balancer** 페이지에서 확인할 수 있습니다.
 > 로드 밸런서의 IP는 외부에서 접근할 수 있는 플로팅 IP입니다. **Network > Floating IP** 페이지에서 확인할 수 있습니다.
 
-웹 브라우저에서 `https://{EXTERNAL-IP}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 엑세스 토큰](/Container/NKS/ko/user-guide-ppp/#dashboard-access-token)을 참고하세요.
+웹 브라우저에서 `https://{EXTERNAL-IP}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 액세스 토큰](/Container/NKS/ko/user-guide-ppp/#dashboard-access-token)을 참고하세요.
 
 > [참고]
 > Kubernetes 대시보드는 자동 생성되는 사설 인증서를 사용하기 때문에 웹 브라우저의 종류와 보안 설정에 따라 안전하지 않은 페이지로 표시될 수 있습니다.
@@ -2873,10 +2873,10 @@ NAME                    CLASS   HOSTS   ADDRESS          PORTS     AGE
 k8s-dashboard-ingress   nginx   *       123.123.123.44   80, 443   34s
 ```
 
-웹 브라우저에서 `https://{ADDRESS}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 엑세스 토큰](/Container/NKS/ko/user-guide-ppp/#dashboard-access-token)을 참고하세요.
+웹 브라우저에서 `https://{ADDRESS}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 액세스 토큰](/Container/NKS/ko/user-guide-ppp/#dashboard-access-token)을 참고하세요.
 
 <a id="dashboard-access-token"></a>
-### 대시보드 엑세스 토큰
+### 대시보드 액세스 토큰
 Kubernetes 대시보드에 로그인하려면 토큰이 필요합니다. 토큰은 다음 명령으로 얻을 수 있습니다.
 
 ```
@@ -3305,7 +3305,7 @@ ORAS(OCI Registry As Storage)는 OCI 레지스트리에서 OCI 아티팩트를 p
 | | X | oras pull private-4b251859-kr4-registry.container.ngsc.go.kr/container_service/oci/nfs-deploy-tool:v2 |
 
 > [참고]
-> csi-driver-nfs 컨테이너 이미지 및 아티팩트는 NHN Cloud NCR에서 관리되고 있습니다. 폐쇄망 환경에 구성된 클러스터는 인터넷에 연결되어 있지 않기 때문에 이미지 및 아티팩트를 정상적으로 받아오기 위해서는 Private URI를 사용하기 위한 환경 구성이 필요합니다. Private URI 사용법에 대한 자세한 내용은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/user-guide-ppp/#private-uri)를 참고하세요.
+> csi-driver-nfs 컨테이너 이미지 및 아티팩트는 NHN Cloud NCR에서 관리되고 있습니다. 폐쇄망 환경에 구성된 클러스터는 인터넷에 연결되어 있지 않기 때문에 이미지 및 아티팩트를 정상적으로 받아 오기 위해서는 Private URI를 사용하기 위한 환경 구성이 필요합니다. Private URI 사용법에 대한 자세한 내용은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/user-guide-ppp/#private-uri)를 참고하세요.
 
 ##### 3. 설치 패키지를 압축 해제한 후 **./install-driver.sh {REGISTRY} {INTERNET_USAGE}** 명령어를 사용하여 csi-driver-nfs 구성 요소를 설치합니다.
 클러스터가 생성된 리전 및 인터넷 연결 가능 여부에 따라 올바른 {REGISTRY} 및 {INTERNET_USAGE} 값을 입력합니다. 
