@@ -20,7 +20,7 @@ NKS의 Kubernetes 버전 지원 정책은 다음과 같습니다.
     * 따라서 생성 가능한 버전이 하나 추가되면 기존의 서비스 지원 가능 버전 목록에서 가장 낮은 버전이 제거됩니다.
 
 각 Kubernetes 버전별 생성 가능 버전에 추가/삭제하는 시점과 서비스 지원 종료 시점은 다음과 같습니다.
-(단, 이 표는 2025년 3월 4일 기준으로 작성되었으며, 신규 생성 가능 버전의 버전명과 제공 시기는 당사 내부 사정에 의해 변경될 수 있습니다)
+(단, 이 표는 2025년 3월 11일 기준으로 작성되었으며, 신규 생성 가능 버전의 버전명과 제공 시기는 당사 내부 사정에 의해 변경될 수 있습니다)
 
 | 버전    | 생성 가능 버전에 추가 | 생성 가능 버전에서 제거 | 서비스 지원 종료 |
 |:-------:|:-------------------:|:--------------------:|:---------------------:|
@@ -42,7 +42,7 @@ NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해�
 > [주의] 클러스터 사용을 위한 권한 설정<br>
 > 클러스터를 만들고자 하는 사용자는 대상 프로젝트에 대해 반드시 기본 인프라 서비스의 **Infrastructure ADMIN** 또는 **Infrastructure LoadBalancer ADMIN** 또는 **Infrastructure NKS ADMIN** 권한을 가져야 합니다.
 > 해당 권한이 있어야만 기본 인프라 서비스를 기반으로 하는 클러스터를 정상적으로 생성하고 활용할 수 있으며, 이 중 하나의 권한을 가진 상태에서 다른 권한이 추가되는 것은 사용에 문제가 없습니다.
-> 권한 설정에 대해서는 [프로젝트 멤버 관리](/TOAST/ko/console-guide/#_22)를 참고하세요.
+> 권한 설정에 대해서는 [프로젝트 멤버 관리](/TOAST/ko/console-guide-gov/#_22)를 참고하세요.
 
 **Container > NHN Kubernetes Service(NKS)** 페이지에서 **클러스터 생성**을 클릭하면 클러스터 생성 페이지가 나타납니다. 클러스터 생성에 필요한 항목은 다음과 같습니다.
 
@@ -52,8 +52,6 @@ NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해�
 | Kubernetes 버전 | 사용할 Kubernetes 버전 |
 | VPC | 클러스터에 연결할 VPC 네트워크 |
 | 서브넷 | VPC에 정의된 서브넷 중 클러스터를 구성하는 인스턴스에 연결할 서브넷 |
-| NCR 서비스 게이트웨이 | NCR 타입의 서비스 게이트웨이<br>(단, 서브넷에 인터넷 게이트웨이가 연결되어 있지 않은 경우에 한함) |
-| OBS 서비스 게이트웨이 | OBS 타입의 서비스 게이트웨이<br>(단, 서브넷에 인터넷 게이트웨이가 연결되어 있지 않은 경우에 한함) |
 | K8s 서비스 네트워크 | 클러스터의 service object CIDR 설정 |
 | 파드 네트워크 | 클러스터의 파드 네트워크 설정 |
 | 파드 서브넷 크기 | 클러스터의 파드 서브넷 크기 설정 |
@@ -77,17 +75,6 @@ NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해�
 >  - NKS 내부에서 사용하고 있는 IP 대역(198.18.0.0/19)과 중첩될 수 없습니다.
 >  - /24보다 큰 CIDR 블록은 입력할 수 없습니다(다음과 같은 CIDR 블록은 사용할 수 없습니다. /26, /30).
 >  - v1.23.3 이하 클러스터의 경우 도커 BIP(bridged IP range)와 중첩될 수 없습니다(172.17.0.0/16).
->
-> 클러스터 생성 시 설정한 서비스 게이트웨이는 삭제하지 않아야 합니다.
->  - 선택한 서브넷이 인터넷 게이트웨이에 연결되지 않은 경우 NCR 서비스 게이트웨이와 OBS 서비스 게이트웨이 설정이 필요합니다.
->  - 이 두 개의 서비스 게이트웨이는 NKS 클러스터 구성 및 기본 기능에 필요한 이미지/바이너리를 받아올 때 사용됩니다.
->  - 클러스터 생성 시 설정한 서비스 게이트웨이를 삭제하면 클러스터가 정상 동작하지 않습니다.
->  - 만약 클러스터 생성 시 설정한 서비스 게이트웨이가 삭제된 경우 클러스터별로 서비스 게이트웨이를 다시 설정해야 합니다.
->  - 클러스터의 서비스 게이트웨이는 클러스터 **기본 정보** 탭의 서비스 게이트웨이 조회 결과 옆 **변경** 버튼을 눌러 다시 설정할 수 있습니다.
->
-> 클러스터 생성 시 설정한 서브넷의 인터넷 게이트웨이 연결 여부를 변경하지 않아야 합니다.
->  - 클러스터 생성 시 설정한 서브넷의 인터넷 게이트웨이 연결 여부에 따라 이미지/바이너리를 받아 올 레지스트리가 달라집니다.
->  - 클러스터 생성 후 서브넷의 인터넷 게이트웨이 연결 여부가 변경되면 설정된 레지스트리에 연결되지 못해 클러스터가 정상 동작하지 않습니다.
 
 > [최대 생성 가능한 노드 수]
 > 클러스터 생성 시 생성 가능한 최대 노드 수는 파드 네트워크, 파드 서브넷 크기 설정으로 결정됩니다.
@@ -318,7 +305,7 @@ Kubernetes를 통한 GPU 기반 워크로드 실행이 필요한 경우, GPU 인
 클러스터 혹은 노드 그룹 생성 과정에서 인스턴스 타입 선택 시, `g2` 타입을 선택하면 GPU 노드 그룹을 만들 수 있습니다.
 
 > [참고]
-> NHN Cloud GPU 인스턴스에서 제공되는 GPU는 NVIDIA 계열입니다. ([사용 가능한 GPU 제원 확인하기](/Compute/GPU%20Instance/ko/overview/#gpu))
+> NHN Cloud GPU 인스턴스에서 제공되는 GPU는 NVIDIA 계열입니다. ([사용 가능한 GPU 제원 확인하기](/Compute/GPU%20Instance/ko/overview-gov/#gpu))
 > NVIDIA GPU 이용을 위해 Kubernetes에 필요한 nvidia-device-plugin은 GPU 노드 그룹 생성 시 자동으로 설치됩니다.
 
 생성된 GPU 노드에 대한 기본적인 설정 상태 확인 및 간단한 동작 테스트는 다음과 같은 방법을 이용하면 됩니다.
@@ -444,16 +431,6 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 | --- | --- |
 | 증설 | 노드의 수를 증가시키는 것을 말합니다 |
 | 감축 | 노드의 수를 감소시키는 것을 말합니다 |
-
-> [주의]
-> 워커 노드가 인터넷 연결이 불가능한 환경에서 동작하고 있다면 오토 스케일러 컨테이너 이미지를 워커 노드에 직접 설치해야 합니다. 이 작업이 필요한 대상은 다음과 같습니다.
-> 
-> * 판교 리전: 2020년 11월 24일 이전에 생성한 노드 그룹
-> * 평촌 리전: 2020년 11월 19일 이전에 생성한 노드 그룹
-> 
-> 오토 스케일러의 컨테이너 이미지 경로는 다음과 같습니다.
->
-> * k8s.gcr.io/autoscaling/cluster-autoscaler:v1.19.0
 
 #### 오토 스케일러 설정
 오토 스케일러 기능은 노드 그룹별로 설정하고 동작합니다. 오토 스케일러 기능은 아래 경로로 설정할 수 있습니다.
@@ -963,7 +940,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 4. 버퍼 노드에서 동작 중인 파드를 축출하고 버퍼 노드를 삭제합니다.
 5. 클러스터 오토스케일러 기능을 다시 활성화합니다.
 
-인스턴스 타입 변경은 워커 구성 요소 업그레이드와 유사한 방법으로 진행됩니다. 버퍼 노드의 생성과 삭제, 파드의 축출에 대해서는 [클러스터 업그레이드](/Container/NKS/ko/user-guide/#cluster-upgrade)를 참고하세요.
+인스턴스 타입 변경은 워커 구성 요소 업그레이드와 유사한 방법으로 진행됩니다. 버퍼 노드의 생성과 삭제, 파드의 축출에 대해서는 [클러스터 업그레이드](/NKS/ko/user-guide-gov/#cluster-upgrade)를 참고하세요.
 
 
 #### 제약 사항
@@ -977,7 +954,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 <a id="custom-image"></a>
 ### 커스텀 이미지를 워커 이미지로 활용
 
-사용자의 커스텀 이미지를 기반으로 한 워커 노드 그룹을 생성할 수 있습니다. 커스텀 이미지가 워커 노드 이미지로 활용될 수 있도록 NHN Cloud Image Builder 서비스에서 추가적인 작업(NKS 워커 노드화)이 필요합니다. Image Builder 서비스에서 NHN Kubernetes Service(NKS) 워커 노드 애플리케이션으로 이미지 템플릿을 생성하여 커스텀 워커 노드 이미지를 생성할 수 있습니다. Image Builder 서비스에 대한 자세한 내용은 [Image Builder 사용자 가이드](/Compute/Image%20Builder/ko/console-guide/#_1)를 참고하세요.
+사용자의 커스텀 이미지를 기반으로 한 워커 노드 그룹을 생성할 수 있습니다. 커스텀 이미지가 워커 노드 이미지로 활용될 수 있도록 NHN Cloud Image Builder 서비스에서 추가적인 작업(NKS 워커 노드화)이 필요합니다. Image Builder 서비스에서 NHN Kubernetes Service(NKS) 워커 노드 애플리케이션으로 이미지 템플릿을 생성하여 커스텀 워커 노드 이미지를 생성할 수 있습니다. Image Builder 서비스에 대한 자세한 내용은 [Image Builder 사용자 가이드](/Compute/Image%20Builder/ko/console-guide-gov/#_1)를 참고하세요.
 
 > [주의]
 > NKS 워커 노드화 작업에는 패키지 설치 및 설정 변경 등이 포함되어 있어 정상적으로 동작하지 않는 이미지로 작업을 진행하는 경우 실패할 수 있습니다.
@@ -1030,6 +1007,21 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 
 ![nkscustom_image_3.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nkscustom_image_3.png)
 
+### 추가 보안 그룹
+노드 그룹에 추가 보안 그룹을 설정할 수 있습니다. 클러스터 및 노드 그룹 생성 시 추가 보안 그룹을 지정하여 생성하거나, 기존의 노드 그룹에 추가 보안 그룹을 설정할 수 있습니다. 추가 보안 그룹의 특징은 다음과 같습니다.
+
+* 추가 보안 그룹은 서브넷당 최대 8개까지 설정할 수 있습니다.
+* 노드 그룹의 추가 보안 그룹 설정은 노드 그룹에 속한 모든 워커 노드에 동일하게 적용됩니다.
+* 추가 보안 그룹 미입력 시 클러스터의 기본 보안 그룹만 적용됩니다.
+* 사용자가 개별 노드에 직접 설정한 보안 그룹은 노드 그룹의 추가 보안 그룹 항목에서 조회되지 않습니다.
+
+[참고]
+> 콘솔에서 노드 그룹 생성 시 지정한 추가 보안 그룹은 기본 네트워크 및 모든 추가 네트워크에 적용됩니다. 개별 네트워크의 추가 보안 그룹에 대한 변경은 노드 그룹 생성 이후에 가능합니다.
+
+[주의]
+> 노드 그룹에 추가 보안 그룹 설정 시 기존 인스턴스에 할당된 보안 그룹 중 추가 보안 그룹에 정의되지 않은 대상은 제거됩니다.
+> 추가 보안 그룹 변경 시 네트워크 설정이 변경되므로 설정이 적용되는 동안 일시적으로 통신에 영향이 있을 수 있습니다.
+
 ### 추가 블록 스토리지
 노드 그룹에 추가 블록 스토리지를 사용할 수 있습니다. 클러스터 및 노드 그룹 생성 시 추가 블록 스토리지를 지정하여 생성하거나, 기존의 노드 그룹에 추가 블록 스토리지를 생성하여 사용할 수 있습니다. 추가 블록 스토리지는 다음과 같은 특징을 가집니다.
 
@@ -1047,20 +1039,6 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 [주의]
 > 추가 블록 스토리지의 설정 변경은 기존 볼륨의 마운트 해제를 포함하므로 사용 중인 서비스에 영향을 미칠 수 있습니다.
 
-### 추가 보안 그룹
-노드 그룹에 추가 보안 그룹을 설정할 수 있습니다. 클러스터 및 노드 그룹 생성 시 추가 보안 그룹을 지정하여 생성하거나, 기존의 노드 그룹에 추가 보안 그룹을 설정할 수 있습니다. 추가 보안 그룹의 특징은 다음과 같습니다.
-
-* 추가 보안 그룹은 서브넷당 최대 8개까지 설정할 수 있습니다.
-* 노드 그룹의 추가 보안 그룹 설정은 노드 그룹에 속한 모든 워커 노드에 동일하게 적용됩니다.
-* 추가 보안 그룹 미입력 시 클러스터의 기본 보안 그룹만 적용됩니다.
-* 사용자가 개별 노드에 직접 설정한 보안 그룹은 노드 그룹의 추가 보안 그룹 항목에서 조회되지 않습니다.
-
-[참고]
-> 콘솔에서 노드 그룹 생성 시 지정한 추가 보안 그룹은 기본 네트워크 및 모든 추가 네트워크에 적용됩니다. 개별 네트워크의 추가 보안 그룹에 대한 변경은 노드 그룹 생성 이후에 가능합니다.
-
-[주의]
-> 노드 그룹에 추가 보안 그룹 설정 시 기존 인스턴스에 할당된 보안 그룹 중 추가 보안 그룹에 정의되지 않은 대상은 제거됩니다.
-> 추가 보안 그룹 변경 시 네트워크 설정이 변경되므로 설정이 적용되는 동안 일시적으로 통신에 영향이 있을 수 있습니다.
 
 ## 클러스터 관리
 원격의 호스트에서 클러스터를 조작하고 관리하려면 Kubernetes가 제공하는 명령줄 도구(CLI)인 `kubectl`이 필요합니다.
@@ -1222,31 +1200,10 @@ status:
     type: Approved
 ```
 
-> [주의]
-> 이 기능은 클러스터 생성 시점이 아래 기간에 해당하는 경우에만 제공됩니다.
-> 
-> * 판교 리전: 2020년 12월 29일 이후에 생성한 클러스터
-> * 평촌 리전: 2020년 12월 24일 이후에 생성한 클러스터
-
 ### 승인 컨트롤러(admission controller) 플러그인
 승인 컨트롤러는 Kubernetes API 서버 요청을 가로채 객체를 변경하거나 요청을 거부할 수 있습니다. 승인 컨트롤러에 대한 자세한 설명은 [승인 컨트롤러](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/)를 참고하세요. 그리고 승인 컨트롤러의 사용 예제는 [승인 컨트롤러 가이드](https://kubernetes.io/blog/2019/03/21/a-guide-to-kubernetes-admission-controllers/)를 참고하세요.
 
 클러스터 버전과 클러스터 생성 시점에 따라 승인 컨트롤러에 적용되는 플러그인의 종류가 다릅니다. 자세한 내용은 리전별 생성 시점에 따른 플러그인 목록을 참고하세요.
-
-#### v1.19.13 이전 버전
-판교 리전 2021년 2월 22일 이전에 생성한 클러스터 및 평촌 리전 2021년 2월 17일 이전에 생성한 클러스터는 다음과 같이 적용됩니다.
-
-* DefaultStorageClass
-* DefaultTolerationSeconds
-* LimitRanger
-* MutatingAdmissionWebhook
-* NamespaceLifecycle
-* NodeRestriction
-* ResourceQuota
-* ServiceAccount
-* ValidatingAdmissionWebhook
-
-판교 리전 2021년 2월 23일 이후에 생성한 클러스터 및 평촌 리전 2021년 2월 18일 이후에 생성한 클러스터는 다음과 같이 적용됩니다.
 
 * DefaultStorageClass
 * DefaultTolerationSeconds
@@ -1274,15 +1231,13 @@ Kubernetes 버전은 `x.y.z`로 표현됩니다. `x`는 메이저 버전, `y`는
 
 Kubernetes 클러스터는 동작 중인 상태에서 Kubernetes 구성 요소를 업그레이드할 수 있습니다. 이를 위해 Kubernetes 구성 요소별로 Kubernetes 버전 차이에 따른 기능 지원 여부를 정의하고 있습니다. 마이너 버전을 기준으로 한 단계의 버전 차이는 상호 기능 호환을 지원함으로써 동작 중인 클러스터의 Kubernetes 구성 요소 업그레이드를 지원합니다. 또 구성 요소 종류별로 업그레이드 순서를 정의하고 있습니다. 좀 더 자세한 내용은 [Version Skew Policy](https://kubernetes.io/releases/version-skew-policy/)를 참고하세요.
 
+#### 기능 동작 방식
+NHN Cloud에서 지원하는 Kubernetes 클러스터 업그레이드 기능의 동작 방식에 대해 설명합니다. 
 
-<br>
-
-#### NKS 클러스터의 버전 관리
+##### Kubernetes 버전 관리
 NKS 클러스터는 클러스터 컨트롤 플레인과 워커 노드 그룹별로 Kubernetes 버전을 관리합니다. 컨트롤 플레인의 Kubernetes 버전은 클러스터 조회 화면에서 확인할 수 있고, 워커 노드 그룹의 Kubernetes 버전은 각 워커 노드 그룹 조회 화면에서 확인할 수 있습니다. 
 
-<br>
-
-#### 업그레이드 규칙
+##### 업그레이드 규칙
 NKS 클러스터 버전 관리 방식과 Kubernetes 버전 차이 지원 정책에 의해 구성 요소별로 순서에 맞게 업그레이드해야 합니다. NKS 클러스터 업그레이드 기능에 적용되는 규칙은 다음과 같습니다.
 
 * 컨트롤 플레인과 각 워커 노드 그룹별로 업그레이드 명령을 실행해야 합니다.
@@ -1315,27 +1270,16 @@ NKS 클러스터 버전 관리 방식과 Kubernetes 버전 차이 지원 정책�
 * <a name="footnote_cluster_upgrade_rule_1">4</a>: 컨트롤 플레인이 업그레이드됐기 때문에 업그레이드 가능
 * <a name="footnote_cluster_upgrade_rule_1">5</a>: NHN Cloud에서 지원하는 가장 최신 버전을 사용하고 있기 때문에 업그레이드 불가능
 
-<br>
 
-#### 업그레이드 전략
-NKS 클러스터는 Rolling Upgrade, Blue/Green Upgrade 2가지 방식의 업그레이드 전략을 제공합니다. 사용자는 운영 정책에 따라 적절한 전략을 선택하여 클러스터를 업그레이드할 수 있습니다.
+##### 컨트롤 플레인 구성 요소 업그레이드
+NKS 클러스터 컨트롤 플레인은 고가용성을 보장합니다. 컨트롤 플레인에 대해 롤링 업데이트 방식으로 업그레이드되기 때문에 클러스터의 가용성이 보장됩니다. 
 
-<br>
+이 과정에서 아래와 같은 일들이 발생할 수 있습니다.
 
-**Rolling Upgrade**
+* Kubernetes API가 일시적으로 실패할 수 있습니다.
 
-![Rolling_Upgrade.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/Rolling_Upgrade.png)
 
-Rolling Upgrade는 컨트롤 플레인과 워커 노드 그룹들을 순차적으로 업그레이드하여 전체 클러스터를 신규 버전으로 전환하는 방식의 업그레이드 전략입니다. 아래는 Rolling Upgrade 전략을 통한 클러스터 업그레이드 수행 과정 및 각 과정에 대한 설명입니다.
-
-<br>
-
-##### 1. 클러스터 조회 화면의 업그레이드 버튼을 통해 컨트롤 플레인 구성 요소를 업그레이드합니다.
-
-NKS 클러스터 컨트롤 플레인은 고가용성을 보장합니다. 컨트롤 플레인에 대해 롤링 업데이트 방식으로 업그레이드되기 때문에 클러스터의 가용성이 보장됩니다. 이 과정에서 Kubernetes API가 일시적으로 실패할 수 있습니다. 
-
-##### 2. 노드 그룹 조회 화면의 업그레이드 버튼을 통해 모든 워커 노드 그룹의 워커 구성 요소를 업그레이드합니다.
-
+##### 워커 구성 요소 업그레이드
 워커 노드 그룹별로 워커 구성 요소를 업그레이드할 수 있습니다. 워커 구성 요소 업그레이드는 다음 순서로 진행됩니다.
 
 1. 클러스터 오토스케일러 기능을 비활성화합니다.<sup>[1](#footnote_worker_component_upgrade_1)</sup> 
@@ -1346,7 +1290,7 @@ NKS 클러스터 컨트롤 플레인은 고가용성을 보장합니다. 컨트�
     3. 노드를 스케줄 가능한 상태로 전환합니다.
 4. 버퍼 노드에서 동작 중인 파드를 축출하고 버퍼 노드를 삭제합니다.
 5. 클러스터 오토스케일러 기능을 다시 활성화합니다.<sup>[1](#footnote_worker_component_upgrade_1)</sup> 
-6. 모든 워커 노드 그룹의 워커 구성 요소 업그레이드가 완료되면, 시스템 파드 업그레이드는 자동으로 수행됩니다.
+
 
 주석
 
@@ -1374,34 +1318,11 @@ NKS 클러스터 컨트롤 플레인은 고가용성을 보장합니다. 컨트�
 
 안전한 파드 축출에 대한 좀 더 상세한 설명은 [Safely Drain a Node](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)를 참고하세요.
 
-
-<br>
-
-**Blue/Green Upgrade**
-
-![Blue_Green.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/Blue_Green.png)
-
-Blue/Green Upgrade는 업그레이드 과정에서 클러스터 내에 두 개의 서로 다른 버전의 환경을 구성하여 응용 프로그램 가용성을 높이고 배포 실패 시 롤백 프로세스를 단순화하여 업그레이드 위험을 줄일 수 있도록 하는 업그레이드 전략입니다. 하나의 환경(Blue)은 업그레이드 이전 버전의 노드 그룹으로 구성되고, 다른 하나의 환경(Green)은 업그레이드 할 버전의 노드 그룹으로 구성됩니다. Green 환경에서 테스트가 완료되면 애플리케이션 트래픽을 Green 환경으로 이동하고, Blue 환경을 폐기합니다. 이 과정을 통해 전체 클러스터를 다음 버전으로 업그레이드할 수 있습니다. 아래는 Blue/Green Upgrade 전략을 통한 클러스터 업그레이드 수행 과정 및 각 과정에 대한 설명입니다.
-
-<br>
-
-##### 1. 클러스터 조회 화면의 업그레이드 버튼을 통해 컨트롤 플레인 구성 요소를 업그레이드합니다.
-NKS 클러스터 컨트롤 플레인은 고가용성을 보장합니다. 컨트롤 플레인에 대해 롤링 업데이트 방식으로 업그레이드되기 때문에 클러스터의 가용성이 보장됩니다. 이 과정에서 Kubernetes API가 일시적으로 실패할 수 있습니다. 
-
-##### 2. 노드 그룹을 생성합니다.
-신규 노드 그룹을 생성하여 테스트를 위한 Green 환경을 생성합니다. 컨트롤 플레인 구성 요소 업그레이드 이후 생성되는 신규 노드 그룹은 컨트롤 플레인의 Kubernetes 버전과 동일한 버전으로 생성됩니다. Green 환경에 Blue 환경(기존 노드 그룹)과 동일한 리소스를 배포하여 업그레이드 이후 환경의 검증을 수행할 수 있습니다. 이 때, Blue 환경이 기존 클러스터의 운영에 영향을 주지 않도록 애플리케이션 트래픽을 분리해야 합니다.
-
-##### 3. Green 환경(신규 노드 그룹)에 대한 검증 후 애플리케이션 트래픽을 Green 환경으로 전환합니다.
-새로 구축한 Green 환경에서 기존 사용자가 운영 중이던 리소스가 다음 버전의 쿠버네티스와 정상적으로 호환되는지에 대해 검증하고, 검증이 완료되면 애플리케이션 트래픽을 기존의 Blue 환경에서 새로 구축한 Green 환경으로 전환합니다. 만약 Green 환경에서의 검증 단계에서 문제가 발생하는 경우, 트래픽을 전환하지 않고 Blue 환경을 삭제함으로써 간단하게 롤백할 수 있습니다.
-
-##### 4. Blue 환경(이전 버전의 모든 워커 노드 그룹)을 폐기합니다.
-컨트롤 플레인과 모든 워커 노드 그룹의 버전이 일치하지 않으면 다음 단계인 시스템 파드 업그레이드 수행이 불가능합니다. 클러스터의 모든 노드 그룹을 업그레이드 버전으로 맞추기 위해 Blue 환경을 폐기합니다.
-
-##### 5. 클러스터 조회 화면의 업그레이드 버튼을 통해 시스템 파드를 업그레이드합니다.
-Kubernetes 클러스터 구성을 위해 동작하는 시스템 파드 업그레이드가 수행됩니다.
+##### 시스템 파드 업그레이드
+컨트롤 플레인과 모든 워커 노드 그룹을 업그레이드하여 버전이 일치하게 되면 Kubernetes 클러스터 구성을 위해 동작하는 시스템 파드가 업그레이드 됩니다.
 
 > [주의]
-> 시스템 파드 업그레이드가 수행되지 않으면 일부 파드가 정상적으로 동작하지 않을 수 있습니다.
+> 컨트롤 플레인 업그레이드 후 워커 노드 그룹을 업그레이드하지 않으면 일부 파드가 정상적으로 동작하지 않을 수 있습니다.
 
 
 ### 클러스터 CNI 변경
@@ -1464,7 +1385,7 @@ CNI 변경은 다음 순서로 진행됩니다.
 
 이 과정에서 아래와 같은 일들이 발생할 수 있습니다.
 
-* 서비스 중인 파드가 축출되어 다른 노드로 스케줄링됩니다. (파드 축출에 대한 더 자세한 내용은 [클러스터 업그레이드](/Container/NKS/ko/user-guide/#cluster-upgrade)를 참고하시길 바랍니다.)
+* 서비스 중인 파드가 축출되어 다른 노드로 스케줄링됩니다. (파드 축출에 대한 더 자세한 내용은 [클러스터 업그레이드](/NKS/ko/user-guide-gov/#cluster-upgrade)를 참고하시길 바랍니다.)
 * 클러스터에 배포되어 있는 모든 파드가 재배포됩니다. (파드 재배포에 대한 더 자세한 내용은 아래 파드 재배포 주의 사항을 참고하시길 바랍니다.)
 * 오토스케일러 기능이 동작하지 않습니다. 
 
@@ -1474,10 +1395,11 @@ CNI 변경은 다음 순서로 진행됩니다.
 > 2. CNI 변경 과정 중에 Flannel CIDR와 Calico-VXLAN CIDR 간 정상 통신을 위해 CNI 변경 파드 네트워크 값은 기존 Flannel CIDR 값과 동일하면 안 됩니다.
 > 3. 기존에 배포되어 있던 파드들의 pause 컨테이너는 모두 stop 되었다가 kubelet에 의해 다시 재생성됩니다. 파드 이름과 로컬 저장 공간 등 설정은 그대로 유지되지만 IP는 Calico-VXLAN CIDR의 IP로 변경됩니다.
 
+
 <a id="api_endpoint_ipacl"></a>
 ### 클러스터 API 엔드포인트 IP 접근 제어 적용
 클러스터 API 엔드포인트에 IP 접근 제어를 적용하거나 해제할 수 있습니다.
-IP 접근 제어 기능에 대한 자세한 사항은 [IP 접근제어](/Network/Load%20Balancer/ko/overview/#ip) 문서를 참고하세요.
+IP 접근 제어 기능에 대한 자세한 사항은 [IP 접근제어](/Network/Load%20Balancer/ko/overview-gov/#ip) 문서를 참고하세요.
 
 #### IP 접근 제어 대상 규칙
 클러스터 API 엔드포인트 IP 접근 제어 대상을 추가하는 경우 아래의 규칙이 적용됩니다.
@@ -1658,7 +1580,7 @@ kubelet은 모든 워커 노드에서 동작하는 노드 에이전트입니다.
 * `systemctl status kubelet` 명령으로 kubelet이 정상 동작 중인지 확인합니다.
 
 > [주의]
-> * 이 기능은 2023년 11월 28일 이후 신규 생성된 클러스터에서만 동작합니다.
+> * 이 기능은 2023년 11월 30일 이후 신규 생성된 클러스터에서만 동작합니다.
 > * 사용자 정의 아규먼트를 설정할 워커 노드별로 수행합니다.
 > * 올바르지 않은 형식의 사용자 정의 아규먼트 입력 시 kubelet이 정상 동작하지 않습니다.
 > * 설정된 사용자 정의 아규먼트는 시스템 재시작 시에도 그대로 적용됩니다.
@@ -2088,7 +2010,6 @@ spec:
 
 > [참고]
 > 별도로 표시되어 있지 않은 기능은 Kubernetes v1.19.13 이후 버전의 클러스터에만 적용 가능합니다.
-> Kubernetes v1.19.13 버전의 클러스터는 2022년 1월 25일 이후 생성된 클러스터에 한해 리스너별 설정이 적용됩니다.
 >
 
 > [주의]
@@ -2112,20 +2033,13 @@ spec:
 > * 프로젝트 내에 같은 이름의 로드 밸런서를 생성
 
 #### 로드 밸런서 타입 설정
-로드 밸런서의 타입을 설정할 수 있습니다. 로드 밸런서에 대한 자세한 내용은 [로드 밸런서 콘솔 사용 가이드](/Network/Load%20Balancer/ko/console-guide/)를 참고하세요.
+로드 밸런서의 타입을 설정할 수 있습니다. 로드 밸런서에 대한 자세한 내용은 [로드 밸런서 콘솔 사용 가이드](/Network/Load%20Balancer/ko/console-guide-gov/)를 참고하세요.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/loadbalancer-type입니다.
 * **리스너별 설정을 적용할 수 없습니다.**
 * 다음 중 하나로 설정할 수 있습니다.
     * shared: '일반' 타입의 로드 밸런서를 생성합니다. 미설정 시 기본값입니다.
     * dedicated: '전용' 타입의 로드 밸런서를 생성합니다.
-    * physical_basic: '물리 Basic' 타입의 로드 밸런서를 생성합니다.
-    * physical_premium: '물리 Premium' 타입의 로드 밸런서를 생성합니다.
-
-> [주의]
-> 물리 로드 밸런서는 한국(평촌) 리전에만 제공됩니다.
-> 물리 로드 밸런서는 플로팅 IP를 연결할 수 없습니다. 대신 물리 로드 밸런서 생성 시 자동 할당된 퍼블릭 IP 하나를 밸런싱 대상 트래픽을 수신하는 IP로 사용합니다. 이 퍼블릭 IP는 서비스 IP라는 이름으로 콘솔에 노출됩니다.
-> 이런 특성으로 인해 Kubernetes 서비스 객체를 통해 로드 밸런서의 정확한 상태(연결된 플로팅 IP 등)를 얻을 수 없습니다. 물리 로드 밸런서에 대한 상태 등은 콘솔에서 확인하시길 바랍니다.
 
 #### 정적 라우트 설정
 로드 밸런서의 정적 라우트 적용 여부를 설정할 수 있습니다. 
@@ -2137,7 +2051,7 @@ spec:
     * false: 정적 라우트를 적용하지 않습니다. 미설정 시 기본값입니다.
 
 > [주의]
-> 정적 라우트 설정은 2024년 8월 27일 이후에 생성됐거나 k8s 버전을 업그레이드한 클러스터에서 설정 가능합니다.
+> 정적 라우트 설정은 2024년 9월 5일 이후에 생성됐거나 k8s 버전을 업그레이드한 클러스터에서 설정 가능합니다.
 
 #### 세션 지속성 설정
 로드 밸런서의 세션 지속성을 설정할 수 있습니다.
@@ -2161,10 +2075,6 @@ spec:
 * 다음 중 하나로 설정할 수 있습니다.
     * true: 플로팅 IP를 보존합니다.
     * false: 플로팅 IP를 삭제합니다. 미설정 시 기본값입니다.
-
-> [주의]
-> 2021년 10월 26일 이전에 생성된 v1.18.19 클러스터는 로드 밸런서가 삭제될 때 플로팅 IP가 삭제되지 않는 문제가 있습니다. 고객 센터의 1:1 문의를 통해 문의주시면 이 문제를 해결하기 위한 절차에 대해 상세히 알려드리겠습니다.
-
 
 #### 로드 밸런서 IP 설정
 로드 밸런서를 생성할 때 로드 밸런서의 IP를 설정할 수 있습니다.
@@ -2318,7 +2228,7 @@ spec:
 >     * eth0: 서브넷#1
 >     * eth1: 서브넷#2(멤버)
 > 
-> 이 경우 인스턴스 eth1의 IP 주소가 멤버로 등록됩니다. 로드 밸런서에서 전송한 헬스체크 패킷은 인스턴스의 eth1로 수신하고, eth0을 통해 송신을 시도합니다. 이 때, eth0으로 보내는 패킷의 소스 IP 주소가 eth0의 IP 주소와 다릅니다. eth0의 네트워크 인터페이스에 소스/대상 확인 기능이 활성화되어 있으면 이 패킷은 송신되지 못하고 버려집니다. 이와 같은 구성에서는 eth0의 네트워크 인터페이스에서 소스/대상 확인 기능을 비활성화해야 멤버가 정상 동작합니다. 소스/대상 확인 기능에 대한 설명은 [소스/대상 확인 변경](/Network/Network%20Interface/ko/console-guide/#_4)을 참고하세요.
+> 이 경우 인스턴스 eth1의 IP 주소가 멤버로 등록됩니다. 로드 밸런서에서 전송한 헬스체크 패킷은 인스턴스의 eth1로 수신하고, eth0을 통해 송신을 시도합니다. 이 때, eth0으로 보내는 패킷의 소스 IP 주소가 eth0의 IP 주소와 다릅니다. eth0의 네트워크 인터페이스에 소스/대상 확인 기능이 활성화되어 있으면 이 패킷은 송신되지 못하고 버려집니다. 이와 같은 구성에서는 eth0의 네트워크 인터페이스에서 소스/대상 확인 기능을 비활성화해야 멤버가 정상 동작합니다. 소스/대상 확인 기능에 대한 설명은 [소스/대상 확인 변경](/Network/Network%20Interface/ko/console-guide-gov/#_4)을 참고하세요.
 > 
 > **예시2.**
 > 
@@ -2332,8 +2242,7 @@ spec:
 
 
 > [주의]
-> 멤버 서브넷은 2023년 11월 28일 이후 v1.24.3 이상의 버전으로 업그레이드됐거나 신규 생성된 클러스터에서 설정 가능합니다.
-
+> 멤버 서브넷은 2023년 11월 30일 이후 v1.24.3 이상의 버전으로 업그레이드됐거나 신규 생성된 클러스터에서 설정 가능합니다.
 
 #### 리스너 연결 제한 설정
 리스너의 연결 제한을 설정할 수 있습니다.
@@ -2434,11 +2343,11 @@ metadata:
 ```
 
 > [주의]
-> Certificate Manager에 등록된 인증서를 이용하는 방법은 2024년 5월 28일 이후에 생성됐거나 k8s 버전을 업그레이드한 클러스터에서 설정 가능합니다.
+> Certificate Manager에 등록된 인증서를 이용하는 방법은 2024년 6월 4일 이후에 생성됐거나 k8s 버전을 업그레이드한 클러스터에서 설정 가능합니다.
 > 리스너와 연동된 Certificate Manager의 인증서를 삭제하면 로드 밸런서의 동작에 영향을 줄 수 있습니다.
 
 #### 리스너 프록시 프로토콜(Proxy Protocol) 설정
-리스너 프로토콜이 TCP 혹은 HTTPS인 경우 리스너에 프록시 프로토콜을 설정할 수 있습니다. 프록시 프로토콜에 대한 자세한 내용은 [로드 밸런서 프록시 모드](/Network/Load%20Balancer/ko/overview/#_4)를 참고하세요.
+리스너 프로토콜이 TCP 혹은 HTTPS인 경우 리스너에 프록시 프로토콜을 설정할 수 있습니다. 프록시 프로토콜에 대한 자세한 내용은 [로드 밸런서 프록시 모드](/Network/Load%20Balancer/ko/overview-gov/#_4)를 참고하세요.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/proxy-protocol입니다.
 * 리스너별 설정을 적용할 수 있습니다.
@@ -2525,7 +2434,7 @@ keep-alive 타임아웃 값을 설정할 수 있습니다.
 * 설정하지 않거나 범위에서 벗어나는 값을 입력하면 기본값인 300으로 설정됩니다.
 
 > [주의]
-> keep-alive 타임아웃은 2023년 11월 28일 이후 v1.24.3 이상의 버전으로 업그레이드됐거나 신규 생성된 클러스터에서 설정 가능합니다.
+> keep-alive 타임아웃은 2023년 11월 30일 이후 v1.24.3 이상의 버전으로 업그레이드됐거나 신규 생성된 클러스터에서 설정 가능합니다.
 
 #### L7 규칙
 리스너별로 L7 규칙을 설정할 수 있습니다. L7 규칙은 다음과 같이 동작합니다.
@@ -2891,7 +2800,7 @@ service "tea-svc" deleted
 ![ingress-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/ingress-02.png)
 
 #### 서비스와 파드 생성
-[URI 기반 서비스 분기](/Container/NKS/ko/user-guide/#uri)와 동일한 매니페스트를 이용해 서비스와 파드를 생성합니다.
+[URI 기반 서비스 분기](/Container/NKS/ko/user-guide-gov/#uri)와 동일한 매니페스트를 이용해 서비스와 파드를 생성합니다.
 
 #### 인그레스 생성
 호스트 이름에 따라 서비스를 연결하는 인그레스 매니페스트를 작성합니다. `tea.cafe.example.com` 호스트로 들어온 요청은 `tea-svc` 서비스에 연결하고 `coffee.cafe.example.com` 호스트로 들어온 요청은 `coffee-svc` 서비스에 연결합니다.
@@ -3018,7 +2927,7 @@ Events:            <none>
 
 #### LoadBalancer 서비스 객체로 변경
 
-`LoadBalancer` 유형으로 서비스 객체를 변경하면 클러스터 외부에 NHN Cloud Load Balancer가 생성되고, 로드 밸런서와 서비스 객체가 연결됩니다. 로드 밸런서와 연결된 서비스 객체를 조회하면 **EXTERNAL-IP** 필드에 로드 밸런서의 IP가 표시됩니다. `LoadBalancer` 유형의 서비스 객체에 대한 설명은 [LoadBalancer 서비스](/Container/NKS/ko/user-guide/#loadbalancer)를 참고하세요. 아래 그림은 `LoadBalancer` 유형의 서비스를 이용해 대시보드를 외부에 공개하는 구조를 나타냅니다.
+`LoadBalancer` 유형으로 서비스 객체를 변경하면 클러스터 외부에 NHN Cloud Load Balancer가 생성되고, 로드 밸런서와 서비스 객체가 연결됩니다. 로드 밸런서와 연결된 서비스 객체를 조회하면 **EXTERNAL-IP** 필드에 로드 밸런서의 IP가 표시됩니다. `LoadBalancer` 유형의 서비스 객체에 대한 설명은 [LoadBalancer 서비스](/Container/NKS/ko/user-guide-gov/#loadbalancer)를 참고하세요. 아래 그림은 `LoadBalancer` 유형의 서비스를 이용해 대시보드를 외부에 공개하는 구조를 나타냅니다.
 
 ![dashboard-01.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-01.png)
 
@@ -3042,18 +2951,18 @@ kubernetes-dashboard   LoadBalancer   10.254.95.176   123.123.123.81   443:30963
 > 생성된 로드 밸런서는 **Network > Load Balancer** 페이지에서 확인할 수 있습니다.
 > 로드 밸런서의 IP는 외부에서 접근할 수 있는 플로팅 IP입니다. **Network > Floating IP** 페이지에서 확인할 수 있습니다.
 
-웹 브라우저에서 `https://{EXTERNAL-IP}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 액세스 토큰](/Container/NKS/ko/user-guide/#dashboard-access-token)을 참고하세요.
+웹 브라우저에서 `https://{EXTERNAL-IP}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 액세스 토큰](/Container/NKS/ko/user-guide-gov/#dashboard-access-token)을 참고하세요.
 
 > [참고]
 > Kubernetes 대시보드는 자동 생성되는 사설 인증서를 사용하기 때문에 웹 브라우저의 종류와 보안 설정에 따라 안전하지 않은 페이지로 표시될 수 있습니다.
 
 #### 인그레스(Ingress)를 이용한 서비스 공개
 
-인그레스는 클러스터 내부의 여러 서비스들로 접근하기 위한 라우팅을 제공하는 네트워크 객체입니다. 인그레스 객체의 설정은 인그레스 컨트롤러로 구동됩니다. `kubernetes-dashboard` 서비스 객체를 인그레스를 통해 공개할 수 있습니다. 인그레스와 인그레스 컨트롤러에 대한 설명은 [인그레스 컨트롤러](/Container/NKS/ko/user-guide/#ingress-controller)를 참고하세요. 아래 그림은 인그레스를 통해 대시보드를 외부에 공개하는 구조를 나타냅니다.
+인그레스는 클러스터 내부의 여러 서비스들로 접근하기 위한 라우팅을 제공하는 네트워크 객체입니다. 인그레스 객체의 설정은 인그래스 컨트롤러로 구동됩니다. `kubernetes-dashboard` 서비스 객체를 인그레스를 통해 공개할 수 있습니다. 인그레스와 인그레스 컨트롤러에 대한 설명은 [인그레스 컨트롤러](/Container/NKS/ko/user-guide-gov/#ingress-controller)를 참고하세요. 아래 그림은 인그레스를 통해 대시보드를 외부에 공개하는 구조를 나타냅니다.
 
 ![dashboard-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-02.png)
 
-[NGINX Ingress Controller 설치](/Container/NKS/ko/user-guide/#nginx-ingress-controller)를 참고해 `NGINX Ingress Controller`를 설치하고 다음과 같이 인그레스 객체 생성을 위한 매니페스트를 작성합니다.
+[NGINX Ingress Controller 설치](/Container/NKS/ko/user-guide-gov/#nginx-ingress-controller)를 참고해 `NGINX Ingress Controller`를 설치하고 `LoadBalancer` 유형의 서비스를 생성합니다. 그리고 다음과 같이 인그레스 객체 생성을 위한 매니페스트를 작성합니다.
 
 ```yaml
 # kubernetes-dashboard-ingress-tls-passthrough.yaml
@@ -3096,7 +3005,7 @@ NAME                    CLASS   HOSTS   ADDRESS          PORTS     AGE
 k8s-dashboard-ingress   nginx   *       123.123.123.44   80, 443   34s
 ```
 
-웹 브라우저에서 `https://{ADDRESS}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 액세스 토큰](/Container/NKS/ko/user-guide/#dashboard-access-token)을 참고하세요.
+웹 브라우저에서 `https://{ADDRESS}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 액세스 토큰](/Container/NKS/ko/user-guide-gov/#dashboard-access-token)을 참고하세요.
 
 <a id="dashboard-access-token"></a>
 ### 대시보드 액세스 토큰
@@ -3221,10 +3130,11 @@ NAME               PROVISIONER                RECLAIMPOLICY   VOLUMEBINDINGMODE 
 csi-storageclass   cinder.csi.openstack.org   Delete          WaitForFirstConsumer   false                  7s
 ```
 
+
 <a id="static-provisioning"></a>
 ### 정적 프로비저닝
 
-정적 프로비저닝(static provisioning)은 사용자가 직접 블록 스토리지를 준비해야 합니다. NHN Cloud 웹 콘솔의 **Storage > Block Storage** 서비스 페이지에서 **블록 스토리지 생성** 버튼을 클릭해 PV와 연결할 블록 스토리지를 생성합니다. 블록 스토리지 가이드의 [블록 스토리지 생성](/Storage/Block%20Storage/ko/console-guide/#_1)을 참고하세요.
+정적 프로비저닝(static provisioning)은 사용자가 직접 블록 스토리지를 준비해야 합니다. NHN Cloud 웹 콘솔의 **Storage > Block Storage** 서비스 페이지에서 **블록 스토리지 생성** 버튼을 클릭해 PV와 연결할 블록 스토리지를 생성합니다. 블록 스토리지 가이드의 [블록 스토리지 생성](/Storage/Block%20Storage/ko/console-guide/#_2)을 참고하세요.
 
 PV를 생성하려면 블록 스토리지의 ID가 필요합니다. **Storage > Block Storage** 서비스 페이지의 블록 스토리지 목록에서 사용할 블록 스토리지를 선택합니다. 하단 **정보** 탭의 블록 스토리지 이름 항목에서 ID를 확인할 수 있습니다.
 
@@ -3305,6 +3215,7 @@ $ kubectl get pv -o wide
 NAME            CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                STORAGECLASS   REASON   AGE   VOLUMEMODE
 pv-static-001   10Gi       RWO            Delete           Bound    default/pvc-static   sc-default              79s   Filesystem
 ```
+
 
 <a id="dynamic-provisioning"></a>
 ### 동적 프로비저닝
@@ -3460,8 +3371,7 @@ status:
 ```
 
 #### v1.20.12 이후 버전의 볼륨 확장
-v1.20.12 이후 버전의 스토리지 제공자 **cinder.csi.openstack.org**는 기본적으로 사용 중인 볼륨의 확장 기능을 지원합니다. PVC 개체의 **spec.resources.requests.storage**항목을 원하는 값으로 수정하여 볼륨 사이즈를 변경할 수 있습니다.
-
+v1.20.12 이후 버전의 스토리지 제공자 **cinder.csi.openstack.org**는 기본적으로 사용 중인 볼륨의 확장 기능을 지원합니다. PVC 개체의 **spec.resources.requests.storage** 항목을 원하는 값으로 수정하여 볼륨 사이즈를 변경할 수 있습니다.
 
 ## NHN Cloud 서비스 연동
 
@@ -3512,14 +3422,14 @@ spec:
 ```
 
 > [참고]
-> NHN Cloud Container Registry 사용 방법은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/user-guide) 문서를 참고하세요.
+> NHN Cloud Container Registry 사용 방법은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/user-guide-gov) 문서를 참고하세요.
 
 
 ### NHN Cloud NAS 서비스 연동
-NHN Cloud에서 제공하는 NAS 스토리지를 PV로 활용할 수 있습니다. NAS 서비스를 사용하기 위해서는 v1.20 이후 버전의 클러스터를 사용해야 합니다. NHN Cloud NAS 사용에 대한 자세한 내용은 [NAS 콘솔 사용 가이드](/Storage/NAS%20(online)/ko/console-guide)를 참고하세요.
+NHN Cloud에서 제공하는 NAS 스토리지를 PV로 활용할 수 있습니다. NAS 서비스를 사용하기 위해서는 v1.20 이후 버전의 클러스터를 사용해야 합니다. NHN Cloud NAS 사용에 대한 자세한 내용은 [NAS 콘솔 사용 가이드](/Storage/NAS%20(online)/ko/console-guide-gov)를 참고하세요.
 
 > [참고]
-> NHN Cloud NAS 서비스는 현재(2024. 08.) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS%20(online)/ko/overview)를 참고하세요.
+> NHN Cloud NAS 서비스는 현재(2024. 08.) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS%20(online)/ko/overview-gov)를 참고하세요.
 
 #### 모든 워커 노드에서 rpcbind 서비스 실행
 NAS 스토리지를 사용하려면 모든 워커 노드에서 rpcbind 서비스를 실행해야 합니다. 모든 워커 노드에 접속한 뒤 아래 명령어를 통해 rpcbind 서비스를 실행합니다.
@@ -3561,22 +3471,18 @@ $ export KUBECONFIG={클러스터 설정 파일 절대경로}
 ORAS(OCI Registry As Storage)는 OCI 레지스트리에서 OCI 아티팩트를 push 및 pull 하는 방법을 제공하는 툴입니다.
 [ORAS installation](https://oras.land/docs/installation)을 참고하여 ORAS 명령줄 도구를 설치합니다. ORAS 명령줄 도구의 자세한 사용법은 [ORAS docs](https://oras.land/docs/)를 참고하세요.
 
-
 | 리전 | 인터넷 연결 | 다운로드 커맨드 |
 | --- | --- | --- |
-| 한국(판교) 리전 | O | oras pull dfe965c3-kr1-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v2 |
-| | X | oras pull private-dfe965c3-kr1-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v2 |
-| 한국(평촌) 리전 | O | oras pull 6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/oci/nfs-deploy-tool:v2 |
-| | X | oras pull private-6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/oci/nfs-deploy-tool:v2 |
+| 한국(판교) 리전 | O | oras pull af80e8b3-kr-registry.container.gov-nhncloud.com/container_service/oci/nfs-deploy-tool:v2 |
+| | X | oras pull private-af80e8b3-kr-registry.container.gov-nhncloud.com/container_service/oci/nfs-deploy-tool:v2 |
 
 > [참고]
-> csi-driver-nfs 컨테이너 이미지 및 아티팩트는 NHN Cloud NCR에서 관리되고 있습니다. 폐쇄망 환경에 구성된 클러스터는 인터넷에 연결되어 있지 않기 때문에 이미지 및 아티팩트를 정상적으로 받아 오기 위해서는 Private URI를 사용하기 위한 환경 구성이 필요합니다. Private URI 사용법에 대한 자세한 내용은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/user-guide/#private-uri)를 참고하세요.
+> csi-driver-nfs 컨테이너 이미지 및 아티팩트는 NHN Cloud NCR에서 관리되고 있습니다. 폐쇄망 환경에 구성된 클러스터는 인터넷에 연결되어 있지 않기 때문에 이미지 및 아티팩트를 정상적으로 받아 오기 위해서는 Private URI를 사용하기 위한 환경 구성이 필요합니다. Private URI 사용법에 대한 자세한 내용은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/user-guide-gov/#private-uri)를 참고하세요.
 
 ##### 3. 설치 패키지를 압축 해제한 후 **./install-driver.sh {REGISTRY} {INTERNET_USAGE}** 명령어를 사용하여 csi-driver-nfs 구성 요소를 설치합니다.
 클러스터가 생성된 리전 및 인터넷 연결 가능 여부에 따라 올바른 {REGISTRY} 및 {INTERNET_USAGE} 값을 입력합니다. 
 * {REGISTRY}
-  * 한국(판교) 리전: **dfe965c3-kr1-registry.container.nhncloud.com**
-  * 한국(평촌) 리전: **6e7f43c6-kr2-registry.container.cloud.toast.com**
+  * 한국(판교) 리전: **af80e8b3-kr-registry.container.gov-nhncloud.com**
 * {INTERNET_USAGE}
   * 인터넷 연결 가능한 클러스터: **true**
   * 인터넷 연결 불가능한 클러스터: **false**
@@ -3586,8 +3492,8 @@ ORAS(OCI Registry As Storage)는 OCI 레지스트리에서 OCI 아티팩트를 p
 ```
 $ tar -xvf nfs-deploy-tool.tar
 
-$ ./install-driver.sh dfe965c3-kr1-registry.container.nhncloud.com public
-INTERNET_USAGE set to true. Container image registry set with value dfe965c3-kr1-registry.container.nhncloud.com
+$ ./install-driver.sh  af80e8b3-kr-registry.container.gov-nhncloud.com public
+INTERNET_USAGE set to true. Container image registry set with value af80e8b3-kr-registry.container.gov-nhncloud.com
 Installing NFS CSI driver
 serviceaccount/csi-nfs-controller-sa created
 serviceaccount/csi-nfs-node-sa created
@@ -3998,109 +3904,3 @@ tmpfs                                                                          1
 > [참고]
 > csi-driver-nfs는 프로비저닝 시 NFS 스토리지 내부에 subdirectory를 생성하는 방식으로 동작합니다.
 > 파드에 PV를 마운트하는 과정에서 subdirectory만 마운트되는 것이 아니라 NFS 스토리지 전체가 마운트되기 때문에 애플리케이션이 프로비저닝된 크기만큼 볼륨을 사용하도록 강제할 수 없습니다.
-
-### NHN Cloud 암호화 블록 스토리지 연동
-NHN Cloud에서 제공하는 암호화된 블록 스토리지를 PV로 활용할 수 있습니다. NHN Cloud 암호화 블록 스토리지에 대한 자세한 내용은 [암호화 블록 스토리지](/Storage/Block%20Storage/ko/console-guide/#_2)를 참고하세요.
-
-> [참고]
-> 암호화 블록 스토리지 서비스 연동 기능은 v1.24.3 이상 버전의 클러스터에서 사용 가능합니다.
-> 2023년 11월 28일 이후 신규 생성된 클러스터는 기본적으로 암호화 블록 스토리지 연동 기능이 내장되어 있습니다.
-> 2023년 11월 28일 이전에 생성된 클러스터는 v1.24.3 이상의 버전으로 업그레이드하거나 csi-cinder-controllerplugin 스테이트풀셋과 csi-cinder-nodeplugin 데몬셋의 cinder-csi-plugin 이미지를 최신 버전으로 교체하여 암호화 블록 스토리지 연동 기능 사용이 가능합니다.
-
-> [주의]
-> v1.24.3 이전 버전의 클러스터를 업그레이드하지 않고 cinder-csi-plugin 컨테이너 이미지만 교체하여 사용하는 경우 오동작을 초래할 수 있습니다.
-
-#### 암호화 블록 스토리지 연동을 위한 cinder-csi-plugin 이미지 업데이트
-아래 커맨드를 실행하여 현재 클러스터에 배포된 cinder-csi-plugin 이미지의 태그를 확인할 수 있습니다.
-
-```
-$ kubectl -n kube-system get statefulset csi-cinder-controllerplugin -o=jsonpath="{$.spec.template.spec.containers[?(@.name=='cinder-csi-plugin')].image}"
-
-> registry.k8s.io/provider-os/cinder-csi-plugin:v1.27.101
-```
-
-cinder-csi-plugin 이미지의 태그가 v1.27.101 이상인 경우 아무런 조치 없이 암호화 블록 스토리지를 연동할 수 있습니다.
-cinder-csi-plugin 이미지의 태그가 v1.27.101 미만인 경우 아래의 과정을 통해 cinder-csi-plugin의 이미지를 업데이트한 후 암호화 블록 스토리지를 연동할 수 있습니다.
-
-| 리전 | 인터넷 연결 | cinder-csi-plugin 이미지 |
-| --- | --- | --- |
-| 한국(판교) 리전 | O | dfe965c3-kr1-registry.container.nhncloud.com/container_service/cinder-csi-plugin:v1.27.101 |
-| | X | private-dfe965c3-kr1-registry.container.nhncloud.com/container_service/cinder-csi-plugin:v1.27.101 |
-| 한국(평촌) 리전 | O | 6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/cinder-csi-plugin:v1.27.101 |
-| | X | private-6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/cinder-csi-plugin:v1.27.101 |
-
-##### 1. container_image에 올바른 cinder-csi-plugin 이미지 값을 입력합니다.
-```
-$ container_image={cinder-csi-plugin 이미지}
-```
-
-##### 2. 컨테이너 이미지를 교체합니다.
-```
-$ kubectl -n kube-system patch statefulset csi-cinder-controllerplugin -p "{\"spec\": {\"template\": {\"spec\": {\"containers\": [{\"name\": \"cinder-csi-plugin\", \"image\": \"${container_image}\"}]}}}}"
-
-$ kubectl -n kube-system patch daemonset csi-cinder-nodeplugin -p "{\"spec\": {\"template\": {\"spec\": {\"containers\": [{\"name\": \"cinder-csi-plugin\", \"image\": \"${container_image}\"}]}}}}"
-```
-
-> [참고]
-> cinder-csi-plugin 컨테이너 이미지는 NHN Cloud NCR에서 관리되고 있습니다. 폐쇄망 환경에 구성된 클러스터는 인터넷에 연결되어 있지 않기 때문에 이미지를 정상적으로 받아오기 위해서는 Private URI를 사용하기 위한 환경 구성이 필요합니다. Private URI 사용법에 대한 자세한 내용은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/user-guide/#private-uri)를 참고하세요.
-
-
-#### 정적 프로비저닝
-PV를 생성하려면 암호화 블록 스토리지의 ID가 필요합니다. Storage > Block Storage 서비스 페이지의 블록 스토리지 목록에서 사용할 블록 스토리지를 선택합니다. 하단 정보 탭의 블록 스토리지 이름 항목에서 ID를 확인할 수 있습니다.
-
-PV 매니페스트 작성 시 암호화 블록 스토리지의 정보를 입력합니다. 설정 위치는 **.spec.csi** 아래입니다.
-* driver: `cinder.csi.openstack.org`를 입력합니다.
-* fsType: `ext3`를 입력합니다. 
-* volumeHandle: 생성한 암호화 블록 스토리지의 ID를 입력합니다.
-
-아래는 매니페스트 예제입니다.
-```yaml
-# pv-static.yaml
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  annotations:
-    pv.kubernetes.io/provisioned-by: cinder.csi.openstack.org
-  name: pv-static-encrypted-hdd
-spec:
-  capacity:
-    storage: 10Gi
-  volumeMode: Filesystem
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Delete
-  csi:
-    driver: cinder.csi.openstack.org
-    fsType: ext3
-    volumeHandle: 9f606b78-256b-4f74-8988-1331cd6d398b
-```
-
-PVC 매니페스트 작성 및 파드에 마운트하는 과정은 일반 블록 스토리지의 정적 프로비저닝과 동일합니다. 자세한 내용은 [정적 프로비저닝](/Container/NKS/ko/user-guide/#static-provisioning)을 참고하세요.
-
-#### 동적 프로비저닝
-스토리지 클래스 매니페스트 작성 시 암호화 블록 스토리지 생성에 필요한 정보를 입력해 자동으로 생성된 암호화 블록 스토리지를 PV로 사용할 수 있습니다.
-
-스토리지 클래스 매니페스트에 암호화 블록 스토리지 생성에 필요한 정보를 입력합니다. 설정 위치는 **.parameters** 아래입니다.
-* 스토리지 종류(type): 스토리지의 종류를 입력합니다.
-    * **Encrypted HDD**: 스토리지 종류가 암호화된 HDD로 설정됩니다.
-    * **Encrypted SSD**: 스토리지 종류가 암호화된 SSD로 설정됩니다.
-* 암호화 키 아이디(volume_key_id): Secure Key Manager(SKM) 서비스에서 생성한 대칭 키의 아이디를 입력합니다.
-* 암호화 앱키(volume_appkey): Secure Key Manager(SKM) 서비스에서 확인한 Appkey를 입력합니다.
-
-아래는 매니페스트 예제입니다.
-```yaml
-# storage_class.yaml
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: csi-storageclass-encrypted-hdd
-provisioner: cinder.csi.openstack.org
-volumeBindingMode: Immediate
-allowVolumeExpansion: true
-parameters:
-  type: Encrypted HDD
-  volume_key_id: "5530..."
-  volume_appkey: "uaUW..."
-```
-
-PVC 매니페스트 작성 및 파드에 마운트하는 과정은 일반 블록 스토리지의 동적 프로비저닝과 동일합니다. 자세한 내용은 [동적 프로비저닝](/Container/NKS/ko/user-guide/#dynamic-provisioning)을 참고하세요.

@@ -69,6 +69,8 @@ NHN Kubernetes Service(NKS)を使用するには、まずクラスターを作�
 | ブロックストレージサイズ | 基本ノードグループインスタンスのブロックストレージサイズ |
 | 追加ネットワーク | 基本ワーカーノードグループに作成する追加ネットワーク/サブネット |
 
+必要な情報を入力し、**クラスター作成**を押すと、クラスターの作成が始まります。クラスターリストで状態を確認できます。作成には約10分かかります。クラスターの設定によっては、さらに時間がかかる場合もあります。
+
 > [注意]
 > VPCネットワークサブネットとK8sサービスネットワーク、 PodネットワークのCIDRは、以下の制約事項に該当しないように設定する必要があります。
 >  - リンクローカルアドレス帯域(169.254.0.0/16)と重複することはできません。
@@ -106,27 +108,6 @@ NHN Kubernetes Service(NKS)を使用するには、まずクラスターを作�
 >  - Podサブネットサイズ= 24
 >  - Podネットワーク= 10.100.0.0/16
 >  - 計算 : 254(ノードごとにPodに割り当て可能な最大IP数) * 253(最大作成可能なノード数) =最大64,262個のIPを使用可能
-
-NHN Kubernetes Service(NKS)は複数のバージョンをサポートしています。バージョンによっては一部機能に制約がある場合があります。
-
-| バージョン | クラスタ新規作成 | 作成されたクラスタの使用|
-| :-: | :-: | :-: |
-| v1.17.6 | 不可 | 可能 |
-| v1.18.19 | 不可 | 可能 |
-| v1.19.13 | 不可 | 可能 |
-| v1.20.12 | 不可 | 可能 |
-| v1.21.6 | 不可 | 可能 |
-| v1.22.3 | 不可 | 可能 |
-| v1.23.3 | 不可 | 可能 |
-| v1.24.3 | 不可 | 可能 |
-| v1.25.4 | 不可 | 可能 |
-| v1.26.3 | 不可 | 可能 |
-| v1.27.3 | 可能 | 可能 |
-| v1.28.3 | 可能 | 可能 |
-| v1.29.3 | 可能 | 可能 |
-| v1.30.3 | 可能 | 可能 |
-
-必要な情報を入力し、**クラスター作成**を押すと、クラスターの作成が始まります。クラスターリストで状態を確認できます。作成には約10分かかります。クラスターの設定によっては、さらに時間がかかる場合もあります。
 
 
 ### クラスター照会
@@ -1035,6 +1016,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 | --- | --- | --- |
 | Rocky | Rocky Linux 8.10 (2024.08.20)  | 1.6 |
 |  | Rocky Linux 8.10 (2024.11.19)  | 1.7 |
+|  | Rocky Linux 8.10 (2025.02.25)  | 1.8 |
 | Ubuntu | Ubuntu Server 20.04.6 LTS (2023.05.25)  | 1.1 |
 |  | Ubuntu Server 20.04.6 LTS (2023.08.22)  | 1.2 |
 |  | Ubuntu Server 20.04.6 LTS (2023.11.21)  | 1.3 |
@@ -1046,6 +1028,8 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 |  | Ubuntu Server 20.04.6 LTS (2024.08.20)  | 1.6 |
 |  | Ubuntu Server 20.04.6 LTS (2024.11.19)  | 1.7 |
 |  | Ubuntu Server 22.04.6 LTS (2024.11.19)  | 1.7 |
+|  | Ubuntu Server 20.04.6 LTS (2025.02.25)  | 1.8 |
+|  | Ubuntu Server 22.04.6 LTS (2025.02.25)  | 1.8 |
 
 
 > [参考]
@@ -1780,10 +1764,11 @@ NHN Kubernetes Service(NKS)が提供するCalico-VXLAN、Calic-eBPFは下記の�
 | v1.24.3 | Flannel v0.14.0またはCalico-VXLAN v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 条件付きで可能 <sup>[2](#footnote_calico_version_2)</sup> |
 | v1.25.4 | Flannel v0.14.0またはCalico-VXLAN v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 条件付きで可能 <sup>[2](#footnote_calico_version_2)</sup> |
 | v1.26.3 | Flannel v0.14.0またはCalico-VXLAN, Calico-eBPF v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 条件付きで可能 <sup>[2](#footnote_calico_version_2)</sup> |
-| v1.27.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 不可|
-| v1.28.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 不可|
-| v1.29.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 不可|
-| v1.30.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 不可|
+| v1.27.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | 不可|
+| v1.28.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | 不可|
+| v1.29.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | 不可|
+| v1.30.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | 不可|
+| v1.31.4 | Calico-VXLAN, Calico-eBPF v3.28.2 | 不可|
 
 注釈
 

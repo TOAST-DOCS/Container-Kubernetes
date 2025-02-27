@@ -70,6 +70,8 @@ Go to **Container > NHN Kubernetes Service(NKS)** and click **Create Cluster** a
 | Block Storage Size | Size of block storage for a default node group instance |
 | Additional Network | Additional network and subnet to create in a default worker node group |
 
+Enter information as required and click **Create Cluster**, and a cluster begins to be created. You can check the status from the list of clusters. It takes about 10 minutes to create; more time may be required depending on the cluster configuration.
+
 > [Caution]
 > For CIDRs of VPC network subnet, K8s service network and pod network, the following constraints must be avoided.
 >  - CIDR cannot overlap with the link-local address band (169.254.0.0/16).
@@ -108,27 +110,6 @@ Example:
 >  - Pod subnet size = 24
 >  - Pod network = 10.100.0.0/16
 >  - Calculate: 254 (maximum number of IPs that can be assigned to a Pod for each node) * 253 (maximum number of nodes that can be created) = 64,262 IPs available at most
-
-NHN Kubernetes Service (NKS) supports several versions of Kubernetes. Some features may be restricted depending on the version.
-
-| Version | Creating a new cluster | Using the created cluster|
-| :-: | :-: | :-: |
-| v1.17.6 | Unavailable | Available |
-| v1.18.19 | Unavailable | Available |
-| v1.19.13 | Unavailable | Available |
-| v1.20.12 | Unavailable | Available |
-| v1.21.6 | Unavailable | Available |
-| v1.22.3 | Unavailable | Available |
-| v1.23.3 | Unavailable | Available |
-| v1.24.3 | Unavailable | Available |
-| v1.25.4 | Unavailable | Available |
-| v1.26.3 | Unavailable | Available |
-| v1.27.3 | Available | Available |
-| v1.28.3 | Available | Available |
-| v1.29.3 | Available | Available |
-| v1.30.3 | Available | Available |
-
-Enter information as required and click **Create Cluster**, and a cluster begins to be created. You can check the status from the list of clusters. It takes about 10 minutes to create; more time may be required depending on the cluster configuration.
 
 
 ### Querying Clusters
@@ -1047,6 +1028,7 @@ The supported OS images and the application versions you must select for each OS
 | --- | --- | --- |
 | Rocky | Rocky Linux 8.10 (2024.08.20)  | 1.6 |
 |  | Rocky Linux 8.10 (2024.11.19)  | 1.7 |
+|  | Rocky Linux 8.10 (2025.02.25)  | 1.8 |
 | Ubuntu | Ubuntu Server 20.04.6 LTS (2023.05.25)  | 1.1 |
 |  | Ubuntu Server 20.04.6 LTS (2023.08.22)  | 1.2 |
 |  | Ubuntu Server 20.04.6 LTS (2023.11.21)  | 1.3 |
@@ -1058,6 +1040,8 @@ The supported OS images and the application versions you must select for each OS
 |  | Ubuntu Server 20.04.6 LTS (2024.08.20)  | 1.6 |
 |  | Ubuntu Server 20.04.6 LTS (2024.11.19)  | 1.7 |
 |  | Ubuntu Server 22.04.6 LTS (2024.11.19)  | 1.7 |
+|  | Ubuntu Server 20.04.6 LTS (2025.02.25)  | 1.8 |
+|  | Ubuntu Server 22.04.6 LTS (2025.02.25)  | 1.8 |
 
 
 > [Notes]
@@ -1807,10 +1791,11 @@ Notes
 | v1.24.3 | Flannel v0.14.0 or Calico-VXLAN v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | Conditionally Available<sup>[2](#footnote_calico_version_2)</sup> |
 | v1.25.4 | Flannel v0.14.0 or Calico-VXLAN v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | Conditionally Available<sup>[2](#footnote_calico_version_2)</sup> |
 | v1.26.3 | Flannel v0.14.0 or Calico-VXLAN, Calico-eBPF v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | Conditionally Available<sup>[2](#footnote_calico_version_2)</sup> |
-| v1.27.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | Unavailable|
-| v1.28.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | Unavailable|
-| v1.29.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | Unavailable|
-| v1.30.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | Unavailable|
+| v1.27.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | Unavailable|
+| v1.28.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | Unavailable|
+| v1.29.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | Unavailable|
+| v1.30.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | Unavailable|
+| v1.31.4 | Calico-VXLAN, Calico-eBPF v3.28.2 | Unavailable|
 
 Notes
 
