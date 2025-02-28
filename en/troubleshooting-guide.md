@@ -226,7 +226,7 @@ $ reboot
 This issue may not always occur, and may depend on the nature of your application. If you are concerned about this issue, you can use the custom image feature in NKS to use a worker node image with the above workaround applied from the start.
 
 #### Apply the workaround to newly created clusters using the NKS Custom Image feature
-NKS provides the feature to create a group of worker nodes based on your custom image. You can use the NKS custom image feature to create an image with kernel object accounting disabled for memory cgroups and utilize it when creating a cluster. For more information about the feature, see [](/Container/NKS/ko/user-guide/#_25)Use Custom Image as Worker Image[](/Container/NKS/ko/user-guide/#_25).
+NKS provides the feature to create a group of worker nodes based on your custom image. You can use the NKS custom image feature to create an image with kernel object accounting disabled for memory cgroups and utilize it when creating a cluster. For more information about the feature, see [](/Container/NKS/ko/user-guide/#_25)Use Custom Image as Worker Image[](/Container/NKS/ko/user-guide/#custom-image).
 
 1. While creating the image template, enter the following in the user script.
 ```
@@ -505,3 +505,15 @@ This issue is caused by a bug found in calico/kube-controllers in Calico v3.28.0
 This issue has been resolved in Calico v3.28.2. To use Calico v3.28.2, you must upgrade your Kubernetes version or recreate your cluster. 
 
 
+### > Failed to upgrade clusters.
+
+#### When creating an NKS, check whether finalizers are set on the resources that are deployed by default.
+If finalizers are set on deployed resources when the NKS is created, the upgrade fails because the resources cannot be removed. When the upgrade of all worker node groups is complete, the NKS initial deployment resources are redeployed.If finalizers are set on the NKS initial deployment resource during this process, the redeployment of the resources will fail and the upgrade will be stopped. To resolve this issue, you must remove the finalizers setting on the NKS initial deployment resource before upgrading.
+
+The command to remove the finalizers setting is as follows
+```
+kubectl patch {resource type} {resource name} -n {namespace} --type=json -p='[{"op": "remove", "path": "/metadata/finalizers"}]'
+```
+Example
+```
+kubectl patch clusterrole calico-kube-controllers --type=json -p='[{"op": "remove", "path": "/metadata/finalizers"}]'
