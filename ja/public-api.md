@@ -487,6 +487,7 @@ X-Auth-Token: {tokenId}
 | labels.external_subnet_id_list | Body | String | X | インターネットゲートウェイに接続されたサブネットUUIDリスト(コロンで区切る)<br>VPCサブネットが接続されているルーターがインターネットゲートウェイに接続されている場合は必ず設定 |
 | labels.cert_manager_api | Body | String | O | CSR(Certificate Signing Request)機能を有効にするかどうか。必ず"True"に設定 |
 | labels.ca_enable | Body | String | O | 基本ワーカーノードグループ適用：オートスケーラー：機能を有効にするかどうか("True" / "False") |
+| labels.ca_pod_replicas | Body | String | X | 基本ワーカーノードグループ適用:オートスケーラー: Pod数 |
 | labels.ca_max_node_count | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：最大ノード数 |
 | labels.ca_min_node_count | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：最小ノード数 |
 | labels.ca_scale_down_enable | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：縮小が有効かどうか("True" / "False") |
@@ -551,6 +552,7 @@ X-Auth-Token: {tokenId}
         "boot_volume_size": "20",
         "boot_volume_type": "General HDD",
         "ca_enable": "false",
+        "ca_pod_replicas": "1",        
         "ca_max_node_count": "10",
         "ca_min_node_count": "1",
         "ca_scale_down_delay_after_add": "3",
@@ -830,7 +832,7 @@ pod_subnetは以下のようなルールで入力する必要があります。
 ### クラスタAPIエンドポイントIPアクセス制御適用
 クラスタAPIエンドポイントにIPアクセス制御を適用または解除できます。
 IPアクセス制御機能の詳細については、 [IPアクセス制御](/Network/Load%20Balancer/ja/overview/#ip)文書を参照してください。
-クラスタAPIエンドポイントへのIPアクセス制御ルールに関する詳細については、 [ユーザーガイド](/Container/NKS/ja/user-guide/#_67)を参照してください。
+クラスタAPIエンドポイントへのIPアクセス制御ルールに関する詳細については、 [ユーザーガイド](/Container/NKS/ja/user-guide/#api_endpoint_ipacl)を参照してください。
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/api_ep_ipacl
@@ -1176,6 +1178,7 @@ X-Auth-Token: {tokenId}
 | labels.external_subnet_id_list | Body | String | インターネットゲートウェイに接続されたサブネットUUIDリスト(コロンで区切る) |
 | labels.cert_manager_api | Body | String | CSR(Certificate Signing Request)機能を有効にするかどうか。必ず"True"に設定 |
 | labels.ca_enable | Body | String | ワーカーノードグループ適用：オートスケーラー：機能を有効にするかどうか("True" / "False") |
+| labels.ca_pod_replicas | Body | String | ワーカーノードグループ適用:オートスケーラー: Pod数 |
 | labels.ca_max_node_count | Body | String | ワーカーノードグループ適用：オートスケーラー：最大ノード数 |
 | labels.ca_min_node_count | Body | String | ワーカーノードグループ適用：オートスケーラー：最小ノード数 |
 | labels.ca_scale_down_enable | Body | String | ワーカーノードグループ適用：オートスケーラー：縮小が有効かどうか("True" / "False") |
@@ -1217,7 +1220,7 @@ X-Auth-Token: {tokenId}
         "boot_volume_size": "20",
         "boot_volume_type": "General HDD",
         "ca_enable": "True",
-        "ca_image": "k8s.gcr.io/autoscaling/cluster-autoscaler:v1.19.0",
+        "ca_pod_replicas": "1",        
         "ca_max_node_count": "10",
         "ca_min_node_count": "2",
         "ca_scale_down_delay_after_add": "10",
@@ -1304,6 +1307,7 @@ X-Auth-Token: {tokenId}
 | labels.boot_volume_key_id | Body | String | X | (暗号化されたブロックストレージを使用する場合)ブロックストレージに適用する対称鍵ID |
 | labels.boot_volume_appkey | Body | String | X | (暗号化されたブロックストレージを使用する場合)ブロックストレージに適用する対称鍵のアプリケーションキー |
 | labels.ca_enable | Body | String | O | 基本ワーカーノードグループ適用：オートスケーラー：機能を有効にするかどうか("True" / "False") |
+| labels.ca_pod_replicas | Body | String | X | 基本ワーカーノードグループ適用:オートスケーラー: Pod数 |
 | labels.ca_max_node_count | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：最大ノード数 |
 | labels.ca_min_node_count | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：最小ノード数 |
 | labels.ca_scale_down_enable | Body | String | X | 基本ワーカーノードグループ適用：オートスケーラー：縮小が有効かどうか("True" / "False") |
@@ -1361,6 +1365,7 @@ X-Auth-Token: {tokenId}
 | labels.boot_volume_type | Body | String | 基本ワーカーノードグループ適用：ブロックストレージの種類|
 | labels.boot_volume_size | Body | String | 基本ワーカーノードグループ適用：ブロックストレージサイズ(GB) |
 | labels.ca_enable | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：機能を有効にするかどうか("True" / "False") |
+| labels.ca_pod_replicas | Body | String | 基本ワーカーノードグループ適用:オートスケーラー: Pod数 |
 | labels.ca_max_node_count | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：最大ノード数 |
 | labels.ca_min_node_count | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：最小ノード数 |
 | labels.ca_scale_down_enable | Body | String | 基本ワーカーノードグループ適用：オートスケーラー：縮小が有効かどうか("True" / "False") |
@@ -1391,6 +1396,7 @@ X-Auth-Token: {tokenId}
         "boot_volume_size": "20",
         "boot_volume_type": "General HDD",
         "ca_enable": "false",
+        "ca_pod_replicas": "1",        
         "ca_max_node_count": "10",
         "ca_min_node_count": "1",
         "ca_scale_down_enable": "true",
@@ -1587,6 +1593,7 @@ X-Auth-Token: {tokenId}
 | 名前 | 種類 | 形式 | 説明 |
 |---|---|---|---|
 | ca_enable | Body | String | 機能を有効にするかどうか("True" / "False") |
+| ca_pod_replicas | Body | String | Pod数 |
 | ca_max_node_count | Body | String | 最大ノード数 |
 | ca_min_node_count | Body | String | 最小ノード数 |
 | ca_scale_down_enable | Body | String | 縮小が有効かどうか("True" / "False") |
@@ -1600,7 +1607,7 @@ X-Auth-Token: {tokenId}
 ```json
 {
     "ca_enable": true,
-    "ca_image": "k8s.gcr.io/autoscaling/cluster-autoscaler:v1.19.0",
+    "ca_pod_replicas": 1,
     "ca_max_node_count": 10,
     "ca_min_node_count": 2,
     "ca_scale_down_delay_after_add": 10,
@@ -1636,6 +1643,7 @@ X-Auth-Token: {tokenId}
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
 | NODEGROUP_ID_OR_NAME | URL | UUID or String | O | ノードグループUUIDまたはノードグループ名 | 
 | ca_enable | Body | String | O | 機能を有効にするかどうか("True" / "False") |
+| ca_pod_replicas | Body | String | X | Pod数 |
 | ca_max_node_count | Body |X|String | 最大ノード数 |
 | ca_min_node_count | Body |X|String | 最小ノード数 |
 | ca_scale_down_enable | Body |X|String | 縮小が有効かどうか("True" / "False") |
@@ -1649,6 +1657,7 @@ X-Auth-Token: {tokenId}
 ```json
 {
     "ca_enable": true,
+    "ca_pod_replicas": 1,    
     "ca_max_node_count": 10,
     "ca_min_node_count": 1,
     "ca_scale_down_delay_after_add": 30,
@@ -1913,11 +1922,12 @@ X-Auth-Token: {tokenId}
         "v1.25.4": false,
         "v1.26.3": true,
         "v1.26.3": false,
-        "v1.27.3": true,
+        "v1.27.3": false,
         "v1.28.3": true,
         "v1.29.3": true
         "v1.29.3": true,
-        "v1.30.3": true
+        "v1.30.3": true,
+        "v1.31.4": true
     },
     "supported_event_type": {
         "cluster_events": {
