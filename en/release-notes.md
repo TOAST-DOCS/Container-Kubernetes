@@ -1,5 +1,17 @@
 ## Container > NHN Kubernetes Service (NKS) > Release Notes
 
+### March 4, 2025
+
+#### Added Features
+* Support for Kubernetes v1.31.4.
+* The OIDC(openID connect) setting feature is available.
+* You can change the cluster key pair.
+    * Clusters that enabled a cluster key pair operate with the service user's permissions
+    * Clusters that operate under the service user's permissions do not need to change/manage owners.
+
+#### Feature Updates
+* The feature to change cluster owners is not supported.
+
 ### November 26, 2024
 
 #### Added Features

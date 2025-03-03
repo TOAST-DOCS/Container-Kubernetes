@@ -20,7 +20,7 @@ NKS's Kubernetes version support policy is as follows.
     * So when a new version is added to the createable versions, the lowest version among the serviceable versions is removed.
 
 For each Kubernetes version, here's when you can expect to see additions/deletions to the createable versions and when versions are listed as end of service.
-(Note that this table is current as of August 27, 2024, and the version names of createable versions and when they are provided are subject to change due to our internal circumstances)
+(Note that this table is current as of March 4, 2024, and the version names of createable versions and when they are provided are subject to change due to our internal circumstances)
 
 | Version    | Add to Createable Versions | Remove from Createable Versions | End of Service Support |
 |:-------:|:-------------------:|:--------------------:|:---------------------:|
@@ -28,23 +28,22 @@ For each Kubernetes version, here's when you can expect to see additions/deletio
 | v1.23.3 | 2022. 03.           | 2023. 08.            | 2024. 02.             |
 | v1.24.3 | 2022. 09.           | 2024. 02.            | 2024. 05.             |
 | v1.25.4 | 2023. 01.           | 2024. 05.            | 2024. 08.             |
-| v1.26.3 | 2023. 05.           | 2024. 08.            | 2025. 02.(Scheduled)    |
-| v1.27.3 | 2023. 08.           | 2025. 02.(Scheduled)      | 2025. 05.(Scheduled)       |
+| v1.26.3 | 2023. 05.           | 2024. 08.            | 2025. 02.             |
+| v1.27.3 | 2023. 08.           | 2025. 02.            | 2025. 05.(Scheduled)       |
 | v1.28.3 | 2024. 02.           | 2025. 05.(Scheduled)      | 2025. 08.(Scheduled)       |
-| v1.29.3 | 2024. 05.           | 2025. 08.(Scheduled)      | 2026. 02.(Scheduled)       |
-| v1.30.3 | 2024. 08.           | 2026. 02.(Scheduled)      | 2026. 05.(Scheduled)       |
-| v1.31.x | 2025. 02.(Scheduled)     | 2026. 05.(Scheduled)      | 2026. 08.(Scheduled)       |
+| v1.29.3 | 2024. 05.           | 2025. 08.(Scheduled)      | 2025. 11.(Scheduled)       |
+| v1.30.3 | 2024. 08.           | 2025. 11.(Scheduled)      | 2026. 02.(Scheduled)       |
+| v1.31.4 | 2025. 02.           | 2025. 11.(Scheduled)      | 2026. 02.(Scheduled)       |
+| v1.32.x | 2025. 05.(Scheduled)     | 2025. 11.(Scheduled)      | 2026. 02.(Scheduled)       |
 
 
 ### Creating Clusters
 To use NHN Kubernetes Service (NKS), you must create clusters first.
 
 > [Caution] Setting up permissions to use clusters<br>
-> To create a cluster, the user must have **Infrastructure ADMIN** or **Infrastructure LoadBalancer ADMIN** permissions of basic infrastructure services for the project.
+> To create a cluster, the user must have **Infrastructure ADMIN**, **Infrastructure LoadBalancer ADMIN**, or **Infrastructure NKS ADMIN** permissions of basic infrastructure services for the project.
 Only with the permissions, the user can normally create and operate clusters running on basic infrastructure services. It is totally possible to add one of the two permissions when the other is already acquired.
 To learn more about setting up permissions, see [Manage Project Members](/TOAST/en/console-guide/#_22).
-If there is some change to the permissions (permissions added or deleted) that were set up when creating a cluster, some features of the cluster may be restricted.
-For more information, see [Change Cluster OWNER](./user-guide/#_4).
 
 Go to **Container > NHN Kubernetes Service(NKS)** and click **Create Cluster** and a page for creating clusters shows up. The following items are required to create a cluster.
 
@@ -170,56 +169,19 @@ When you select a cluster, cluster information appears at the bottom.
 ### Deleting Clusters
 Select a cluster to delete, and click **Delete Clusters** and it is deleted. It takes about 5 minutes to delete. More time may be required depending on the cluster status.
 
-### Change Cluster OWNER
-> [Notes]
-The cluster OWNER is set to the user who created the cluster, but can be changed to other user when required.
+### Change Cluster Key Pair
 
-The cluster operates based on the [OWNER permission](./user-guide/#_1) set when it is created.
-The permission is used in integrating with Kubernetes and NHN Cloud basic infrastructure services.
-Basic infrastructure services used by Kubernetes are as follows.
+Change the key pair of all worker nodes in the cluster. To set the key pair, select one of the key pairs of the logged-in user. When you change the key pair, the following applies
 
-| Basic Infrastructure Service | Kubernetes Integration |
-| --- | --- |
-| Compute | Use Instance service when scaling out or in worker nodes through Kubernetes Cluster Auto Scaler |
-| Network | Use Load Balancer and Floating IP services when creating Kubernetes Load Balancer service. |
-| Storage | Use Block Storage service when creating Kubernetes Persistent Volume |
+* The selected key pair is set on all worker node VMs.
+* You can access all worker node VMs via SSH by using the set key pair.
+* The key pair for each worker node instance appears as `managed-by-nks`.
 
-If any of the following situations occur during operation, basic infrastructure services cannot be used in Kubernetes.
+A cluster with key pairing operates with the permissions of a service user. A service user is an internal user managed at the NKS service level, and the functional behavior and service integration of NKS operates with the service user's permissions. Clusters operating under the service user's permissions do not need to change/manage the owner.
 
-| Situation | Cause |
-| --- | --- |
-| Cluster OWNER departure from the project | Project member removal due to cluster OWNER resignation or manual project member removal  |
-| Change to cluster OWNER permissions | Permissions added or deleted after the cluster is created |
-
-When there is a problem in operating clusters and the clusters cannot be normalized through member and permission setup due to the above reasons, you can perform normalization by changing the cluster OWNER in the NKS console.
-How to change the cluster OWNER is as follows.
-
-> [Notes] The user who changes the cluster OWNER in the console becomes a new cluster OWNER.
-The cluster after changing the cluster OWNER operates based on the new OWNER permission.
-
-![handover.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/handover.png)
-
-1. Click **Change Cluster Owner**.
-2. Specify an owner and cluster to change.
-    * Specify the current owner to choose the cluster to change.
-    * Select a cluster to change from the listed clusters.
-    * Specify a key pair to use when creating a new worker node.
-3. Click **Confirm** to continue to change the owner.
-4. Check the status of the cluster to be changed.
-    * Check the progress of the task for the cluster specified from the listed clusters in the NKS console.
-    * The status of cluster where changing OWNER is in progress is HANDOVER_IN_PROGRESS, and when the change completes, the status turns to HANDOVER_COMPLETE.
-        * All node groups under the cluster also turn to the HANDOVER_* status.  
-    * When there is a problem with the change, the status is converted to HANDOVER_FAILED, and it is not allowed to change cluster configuration until normalization completes.
-        * In this status, the **Retry** button is shown next to the status icon.
-        * To normalize the cluster status, click **Retry** and specifiy a key pair and click **Confirm**.
-
-> [Caution] Change cluster OWNER and key pair<br>
-> **Key pair resources** of NHN Cloud basic infrastructure services are dependent on specific users and cannot be shared with other users.
-(separate from the PEM file downloaded after generating the key pair in the NHN Cloud console)
-Therefore, the key pair resource specified when creating the cluster must also be newly designated to belong to the new OWNER when the cluster OWNER is changed.<br>
-> You can connect to the worker nodes (instances) created after changing the cluster OWNER using the newly specified key pair (PEM file).
-However, you still need the key pair (PEM file) of the existing OWNER to connect to the worker nodes created before the OWNER change.
-Therefore, even if the OWNER is changed, the existing key pair (PEM file) must be well managed at the project manager level.
+> [Caution]
+> * Clusters that are set up with a regular user as the owner can be changed to act as a service user through the Change key pair feature.
+> * The Change cluster owner feature is no longer available. If you want the cluster to act as a service user, use the Change key pair feature.
 
 ## Node Group
 A node group is comprised of worker node instances that comprise a Kubernetes.
@@ -1002,7 +964,7 @@ Changing the instance flavor proceeds in the following order.
 4. Evict working pods from the buffer node, and delete the buffer node.
 5. Reactivate the cluster auto scaler feature.
 
-Instance flavor changes work in a similar way to worker component upgrades. For more details on creating and deleting buffer nodes and evicting pods, see [Upgrade a Cluster](/Container/NKS/en/user-guide/#_30).
+Instance flavor changes work in a similar way to worker component upgrades. For more details on creating and deleting buffer nodes and evicting pods, see [Upgrade a Cluster](/Container/NKS/en/user-guide/#cluster-upgrade).
 
 
 #### Constraints
@@ -1013,6 +975,7 @@ You can only change an instance to another flavor that is compatible with its cu
 * m2, c2, r2, t2, x1 flavor instances cannot be changed to u2 flavors.
 * u2 flavor instances cannot be changed to other flavors once they have been created, not even to those of the same u2 flavor.
 
+<a id="custom-image"></a>
 ### Use Custom Image as Worker Image
 
 You can create a worker node group using your custom images. This requires additional work (conversion to NKS worker node) in NHN Cloud Image Builder so that the custom image can be used as a worker node image. In Image Builder, you can create custom worker node images by creating image templates with the worker node application of NHN Kubernetes Service (NKS). For more information on Image Builder, see [](/Compute/Image%20Builder/ko/console-guide/#_1)Image Builder User Guide[](/Compute/Image%20Builder/ko/console-guide/#_1).
@@ -1304,7 +1267,7 @@ All default active admission controllers per Kubernetes version are enabled. The
 * NodeRestriction
 * PodSecurityPolicy
 
-
+<a id="cluster-upgrade"></a>
 ### Cluster upgrade
 NHN Kubernetes Service (NKS) supports the Kubernetes component upgrade for the currently operating Kubernetes clusters. 
 
@@ -1313,14 +1276,11 @@ Kubernetes version is represented as `x.y.z`. `x` is the major, `y` is the minor
 
 Kubernetes clusters can upgrade the Kubernetes components while in operation. To this end, each Kubernetes component defines whether to support the features based on the Kubernetes version difference. In minor version, for example, the difference of one version supports the Kubernetes component upgrade for the operating clusters by supporting the mutual feature compatibility. It also defines the upgrade sequence for each type of the components. For more information, see [Version Skew Policy](https://kubernetes.io/releases/version-skew-policy/).
 
-#### Feature Behavior
-Explains how the Kubernetes cluster upgrade feature supported by NHN Cloud works. 
-
-##### Kubernetes Version Control
-NHN Cloud's Kubernetes cluster controls the Kubernetes versions per cluster control plane and worker node group. Control plane's Kubernetes version can be checked in the cluster view screen, and the Kubernetes version of the worker node group can be checked in the screen view of each worker node group. 
+#### Manage NKS Cluster Version
+NKS cluster controls the Kubernetes versions per control plane and worker node group. Control plane's Kubernetes version can be checked in the cluster view screen, and the Kubernetes version of the worker node group can be checked in the screen view of each worker node group.
 
 ##### Upgrade Rules
-When upgrading, NHN Cloud's Kubernetes Cluster version control and Kubernetes versioning support policy must be followed to keep the proper sequence. The following rules are applied to NHN Cloud's Kubernetes cluster upgrade features.
+When upgrading, NKS cluster version control and Kubernetes versioning support policy must be followed to keep the proper sequence. The following rules are applied to NKS's cluster upgrade features.
 
 * Upgrade commands must be given to each control plane and worker node group. 
 * In order to upgrade, the Kubernetes version of the control plane  and all worker node groups must match.
@@ -1352,16 +1312,26 @@ Notes
 * <a name="footnote_cluster_upgrade_rule_1">4</a>: Upgrade is possible because the control plane is upgraded
 * <a name="footnote_cluster_upgrade_rule_1">5</a>: Upgrade is not possible because the latest version supported by NHN Cloud is being used
 
+<br>
 
-##### Upgrading control plane components
-NHN Cloud's Kubernetes cluster control plane consists of a number of control planes to ensure high availability. Since upgrade is carried out by taking the rolling update method for the control plane, the availability of the clusters is guaranteed. 
+#### Upgrade Strategy
+NKS clusters provide two upgrade strategies: Rolling Upgrade and Blue/Green Upgrade. Users can choose the appropriate strategy to upgrade the cluster based on their operational policies.
 
-The following can happen in this process.
+<br>
 
-* Kubernetes API can fail temporarily.
+**Rolling Upgrade**
 
+![Rolling_Upgrade.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/Rolling_Upgrade.png)
 
-##### Upgrading worker components
+Rolling Upgrade is an upgrade strategy that moves the entire cluster to a new version by sequentially upgrading groups of control plane and worker nodes. Below are the steps involved in performing a cluster upgrade with the Rolling Upgrade strategy and a description of each step.
+
+<br>
+
+##### 1. Upgrade the control plane components via the Upgrade button on the Cluster Query screen.
+
+The NKS cluster control plane ensures high availability. Upgrades are made to the control plane on a rolling update basis to ensure the availability of the cluster. During this process, the Kubernetes APIs may temporarily fail. 
+
+##### 2. Upgrade the worker components of all worker node groups via the Upgrade button on the Node Group Query screen.
 Worker components can be upgraded for each worker node group. Worker components are upgraded in the following steps:
 
 1. Deactivate the cluster auto scaler feature.<sup>[1](#footnote_worker_component_upgrade_1)</sup> 
@@ -1372,6 +1342,7 @@ Worker components can be upgraded for each worker node group. Worker components 
     3. Make the node schedulable.
 4. Evict working pods from the buffer node, and delete the buffer node.
 5. Reactivate the cluster auto scaler feature.<sup>[1](#footnote_worker_component_upgrade_1)</sup> 
+6. Once worker component upgrades are complete for all worker node groups, system pod upgrades are performed automatically.
 
 
 Notes
@@ -1400,11 +1371,34 @@ You can define the number of pods to maintain with the PodDisruptionBudgets(PDB)
 
 To find out more about safely evicting pods, see [Safely Drain a Node](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/).
 
-##### System Pod Upgrade
-If the versions match after upgrading the versions of the control plane and all worker node groups, the system pod which runs for Kubernetes cluster configuration will be upgraded.
+
+<br>
+
+**Blue/Green Upgrade**
+
+![Blue_Green.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/Blue_Green.png)
+
+Blue/Green Upgrade is an upgrade strategy that allows you to configure two different versions of an environment within a cluster during the upgrade process to increase application availability and reduce upgrade risk by simplifying the rollback process in the event of a deployment failure. One environment (Blue) consists of a group of nodes in the version prior to the upgrade, and the other environment (Green) consists of a group of nodes in the version to be upgraded. Once testing is complete on the Green environment, you move application traffic to the Green environment and decommission the Blue environment. This process allows you to upgrade the entire cluster to the next version. Below is the process of performing a cluster upgrade with the Blue/Green Upgrade strategy and a description of each step.
+
+<br>
+
+##### 1. Upgrade the control plane components via the Upgrade button on the Cluster Query screen.
+The NKS cluster control plane ensures high availability. Upgrades are made to the control plane on a rolling update basis to ensure the availability of the cluster. During this process, the Kubernetes APIs may temporarily fail. 
+
+##### 2. Create a node group.
+Create a new node group to create a green environment for testing. New node groups created after a control plane component upgrade are created with the same version of Kubernetes as the control plane. You can deploy the same resources in the Green environment as in the Blue environment (the existing node group) to validate the post-upgrade environment. In doing so, you must isolate application traffic to ensure that the Blue environment does not impact the operation of the existing cluster.
+
+##### 3. After validating the Green environment (new node group), switch application traffic to the Green environment.
+In the newly built Green environment, existing users validate that the resources they are running on are fully compatible with the next version of Kubernetes, and once validation is complete, they switch their application traffic from the existing Blue environment to the newly built Green environment. If something goes wrong during the validation phase in the Green environment, you can simply roll back by deleting the Blue environment without switching traffic.
+
+##### 4. Discard the Blue environment (all worker node groups from previous versions).
+If the versions of the control plane and all worker node groups do not match, it is not possible to perform the next step, upgrading the system pods. Discard the Blue environment to bring all node groups in the cluster up to the upgrade version.
+
+##### 5. Upgrade the system pod via the Upgrade button on the Cluster Query screen.
+System Pod upgrade is performed for the Kubernetes cluster configuration.
 
 > [Caution]
-If you do not upgrade the worker node group after upgrading the control plane, some pods might not work properly.
+> If a system Pod upgrade is not performed, some Pods might not function properly.
 
 
 ### Change Cluster CNI
@@ -1412,7 +1406,7 @@ NHN Kubernetes Service (NKS) supports changing the container network interface (
 The Change Cluster CNI feature allows you to change the CNI of the NHN Kubernetes Service (NKS) from Flannel CNI to Calico-VXLAN CNI.
 
 #### CNI Change Rules
-The following rules apply to the Kubernetes Cluster CNI change feature in the NHN Cloud.
+The following rules apply to the NKS Cluster CNI change feature in the NHN Cloud.
 
 * The CNI change feature is available for the NHN Kubernetes Service (NKS) v1.24.3 and above.
 * The CNI change is only available if the CNI being used by the existing NHN Kubernetes Service (NKS) is Flannel.
@@ -1478,7 +1472,7 @@ The following can happen in this process.
 > 2. For normal communication between Flannel CIDR and Calico-VXLAN CIDR during the CNI change process, CNI change pod network value should not be the same as the existing Flannel CIDR value.
 > 3. Pause containers of the previously distributed pod are all stopped and then regenerated by kubelet. The settings, such as the pod name and local storage space, remain unchanged, but the IP is changed to the IP of Calico-VXLAN CIDR.
 
-
+<a id="api_endpoint_ipacl"></a>
 ### Enforce IP Access Control to Cluster API Endpoints
 You can enforce or disable IP access control to cluster API endpoints.
 For more information about the IP access control feature, see [IP Access Control](/Network/Load%20Balancer/ko/overview/#ip).
@@ -1535,6 +1529,7 @@ You can set a number of options for Kubernetes components. You can set these opt
 | kube-apiserver | Control plane | default-not-ready-toleration-seconds | Defines how long pods running on a node will be allowed when the node is in the NotReady state:<br>(unit: seconds, default: 300, minimum: 0, maximum: 86400) |
 | kube-apiserver | Control plane | default-unreachable-toleration-seconds | Defines how long pods running on a node will be allowed when the node is not connected to the network:<br>(unit: seconds, default: 300, minimum: 0, maximum: 86400) |
 | kube-controller-manager | Control plane | node-monitor-grace-period | Defines how long to wait when a node is in an unhealthy state before considering it unhealthy.<br>(unit: seconds, default: 40, minimum: 0, maximum: 86400) |
+| kube-controller-manager | Control plane | unhealthy-zone-threshold | Defines the threshold for the percentage of NotReady nodes to consider a zone unhealthy:<br>(Unit: percentage, Default: 55, Minimum: 0, Maximum: 100) |
 | kubelet | Worker node | node-status-update-frequency | Defines how often the kubelet should report the node state of the kubelet:<br>(unit: seconds, default: 10, minimum: 0, maximum: 86400) |
 
 For more information on each item, see the [Kubernetes official documents](https://kubernetes.io/docs/).
@@ -1542,6 +1537,24 @@ For more information on each item, see the [Kubernetes official documents](https
 > [Caution]
 > * If you change the settings of a component running in the control plane, the component in the control plane will restart.
 > * If you change the settings of a component running on a worker node, the component on the worker node will restart.
+
+## OIDC Authentication Settings Feature
+
+OpenID Connect (OIDC) is an interoperable authentication protocol based on the OAuth 2.0 framework. With OIDC, you can authenticate users with external authentication services. To learn more about how OIDC works, see [What is OpenID Connect](https://openid.net/developers/how-connect-works/).
+
+The NKS cluster can be set up to handle authentication using OIDC. The configuration items for OIDC authentication are as follows
+
+| Item | Required | Description |
+| --- | --- | --- |
+| Issuer URL | O | 'https://'로 OIDC provider URL starting with |
+| Client ID | O | Client ID of the OIDC provider |
+| Username claim | X | The claim to use as username. Default: 'sub'<br>Non-email claims are prefixed with the provider URL. |
+| Groups claim | X | Claims to use as groups |
+| Username prefix | X | A prefix to attach to the username claim to avoid conflicts.<br>If not set, username claims except email are prefixed with the provider URL.<br>To disable the prefix, enter '-'. |
+| Groups prefix | X | Prefix to attach to groups claim to avoid conflicts |
+| Required Claim | X | Key/value pairs that require verification in an ID token |
+| CA File | X | The certificate file of the CA that signed the OIDC provider's web certificate. |
+| Signing Algs| X | List of allowed JOSE asymmetric signature algorithms. Default: 'RS256' |
 
 ## Manage Worker Node
 
@@ -2641,7 +2654,7 @@ spec:
     app: echosvr
   type: LoadBalancer
 ```
-
+<a id="ingress-controller"></a>
 ## Ingress Controller
 Ingress Controller routes HTTP and HTTPS requests from cluster externals to internal services, in reference of the rules that are defined at ingress object so as to provide SSL/TSL closure and virtual hosting. For more details on Ingress Controller and Ingress, see [Ingress Controller](https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/), [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/).
 
@@ -3081,6 +3094,7 @@ k8s-dashboard-ingress   nginx   *       123.123.123.44   80, 443   34s
 
 If you access `https://{ADDRESS}` in a web browser, the Kubernetes dashboard page is loaded. See [Dashboard Access Token](/Container/NKS/en/user-guide/#dashboard-access-token) for the token required for login.
 
+<a id="dashboard-access-token"></a>
 ### Dashboard Access Token
 A token is required to log in to the Kubernetes dashboard. You can get the token with the following command:
 
@@ -3203,7 +3217,7 @@ NAME               PROVISIONER                RECLAIMPOLICY   VOLUMEBINDINGMODE 
 csi-storageclass   cinder.csi.openstack.org   Delete          WaitForFirstConsumer   false                  7s
 ```
 
-
+<a id="static-provisioning"></a>
 ### Static Provisioning
 
 Static provisioning requires the user to prepare a block storage manually. On the **Storage > Block Storage** service page of the NHN Cloud web console, click the **Create Block Storage** button to create a block storage to attach to the PV. See [Create Block Storage](/Storage/Block%20Storage/en/console-guide/#create-block-storage) in the Block Storage guide.
@@ -3289,7 +3303,7 @@ NAME            CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM       
 pv-static-001   10Gi       RWO            Delete           Bound    default/pvc-static   sc-default              79s   Filesystem
 ```
 
-
+<a id="dynamic-provisioning"></a>
 ### Dynamic Provisioning
 
 With Dynamic Provisioning, block storage is automatically created in reference of attributes defined at storage class. To use Dynamic Provisioning, do not set Volume Binding Mode of storage class or set it to **Immediate**.
@@ -4056,7 +4070,7 @@ spec:
     volumeHandle: 9f606b78-256b-4f74-8988-1331cd6d398b
 ```
 
-The process of creating a PVC manifest and mounting it to a Pod is the same as static provisioning for general block storage. For more information, see [Static Provisioning](/Container/NKS/en/user-guide/#_70).
+The process of creating a PVC manifest and mounting it to a Pod is the same as static provisioning for general block storage. For more information, see [Static Provisioning](/Container/NKS/en/user-guide/#static-provisioning).
 
 #### Dynamic Provisioning
 You can use automatically generated encrypted block storage as a PV by entering the information required to create encrypted block storage when creating the storage class manifest.
@@ -4084,4 +4098,4 @@ parameters:
   volume_appkey: "uaUW..."
 ```
 
-The process of creating a PVC manifest and mounting it to a Pod is the same as dynamic provisioning for general block storage. For more information, see [Dynamic Provisioning](/Container/NKS/en/user-guide/#_71).
+The process of creating a PVC manifest and mounting it to a Pod is the same as dynamic provisioning for general block storage. For more information, see [Dynamic Provisioning](/Container/NKS/en/user-guide/#dynamic-provisioning).
