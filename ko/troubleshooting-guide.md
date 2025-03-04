@@ -226,7 +226,7 @@ $ reboot
 해당 이슈는 항상 발생하는 것은 아니며, 사용자의 애플리케이션 특성에 따라 발생할 수 있습니다. 만약 이슈 발생이 우려될 경우 NKS의 커스텀 이미지 기능을 이용해 처음부터 위와 같은 해결 방안이 적용된 워커 노드 이미지를 사용할 수 있습니다.
 
 #### NKS 커스텀 이미지 기능을 사용하여 새로 생성한 클러스터에 해결 방안 적용
-NKS에서는 사용자의 커스텀 이미지를 기반으로 한 워커 노드 그룹을 생성하는 기능을 제공하고 있습니다. NKS 커스텀 이미지 기능을 사용하여 memory cgroup에 대한 kernel object accounting 기능이 비활성화된 이미지를 만들고 클러스터 생성 시 활용할 수 있습니다. 커스텀 이미지 사용 기능에 대한 자세한 내용은 [커스텀 이미지를 워커 이미지로 활용](/Container/NKS/ko/user-guide/#_25)을 참고하세요.
+NKS에서는 사용자의 커스텀 이미지를 기반으로 한 워커 노드 그룹을 생성하는 기능을 제공하고 있습니다. NKS 커스텀 이미지 기능을 사용하여 memory cgroup에 대한 kernel object accounting 기능이 비활성화된 이미지를 만들고 클러스터 생성 시 활용할 수 있습니다. 커스텀 이미지 사용 기능에 대한 자세한 내용은 [커스텀 이미지를 워커 이미지로 활용](/Container/NKS/ko/user-guide/#custom-image)을 참고하세요.
 
 1. 이미지 템플릿 생성 과정에서 사용자 스크립트에 아래 내용을 입력합니다.
 ```
@@ -528,3 +528,17 @@ CTLB가 활성화된 경우 패킷은 BPF MAP에서 목적지 Pod로 직접 전�
 Calico v3.28.0의 calico/kube-controllers에서 발견된 버그로 인해 발생하는 문제입니다. 노드 감축 진행 시 calico/kube-controllers 파드가 배포된 노드가 제거되면 해당 파드는 다른 노드로 스케줄링되어 실행됩니다. calico/kube-controllers가 재실행되는 동안 노드 정보가 동기화되지 않습니다. 이 상태에서 제거했던 노드와 동일한 이름의 노드가 추가되면 네트워크 장애가 발생할 수 있습니다.
 
 이 문제는 Calico v3.28.2에서 해결되었습니다. Calico v3.28.2를 사용하기 위해서는 Kubernetes 버전을 업그레이드하거나 클러스터를 다시 생성해야 합니다. 
+
+### > 클러스터 업그레이드에 실패합니다.
+
+#### NKS 생성 시 기본으로 배포되는 리소스에 finalizers 설정 여부를 확인해야 합니다.
+NKS 생성 시 배포된 리소스에 finalizers가 설정되어 있는 경우, 리소스가 제거되지 못하여 업그레이드에 실패합니다. 모든 워커 노드 그룹의 업그레이드가 완료되면 NKS 초기 배포 리소스가 재배포됩니다. 이 과정에서 NKS 초기 배포 리소스에 finalizers가 설정되어 있으면 리소스 재배포에 실패해 업그레이드가 중단됩니다. 이 문제를 해결하기 위해서는 업그레이드 전 NKS 초기 배포 리소스에 finalizers 설정을 제거해야 합니다.
+
+finalizers 설정 제거 명령어는 다음과 같습니다.
+```
+kubectl patch {리소스 유형} {리소스 이름} -n {네임스페이스} --type=json -p='[{"op": "remove", "path": "/metadata/finalizers"}]'
+```
+예시
+```
+kubectl patch clusterrole calico-kube-controllers --type=json -p='[{"op": "remove", "path": "/metadata/finalizers"}]'
+```

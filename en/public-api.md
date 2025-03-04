@@ -486,6 +486,7 @@ X-Auth-Token: {tokenId}
 | labels.external_subnet_id_list | Body | String | X | List of UUIDs of subnets attached to the internet gateway (separated by colon)<br>Must be set when a router associated with a VPC subnet is attached to the internet gateway |
 | labels.cert_manager_api | Body | String | O | Whether to enable the certificate signing request (CSR) feature. Must be set to "True" |
 | labels.ca_enable | Body | String | O | Applied to the default worker node group: Autoscaler: Whether to enable the feature ("True" / "False") |
+| labels.ca_pod_replicas | Body | String | X | Applied to the default worker node group: Autoscaler: Number of pods |
 | labels.ca_max_node_count | Body | String | X | Applied to the default worker node group: Autoscaler: Maximum number of nodes |
 | labels.ca_min_node_count | Body | String | X | Applied to the default worker node group: Autoscaler: Minimum number of nodes |
 | labels.ca_scale_down_enable | Body | String | X | Applied to the default worker node group: Autoscaler: Whether to enable scale-down ("True" / "False") |
@@ -546,6 +547,7 @@ X-Auth-Token: {tokenId}
         "boot_volume_size": "20",
         "boot_volume_type": "General HDD",
         "ca_enable": "false",
+        "ca_pod_replicas": "1",
         "ca_max_node_count": "10",
         "ca_min_node_count": "1",
         "ca_scale_down_delay_after_add": "3",
@@ -824,7 +826,7 @@ pod_subnet must be entered in the following rules.
 ### Enforce IP Access Control to Cluster API Endpoints
 You can enforce or disable IP access control to cluster API endpoints.
 For more information about IP access control features, see [IP access control](/Network/Load%20Balancer/en/overview/#ip).
-For more information about IP access control rules for Cluster API endpoints, see the [user guide](/Container/NKS/en/user-guide/#_67).
+For more information about IP access control rules for Cluster API endpoints, see the [user guide](/Container/NKS/en/user-guide/#api_endpoint_ipacl).
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/api_ep_ipacl
@@ -1173,6 +1175,7 @@ This API does not require a request body.
 | labels.external_subnet_id_list | Body | String | List of UUIDs of subnets attached to the internet gateway (separated by colons) |
 | labels.cert_manager_api | Body | String | Whether to enable the certificate signing request (CSR) feature. Must be set to "True" |
 | labels.ca_enable | Body | String | Applied to the worker node group: Autoscaler: Whether to enable the feature ("True" / "False") |
+| labels.ca_pod_replicas | Body | String | X | Applied to the default worker node group: Autoscaler: Number of pods |
 | labels.ca_max_node_count | Body | String | Applied to the worker node group: Autoscaler: Maximum number of nodes |
 | labels.ca_min_node_count | Body | String | Applied to the worker node group: Autoscaler: Minimum number of nodes |
 | labels.ca_scale_down_enable | Body | String | Applied to the worker node group: Autoscaler: Whether to enable scale-down ("True" / "False") |
@@ -1214,7 +1217,7 @@ This API does not require a request body.
         "boot_volume_size": "20",
         "boot_volume_type": "General HDD",
         "ca_enable": "True",
-        "ca_image": "k8s.gcr.io/autoscaling/cluster-autoscaler:v1.19.0",
+        "ca_pod_replicas": "1",
         "ca_max_node_count": "10",
         "ca_min_node_count": "2",
         "ca_scale_down_delay_after_add": "10",
@@ -1302,6 +1305,7 @@ X-Auth-Token: {tokenId}
 | labels.ca_max_node_count | Body | String | X | Applied to the default worker node group: Autoscaler: Maximum number of nodes |
 | labels.ca_min_node_count | Body | String | X | Applied to the default worker node group: Autoscaler: Minimum number of nodes |
 | labels.ca_scale_down_enable | Body | String | X | Applied to the default worker node group: Autoscaler: Whether to enable scale-down ("True" / "False") |
+| labels.ca_pod_replicas | Body | String | X | Applied to the default worker node group: Autoscaler: Number of pods |
 | labels.ca_scale_down_unneeded_time | Body | String | X | Applied to the default worker node group: Autoscaler: Scale down unneeded time |
 | labels.ca_scale_down_util_thresh | Body | String | X | Applied to the default worker node group: Autoscaler: Scale down utilization threshold  |
 | labels.ca_scale_down_delay_after_add | Body | String | X | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
@@ -1358,6 +1362,7 @@ X-Auth-Token: {tokenId}
 | labels.boot_volume_type | Body | String | Applied to the default worker node group: Block storage type|
 | labels.boot_volume_size | Body | String | Applied to the default worker node group: Block storage size (GB) |
 | labels.ca_enable | Body | String | Applied to the default worker node group: Autoscaler: Whether to enable the feature ("True" / "False") |
+| labels.ca_pod_replicas | Body | String | X | Applied to the default worker node group: Autoscaler: Number of pods |
 | labels.ca_max_node_count | Body | String | Applied to the default worker node group: Autoscaler: Maximum number of nodes |
 | labels.ca_min_node_count | Body | String | Applied to the default worker node group: Autoscaler: Minimum number of nodes |
 | labels.ca_scale_down_enable | Body | String | Applied to the default worker node group: Autoscaler: Whether to enable scale-down ("True" / "False") |
@@ -1388,6 +1393,7 @@ X-Auth-Token: {tokenId}
         "boot_volume_size": "20",
         "boot_volume_type": "General HDD",
         "ca_enable": "false",
+        "ca_pod_replicas": "1",
         "ca_max_node_count": "10",
         "ca_min_node_count": "1",
         "ca_scale_down_enable": "true",
@@ -1583,6 +1589,7 @@ This API does not require a request body.
 | Name | Type | Format | Description |
 |---|---|---|---|
 | ca_enable | Body | String | Whether to enable the feature ("True" / "False") |
+| ca_pod_replicas | Body | String | Pod Count |
 | ca_max_node_count | Body | String | Maximum Node Count |
 | ca_min_node_count | Body | String | Minimum Node Count |
 | ca_scale_down_enable | Body | String | Whether to enable scale-down ("True" / "False") |
@@ -1596,7 +1603,7 @@ This API does not require a request body.
 ```json
 {
     "ca_enable": true,
-    "ca_image": "k8s.gcr.io/autoscaling/cluster-autoscaler:v1.19.0",
+    "ca_pod_replicas": 1,
     "ca_max_node_count": 10,
     "ca_min_node_count": 2,
     "ca_scale_down_delay_after_add": 10,
@@ -1632,6 +1639,7 @@ X-Auth-Token: {tokenId}
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
 | NODEGROUP_ID_OR_NAME | URL | UUID or String | O | Node group UUID or node group name | 
 | ca_enable | Body | String | O | Whether to enable the feature ("True" / "False") |
+| ca_pod_replicas | Body | String | X | Pod Count |
 | ca_max_node_count | Body | String |X| Maximum Node Count |
 | ca_min_node_count | Body | String |X| Minimum Node Count |
 | ca_scale_down_enable | Body | String |X| Whether to enable scale-down ("True" / "False") |
@@ -1645,6 +1653,7 @@ X-Auth-Token: {tokenId}
 ```json
 {
     "ca_enable": true,
+    "ca_pod_replicas": 1,
     "ca_max_node_count": 10,
     "ca_min_node_count": 1,
     "ca_scale_down_delay_after_add": 30,
@@ -1908,10 +1917,11 @@ This API does not require a request body.
         "v1.24.3": false,
         "v1.25.4": false,
         "v1.26.3": false,
-        "v1.27.3": true
+        "v1.27.3": false,
         "v1.28.3": true,
         "v1.29.3": true,
-        "v1.30.3": true       
+        "v1.30.3": true,
+        "v1.31.4": true      
     },
     "supported_event_type": {
         "cluster_events": {

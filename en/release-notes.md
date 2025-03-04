@@ -1,9 +1,49 @@
 ## Container > NHN Kubernetes Service (NKS) > Release Notes
 
+### March 4, 2025
+
+#### Added Features
+* Support for Kubernetes v1.31.4.
+* The OIDC(openID connect) setting feature is available.
+* You can change the cluster key pair.
+    * Clusters that enabled a cluster key pair operate with the service user's permissions
+    * Clusters that operate under the service user's permissions do not need to change/manage owners.
+
+#### Feature Updates
+* The feature to change cluster owners is not supported.
+
 ### November 26, 2024
 
 #### Added Features
+* Added the feature to set Kubernetes component.
+
+#### Feature Updates
 * Changed to automatically set the maximum number of Pods that can be created per node based on the pod subnet size.
+
+#### Image Update
+Chagned the version of the GPU driver installed in images.
+
+| Image | AS-IS | TO-BE |
+| --- | --- | --- |
+| Rocky Linux 8.10 (2024.11.19)  | 535.183.06 | 535.216.01 |
+| Ubuntu Server 20.04.6 LTS (2024.11.19)  | 535.183.06 | 535.216.01 |
+| Ubuntu Server 22.04.6 LTS (2024.11.19)  | 535.183.06 | 535.216.01 |
+
+Changed the kernel version installed in images.
+
+| Image | AS-IS | TO-BE |
+| --- | --- | --- |
+| Rocky Linux 8.10 (2024.11.19)  | 4.18.0-553.8.1 | 4.18.0-553.22.1 |
+| Ubuntu Server 20.04.6 LTS (2024.11.19)  | 5.4.0-190 | 5.4.0-198 |
+| Ubuntu Server 22.04.6 LTS (2024.11.19)  | 5.15.0-117 | 5.15.0-124 |
+
+Changed the minimum disk size required to create worker nodes in images.
+
+| Image | AS-IS | TO-BE |
+| --- | --- | --- |
+| Rocky Linux 8.10 (2024.11.19) | 20GB | 30GB |
+| Ubuntu Server 20.04.6 LTS (2024.11.19) | 20GB | 30GB |
+| Ubuntu Server 22.04.6 LTS (2024.11.19) | 20GB | 30GB |
 
 #### Deprecated Image Support
 * You can't create new clusters and node groups using CentOS images.

@@ -20,30 +20,29 @@ NKS의 Kubernetes 버전 지원 정책은 다음과 같습니다.
     * 따라서 생성 가능한 버전이 하나 추가되면 기존의 서비스 지원 가능 버전 목록에서 가장 낮은 버전이 제거됩니다.
 
 각 Kubernetes 버전별 생성 가능 버전에 추가/삭제하는 시점과 서비스 지원 종료 시점은 다음과 같습니다.
-(단, 이 표는 2023년 9월 26일 기준으로 작성되었으며, 신규 생성 가능 버전의 버전명과 제공 시기는 당사 내부 사정에 의해 변경될 수 있습니다)
+(단, 이 표는 2025년 3월 기준으로 작성되었으며, 신규 생성 가능 버전의 버전명과 제공 시기는 당사 내부 사정에 의해 변경될 수 있습니다)
 
 | 버전    | 생성 가능 버전에 추가 | 생성 가능 버전에서 제거 | 서비스 지원 종료 |
 |:-------:|:-------------------:|:--------------------:|:---------------------:|
 | v1.22.3 | 2022. 01.           | 2023. 05.            | 2023. 08.             |
 | v1.23.3 | 2022. 03.           | 2023. 08.            | 2024. 02.             |
 | v1.24.3 | 2022. 09.           | 2024. 02.            | 2024. 05.             |
-| v1.25.4 | 2023. 01.           | 2024. 05.            | 2024. 08.(예정)       |
-| v1.26.3 | 2023. 05.           | 2024. 08.(예정)      | 2025. 02.(예정)       |
-| v1.27.3 | 2023. 08.           | 2025. 02.(예정)      | 2025. 05.(예정)       |
+| v1.25.4 | 2023. 01.           | 2024. 05.            | 2024. 08.             |
+| v1.26.3 | 2023. 05.           | 2024. 08.            | 2025. 02.             |
+| v1.27.3 | 2023. 08.           | 2025. 02.            | 2025. 05.(예정)       |
 | v1.28.3 | 2024. 02.           | 2025. 05.(예정)      | 2025. 08.(예정)       |
 | v1.29.3 | 2024. 05.           | 2025. 08.(예정)      | 2025. 11.(예정)       |
-| v1.30.x | 2024. 08.(예정)     | 2025. 11.(예정)      | 2026. 02.(예정)       |
-
+| v1.30.3 | 2024. 08.           | 2025. 11.(예정)      | 2026. 02.(예정)       |
+| v1.31.4 | 2025. 02.           | 2025. 11.(예정)      | 2026. 02.(예정)       |
+| v1.32.x | 2025. 05.(예정)     | 2025. 11.(예정)      | 2026. 02.(예정)       |
 
 ### 클러스터 생성
 NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해야 합니다.
 
 > [주의] 클러스터 사용을 위한 권한 설정<br>
-> 클러스터를 만들고자 하는 사용자는 대상 프로젝트에 대해 반드시 기본 인프라 서비스의 **Infrastructure ADMIN** 또는 **Infrastructure LoadBalancer ADMIN** 권한을 가져야 합니다.
+> 클러스터를 만들고자 하는 사용자는 대상 프로젝트에 대해 반드시 기본 인프라 서비스의 **Infrastructure ADMIN** 또는 **Infrastructure LoadBalancer ADMIN** 또는 **Infrastructure NKS ADMIN** 권한을 가져야 합니다.
 > 해당 권한이 있어야만 기본 인프라 서비스를 기반으로 하는 클러스터를 정상적으로 생성하고 활용할 수 있으며, 이 중 하나의 권한을 가진 상태에서 다른 권한이 추가되는 것은 사용에 문제가 없습니다.
 > 권한 설정에 대해서는 [프로젝트 멤버 관리](/TOAST/ko/console-guide-ngsc/#_22)를 참고하세요.
-> 클러스터 생성 시점의 권한 설정 내역이 차후 변경(임의의 권한 추가 혹은 삭제)될 경우 클러스터의 일부 기능 사용에 제한이 있을 수 있습니다.
-> 이에 대한 자세한 내용은 [클러스터 OWNER 변경](/NKS/ko/user-guide-ngsc/#owner)을 참고하세요.
 
 **Container > NHN Kubernetes Service(NKS)** 페이지에서 **클러스터 생성**을 클릭하면 클러스터 생성 페이지가 나타납니다. 클러스터 생성에 필요한 항목은 다음과 같습니다.
 
@@ -68,6 +67,8 @@ NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해�
 | 블록 스토리지 타입 | 기본 노드 그룹 인스턴스의 블록 스토리지 종류 |
 | 블록 스토리지 크기 | 기본 노드 그룹 인스턴스의 블록 스토리지 크기 |
 | 추가 네트워크 | 기본 워커 노드 그룹에 생성할 추가 네트워크/서브넷 |
+
+필요한 정보를 입력하고 **클러스터 생성**을 클릭하면 클러스터 생성이 시작됩니다. 클러스터 목록에서 상태를 확인할 수 있습니다. 생성하는 데는 약 10분 정도 걸립니다. 클러스터 설정에 따라 더 오래 걸릴 수도 있습니다.
 
 > [주의]
 > VPC 네트워크 서브넷과 K8s 서비스 네트워크, 파드 네트워크의 CIDR은 경우 아래의 제약 사항에 해당하지 않도록 설정해야 합니다.
@@ -96,7 +97,7 @@ NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해�
 >  - 파드 네트워크 = 10.100.0.0/16
 >  - 계산 : 2 ^ (24 - 16) - 3 =  최대 253개 노드 생성 가능
 
-> [각 노드 당 파드에 할당 가능한 최대 IP 수]
+> [각 노드당 파드에 할당 가능한 최대 IP 수]
 > 한 개의 노드에서 사용 가능한 최대 IP수는 생성 가능한 최대 노드 수는 파드 서브넷 크기 설정으로 결정됩니다.
 > 계산법 : 2 ^ (32 - pods_network_subnet) - 2
 > 예제 :
@@ -104,32 +105,12 @@ NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해�
 >  - 계산 : 2 ^ (32 - 24) - 2 = 최대 254개 IP 사용 가능
 
 > [클러스터에서 파드에 할당 가능한 최대 IP 수]
-> 계산법 : 각 노드 당 파드에 할당 가능한 최대 IP 수 * 최대 생성 가능한 노드 수
+> 계산법 : 각 노드당 파드에 할당 가능한 최대 IP 수 * 최대 생성 가능한 노드 수
 > 예제 :
 >  - 파드 서브넷 크기 = 24
 >  - 파드 네트워크 = 10.100.0.0/16
->  - 계산 : 254(각 노드 당 파드에 할당 가능한 최대 IP 수) * 253(최대 생성 가능한 노드 수) = 최대 64,262개 IP 사용 가능
+>  - 계산 : 254(각 노드당 파드에 할당 가능한 최대 IP 수) * 253(최대 생성 가능한 노드 수) = 최대 64,262개 IP 사용 가능
 
-
-NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전에 따라 일부 기능에 제약이 있을 수 있습니다.
-
-| 버전 | 클러스터 신규 생성 | 생성된 클러스터 사용|
-| :-: | :-: | :-: |
-| v1.17.6 | 불가능 | 가능 |
-| v1.18.19 | 불가능 | 가능 |
-| v1.19.13 | 불가능 | 가능 |
-| v1.20.12 | 불가능 | 가능 |
-| v1.21.6 | 불가능 | 가능 |
-| v1.22.3 | 불가능 | 가능 |
-| v1.23.3 | 불가능 | 가능 |
-| v1.24.3 | 불가능 | 가능 |
-| v1.25.4 | 불가능 | 가능 |
-| v1.26.3 | 가능 | 가능 |
-| v1.27.3 | 가능 | 가능 |
-| v1.28.3 | 가능 | 가능 |
-| v1.29.3 | 가능 | 가능 |
-
-필요한 정보를 입력하고 **클러스터 생성**을 클릭하면 클러스터 생성이 시작됩니다. 클러스터 목록에서 상태를 확인할 수 있습니다. 생성하는 데는 약 10분 정도 걸립니다. 클러스터 설정에 따라 더 오래 걸릴 수도 있습니다.
 
 
 ### 클러스터 조회
@@ -145,7 +126,7 @@ NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전�
 | k8s API 상태 | Kubernetes API 엔드포인트의 동작 상태 |
 | k8s Node 상태 | Kubernetes Node 리소스의 상태 |
 
-작업 상태의 아이콘 별 의미는 다음과 같습니다.
+작업 상태의 아이콘별 의미는 다음과 같습니다.
 
 | 아이콘 | 의미 |
 | --- | --- |
@@ -154,7 +135,7 @@ NHN Kubernetes Service(NKS)는 여러 가지 버전을 지원합니다. 버전�
 | 빨간색 솔리드 아이콘 | 작업 실패 |
 | 회색 솔리드 아이콘 | 클러스터 사용 불가능 |
 
-k8s API 상태의 아이콘 별 의미는 다음과 같습니다.
+k8s API 상태의 아이콘별 의미는 다음과 같습니다.
 
 | 아이콘 | 의미 |
 | --- | --- |
@@ -162,7 +143,7 @@ k8s API 상태의 아이콘 별 의미는 다음과 같습니다.
 | 노란색 솔리드 아이콘 | 정보의 유효 기간(5분)이 얼마 남지 않아 정보가 정확하지 않음 |
 | 빨간색 솔리드 아이콘 | Kubernetes API 엔드포인트가 정상 동작하지 않거나 정보의 유효 기간이 만료됐음 |
 
-k8s Node 상태의 아이콘 별 의미는 다음과 같습니다.
+k8s Node 상태의 아이콘별 의미는 다음과 같습니다.
 
 | 아이콘 | 의미 |
 | --- | --- |
@@ -190,56 +171,20 @@ k8s Node 상태의 아이콘 별 의미는 다음과 같습니다.
 ### 클러스터 삭제
 삭제할 클러스터를 선택하고 **클러스터 삭제**를 클릭하면 삭제가 진행됩니다. 삭제하는 데는 약 5분 정도 걸립니다. 클러스터의 상태에 따라 더 오래 걸릴 수도 있습니다.
 
-### 클러스터 OWNER 변경
-> [참고]
-> 기본적으로 클러스터 OWNER는 클러스터를 생성한 사용자를 의미하지만, 상황에 따라 다른 사용자로 변경 가능합니다.
+### 클러스터 키페어 변경
 
-클러스터는 생성 시점의 [OWNER 권한](/NKS/ko/user-guide-ngsc/#_1)을 기반으로 동작합니다.
-해당 권한은 Kubernetes와 NHN Cloud 기본 인프라 서비스의 연동 과정에서 사용됩니다.
-Kubernetes에서 사용하는 기본 인프라 서비스는 다음과 같습니다.
+클러스터에 속한 모든 워커 노드의 키페어를 변경합니다. 설정할 키페어는 로그인한 사용자의 키페어 중 하나를 선택합니다. 키페어를 변경하면 아래 내용이 적용됩니다.
 
-| 기본 인프라 서비스 | Kubernetes와의 연동 |
-| --- | --- |
-| Compute | Kubernetes 클러스터 오토스케일러를 통한 워커 노드 증설 혹은 감축 시 Instance 서비스 사용 |
-| Network | Kubernetes LoadBalancer 서비스 생성 시 Load Balancer 및 Floating IP 서비스 사용 |
-| Storage | Kubernetes 퍼시스턴트 볼륨 생성 시 Block Storage 서비스 사용 |
+* 모든 워커 노드 VM에 선택한 키페어가 설정됩니다.
+* 설정한 키페어를 이용해 모든 워커 노드 VM에 SSH로 접속할 수 있습니다.
+* 각 워커 노드 인스턴스의 키페어는 `managed-by-nks`로 표시됩니다.
 
-동작 중 아래와 같은 상황이 발생할 경우 Kubernetes에서 기본 인프라 서비스를 사용할 수 없게 됩니다.
+키페어가 설정된 클러스터는 서비스 사용자의 권한으로 동작합니다. 서비스 사용자는 NKS 서비스 수준에서 관리되는 내부 사용자로서 NKS의 기능 동작 및 서비스 연동이 서비스 사용자의 권한으로 동작합니다. 서비스 사용자의 권한으로 동작하는 클러스터는 오너를 변경/관리할 필요가 없습니다.
 
-| 상황 | 사례 |
-| --- | --- |
-| 프로젝트에서 클러스터 OWNER 이탈 | 클러스터 OWNER의 퇴사로 인한 프로젝트 멤버 제거 혹은 인위적 프로젝트 멤버 제거  |
-| 클러스터 OWNER의 권한 변경 | 클러스터 생성 시점 이후 임의의 권한 추가 혹은 삭제 |
+> [주의]
+> * 일반 사용자가 오너로 설정된 클러스터는 키페어 변경 기능을 통해 서비스 사용자의 권한으로 동작하도록 변경할 수 있습니다.
+> * 클러스터 오너 변경 기능은 더 이상 제공되지 않습니다. 클러스터가 서비스 사용자의 권한으로 동작할 수 있도록 하려면 키페어 변경 기능을 이용하세요.
 
-위와 같은 이유로 클러스터 운용에 문제가 발생하고, 멤버나 권한 설정을 통해 정상화할 수 없을 경우 NKS 콘솔의 클러스터 OWNER 변경 기능을 이용해 정상화할 수 있습니다.
-클러스터 OWNER 변경 기능 사용법은 다음과 같습니다.
-
-> [참고] 콘솔에서 클러스터 OWNER 변경 작업을 수행하는 사용자가 대상 클러스터의 새로운 OWNER가 됩니다.
-> OWNER 변경 작업 완료 이후의 클러스터는 새로운 OWNER의 권한을 기반으로 동작합니다.
-
-![handover.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/handover.png)
-
-1. **클러스터 오너 변경**을 클릭합니다.
-2. 변경 대상 오너 및 클러스터를 지정합니다.
-    * 변경 대상 클러스터를 특정하기 위한 현재의 오너를 지정합니다.
-    * 노출된 클러스터 목록에서 변경 대상을 선택합니다.
-    * 신규 워커 노드 생성 시 사용할 자신의 키 페어를 지정합니다.
-3. 오너 변경을 진행하려면 **확인**을 클릭합니다.
-4. 변경 대상 클러스터의 상태를 확인합니다.
-    * NKS 콘솔의 클러스터 목록에서 지정한 클러스터들에 대한 작업 진행 상태를 확인합니다.
-    * OWNER 변경 작업 진행 중인 클러스터의 상태는 HANDOVER_IN_PROGRESS이며, 정상적으로 완료된 경우 HANDOVER_COMPLETE 상태로 전환됩니다.
-        * 해당 클러스터 하위의 모든 노드 그룹도 HANDOVER_* 상태로 전환됩니다.  
-    * 작업에 문제가 발생한 경우에는 HANDOVER_FAILED 상태로 전환되며, 정상화 전까지 클러스터 형상 변경 작업(노드 추가 등)은 허용되지 않습니다.
-        * 이와 같은 상태의 클러스터에는 상태 아이콘 옆에 **재시도** 버튼이 노출됩니다.
-        * 클러스터 상태 정상화를 위해 **재시도**를 클릭하고, 키 페어를 지정한 뒤 **확인**을 클릭합니다.
-
-> [주의] 클러스터 OWNER 변경과 키 페어<br>
-> NHN Cloud 기본 인프라 서비스의 **키 페어 리소스**는 특정 사용자에게 종속되며, 다른 사용자와 공유할 수 없습니다.
-> (NHN Cloud 콘솔에서 키 페어 생성 후 다운로드한 PEM 파일과는 별개)
-> 따라서 클러스터를 생성할 때 지정된 키 페어 리소스 또한 클러스터 OWNER 변경 시 신규 OWNER의 것으로 새롭게 지정해야 합니다.<br>
-> 클러스터 OWNER 변경 후 생성된 워커 노드(인스턴스)에는 새롭게 지정된 키 페어(PEM 파일)를 이용해 접속할 수 있습니다.
-> 하지만 OWNER 변경 전에 만들어진 워커 노드에 접속하려면 여전히 기존 OWNER의 키 페어(PEM 파일)가 필요합니다.
-> 따라서 OWNER를 변경하더라도 기존 키 페어(PEM 파일)는 프로젝트 관리자 수준에서 잘 관리해 주셔야 합니다.
 
 ## 노드 그룹
 노드 그룹은 Kubernetes를 구성하는 워커 노드 인스턴스들의 그룹입니다.
@@ -258,7 +203,7 @@ Kubernetes에서 사용하는 기본 인프라 서비스는 다음과 같습니�
 | 작업 상태 | 노드 그룹에 내린 명령에 대한 작업 상태 |
 | k8s Node 상태 | 노드 그룹에 속한 Kubernetes Node 리소스의 상태 |
 
-작업 상태의 아이콘 별 의미는 다음과 같습니다.
+작업 상태의 아이콘별 의미는 다음과 같습니다.
 
 | 아이콘 | 의미 |
 | --- | --- |
@@ -267,7 +212,7 @@ Kubernetes에서 사용하는 기본 인프라 서비스는 다음과 같습니�
 | 빨간색 솔리드 아이콘 | 작업 실패 |
 | 회색 솔리드 아이콘 | 클러스터 및 노드 그룹 사용 불가능 |
 
-k8s Node 상태의 아이콘 별 의미는 다음과 같습니다.
+k8s Node 상태의 아이콘별 의미는 다음과 같습니다.
 
 | 아이콘 | 의미 |
 | --- | --- |
@@ -326,7 +271,7 @@ k8s Node 상태의 아이콘 별 의미는 다음과 같습니다.
 동작 중인 노드 그룹에서 노드를 삭제할 수 있습니다. 노드 그룹 정보 조회 페이지의 노드 목록 탭을 클릭하면 현재 노드 목록이 나타납니다. 노드 목록 중 삭제할 노드를 선택하고 노드 삭제 버튼을 클릭하면 확인 대화 상자가 나타납니다. 삭제할 노드 이름을 다시 한번 확인하고 확인 버튼을 클릭하면 노드가 삭제됩니다.
 
 >[주의]
->삭제되는 노드에서 동작하고 있던 파드는 강제 종료 됩니다. 삭제될 노드에서 동작 중인 파드를 안전하게 다른 노드로 옮기기 위해서는 drain 명령을 내려야 합니다. 노드가 drain 된 후에도 새로운 파드는 이 노드에 스케줄링 될 수 있습니다. 새로운 파드가 삭제될 노드에 스케줄링되는 것을 방지하기 위해서는 cordon 명령을 내려야 합니다. 안전한 노드 관리에 대한 좀 더 자세한 내용은 아래 문서를 참고하세요.
+>삭제되는 노드에서 동작하고 있던 파드는 강제 종료됩니다. 삭제될 노드에서 동작 중인 파드를 안전하게 다른 노드로 옮기기 위해서는 drain 명령을 내려야 합니다. 노드가 drain 된 후에도 새로운 파드는 이 노드에 스케줄링될 수 있습니다. 새로운 파드가 삭제될 노드에 스케줄링되는 것을 방지하기 위해서는 cordon 명령을 내려야 합니다. 안전한 노드 관리에 대한 좀 더 자세한 내용은 아래 문서를 참고하세요.
 
 >[주의]
 >오토 스케일러가 활성화된 노드 그룹은 수동으로 노드를 삭제할 수 없습니다.
@@ -369,124 +314,6 @@ k8s Node 상태의 아이콘 별 의미는 다음과 같습니다.
 * 회색: 중지 상태의 노드
 * 빨간색: 비정상 상태의 노드
 
-
-### GPU 노드 그룹 사용 
-Kubernetes를 통한 GPU 기반 워크로드 실행이 필요한 경우, GPU 인스턴스로 구성된 노드 그룹을 생성할 수 있습니다.
-클러스터 혹은 노드 그룹 생성 과정에서 인스턴스 타입 선택 시, `g2` 타입을 선택하면 GPU 노드 그룹을 만들 수 있습니다.
-
-> [참고]
-> NHN Cloud GPU 인스턴스에서 제공되는 GPU는 NVIDIA 계열입니다. ([사용 가능한 GPU 제원 확인하기](/Compute/GPU%20Instance/ko/overview-ngsc/#gpu))
-> NVIDIA GPU 이용을 위해 Kubernetes에 필요한 nvidia-device-plugin은 GPU 노드 그룹 생성 시 자동으로 설치됩니다.
-
-생성된 GPU 노드에 대한 기본적인 설정 상태 확인 및 간단한 동작 테스트는 다음과 같은 방법을 이용하면 됩니다.
-
-#### 노드 수준의 상태 확인
-GPU 노드에 접속한 후, `nvidia-smi` 명령을 실행합니다.
-다음과 같은 내용이 출력되면 GPU driver가 정상적으로 동작하는 것입니다.
-
-```
-$ nvidia-smi
-Mon Jul 27 14:38:07 2020
-+-----------------------------------------------------------------------------+
-| NVIDIA-SMI 418.152.00   Driver Version: 418.152.00   CUDA Version: 10.1     |
-|-------------------------------+----------------------+----------------------+
-| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
-| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
-|===============================+======================+======================|
-|   0  Tesla T4            Off  | 00000000:00:05.0 Off |                    0 |
-| N/A   30C    P8     9W /  70W |      0MiB / 15079MiB |      0%      Default |
-+-------------------------------+----------------------+----------------------+
-
-+-----------------------------------------------------------------------------+
-| Processes:                                                       GPU Memory |
-|  GPU       PID   Type   Process name                             Usage      |
-|=============================================================================|
-|  No running processes found                                                 |
-+-----------------------------------------------------------------------------+ 
-```
-
-#### Kubernetes 수준의 상태 확인
-`kubectl` 명령을 사용해 클러스터 수준에서 사용 가능한 GPU 리소스 정보를 확인합니다.
-아래는 각 노드에서 사용 가능한 GPU 코어의 개수를 출력하도록 하는 명령 및 수행 결과입니다.
-
-```
-$ kubectl get nodes -A -o custom-columns='NAME:.metadata.name,GPU Allocatable:.status.allocatable.nvidia\.com/gpu,GPU Capacity:.status.capacity.nvidia\.com/gpu'
-NAME                                       GPU Allocatable   GPU Capacity
-my-cluster-default-w-vdqxpwisjjsk-node-1   1                 1
-```
-
-#### GPU 테스트를 위한 샘플 워크로드 실행
-Kubernetes 클러스터에 속한 GPU 노드들은 CPU와 메모리 이외에 `nvidia.com/gpu`와 같은 이름의 리소스를 제공합니다.
-GPU를 사용하고 싶다면 `nvidia.com/gpu` 리소스를 할당받도록 아래의 샘플 파일처럼 입력하면 됩니다.
-
-* resnet.yaml
-```
-apiVersion: v1
-kind: Pod
-metadata:
-  name: resnet-gpu-pod
-spec:
-  imagePullSecrets:
-    - name: nvcr.dgxkey
-  containers:
-    - name: resnet
-      image: nvcr.io/nvidia/tensorflow:18.07-py3
-      command: ["mpiexec"]
-      args: ["--allow-run-as-root", "--bind-to", "socket", "-np", "1", "python", "/opt/tensorflow/nvidia-examples/cnn/resnet.py", "--layers=50", "--precision=fp16", "--batch_size=64", "--num_iter=90"]
-      resources:
-        limits:
-          nvidia.com/gpu: 1
-``` 
-
-위 파일을 실행하면 다음과 같은 결과를 확인할 수 있습니다.
-
-```
-$ kubectl create -f resnet.yaml
-pod/resnet-gpu-pod created
-
-$ kubectl get pods resnet-gpu-pod
-NAME             READY   STATUS    RESTARTS   AGE
-resnet-gpu-pod   0/1     Running   0          17s 
-
-$ kubectl logs resnet-gpu-pod -n default -f
-PY 3.5.2 (default, Nov 23 2017, 16:37:01)
-[GCC 5.4.0 20160609]
-TF 1.8.0
-Script arguments:
-  --layers 50
-  --display_every 10
-  --iter_unit epoch
-  --batch_size 64
-  --num_iter 100
-  --precision fp16
-Training
-WARNING:tensorflow:Using temporary folder as model directory: /tmp/tmpjw90ypze
-2020-07-31 00:57:23.020712: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:898] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
-2020-07-31 00:57:23.023190: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1356] Found device 0 with properties:
-name: Tesla T4 major: 7 minor: 5 memoryClockRate(GHz): 1.59
-pciBusID: 0000:00:05.0
-totalMemory: 14.73GiB freeMemory: 14.62GiB
-2020-07-31 00:57:23.023226: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1435] Adding visible gpu devices: 0
-2020-07-31 00:57:23.846680: I tensorflow/core/common_runtime/gpu/gpu_device.cc:923] Device interconnect StreamExecutor with strength 1 edge matrix:
-2020-07-31 00:57:23.846743: I tensorflow/core/common_runtime/gpu/gpu_device.cc:929]      0
-2020-07-31 00:57:23.846753: I tensorflow/core/common_runtime/gpu/gpu_device.cc:942] 0:   N
-2020-07-31 00:57:23.847023: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1053] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14151 MB memory) -> physical GPU (device: 0, name: Tesla T4, pci bus id: 0000:00:05.0, compute capability: 7.5)
-  Step Epoch Img/sec   Loss  LR
-     1   1.0     3.1  7.936  8.907 2.00000
-    10  10.0    68.3  1.989  2.961 1.65620
-    20  20.0   214.0  0.002  0.978 1.31220
-    30  30.0   213.8  0.008  0.979 1.00820
-    40  40.0   210.8  0.095  1.063 0.74420
-    50  50.0   211.9  0.261  1.231 0.52020
-    60  60.0   211.6  0.104  1.078 0.33620
-    70  70.0   211.3  0.340  1.317 0.19220
-    80  80.0   206.7  0.168  1.148 0.08820
-    90  90.0   210.4  0.092  1.073 0.02420
-   100 100.0   210.4  0.001  0.982 0.00020
-```
-
-> [참고]
-> GPU가 필요없는 워크로드가 GPU 노드에 할당되는 것을 막고 싶다면 [Taint 및 Toleration 개요](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)를 참고하세요.
 
 ### 오토 스케일러
 오토 스케일러는 노드 그룹의 가용 리소스가 부족해 파드(pod)를 스케줄링할 수 없거나 노드의 사용률이 일정 수준 이하로 유지되는 경우 노드의 수를 자동으로 조정하는 기능입니다. 이 기능은 노드 그룹별로 설정할 수 있고, 서로 독립적으로 동작합니다. 이 기능은 Kubernetes 프로젝트의 공식 지원 기능인 cluster-autoscaler 기능을 기반으로 합니다. 자세한 사항은 [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler)를 참고하세요.
@@ -549,7 +376,7 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 
 ##### 1. 오토 스케일러 활성화
 
-대상 클러스터의 기본 노드 그룹의 오토 스케일러 기능을 활성화 합니다. 이 예시에서는 기본 노드 그룹의 노드 수를 1로 생성하였고, 오토 스케일러 설정 항목은 아래와 같이 설정했습니다.
+대상 클러스터의 기본 노드 그룹의 오토 스케일러 기능을 활성화합니다. 이 예시에서는 기본 노드 그룹의 노드 수를 1로 생성하였고, 오토 스케일러 설정 항목은 아래와 같이 설정했습니다.
 
 | 설정 항목 | 설정값 |
 | --- | --- |
@@ -626,7 +453,7 @@ NAME                                            STATUS   ROLES    AGE   VERSION
 autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   45m   v1.23.3
 ```
 
-약5~10분 후 아래와 같이 노드가 증설된 것을 확인할 수 있습니다.
+약 5~10분 후 아래와 같이 노드가 증설된 것을 확인할 수 있습니다.
 
 ```
 # kubectl get nodes
@@ -770,7 +597,7 @@ metadata:
 HPA(Horizontal Pod Autoscaler) 기능은 CPU 사용량 등의 리소스 사용량을 관찰하여 레플리케이션 컨트롤러(ReplicationController), 디플로이먼트(Deployment), 레플리카셋(ReplicaSet), 스테이트풀셋(StatefulSet)의 파드 개수를 자동으로 스케일합니다. 파드 개수를 조절하다 보면 노드에 가용 리소스가 부족하거나 리소스가 많이 남는 상황이 발생할 수 있습니다. 이때 오토 스케일러 기능과 연동하여 노드의 수를 늘이거나 줄일 수 있습니다. 이 예제에서는 HPA 기능과 오토 스케일러 기능을 연동해 동작하는 것을 보여줍니다. HPA에 대한 자세한 설명은 [Horizontal Pod Autoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) 문서를 참고하세요. 
 
 ##### 1. 오토 스케일러 활성화
-위의 예제와 같이 오토 스케일러를 활성화 합니다.
+위의 예제와 같이 오토 스케일러를 활성화합니다.
 
 ##### 2. HPA 설정
 웹 요청을 받으면 일정 시간동안 CPU 부하를 생성하는 컨테이너를 배포합니다. 그리고 서비스를 노출시킵니다. 다음은 `php-apache.yaml` 파일의 내용입니다.
@@ -827,7 +654,7 @@ service/php-apache created
 horizontalpodautoscaler.autoscaling/php-apache autoscaled
 ```
 
-HPA의 상태를 조회해보면 설정값과 현재 상태를 볼 수 있습니다. 아직 CPU 부하를 일으키는 web request를 보내지 않았기 때문에 CPU load가 0% 입니다.
+HPA의 상태를 조회해 보면 설정값과 현재 상태를 볼 수 있습니다. 아직 CPU 부하를 일으키는 web request를 보내지 않았기 때문에 CPU load가 0%입니다.
 
 ```
 # kubectl get hpa
@@ -858,7 +685,7 @@ NAME                                            CPU(cores)   CPU%   MEMORY(bytes
 autoscaler-test-default-w-ohw5ab5wpzug-node-0   574m         57%    1013Mi          58%
 ```
 
-HPA의 상태를 조회해보면 CPU load가 증가했고, 이를 맞추기 위해 REPLICAS(=파드 수)가 수가 늘어난 것을 확인할 수 있습니다.
+HPA의 상태를 조회해 보면 CPU load가 증가했고, 이를 맞추기 위해 REPLICAS(=파드 수)가 수가 늘어난 것을 확인할 수 있습니다.
 
 ```
 # kubectl get hpa
@@ -867,7 +694,7 @@ php-apache   Deployment/php-apache   250%/50%   1         30        5          2
 ```
 
 ##### 4. 오토 스케일러 동작 확인
-파드를 조회해보면 파드의 수가 늘어나면서 일부 파드는 `node-0`에 스케줄링되어 Running 상태가 됐지만 일부는 Pending 상태인 것을 확인할 수 있습니다
+파드를 조회해 보면 파드의 수가 늘어나면서 일부 파드는 `node-0`에 스케줄링되어 Running 상태가 됐지만 일부는 Pending 상태인 것을 확인할 수 있습니다
 
 ```
 # kubectl get pods -o wide
@@ -881,7 +708,7 @@ php-apache-79544c9bd9-mplnn   0/1     Pending   0          19s     <none>       
 php-apache-79544c9bd9-t2knw   1/1     Running   0          80s     10.100.8.40   autoscaler-test-default-w-ohw5ab5wpzug-node-0   <none>           <none>
 ```
 
-파드를 스케줄링하지 못하는 상황이 바로 오토 스케일러의 노드 증설 조건입니다. Cluster Autoscaler 파드가 제공하는 상태 정보를 조회해보면 ScaleUp이 InProgress 상태가 된 것을 확인할 수 있습니다.
+파드를 스케줄링하지 못하는 상황이 바로 오토 스케일러의 노드 증설 조건입니다. Cluster Autoscaler 파드가 제공하는 상태 정보를 조회해 보면 ScaleUp이 InProgress 상태가 된 것을 확인할 수 있습니다.
 
 ```
 # kubectl get cm/cluster-autoscaler-status -n nhn-ng-default-worker -o yaml
@@ -937,7 +764,7 @@ php-apache-79544c9bd9-mplnn   1/1     Running   0          3m51s   10.100.42.4  
 php-apache-79544c9bd9-t2knw   1/1     Running   0          4m52s   10.100.8.40   autoscaler-test-default-w-ohw5ab5wpzug-node-0   <none>           <none>
 ```
 
-부하를 위해 실행해두었던 파드(`load-generator`)를 `Ctrl+C`로 중단시키면 잠시 후 부하가 줄어들게 됩니다. 부하가 줄면 파드가 점유하던 CPU 사용량이 줄어들어 파드의 수가 줄어들게 됩니다.
+부하를 위해 실행해 두었던 파드(`load-generator`)를 `Ctrl+C`로 중단시키면 잠시 후 부하가 줄어듭니다. 부하가 줄면 파드가 점유하던 CPU 사용량이 줄어들어 파드의 수가 줄어들게 됩니다.
 
 ```
 # kubectl get hpa
@@ -945,7 +772,7 @@ NAME         REFERENCE               TARGETS   MINPODS   MAXPODS   REPLICAS   AG
 php-apache   Deployment/php-apache   0%/50%    1         30        1          31m
 ```
 
-파드의 수가 줄어들어 노드의 리소스 사용량이 줄어들면 결국 노드 감축이 발생합니다. 새로 추가되었던 node-8이 감축된 것을 확인할 수 있습니다.
+파드의 수가 줄어 노드의 리소스 사용량이 줄면 결국 노드 감축이 발생합니다. 새로 추가되었던 node-8이 감축된 것을 확인할 수 있습니다.
 
 ```
 # kubectl get nodes
@@ -966,7 +793,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
     * 사용자 스크립트는 워커 노드 초기화 과정 중 인스턴스 초기화 과정에서 실행됩니다.
     * 사용자 스크립트가 실행된 후, 해당 인스턴스를 '워커 노드 그룹'의 워커 노드로 설정하고 등록합니다.
 * 스크립트 내용
-    * 사용자 스크립트의 첫번째 줄은 반드시 #! 으로 시작해야 합니다.
+    * 사용자 스크립트의 첫 번째 줄은 반드시 #! 으로 시작해야 합니다.
     * 스크립트 최대 크기는 64KB입니다.
     * 스크립트는 root 권한으로 실행됩니다.
     * 스크립트 실행 기록은 아래 위치에 저장됩니다.
@@ -1010,7 +837,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 4. 버퍼 노드에서 동작 중인 파드를 축출하고 버퍼 노드를 삭제합니다.
 5. 클러스터 오토스케일러 기능을 다시 활성화합니다.
 
-인스턴스 타입 변경은 워커 구성 요소 업그레이드와 유사한 방법으로 진행됩니다. 버퍼 노드의 생성과 삭제, 파드의 축출에 대해서는 [클러스터 업그레이드](/NKS/ko/user-guide-ngsc/#_30)를 참고하세요.
+인스턴스 타입 변경은 워커 구성 요소 업그레이드와 유사한 방법으로 진행됩니다. 버퍼 노드의 생성과 삭제, 파드의 축출에 대해서는 [클러스터 업그레이드](/NKS/ko/user-guide-ncgn/#cluster-upgrade)를 참고하세요.
 
 
 #### 제약 사항
@@ -1233,7 +1060,7 @@ status:
 * ValidatingAdmissionWebhook
 
 #### v1.20.12 이후 버전
-Kubernetes 버전 별 기본 활성 승인 컨트롤러는 모두 활성화됩니다. 기본 활성 승인 컨트롤러에 아래의 컨트롤러가 추가 활성화됩니다.
+Kubernetes 버전별 기본 활성 승인 컨트롤러는 모두 활성화됩니다. 기본 활성 승인 컨트롤러에 아래의 컨트롤러가 추가 활성화됩니다.
 
 * NodeRestriction
 * PodSecurityPolicy
@@ -1245,16 +1072,18 @@ NHN Kubernetes Service(NKS)는 동작 중인 Kubernetes 클러스터의 Kubernet
 #### Kubernetes 버전 차이 지원 정책
 Kubernetes 버전은 `x.y.z`로 표현됩니다. `x`는 메이저 버전, `y`는 마이너 버전, `z`는 패치 버전입니다. 기능이 추가되면 메이저 버전 혹은 마이너 버전을 올리고, 버그 수정과 같이 이전 버전과 호환되는 기능을 제공하면 패치 버전을 올립니다. 좀 더 자세한 내용은 [Semantic Versioning 2.0.0](https://semver.org/)을 참고하세요.
 
-Kubernetes 클러스터는 동작 중인 상태에서 Kubernetes 구성 요소를 업그레이드할 수 있습니다. 이를 위해 Kubernetes 구성 요소별로 Kubernetes 버전 차이에 따른 기능 지원 여부를 정의하고 있습니다. 마이너 버전을 기준으로 한 단계의 버전 차이는 상호 기능 호환을 지원함으로써 동작 중인 클러스터의 Kubernetes 구성 요소 업그레이드를 지원합니다. 또 구성 요소 종류 별로 업그레이드 순서를 정의하고 있습니다. 좀 더 자세한 내용은 [Version Skew Policy](https://kubernetes.io/releases/version-skew-policy/)를 참고하세요.
+Kubernetes 클러스터는 동작 중인 상태에서 Kubernetes 구성 요소를 업그레이드할 수 있습니다. 이를 위해 Kubernetes 구성 요소별로 Kubernetes 버전 차이에 따른 기능 지원 여부를 정의하고 있습니다. 마이너 버전을 기준으로 한 단계의 버전 차이는 상호 기능 호환을 지원함으로써 동작 중인 클러스터의 Kubernetes 구성 요소 업그레이드를 지원합니다. 또 구성 요소 종류별로 업그레이드 순서를 정의하고 있습니다. 좀 더 자세한 내용은 [Version Skew Policy](https://kubernetes.io/releases/version-skew-policy/)를 참고하세요.
 
-#### 기능 동작 방식
-NHN Cloud에서 지원하는 Kubernetes 클러스터 업그레이드 기능의 동작 방식에 대해 설명합니다. 
 
-##### Kubernetes 버전 관리
-NHN Cloud의 Kubernetes 클러스터는 클러스터 컨트롤 플레인과 워커 노드 그룹별로 Kubernetes 버전을 관리합니다. 컨트롤 플레인의 Kubernetes 버전은 클러스터 조회 화면에서 확인할 수 있고, 워커 노드 그룹의 Kubernetes 버전은 각 워커 노드 그룹 조회 화면에서 확인할 수 있습니다. 
 
-##### 업그레이드 규칙
-NHN Cloud의 Kubernetes 클러스터 버전 관리 방식과 Kubernetes 버전 차이 지원 정책에 의해 구성 요소별로 순서에 맞게 업그레이드해야 합니다. NHN Cloud의 Kubernetes 클러스터 업그레이드 기능에 적용되는 규칙은 다음과 같습니다.
+#### NKS 클러스터의 버전 관리
+NKS 클러스터는 클러스터 컨트롤 플레인과 워커 노드 그룹별로 Kubernetes 버전을 관리합니다. 컨트롤 플레인의 Kubernetes 버전은 클러스터 조회 화면에서 확인할 수 있고, 워커 노드 그룹의 Kubernetes 버전은 각 워커 노드 그룹 조회 화면에서 확인할 수 있습니다. 
+
+<br>
+
+#### 업그레이드 규칙
+NKS 클러스터 버전 관리 방식과 Kubernetes 버전 차이 지원 정책에 의해 구성 요소별로 순서에 맞게 업그레이드해야 합니다. NKS 클러스터 업그레이드 기능에 적용되는 규칙은 다음과 같습니다.
+
 
 * 컨트롤 플레인과 각 워커 노드 그룹별로 업그레이드 명령을 실행해야 합니다.
 * 컨트롤 플레인의 Kubernetes 버전과 모든 워커 노드 그룹의 Kubernetes 버전이 일치해야 업그레이드가 가능합니다.
@@ -1286,16 +1115,77 @@ NHN Cloud의 Kubernetes 클러스터 버전 관리 방식과 Kubernetes 버전 �
 * <a name="footnote_cluster_upgrade_rule_1">4</a>: 컨트롤 플레인이 업그레이드됐기 때문에 업그레이드 가능
 * <a name="footnote_cluster_upgrade_rule_1">5</a>: NHN Cloud에서 지원하는 가장 최신 버전을 사용하고 있기 때문에 업그레이드 불가능
 
+<a id="cluster-upgrade"></a>
+### 클러스터 업그레이드
+NHN Kubernetes Service(NKS)는 동작 중인 Kubernetes 클러스터의 Kubernetes 구성 요소 업그레이드를 지원합니다. 
 
-##### 컨트롤 플레인 구성 요소 업그레이드
-NHN Cloud의 Kubernetes 클러스터 컨트롤 플레인은 고가용성을 보장합니다. 컨트롤 플레인에 대해 롤링 업데이트 방식으로 업그레이드되기 때문에 클러스터의 가용성이 보장됩니다. 
+#### Kubernetes 버전 차이 지원 정책
+Kubernetes 버전은 `x.y.z`로 표현됩니다. `x`는 메이저 버전, `y`는 마이너 버전, `z`는 패치 버전입니다. 기능이 추가되면 메이저 버전 혹은 마이너 버전을 올리고, 버그 수정과 같이 이전 버전과 호환되는 기능을 제공하면 패치 버전을 올립니다. 좀 더 자세한 내용은 [Semantic Versioning 2.0.0](https://semver.org/)을 참고하세요.
 
-이 과정에서 아래와 같은 일들이 발생할 수 있습니다.
-
-* Kubernetes API가 일시적으로 실패할 수 있습니다.
+Kubernetes 클러스터는 동작 중인 상태에서 Kubernetes 구성 요소를 업그레이드할 수 있습니다. 이를 위해 Kubernetes 구성 요소별로 Kubernetes 버전 차이에 따른 기능 지원 여부를 정의하고 있습니다. 마이너 버전을 기준으로 한 단계의 버전 차이는 상호 기능 호환을 지원함으로써 동작 중인 클러스터의 Kubernetes 구성 요소 업그레이드를 지원합니다. 또 구성 요소 종류별로 업그레이드 순서를 정의하고 있습니다. 좀 더 자세한 내용은 [Version Skew Policy](https://kubernetes.io/releases/version-skew-policy/)를 참고하세요.
 
 
-##### 워커 구성 요소 업그레이드
+<br>
+
+#### NKS 클러스터의 버전 관리
+NKS 클러스터는 클러스터 컨트롤 플레인과 워커 노드 그룹별로 Kubernetes 버전을 관리합니다. 컨트롤 플레인의 Kubernetes 버전은 클러스터 조회 화면에서 확인할 수 있고, 워커 노드 그룹의 Kubernetes 버전은 각 워커 노드 그룹 조회 화면에서 확인할 수 있습니다. 
+
+<br>
+
+#### 업그레이드 규칙
+NKS 클러스터 버전 관리 방식과 Kubernetes 버전 차이 지원 정책에 의해 구성 요소별로 순서에 맞게 업그레이드해야 합니다. NKS 클러스터 업그레이드 기능에 적용되는 규칙은 다음과 같습니다.
+
+* 컨트롤 플레인과 각 워커 노드 그룹별로 업그레이드 명령을 실행해야 합니다.
+* 컨트롤 플레인의 Kubernetes 버전과 모든 워커 노드 그룹의 Kubernetes 버전이 일치해야 업그레이드가 가능합니다.
+* 컨트롤 플레인을 먼저 업그레이드한 후 워커 노드 그룹을 업그레이드할 수 있습니다.
+* 현재 버전의 다음 버전(마이너 버전 기준 +1)으로 업그레이드 가능합니다.
+* 다운그레이드는 지원하지 않습니다.
+* 다른 기능의 동작으로 인해 클러스터가 업데이트 중인 상태에서는 업그레이드가 불가능합니다.
+* 클러스터 버전을 v1.25.4에서 v1.26.3으로 업그레이드할 때 CNI가 Flannel인 경우 Calico-VXLAN으로 변경해야 합니다.
+* NKS 레지스트리가 활성화되지 않은 클러스터는 업그레이드가 불가능합니다.
+
+다음 예시는 Kubernetes 버전을 업그레이드 과정에서 업그레이드 가능 여부를 표로 나타낸 것입니다. 예시에 사용된 조건은 다음과 같습니다. 
+
+* NHN Cloud가 지원하는 Kubernetes 버전 목록: v1.28.3, v1.29.3, v1.30.3
+* 클러스터는 v1.28.3으로 생성
+
+| 상태 | 컨트롤 플레인 버전 | 컨트롤 플레인 업그레이드 가능 여부 | 워커 노드 그룹 버전 | 워커 노드 그룹 업그레이드 가능 여부
+| --- | :-: | :-: | :-: | :-: |
+| 초기 상태| v1.28.3 | 가능 <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.28.3 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> | 
+| 컨트롤 플레인 업그레이드 후 상태 | v1.29.3 | 불가능 <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.28.3 | 가능 <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
+| 워커 노드 그룹 업그레이드 후 상태 | v1.29.3 | 가능 <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.29.3 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
+| 컨트롤 플레인 업그레이드 후 상태 | v1.30.3 | 불가능 <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.29.3 | 가능 <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
+| 워커 노드 그룹 업그레이드 후 상태 | v1.30.3 | 불가능 <sup>[5](#footnote_cluster_upgrade_rule_5)</sup> | v1.30.3 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
+
+주석
+
+* <a name="footnote_cluster_upgrade_rule_1">1</a>: 컨트롤 플레인과 모든 워커 노드 그룹의 버전이 일치하는 상태이기 때문에 업그레이드 가능
+* <a name="footnote_cluster_upgrade_rule_1">2</a>: 워커 노드 그룹은 컨트롤 플레인이 업그레이드된 후 업그레이드 가능
+* <a name="footnote_cluster_upgrade_rule_1">3</a>: 컨트롤 플레인과 모든 워커 노드 그룹의 버전이 일치해야 업그레이드 가능
+* <a name="footnote_cluster_upgrade_rule_1">4</a>: 컨트롤 플레인이 업그레이드됐기 때문에 업그레이드 가능
+* <a name="footnote_cluster_upgrade_rule_1">5</a>: NHN Cloud에서 지원하는 가장 최신 버전을 사용하고 있기 때문에 업그레이드 불가능
+
+<br>
+
+#### 업그레이드 전략
+NKS 클러스터는 Rolling Upgrade, Blue/Green Upgrade 2가지 방식의 업그레이드 전략을 제공합니다. 사용자는 운영 정책에 따라 적절한 전략을 선택하여 클러스터를 업그레이드할 수 있습니다.
+
+<br>
+
+**Rolling Upgrade**
+
+<Rolling Upgrade 이미지>
+
+Rolling Upgrade는 컨트롤 플레인과 워커 노드 그룹들을 순차적으로 업그레이드하여 전체 클러스터를 신규 버전으로 전환하는 방식의 업그레이드 전략입니다. 아래는 Rolling Upgrade 전략을 통한 클러스터 업그레이드 수행 과정 및 각 과정에 대한 설명입니다.
+
+<br>
+
+##### 1. 클러스터 조회 화면의 업그레이드 버튼을 통해 컨트롤 플레인 구성 요소를 업그레이드합니다.
+
+NKS 클러스터 컨트롤 플레인은 고가용성을 보장합니다. 컨트롤 플레인에 대해 롤링 업데이트 방식으로 업그레이드되기 때문에 클러스터의 가용성이 보장됩니다. 이 과정에서 Kubernetes API가 일시적으로 실패할 수 있습니다. 
+
+##### 2. 노드 그룹 조회 화면의 업그레이드 버튼을 통해 모든 워커 노드 그룹의 워커 구성 요소를 업그레이드합니다.
+
 워커 노드 그룹별로 워커 구성 요소를 업그레이드할 수 있습니다. 워커 구성 요소 업그레이드는 다음 순서로 진행됩니다.
 
 1. 클러스터 오토스케일러 기능을 비활성화합니다.<sup>[1](#footnote_worker_component_upgrade_1)</sup> 
@@ -1306,12 +1196,12 @@ NHN Cloud의 Kubernetes 클러스터 컨트롤 플레인은 고가용성을 보�
     3. 노드를 스케줄 가능한 상태로 전환합니다.
 4. 버퍼 노드에서 동작 중인 파드를 축출하고 버퍼 노드를 삭제합니다.
 5. 클러스터 오토스케일러 기능을 다시 활성화합니다.<sup>[1](#footnote_worker_component_upgrade_1)</sup> 
-
+6. 모든 워커 노드 그룹의 워커 구성 요소 업그레이드가 완료되면, 시스템 파드 업그레이드는 자동으로 수행됩니다.
 
 주석
 
 * <a name="footnote_worker_component_upgrade_1">1</a>: 이 단계는 업그레이드 기능 시작 전 클러스터 오토스케일러 기능이 활성화 되어 있는 경우에만 유효합니다.
-* <a name="footnote_worker_component_upgrade_2">2</a>: 버퍼 노드란 업그레이드 과정 중 기존 워커 노드에서 축출당한 파드가 다시 스케줄링 가능하도록 생성해놓는 여유 노드를 말합니다. 해당 워커 노드 그룹에서 정의한 워커 노드와 동일한 규격의 노드로 생성되며, 업그레이드 과정이 종료될 때 자동으로 삭제됩니다. 이 노드는 Instance 요금 정책에 따라 비용이 청구됩니다. 
+* <a name="footnote_worker_component_upgrade_2">2</a>: 버퍼 노드란 업그레이드 과정 중 기존 워커 노드에서 축출당한 파드가 다시 스케줄링 가능하도록 생성해 놓는 여유 노드를 말합니다. 해당 워커 노드 그룹에서 정의한 워커 노드와 동일한 규격의 노드로 생성되며, 업그레이드 과정이 종료될 때 자동으로 삭제됩니다. 이 노드는 Instance 요금 정책에 따라 비용이 청구됩니다. 
 * <a name="footnote_worker_component_upgrade_3">3</a>: 업그레이드 시 버퍼 노드 수를 설정할 수 있습니다. 기본값은 1이며, 0으로 설정하면 버퍼 노드를 추가하지 않습니다. 최솟값은 0이고, 최댓값은 (노드 그룹당 최대 노드 수 쿼터-해당 워커 노드 그룹의 현재 노드 수)입니다.
 * <a name="footnote_worker_component_upgrade_4">4</a>: 업그레이드 시 설정한 최대 서비스 불가 노드 수만큼씩 작업을 수행합니다. 기본값은 1입니다. 최솟값은 1이고, 최댓값은 해당 워커 노드 그룹의 현재 노드 수입니다.
 
@@ -1323,22 +1213,45 @@ NHN Cloud의 Kubernetes 클러스터 컨트롤 플레인은 고가용성을 보�
 
 > [파드 축출 관련 유의 사항]
 > 1. 데몬셋(daemonset) 컨트롤러에 의한 파드는 축출되지 않습니다.
-> 데몬셋 컨트롤러는 각 워커 노드 별로 파드를 실행하기 떄문에 데몬셋 컨트롤러에 의해 실행된 파드는 축출되더라도 다른 노드에서 실행될 수 없습니다. 워커 노드 그룹 업그레이드 과정에서 데몬셋 컨트롤러에 의해 실행된 파드는 축출하지 않습니다. 
+> 데몬셋 컨트롤러는 각 워커 노드별로 파드를 실행하기 때문에 데몬셋 컨트롤러에 의해 실행된 파드는 축출되더라도 다른 노드에서 실행될 수 없습니다. 워커 노드 그룹 업그레이드 과정에서 데몬셋 컨트롤러에 의해 실행된 파드는 축출하지 않습니다. 
 > 2. 로컬 저장 공간을 사용하는 파드는 축출되면서 사용하던 데이터를 잃게 됩니다.
 > `emptyDir`을 이용해 노드의 로컬 저장 공간을 사용하는 파드는 축출되면서 사용하던 데이터를 잃게 됩니다. 노드의 로컬에 저장된 저장 공간이 다른 노드로 옮겨갈 수 없기 때문입니다. 
 > 3. 다른 노드로 복제가 불가능한 파드는 다른 노드로 옮겨지지 않습니다.
-> 리플리케이션 컨트롤러(ReplicationController), 레플리카셋(ReplicaSet), 잡(Job), 데몬셋(Daemonset), 스테이트풀(StatefulSet)와 같은 컨트롤러에 의해 실행된 파드가 축출되면 컨트롤러에 의해 다른 노드로 스케줄링 됩니다. 하지만 이와 같은 컨트롤러를 이용하지 않은 파드는 축출된 후 다른 노드로 스케줄링되지 않습니다. 
+> 리플리케이션 컨트롤러(ReplicationController), 레플리카셋(ReplicaSet), 잡(Job), 데몬셋(Daemonset), 스테이트풀(StatefulSet)과 같은 컨트롤러에 의해 실행된 파드가 축출되면 컨트롤러에 의해 다른 노드로 스케줄링됩니다. 하지만 이와 같은 컨트롤러를 이용하지 않은 파드는 축출된 후 다른 노드로 스케줄링되지 않습니다. 
 > 4. PodDisruptionBudgets(PDB) 설정에 의해 축출에 실패하거나 느려질 수 있습니다.
 > PodDisruptionBudgets(PDB) 설정으로 유지해야 할 파드 수를 정의할 수 있습니다. 이 기능 설정으로 인해 업그레이드 과정에서 파드 축출이 불가능할 수도 있고, 파드 축출 시간이 길어질 수 있습니다. 파드 축출에 실패하면 업그레이드가 실패합니다. 따라서 PDB 설정이 되어 있는 경우 적절한 PDB 설정으로 파드 축출이 원활히 동작할 수 있도록 설정해야 합니다. PDB 설정에 대한 더 자세한 내용은 [여기](https://kubernetes.io/docs/tasks/run-application/configure-pdb/)를 참고하세요.
 
 
-안전한 파드 축출에 대한 좀 더 상세한 설명은 [Safely Drain a Node](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)를 참고하세요
+안전한 파드 축출에 대한 좀 더 상세한 설명은 [Safely Drain a Node](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)를 참고하세요.
 
-##### 시스템 파드 업그레이드
-컨트롤 플레인과 모든 워커 노드 그룹을 업그레이드하여 버전이 일치하게 되면 Kubernetes 클러스터 구성을 위해 동작하는 시스템 파드가 업그레이드 됩니다.
+
+<br>
+
+**Blue/Green Upgrade**
+
+<Blue/Green Upgrade 이미지>
+
+Blue/Green Upgrade는 업그레이드 과정에서 클러스터 내에 두 개의 서로 다른 버전의 환경을 구성하여 응용 프로그램 가용성을 높이고 배포 실패 시 롤백 프로세스를 단순화하여 업그레이드 위험을 줄일 수 있도록 하는 업그레이드 전략입니다. 하나의 환경(Blue)은 업그레이드 이전 버전의 노드 그룹으로 구성되고, 다른 하나의 환경(Green)은 업그레이드 할 버전의 노드 그룹으로 구성됩니다. Green 환경에서 테스트가 완료되면 애플리케이션 트래픽을 Green 환경으로 이동하고, Blue 환경을 폐기합니다. 이 과정을 통해 전체 클러스터를 다음 버전으로 업그레이드할 수 있습니다. 아래는 Blue/Green Upgrade 전략을 통한 클러스터 업그레이드 수행 과정 및 각 과정에 대한 설명입니다.
+
+<br>
+
+##### 1. 클러스터 조회 화면의 업그레이드 버튼을 통해 컨트롤 플레인 구성 요소를 업그레이드합니다.
+NKS 클러스터 컨트롤 플레인은 고가용성을 보장합니다. 컨트롤 플레인에 대해 롤링 업데이트 방식으로 업그레이드되기 때문에 클러스터의 가용성이 보장됩니다. 이 과정에서 Kubernetes API가 일시적으로 실패할 수 있습니다. 
+
+##### 2. 노드 그룹을 생성합니다.
+신규 노드 그룹을 생성하여 테스트를 위한 Green 환경을 생성합니다. 컨트롤 플레인 구성 요소 업그레이드 이후 생성되는 신규 노드 그룹은 컨트롤 플레인의 Kubernetes 버전과 동일한 버전으로 생성됩니다. Green 환경에 Blue 환경(기존 노드 그룹)과 동일한 리소스를 배포하여 업그레이드 이후 환경의 검증을 수행할 수 있습니다. 이 때, Blue 환경이 기존 클러스터의 운영에 영향을 주지 않도록 애플리케이션 트래픽을 분리해야 합니다.
+
+##### 3. Green 환경(신규 노드 그룹)에 대한 검증 후 애플리케이션 트래픽을 Green 환경으로 전환합니다.
+새로 구축한 Green 환경에서 기존 사용자가 운영 중이던 리소스가 다음 버전의 쿠버네티스와 정상적으로 호환되는지에 대해 검증하고, 검증이 완료되면 애플리케이션 트래픽을 기존의 Blue 환경에서 새로 구축한 Green 환경으로 전환합니다. 만약 Green 환경에서의 검증 단계에서 문제가 발생하는 경우, 트래픽을 전환하지 않고 Blue 환경을 삭제함으로써 간단하게 롤백할 수 있습니다.
+
+##### 4. Blue 환경(이전 버전의 모든 워커 노드 그룹)을 폐기합니다.
+컨트롤 플레인과 모든 워커 노드 그룹의 버전이 일치하지 않으면 다음 단계인 시스템 파드 업그레이드 수행이 불가능합니다. 클러스터의 모든 노드 그룹을 업그레이드 버전으로 맞추기 위해 Blue 환경을 폐기합니다.
+
+##### 5. 클러스터 조회 화면의 업그레이드 버튼을 통해 시스템 파드를 업그레이드합니다.
+Kubernetes 클러스터 구성을 위해 동작하는 시스템 파드 업그레이드가 수행됩니다.
 
 > [주의]
-> 컨트롤 플레인 업그레이드 후 워커 노드 그룹을 업그레이드하지 않으면 일부 파드가 정상적으로 동작하지 않을 수 있습니다.
+> 시스템 파드 업그레이드가 수행되지 않으면 일부 파드가 정상적으로 동작하지 않을 수 있습니다.
 
 
 ### 클러스터 CNI 변경
@@ -1346,7 +1259,7 @@ NHN Kubernetes Service(NKS)는 동작 중인 Kubernetes 클러스터의 CNI(cont
 클러스터 CNI 변경 기능을 사용하면 NHN Kubernetes Service(NKS)의 CNI가 Flannel CNI에서 Calico-VXLAN CNI로 변경됩니다.
 
 #### CNI 변경 규칙
-NHN Cloud의 Kubernetes 클러스터 CNI 변경 기능에 적용되는 규칙은 다음과 같습니다.
+NKS 클러스터 CNI 변경 기능에 적용되는 규칙은 다음과 같습니다.
 
 * CNI 변경 기능은 NHN Kubernetes Service(NKS) 버전 1.24.3 이상인 경우에 사용할 수 있습니다.
 * 기존 NHN Kubernetes Service(NKS)에서 사용하고 있는 CNI가 Flannel인 경우에만 CNI 변경을 사용할 수 있습니다.
@@ -1401,17 +1314,18 @@ CNI 변경은 다음 순서로 진행됩니다.
 
 이 과정에서 아래와 같은 일들이 발생할 수 있습니다.
 
-* 서비스 중인 파드가 축출되어 다른 노드로 스케줄링됩니다. (파드 축출에 대한 더 자세한 내용은 [클러스터 업그레이드](/NKS/ko/user-guide-ngsc/#_30)를 참고하시길 바랍니다.)
-* 클러스터에 배포되어있는 모든 파드가 재배포 됩니다. (파드 재배포에 대한 더 자세한 내용은 아래 파드 재배포 주의 사항을 참고하시길 바랍니다.)
+* 서비스 중인 파드가 축출되어 다른 노드로 스케줄링됩니다. (파드 축출에 대한 더 자세한 내용은 [클러스터 업그레이드](/NKS/ko/user-guide-ncgn/#cluster-upgrade)를 참고하시길 바랍니다.)
+* 클러스터에 배포되어 있는 모든 파드가 재배포됩니다. (파드 재배포에 대한 더 자세한 내용은 아래 파드 재배포 주의 사항을 참고하시길 바랍니다.)
 * 오토스케일러 기능이 동작하지 않습니다. 
 
 
 > [파드 재배포 주의 사항]
 > 1. 파드 축출 과정을 통해 다른 노드로 옮겨지지 않은 파드에 대해 진행됩니다.
-> 2. CNI 변경 과정 중에 Flannel CIDR와 Calico-VXLAN CIDR 간 정상 통신을 위해 CNI 변경 파드 네트워크 값은 기존 Flannel CIDR 값과 동일하면 안됩니다.
+> 2. CNI 변경 과정 중에 Flannel CIDR와 Calico-VXLAN CIDR 간 정상 통신을 위해 CNI 변경 파드 네트워크 값은 기존 Flannel CIDR 값과 동일하면 안 됩니다.
 > 3. 기존에 배포되어 있던 파드들의 pause 컨테이너는 모두 stop 되었다가 kubelet에 의해 다시 재생성됩니다. 파드 이름과 로컬 저장 공간 등 설정은 그대로 유지되지만 IP는 Calico-VXLAN CIDR의 IP로 변경됩니다.
 
 
+<a id="api_endpoint_ipacl"></a>
 ### 클러스터 API 엔드포인트 IP 접근 제어 적용
 클러스터 API 엔드포인트에 IP 접근 제어를 적용하거나 해제할 수 있습니다.
 IP 접근 제어 기능에 대한 자세한 사항은 [IP 접근제어](/Network/Load%20Balancer/ko/overview-ngsc/#ip) 문서를 참고하세요.
@@ -1468,6 +1382,7 @@ Kubernetes 컴포넌트의 여러 가지 옵션을 설정할 수 있습니다. �
 | kube-apiserver | 컨트롤 플레인 | default-not-ready-toleration-seconds | 노드가 NotReady 상태일 때, 해당 노드에서 실행 중인 파드가 얼마나 오랫동안 허용될지 정의합니다.<br>(단위: 초, 기본값: 300, 최솟값: 0, 최댓값: 86400) |
 | kube-apiserver | 컨트롤 플레인 | default-unreachable-toleration-seconds | 노드가 네트워크에 연결되지 않았을 때, 해당 노드에서 실행 중인 파드가 얼마나 오랫동안 허용될지 정의합니다.<br>(단위: 초, 기본값: 300, 최솟값: 0, 최댓값: 86400) |
 | kube-controller-manager | 컨트롤 플레인 | node-monitor-grace-period | 노드가 비정상 상태일 때 해당 노드를 비정상으로 간주하기까지 기다리는 시간을 정의합니다.<br>(단위: 초, 기본값: 40, 최솟값: 0, 최댓값: 86400) |
+| kube-controller-manager | 컨트롤 플레인 | unhealthy-zone-threshold | 가용 영역(zone)을 비정상으로 간주하는 NotReady 노드 비율의 임계값을 정의합니다.<br>(단위: 백분율, 기본값: 55, 최솟값: 0, 최댓값: 100) |
 | kubelet | 워커 노드 | node-status-update-frequency | kubelet의 노드 상태 보고 주기를 정의합니다.<br>(단위: 초, 기본값: 10, 최솟값: 0, 최댓값: 86400) |
 
 각 항목에 대한 자세한 설명은 [Kubernetes 공식 문서](https://kubernetes.io/docs/)를 참고하세요.
@@ -1475,6 +1390,24 @@ Kubernetes 컴포넌트의 여러 가지 옵션을 설정할 수 있습니다. �
 > [주의]
 > * 컨트롤 플레인에서 동작하는 컴포넌트의 설정을 변경한 경우 컨트롤 플레인의 컴포넌트들이 재시작됩니다.
 > * 워커 노드에서 동작하는 컴포넌트의 설정을 변경한 경우 워커 노드의 컴포넌트가 재시작됩니다.
+
+### OIDC 인증 설정 기능
+
+OIDC(OpenID Connect)는 OAuth 2.0 프레임워크를 기반으로 한 상호 운용 가능한 인증 프로토콜입니다. OIDC를 이용하면 외부 인증 서비스를 통해 사용자를 인증할 수 있습니다. OIDC의 자세한 동작 방식은 [What is OpenID Connect](https://openid.net/developers/how-connect-works/)를 참고하세요.
+
+NKS 클러스터는 OIDC를 이용한 인증을 처리하도록 설정할 수 있습니다. OIDC 인증 관련한 설정 항목은 다음과 같습니다.
+
+| 항목 | 필수 여부 | 설명 |
+| --- | --- | --- |
+| Issuer URL | O | 'https://'로 시작하는 OIDC 제공자 URL |
+| Client ID | O | OIDC 제공자의 클라이언트 ID |
+| Username claim | X | username으로 사용할 claim. 기본값: 'sub'<br>email이 아닌 claim에는 제공자 URL이 접두사로 연결됩니다. |
+| Groups claim | X | groups로 사용할 claim |
+| Username prefix | X | 충돌을 방지하기 위해 username claim에 붙일 접두사(prefix).<br>설정하지 않으면 email을 제외한 username claim은 제공자 URL이 접두사로 연결됩니다.<br>접두사를 사용하지 않으려면 '-'를 입력합니다. |
+| Groups prefix | X | 충돌을 방지하기 위해 groups claim에 붙일 접두사(prefix) |
+| Required claim | X | ID 토큰에서 확인이 필요한 키/값 쌍 |
+| CA File | X | OIDC 제공자의 웹 인증서에 서명한 CA의 인증서 파일 |
+| Signing Algs| X | 허용된 JOSE 비대칭 서명 알고리즘 목록. 기본값: 'RS256' |
 
 ## 워커 노드 관리
 
@@ -1502,7 +1435,7 @@ Kubernetes v1.24.3 이후 버전의 클러스터는 containerd를 이용해 컨�
 시스템 기본 경로를 추가 네트워크 인터페이스로 설정하기 위해서는 아래와 같은 작업이 필요합니다. 
 
 ##### 1. 네트워크 인터페이스별 메트릭 설정 변경
-워커 노드의 모든 네트워크 인터페이스는 DHCP 서버를 통해 IP 주소를 할당 받습니다. DHCP 서버로부터 IP 주소를 할당받을 때 네트워크 인터페이스별 기본 경로를 설정합니다. 이 때 각 기본 경로의 메트릭 값은 인터페이스별로 미리 설정되어 있습니다. 리눅스 배포판별 저장 위치 및 설정 항목은 다음과 같습니다.
+워커 노드의 모든 네트워크 인터페이스는 DHCP 서버를 통해 IP 주소를 할당 받습니다. DHCP 서버로부터 IP 주소를 할당 받을 때 네트워크 인터페이스별 기본 경로를 설정합니다. 이 때 각 기본 경로의 메트릭 값은 인터페이스별로 미리 설정되어 있습니다. 리눅스 배포판별 저장 위치 및 설정 항목은 다음과 같습니다.
 
 * CentOS
     * 설정 파일 위치: /etc/sysconfig/network-scripts/ifcfg-{네트워크 인터페이스 이름}
@@ -1724,9 +1657,12 @@ NHN Kubernetes Service(NKS)가 제공하는 Calico-VXLAN, Calic-eBPF는 아래�
 | v1.24.3 | Flannel v0.14.0 혹은 Calico-VXLAN v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
 | v1.25.4 | Flannel v0.14.0 혹은 Calico-VXLAN v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
 | v1.26.3 | Flannel v0.14.0 혹은 Calico-VXLAN, Calico-eBPF v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
-| v1.27.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 불가|
-| v1.28.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 불가|
-| v1.29.3 | Calico-VXLAN, Calico-eBPF v3.28.0 | 불가|
+| v1.27.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | 불가|
+| v1.28.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | 불가|
+| v1.29.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | 불가|
+| v1.30.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | 불가|
+| v1.31.4 | Calico-VXLAN, Calico-eBPF v3.28.2 | 불가|
+
 
 주석
 
@@ -1951,6 +1887,8 @@ Kubernetes의 서비스 객체를 정의할 때 로드 밸런서의 여러 가�
 * 상태 확인 주기 설정
 * 상태 확인 최대 응답 시간 설정
 * 상태 확인 최대 재시도 횟수 설정
+* L7 규칙 및 조건
+
 
 #### 전역 설정과 리스너별 설정
 설정 항목별로 전역 설정과 리스너별 설정이 가능합니다. 전역 설정과 리스너별 설정 모두 없는 경우 설정별 기본값을 사용합니다.
@@ -2538,6 +2476,7 @@ spec:
   type: LoadBalancer
 ```
 
+<a id="ingress-controller"></a>
 ## 인그레스 컨트롤러
 인그레스 컨트롤러(ingress controller)는 인그레스(Ingress) 객체에 정의된 규칙을 참조하여 클러스터 외부에서 내부 서비스로 HTTP와 HTTPS 요청을 라우팅하고 SSL/TSL 종료, 가상 호스팅 등을 제공합니다. 인그레스 컨트롤러와 인그레스에 대한 자세한 내용은 [인그레스 컨트롤러](https://kubernetes.io/ko/docs/concepts/services-networking/ingress-controllers/), [인그레스](https://kubernetes.io/ko/docs/concepts/services-networking/ingress/) 문서를 참고하세요.
 
@@ -2770,7 +2709,7 @@ service "tea-svc" deleted
 ![ingress-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/ingress-02.png)
 
 #### 서비스와 파드 생성
-[URI 기반 서비스 분기](/Container/NKS/ko/user-guide-ngsc/#uri)와 동일한 매니페스트를 이용해 서비스와 파드를 생성합니다.
+[URI 기반 서비스 분기](/Container/NKS/ko/user-guide-ncgn/#uri)와 동일한 매니페스트를 이용해 서비스와 파드를 생성합니다.
 
 #### 인그레스 생성
 호스트 이름에 따라 서비스를 연결하는 인그레스 매니페스트를 작성합니다. `tea.cafe.example.com` 호스트로 들어온 요청은 `tea-svc` 서비스에 연결하고 `coffee.cafe.example.com` 호스트로 들어온 요청은 `coffee-svc` 서비스에 연결합니다.
@@ -2898,7 +2837,7 @@ Events:            <none>
 
 #### LoadBalancer 서비스 객체로 변경
 
-`LoadBalancer` 유형으로 서비스 객체를 변경하면 클러스터 외부에 NHN Cloud Load Balancer가 생성되고, 로드 밸런서와 서비스 객체와 연결됩니다. 로드 밸런서와 연결된 서비스 객체를 조회하면 **EXTERNAL-IP** 필드에 로드 밸런서의 IP가 표시됩니다. `LoadBalancer` 유형의 서비스 객체에 대한 설명은 [LoadBalancer 서비스](/Container/NKS/ko/user-guide-ngsc/#loadbalancer)를 참고하세요. 아래 그림은 `LoadBalancer` 유형의 서비스를 이용해 대시보드를 외부에 공개하는 구조를 나타냅니다.
+`LoadBalancer` 유형으로 서비스 객체를 변경하면 클러스터 외부에 NHN Cloud Load Balancer가 생성되고, 로드 밸런서와 서비스 객체가 연결됩니다. 로드 밸런서와 연결된 서비스 객체를 조회하면 **EXTERNAL-IP** 필드에 로드 밸런서의 IP가 표시됩니다. `LoadBalancer` 유형의 서비스 객체에 대한 설명은 [LoadBalancer 서비스](/Container/NKS/ko/user-guide-ncgn/#loadbalancer)를 참고하세요. 아래 그림은 `LoadBalancer` 유형의 서비스를 이용해 대시보드를 외부에 공개하는 구조를 나타냅니다.
 
 ![dashboard-01.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-01.png)
 
@@ -2922,18 +2861,18 @@ kubernetes-dashboard   LoadBalancer   10.254.95.176   123.123.123.81   443:30963
 > 생성된 로드 밸런서는 **Network > Load Balancer** 페이지에서 확인할 수 있습니다.
 > 로드 밸런서의 IP는 외부에서 접근할 수 있는 플로팅 IP입니다. **Network > Floating IP** 페이지에서 확인할 수 있습니다.
 
-웹 브라우저에서 `https://{EXTERNAL-IP}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 엑세스 토큰](/Container/NKS/ko/user-guide-ngsc/#_64)을 참고하세요.
+웹 브라우저에서 `https://{EXTERNAL-IP}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 액세스 토큰](/Container/NKS/ko/user-guide-ncgn/#dashboard-access-token)을 참고하세요.
 
 > [참고]
 > Kubernetes 대시보드는 자동 생성되는 사설 인증서를 사용하기 때문에 웹 브라우저의 종류와 보안 설정에 따라 안전하지 않은 페이지로 표시될 수 있습니다.
 
 #### 인그레스(Ingress)를 이용한 서비스 공개
 
-인그레스는 클러스터 내부의 여러 서비스들로 접근하기 위한 라우팅을 제공하는 네트워크 객체입니다. 인그레스 객체의 설정은 인그래스 컨트롤러로 구동됩니다. `kubernetes-dashboard` 서비스 객체를 인그레스를 통해 공개할 수 있습니다. 인그레스와 인그레스 컨트롤러에 대한 설명은 [인그레스 컨트롤러](/Container/NKS/ko/user-guide-ngsc/#_57)를 참고하세요. 아래 그림은 인그레스를 통해 대시보드를 외부에 공개하는 구조를 나타냅니다.
+인그레스는 클러스터 내부의 여러 서비스들로 접근하기 위한 라우팅을 제공하는 네트워크 객체입니다. 인그레스 객체의 설정은 인그래스 컨트롤러로 구동됩니다. `kubernetes-dashboard` 서비스 객체를 인그레스를 통해 공개할 수 있습니다. 인그레스와 인그레스 컨트롤러에 대한 설명은 [인그레스 컨트롤러](/Container/NKS/ko/user-guide-ncgn/#ingress-controller)를 참고하세요. 아래 그림은 인그레스를 통해 대시보드를 외부에 공개하는 구조를 나타냅니다.
 
 ![dashboard-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-02.png)
 
-[NGINX Ingress Controller 설치](/Container/NKS/ko/user-guide-ngsc/#nginx-ingress-controller)를 참고해 `NGINX Ingress Controller`를 설치하고 `LoadBalancer` 유형의 서비스를 생성합니다. 그리고 다음과 같이 인그레스 객체 생성을 위한 매니페스트를 작성합니다.
+[NGINX Ingress Controller 설치](/Container/NKS/ko/user-guide-ncgn/#nginx-ingress-controller)를 참고해 `NGINX Ingress Controller`를 설치하고 `LoadBalancer` 유형의 서비스를 생성합니다. 그리고 다음과 같이 인그레스 객체 생성을 위한 매니페스트를 작성합니다.
 
 ```yaml
 # kubernetes-dashboard-ingress-tls-passthrough.yaml
@@ -2976,9 +2915,10 @@ NAME                    CLASS   HOSTS   ADDRESS          PORTS     AGE
 k8s-dashboard-ingress   nginx   *       123.123.123.44   80, 443   34s
 ```
 
-웹 브라우저에서 `https://{ADDRESS}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 엑세스 토큰](/Container/NKS/ko/user-guide-ngsc/#_64)을 참고하세요.
+웹 브라우저에서 `https://{ADDRESS}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 액세스 토큰](/Container/NKS/ko/user-guide-ncgn/#dashboard-access-token)을 참고하세요.
 
-### 대시보드 엑세스 토큰
+<a id="dashboard-access-token"></a>
+### 대시보드 액세스 토큰
 Kubernetes 대시보드에 로그인하려면 토큰이 필요합니다. 토큰은 다음 명령으로 얻을 수 있습니다.
 
 ```
@@ -2988,7 +2928,7 @@ $ kubectl describe secret $SECRET_NAME -n kube-system | grep -E '^token' | cut -
 eyJhbGc...-QmXA
 ```
 
-출력된 토큰을 브라우저의 토큰 입력 창에 입력하면 클러스터 관리자 권한을 부여받은 사용자로 로그인할 수 있습니다.
+출력된 토큰을 브라우저의 토큰 입력 창에 입력하면 클러스터 관리자 권한을 부여 받은 사용자로 로그인할 수 있습니다.
 
 
 ## 퍼시스턴트 볼륨
@@ -3016,8 +2956,8 @@ PV를 파드에 마운트해 사용합니다.
 | 방법 | 설명 |
 | --- | --- |
 | 삭제(Delete) | PV를 삭제할 때 연결된 볼륨을 함께 삭제합니다. |
-| 보존(Retain) | PV를 삭제할 때 연결된 볼륨을 삭제하지 않습니다. 볼륨은 사용자가 직접 삭제하거나 재사용 할 수 있습니다. |
-| 재사용(Recycle) | PV를 삭제할 때 연결된 볼륨을 삭제하지 않고 재사용할 수 있는 상태로 만듭니다. 이 방법은 사용 중단(deprecated) 되었습니다. |
+| 보존(Retain) | PV를 삭제할 때 연결된 볼륨을 삭제하지 않습니다. 볼륨은 사용자가 직접 삭제하거나 재사용할 수 있습니다. |
+| 재사용(Recycle) | PV를 삭제할 때 연결된 볼륨을 삭제하지 않고 재사용할 수 있는 상태로 만듭니다. 이 방법은 사용 중단(deprecated)되었습니다. |
 
 ### 스토리지 클래스(StorageClass)
 프로비저닝을 하기 위해서는 먼저 스토리지 클래스가 정의되어 있어야 합니다. 스토리지 클래스는 어떤 특성으로 스토리지들을 분류할 수 있는 방법을 제공합니다. 스토리지 제공자(provisioner)에 대한 정보를 포함해 미디어의 종류나 가용성 영역 등을 설정할 수 있습니다. 
@@ -3031,18 +2971,18 @@ PV를 파드에 마운트해 사용합니다.
 #### 파라미터(parameter)
 스토리지 클래스를 통해 다음의 파라미터를 설정할 수 있습니다.
 
-* 스토리지 종류(type): 스토리지의 종류를 입력합니다.(미입력시 General HDD가 설정됩니다)
+* 스토리지 종류(type): 스토리지의 종류를 입력합니다.(미입력 시 General HDD가 설정됩니다)
     * **General HDD**: 스토리지 종류가 HDD로 설정됩니다.
     * **General SSD**: 스토리지 종류가 SSD로 설정됩니다.
-* 가용성 영역(availability): 가용성 영역을 설정합니다.(미입력시 무작위로 설정됩니다)
+* 가용성 영역(availability): 가용성 영역을 설정합니다.(미입력 시 무작위로 설정됩니다)
     * 판교 리전: **kr-pub-a** 혹은 **kr-pub-b**
     * 평촌 리전: **kr2-pub-a** 혹은 **kr2-pub-b**
 
 #### 볼륨 바인딩 모드(VolumeBindingMode)
 볼륨 바인딩 모드는 볼륨 바인딩과 동적 프로비저닝의 시작 시점을 제어합니다. 이 설정은 스토리지 제공자가 cinder.csi.openstack.org인 경우에만 설정 가능합니다. 
 
-* **Immediate**: 퍼시스턴트 볼륨 클레임이 생성되는 즉시 볼륨 바인딩과 동적 프로비저닝이 시작됩니다. 퍼시스턴트 볼륨 클레임이 생성되는 시점에는 볼륨을 연결할 파드에 대한 사전 지식이 없는 상태입니다. 그래서 볼륨의 가용성 영역과 파드가 스케쥴링될 노드의 가용성 영역이 서로 다르게 되면 경우 파드가 정상 동작하지 않습니다. 
-* **WaitForFirstConsumer**: 퍼시스턴트 볼륨 클레임이 생성될 때는 볼륨 바인딩과 동적 프로비저닝을 하지 않습니다. 이 퍼시스턴트 볼륨 클레임이 처음으로 파드에 연결되면, 파드가 스케쥴링된 노드의 가용성 영역 정보를 기반으로 볼륨 바인딩과 동적 프로비저닝을 수행합니다. 따라서 Immediate 모드와 같은 볼륨의 가용성 영역과 인스턴스의 가용성 영역이 서로 달라 파드가 정상 동작하지 않는 경우가 발생하지 않습니다.
+* **Immediate**: 퍼시스턴트 볼륨 클레임이 생성되는 즉시 볼륨 바인딩과 동적 프로비저닝이 시작됩니다. 퍼시스턴트 볼륨 클레임이 생성되는 시점에는 볼륨을 연결할 파드에 대한 사전 지식이 없는 상태입니다. 그래서 볼륨의 가용성 영역과 파드가 스케줄링될 노드의 가용성 영역이 서로 다르면 경우 파드가 정상 동작하지 않습니다. 
+* **WaitForFirstConsumer**: 퍼시스턴트 볼륨 클레임이 생성될 때는 볼륨 바인딩과 동적 프로비저닝을 하지 않습니다. 이 퍼시스턴트 볼륨 클레임이 처음으로 파드에 연결되면, 파드가 스케줄링된 노드의 가용성 영역 정보를 기반으로 볼륨 바인딩과 동적 프로비저닝을 수행합니다. 따라서 Immediate 모드와 같은 볼륨의 가용성 영역과 인스턴스의 가용성 영역이 서로 달라 파드가 정상 동작하지 않는 경우가 발생하지 않습니다.
 
 #### 볼륨 확장 허용(allowVolumeExpansion)
 생성된 볼륨의 확장 허용 여부를 설정합니다(미입력 시 false가 설정됩니다).
@@ -3101,6 +3041,7 @@ csi-storageclass   cinder.csi.openstack.org   Delete          WaitForFirstConsum
 ```
 
 
+<a id="static-provisioning"></a>
 ### 정적 프로비저닝
 
 정적 프로비저닝(static provisioning)은 사용자가 직접 블록 스토리지를 준비해야 합니다. NHN Cloud 웹 콘솔의 **Storage > Block Storage** 서비스 페이지에서 **블록 스토리지 생성** 버튼을 클릭해 PV와 연결할 블록 스토리지를 생성합니다. 블록 스토리지 가이드의 [블록 스토리지 생성](/Storage/Block%20Storage/ko/console-guide/#_2)을 참고하세요.
@@ -3177,7 +3118,7 @@ NAME         STATUS   VOLUME          CAPACITY   ACCESS MODES   STORAGECLASS   A
 pvc-static   Bound    pv-static-001   10Gi       RWO            sc-default     7s    Filesystem
 ```
 
-PVC를 생성한 다음 PV의 상태를 조회해보면 **CLAIM** 항목에 PVC 이름이 지정되고, **STATUS** 항목이 `Bound`로 변경된 것을 확인할 수 있습니다.
+PVC를 생성한 다음 PV의 상태를 조회해 보면 **CLAIM** 항목에 PVC 이름이 지정되고, **STATUS** 항목이 `Bound`로 변경된 것을 확인할 수 있습니다.
 
 ```
 $ kubectl get pv -o wide
@@ -3186,6 +3127,7 @@ pv-static-001   10Gi       RWO            Delete           Bound    default/pvc-
 ```
 
 
+<a id="dynamic-provisioning"></a>
 ### 동적 프로비저닝
 
 동적 프로비저닝(dynamic provisioning)은 스토리지 클래스에 정의된 속성을 참조하여 자동으로 블록 스토리지를 생성합니다. 동적 프로비저닝을 사용하기 위해서는 스토리지 클래스의 볼륨 바인딩 모드를 설정하지 않거나 **Immediate**로 설정해야 합니다.
@@ -3390,7 +3332,7 @@ spec:
 ```
 
 > [참고]
-> NHN Cloud Container Registry 사용 방법은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/user-guide-ngsc) 문서를 참고하세요.
+> NHN Cloud Container Registry 사용 방법은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/user-guide-ncgn) 문서를 참고하세요.
 
 ### NHN Cloud NAS 서비스 연동
 NHN Cloud에서 제공하는 NAS 스토리지를 PV로 활용할 수 있습니다. NAS 서비스를 사용하기 위해서는 v1.20 이후 버전의 클러스터를 사용해야 합니다. NHN Cloud NAS 사용에 대한 자세한 내용은 [NAS 콘솔 사용 가이드](/Storage/NAS%20(online)/ko/console-guide)를 참고하세요.
@@ -3445,7 +3387,7 @@ ORAS(OCI Registry As Storage)는 OCI 레지스트리에서 OCI 아티팩트를 p
 | | X | oras pull private-4019c2fb-kr1-registry.container.gncloud.go.kr/container_service/oci/nfs-deploy-tool:v2 |
 
 > [참고]
-> csi-driver-nfs 컨테이너 이미지 및 아티팩트는 NHN Cloud NCR에서 관리되고 있습니다. 폐쇄망 환경에 구성된 클러스터는 인터넷에 연결되어 있지 않기 때문에 이미지 및 아티팩트를 정상적으로 받아오기 위해서는 Private URI를 사용하기 위한 환경 구성이 필요합니다. Private URI 사용법에 대한 자세한 내용은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/user-guide-ngsc/#private-uri)를 참고하세요.
+> csi-driver-nfs 컨테이너 이미지 및 아티팩트는 NHN Cloud NCR에서 관리되고 있습니다. 폐쇄망 환경에 구성된 클러스터는 인터넷에 연결되어 있지 않기 때문에 이미지 및 아티팩트를 정상적으로 받아 오기 위해서는 Private URI를 사용하기 위한 환경 구성이 필요합니다. Private URI 사용법에 대한 자세한 내용은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/user-guide-ncgn/#private-uri)를 참고하세요.
 
 ##### 3. 설치 패키지를 압축 해제한 후 **./install-driver.sh {REGISTRY} {INTERNET_USAGE}** 명령어를 사용하여 csi-driver-nfs 구성 요소를 설치합니다.
 클러스터가 생성된 리전 및 인터넷 연결 가능 여부에 따라 올바른 {REGISTRY} 및 {INTERNET_USAGE} 값을 입력합니다. 
@@ -3573,7 +3515,7 @@ NAME              STATUS   VOLUME    CAPACITY   ACCESS MODES   STORAGECLASS   AG
 pvc-onas   Bound    pv-onas   300Gi      RWX                           2m8s   Filesystem
 ```
 
-PVC를 생성한 다음 PV의 상태를 조회해보면 **CLAIM** 항목에 PVC 이름이 지정되고, STATUS 항목이 `Bound`로 변경된 것을 확인할 수 있습니다.
+PVC를 생성한 다음 PV의 상태를 조회해 보면 **CLAIM** 항목에 PVC 이름이 지정되고, STATUS 항목이 `Bound`로 변경된 것을 확인할 수 있습니다.
 ```
 $ kubectl get pv -o wide
 NAME      CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                     STORAGECLASS   REASON   AGE     VOLUMEMODE
@@ -3688,7 +3630,7 @@ spec:
             claimName: pvc-onas-dynamic
 ```
 
-파드를 생성하고 NAS 스토리지가 마운트 되어 있는지 확인합니다.
+파드를 생성하고 NAS 스토리지가 마운트되어 있는지 확인합니다.
 ```
 $ kubectl apply -f deployment.yaml
 deployment.apps/nginx created
