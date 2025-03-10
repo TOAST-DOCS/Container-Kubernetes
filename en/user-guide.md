@@ -31,11 +31,10 @@ For each Kubernetes version, here's when you can expect to see additions/deletio
 | v1.26.3 | 2023. 05.           | 2024. 08.            | 2025. 02.             |
 | v1.27.3 | 2023. 08.           | 2025. 02.            | 2025. 05.(Scheduled)       |
 | v1.28.3 | 2024. 02.           | 2025. 05.(Scheduled)      | 2025. 08.(Scheduled)       |
-| v1.29.3 | 2024. 05.           | 2025. 08.(Scheduled)      | 2025. 11.(Scheduled)       |
-| v1.30.3 | 2024. 08.           | 2025. 11.(Scheduled)      | 2026. 02.(Scheduled)       |
-| v1.31.4 | 2025. 02.           | 2025. 11.(Scheduled)      | 2026. 02.(Scheduled)       |
-| v1.32.x | 2025. 05.(Scheduled)     | 2025. 11.(Scheduled)      | 2026. 02.(Scheduled)       |
-
+| v1.29.3 | 2024. 05.           | 2025. 08.(Scheduled)      | 2026. 02.(Scheduled)       |
+| v1.30.3 | 2024. 08.           | 2026. 02.(Scheduled)      | 2026. 05.(Scheduled)       |
+| v1.31.4 | 2025. 02.           | 2026. 05.(Scheduled)      | 2026. 08.(Scheduled)       |
+| v1.32.x | 2025. 05.(Scheduled)     | 2026. 08.(Scheduled)      | 2027. 02.(Scheduled)       |
 
 ### Creating Clusters
 To use NHN Kubernetes Service (NKS), you must create clusters first.
