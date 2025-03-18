@@ -1461,7 +1461,7 @@ Notes
 
 The following can happen in this process.
 
-* The pod in service is evicted and scheduled to another node. (For more information on pod eviction, ss [Cluster Upgrade](/NKS/en/user-guide/#_27)).
+* The pod in service is evicted and scheduled to another node. (For more information on pod eviction, [Cluster Upgrade](/Container/NKS/en/user-guide/#cluster-upgrade).
 * All the pods deployed in the cluster are redeployed. (For more information on redeploying pods, see the precautions for pod redeployment below.)
 * Auto scale feature does not operate. 
 
