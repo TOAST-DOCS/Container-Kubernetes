@@ -1918,10 +1918,11 @@ X-Auth-Token: {tokenId}
         "v1.25.4": false,
         "v1.26.3": false,
         "v1.27.3": false,
-        "v1.28.3": true,
+        "v1.28.3": false,
         "v1.29.3": true,
         "v1.30.3": true,
-        "v1.31.4": true
+        "v1.31.4": true,
+        "v1.32.3": true
     },
     "supported_event_type": {
         "cluster_events": {
