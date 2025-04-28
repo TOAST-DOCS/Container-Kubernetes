@@ -516,6 +516,7 @@ X-Auth-Token: {tokenId}
 | labels.extra_volumes[].volume_key_id | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키 ID |
 | labels.extra_volumes[].volume_appkey | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키의 앱키 |
 | labels.extra_volumes[].volume_mount_path | Body | String | X | 추가 블록 스토리지가 마운트될 경로 |
+| labels.control_plane_log | Body | String | X | K8S 컨트롤 플레인 로그 저장 활성화 |
 | flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
 | fixed_network | Body | UUID | O | VPC 네트워크 UUID |
 | fixed_subnet | Body | UUID | O | VPC 서브넷 UUID. fixed_subnet, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
@@ -1064,6 +1065,107 @@ X-Auth-Token: {tokenId}
 </details>
 
 ---
+### 컨트롤 플레인 kubernetes 컴포넌트 로그 저장
+NHN Kubernetes Service(NKS)의 컨트롤 플레인에서 실행 중인 주요 Kubernetes 컴포넌트들의 로그를 Log & Crash Search 또는 또는 Object Storage에 저장합니다.
+```
+PATCH /v1/clusters/{CLUSTER_ID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
+| type | Body | String | O | `control_plane_log`로 설정 |
+| control_plane_log | Body | Object | O | control_plane_log 객체 |
+| control_plane_log.enable | Body | bool | O | K8S 컨트롤 플레인 로그 저장 활성화 |
+| control_plane_log.type | Body | String | enable : true인 경우 필수 | lncs : Log & Crash Search 로 control plane 로그 전송 obs : Object storage 로 control plane 로그 전송 |
+| control_plane_log.sgw | Body | UUID | enable : true인 경우 필수 | control_plane_log.type 에 따라 구분됨<br>lncs : Log and Crash Search Service Gateway UUID<br>obs : Object storage Search Service Gateway UUID |
+| control_plane_log.upload_interval | Body | Integer | x | OBS로 log 전송 주기 설정 (분)<br>min : 1<br>max : 60<br>default : 10 |
+| control_plane_log.lncs_appkey | Body | String | enable : true,<br>control_plane_log.type = incs 인 경우 필수 | Log & Crash Search의 Appkey 정보 |
+| control_plane_log.obs_api_url | Body | String | enable : true,<br>control_plane_log.type = obs 인 경우 필수 | 사용자의 obs 컨테이너 full path<br>(OBS의 스토리지 주소 + OBS의 컨테이너 이름 + 희망하는 저장 경로) |
+| control_plane_log.obs_store_as | Body | String | X | OBS 로그 파일 제공 방식(gzip, text) |
+
+
+<details><summary>Log & Crash Search 로그 전송 활성화</summary>
+<p>
+
+```json
+{
+    "type": "control_plane_log",
+    "control_plane_log" : {
+        "enable": true,
+        "type": "lncs",
+        "sgw": "b6f68830-e688-4d89-ac0a-2f1a5594177a",
+        "upload_interval" : 10,
+        "lncs_appkey" : "3e4jP4LlMGXitafx",
+    }
+}
+```
+
+</p>
+</details>
+
+
+<details><summary>Object Storage 로그 전송 활성화</summary>
+<p>
+
+```json
+{
+    "type": "control_plane_log",
+    "control_plane_log" : {
+        "enable": true,
+        "type": "obs",
+        "sgw": "b6f68830-e688-4d89-ac03-2f1155a4177a",
+        "upload_interval" : 60,
+        "obs_api_url" :"https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_d5b58ab0bb9340909bd7ff5a24f44313/iksoon-obs-container/testpath",
+        "obs_store_as" : "gzip"
+    }
+}
+```
+
+</p>
+</details>
+
+
+<details><summary>로그 전송 비활성화</summary>
+<p>
+
+```json
+{
+    "type": "control_plane_log",
+    "control_plane_log" : {
+        "enable": false,
+    }
+}
+```
+
+</p>
+</details>
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | UUID | 클러스터 UUID |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "018b06c5-1293-4081-8242-167a1cb9f262"
+}
+```
+
+</p>
+</details>
+
 
 ## 노드 그룹
 
