@@ -1024,8 +1024,8 @@ X-Auth-Token: {tokenId}
 | control_plane_log.type | Body | String | enable : true인 경우 필수 | lncs : Log & Crash Search 로 control plane 로그 전송 obs : Object storage 로 control plane 로그 전송 |
 | control_plane_log.sgw | Body | UUID | enable : true인 경우 필수 | control_plane_log.type 에 따라 구분됨<br>lncs : Log and Crash Search Service Gateway UUID<br>obs : Object storage Search Service Gateway UUID |
 | control_plane_log.upload_interval | Body | Integer | x | OBS로 log 전송 주기 설정 (분)<br>min : 1<br>max : 60<br>default : 10 |
-| control_plane_log.lncs_appkey | Body | String | enable : true,<br>control_plane_log.type = incs 인 경우 필수 | Log & Crash Search의 Appkey 정보 |
-| control_plane_log.obs_api_url | Body | String | enable : true,<br>control_plane_log.type = obs 인 경우 필수 | 사용자의 obs 컨테이너 full path<br>(OBS의 스토리지 주소 + OBS의 컨테이너 이름 + 희망하는 저장 경로) |
+| control_plane_log.lncs_appkey | Body | String | enable : true<br>control_plane_log.type = lncs 인 경우 필수 | Log & Crash Search의 Appkey 정보 |
+| control_plane_log.obs_api_url | Body | String | enable : true<br>control_plane_log.type = obs 인 경우 필수 | 사용자의 obs 컨테이너 full path<br>(OBS의 스토리지 주소 + OBS의 컨테이너 이름 + 희망하는 저장 경로) |
 | control_plane_log.obs_store_as | Body | String | X | OBS 로그 파일 제공 방식(gzip, text) |
 
 
