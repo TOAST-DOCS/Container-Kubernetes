@@ -1,5 +1,10 @@
 ## Container > NHN Kubernetes Service(NKS) > 릴리스 노트
 
+### 2025. 05. 29.
+
+#### 기능 추가
+* Kubernetes 레이블 설정 기능을 사용할 수 있습니다.
+
 ### 2025. 03. 06.
 
 #### 기능 추가
