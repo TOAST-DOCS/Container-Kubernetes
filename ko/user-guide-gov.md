@@ -20,7 +20,7 @@ NKS의 Kubernetes 버전 지원 정책은 다음과 같습니다.
     * 따라서 생성 가능한 버전이 하나 추가되면 기존의 서비스 지원 가능 버전 목록에서 가장 낮은 버전이 제거됩니다.
 
 각 Kubernetes 버전별 생성 가능 버전에 추가/삭제하는 시점과 서비스 지원 종료 시점은 다음과 같습니다.
-(단, 이 표는 2025년 3월 11일 기준으로 작성되었으며, 신규 생성 가능 버전의 버전명과 제공 시기는 당사 내부 사정에 의해 변경될 수 있습니다)
+(단, 이 표는 2025년 5월 기준으로 작성되었으며, 신규 생성 가능 버전의 버전명과 제공 시기는 당사 내부 사정에 의해 변경될 수 있습니다)
 
 | 버전    | 생성 가능 버전에 추가 | 생성 가능 버전에서 제거 | 서비스 지원 종료 |
 |:-------:|:-------------------:|:--------------------:|:---------------------:|
@@ -29,12 +29,13 @@ NKS의 Kubernetes 버전 지원 정책은 다음과 같습니다.
 | v1.24.3 | 2022. 09.           | 2024. 02.            | 2024. 05.             |
 | v1.25.4 | 2023. 01.           | 2024. 05.            | 2024. 08.             |
 | v1.26.3 | 2023. 05.           | 2024. 08.            | 2025. 02.             |
-| v1.27.3 | 2023. 08.           | 2025. 02.            | 2025. 05.(예정)       |
-| v1.28.3 | 2024. 02.           | 2025. 05.(예정)      | 2025. 08.(예정)       |
-| v1.29.3 | 2024. 05.           | 2025. 08.(예정)      | 2026. 02.(예정)       |
-| v1.30.3 | 2024. 08.           | 2026. 02.(예정)      | 2026. 05.(예정)       |
-| v1.31.4 | 2025. 02.           | 2026. 05.(예정)      | 2026. 08.(예정)       |
-| v1.32.x | 2025. 05.(예정)     | 2026. 08.(예정)      | 2027. 02.(예정)       |
+| v1.27.3 | 2023. 08.           | 2025. 02.            | 2025. 05.             |
+| v1.28.3 | 2024. 02.           | 2025. 05.            | 2025. 08.(예정)        |
+| v1.29.3 | 2024. 05.           | 2025. 08.(예정)       | 2026. 02.(예정)        |
+| v1.30.3 | 2024. 08.           | 2026. 02.(예정)       | 2026. 05.(예정)        |
+| v1.31.4 | 2025. 02.           | 2026. 05.(예정)       | 2026. 08.(예정)        |
+| v1.32.3 | 2025. 05.           | 2026. 08.(예정)       | 2027. 02.(예정)        |
+| v1.33.x | 2025. 08.(예정)      | 2027. 02.(예정)       | 2027. 05.(예정)        | 
 
 ### 클러스터 생성
 NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해야 합니다.
@@ -1050,6 +1051,23 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 > 노드 그룹에 추가 보안 그룹 설정 시 기존 인스턴스에 할당된 보안 그룹 중 추가 보안 그룹에 정의되지 않은 대상은 제거됩니다.
 > 추가 보안 그룹 변경 시 네트워크 설정이 변경되므로 설정이 적용되는 동안 일시적으로 통신에 영향이 있을 수 있습니다.
 
+### 플로팅 IP 자동 할당
+노드 그룹에 플로팅 IP 자동 할당 기능을 사용할 수 있습니다. 기능이 활성화 된 노드 그룹은 노드 생성 시 플로팅 IP를 자동으로 할당합니다. 클러스터 및 추가 노드 그룹 생성 시 기능 활성화 여부를 선택할 수 있으며, 설정한 옵션은 이후에 변경할 수 있습니다. 플로팅 IP 자동 할당 기능을 활성화 하기 위해 필요한 항목은 다음과 같습니다.
+
+| 항목 | 설명 | 
+| --- | --- | 
+| 연결할 서브넷 | 플로팅 IP를 연결할 네트워크 인터페이스의 서브넷을 의미합니다. 해당 서브넷은 클러스터의 기본 서브넷이거나 노드 그룹의 추가 서브넷에 포함되어 있어야 합니다. |
+| 플로팅 IP 레이블 | 노드에 할당할 플로팅 IP를 선별하기 위한 식별자입니다. 입력하지 않는 경우 할당 대상은 전체 플로팅 IP가 됩니다. |
+
+
+플로팅 IP 자동 할당 기능의 특징은 다음과 같습니다.
+
+* 플로팅 IP를 생성하지 않습니다.
+  * 사용자가 사전에 생성한 플로팅 IP를 할당해주는 방식으로 동작합니다. 가용 플로팅 IP가 충분하지 않으면 노드 증설에 실패할 수 있습니다.
+* 플로팅 IP 자동 할당 기능의 활성화/비활성화 및 설정 변경은 기존 노드에 영향을 주지 않습니다.
+  * 기능이 활성화되지 않은 노드 그룹에서 기능을 활성화 하더라도 기존 노드에 플로팅 IP가 할당되지 않습니다.
+  * 기능이 활성화된 노드 그룹에서 기능을 비활성화 하더라도 기존 노드에 할당된 플로팅 IP는 해제되지 않습니다.
+
 ## 클러스터 관리
 원격의 호스트에서 클러스터를 조작하고 관리하려면 Kubernetes가 제공하는 명령줄 도구(CLI)인 `kubectl`이 필요합니다.
 
@@ -1370,77 +1388,6 @@ Kubernetes 클러스터 구성을 위해 동작하는 시스템 파드 업그레
 > 시스템 파드 업그레이드가 수행되지 않으면 일부 파드가 정상적으로 동작하지 않을 수 있습니다.
 
 
-### 클러스터 CNI 변경
-NHN Kubernetes Service(NKS)는 동작 중인 Kubernetes 클러스터의 CNI(container network interface) 변경을 지원합니다. 
-클러스터 CNI 변경 기능을 사용하면 NHN Kubernetes Service(NKS)의 CNI가 Flannel CNI에서 Calico-VXLAN CNI로 변경됩니다.
-
-#### CNI 변경 규칙
-NKS 클러스터 CNI 변경 기능에 적용되는 규칙은 다음과 같습니다.
-
-* CNI 변경 기능은 NHN Kubernetes Service(NKS) 버전 1.24.3 이상인 경우에 사용할 수 있습니다.
-* 기존 NHN Kubernetes Service(NKS)에서 사용하고 있는 CNI가 Flannel인 경우에만 CNI 변경을 사용할 수 있습니다.
-* CNI 변경 시작 시 컨트롤 플레인과 모든 워커 노드 그룹에 대해 일괄적으로 작업을 진행합니다.
-* 컨트롤 플레인의 Kubernetes 버전과 모든 워커 노드 그룹의 Kubernetes 버전이 일치해야 CNI 변경이 가능합니다.
-* Calico-VXLAN, Calico-eBPF에서 Flannel로 CNI 변경은 지원하지 않습니다.
-* Flannel에서 Calico-eBPF로 CNI 변경은 지원하지 않습니다.
-* Calico-VXLAN에서 Calico-eBPF로 CNI 변경은 지원하지 않습니다.
-* 다른 기능의 동작으로 인해 클러스터가 업데이트 중인 상태에서는 CNI 변경이 불가능합니다.
-
-다음 예시는 Kubernetes CNI 변경 과정에서 변경 가능 여부를 표로 나타낸 것입니다. 예시에 사용된 조건은 다음과 같습니다. 
-
-NHN Cloud가 지원하는 Kubernetes 버전 목록: v1.23.3, v1.24.3, v1.25.4
-클러스터는 v1.23.3으로 생성
-
-| 상태 | 클러스터 버전 | 현재 CNI | CNI 변경 가능 여부 |
-| --- | :-: | :-: | :-: |
-| 초기 상태| v1.23.3 | Flannel | 불가능 <sup>[1](#footnote_calico_change_rule_1)</sup> |
-| 클러스터 업그레이드 후 상태 | v1.24.3 | Flannel | 가능 <sup>[2](#footnote_calico_change_rule_2)</sup> |
-| CNI 변경 후 상태 | v1.24.3 | Calico-VXLAN | 불가능 <sup>[3](#footnote_calico_change_rule_3)</sup> |
-
-
-주석
-
-* <a name="footnote_calico_change_rule_1">1</a>: 클러스터 버전이 1.24.3 미만이기 때문에 CNI 변경 불가능
-* <a name="footnote_calico_change_rule_2">2</a>: 클러스터 버전이 1.24.3 이상이기 때문에 CNI 변경 가능
-* <a name="footnote_calico_change_rule_3">3</a>: CNI가 이미 Calico-VXLAN이므로 CNI 변경 불가능
-
-#### Flannel에서 Calico-VXLAN CNI로 변경 진행 과정
-CNI 변경은 다음 순서로 진행됩니다.
-
-1. 모든 워커 노드 그룹에 버퍼 노드<sup>[1](#footnote_calico_change_step_1)</sup>를 추가합니다.<sup>[2](#footnote_calico_change_step_2)</sup>
-2. 클러스터에 Calico-VXLAN CNI가 배포됩니다.<sup>[3](#footnote_calico_change_step_3)</sup>
-3. 클러스터 오토스케일러 기능을 비활성화합니다.<sup>[4](#footnote_calico_change_step_4)</sup>
-3. 모든 워커 노드 그룹 내의 모든 워커 노드에 대해 순차적으로 아래 작업을 수행합니다.<sup>[5](#footnote_calico_change_step_5)</sup>
-    1. 해당 워커 노드에서 동작 중인 파드를 축출하고, 노드를 스케줄 불가능한 상태로 전환합니다.
-    2. 워커 노드의 파드 IP를 Calico-VXLAN CIDR로 재할당합니다. 해당 노드에 배포되어 있는 모든 파드는 재배포됩니다.<sup>[6](#footnote_calico_change_step_6)</sup>
-    3. 노드를 스케줄 가능한 상태로 전환합니다.
-5. 버퍼 노드에서 동작 중인 파드를 축출하고 버퍼 노드를 삭제합니다.
-6. 클러스터 오토스케일러 기능을 다시 활성화합니다.<sup>[4](#footnote_calico_change_step_4)</sup>
-7. Flannel CNI를 제거합니다.
-
-
-주석
-
-* <a name="footnote_calico_change_step_1">1</a>: 버퍼 노드란 CNI 변경 과정 중 기존 워커 노드에서 축출된 파드가 다시 스케줄링될 수 있도록 생성해 두는 여유 노드를 말합니다. 해당 워커 노드 그룹에서 정의한 워커 노드와 동일한 규격의 노드로 생성되며, 업그레이드 과정이 종료될 때 자동으로 삭제됩니다. 이 노드는 Instance 요금 정책에 따라 비용이 청구됩니다. 
-* <a name="footnote_calico_change_step_2">2</a>: CNI 변경 시 버퍼 노드 수를 설정할 수 있습니다. 기본값은 1이며, 0으로 설정하면 버퍼 노드를 추가하지 않습니다. 최솟값은 0이고, 최댓값은 (노드 그룹당 최대 노드 수 쿼터-해당 워커 노드 그룹의 현재 노드 수)입니다.
-* <a name="footnote_calico_change_step_3">3</a>: 클러스터에 Calico-VXLAN CNI가 배포되면 Flannel과 Calico-VXLAN CNI가 공존하게 됩니다. 이 상태에서 새로운 파드가 배포되면 파드 IP는 Flannel CNI로 설정되어 배포됩니다. Flannel CIDR IP를 가진 파드와 Calico-VXLAN CIDR IP를 가진 파드는 서로 통신할 수 있습니다.
-* <a name="footnote_calico_change_step_4">4</a>: 이 단계는 업그레이드 기능 시작 전 클러스터 오토스케일러 기능이 활성화되어 있는 경우에만 유효합니다.
-* <a name="footnote_calico_change_step_5">5</a>: CNI 변경 시 설정한 최대 서비스 불가 노드 수만큼씩 작업을 수행합니다. 기본값은 1입니다. 최솟값은 1이고, 최댓값은 현재 클러스터의 모든 노드 수입니다.
-* <a name="footnote_calico_change_step_6">6</a>: 기존에 배포된 파드의 IP는 모두 Flannel CIDR로 할당되어 있습니다. Calico-VXLAN CNI로 변경하기 위해 Flannel CIDR의 IP가 할당되어 있는 파드들을 모두 재배포하여 Calico-VXLAN CIDR IP를 할당합니다. 새로운 파드가 배포되면 파드 IP는 Calico-VXLAN CNI로 설정되어 배포됩니다.
-
-이 과정에서 아래와 같은 일들이 발생할 수 있습니다.
-
-* 서비스 중인 파드가 축출되어 다른 노드로 스케줄링됩니다. (파드 축출에 대한 더 자세한 내용은 [클러스터 업그레이드](/Container/NKS/ko/user-guide-gov/#cluster-upgrade)를 참고하시길 바랍니다.)
-* 클러스터에 배포되어 있는 모든 파드가 재배포됩니다. (파드 재배포에 대한 더 자세한 내용은 아래 파드 재배포 주의 사항을 참고하시길 바랍니다.)
-* 오토스케일러 기능이 동작하지 않습니다. 
-
-
-> [파드 재배포 주의 사항]
-> 1. 파드 축출 과정을 통해 다른 노드로 옮겨지지 않은 파드에 대해 진행됩니다.
-> 2. CNI 변경 과정 중에 Flannel CIDR와 Calico-VXLAN CIDR 간 정상 통신을 위해 CNI 변경 파드 네트워크 값은 기존 Flannel CIDR 값과 동일하면 안 됩니다.
-> 3. 기존에 배포되어 있던 파드들의 pause 컨테이너는 모두 stop 되었다가 kubelet에 의해 다시 재생성됩니다. 파드 이름과 로컬 저장 공간 등 설정은 그대로 유지되지만 IP는 Calico-VXLAN CIDR의 IP로 변경됩니다.
-
-
 <a id="api_endpoint_ipacl"></a>
 ### 클러스터 API 엔드포인트 IP 접근 제어 적용
 클러스터 API 엔드포인트에 IP 접근 제어를 적용하거나 해제할 수 있습니다.
@@ -1482,7 +1429,6 @@ Kubernetes는 구성 요소 간의 TLS 인증을 위해 PKI 인증서가 필요�
 
 > [참고]
 > 인증서 갱신 기능은 1.24 이상 버전의 Calico-VXLAN CNI를 사용하는 클러스터에서 사용 가능합니다.
-> 클러스터 버전이 1.23 이하거나, CNI가 Flannel인 경우 버전 업그레이드 및 CNI 변경 이후 인증서 갱신이 가능합니다.
 
 > [주의]
 > 인증서 갱신 기능에는 신규 인증서 생성 및 설정 반영을 위해 시스템 구성 요소 및 클러스터 생성 시 초기 배포된 모든 kube-system 네임스페이스 파드의 재시작이 동반됩니다.
@@ -1780,34 +1726,6 @@ NHN Kubernetes Service(NKS)가 제공하는 Calico-VXLAN, Calic-eBPF는 아래�
 주석
 
 * <a name="footnote_calico_1">1</a>: 패킷의 출발지 IP, 목적지 IP가 파드 IP로 설정됩니다. 강화된 보안 규칙 사용 시 이 트래픽에 대한 보안 규칙을 별도로 설정해야 합니다. 
-
-
-
-### 클러스터 생성 시 설정한 CNI별 CNI 변경 가능 여부
-
-| 버전 | 클러스터 생성 시 설치한 CNI 종류 및 버전 | CNI 변경 가능 여부 |
-| :-: | :-: | :-: |
-| v1.17.6 | Flannel v0.12.0 | 불가 |
-| v1.18.19 | Flannel v0.12.0 | 불가 |
-| v1.19.13 | Flannel v0.14.0 | 불가 |
-| v1.20.12 | Flannel v0.14.0 | 불가 |
-| v1.21.6 | Flannel v0.14.0 | 불가 |
-| v1.22.3 | Flannel v0.14.0 | 불가 |
-| v1.23.3 | Flannel v0.14.0 | 불가 |
-| v1.24.3 | Flannel v0.14.0 혹은 Calico-VXLAN v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
-| v1.25.4 | Flannel v0.14.0 혹은 Calico-VXLAN v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
-| v1.26.3 | Flannel v0.14.0 혹은 Calico-VXLAN, Calico-eBPF v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | 조건부 가능 <sup>[2](#footnote_calico_version_2)</sup> |
-| v1.27.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | 불가|
-| v1.28.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | 불가|
-| v1.29.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | 불가|
-| v1.30.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | 불가|
-| v1.31.4 | Calico-VXLAN, Calico-eBPF v3.28.2 | 불가|
-
-주석
-
-* <a name="footnote_calico_version_1">1</a>: 2023/03/31 이전에 생성된 클러스터에는 Flannel이 설치되어 있습니다. 2023/03/31 이후에 생성되는 v1.24.3 이상의 클러스터는 Calico가 설치됩니다.
-* <a name="footnote_calico_version_2">2</a>: CNI 변경은 v1.24.3 이상의 클러스터에서만 지원되며, 현재 Flannel에서 Calico-VXLAN으로의 변경만 지원합니다.
-
 
 
 ## 보안 그룹
