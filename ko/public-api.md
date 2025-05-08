@@ -518,6 +518,9 @@ X-Auth-Token: {tokenId}
 | labels.extra_volumes[].volume_key_id | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키 ID |
 | labels.extra_volumes[].volume_appkey | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키의 앱키 |
 | labels.extra_volumes[].volume_mount_path | Body | String | X | 추가 블록 스토리지가 마운트될 경로 |
+| labels.fip_auto_bind_enable | Body | String | X | 플로팅 IP 자동 할당: 기능 활성화 여부 ("True" / "False") |
+| labels.fip_bind_subnet | Body | String | X | 플로팅 IP 자동 할당: 플로팅 IP가 연결되는 네트워크 인터페이스의 서브넷 |
+| labels.fip_selector | Body | String | X | 플로팅 IP 자동 할당: 노드에 할당할 플로팅 IP를 선별하기 위한 식별자 |
 | flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
 | fixed_network | Body | UUID | O | VPC 네트워크 UUID |
 | fixed_subnet | Body | UUID | O | VPC 서브넷 UUID. fixed_subnet, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
@@ -1256,6 +1259,9 @@ X-Auth-Token: {tokenId}
 | labels.extra_volumes[].volume_key_id | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키 ID |
 | labels.extra_volumes[].volume_appkey | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키의 앱키 |
 | labels.extra_volumes[].volume_mount_path | Body | String | X | 추가 블록 스토리지가 마운트될 경로 |
+| labels.fip_auto_bind_enable | Body | String | X | 플로팅 IP 자동 할당: 기능 활성화 여부 ("True" / "False") |
+| labels.fip_bind_subnet | Body | String | X | 플로팅 IP 자동 할당: 플로팅 IP가 연결되는 네트워크 인터페이스의 서브넷 |
+| labels.fip_selector | Body | String | X | 플로팅 IP 자동 할당: 노드에 할당할 플로팅 IP를 선별하기 위한 식별자 |
 | name | BODY | String | O | 노드 그룹 이름 |
 | node_count | Body | Integer | X | 노드 수(기본값: 1) |
 
@@ -1774,6 +1780,70 @@ X-Auth-Token: {tokenId}
     "flavor_id": "1d0d6983-8e9d-44dc-810e-d7689afa372c",
     "num_buffer_nodes": 1,
     "num_max_unavailable_nodes":1
+}
+```
+
+</p>
+</details>
+
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | UUID | 노드 그룹 UUID |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "018b06c5-1293-4081-8242-167a1cb9f262"
+}
+```
+
+</p>
+</details>
+
+---
+
+### 노드 그룹의 플로팅 IP 자동 할당 설정 변경하기
+
+노드 그룹의 플로팅 IP 자동 할당 설정을 변경합니다.
+
+```
+PATCH /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | 노드 그룹 UUID 또는 노드 그룹 이름 | 
+| type | Body | String | O | `fip_auto_bind`로 설정 |
+| fip_auto_bind_update_info | Body | Object | O | 플로팅 IP 자동 할당 설정 정보 객체 |
+| fip_auto_bind_update_info.fip_auto_bind_enable | Body | Boolean | O | 기능 활성화 여부 (true/false) |
+| fip_auto_bind_update_info.fip_bind_subnet | Body |  String | O(enable 설정이 true인 경우) | 플로팅 IP가 연결되는 네트워크 인터페이스의 서브넷. <br> 연결할 서브넷은 반드시 클러스터의 기본 서브넷이거나 노드 그룹의 추가 서브넷에 포함되어 있어야 함 |
+| fip_auto_bind_update_info.fip_selector | Body | String | X | 노드에 할당할 플로팅 IP를 선별하기 위한 식별자 |
+
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "type": "fip_auto_bind",
+    "fip_auto_bind_update_info": {
+        "fip_auto_bind_enable": true,
+        "fip_selector": "nks-fip",
+        "fip_bind_subnet": "7f3237f6-ce05-4e9c-bce8-bbaabd22e83a"
+    }
 }
 ```
 
