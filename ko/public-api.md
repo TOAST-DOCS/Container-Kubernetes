@@ -353,6 +353,7 @@ X-Auth-Token: {tokenId}
 | events.type | Body | String | 작업 종류 |
 | events.state | Body | String | 작업 상태("SUCCESS" / "FAIL" / "IN_PROGRESS") |
 | events.contents | Body | String | 작업 진행 내용(성공 시 null) |
+| events.details | Body | String | 작업 요청 정보 | 
 | events.created_at | Body | String | 작업 시작 시간(UTC) |
 | events.updated_at | Body | String | 작업 완료 시간(UTC) |
 
@@ -425,6 +426,7 @@ X-Auth-Token: {tokenId}
 | type | Body | String | 작업 종류 |
 | state | Body | String | 작업 상태("SUCCESS" / "FAIL" / "IN_PROGRESS") |
 | contents | Body | String | 작업 진행 내용(성공 시 null) |
+| events.details | Body | String | 작업 요청 정보 | 
 | created_at | Body | String | 작업 시작 시간(UTC) |
 | updated_at | Body | String | 작업 완료 시간(UTC) |
 
