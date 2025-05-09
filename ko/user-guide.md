@@ -1490,7 +1490,7 @@ Kubernetes 컴포넌트의 여러 가지 옵션을 설정할 수 있습니다. �
 > * 워커 노드에서 동작하는 컴포넌트의 설정을 변경한 경우 워커 노드의 컴포넌트가 재시작됩니다.
 
 ### Kubernetes 레이블 설정 기능
-노드 그룹마다 Kubernetes 레이블 설정 기능을 사용할 수 있습니다. 기능이 활성화 된 노드 그룹은 노드 생성 시 사용자가 설정한 레이블을 자동으로 추가합니다. 레이블은 파드, 노드와 같은 오브젝트에 첨부된 키와 값의 쌍으로 오브젝트의 특성을 식별하는 데 사용됩니다. 레이블에 대한 자세한 설명은 [Labels and Selectors](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/)를 참고하세요.
+노드 그룹마다 Kubernetes 레이블 설정 기능을 사용할 수 있습니다. 이 기능을 통해 레이블이 설정된 노드 그룹은 노드 생성 시 사용자가 설정한 레이블을 자동으로 추가합니다. 레이블은 파드, 노드와 같은 오브젝트에 첨부된 키와 값의 쌍으로 오브젝트의 특성을 식별하는 데 사용됩니다. 레이블에 대한 자세한 설명은 [Labels and Selectors](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/)를 참고하세요.
 
 
 Kubernetes 레이블은 키와 값의 쌍으로 이루어지며, 유효한 레이블 키와 값은 각각 다음과 같은 규칙을 준수하여야 합니다.
