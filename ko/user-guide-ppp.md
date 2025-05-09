@@ -332,7 +332,7 @@ k8s Node 상태의 아이콘별 의미는 다음과 같습니다.
 
 
 #### 지표 기반 오토 스케일러
-지표 기반 오토 스케일러는 NHN Cloud의 [Cloud Monitoring](/Monitoring/Cloud%20Monitoring/ko/overview/) 서비스 기반으로 동작합니다. 워커 노드에 설치된 지표 수집 에이전트가 1분 주기로 시스템 지표를 Cloud Monitoring으로 전송하고, 수집된 지표가 설정한 임계치를 초과하거나 미달할 경우 자동으로 노드를 추가하거나 제거합니다. 확장(Scale Out)과 축소(Scale In) 기능은 각각 독립적으로 활성화할 수 있습니다.
+지표 기반 오토 스케일러는 NHN Cloud의 [Cloud Monitoring](/Monitoring/Cloud%20Monitoring/ko/overview/) 서비스 기반으로 동작합니다. 워커 노드에 설치된 지표 수집 에이전트가 1분 주기로 시스템 지표를 Cloud Monitoring으로 전송하고, 수집된 지표가 설정한 임계치를 초과하거나 미달할 경우 자동으로 노드를 추가하거나 제거합니다. 증설(Scale Out)과 감축(Scale In) 기능은 각각 독립적으로 활성화할 수 있습니다.
 
 ##### 지표 기반 오토 스케일러 설정
 지표 기반 오토 스케일러 활성화 시 아래의 항목에 대해 설정할 수 있습니다.

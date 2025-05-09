@@ -1722,7 +1722,7 @@ X-Auth-Token: {tokenId}
 | mba_scale_out.rules_operator | Body | String | X | 증설 규칙 사이에 적용되는 연산자 ("AND" / "OR") |
 | mba_scale_out.delay | Body | Integer | X | 증설 대기 시간 (1 ~ 60)분 |
 | mba_scale_out.adjustment_count | Body | Integer | X | 증설 노드 수 (1 ~ 10) |
-| mba_scale_out.rules | Body | Object | mba_scale_out.enable 설정이 true인 경우 1개 이상의 규칙 설정 필요 | 증설 규칙 설정 |
+| mba_scale_out.rules | Body | List of Object | mba_scale_out.enable 설정이 true인 경우 1개 이상의 규칙 설정 필요 | 증설 규칙 설정 |
 | mba_scale_out.rules.metric | Body | Integer | mba_scale_out.enable 설정이 true인 경우 필수 | 지표 설정 |
 | mba_scale_out.rules.threshold | Body | Integer | mba_scale_out.enable 설정이 true인 경우 필수 | 임계치 설정 |
 | mba_scale_out.rules.duration | Body | Integer | mba_scale_out.enable 설정이 true인 경우 필수 | 임계 영역 유지 시간 (2 ~ 60)분 |
@@ -1732,7 +1732,7 @@ X-Auth-Token: {tokenId}
 | mba_scale_in.rules_operator | Body | String | X | 감축 규칙 사이에 적용되는 연산자 ("AND" / "OR") |
 | mba_scale_in.delay | Body | Integer | X | 감축 대기 시간 (1 ~ 60)분 |
 | mba_scale_in.adjustment_count | Body | Integer | X | 감축 노드 수 (1 ~ 10)대 |
-| mba_scale_in.rules | Body | Object | mba_scale_in.enable 설정이 true인 경우 1개 이상의 규칙 설정 필요 | 감축 규칙 설정 |
+| mba_scale_in.rules | Body | List of Object | mba_scale_in.enable 설정이 true인 경우 1개 이상의 규칙 설정 필요 | 감축 규칙 설정 |
 | mba_scale_in.rules.metric | Body | Integer | mba_scale_in.enable 설정이 true인 경우 필수 | 지표 설정 |
 | mba_scale_in.rules.threshold | Body | Integer | mba_scale_in.enable 설정이 true인 경우 필수 | 임계치 설정 |
 | mba_scale_in.rules.duration | Body | Integer | mba_scale_in.enable 설정이 true인 경우 필수 | 임계 영역 유지 시간 (2 ~ 60)분 |
