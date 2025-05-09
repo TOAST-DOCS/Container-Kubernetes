@@ -349,6 +349,7 @@ X-Auth-Token: {tokenId}
 | events.type | Body | String | 작업 종류 |
 | events.state | Body | String | 작업 상태("SUCCESS" / "FAIL" / "IN_PROGRESS") |
 | events.contents | Body | String | 작업 진행 내용(성공 시 null) |
+| events.details | Body | String | 작업 요청 정보 | 
 | events.created_at | Body | String | 작업 시작 시간(UTC) |
 | events.updated_at | Body | String | 작업 완료 시간(UTC) |
 
@@ -421,6 +422,7 @@ X-Auth-Token: {tokenId}
 | type | Body | String | 작업 종류 |
 | state | Body | String | 작업 상태("SUCCESS" / "FAIL" / "IN_PROGRESS") |
 | contents | Body | String | 작업 진행 내용(성공 시 null) |
+| events.details | Body | String | 작업 요청 정보 | 
 | created_at | Body | String | 작업 시작 시간(UTC) |
 | updated_at | Body | String | 작업 완료 시간(UTC) |
 
@@ -509,6 +511,9 @@ X-Auth-Token: {tokenId}
 | labels.extra_volumes[].volume_key_id | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키 ID |
 | labels.extra_volumes[].volume_appkey | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키의 앱키 |
 | labels.extra_volumes[].volume_mount_path | Body | String | X | 추가 블록 스토리지가 마운트될 경로 |
+| labels.fip_auto_bind_enable | Body | String | X | 플로팅 IP 자동 할당: 기능 활성화 여부 ("True" / "False") |
+| labels.fip_bind_subnet | Body | String | X | 플로팅 IP 자동 할당: 플로팅 IP가 연결되는 네트워크 인터페이스의 서브넷 |
+| labels.fip_selector | Body | String | X | 플로팅 IP 자동 할당: 노드에 할당할 플로팅 IP를 선별하기 위한 식별자 |
 | flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
 | fixed_network | Body | UUID | O | VPC 네트워크 UUID |
 | fixed_subnet | Body | UUID | O | VPC 서브넷 UUID. fixed_subnet, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
@@ -746,76 +751,6 @@ X-Auth-Token: {tokenId}
 </p>
 </details>
 
-### 클러스터 CNI 변경
-클러스터 CNI(container network interface)를 변경합니다. Flannel CNI를 다른 CNI로 변경할 수 있습니다. 변경할 수 있는 CNI 종류와 변경 가능 조건에 대한 자세한 내용은 [사용자 가이드](/Container/NKS/ko/user-guide-gov/#cni)를 참고하세요.
-
-```
-POST /v1/clusters/{CLUSTER_ID_OR_NAME}/actions/cni_update
-Accept: application/json
-Content-Type: application/json
-OpenStack-API-Version: container-infra latest
-X-Auth-Token: {tokenId}
-```
-
-#### 요청
-
-| 이름 | 종류 | 형식 | 필수 | 설명 |
-|---|---|---|---|---|
-| tokenId | Header | String | O | 토큰 ID |
-| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
-| cni | Body | String | O | 변경할 CNI를 설정(선택 가능 CNI 목록: calico) | 
-| num_buffer_nodes | Body | Integer | X | 버퍼 노드 수. 기본값: 1, 최솟값: 0, 최댓값: 각 워커 노드 그룹에서 추가로 생성 가능한 노드 수(워커 노드 그룹당 최대 노드 수 쿼터 - 해당 워커 노드 그룹의 현재 노드 수) 중 최솟값 |
-| num_max_unavailable_nodes | Body |  Integer | X | 최대 서비스 불가 노드 수. 최솟값: 1, 최댓값: 해당 cluster의 현재 노드 수, 기본값: 1 |
-| pod_cidr | Body | String | O | calico pod cidr 설정, pod_cidr 입력 규칙 참고 |
-| pod_subnet | Body | String | O | calico pod cidr subnet 설정, 기본값: 24, pod_subnet 입력 규칙 참고 |
-
-pod_cidr는 아래와 같은 규칙으로 입력되어야 합니다.
-* CIDR은 링크 로컬 주소 대역(169.254.0.0/16)과 중첩될 수 없습니다.
-* CIDR은 NKS 클러스터에 사용된 서비스 IP 대역(K8s 서비스 네트워크)과 중첩될 수 없습니다.
-* CIDR은 NKS 내부에서 사용하고 있는 IP 대역(198.18.0.0/19)과 중첩될 수 없습니다.
-* CIDR은 NKS 클러스터에 연결된 VPC 네트워크 서브넷 또는 추가 네트워크 서브넷의 대역과 중첩될 수 없습니다.
-* CIDR은 현재 NKS 클러스터에 사용되고 있는 파드 네트워크 대역값과 중첩될 수 없습니다.
-* /24보다 큰 CIDR 블록은 입력할 수 없습니다. (다음과 같은 CIDR 블록은 사용할 수 없습니다. /26, /30)
-
-pod_subnet은 아래와 같은 규칙으로 입력되어야 합니다.
-* 20-28(포함) 범위의 값만 입력 가능합니다.
-* pod_subnet의 값이 pod_cidr의 prefix 값보다 최소 2 커야 합니다. 정상 예시(파드 서브넷 크기: 24, 파드 네트워크: 10.100.0.0/22)
-
-
-
-<details><summary>예시</summary>
-<p>
-
-```json
-{
-    "cni": "calico",
-    "num_max_unavailable_nodes": 1,
-    "num_buffer_nodes": 1,
-    "pod_cidr": "10.200.0.0/16"
-}
-```
-
-</p>
-</details>
-
-
-#### 응답
-
-| 이름 | 종류 | 형식 | 설명 |
-|---|---|---|---|
-| uuid | Body | UUID | 클러스터 UUID |
-
-<details><summary>예시</summary>
-<p>
-
-```json
-{
-    "uuid": "0641db9f-5e71-4df9-9571-089c7964d82e"
-}
-```
-
-</p>
-</details>
 
 ### 클러스터 API 엔드포인트 IP 접근 제어 적용
 클러스터 API 엔드포인트에 IP 접근 제어를 적용하거나 해제할 수 있습니다.
@@ -1264,6 +1199,9 @@ X-Auth-Token: {tokenId}
 | labels.extra_volumes[].volume_key_id | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키 ID |
 | labels.extra_volumes[].volume_appkey | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키의 앱키 |
 | labels.extra_volumes[].volume_mount_path | Body | String | X | 추가 블록 스토리지가 마운트될 경로 |
+| labels.fip_auto_bind_enable | Body | String | X | 플로팅 IP 자동 할당: 기능 활성화 여부 ("True" / "False") |
+| labels.fip_bind_subnet | Body | String | X | 플로팅 IP 자동 할당: 플로팅 IP가 연결되는 네트워크 인터페이스의 서브넷 |
+| labels.fip_selector | Body | String | X | 플로팅 IP 자동 할당: 노드에 할당할 플로팅 IP를 선별하기 위한 식별자 |
 | name | BODY | String | O | 노드 그룹 이름 |
 | node_count | Body | Integer | X | 노드 수(기본값: 1) |
 
@@ -1944,6 +1882,71 @@ X-Auth-Token: {tokenId}
 
 ---
 
+### 노드 그룹의 플로팅 IP 자동 할당 설정 변경하기
+
+노드 그룹의 플로팅 IP 자동 할당 설정을 변경합니다.
+
+```
+PATCH /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | 노드 그룹 UUID 또는 노드 그룹 이름 | 
+| type | Body | String | O | `fip_auto_bind`로 설정 |
+| fip_auto_bind_update_info | Body | Object | O | 플로팅 IP 자동 할당 설정 정보 객체 |
+| fip_auto_bind_update_info.fip_auto_bind_enable | Body | Boolean | O | 기능 활성화 여부 (true/false) |
+| fip_auto_bind_update_info.fip_bind_subnet | Body | String | X | 플로팅 IP가 연결되는 네트워크 인터페이스의 서브넷. <br> 연결할 서브넷은 반드시 클러스터의 기본 서브넷이거나 노드 그룹의 추가 서브넷에 포함되어 있어야 함 |
+| fip_auto_bind_update_info.fip_selector | Body | String | X | 노드에 할당할 플로팅 IP를 선별하기 위한 식별자 |
+
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "type": "fip_auto_bind",
+    "fip_auto_bind_update_info": {
+        "fip_auto_bind_enable": true,
+        "fip_selector": "nks-fip",
+        "fip_bind_subnet": "7f3237f6-ce05-4e9c-bce8-bbaabd22e83a"
+    }
+}
+```
+
+</p>
+</details>
+
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | UUID | 노드 그룹 UUID |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "018b06c5-1293-4081-8242-167a1cb9f262"
+}
+```
+
+</p>
+</details>
+
+---
+
+
 ## 기타 기능
 
 ### 지원되는 Kubernetes 버전 보기
@@ -1993,29 +1996,48 @@ X-Auth-Token: {tokenId}
         "v1.25.4": false,
         "v1.26.3": false,
         "v1.27.3": false,
-        "v1.28.3": true,
+        "v1.28.3": false,
         "v1.29.3": true,
         "v1.30.3": true,
-        "v1.31.4": true
+        "v1.31.4": true,
+        "v1.32.3": true
     },
     "supported_event_type": {
-        "cluster_events": {
-            "CLUSTER_CREATE": "클러스터 생성",
-            "CLUSTER_DELETE": "클러스터 삭제",
-            "CLUSTER_HANDOVER": "클러스터 OWNER 변경",
-            "CLUSTER_CNI_UPDATE": "CNI 변경"
-        },
-        "nodegroup_events": {
-            "NODEGROUP_CREATE": "노드 그룹 생성",
-            "NODEGROUP_DELETE": "노드 그룹 삭제",
-            "CLUSTER_RESIZE": "클러스터 크기 조정",
-            "NODEGROUP_UPDATE_FLAVOR": "인스턴스 타입 변경",
-            "NODEGROUP_UPGRADE": "노드 그룹 업그레이드",
-            "NODEGROUP_USERSCRIPT_UPDATE": "유저 스크립트 변경",
-            "NODEGROUP_SET_CLUSTER_AUTOSCALER": "클러스터 오토 스케일러 설정 변경",
-            "NODEGROUP_NODE_ACTION_NODE_START": "워커 노드 시작",
-            "NODEGROUP_NODE_ACTION_NODE_STOP": "워커 노드 중지"
-        }
+        "CLUSTER_CREATE": "클러스터 생성",
+        "CLUSTER_DELETE": "클러스터 삭제",
+        "CLUSTER_HANDOVER": "클러스터 OWNER 변경",
+        "CLUSTER_UPDATE_VM_AUTH_KEY": "키페어 업데이트",
+        "NODEGROUP_CREATE": "노드 그룹 생성",
+        "NODEGROUP_DELETE": "노드 그룹 삭제",
+        "CLUSTER_RESIZE": "클러스터 크기 조정",
+        "NODEGROUP_SCALE_OUT": "노드 증설",
+        "NODEGROUP_SCALE_IN": "노드 감축",
+        "NODEGROUP_UPDATE_FLAVOR": "인스턴스 타입 변경",
+        "NODEGROUP_UPGRADE": "노드 그룹 업그레이드",
+        "NODEGROUP_USERSCRIPT_UPDATE": "유저 스크립트 변경",
+        "NODEGROUP_SET_CLUSTER_AUTOSCALER": "클러스터 오토 스케일러 설정 변경",
+        "NODEGROUP_SET_METRIC_BASE_AUTOSCALER": "지표 기반 오토 스케일러 설정 변경",
+        "NODEGROUP_METRIC_BASE_AUTOSCALER_SCALE_OUT": "임계치 기반 오토스케일을 통한 노드 증설",
+        "NODEGROUP_METRIC_BASE_AUTOSCALER_SCALE_IN": "임계치 기반 오토스케일을 통한 노드 감축",
+        "CLUSTER_API_EP_IPACL_UPDATE": "클러스터 API 엔드포인트 IP 접근 제어 변경",
+        "NODEGROUP_NODE_ACTION_START_NODE": "워커 노드 시작",
+        "NODEGROUP_NODE_ACTION_STOP_NODE": "워커 노드 중지",
+        "CLUSTER_UPDATE_SGW": "클러스터 서비스 게이트웨이 변경",
+        "CLUSTER_ROTATE_CERTIFICATE": "클러스터 인증서 갱신",
+        "CLUSTER_UPDATE_NKS_REGISTRY": "NKS 레지스트리 활성화",
+        "NODEGROUP_UPDATE_EXTRA_VOLUME": "추가 블록 스토리지 변경",
+        "NODEGROUP_UPDATE_EXTRA_SECURITY_GROUP": "추가 보안 그룹 변경",
+        "CLUSTER_UPDATE_K8S_ARGS": "Kubernetes 구성 요소 옵션 변경",
+        "CLUSTER_UPDATE_OIDC_ARGS": "OIDC 설정 변경",
+        "NODEGROUP_UPDATE_K8S_NODE_LABELS": "노드 그룹 Kubernetes 레이블 설정 변경",
+        "CLUSTER_INSTALL_ADDON": "Addon 설치",
+        "CLUSTER_UNINSTALL_ADDON": "Addon 제거",
+        "CLUSTER_UPDATE_ADDON": "Addon 업데이트",
+        "CLUSTER_UPDATE_CONTROL_PLANE_LOG": "컨트롤 플레인 로그 수집 업데이트",
+        "NODEGROUP_UPDATE_FIP_AUTO_BIND": "노드 그룹 플로팅 IP 자동 할당 설정 변경",
+        "K8S_API_NOT_WORKING": "kube-apiserver 정지",
+        "ALL_NODES_NOT_READY": "모든 노드 정지 상태",
+        "AUTO_HEALING": "오토 힐링"
     }
 }
 ```
