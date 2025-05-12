@@ -983,8 +983,8 @@ data:
 ```
 # kubectl get nodes
 NAME                                            STATUS     ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready      <none>   22d   v1.23.3
-autoscaler-test-default-w-ohw5ab5wpzug-node-8   Ready      <none>   90s   v1.23.3
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready      <none>   22d   v1.28.3
+autoscaler-test-default-w-ohw5ab5wpzug-node-8   Ready      <none>   90s   v1.28.3
 ```
 
 Pending 상태였던 파드 모두 정상 스케줄링되어 Running 상태가 된 것을 확인할 수 있습니다.
