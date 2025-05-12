@@ -2060,7 +2060,7 @@ X-Auth-Token: {tokenId}
 | option_schemas.data_type | Body | String | 옵션 데이터 타입. `STRING`, `INTEGER`, `SELECT` 중 하나 |
 | option_schemas.default | Body | String | 옵션 기본값 |
 | option_schemas.updatable | Body | Boolean | 옵션 변경 가능 여부 |
-| option_schemas.mandatory | Body | String | 필수 여부  |
+| option_schemas.mandatory | Body | Boolean | 필수 여부  |
 | option_schemas.choices | Body | List of String | 선택 가능한 값의 목록 |
 
 
