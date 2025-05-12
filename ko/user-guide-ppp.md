@@ -1491,14 +1491,14 @@ Log & Crash Search로 로그 전달 시 설정되는 라벨 정보는 다음과 
 실제 로그는 위 URL 하위에 다음 구조로 저장됩니다:
 * ${사용자 설정 OBS 컨테이너 이름}/NKS/${클러스터 UUID}/${마스터 노드 이름}/${K8S 컴포넌트 이름}/${년도}/${월}/${년월일-시분초}-index${index_count}.gz
 
-예를 들어 
+예를 들어, 설정값이 아래와 같은 경우
 * Container: nks_log_container
 * 클러스터 UUID: f31dd18f-4dab-49fa-97bb-8feba31cb30b
 * 클러스터 이름: nks-test
 * 컴포넌트: kube-apiserver
 * 저장 시각: 2025-04-28 10:15:00
 
-이 경우, 아래와 같습니다.
+OBS 컨테이너에 로그가 생성되는 경로는 다음과 같습니다.
 * nks_log_container/NKS/f31dd18f-4dab-49fa-97bb-8feba31cb30b/
   nks-test-master-0/kube-apiserver/2025/04/20250428-101500-index0.gz
 
