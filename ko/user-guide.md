@@ -1746,7 +1746,7 @@ NHN Kubernetes Service(NKS)는 버전에 따라 다른 종류의 Container Netwo
 
 또한, Calico-eBPF CNI를 선택할 수 있는 OS는 Rocky와 Ubuntu이며, Flannel과 Calico-VXLAN은 모든 OS(Centos, Rocky, Red Hat, Ubuntu)를 지원합니다.
 
-
+<a id="calico_cni_types"></a>
 ### Calico CNI 종류
 NHN Kubernetes Service(NKS)가 제공하는 Calico-VXLAN, Calic-eBPF는 아래와 같은 차이점이 있습니다.
 
@@ -1824,6 +1824,85 @@ NHN Kubernetes Service(NKS)가 제공하는 Calico-VXLAN, Calic-eBPF는 아래�
 | egress | 임의 | 1 - 65535 | IPv4 | 모두 허용 | 모든 포트, 방향: 워커 노드 → 외부 |
 | egress | 임의 | 1 - 65535 | IPv6 | 모두 허용 | 모든 포트, 방향: 워커 노드 → 외부 |
 
+<a id="addon_mgmt"></a>
+## 애드온 관리 기능
+애드온은 Kubernetes 클러스터의 필수 구성 요소는 아니지만 NKS 클러스터의 기능을 확장하거나 특화된 기능을 제공하기 위해 제공되는 구성 요소를 말합니다. 애드온은 네트워킹, 서비스 디스커버리, 모니터링, 스토리지 프로비저닝 등의 기능을 하는 구성 요소가 포함될 수 있습니다. 사용자는 애드온 관리 기능을 통해 NHN Cloud에서 제공하는 애드온을 클러스터에 설치/업데이트/제거할 수 있습니다.
+
+> [주의]
+> NKS 레지스트리가 활성화되지 않은 클러스터는 애드온 관리 기능을 사용할 수 없습니다.
+
+<a id="addon_mgmt_operation"></a>
+### 동작 방식
+애드온 관리 기능의 동작 방식에 대해 설명합니다.
+
+#### Server-side apply
+애드온 관리 기능을 이용해 클러스터에 애드온을 설치/업데이트 할 때 Kubernetes의 Server-side apply를 이용합니다. Client-side apply는 클라이언트가 로컬에서 리소스 상태를 계산해 전체 리소스를 API 서버에 보내는 방식입니다. 반면 Server-side apply는 API 서버가 리소스 병합 및 필드 소유권 관리를 수행하여 API 서버가 리소스 병합과 충돌 감지를 수행할 수 있습니다. Server-side apply에 대한 자세한 내용은 [Server-Side Apply](https://kubernetes.io/docs/reference/using-api/server-side-apply/)를 참고하세요.
+
+
+#### 충돌 처리 옵션
+사용자가 애드온이 관리하는 필드를 변경해 사용하는 경우 애드온 설치/업데이트 시 충돌이 발생할 수 있습니다. 사용자는 애드온의 설치/업데이트 시 적절한 충돌 처리 옵션(resolve-conflicts)을 선택해 충돌 상황을 관리할 수 있습니다. 애드온 관리 기능에서 제공하는 충돌 처리 옵션은 다음과 같습니다.
+
+* 없음(none): 충돌 발생 시 설치/업데이트가 적용되지 않고, 설치/업데이트 요청은 실패로 처리됩니다.
+* 재정의(overwrite): 충돌 발생 시 충돌하는 필드를 애드온에서 정의하는 기본값으로 재정의합니다.
+* 보존(preserve): 충돌 발생 시 충돌하는 필드는 기존 값으로 보존합니다.
+
+> [보존 옵션에 대한 주의 사항]
+> 애드온을 구성하는 리소스의 모든 변경 사항을 보존할 수는 없습니다.
+> 보존 불가능한 필드에서 충돌 발생 시 설치/업데이트 작업은 실패로 처리됩니다.
+
+#### 제공 기능
+애드온 관리 기능을 이용해 애드온을 클러스터에 설치/업데이트/제거할 수 있습니다.
+
+* 설치
+    * 클러스터에 애드온을 설치합니다.
+    * 애드온 버전, 애드온 별 옵션을 지정해 설치합니다.
+    * 설치 시 충돌 처리 옵션을 지정해 설치합니다.
+* 업데이트
+    * 클러스터에 설치되어 있는 애드온을 업데이트합니다.
+    * 애드온 버전, 애드온 별 옵션 등을 변경할 수 있습니다.
+        * 애드온에 따라 옵션 변경이 불가능할 수 있습니다.
+    * 업데이트 시 충돌 처리 옵션을 지정해 업데이트합니다.
+* 제거
+    * 클러스터에서 애드온을 구성하는 리소스를 모두 제거합니다.
+    * 단, 필수 유형은 제거가 불가능합니다.
+
+> [주의]
+> Kubernetes 버전 업그레이드 기능을 통한 CNI, coredns 등의 업그레이드는 더 이상 제공되지 않습니다.
+> 대신 애드온 업데이트 기능을 통해 각 애드온의 버전을 변경할 수 있습니다.
+
+#### 애드온 관리 기능 활성화
+애드온 관리 기능이 활성화되지 않은 기존 클러스터도 애드온 관리 기능을 사용할 수 있습니다. 애드온이 설정되지 않은 클러스터는 calico, coredns 등이 동작하고 있음에도 애드온이 설치되지 않은 것으로 표시됩니다. 이 상태에서 각 애드온을 설치하면 이후 애드온 관리 기능을 통해 애드온을 관리할 수 있습니다. 애드온을 구성하는 리소스의 설정을 변경해 사용하는 경우 충돌 처리 옵션을 '보존'으로 선택해 설치하면 기존 리소스의 설정을 유지할 수 있습니다.
+
+<a id="addon_mgmt_types"></a>
+### 애드온 유형
+애드온 유형은 클러스터에 설치되는 애드온을 특성에 따라 구분한 것입니다.
+
+| 유형 | 필수 여부 | 설명|
+|---|---|---|
+| CNI | O | 클러스터에 설치될 CNI에 해당하는 유형입니다. |
+| kube-dns | O | NKS 클러스터 내에서 동작하는 기본 DNS 서버입니다. |
+
+<a id="addon_mgmt_addon_list"></a>
+### 애드온 목록
+
+<a id="addon_mgmt_addon_calico"></a>
+#### Calico
+Calico는 Kubernetes의 네트워킹과 네트워크 보안을 제공하는 CNI 플러그인입니다. NHN Cloud에서 제공하는 Calico에 대한 설명은 [Calico CNI 종류](#calico_cni_types)를 참고하세요.
+
+* 유형: CNI
+* 옵션
+    * mode
+        * Calico의 동작 모드를 결정합니다.
+        * 지원하는 동작 모드: vxlan, ebpf
+* 지원 버전 목록: v3.28.1-nks1
+
+<a id="addon_mgmt_addon_coredns"></a>
+#### CoreDNS
+CoreDNS는 Kubernetes 클러스터의 기본 DNS 서버입니다.
+
+* 유형: kube-dns
+* 옵션: 없음
+* 지원 버전 목록: v1.8.3-nks1
 
 ## LoadBalancer 서비스
 Kubernetes 애플리케이션의 기본 실행 단위인 파드(pod)는 CNI(container network interface)로 클러스터 네트워크에 연결됩니다. 기본적으로 클러스터 외부에서 파드로는 접근할 수 없습니다. 파드의 서비스를 클러스터 외부에 공개하려면 Kubernetes의 `LoadBalancer` 서비스(Service) 객체(object)를 이용해 외부에 공개할 경로를 만들어야 합니다. LoadBalancer 서비스 객체를 만들면 클러스터 외부에 NHN Cloud Load Balancer가 생성되어 서비스 객체와 연결됩니다.
