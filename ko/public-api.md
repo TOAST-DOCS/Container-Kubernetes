@@ -546,6 +546,10 @@ X-Auth-Token: {tokenId}
 | flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
 | fixed_network | Body | UUID | O | VPC 네트워크 UUID |
 | fixed_subnet | Body | UUID | O | VPC 서브넷 UUID. fixed_subnet, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
+| addons | Body | List of Object | X | 설치할 애드온 정보 목록 |
+| addons.name | Body | String | O | 애드온 이름 |
+| addons.version | Body | String | O | 애드온 버전 |
+| addons.options | Body | Object | X | 애드온 별 옵션 |
 
 > [주의]
 > fixed_subnet, pods_network_cidr, service_cluster_ip_range의 CIDR은 아래와 같은 규칙으로 입력되어야 합니다.
@@ -605,7 +609,11 @@ X-Auth-Token: {tokenId}
         ]
     },
     "name": "test-k8s",
-    "node_count": 1
+    "node_count": 1,
+    "addons": [
+        {"name": "calico", "version": "v3.28.2-nks1", "options": {"mode": "vxlan"}},
+        {"name": "coredns", "version": "1.8.4-nks1"}
+    ]
 }
 ```
 
@@ -2054,6 +2062,454 @@ X-Auth-Token: {tokenId}
 </details>
 
 ---
+
+## 애드온 관리 기능
+
+### NHN Cloud에서 제공하는 애드온 유형 보기
+NHN Cloud에서 제공하는 애드온 유형을 확인할 수 있습니다.
+
+```
+GET /v1/addon_types/${ADDON_TYPE_UUID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| ADDON_TYPE_UUID_OR_NAME | URL | UUID or String | O | 애드온 유형의 UUID 혹은 이름 |
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | UUID | 애드온 유형 UUID |
+| name | Body | String | 애드온 유형 이름 |
+| mandatory | Body | boolean | 필수 여부 |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "123e4567-e89b-12d3-a456-426614174001",
+    "name": "cni",
+    "mandatory": true
+}
+```
+
+</p>
+</details>
+
+---
+
+### NHN Cloud에서 제공하는 애드온 유형 목록 보기
+NHN Cloud에서 제공하는 애드온 유형의 목록을 확인할 수 있습니다.
+
+```
+GET /v1/addon_types/
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| addon_types | Body | List of object | 애드온 유형 정보의 목록 |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "addon_types": [
+        {"uuid": "123e4567-e89b-12d3-a456-426614174001", "name": "cni", "mandatory": true},
+        {"uuid": "123e4567-e89b-12d3-a456-426614174003", "name": "kube-dns", "mandatory": true}
+    ]
+}
+```
+
+</p>
+</details>
+
+---
+
+### NHN Cloud에서 제공하는 애드온 보기
+NHN Cloud에서 제공하는 애드온을 확인할 수 있습니다.
+
+```
+GET /v1/addons/{ADDON_UUID}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| ADDON_UUID | URL | UUID | O | 애드온 UUID |
+| tokenId | Header | String | O | 토큰 ID |
+
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | UUID | 애드온 유형 UUID |
+| type | Body | String | 애드온 유형 이름 |
+| version | Body | String | 애드온 버전 |
+| name | Body | String | 애드온 이름 |
+| deploy_target | Body | String | (내부 사용 용도) 애드온 배포 유형 |
+| k8s_min_version | Body | String | (내부 사용 용도) 지원 최소 k8s 버전 |
+| k8s_max_version | Body | String | (내부 사용 용도) 지원 최대 k8s 버전 |
+| description | Body | String | 애드온 설명 |
+| option_schemas | Body | List of object | 옵션 정의 목록 |
+| option_schemas.name | Body | String | 옵션의 이름 |
+| option_schemas.data_type | Body | String | 옵션 데이터 타입. `STRING`, `INTEGER`, `SELECT` 중 하나 |
+| option_schemas.default | Body | String | 옵션 기본값 |
+| option_schemas.updatable | Body | Boolean | 옵션 변경 가능 여부 |
+| option_schemas.mandatory | Body | Boolean | 필수 여부  |
+| option_schemas.choices | Body | List of String | 선택 가능한 값의 목록 |
+
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "23454567-1234-12d3-a456-426614174001",
+    "type": "cni",
+    "version": "v3.28.2-nks1",
+    "name": "calico",
+    "option_schemas": [
+        {
+            "name": "mode",
+            "data_type": "SELECT",
+            "default": "vxlan",
+            "updatable": false,
+            "mandatory": false,
+            "choices": ["vxlan", "ebpf"]
+        }
+    ],
+    "k8s_min_version": "v1.26.0",
+    "k8s_max_version": null,
+    "description": "Calico is a CNI plugin for Kubernetes that provides networking and network security."
+}
+```
+
+</p>
+</details>
+
+---
+
+### NHN Cloud에서 제공하는 애드온 목록 보기
+NHN Cloud에서 제공하는 애드온 목록을 확인할 수 있습니다.
+
+```
+GET /v1/addons/
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| addons | Body | List of object | 애드온 정보의 목록 |
+
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "addons": [
+        {"uuid": "23454567-1234-12d3-a456-426614174001", "type": "cni", "version": "v3.28.2-nks1", "name": "calico", "option_schemas": [{"name": "mode", "data_type": "SELECT", "default": "vxlan", "updatable": false, "mandatory": false, "choices": ["vxlan", "ebpf"]}], "k8s_min_version": "v1.26.0", "k8s_max_version": null, "description": "Calico is a CNI plugin for Kubernetes that provides networking and network security."},
+        {"uuid": "23454567-1234-12d3-a456-426614174005", "type": "kube-dns", "version": "1.8.4-nks1", "name": "coredns", "option_schemas": [], "k8s_min_version": "v1.26.0", "k8s_max_version": null, "description": "CoreDNS is the default DNS server for Kubernetes clusters."}
+    ]
+}
+
+
+```
+
+</p>
+</details>
+
+---
+
+### 클러스터에 설치된 애드온 보기
+클러스터에 설치된 애드온을 확인할 수 있습니다.
+
+```
+GET /v1/clusters/{CLUSTER_ID_OR_NAME}/addons/{ADDON_UUID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 |
+| ADDON_UUID_OR_NAME | URL | UUID or String | O | 애드온 UUID 또는 애드온 이름 |
+
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | UUID | 애드온 유형 UUID |
+| project_id | Body | String | 프로젝트 ID |
+| cluster_uuid | Body | UUID | 클러스터 UUID |
+| cluster_name | Body | String | 클러스터 이름 |
+| type | Body | String | 애드온 유형 이름 |
+| version | Body | String | 애드온 버전 |
+| options | Body | Object | 애드온 별 옵션 |
+| name | Body | String | 애드온 이름 |
+| status | Body | String | 애드온 상태 |
+| status_reason | Body | String | 애드온 상태 이유 |
+| scope | Body | String | 적용 범위 |
+| target_uuid | Body | UUID | 적용 대상 UUID |
+| created_at | Body | String | 생성 시간(UTC) |
+| updated_at | Body | String | 최근 업데이트 시간(UTC) |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "0b29e253-fb0d-4888-a8fe-d287c65ba76b",
+    "project_id": "1ffeaca9bbf94ab1aa9cffdec29a258a",
+    "cluster_uuid": "6c1284e2-8ead-46a7-ace9-c19d6eec76b3",
+    "cluster_name": "tw-addon3",
+    "type": "cni",
+    "version": "v3.28.2-nks1",
+    "options": {"mode": "vxlan"},
+    "name": "calico",
+    "status": "UPDATE_COMPLETE",
+    "status_reason": null,
+    "scope": "cluster",
+    "target_uuid": "6c1284e2-8ead-46a7-ace9-c19d6eec76b3",
+    "created_at": "2025-04-25T15:11:48+00:00",
+    "updated_at": "2025-04-25T15:17:16+00:00"
+}
+```
+
+</p>
+</details>
+
+---
+
+### 클러스터에 설치된 애드온 목록 보기
+클러스터에 설치된 애드온 목록을 확인할 수 있습니다.
+
+```
+GET /v1/clusters/{CLUSTER_ID_OR_NAME}/addons/
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 |
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| addons | Body | List of Object | 설치된 애드온 정보의 목록 |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "addons": [
+        {"uuid": "0b29e253-fb0d-4888-a8fe-d287c65ba76b", "project_id": "1ffeaca9bbf94ab1aa9cffdec29a258a", "cluster_uuid": "6c1284e2-8ead-46a7-ace9-c19d6eec76b3", "cluster_name": "tw-addon3", "type": "cni", "version": "v3.28.2-nks1", "options": {"mode": "vxlan"}, "name": "calico", "status": "UPDATE_COMPLETE", "status_reason": null, "scope": "cluster", "target_uuid": "6c1284e2-8ead-46a7-ace9-c19d6eec76b3", "created_at": "2025-04-25T15:11:48+00:00", "updated_at": "2025-04-25T15:17:16+00:00"},
+        {"uuid": "be71a120-7596-4b25-bee5-d5317e5134ee", "project_id": "1ffeaca9bbf94ab1aa9cffdec29a258a", "cluster_uuid": "6c1284e2-8ead-46a7-ace9-c19d6eec76b3", "cluster_name": "tw-addon3", "type": "kube-dns", "version": "1.8.4-nks1", "options": {}, "name": "coredns", "status": "UPDATE_FAILED", "status_reason": null, "scope": "cluster", "target_uuid": "6c1284e2-8ead-46a7-ace9-c19d6eec76b3", "created_at": "2025-05-02T06:16:39+00:00", "updated_at": "2025-05-08T01:03:19+00:00"}
+    ]
+}
+```
+
+</p>
+</details>
+
+---
+
+### 클러스터에 애드온 설치
+클러스터에 애드온을 설치합니다.
+
+```
+POST /v1/clusters/{CLUSTER_ID_OR_NAME}/addons/
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 |
+| name | Body | String | O | 애드온 이름 |
+| version | Body | String | O | 애드온 버전 |
+| resolve_conflicts | Body | String | O | 충돌 옵션. `none`, `overwrite`, `preserve` 중 하나 |
+
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{"version": "1.8.4-nks1", "name": "coredns", "resolve_conflicts": "overwrite"}
+```
+
+</p>
+</details>
+
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | UUID | 클러스터 UUID |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "6c1284e2-8ead-46a7-ace9-c19d6eec76b3"
+}
+```
+
+</p>
+</details>
+
+---
+
+### 클러스터에 애드온 업데이트
+클러스터에 설치된 애드온을 업데이트합니다.
+
+```
+PATCH /v1/clusters/{CLUSTER_ID_OR_NAME}/addons/{ADDON_UUID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 |
+| ADDON_UUID_OR_NAME | URL | UUID or String | O | 애드온 UUID 또는 애드온 이름 |
+| version | Body | String | O | 애드온 버전 |
+| resolve_conflicts | Body | String | O | 충돌 옵션. `none`, `overwrite`, `preserve` 중 하나 |
+
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{"version": "1.8.4-nks1", "resolve_conflicts": "none"}
+```
+
+</p>
+</details>
+
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | UUID | 클러스터 UUID |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "6c1284e2-8ead-46a7-ace9-c19d6eec76b3"
+}
+```
+
+</p>
+</details>
+
+---
+
+### 클러스터에 애드온 제거
+클러스터에 설치된 애드온을 제거합니다.
+
+```
+DELETE /v1/clusters/{CLUSTER_ID_OR_NAME}/addons/{ADDON_UUID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 |
+| ADDON_UUID_OR_NAME | URL | UUID or String | O | 애드온 UUID 또는 애드온 이름 |
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | UUID | 클러스터 UUID |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "6c1284e2-8ead-46a7-ace9-c19d6eec76b3"
+}
+```
+
+</p>
+</details>
+
+
 
 ## 기타 기능
 
