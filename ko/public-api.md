@@ -1000,7 +1000,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 ---
-### 컨트롤 플레인 kubernetes 컴포넌트 로그 저장
+### 컨트롤 플레인 Kubernetes 컴포넌트 로그 저장
 NHN Kubernetes Service(NKS)의 컨트롤 플레인에서 실행 중인 주요 Kubernetes 컴포넌트들의 로그를 Log & Crash Search 또는 또는 Object Storage에 저장합니다.
 ```
 PATCH /v1/clusters/{CLUSTER_ID_OR_NAME}
