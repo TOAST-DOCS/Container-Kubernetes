@@ -2069,9 +2069,9 @@ X-Auth-Token: {tokenId}
 
 ```json
 {
-    "uuid": "23454567-1234-12d3-a456-426614174000",
+    "uuid": "23454567-1234-12d3-a456-426614174001",
     "type": "cni",
-    "version": "v3.24.1-nks1",
+    "version": "v3.28.2-nks1",
     "name": "calico",
     "option_schemas": [
         {
@@ -2124,9 +2124,7 @@ X-Auth-Token: {tokenId}
 ```json
 {
     "addons": [
-        {"uuid": "23454567-1234-12d3-a456-426614174000", "type": "cni", "version": "v3.24.1-nks1", "name": "calico", "option_schemas": [{"name": "mode", "data_type": "SELECT", "default": "vxlan", "updatable": false, "mandatory": false, "choices": ["vxlan", "ebpf"]}], "k8s_min_version": "v1.26.0", "k8s_max_version": null, "description": "Calico is a CNI plugin for Kubernetes that provides networking and network security."},
         {"uuid": "23454567-1234-12d3-a456-426614174001", "type": "cni", "version": "v3.28.2-nks1", "name": "calico", "option_schemas": [{"name": "mode", "data_type": "SELECT", "default": "vxlan", "updatable": false, "mandatory": false, "choices": ["vxlan", "ebpf"]}], "k8s_min_version": "v1.26.0", "k8s_max_version": null, "description": "Calico is a CNI plugin for Kubernetes that provides networking and network security."},
-        {"uuid": "23454567-1234-12d3-a456-426614174004", "type": "kube-dns", "version": "1.6.6-nks1", "name": "coredns", "option_schemas": [], "k8s_min_version": "v1.26.0", "k8s_max_version": null, "description": "CoreDNS is the default DNS server for Kubernetes clusters."},
         {"uuid": "23454567-1234-12d3-a456-426614174005", "type": "kube-dns", "version": "1.8.4-nks1", "name": "coredns", "option_schemas": [], "k8s_min_version": "v1.26.0", "k8s_max_version": null, "description": "CoreDNS is the default DNS server for Kubernetes clusters."}
     ]
 }
@@ -2325,7 +2323,7 @@ X-Auth-Token: {tokenId}
 <p>
 
 ```json
-{"version": "1.6.6-nks1", "resolve_conflicts": "none"}
+{"version": "1.8.4-nks1", "resolve_conflicts": "none"}
 ```
 
 </p>
