@@ -467,10 +467,11 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 | 증설 | 노드의 수를 증가시키는 것을 말합니다 |
 | 감축 | 노드의 수를 감소시키는 것을 말합니다 |
 
-
+<a id="metric-base-autoscaler"></a>
 #### 지표 기반 오토 스케일러
 지표 기반 오토 스케일러는 NHN Cloud의 [Cloud Monitoring](/Monitoring/Cloud%20Monitoring/ko/overview/) 서비스 기반으로 동작합니다. 워커 노드에 설치된 지표 수집 에이전트가 1분 주기로 시스템 지표를 Cloud Monitoring으로 전송하고, 수집된 지표가 설정한 임계치를 초과하거나 미달할 경우 자동으로 노드를 추가하거나 제거합니다. 증설(Scale Out)과 감축(Scale In) 기능은 각각 독립적으로 활성화할 수 있습니다.
 
+<a id="metric-base-autoscaler-set"></a>
 ##### 지표 기반 오토 스케일러 설정
 지표 기반 오토 스케일러 활성화 시 아래의 항목에 대해 설정할 수 있습니다.
 
@@ -510,7 +511,7 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 | 네트워크 전송률 (송신) | 스케일링 그룹에 속한 모든 인스턴스의 초당 네트워크 송신 데이터양의 평균 | Bytes/s |
 | 네트워크 전송률 (수신) | 스케일링 그룹에 속한 모든 인스턴스의 초당 네트워크 수신 데이터양의 평균 | Bytes/s |
 
-
+<a id="metric-base-autoscaler-resize"></a>
 ##### 증설 및 감축 조건
 아래의 조건을 모두 만족하면 노드를 증설합니다.
 
@@ -536,6 +537,7 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 > [노드 감축 참고]
 > 지표 기반 오토 스케일러가 감축을 진행하면 가장 최근에 생성된 노드부터 차례로 제거합니다.
 
+<a id="metric-base-autoscaler-example"></a>
 ##### 동작 예시
 
 **증설 정책**
@@ -587,12 +589,14 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 | 24 | 28% | 6 |  | 노드 감축 작업 완료<br>작업이 끝난 24분이 ‘증설/감축 후 대기’ 조건의 시작 시점으로 설정됨 |
 | 24 - | 28% | 6 | – | 증설 조건 임계치 이하 → 임계 영역 유지 시간 2분 측정 시작<br>이후에 감축 후 대기 10분(24→34) 조건 만족되면 1대씩 감축됨 |
 
+<a id="cluster-autoscaler"></a>
 #### 클러스터 오토 스케일러
 클러스터 오토 스케일러는 Kubernetes 프로젝트의 공식 지원 기능인 cluster-autoscaler 기능을 기반으로 동작합니다. 자세한 사항은 [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler)를 참고하세요.
 
 > [참고]
 > NHN Kubernetes Service(NKS)에 적용된 `cluster-autoscaler`의 버전은 `1.19.0`입니다.
 
+<a id="cluster-autoscaler-set"></a>
 ##### 클러스터 오토 스케일러 설정
 클러스터 오토 스케일러 활성화 시 아래의 항목에 대해 설정할 수 있습니다.
 
@@ -605,7 +609,7 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 | 임계 영역 유지 시간| 감축 대상이 될 노드의 임계치 이하의 리소스 사용량 유지 시간| 1-1440 | 10 | 분 |
 | 증설 후 감축 지연 시간 | 노드 증설 후 감축 대상 노드로 모니터링하기 시작까지의 지연 시간| 10-1440 | 10 | 분 |
 
-
+<a id="cluster-autoscaler-resize"></a>
 ##### 증설 및 감축 조건
 아래의 조건을 모두 만족하면 노드를 증설합니다.
 
@@ -627,6 +631,7 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 
 좀 더 자세한 증설 및 감축 조건은 [Cluster Autoscaler FAQ](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md)를 참고하세요.
 
+<a id="cluster-autoscaler-example"></a>
 ##### 동작 예시
 오토 스케일러의 동작을 예시를 통해 알아봅니다.
 
@@ -849,6 +854,7 @@ metadata:
 > [참고]
 > 상태 정보의 내용 중 `Cluster-wide` 영역의 내용은 `NodeGroups` 영역의 내용과 같습니다.
 
+<a id="cluster-autoscaler-with-hpa"></a>
 ##### HPA(HorizontalPodAutoscale) 기능과 연동한 동작 예시
 HPA(Horizontal Pod Autoscaler) 기능은 CPU 사용량 등의 리소스 사용량을 관찰하여 레플리케이션 컨트롤러(ReplicationController), 디플로이먼트(Deployment), 레플리카셋(ReplicaSet), 스테이트풀셋(StatefulSet)의 파드 개수를 자동으로 스케일합니다. 파드 개수를 조절하다 보면 노드에 가용 리소스가 부족하거나 리소스가 많이 남는 상황이 발생할 수 있습니다. 이때 오토 스케일러 기능과 연동하여 노드의 수를 늘이거나 줄일 수 있습니다. 이 예제에서는 HPA 기능과 오토 스케일러 기능을 연동해 동작하는 것을 보여줍니다. HPA에 대한 자세한 설명은 [Horizontal Pod Autoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) 문서를 참고하세요. 
 
