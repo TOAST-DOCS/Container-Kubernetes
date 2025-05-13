@@ -95,7 +95,16 @@ X-Auth-Token: {tokenId}
 | clusters.keypair | Body | UUID | 기본 워커 노드 그룹에 적용된 키페어 UUID |
 | clusters.node_count | Body | Integer| 전체 워커 노드 수 |
 | clusters.stack_id | Body | UUID | 컨트롤 플레인과 연결된 heat stack UUID |
-| clusters.status | Body | String | 클러스터 상태 |
+| clusters.status | Body | String | 클러스터 작업 상태 |
+| clusters.status_reason | Body | String | 클러스터 작업 상태 이유(null 가능) |
+| clusters.health_status | Body | String | 클러스터의 k8s API 및 k8s 노드 상태 정보의 유효성. <br> "FRESH": k8s API 및 k8s 노드 상태 정보가 유효함 <br> "STALE": 일정 시간동안 k8s API 및 노드 상태 정보 업데이트가 되지 않아 정보의 유효성이 떨어짐 <br> "ROTTEN": 오랜 시간동안 k8s API 및 노드 상태 정보 업데이트가 되지 않아 정보를 신뢰할 수 없음 |
+| clusters.health_status_reason | Body | Object | 클러스터의 k8s API 및 워커 노드 그룹 별 k8s 노드 상태의 상세 정보가 담긴 객체 |
+| clusters.health_status_reason.timestamp | Body | String | 클러스터 k8s API 및 k8s 노드 상태 정보의 갱신 시각(UTC) |
+| clusters.health_status_reason.cluster.api_status | Body | String | k8s API의 상태 정보의 통계. <br> "NORMAL": k8s API 상태가 정상 <br> "STALED_DATA": 일정 시간동안 k8s API 상태 정보 업데이트가 되지 않아 정보의 유효성이 떨어짐 <br> "ROTTEN_DATA": 오랜 시간동안 k8s API 상태 정보 업데이트가 되지 않아 정보를 신뢰할 수 없음 <br> "K8S_API_NOT_WORKING": k8s API 상태가 비정상 |
+| clusters.health_status_reason.api | Body | String | k8s API의 상태 정보. <br> "OK": k8s API 상태가 정상 <br> "NOT_OK": k8s API 상태가 비정상 |
+| clusters.health_status_reason.cluster.node_status | Body | String | 모든 워커 노드 그룹의 k8s 노드 상태 정보의 통계. <br> "NORMAL": 모든 k8s 노드가 Ready 상태 <br> "STALED_DATA": 일정 시간동안 k8s 노드 상태 정보 업데이트가 되지 않아 정보의 유효성이 떨어짐 <br> "ROTTEN_DATA": 오랜 시간동안 k8s API 상태 정보 업데이트가 되지 않아 정보를 신뢰할 수 없음 <br> "NOT_READY_NODE_EXIST": 클러스터에 Not Ready 상태의 k8s 노드가 존재 <br> "ALL_NODES_NOT_READY": 클러스터의 모든 k8s 노드 상태가 Not Ready  |
+| clusters.health_status_reason.nodegroup.node_status.{WORKER_NODEGROUP_NAME} | Body | String | 특정 워커 노드 그룹의 k8s 노드 상태 정보의 통계. <br> "NORMAL": 해당 워커 노드 그룹의 모든 k8s 노드가 Ready 상태 <br> "STALED_DATA": 일정 시간동안 k8s 노드 상태 정보 업데이트가 되지 않아 정보의 유효성이 떨어짐 <br> "ROTTEN_DATA": 오랜 시간동안 k8s API 상태 정보 업데이트가 되지 않아 정보를 신뢰할 수 없음 <br> "NOT_READY_NODE_EXIST": 해당 워커 노드 그룹에 Not Ready 상태의 k8s 노드가 존재 <br> "ALL_NODES_NOT_READY": 해당 워커 노드 그룹의 모든 k8s 노드 상태가 Not Ready |
+| clusters.health_status_reason.nodegroup-stats.{WORKER_NODEGROUP_NAME} | Body | String | 특정 워커 노드 그룹의 k8s 노드 상태 정보. {Ready Node의 수}:{Not Ready Node의 수}를 의미 |
 | clusters.labels | Body | Object | 클러스터 레이블 |
 | clusters.labels.kube_tag | Body |String | 컨트롤 플레인 Kubernetes 버전 |
 | clusters.labels.availability_zone | Body | String | 기본 워커 노드 그룹 적용 : 가용성 영역 |
@@ -210,8 +219,16 @@ X-Auth-Token: {tokenId}
 | keypair | Body | UUID | 기본 워커 노드 그룹에 적용된 키페어 UUID |
 | node_count | Body | Integer| 전체 워커 노드 수 |
 | stack_id | Body | UUID | 컨트롤 플레인과 연결된 heat stack UUID |
-| status | Body | String | 클러스터 상태 |
-| status_reason | Body | String | 클러스터 상태 이유(null 가능) |
+| status | Body | String | 클러스터 작업 상태 |
+| status_reason | Body | String | 클러스터 작업 상태 이유(null 가능) |
+| health_status | Body | String | 클러스터의 k8s API 및 k8s 노드 상태 정보의 유효성. <br> "FRESH": k8s API 및 k8s 노드 상태 정보가 유효함 <br> "STALE": 일정 시간동안 k8s API 및 노드 상태 정보 업데이트가 되지 않아 정보의 유효성이 떨어짐 <br> "ROTTEN": 오랜 시간동안 k8s API 및 노드 상태 정보 업데이트가 되지 않아 정보를 신뢰할 수 없음 |
+| health_status_reason | Body | Object | 클러스터의 k8s API 및 워커 노드 그룹 별 k8s 노드 상태의 상세 정보가 담긴 객체 |
+| health_status_reason.timestamp | Body | String | 클러스터 k8s API 및 k8s 노드 상태 정보의 갱신 시각(UTC) |
+| health_status_reason.cluster.api_status | Body | String | k8s API의 상태 정보의 통계. <br> "NORMAL": k8s API 상태가 정상 <br> "STALED_DATA": 일정 시간동안 k8s API 상태 정보 업데이트가 되지 않아 정보의 유효성이 떨어짐 <br> "ROTTEN_DATA": 오랜 시간동안 k8s API 상태 정보 업데이트가 되지 않아 정보를 신뢰할 수 없음 <br> "K8S_API_NOT_WORKING": k8s API 상태가 비정상 |
+| health_status_reason.api | Body | String | k8s API의 상태 정보. <br> "OK": k8s API 상태가 정상 <br> "NOT_OK": k8s API 상태가 비정상 |
+| health_status_reason.cluster.node_status | Body | String | 모든 워커 노드 그룹의 k8s 노드 상태 정보의 통계. <br> "NORMAL": 모든 k8s 노드가 Ready 상태 <br> "STALED_DATA": 일정 시간동안 k8s 노드 상태 정보 업데이트가 되지 않아 정보의 유효성이 떨어짐 <br> "ROTTEN_DATA": 오랜 시간동안 k8s API 상태 정보 업데이트가 되지 않아 정보를 신뢰할 수 없음 <br> "NOT_READY_NODE_EXIST": 클러스터에 Not Ready 상태의 k8s 노드가 존재 <br> "ALL_NODES_NOT_READY": 클러스터의 모든 k8s 노드 상태가 Not Ready  |
+| health_status_reason.nodegroup.node_status.{WORKER_NODEGROUP_NAME} | Body | String | 특정 워커 노드 그룹의 k8s 노드 상태 정보의 통계. <br> "NORMAL": 해당 워커 노드 그룹의 모든 k8s 노드가 Ready 상태 <br> "STALED_DATA": 일정 시간동안 k8s 노드 상태 정보 업데이트가 되지 않아 정보의 유효성이 떨어짐 <br> "ROTTEN_DATA": 오랜 시간동안 k8s API 상태 정보 업데이트가 되지 않아 정보를 신뢰할 수 없음 <br> "NOT_READY_NODE_EXIST": 해당 워커 노드 그룹에 Not Ready 상태의 k8s 노드가 존재 <br> "ALL_NODES_NOT_READY": 해당 워커 노드 그룹의 모든 k8s 노드 상태가 Not Ready |
+| health_status_reason.nodegroup-stats.{WORKER_NODEGROUP_NAME} | Body | String | 특정 워커 노드 그룹의 k8s 노드 상태 정보. {Ready Node의 수}:{Not Ready Node의 수}를 의미 |
 | api_address | Body | String | Kubernetes API 엔드포인트 |
 | project_id | Body | String | 프로젝트(테넌트) ID |
 | fixed_network | Body | UUID | VPC UUID|
@@ -509,10 +526,10 @@ X-Auth-Token: {tokenId}
 | labels.ncr_sgw | Body | String | X | NCR 타입의 서비스 게이트웨이 UUID<br>단, 클러스터 VPC와 동일한 VPC에 생성된 것에 한함. |
 | labels.obs_sgw | Body | String | X | OBS 타입의 서비스 게이트웨이 UUID<br>단, 클러스터 VPC와 동일한 VPC에 생성된 것에 한함. |
 | labels.cni_driver | Body | String | X | CNI 설정, 선택 가능 CNI 목록: calico(기본), calico-ebpf<br>calico: Calico-VXLAN으로 생성<br>calico-ebpf: Calico-eBPF로 생성 |
-| labels.extra_security_groups | Body | Array | X | 추가 보안 그룹 객체 목록 |
+| labels.extra_security_groups | Body | Array | X | 기본 워커 노드 그룹 적용: 추가 보안 그룹 객체 목록 |
 | labels.extra_security_groups[].target_subnet | Body | String | X | 추가 보안 그룹 지정 대상 서브넷 UUID |
 | labels.extra_security_groups[].security_group_ids | Body | String | X | 추가 보안 그룹 UUID 목록(쉼표로 구분) |
-| labels.extra_volumes | Body | Array | X | 추가 블록 스토리지 객체 목록 |
+| labels.extra_volumes | Body | Array | X | 기본 워커 노드 그룹 적용: 추가 블록 스토리지 객체 목록 |
 | labels.extra_volumes[].volume_type | Body | String | X | 추가 블록 스토리지 종류 |
 | labels.extra_volumes[].volume_size | Body | Integer | X | 추가 블록 스토리지 사이즈(GB) |
 | labels.extra_volumes[].volume_key_id | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키 ID |
@@ -522,6 +539,10 @@ X-Auth-Token: {tokenId}
 | labels.fip_auto_bind_enable | Body | String | X | 플로팅 IP 자동 할당: 기능 활성화 여부 ("True" / "False") |
 | labels.fip_bind_subnet | Body | String | X | 플로팅 IP 자동 할당: 플로팅 IP가 연결되는 네트워크 인터페이스의 서브넷 |
 | labels.fip_selector | Body | String | X | 플로팅 IP 자동 할당: 노드에 할당할 플로팅 IP를 선별하기 위한 식별자 |
+| labels.fip_auto_bind_enable | Body | String | X | 기본 워커 노드 그룹 적용: 플로팅 IP 자동 할당: 기능 활성화 여부 ("True" / "False") |
+| labels.fip_bind_subnet | Body | String | X | 기본 워커 노드 그룹 적용: 플로팅 IP 자동 할당: 플로팅 IP가 연결되는 네트워크 인터페이스의 서브넷 |
+| labels.fip_selector | Body | String | X | 기본 워커 노드 그룹 적용: 플로팅 IP 자동 할당: 노드에 할당할 플로팅 IP를 선별하기 위한 식별자 |
+| labels.k8s_node_labels | Body | String | 기본 워커 노드 그룹 적용: Kubernetes 레이블 설정 |
 | flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
 | fixed_network | Body | UUID | O | VPC 네트워크 UUID |
 | fixed_subnet | Body | UUID | O | VPC 서브넷 UUID. fixed_subnet, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
@@ -1364,6 +1385,7 @@ X-Auth-Token: {tokenId}
 | labels.fip_auto_bind_enable | Body | String | X | 플로팅 IP 자동 할당: 기능 활성화 여부 ("True" / "False") |
 | labels.fip_bind_subnet | Body | String | X | 플로팅 IP 자동 할당: 플로팅 IP가 연결되는 네트워크 인터페이스의 서브넷 |
 | labels.fip_selector | Body | String | X | 플로팅 IP 자동 할당: 노드에 할당할 플로팅 IP를 선별하기 위한 식별자 |
+| labels.k8s_node_labels | Body | String | Kubernetes 레이블 설정 |
 | name | BODY | String | O | 노드 그룹 이름 |
 | node_count | Body | Integer | X | 노드 수(기본값: 1) |
 
@@ -1945,6 +1967,66 @@ X-Auth-Token: {tokenId}
         "fip_auto_bind_enable": true,
         "fip_selector": "nks-fip",
         "fip_bind_subnet": "7f3237f6-ce05-4e9c-bce8-bbaabd22e83a"
+    }
+}
+```
+
+</p>
+</details>
+
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | UUID | 노드 그룹 UUID |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "018b06c5-1293-4081-8242-167a1cb9f262"
+}
+```
+
+</p>
+</details>
+
+---
+
+### 노드 그룹의 Kubernetes 레이블 설정 변경하기
+
+노드 그룹의 Kubernetes 레이블 설정을 변경합니다.
+
+```
+PATCH /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | 노드 그룹 UUID 또는 노드 그룹 이름 | 
+| type | Body | String | O | `k8s_node_labels`로 설정 |
+| k8s_node_labels | Body | Object | O | Kubernetes 레이블 키,값 쌍으로 구성된 설정 정보 객체. 최대 20개까지 설정 가능 |
+
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "type": "k8s_node_labels",
+    "k8s_node_labels": {
+        "node_type": "production",
+        "pod_type": "opt"
     }
 }
 ```
