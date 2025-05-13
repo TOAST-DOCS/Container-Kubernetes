@@ -1402,6 +1402,115 @@ NKS 클러스터는 OIDC를 이용한 인증을 처리하도록 설정할 수 �
 | CA File | X | OIDC 제공자의 웹 인증서에 서명한 CA의 인증서 파일 |
 | Signing Algs| X | 허용된 JOSE 비대칭 서명 알고리즘 목록. 기본값: 'RS256' |
 
+<a id="control-plane-k8s-log"></a>
+### 컨트롤 플레인 Kubernetes 컴포넌트 로그 저장
+NHN Kubernetes Service(NKS)는 컨트롤 플레인에서 실행 중인 주요 Kubernetes 컴포넌트들의 로그를 제공합니다. 이를 통해 클러스터 내에서 발생하는 다양한 이벤트와 동작을 보다 명확하게 파악할 수 있으며, 서비스 상태 진단 및 문제 해결에 유용하게 활용할 수 있습니다.
+
+컨트롤 플레인 Kubernetes 컴포넌트 로그 저장 기능의 특징은 다음과 같습니다.
+
+* Log & Crash Search, Object Storage 2개의 서비스 중 하나에 로그를 전송할 수 있습니다.
+* 전송되는 로그 레벨은 `INFO`로 고정됩니다.
+* 로그를 제공하는 Kubernetes 컴포넌트는 아래와 같습니다.
+    * kube-apiserver
+    * kube-scheduler
+    * kube-controller-manager
+
+> [참고]
+> 로그 전송 대상은 하나만 설정할 수 있습니다. Log & Crash Search와 Object Storage에서 모두 로그를 관리하려면, 먼저 전송 대상을 Log & Crash Search로 설정한 후, "로그 외부 보관" 기능을 사용해 해당 로그를 Object Storage에 추가 저장할 수 있습니다.
+> 다른 프로젝트의 Log & Crash Search 또는 또는 Object Storage에도 전송할 수 있습니다.
+
+<a id="control-plane-k8s-log-lncs"></a>
+#### Log & Crash Search로 전송
+
+<a id="control-plane-k8s-log-lncs-forward"></a>
+##### 로그 전송 주기
+로그 전송은 로그 생성 시점부터 사용자가 지정한 전송 주기 이후에 전송됩니다. 전송 주기는 1분에서 60분 사이로 설정이 가능합니다. 
+
+> [참고]
+> 전송 주기 이전에 로그 용량이 300KB가 초과하면 즉시 Log & Crash Search로 전송됩니다.
+<a id="control-plane-k8s-log-lncs-labels"></a>
+##### Log & Crash Search 라벨 정보
+Log & Crash Search로 로그 전달 시 설정되는 라벨 정보는 다음과 같습니다.
+| 라벨 | 설명 
+| --- | --- |
+| logType | "log" 고정값 |
+| logSource | "NKS" 고정값 |
+| logLevel | "INFO" 고정값 |
+| logVersion | "v2" 고정값 |
+| projectVersion | "1.0.0" 고정값 |
+| host | 마스터 노드 이름 |
+| cluster_uuid | 클러스터 UUID |
+| cluster_name | 클러스터 이름 |
+| nks_version | 클러스터 버전 |
+| component | 컴포넌트 이름 |
+
+> [참고]
+> Log & Crash Search 콘솔에서 로그 조회 시 cluster_uuid, cluster_name, nks_version, component 네 가지 라벨은 기본 필드에 포함되어 있지 않습니다.
+> 선택한 필드 항목에서 라벨 추가를 통해 직접 등록하여 확인할 수 있습니다.
+
+<a id="control-plane-k8s-log-obs"></a>
+#### Object Storage로 전송
+
+<a id="control-plane-k8s-log-obs-forward"></a>
+##### 로그 전송 주기
+사용자가 지정한 전송 주기마다 로그를 수집하여 전송됩니다. 전송 주기는 1분에서 60분 사이로 설정이 가능합니다.
+
+> [참고]
+> Object Storage에 저장되는 파일 용량이 300KB가 초과하면 분할되어 저장됩니다.
+> 로그 파일은 300KB가 초과되는 즉시 전송됩니다.
+> 400KB 이하: _index0 접미사가 붙은 단일 파일로 저장 
+> 400KB 초과: _index1, _index2 등의 접미사가 붙은 다수의 파일로 분할 저장
+
+<a id="control-plane-k8s-log-obs-compression"></a>
+##### 파일 압축
+저장소에 보관할 때 gzip 형태로 압축하여 저장할지 선택할 수 있습니다.
+
+<a id="control-plane-k8s-log-obs-authorization"></a>
+##### 저장소 접근 권한 부여
+콘솔의 NKS 페이지에서 **“NKS 시스템 계정 정보"**를 클릭하면, NKS가 사용하는 테넌트 ID와 사용자 ID가 표시됩니다. 컨트롤 플레인 로그 저장소 타입을 OBS(Object Storage)로 설정한 경우, 이 NKS 시스템 계정에 해당 컨테이너에 대한 쓰기 권한이 반드시 부여되어야 합니다. 그렇지 않으면 NKS 시스템 계정은 사용자의 OBS에 데이터를 기록할 수 없습니다.
+
+설정 방법
+* NHN Cloud > Object Storage 콘솔로 접근합니다.
+* 컨트롤 플레인 로그를 저장할 컨테이너를 선택합니다.
+* 하단의 기본 정보 > 접근 정책 설정 변경을 클릭합니다.
+* 역할 기반 접근 정책에서 사용을 클릭합니다.
+* 위에서 확인했던 NKS 시스템 계정 정보의 테넌트 ID와 사용자 ID를 입력하고 Write 권한을 부여합니다.
+
+> [주의]
+> 컨트롤 플레인 로그 전송 중 Object Storage의 컨테이너에서 Write 권한을 제거하면 로그 전송에 실패합니다.
+
+<a id="control-plane-k8s-log-path"></a>
+##### 컨트롤 플레인 로그 저장 경로
+컨트롤 플레인 로그 저장 경로는 OBS endpoint, AUTH tenant, Container, Path 정보를 바탕으로 아래 형태로 구성됩니다.
+* {OBS_https_endpoint}/{AUTH_OBS_TENANT}/{Container}/{Path}
+
+예를 들어, 설정값이 아래와 같은 경우
+* OBS https endpoint : https://api-object-storage.gncloud.go.kr/v1
+* AUTH_OBS_TENANT : AUTH_e670167936434f85a03694184000ffe6
+* Container : nks_log_container
+* 희망하는 저장 경로 :  example/my/folder
+
+실제 컨트롤 플레인 로그 저장 경로는 다음과 같습니다.
+* https://api-object-storage.gncloud.go.kr/v1/AUTH_e670167936434f85a03694184000ffe6/nks_log_container/example/my/folder
+
+> [참고]
+> obs_api_url에 설정된 OBS endpoint, AUTH_tenant, Container 정보가 존재하지 않는 경우 설정 요청이 실패합니다.
+
+실제 로그는 위 URL 하위에 다음 구조로 저장됩니다:
+* ${사용자 설정 OBS 컨테이너 이름}/NKS/${클러스터 UUID}/${마스터 노드 이름}/${K8S 컴포넌트 이름}/${년도}/${월}/${년월일-시분초}-index${index_count}.gz
+
+예를 들어, 설정값이 아래와 같은 경우
+* Container: nks_log_container
+* 클러스터 UUID: f31dd18f-4dab-49fa-97bb-8feba31cb30b
+* 클러스터 이름: nks-test
+* 컴포넌트: kube-apiserver
+* 저장 시각: 2025-04-28 10:15:00
+
+OBS 컨테이너에 로그가 생성되는 경로는 다음과 같습니다.
+* nks_log_container/NKS/f31dd18f-4dab-49fa-97bb-8feba31cb30b/
+  nks-test-master-0/kube-apiserver/2025/04/20250428-101500-index0.gz
+
+
 <a id="worker-node-management"></a>
 ## 워커 노드 관리
 
