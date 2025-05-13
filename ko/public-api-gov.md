@@ -96,7 +96,16 @@ X-Auth-Token: {tokenId}
 | clusters.keypair | Body | UUID | 기본 워커 노드 그룹에 적용된 키페어 UUID |
 | clusters.node_count | Body | Integer| 전체 워커 노드 수 |
 | clusters.stack_id | Body | UUID | 컨트롤 플레인과 연결된 heat stack UUID |
-| clusters.status | Body | String | 클러스터 상태 |
+| clusters.status | Body | String | 클러스터 작업 상태 |
+| clusters.status_reason | Body | String | 클러스터 작업 상태 이유(null 가능) |
+| clusters.health_status | Body | String | 클러스터의 k8s API 및 k8s 노드 상태 정보의 유효성. <br> "FRESH": k8s API 및 k8s 노드 상태 정보가 유효함 <br> "STALE": 일정 시간동안 k8s API 및 노드 상태 정보 업데이트가 되지 않아 정보의 유효성이 떨어짐 <br> "ROTTEN": 오랜 시간동안 k8s API 및 노드 상태 정보 업데이트가 되지 않아 정보를 신뢰할 수 없음 |
+| clusters.health_status_reason | Body | Object | 클러스터의 k8s API 및 워커 노드 그룹 별 k8s 노드 상태의 상세 정보가 담긴 객체 |
+| clusters.health_status_reason.timestamp | Body | String | 클러스터 k8s API 및 k8s 노드 상태 정보의 갱신 시각(UTC) |
+| clusters.health_status_reason.cluster.api_status | Body | String | k8s API의 상태 정보의 통계. <br> "NORMAL": k8s API 상태가 정상 <br> "STALED_DATA": 일정 시간동안 k8s API 상태 정보 업데이트가 되지 않아 정보의 유효성이 떨어짐 <br> "ROTTEN_DATA": 오랜 시간동안 k8s API 상태 정보 업데이트가 되지 않아 정보를 신뢰할 수 없음 <br> "K8S_API_NOT_WORKING": k8s API 상태가 비정상 |
+| clusters.health_status_reason.api | Body | String | k8s API의 상태 정보. <br> "OK": k8s API 상태가 정상 <br> "NOT_OK": k8s API 상태가 비정상 |
+| clusters.health_status_reason.cluster.node_status | Body | String | 모든 워커 노드 그룹의 k8s 노드 상태 정보의 통계. <br> "NORMAL": 모든 k8s 노드가 Ready 상태 <br> "STALED_DATA": 일정 시간동안 k8s 노드 상태 정보 업데이트가 되지 않아 정보의 유효성이 떨어짐 <br> "ROTTEN_DATA": 오랜 시간동안 k8s API 상태 정보 업데이트가 되지 않아 정보를 신뢰할 수 없음 <br> "NOT_READY_NODE_EXIST": 클러스터에 Not Ready 상태의 k8s 노드가 존재 <br> "ALL_NODES_NOT_READY": 클러스터의 모든 k8s 노드 상태가 Not Ready  |
+| clusters.health_status_reason.nodegroup.node_status.{WORKER_NODEGROUP_NAME} | Body | String | 특정 워커 노드 그룹의 k8s 노드 상태 정보의 통계. <br> "NORMAL": 해당 워커 노드 그룹의 모든 k8s 노드가 Ready 상태 <br> "STALED_DATA": 일정 시간동안 k8s 노드 상태 정보 업데이트가 되지 않아 정보의 유효성이 떨어짐 <br> "ROTTEN_DATA": 오랜 시간동안 k8s API 상태 정보 업데이트가 되지 않아 정보를 신뢰할 수 없음 <br> "NOT_READY_NODE_EXIST": 해당 워커 노드 그룹에 Not Ready 상태의 k8s 노드가 존재 <br> "ALL_NODES_NOT_READY": 해당 워커 노드 그룹의 모든 k8s 노드 상태가 Not Ready |
+| clusters.health_status_reason.nodegroup-stats.{WORKER_NODEGROUP_NAME} | Body | String | 특정 워커 노드 그룹의 k8s 노드 상태 정보. {Ready Node의 수}:{Not Ready Node의 수}를 의미 |
 | clusters.labels | Body | Object | 클러스터 레이블 |
 | clusters.labels.kube_tag | Body |String | 컨트롤 플레인 Kubernetes 버전 |
 | clusters.labels.availability_zone | Body | String | 기본 워커 노드 그룹 적용 : 가용성 영역 |
@@ -208,8 +217,16 @@ X-Auth-Token: {tokenId}
 | keypair | Body | UUID | 기본 워커 노드 그룹에 적용된 키페어 UUID |
 | node_count | Body | Integer| 전체 워커 노드 수 |
 | stack_id | Body | UUID | 컨트롤 플레인과 연결된 heat stack UUID |
-| status | Body | String | 클러스터 상태 |
-| status_reason | Body | String | 클러스터 상태 이유(null 가능) |
+| status | Body | String | 클러스터 작업 상태 |
+| status_reason | Body | String | 클러스터 작업 상태 이유(null 가능) |
+| health_status | Body | String | 클러스터의 k8s API 및 k8s 노드 상태 정보의 유효성. <br> "FRESH": k8s API 및 k8s 노드 상태 정보가 유효함 <br> "STALE": 일정 시간동안 k8s API 및 노드 상태 정보 업데이트가 되지 않아 정보의 유효성이 떨어짐 <br> "ROTTEN": 오랜 시간동안 k8s API 및 노드 상태 정보 업데이트가 되지 않아 정보를 신뢰할 수 없음 |
+| health_status_reason | Body | Object | 클러스터의 k8s API 및 워커 노드 그룹 별 k8s 노드 상태의 상세 정보가 담긴 객체 |
+| health_status_reason.timestamp | Body | String | 클러스터 k8s API 및 k8s 노드 상태 정보의 갱신 시각(UTC) |
+| health_status_reason.cluster.api_status | Body | String | k8s API의 상태 정보의 통계. <br> "NORMAL": k8s API 상태가 정상 <br> "STALED_DATA": 일정 시간동안 k8s API 상태 정보 업데이트가 되지 않아 정보의 유효성이 떨어짐 <br> "ROTTEN_DATA": 오랜 시간동안 k8s API 상태 정보 업데이트가 되지 않아 정보를 신뢰할 수 없음 <br> "K8S_API_NOT_WORKING": k8s API 상태가 비정상 |
+| health_status_reason.api | Body | String | k8s API의 상태 정보. <br> "OK": k8s API 상태가 정상 <br> "NOT_OK": k8s API 상태가 비정상 |
+| health_status_reason.cluster.node_status | Body | String | 모든 워커 노드 그룹의 k8s 노드 상태 정보의 통계. <br> "NORMAL": 모든 k8s 노드가 Ready 상태 <br> "STALED_DATA": 일정 시간동안 k8s 노드 상태 정보 업데이트가 되지 않아 정보의 유효성이 떨어짐 <br> "ROTTEN_DATA": 오랜 시간동안 k8s API 상태 정보 업데이트가 되지 않아 정보를 신뢰할 수 없음 <br> "NOT_READY_NODE_EXIST": 클러스터에 Not Ready 상태의 k8s 노드가 존재 <br> "ALL_NODES_NOT_READY": 클러스터의 모든 k8s 노드 상태가 Not Ready  |
+| health_status_reason.nodegroup.node_status.{WORKER_NODEGROUP_NAME} | Body | String | 특정 워커 노드 그룹의 k8s 노드 상태 정보의 통계. <br> "NORMAL": 해당 워커 노드 그룹의 모든 k8s 노드가 Ready 상태 <br> "STALED_DATA": 일정 시간동안 k8s 노드 상태 정보 업데이트가 되지 않아 정보의 유효성이 떨어짐 <br> "ROTTEN_DATA": 오랜 시간동안 k8s API 상태 정보 업데이트가 되지 않아 정보를 신뢰할 수 없음 <br> "NOT_READY_NODE_EXIST": 해당 워커 노드 그룹에 Not Ready 상태의 k8s 노드가 존재 <br> "ALL_NODES_NOT_READY": 해당 워커 노드 그룹의 모든 k8s 노드 상태가 Not Ready |
+| health_status_reason.nodegroup-stats.{WORKER_NODEGROUP_NAME} | Body | String | 특정 워커 노드 그룹의 k8s 노드 상태 정보. {Ready Node의 수}:{Not Ready Node의 수}를 의미 |
 | api_address | Body | String | Kubernetes API 엔드포인트 |
 | project_id | Body | String | 프로젝트(테넌트) ID |
 | fixed_network | Body | UUID | VPC UUID|
@@ -502,21 +519,30 @@ X-Auth-Token: {tokenId}
 | labels.service_cluster_ip_range | Body | String  | X |  K8s 서비스 네트워크, 클러스터에서 서비스 생성 시 ClusterIP에 할당되는 IP 대역. fixed_subnet, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
 | labels.pods_network_cidr | Body | String |  X |  클러스터 파드 네트워크. fixed_subnet, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
 | labels.pods_network_subnet | Body | Integer | X |  클러스터 파드 서브넷 크기. pods_network_subnet 입력 규칙 참고 |
-| labels.extra_security_groups | Body | Array | X | 추가 보안 그룹 객체 목록 |
+| labels.extra_security_groups | Body | Array | X | 기본 워커 노드 그룹 적용: 추가 보안 그룹 객체 목록 |
 | labels.extra_security_groups[].target_subnet | Body | String | X | 추가 보안 그룹 지정 대상 서브넷 UUID |
 | labels.extra_security_groups[].security_group_ids | Body | String | X | 추가 보안 그룹 UUID 목록(쉼표로 구분) |
-| labels.extra_volumes | Body | Array | X | 추가 블록 스토리지 객체 목록 |
+| labels.extra_volumes | Body | Array | X | 기본 워커 노드 그룹 적용: 추가 블록 스토리지 객체 목록 |
 | labels.extra_volumes[].volume_type | Body | String | X | 추가 블록 스토리지 종류 |
 | labels.extra_volumes[].volume_size | Body | Integer | X | 추가 블록 스토리지 사이즈(GB) |
 | labels.extra_volumes[].volume_key_id | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키 ID |
 | labels.extra_volumes[].volume_appkey | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키의 앱키 |
 | labels.extra_volumes[].volume_mount_path | Body | String | X | 추가 블록 스토리지가 마운트될 경로 |
+| labels.control_plane_log | Body | String | X | K8S 컨트롤 플레인 로그 저장 활성화 |
 | labels.fip_auto_bind_enable | Body | String | X | 플로팅 IP 자동 할당: 기능 활성화 여부 ("True" / "False") |
 | labels.fip_bind_subnet | Body | String | X | 플로팅 IP 자동 할당: 플로팅 IP가 연결되는 네트워크 인터페이스의 서브넷 |
 | labels.fip_selector | Body | String | X | 플로팅 IP 자동 할당: 노드에 할당할 플로팅 IP를 선별하기 위한 식별자 |
+| labels.fip_auto_bind_enable | Body | String | X | 기본 워커 노드 그룹 적용: 플로팅 IP 자동 할당: 기능 활성화 여부 ("True" / "False") |
+| labels.fip_bind_subnet | Body | String | X | 기본 워커 노드 그룹 적용: 플로팅 IP 자동 할당: 플로팅 IP가 연결되는 네트워크 인터페이스의 서브넷 |
+| labels.fip_selector | Body | String | X | 기본 워커 노드 그룹 적용: 플로팅 IP 자동 할당: 노드에 할당할 플로팅 IP를 선별하기 위한 식별자 |
+| labels.k8s_node_labels | Body | String | 기본 워커 노드 그룹 적용: Kubernetes 레이블 설정 |
 | flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
 | fixed_network | Body | UUID | O | VPC 네트워크 UUID |
 | fixed_subnet | Body | UUID | O | VPC 서브넷 UUID. fixed_subnet, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
+| addons | Body | List of Object | X | 설치할 애드온 정보 목록 |
+| addons.name | Body | String | O | 애드온 이름 |
+| addons.version | Body | String | O | 애드온 버전 |
+| addons.options | Body | Object | X | 애드온 별 옵션 |
 
 > [주의]
 > fixed_subnet, pods_network_cidr, service_cluster_ip_range의 CIDR은 아래와 같은 규칙으로 입력되어야 합니다.
@@ -576,7 +602,11 @@ X-Auth-Token: {tokenId}
         ]
     },
     "name": "test-k8s",
-    "node_count": 1
+    "node_count": 1,
+    "addons": [
+        {"name": "calico", "version": "v3.28.2-nks1", "options": {"mode": "vxlan"}},
+        {"name": "coredns", "version": "1.8.4-nks1"}
+    ]
 }
 ```
 
@@ -937,6 +967,108 @@ X-Auth-Token: {tokenId}
 </p>
 </details>
 
+---
+### 컨트롤 플레인 Kubernetes 컴포넌트 로그 저장
+NHN Kubernetes Service(NKS)의 컨트롤 플레인에서 실행 중인 주요 Kubernetes 컴포넌트들의 로그를 Log & Crash Search 또는 또는 Object Storage에 저장합니다.
+```
+PATCH /v1/clusters/{CLUSTER_ID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
+| type | Body | String | O | `control_plane_log`로 설정 |
+| control_plane_log | Body | Object | O | control_plane_log 객체 |
+| control_plane_log.enable | Body | bool | O | K8S 컨트롤 플레인 로그 저장 활성화 |
+| control_plane_log.type | Body | String | enable : true인 경우 필수 | lncs : Log & Crash Search 로 control plane 로그 전송 obs : Object storage 로 control plane 로그 전송 |
+| control_plane_log.sgw | Body | UUID | enable : true인 경우 필수 | control_plane_log.type 에 따라 구분됨<br>lncs : Log and Crash Search Service Gateway UUID<br>obs : Object storage Search Service Gateway UUID |
+| control_plane_log.upload_interval | Body | Integer | x | OBS로 log 전송 주기 설정 (분)<br>min : 1<br>max : 60<br>default : 10 |
+| control_plane_log.lncs_appkey | Body | String | enable : true<br>control_plane_log.type = lncs 인 경우 필수 | Log & Crash Search의 Appkey 정보 |
+| control_plane_log.obs_api_url | Body | String | enable : true<br>control_plane_log.type = obs 인 경우 필수 | 사용자의 obs 컨테이너 full path<br>(OBS의 스토리지 주소 + OBS의 컨테이너 이름 + 희망하는 저장 경로) |
+| control_plane_log.obs_store_as | Body | String | X | OBS 로그 파일 제공 방식(gzip, text) |
+
+
+<details><summary>Log & Crash Search 로그 전송 활성화</summary>
+<p>
+
+```json
+{
+    "type": "control_plane_log",
+    "control_plane_log" : {
+        "enable": true,
+        "type": "lncs",
+        "sgw": "b6f68830-e688-4d89-ac0a-2f1a5594177a",
+        "upload_interval" : 10,
+        "lncs_appkey" : "3e4jP4LlMGXitafx",
+    }
+}
+```
+
+</p>
+</details>
+
+
+<details><summary>Object Storage 로그 전송 활성화</summary>
+<p>
+
+```json
+{
+    "type": "control_plane_log",
+    "control_plane_log" : {
+        "enable": true,
+        "type": "obs",
+        "sgw": "b6f68830-e688-4d89-ac03-2f1155a4177a",
+        "upload_interval" : 60,
+        "obs_api_url" :"https://kr1-api-object-storage.gov-nhncloudservice.com/v1/AUTH_d5b58ab0bb9340909bd7ff5a24f44313/iksoon-obs-container/testpath",
+        "obs_store_as" : "gzip"
+    }
+}
+```
+
+</p>
+</details>
+
+
+<details><summary>로그 전송 비활성화</summary>
+<p>
+
+```json
+{
+    "type": "control_plane_log",
+    "control_plane_log" : {
+        "enable": false,
+    }
+}
+```
+
+</p>
+</details>
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | UUID | 클러스터 UUID |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "018b06c5-1293-4081-8242-167a1cb9f262"
+}
+```
+
+</p>
+</details>
+
 
 ---
 
@@ -1202,6 +1334,7 @@ X-Auth-Token: {tokenId}
 | labels.fip_auto_bind_enable | Body | String | X | 플로팅 IP 자동 할당: 기능 활성화 여부 ("True" / "False") |
 | labels.fip_bind_subnet | Body | String | X | 플로팅 IP 자동 할당: 플로팅 IP가 연결되는 네트워크 인터페이스의 서브넷 |
 | labels.fip_selector | Body | String | X | 플로팅 IP 자동 할당: 노드에 할당할 플로팅 IP를 선별하기 위한 식별자 |
+| labels.k8s_node_labels | Body | String | Kubernetes 레이블 설정 |
 | name | BODY | String | O | 노드 그룹 이름 |
 | node_count | Body | Integer | X | 노드 수(기본값: 1) |
 
@@ -1945,6 +2078,513 @@ X-Auth-Token: {tokenId}
 </details>
 
 ---
+
+### 노드 그룹의 Kubernetes 레이블 설정 변경하기
+
+노드 그룹의 Kubernetes 레이블 설정을 변경합니다.
+
+```
+PATCH /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | 노드 그룹 UUID 또는 노드 그룹 이름 | 
+| type | Body | String | O | `k8s_node_labels`로 설정 |
+| k8s_node_labels | Body | Object | O | Kubernetes 레이블 키,값 쌍으로 구성된 설정 정보 객체. 최대 20개까지 설정 가능 |
+
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "type": "k8s_node_labels",
+    "k8s_node_labels": {
+        "node_type": "production",
+        "pod_type": "opt"
+    }
+}
+```
+
+</p>
+</details>
+
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | UUID | 노드 그룹 UUID |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "018b06c5-1293-4081-8242-167a1cb9f262"
+}
+```
+
+</p>
+</details>
+
+---
+
+## 애드온 관리 기능
+
+### NHN Cloud에서 제공하는 애드온 유형 보기
+NHN Cloud에서 제공하는 애드온 유형을 확인할 수 있습니다.
+
+```
+GET /v1/addon_types/${ADDON_TYPE_UUID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| ADDON_TYPE_UUID_OR_NAME | URL | UUID or String | O | 애드온 유형의 UUID 혹은 이름 |
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | UUID | 애드온 유형 UUID |
+| name | Body | String | 애드온 유형 이름 |
+| mandatory | Body | boolean | 필수 여부 |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "123e4567-e89b-12d3-a456-426614174001",
+    "name": "cni",
+    "mandatory": true
+}
+```
+
+</p>
+</details>
+
+---
+
+### NHN Cloud에서 제공하는 애드온 유형 목록 보기
+NHN Cloud에서 제공하는 애드온 유형의 목록을 확인할 수 있습니다.
+
+```
+GET /v1/addon_types/
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| addon_types | Body | List of object | 애드온 유형 정보의 목록 |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "addon_types": [
+        {"uuid": "123e4567-e89b-12d3-a456-426614174001", "name": "cni", "mandatory": true},
+        {"uuid": "123e4567-e89b-12d3-a456-426614174003", "name": "kube-dns", "mandatory": true}
+    ]
+}
+```
+
+</p>
+</details>
+
+---
+
+### NHN Cloud에서 제공하는 애드온 보기
+NHN Cloud에서 제공하는 애드온을 확인할 수 있습니다.
+
+```
+GET /v1/addons/{ADDON_UUID}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| ADDON_UUID | URL | UUID | O | 애드온 UUID |
+| tokenId | Header | String | O | 토큰 ID |
+
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | UUID | 애드온 유형 UUID |
+| type | Body | String | 애드온 유형 이름 |
+| version | Body | String | 애드온 버전 |
+| name | Body | String | 애드온 이름 |
+| deploy_target | Body | String | (내부 사용 용도) 애드온 배포 유형 |
+| k8s_min_version | Body | String | (내부 사용 용도) 지원 최소 k8s 버전 |
+| k8s_max_version | Body | String | (내부 사용 용도) 지원 최대 k8s 버전 |
+| description | Body | String | 애드온 설명 |
+| option_schemas | Body | List of object | 옵션 정의 목록 |
+| option_schemas.name | Body | String | 옵션의 이름 |
+| option_schemas.data_type | Body | String | 옵션 데이터 타입. `STRING`, `INTEGER`, `SELECT` 중 하나 |
+| option_schemas.default | Body | String | 옵션 기본값 |
+| option_schemas.updatable | Body | Boolean | 옵션 변경 가능 여부 |
+| option_schemas.mandatory | Body | Boolean | 필수 여부  |
+| option_schemas.choices | Body | List of String | 선택 가능한 값의 목록 |
+
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "23454567-1234-12d3-a456-426614174001",
+    "type": "cni",
+    "version": "v3.28.2-nks1",
+    "name": "calico",
+    "option_schemas": [
+        {
+            "name": "mode",
+            "data_type": "SELECT",
+            "default": "vxlan",
+            "updatable": false,
+            "mandatory": false,
+            "choices": ["vxlan", "ebpf"]
+        }
+    ],
+    "k8s_min_version": "v1.26.0",
+    "k8s_max_version": null,
+    "description": "Calico is a CNI plugin for Kubernetes that provides networking and network security."
+}
+```
+
+</p>
+</details>
+
+---
+
+### NHN Cloud에서 제공하는 애드온 목록 보기
+NHN Cloud에서 제공하는 애드온 목록을 확인할 수 있습니다.
+
+```
+GET /v1/addons/
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| addons | Body | List of object | 애드온 정보의 목록 |
+
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "addons": [
+        {"uuid": "23454567-1234-12d3-a456-426614174001", "type": "cni", "version": "v3.28.2-nks1", "name": "calico", "option_schemas": [{"name": "mode", "data_type": "SELECT", "default": "vxlan", "updatable": false, "mandatory": false, "choices": ["vxlan", "ebpf"]}], "k8s_min_version": "v1.26.0", "k8s_max_version": null, "description": "Calico is a CNI plugin for Kubernetes that provides networking and network security."},
+        {"uuid": "23454567-1234-12d3-a456-426614174005", "type": "kube-dns", "version": "1.8.4-nks1", "name": "coredns", "option_schemas": [], "k8s_min_version": "v1.26.0", "k8s_max_version": null, "description": "CoreDNS is the default DNS server for Kubernetes clusters."}
+    ]
+}
+
+
+```
+
+</p>
+</details>
+
+---
+
+### 클러스터에 설치된 애드온 보기
+클러스터에 설치된 애드온을 확인할 수 있습니다.
+
+```
+GET /v1/clusters/{CLUSTER_ID_OR_NAME}/addons/{ADDON_UUID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 |
+| ADDON_UUID_OR_NAME | URL | UUID or String | O | 애드온 UUID 또는 애드온 이름 |
+
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | UUID | 애드온 유형 UUID |
+| project_id | Body | String | 프로젝트 ID |
+| cluster_uuid | Body | UUID | 클러스터 UUID |
+| cluster_name | Body | String | 클러스터 이름 |
+| type | Body | String | 애드온 유형 이름 |
+| version | Body | String | 애드온 버전 |
+| options | Body | Object | 애드온 별 옵션 |
+| name | Body | String | 애드온 이름 |
+| status | Body | String | 애드온 상태 |
+| status_reason | Body | String | 애드온 상태 이유 |
+| scope | Body | String | 적용 범위 |
+| target_uuid | Body | UUID | 적용 대상 UUID |
+| created_at | Body | String | 생성 시간(UTC) |
+| updated_at | Body | String | 최근 업데이트 시간(UTC) |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "0b29e253-fb0d-4888-a8fe-d287c65ba76b",
+    "project_id": "1ffeaca9bbf94ab1aa9cffdec29a258a",
+    "cluster_uuid": "6c1284e2-8ead-46a7-ace9-c19d6eec76b3",
+    "cluster_name": "tw-addon3",
+    "type": "cni",
+    "version": "v3.28.2-nks1",
+    "options": {"mode": "vxlan"},
+    "name": "calico",
+    "status": "UPDATE_COMPLETE",
+    "status_reason": null,
+    "scope": "cluster",
+    "target_uuid": "6c1284e2-8ead-46a7-ace9-c19d6eec76b3",
+    "created_at": "2025-04-25T15:11:48+00:00",
+    "updated_at": "2025-04-25T15:17:16+00:00"
+}
+```
+
+</p>
+</details>
+
+---
+
+### 클러스터에 설치된 애드온 목록 보기
+클러스터에 설치된 애드온 목록을 확인할 수 있습니다.
+
+```
+GET /v1/clusters/{CLUSTER_ID_OR_NAME}/addons/
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 |
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| addons | Body | List of Object | 설치된 애드온 정보의 목록 |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "addons": [
+        {"uuid": "0b29e253-fb0d-4888-a8fe-d287c65ba76b", "project_id": "1ffeaca9bbf94ab1aa9cffdec29a258a", "cluster_uuid": "6c1284e2-8ead-46a7-ace9-c19d6eec76b3", "cluster_name": "tw-addon3", "type": "cni", "version": "v3.28.2-nks1", "options": {"mode": "vxlan"}, "name": "calico", "status": "UPDATE_COMPLETE", "status_reason": null, "scope": "cluster", "target_uuid": "6c1284e2-8ead-46a7-ace9-c19d6eec76b3", "created_at": "2025-04-25T15:11:48+00:00", "updated_at": "2025-04-25T15:17:16+00:00"},
+        {"uuid": "be71a120-7596-4b25-bee5-d5317e5134ee", "project_id": "1ffeaca9bbf94ab1aa9cffdec29a258a", "cluster_uuid": "6c1284e2-8ead-46a7-ace9-c19d6eec76b3", "cluster_name": "tw-addon3", "type": "kube-dns", "version": "1.8.4-nks1", "options": {}, "name": "coredns", "status": "UPDATE_FAILED", "status_reason": null, "scope": "cluster", "target_uuid": "6c1284e2-8ead-46a7-ace9-c19d6eec76b3", "created_at": "2025-05-02T06:16:39+00:00", "updated_at": "2025-05-08T01:03:19+00:00"}
+    ]
+}
+```
+
+</p>
+</details>
+
+---
+
+### 클러스터에 애드온 설치
+클러스터에 애드온을 설치합니다.
+
+```
+POST /v1/clusters/{CLUSTER_ID_OR_NAME}/addons/
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 |
+| name | Body | String | O | 애드온 이름 |
+| version | Body | String | O | 애드온 버전 |
+| resolve_conflicts | Body | String | O | 충돌 옵션. `none`, `overwrite`, `preserve` 중 하나 |
+
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{"version": "1.8.4-nks1", "name": "coredns", "resolve_conflicts": "overwrite"}
+```
+
+</p>
+</details>
+
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | UUID | 클러스터 UUID |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "6c1284e2-8ead-46a7-ace9-c19d6eec76b3"
+}
+```
+
+</p>
+</details>
+
+---
+
+### 클러스터에 애드온 업데이트
+클러스터에 설치된 애드온을 업데이트합니다.
+
+```
+PATCH /v1/clusters/{CLUSTER_ID_OR_NAME}/addons/{ADDON_UUID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 |
+| ADDON_UUID_OR_NAME | URL | UUID or String | O | 애드온 UUID 또는 애드온 이름 |
+| version | Body | String | O | 애드온 버전 |
+| resolve_conflicts | Body | String | O | 충돌 옵션. `none`, `overwrite`, `preserve` 중 하나 |
+
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{"version": "1.8.4-nks1", "resolve_conflicts": "none"}
+```
+
+</p>
+</details>
+
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | UUID | 클러스터 UUID |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "6c1284e2-8ead-46a7-ace9-c19d6eec76b3"
+}
+```
+
+</p>
+</details>
+
+---
+
+### 클러스터에 애드온 제거
+클러스터에 설치된 애드온을 제거합니다.
+
+```
+DELETE /v1/clusters/{CLUSTER_ID_OR_NAME}/addons/{ADDON_UUID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### 요청
+
+| 이름 | 종류 | 형식 | 필수 | 설명 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | 토큰 ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 |
+| ADDON_UUID_OR_NAME | URL | UUID or String | O | 애드온 UUID 또는 애드온 이름 |
+
+#### 응답
+
+| 이름 | 종류 | 형식 | 설명 |
+|---|---|---|---|
+| uuid | Body | UUID | 클러스터 UUID |
+
+<details><summary>예시</summary>
+<p>
+
+```json
+{
+    "uuid": "6c1284e2-8ead-46a7-ace9-c19d6eec76b3"
+}
+```
+
+</p>
+</details>
+
 
 
 ## 기타 기능
