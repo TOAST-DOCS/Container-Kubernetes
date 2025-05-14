@@ -17,22 +17,6 @@ API 응답에 가이드에 명시되지 않은 필드가 나타날 수 있습니
 
 NHN Kubernetes Service(NKS) API는 클러스터 및 노드 그룹 구성을 위해 여러 가지 리소스를 사용합니다. 리소스별 정보 확인 방법은 다음과 같습니다.
 
-### 인터넷 게이트웨이에 연결된 VPC 네트워크 UUID
-
-인터넷 게이트웨이에 연결된 VPC 네트워크는 VPC 네트워크 목록 조회 API에 **router:external=True** 쿼리 파라미터를 이용해 조회할 수 있습니다.
-
-```
-GET /v2.0/networks?router:external=True
-```
-
-네트워크 목록 조회 API에 대한 좀 더 자세한 내용은 [네트워크 목록 보기](/Network/VPC/ko/public-api-gov/#_2)를 참고하세요.
-
-
-### 인터넷 게이트웨이에 연결된 서브넷 UUID 목록
-
-인터넷 게이트웨이에 연결된 VPC 네트워크와 연결된 서브넷 UUID를 입력합니다. 여러 서브넷이 조회됐다면 콜론(`:`)으로 연결해 입력합니다. 서브넷 목록 조회 API에 대한 좀 더 자세한 내용은 [서브넷 목록 보기](/Network/VPC/ko/public-api-gov/#_6)를 참고하세요.
-
-
 ### VPC 네트워크 UUID
 
 노드와 연결할 내부 VPC 네트워크 UUID를 입력합니다. 네트워크 목록 조회 API에 대한 좀 더 자세한 내용은 [네트워크 목록 보기](/Network/VPC/ko/public-api-gov/#_2)를 참고하세요.
