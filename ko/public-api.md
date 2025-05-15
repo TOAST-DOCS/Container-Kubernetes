@@ -97,13 +97,13 @@ X-Auth-Token: {tokenId}
 | clusters.stack_id | Body | UUID | 컨트롤 플레인과 연결된 heat stack UUID |
 | clusters.status | Body | String | 클러스터 작업 상태 |
 | clusters.status_reason | Body | String | 클러스터 작업 상태 이유(null 가능) |
-| clusters.health_status | Body | String | 클러스터의 k8s API 및 k8s 노드 상태 정보의 유효성. <br> "FRESH": k8s API 및 k8s 노드 상태 정보가 유효함 <br> "STALE": 일정 시간동안 k8s API 및 노드 상태 정보 업데이트가 되지 않아 정보의 유효성이 떨어짐 <br> "ROTTEN": 오랜 시간동안 k8s API 및 노드 상태 정보 업데이트가 되지 않아 정보를 신뢰할 수 없음 |
-| clusters.health_status_reason | Body | Object | 클러스터의 k8s API 및 워커 노드 그룹 별 k8s 노드 상태의 상세 정보가 담긴 객체 |
+| clusters.health_status | Body | String | 클러스터의 k8s API 및 k8s 노드 상태 정보의 유효성. <br>* `FRESH`: k8s API 및 k8s 노드 상태 정보가 유효함 <br>* `STALE`: 일정 시간 동안 k8s API 및 노드 상태 정보가 업데이트되지 않아 정보의 유효성이 떨어짐 <br>* `ROTTEN`: 오랜 시간 동안 k8s API 및 노드 상태 정보가 업데이트되지 않아 정보를 신뢰할 수 없음 |
+| clusters.health_status_reason | Body | Object | 클러스터의 k8s API 및 워커 노드 그룹별 k8s 노드 상태의 상세 정보가 담긴 객체 |
 | clusters.health_status_reason.timestamp | Body | String | 클러스터 k8s API 및 k8s 노드 상태 정보의 갱신 시각(UTC) |
-| clusters.health_status_reason.cluster.api_status | Body | String | k8s API의 상태 정보의 통계. <br> "NORMAL": k8s API 상태가 정상 <br> "STALED_DATA": 일정 시간동안 k8s API 상태 정보 업데이트가 되지 않아 정보의 유효성이 떨어짐 <br> "ROTTEN_DATA": 오랜 시간동안 k8s API 상태 정보 업데이트가 되지 않아 정보를 신뢰할 수 없음 <br> "K8S_API_NOT_WORKING": k8s API 상태가 비정상 |
-| clusters.health_status_reason.api | Body | String | k8s API의 상태 정보. <br> "OK": k8s API 상태가 정상 <br> "NOT_OK": k8s API 상태가 비정상 |
-| clusters.health_status_reason.cluster.node_status | Body | String | 모든 워커 노드 그룹의 k8s 노드 상태 정보의 통계. <br> "NORMAL": 모든 k8s 노드가 Ready 상태 <br> "STALED_DATA": 일정 시간동안 k8s 노드 상태 정보 업데이트가 되지 않아 정보의 유효성이 떨어짐 <br> "ROTTEN_DATA": 오랜 시간동안 k8s API 상태 정보 업데이트가 되지 않아 정보를 신뢰할 수 없음 <br> "NOT_READY_NODE_EXIST": 클러스터에 Not Ready 상태의 k8s 노드가 존재 <br> "ALL_NODES_NOT_READY": 클러스터의 모든 k8s 노드 상태가 Not Ready  |
-| clusters.health_status_reason.nodegroup.node_status.{WORKER_NODEGROUP_NAME} | Body | String | 특정 워커 노드 그룹의 k8s 노드 상태 정보의 통계. <br> "NORMAL": 해당 워커 노드 그룹의 모든 k8s 노드가 Ready 상태 <br> "STALED_DATA": 일정 시간동안 k8s 노드 상태 정보 업데이트가 되지 않아 정보의 유효성이 떨어짐 <br> "ROTTEN_DATA": 오랜 시간동안 k8s API 상태 정보 업데이트가 되지 않아 정보를 신뢰할 수 없음 <br> "NOT_READY_NODE_EXIST": 해당 워커 노드 그룹에 Not Ready 상태의 k8s 노드가 존재 <br> "ALL_NODES_NOT_READY": 해당 워커 노드 그룹의 모든 k8s 노드 상태가 Not Ready |
+| clusters.health_status_reason.cluster.api_status | Body | String | k8s API의 상태 정보의 통계. <br>* `NORMAL`: k8s API 상태가 정상 <br>* `STALED_DATA`: 일정 시간 동안 k8s API 상태 정보가 업데이트되지 않아 정보의 유효성이 떨어짐 <br>* `ROTTEN_DATA`: 오랜 시간 동안 k8s API 상태 정보가 업데이트되지 않아 정보를 신뢰할 수 없음 <br>* `K8S_API_NOT_WORKING`: k8s API 상태가 비정상 |
+| clusters.health_status_reason.api | Body | String | k8s API의 상태 정보. <br>* `OK`: k8s API 상태가 정상 <br>* `NOT_OK`: k8s API 상태가 비정상 |
+| clusters.health_status_reason.cluster.node_status | Body | String | 모든 워커 노드 그룹의 k8s 노드 상태 정보의 통계. <br>* `NORMAL`: 모든 k8s 노드가 Ready 상태 <br>* `STALED_DATA: 일정 시간 동안 k8s 노드 상태 정보가 업데이트되지 않아 정보의 유효성이 떨어짐 <br>* `ROTTEN_DATA`: 오랜 시간 동안 k8s API 상태 정보가 업데이트되지 않아 정보를 신뢰할 수 없음 <br>* `NOT_READY_NODE_EXIST`: 클러스터에 Not Ready 상태의 k8s 노드가 존재 <br>* `ALL_NODES_NOT_READY`: 클러스터의 모든 k8s 노드 상태가 Not Ready |
+| clusters.health_status_reason.nodegroup.node_status.{WORKER_NODEGROUP_NAME} | Body | String | 특정 워커 노드 그룹의 k8s 노드 상태 정보의 통계. <br>* `NORMAL`: 해당 워커 노드 그룹의 모든 k8s 노드가 Ready 상태 <br>* `STALED_DATA`: 일정 시간 동안 k8s 노드 상태 정보가 업데이트되지 않아 정보의 유효성이 떨어짐 <br>* `ROTTEN_DATA`: 오랜 시간 동안 k8s API 상태 정보가 업데이트되지 않아 정보를 신뢰할 수 없음 <br>* `NOT_READY_NODE_EXIST`: 해당 워커 노드 그룹에 Not Ready 상태의 k8s 노드가 존재 <br>* `ALL_NODES_NOT_READY`: 해당 워커 노드 그룹의 모든 k8s 노드 상태가 Not Ready |
 | clusters.health_status_reason.nodegroup-stats.{WORKER_NODEGROUP_NAME} | Body | String | 특정 워커 노드 그룹의 k8s 노드 상태 정보. {Ready Node의 수}:{Not Ready Node의 수}를 의미 |
 | clusters.labels | Body | Object | 클러스터 레이블 |
 | clusters.labels.kube_tag | Body |String | 컨트롤 플레인 Kubernetes 버전 |
@@ -1031,8 +1031,10 @@ X-Auth-Token: {tokenId}
 </details>
 
 ---
+
 ### 컨트롤 플레인 Kubernetes 컴포넌트 로그 저장
-NHN Kubernetes Service(NKS)의 컨트롤 플레인에서 실행 중인 주요 Kubernetes 컴포넌트들의 로그를 Log & Crash Search 또는 또는 Object Storage에 저장합니다.
+NHN Kubernetes Service(NKS)의 컨트롤 플레인에서 실행 중인 주요 Kubernetes 컴포넌트들의 로그를 Log & Crash Search 또는 Object Storage에 저장합니다.
+
 ```
 PATCH /v1/clusters/{CLUSTER_ID_OR_NAME}
 Accept: application/json
