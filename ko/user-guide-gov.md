@@ -1724,6 +1724,7 @@ Log & Crash Search로 로그 전달 시 설정되는 라벨 정보는 다음과 
 콘솔의 NKS 페이지에서 **NKS 시스템 계정 정보**를 클릭하면 NKS가 사용하는 테넌트 ID와 사용자 ID가 표시됩니다. 컨트롤 플레인 로그 저장소 타입을 OBS(Object Storage)로 설정한 경우, 이 NKS 시스템 계정에 해당 컨테이너에 대한 쓰기 권한이 반드시 부여되어야 합니다. 그렇지 않으면 NKS 시스템 계정은 사용자의 OBS에 데이터를 기록할 수 없습니다.
 
 설정 방법
+
 * NHN Cloud > Object Storage 콘솔로 접근합니다.
 * 컨트롤 플레인 로그를 저장할 컨테이너를 선택합니다.
 * 하단의 기본 정보 > 접근 정책 설정 변경을 클릭합니다.
@@ -1731,29 +1732,34 @@ Log & Crash Search로 로그 전달 시 설정되는 라벨 정보는 다음과 
 * 위에서 확인했던 NKS 시스템 계정 정보의 테넌트 ID와 사용자 ID를 입력하고 Write 권한을 부여합니다.
 
 > [주의]
-> 컨트롤 플레인 로그 전송 중 Object Storage의 컨테이너에서 Write 권한을 제거하면 로그 전송에 실패합니다.
+> 컨트롤 플레인 로그 전송 중 Object Storage의 컨테이너가 제거되거나 컨테이너에서 Write 권한을 제거하면 로그 전송에 실패합니다.
 
 <a id="control-plane-k8s-log-path"></a>
 ##### 컨트롤 플레인 로그 저장 경로
 컨트롤 플레인 로그 저장 경로는 OBS endpoint, AUTH tenant, Container, Path 정보를 바탕으로 아래 형태로 구성됩니다.
+
 * {OBS_https_endpoint}/{AUTH_OBS_TENANT}/{Container}/{Path}
 
 예를 들어, 설정값이 아래와 같은 경우
+
 * OBS https endpoint: https://kr1-api-object-storage.gov-nhncloudservice.com/v1
 * AUTH_OBS_TENANT: AUTH_e670167936434f85a03694184000ffe6
 * Container: nks_log_container
 * 희망하는 저장 경로:  example/my/folder
 
 실제 컨트롤 플레인 로그 저장 경로는 다음과 같습니다.
+
 * https://kr1-api-object-storage.gov-nhncloudservice.com/v1/AUTH_e670167936434f85a03694184000ffe6/nks_log_container/example/my/folder
 
 > [참고]
 > obs_api_url에 설정된 OBS endpoint, AUTH_tenant, Container 정보가 존재하지 않는 경우 설정 요청이 실패합니다.
 
-실제 로그는 위 URL 하위에 다음 구조로 저장됩니다:
+실제 로그는 위 URL 하위에 다음 구조로 저장됩니다.
+
 * ${사용자 설정 OBS 컨테이너 이름}/NKS/${클러스터 UUID}/${마스터 노드 이름}/${K8S 컴포넌트 이름}/${년도}/${월}/${년월일-시분초}-index${index_count}.gz
 
 예를 들어, 설정값이 아래와 같은 경우
+
 * Container: nks_log_container
 * 클러스터 UUID: f31dd18f-4dab-49fa-97bb-8feba31cb30b
 * 클러스터 이름: nks-test
@@ -1761,6 +1767,7 @@ Log & Crash Search로 로그 전달 시 설정되는 라벨 정보는 다음과 
 * 저장 시각: 2025-04-28 10:15:00
 
 OBS 컨테이너에 로그가 생성되는 경로는 다음과 같습니다.
+
 * nks_log_container/NKS/f31dd18f-4dab-49fa-97bb-8feba31cb30b/
   nks-test-master-0/kube-apiserver/2025/04/20250428-101500-index0.gz
 

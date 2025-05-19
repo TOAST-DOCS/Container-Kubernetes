@@ -1609,7 +1609,7 @@ Log & Crash Search로 로그 전달 시 설정되는 라벨 정보는 다음과 
 * 위에서 확인했던 NKS 시스템 계정 정보의 테넌트 ID와 사용자 ID를 입력하고 Write 권한을 부여합니다.
 
 > [주의]
-> 컨트롤 플레인 로그 전송 중 Object Storage의 컨테이너에서 Write 권한을 제거하면 로그 전송에 실패합니다.
+> 컨트롤 플레인 로그 전송 중 Object Storage의 컨테이너가 제거되거나 컨테이너에서 Write 권한을 제거하면 로그 전송에 실패합니다.
 
 <a id="control-plane-k8s-log-path"></a>
 ##### 컨트롤 플레인 로그 저장 경로
