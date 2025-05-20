@@ -102,7 +102,7 @@ X-Auth-Token: {tokenId}
 | clusters.health_status_reason.timestamp | Body | String | 클러스터 k8s API 및 k8s 노드 상태 정보의 갱신 시각(UTC) |
 | clusters.health_status_reason.cluster.api_status | Body | String | k8s API의 상태 정보의 통계. <br>* `NORMAL`: k8s API 상태가 정상 <br>* `STALED_DATA`: 일정 시간 동안 k8s API 상태 정보가 업데이트되지 않아 정보의 유효성이 떨어짐 <br>* `ROTTEN_DATA`: 오랜 시간 동안 k8s API 상태 정보가 업데이트되지 않아 정보를 신뢰할 수 없음 <br>* `K8S_API_NOT_WORKING`: k8s API 상태가 비정상 |
 | clusters.health_status_reason.api | Body | String | k8s API의 상태 정보. <br>* `OK`: k8s API 상태가 정상 <br>* `NOT_OK`: k8s API 상태가 비정상 |
-| clusters.health_status_reason.cluster.node_status | Body | String | 모든 워커 노드 그룹의 k8s 노드 상태 정보의 통계. <br>* `NORMAL`: 모든 k8s 노드가 Ready 상태 <br>* `STALED_DATA: 일정 시간 동안 k8s 노드 상태 정보가 업데이트되지 않아 정보의 유효성이 떨어짐 <br>* `ROTTEN_DATA`: 오랜 시간 동안 k8s API 상태 정보가 업데이트되지 않아 정보를 신뢰할 수 없음 <br>* `NOT_READY_NODE_EXIST`: 클러스터에 Not Ready 상태의 k8s 노드가 존재 <br>* `ALL_NODES_NOT_READY`: 클러스터의 모든 k8s 노드 상태가 Not Ready |
+| clusters.health_status_reason.cluster.node_status | Body | String | 모든 워커 노드 그룹의 k8s 노드 상태 정보의 통계. <br>* `NORMAL`: 모든 k8s 노드가 Ready 상태 <br>* `STALED_DATA`: 일정 시간 동안 k8s 노드 상태 정보가 업데이트되지 않아 정보의 유효성이 떨어짐 <br>* `ROTTEN_DATA`: 오랜 시간 동안 k8s API 상태 정보가 업데이트되지 않아 정보를 신뢰할 수 없음 <br>* `NOT_READY_NODE_EXIST`: 클러스터에 Not Ready 상태의 k8s 노드가 존재 <br>* `ALL_NODES_NOT_READY`: 클러스터의 모든 k8s 노드 상태가 Not Ready |
 | clusters.health_status_reason.nodegroup.node_status.{WORKER_NODEGROUP_NAME} | Body | String | 특정 워커 노드 그룹의 k8s 노드 상태 정보의 통계. <br>* `NORMAL`: 해당 워커 노드 그룹의 모든 k8s 노드가 Ready 상태 <br>* `STALED_DATA`: 일정 시간 동안 k8s 노드 상태 정보가 업데이트되지 않아 정보의 유효성이 떨어짐 <br>* `ROTTEN_DATA`: 오랜 시간 동안 k8s API 상태 정보가 업데이트되지 않아 정보를 신뢰할 수 없음 <br>* `NOT_READY_NODE_EXIST`: 해당 워커 노드 그룹에 Not Ready 상태의 k8s 노드가 존재 <br>* `ALL_NODES_NOT_READY`: 해당 워커 노드 그룹의 모든 k8s 노드 상태가 Not Ready |
 | clusters.health_status_reason.nodegroup-stats.{WORKER_NODEGROUP_NAME} | Body | String | 특정 워커 노드 그룹의 k8s 노드 상태 정보. {Ready Node의 수}:{Not Ready Node의 수}를 의미 |
 | clusters.labels | Body | Object | 클러스터 레이블 |
@@ -505,16 +505,16 @@ X-Auth-Token: {tokenId}
 | labels.external_network_id | Body | String | X | 인터넷 게이트웨이에 연결된 VPC 네트워크 UUID<br>VPC 서브넷이 연동된 라우터가 인터넷 게이트웨이에 연결된 경우 반드시 설정 |
 | labels.external_subnet_id_list | Body | String | X | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분)<br>VPC 서브넷이 연동된 라우터가 인터넷 게이트웨이에 연결된 경우 반드시 설정 |
 | labels.cert_manager_api | Body | String | O | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
-| labels.ca_enable | Body | String | O | 기본 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 기능 활성화 여부 ("True" / "False") |
-| labels.ca_pod_replicas | Body | String | X | 기본 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 파드 수 |
-| labels.ca_max_node_count | Body | String | X | 기본 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 최대 노드 수 |
-| labels.ca_min_node_count | Body | String | X | 기본 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 최소 노드 수 |
-| labels.ca_scale_down_enable | Body | String | X | 기본 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 감축 활성 여부 ("True" / "False") |
-| labels.ca_scale_down_unneeded_time | Body | String | X | 기본 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 임계 영역 유지 시간 |
-| labels.ca_scale_down_util_thresh | Body | String | X | 기본 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 리소스 사용량 임계치  |
-| labels.ca_scale_down_delay_after_add | Body | String | X | 기본 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 증설 후 감축 지연 시간 |
-| labels.mba_scale_out | Body | String | X | 기본 워커 노드 그룹 적용 : 지표 기반 오토 스케일러 증설 정책 설정 |
-| labels.mba_scale_in | Body | String | X | 기본 워커 노드 그룹 적용 : 지표 기반 오토 스케일러 감축 정책 설정 |
+| labels.ca_enable | Body | String | O | 기본 워커 노드 그룹 적용 : 클러스터 오토스케일러: 기능 활성화 여부 ("True" / "False") |
+| labels.ca_pod_replicas | Body | String | X | 기본 워커 노드 그룹 적용 : 클러스터 오토스케일러: 파드 수 |
+| labels.ca_max_node_count | Body | String | X | 기본 워커 노드 그룹 적용 : 클러스터 오토스케일러: 최대 노드 수 |
+| labels.ca_min_node_count | Body | String | X | 기본 워커 노드 그룹 적용 : 클러스터 오토스케일러: 최소 노드 수 |
+| labels.ca_scale_down_enable | Body | String | X | 기본 워커 노드 그룹 적용 : 클러스터 오토스케일러: 감축 활성 여부 ("True" / "False") |
+| labels.ca_scale_down_unneeded_time | Body | String | X | 기본 워커 노드 그룹 적용 : 클러스터 오토스케일러: 임계 영역 유지 시간 |
+| labels.ca_scale_down_util_thresh | Body | String | X | 기본 워커 노드 그룹 적용 : 클러스터 오토스케일러: 리소스 사용량 임계치  |
+| labels.ca_scale_down_delay_after_add | Body | String | X | 기본 워커 노드 그룹 적용 : 클러스터 오토스케일러: 증설 후 감축 지연 시간 |
+| labels.mba_scale_out | Body | String | X | 기본 워커 노드 그룹 적용 : 지표 기반 오토스케일러 증설 정책 설정 |
+| labels.mba_scale_in | Body | String | X | 기본 워커 노드 그룹 적용 : 지표 기반 오토스케일러 감축 정책 설정 |
 | labels.kube_tag | Body | String | O | Kubernetes 버전 |
 | labels.user_script | Body | String | X | 사용자 스크립트(old) |
 | labels.user_script_v2 | Body | String | X | 사용자 스크립트 |
@@ -1244,16 +1244,16 @@ X-Auth-Token: {tokenId}
 | labels.external_network_id | Body | String | 인터넷 게이트웨이에 연결된 VPC 네트워크 UUID |
 | labels.external_subnet_id_list | Body | String | 인터넷 게이트웨이에 연결된 서브넷 UUID 목록(콜론으로 구분) |
 | labels.cert_manager_api | Body | String | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
-| labels.ca_enable | Body | String | 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 기능 활성화 여부 ("True" / "False") |
-| labels.ca_pod_replicas | Body | String | 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 파드 수 |
-| labels.ca_max_node_count | Body | String | 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 최대 노드 수 |
-| labels.ca_min_node_count | Body | String | 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 최소 노드 수 |
-| labels.ca_scale_down_enable | Body | String | 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 감축 활성 여부 ("True" / "False") |
-| labels.ca_scale_down_unneeded_time | Body | String | 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 임계 영역 유지 시간 |
-| labels.ca_scale_down_util_thresh | Body | String | 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 리소스 사용량 임계치  |
-| labels.ca_scale_down_delay_after_add | Body | String | 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 증설 후 감축 지연 시간 |
-| labels.mba_scale_out | Body | String | 워커 노드 그룹 적용 : 지표 기반 오토 스케일러 증설 정책 설정 |
-| labels.mba_scale_in | Body | String | 워커 노드 그룹 적용 : 지표 기반 오토 스케일러 감축 정책 설정 |
+| labels.ca_enable | Body | String | 워커 노드 그룹 적용 : 클러스터 오토스케일러: 기능 활성화 여부 ("True" / "False") |
+| labels.ca_pod_replicas | Body | String | 워커 노드 그룹 적용 : 클러스터 오토스케일러: 파드 수 |
+| labels.ca_max_node_count | Body | String | 워커 노드 그룹 적용 : 클러스터 오토스케일러: 최대 노드 수 |
+| labels.ca_min_node_count | Body | String | 워커 노드 그룹 적용 : 클러스터 오토스케일러: 최소 노드 수 |
+| labels.ca_scale_down_enable | Body | String | 워커 노드 그룹 적용 : 클러스터 오토스케일러: 감축 활성 여부 ("True" / "False") |
+| labels.ca_scale_down_unneeded_time | Body | String | 워커 노드 그룹 적용 : 클러스터 오토스케일러: 임계 영역 유지 시간 |
+| labels.ca_scale_down_util_thresh | Body | String | 워커 노드 그룹 적용 : 클러스터 오토스케일러: 리소스 사용량 임계치  |
+| labels.ca_scale_down_delay_after_add | Body | String | 워커 노드 그룹 적용 : 클러스터 오토스케일러: 증설 후 감축 지연 시간 |
+| labels.mba_scale_out | Body | String | 워커 노드 그룹 적용 : 지표 기반 오토스케일러 증설 정책 설정 |
+| labels.mba_scale_in | Body | String | 워커 노드 그룹 적용 : 지표 기반 오토스케일러 감축 정책 설정 |
 | labels.kube_tag | Body | String | 워커 노드 그룹 Kubernetes 버전 |
 | labels.user_script | Body | String | 사용자 스크립트(old) |
 | labels.user_script_v2 | Body | String | 사용자 스크립트 |
@@ -1375,16 +1375,16 @@ X-Auth-Token: {tokenId}
 | labels.boot_volume_size | Body | String | O | 기본 워커 노드 그룹 적용 : 블록 스토리지 사이즈(GB) |
 | labels.boot_volume_key_id | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 블록 스토리지에 적용할 대칭키 ID |
 | labels.boot_volume_appkey | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 블록 스토리지에 적용할 대칭키의 앱키 |
-| labels.ca_enable | Body | String | O | 기본 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 기능 활성화 여부 ("True" / "False") |
-| labels.ca_pod_replicas | Body | String | X | 기본 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 파드 수 |
-| labels.ca_max_node_count | Body | String | X | 기본 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 최대 노드 수 |
-| labels.ca_min_node_count | Body | String | X | 기본 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 최소 노드 수 |
-| labels.ca_scale_down_enable | Body | String | X | 기본 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 감축 활성 여부 ("True" / "False") |
-| labels.ca_scale_down_unneeded_time | Body | String | X | 기본 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 임계 영역 유지 시간 |
-| labels.ca_scale_down_util_thresh | Body | String | X | 기본 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 리소스 사용량 임계치  |
-| labels.ca_scale_down_delay_after_add | Body | String | X | 기본 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 증설 후 감축 지연 시간 |
-| labels.mba_scale_out | Body | String | X | 기본 워커 노드 그룹 적용 : 지표 기반 오토 스케일러 증설 정책 설정 |
-| labels.mba_scale_in | Body | String | X | 기본 워커 노드 그룹 적용 : 지표 기반 오토 스케일러 감축 정책 설정 |
+| labels.ca_enable | Body | String | O | 기본 워커 노드 그룹 적용 : 클러스터 오토스케일러: 기능 활성화 여부 ("True" / "False") |
+| labels.ca_pod_replicas | Body | String | X | 기본 워커 노드 그룹 적용 : 클러스터 오토스케일러: 파드 수 |
+| labels.ca_max_node_count | Body | String | X | 기본 워커 노드 그룹 적용 : 클러스터 오토스케일러: 최대 노드 수 |
+| labels.ca_min_node_count | Body | String | X | 기본 워커 노드 그룹 적용 : 클러스터 오토스케일러: 최소 노드 수 |
+| labels.ca_scale_down_enable | Body | String | X | 기본 워커 노드 그룹 적용 : 클러스터 오토스케일러: 감축 활성 여부 ("True" / "False") |
+| labels.ca_scale_down_unneeded_time | Body | String | X | 기본 워커 노드 그룹 적용 : 클러스터 오토스케일러: 임계 영역 유지 시간 |
+| labels.ca_scale_down_util_thresh | Body | String | X | 기본 워커 노드 그룹 적용 : 클러스터 오토스케일러: 리소스 사용량 임계치  |
+| labels.ca_scale_down_delay_after_add | Body | String | X | 기본 워커 노드 그룹 적용 : 클러스터 오토스케일러: 증설 후 감축 지연 시간 |
+| labels.mba_scale_out | Body | String | X | 기본 워커 노드 그룹 적용 : 지표 기반 오토스케일러 증설 정책 설정 |
+| labels.mba_scale_in | Body | String | X | 기본 워커 노드 그룹 적용 : 지표 기반 오토스케일러 감축 정책 설정 |
 | labels.user_script | Body | String | X | 사용자 스크립트(old) |
 | labels.user_script_v2 | Body | String | X | 사용자 스크립트 |
 | labels.additional_network_id_list | Body | String | X | 워커 노드 그룹 적용: 추가 네트워크의 VPC 네트워크 UUID 목록(콜론으로 구분) |
@@ -1439,16 +1439,16 @@ X-Auth-Token: {tokenId}
 | labels.availability_zone | Body | String | 기본 워커 노드 그룹 적용 : 가용성 영역 |
 | labels.boot_volume_type | Body | String | 기본 워커 노드 그룹 적용 : 블록 스토리지 종류|
 | labels.boot_volume_size | Body | String | 기본 워커 노드 그룹 적용 : 블록 스토리지 사이즈(GB) |
-| labels.ca_enable | Body | String | 기본 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 기능 활성화 여부 ("True" / "False") |
-| labels.ca_pod_replicas | Body | String | 기본 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 파드 수 |
-| labels.ca_max_node_count | Body | String | 기본 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 최대 노드 수 |
-| labels.ca_min_node_count | Body | String | 기본 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 최소 노드 수 |
-| labels.ca_scale_down_enable | Body | String | 기본 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 감축 활성 여부 ("True" / "False") |
-| labels.ca_scale_down_unneeded_time | Body | String | 기본 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 임계 영역 유지 시간 |
-| labels.ca_scale_down_util_thresh | Body | String | 기본 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 리소스 사용량 임계치  |
-| labels.ca_scale_down_delay_after_add | Body | String | 기본 워커 노드 그룹 적용 : 클러스터 오토 스케일러: 증설 후 감축 지연 시간 |
-| labels.mba_scale_out | Body | String | 기본 노드 그룹 적용 : 지표 기반 오토 스케일러 증설 정책 설정 |
-| labels.mba_scale_in | Body | String | 기본 노드 그룹 적용 : 지표 기반 오토 스케일러 감축 정책 설정 |
+| labels.ca_enable | Body | String | 기본 워커 노드 그룹 적용 : 클러스터 오토스케일러: 기능 활성화 여부 ("True" / "False") |
+| labels.ca_pod_replicas | Body | String | 기본 워커 노드 그룹 적용 : 클러스터 오토스케일러: 파드 수 |
+| labels.ca_max_node_count | Body | String | 기본 워커 노드 그룹 적용 : 클러스터 오토스케일러: 최대 노드 수 |
+| labels.ca_min_node_count | Body | String | 기본 워커 노드 그룹 적용 : 클러스터 오토스케일러: 최소 노드 수 |
+| labels.ca_scale_down_enable | Body | String | 기본 워커 노드 그룹 적용 : 클러스터 오토스케일러: 감축 활성 여부 ("True" / "False") |
+| labels.ca_scale_down_unneeded_time | Body | String | 기본 워커 노드 그룹 적용 : 클러스터 오토스케일러: 임계 영역 유지 시간 |
+| labels.ca_scale_down_util_thresh | Body | String | 기본 워커 노드 그룹 적용 : 클러스터 오토스케일러: 리소스 사용량 임계치  |
+| labels.ca_scale_down_delay_after_add | Body | String | 기본 워커 노드 그룹 적용 : 클러스터 오토스케일러: 증설 후 감축 지연 시간 |
+| labels.mba_scale_out | Body | String | 기본 노드 그룹 적용 : 지표 기반 오토스케일러 증설 정책 설정 |
+| labels.mba_scale_in | Body | String | 기본 노드 그룹 적용 : 지표 기반 오토스케일러 감축 정책 설정 |
 | labels.user_script | Body | String | 사용자 스크립트(old) |
 | labels.user_script_v2 | Body | String | 사용자 스크립트 |
 | labels.additional_network_id_list | Body | String | 워커 노드 그룹 적용: 추가 네트워크의 VPC 네트워크 UUID 목록(콜론으로 구분) |
@@ -1641,9 +1641,9 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 노드 그룹의 클러스터 오토 스케일러 설정 보기
+### 노드 그룹의 클러스터 오토스케일러 설정 보기
 
-노드 그룹의 클러스터 오토 스케일러 설정을 조회합니다.
+노드 그룹의 클러스터 오토스케일러 설정을 조회합니다.
 
 ```
 GET /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}/autoscale
@@ -1699,9 +1699,9 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 노드 그룹의 클러스터 오토 스케일러 설정 변경하기
+### 노드 그룹의 클러스터 오토스케일러 설정 변경하기
 
-노드 그룹의 클러스터 오토 스케일러 설정을 변경합니다.
+노드 그룹의 클러스터 오토스케일러 설정을 변경합니다.
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}/autoscale
@@ -1768,9 +1768,9 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 노드 그룹의 지표 기반 오토 스케일러 설정 변경하기
+### 노드 그룹의 지표 기반 오토스케일러 설정 변경하기
 
-노드 그룹의 지표 기반 오토 스케일러 설정을 변경합니다.
+노드 그룹의 지표 기반 오토스케일러 설정을 변경합니다.
 
 ```
 PATCH /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}
@@ -2722,8 +2722,8 @@ X-Auth-Token: {tokenId}
         "NODEGROUP_UPDATE_FLAVOR": "인스턴스 타입 변경",
         "NODEGROUP_UPGRADE": "노드 그룹 업그레이드",
         "NODEGROUP_USERSCRIPT_UPDATE": "유저 스크립트 변경",
-        "NODEGROUP_SET_CLUSTER_AUTOSCALER": "클러스터 오토 스케일러 설정 변경",
-        "NODEGROUP_SET_METRIC_BASE_AUTOSCALER": "지표 기반 오토 스케일러 설정 변경",
+        "NODEGROUP_SET_CLUSTER_AUTOSCALER": "클러스터 오토스케일러 설정 변경",
+        "NODEGROUP_SET_METRIC_BASE_AUTOSCALER": "지표 기반 오토스케일러 설정 변경",
         "NODEGROUP_METRIC_BASE_AUTOSCALER_SCALE_OUT": "임계치 기반 오토스케일을 통한 노드 증설",
         "NODEGROUP_METRIC_BASE_AUTOSCALER_SCALE_IN": "임계치 기반 오토스케일을 통한 노드 감축",
         "CLUSTER_API_EP_IPACL_UPDATE": "클러스터 API 엔드포인트 IP 접근 제어 변경",
