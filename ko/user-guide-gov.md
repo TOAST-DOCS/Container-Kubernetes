@@ -300,6 +300,7 @@ k8s Node 상태의 아이콘별 의미는 다음과 같습니다.
 * 해당 노드를 인스턴스 수준에서 SHUTDOWN 상태로 만듭니다.
 
 중지 상태의 노드를 시작하면 다음의 순서로 동작합니다.
+
 * 해당 노드를 인스턴스 수준에서 ACTIVE 상태로 만듭니다.
 * 해당 노드가 Kubernetes 노드 자원에 다시 추가됩니다.
 
@@ -445,10 +446,12 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 <a id="autoscaler"></a>
 ### 오토스케일러
 오토스케일러는 노드 그룹의 가용 리소스가 부족하거나 노드의 사용률이 일정 수준 이하로 유지되는 경우 노드의 수를 자동으로 조정하는 기능입니다. 이 기능은 노드 그룹별로 설정할 수 있고, 서로 독립적으로 동작합니다. NKS에서는 두 가지 방식의 오토스케일러를 지원합니다.
+
 * 지표 기반 오토스케일러
 * 클러스터 오토스케일러
 
 오토스케일러 기능은 노드 그룹별로 설정하고 동작합니다. 기능은 아래 경로로 설정할 수 있습니다.
+
 * 클러스터 생성 시 기본 노드 그룹에 설정
 * 노드 그룹 추가 시 추가 노드 그룹에 설정
 * 생성되어 있는 노드 그룹에 설정
@@ -1685,6 +1688,7 @@ NHN Kubernetes Service(NKS)는 컨트롤 플레인에서 실행 중인 주요 Ku
 <a id="control-plane-k8s-log-lncs-labels"></a>
 ##### Log & Crash Search 라벨 정보
 Log & Crash Search로 로그 전달 시 설정되는 라벨 정보는 다음과 같습니다.
+
 | 라벨 | 설명 
 | --- | --- |
 | logType | "log" 고정값 |
@@ -1724,6 +1728,7 @@ Log & Crash Search로 로그 전달 시 설정되는 라벨 정보는 다음과 
 콘솔의 NKS 페이지에서 **NKS 시스템 계정 정보**를 클릭하면 NKS가 사용하는 테넌트 ID와 사용자 ID가 표시됩니다. 컨트롤 플레인 로그 저장소 타입을 OBS(Object Storage)로 설정한 경우, 이 NKS 시스템 계정에 해당 컨테이너에 대한 쓰기 권한이 반드시 부여되어야 합니다. 그렇지 않으면 NKS 시스템 계정은 사용자의 OBS에 데이터를 기록할 수 없습니다.
 
 설정 방법
+
 * NHN Cloud > Object Storage 콘솔로 접근합니다.
 * 컨트롤 플레인 로그를 저장할 컨테이너를 선택합니다.
 * 하단의 기본 정보 > 접근 정책 설정 변경을 클릭합니다.
@@ -1731,29 +1736,34 @@ Log & Crash Search로 로그 전달 시 설정되는 라벨 정보는 다음과 
 * 위에서 확인했던 NKS 시스템 계정 정보의 테넌트 ID와 사용자 ID를 입력하고 Write 권한을 부여합니다.
 
 > [주의]
-> 컨트롤 플레인 로그 전송 중 Object Storage의 컨테이너에서 Write 권한을 제거하면 로그 전송에 실패합니다.
+> 컨트롤 플레인 로그 전송 중 Object Storage의 컨테이너가 제거되거나 컨테이너에서 Write 권한을 제거하면 로그 전송에 실패합니다.
 
 <a id="control-plane-k8s-log-path"></a>
 ##### 컨트롤 플레인 로그 저장 경로
 컨트롤 플레인 로그 저장 경로는 OBS endpoint, AUTH tenant, Container, Path 정보를 바탕으로 아래 형태로 구성됩니다.
+
 * {OBS_https_endpoint}/{AUTH_OBS_TENANT}/{Container}/{Path}
 
 예를 들어, 설정값이 아래와 같은 경우
+
 * OBS https endpoint: https://kr1-api-object-storage.gov-nhncloudservice.com/v1
 * AUTH_OBS_TENANT: AUTH_e670167936434f85a03694184000ffe6
 * Container: nks_log_container
 * 희망하는 저장 경로:  example/my/folder
 
 실제 컨트롤 플레인 로그 저장 경로는 다음과 같습니다.
+
 * https://kr1-api-object-storage.gov-nhncloudservice.com/v1/AUTH_e670167936434f85a03694184000ffe6/nks_log_container/example/my/folder
 
 > [참고]
 > obs_api_url에 설정된 OBS endpoint, AUTH_tenant, Container 정보가 존재하지 않는 경우 설정 요청이 실패합니다.
 
-실제 로그는 위 URL 하위에 다음 구조로 저장됩니다:
+실제 로그는 위 URL 하위에 다음 구조로 저장됩니다.
+
 * ${사용자 설정 OBS 컨테이너 이름}/NKS/${클러스터 UUID}/${마스터 노드 이름}/${K8S 컴포넌트 이름}/${년도}/${월}/${년월일-시분초}-index${index_count}.gz
 
 예를 들어, 설정값이 아래와 같은 경우
+
 * Container: nks_log_container
 * 클러스터 UUID: f31dd18f-4dab-49fa-97bb-8feba31cb30b
 * 클러스터 이름: nks-test
@@ -1761,6 +1771,7 @@ Log & Crash Search로 로그 전달 시 설정되는 라벨 정보는 다음과 
 * 저장 시각: 2025-04-28 10:15:00
 
 OBS 컨테이너에 로그가 생성되는 경로는 다음과 같습니다.
+
 * nks_log_container/NKS/f31dd18f-4dab-49fa-97bb-8feba31cb30b/
   nks-test-master-0/kube-apiserver/2025/04/20250428-101500-index0.gz
 
@@ -2311,6 +2322,7 @@ Kubernetes의 서비스 객체를 정의할 때 로드 밸런서의 여러 가�
 
 #### 전역 설정과 리스너별 설정
 설정 항목별로 전역 설정과 리스너별 설정이 가능합니다. 전역 설정과 리스너별 설정 모두 없는 경우 설정별 기본값을 사용합니다.
+
 * 리스너별 설정: 대상 리스너에만 적용되는 설정입니다.
 * 전역 설정: 대상 리스너에 리스너별 설정이 없는 경우 이 설정을 적용합니다.
 
@@ -2675,6 +2687,7 @@ metadata:
 ```
 
 인증서 정보와 개인 키 정보를 manifest에 등록하는 대신 Certificate Manager에 등록된 인증서를 이용해 TERMINATED_HTTPS 타입의 리스너를 생성할 수 있습니다.
+
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/listener-terminated-https-cert-manager-name입니다.
 * 설정값은 Certificate Manager에 등록한 인증서의 이름입니다.
 * 리스너별 설정을 적용할 수 있습니다.
@@ -3838,7 +3851,8 @@ ORAS(OCI Registry As Storage)는 OCI 레지스트리에서 OCI 아티팩트를 p
 > csi-driver-nfs 컨테이너 이미지 및 아티팩트는 NHN Cloud NCR에서 관리되고 있습니다. 폐쇄망 환경에 구성된 클러스터는 인터넷에 연결되어 있지 않기 때문에 이미지 및 아티팩트를 정상적으로 받아 오기 위해서는 Private URI를 사용하기 위한 환경 구성이 필요합니다. Private URI 사용법에 대한 자세한 내용은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/user-guide-gov/#private-uri)를 참고하세요.
 
 ##### 3. 설치 패키지를 압축 해제한 후 **./install-driver.sh {REGISTRY} {INTERNET_USAGE}** 명령어를 사용하여 csi-driver-nfs 구성 요소를 설치합니다.
-클러스터가 생성된 리전 및 인터넷 연결 가능 여부에 따라 올바른 {REGISTRY} 및 {INTERNET_USAGE} 값을 입력합니다. 
+클러스터가 생성된 리전 및 인터넷 연결 가능 여부에 따라 올바른 {REGISTRY} 및 {INTERNET_USAGE} 값을 입력합니다.
+
 * {REGISTRY}
   * 한국(판교) 리전: **af80e8b3-kr-registry.container.gov-nhncloud.com**
 * {INTERNET_USAGE}
@@ -4098,6 +4112,7 @@ Filesystem                                                                 Size 
 StorageClass 및 PVC 매니페스트 작성 시 NAS 정보를 입력해 자동으로 생성된 NAS 스토리지를 PV로 사용할 수 있습니다.
 
 StorageClass 매니페스트에 스토리지 제공자 정보 및 생성할 NAS 스토리지의 스냅숏 정책, 접근 제어 목록(ACL), 서브넷 정보를 정의합니다.
+
 * provisioner: **nfs.csi.k8s.io**를 입력합니다.
 * parameters: 입력 항목은 아래 표를 참고하세요. 파라미터 값에 다중 값을 정의하는 경우 **,**를 이용하여 값을 구분합니다.
 
