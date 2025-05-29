@@ -45,7 +45,7 @@ NHN Kubernetes Service(NKS)を使用するには、まずクラスターを作�
 > [注意]クラスタを使用するための権限設定<br>
 >クラスターを作成したいユーザーは、対象プロジェクトに対して必ず基本インフラサービスの**Infrastructure ADMIN**または **Infrastructure LoadBalancer ADMIN**または **Infrastructure NKS ADMIN**権限を持っている必要があります。
 > 当該権限がある場合にのみ、基本インフラサービスをベースとするクラスタを正常に作成し、活用できます。これらのいずれかの権限を持つ状態で他の権限が追加されることは使用に問題がありません。
-> 権限設定については[プロジェクトメンバー管理](/TOAST/ko/console-guide/#_22)をご覧ください。
+> 権限設定については[プロジェクトメンバー管理](/nhncloud/en/console-user-guide/#_3)をご覧ください。
 
 **Container > NHN Kubernetes Service(NKS)** ページで**クラスタ作成**をクリックすると、クラスタ作成ページが表示されます。クラスタの作成に必要な項目は次のとおりです。
 
