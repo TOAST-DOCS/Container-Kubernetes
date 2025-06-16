@@ -9,7 +9,7 @@ To use NHN Kubernetes Service (NKS), you must create clusters first.
 > [Caution] Setting up permissions to use clusters<br>
 > To create a cluster, the user must have **Infrastructure ADMIN** or **Infrastructure LoadBalancer ADMIN** permissions of basic infrastructure services for the project.
 Only with the permissions, the user can normally create and operate clusters running on basic infrastructure services. It is totally possible to add one of the two permissions when the other is already acquired.
-To learn more about setting up permissions, see [Manage Project Members](/TOAST/ko/console-guide/#_22).
+To learn more about setting up permissions, see [Manage Project Members](/nhncloud/en/console-user-guide/#_3).
 If there is some change to the permissions (permissions added or deleted) that were set up when creating a cluster, some features of the cluster may be restricted.
 For more information, see [Change Cluster OWNER](./user-guide/#_4).
 

@@ -1,8 +1,10 @@
 ## Container > NHN Kubernetes Service (NKS) > User Guide
 
+<a id="cluster-headings"></a>
 ## Cluster
 Cluster refers to a group of instances that comprise user's Kubernetes.
 
+<a id="kubernetes-version-support"></a>
 ### Kubernetes Version Support Policy
 
 NKS's Kubernetes version support policy is as follows.
@@ -36,13 +38,14 @@ For each Kubernetes version, here's when you can expect to see additions/deletio
 | v1.31.4 | 2025. 02.           | 2026. 05.(Scheduled)      | 2026. 08.(Scheduled)       |
 | v1.32.x | 2025. 05.(Scheduled)     | 2026. 08.(Scheduled)      | 2027. 02.(Scheduled)       |
 
+<a id="cluster-create"></a>
 ### Creating Clusters
 To use NHN Kubernetes Service (NKS), you must create clusters first.
 
 > [Caution] Setting up permissions to use clusters<br>
 > To create a cluster, the user must have **Infrastructure ADMIN**, **Infrastructure LoadBalancer ADMIN**, or **Infrastructure NKS ADMIN** permissions of basic infrastructure services for the project.
 Only with the permissions, the user can normally create and operate clusters running on basic infrastructure services. It is totally possible to add one of the two permissions when the other is already acquired.
-To learn more about setting up permissions, see [Manage Project Members](/TOAST/en/console-guide/#_22).
+To learn more about setting up permissions, see [Manage Project Members](/nhncloud/en/console-user-guide/#_3).
 
 Go to **Container > NHN Kubernetes Service(NKS)** and click **Create Cluster** and a page for creating clusters shows up. The following items are required to create a cluster.
 
@@ -109,7 +112,7 @@ Example:
 >  - Pod network = 10.100.0.0/16
 >  - Calculate: 254 (maximum number of IPs that can be assigned to a Pod for each node) * 253 (maximum number of nodes that can be created) = 64,262 IPs available at most
 
-
+<a id="cluster-show"></a>
 ### Querying Clusters
 A newly created cluster can be found in the **Container > NHN Kubernetes Service (NKS)** page. Select a cluster and the information is displayed at the bottom.
 
@@ -165,9 +168,11 @@ When you select a cluster, cluster information appears at the bottom.
 | API Endpoint | URI of API endpoint to access cluster for operation |
 | Configuration File | Download button of configuration file required to access cluster for operation |
 
+<a id="cluster-delete"></a>
 ### Deleting Clusters
 Select a cluster to delete, and click **Delete Clusters** and it is deleted. It takes about 5 minutes to delete. More time may be required depending on the cluster status.
 
+<a id="change-keypair"></a>
 ### Change Cluster Key Pair
 
 Change the key pair of all worker nodes in the cluster. To set the key pair, select one of the key pairs of the logged-in user. When you change the key pair, the following applies
@@ -182,9 +187,11 @@ A cluster with key pairing operates with the permissions of a service user. A se
 > * Clusters that are set up with a regular user as the owner can be changed to act as a service user through the Change key pair feature.
 > * The Change cluster owner feature is no longer available. If you want the cluster to act as a service user, use the Change key pair feature.
 
+<a id="nodegroup-headings"></a>
 ## Node Group
 A node group is comprised of worker node instances that comprise a Kubernetes.
 
+<a id="nodegroup-show"></a>
 ### Querying Node Groups
 Click a cluster name on the list to find the list of node groups. Select a node group and the brief information shows at the bottom.
 
@@ -236,6 +243,7 @@ On the **Basic Information** tab, you can check the following:
 * List of Nodes
 Find the list of instances comprising a node group from the **List of Nodes** tab.
 
+<a id="nodegroup-create"></a>
 ### Creating Node Groups
 Along with a new cluster, a default node group is created, but more node groups can be created depending on the needs. If higher specifications are required to run a container, or more worker node instances are required to scale out, node groups may be additionally created. Click **Create Node Groups** from the page of node group list, and the page of creating a node group shows up. The following items are required to create a node group:
 
@@ -255,15 +263,18 @@ Enter information as required and click **Create Node Groups**, and a node group
 >[Caution]
 Only the user who created the cluster can create node groups.
 
+<a id="nodegroup-delete"></a>
 ### Deleting Node Groups
 Select a node group to delete from the list of node groups, and click **Delete Node Groups** and it is deleted. It takes about 5 minutes to delete a node group; more time may be required depending on the node group status.
 
+<a id="nodegroup-scale-out"></a>
 ### Adding node to node group
 Nodes can be added to operating node groups. The current list of nodes will appear upon clicking the node list tab on the node group information query page. Nodes can be added by selecting the Add Node button and entering the number of nodes you want.
 
 >[Caution]
 Nodes cannot be manually added to node groups on which autoscaler is enabled.
 
+<a id="nodegroup-scale-in"></a>
 ### Deleting node from node group
 Nodes can be deleted from operating node groups. The current list of nodes will appear upon clicking the node list tab on the node group information query page. A confirmation dialog box will appear when a user selects nodes for deletion and clicks the Delete Node button. When the user confirms the node name and selects the OK button, the node will be deleted.
 
@@ -276,6 +287,7 @@ Nodes cannot be manually deleted from node groups on which autoscaler is enabled
 * [Safe node drain](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)
 * [Manual node management](https://kubernetes.io/docs/concepts/architecture/nodes/#manual-node-administration)
 
+<a id="node-start-stop"></a>
 ### Stop and start node
 Nodes can be stopped from node groups and started again. The current list of nodes will appear upon clicking the node list tab on the node group information query page. Nodes can be stopped when a user selects nodes and click the stop button. The stopped nodes can be restarted when the user select them and click the start button.
 
@@ -311,7 +323,7 @@ The status icon is displayed according to the node status on the node list tab. 
 * Gray: A node in the stop status
 * Red: A node in the abnormal status
 
-
+<a id="use-gpu-nodegroup"></a>
 ### Using a GPU node group 
 When you need to run GPU-based workloads through Kubernetes, you can create a node group composed of GPU instances.
 Select the `g2` type when selecting a flavor while creating the clusters or node groups to create a GPU node group.
@@ -430,7 +442,7 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 > [Note]
 To prevent workloads that do not require GPU from being allocated to GPU nodes, see [Taints and Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/).
 
-
+<a id="autoscaler"></a>
 ### Autoscaler
 Autoscaler is a feature that automatically adjusts the number of nodes when a node group does not have enough resources available to schedule pods or when the node's utilization remains below a certain level. Autoscaler can be set for each node group and operates independently of each other. This feature is based on the cluster-autoscaler feature, an officially supported feature of the Kubernetes project. For more information, refer to [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler).
 
@@ -906,7 +918,7 @@ NAME                                            STATUS   ROLES    AGE   VERSION
 autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
 ```
 
-
+<a id="user-script-old"></a>
 ### User Script (old)
 You can register a user script when creating clusters and additional node groups. A user script has the following features.
 
@@ -926,6 +938,7 @@ You can register a user script when creating clusters and additional node groups
         * Script exit code: `/var/log/userscript.exitcode`
         * Standard output and standard error streams of script: `/var/log/userscript.output`
 
+<a id="user-script"></a>
 ### User Script
 The features of a new version of user script are included in the node groups created after July 26, 2022. The following features are found in the new version.
 
@@ -945,6 +958,7 @@ The features of a new version of user script are included in the node groups cre
         1. The old version of a user script
         2. The new version of a user script
 
+<a id="instance-flavor-update"></a>
 ### Change Instance Flavor
 Change the instance flavor of a worker node group. The instance flavors of all worker nodes in a worker node group are changed.
 
@@ -1030,7 +1044,7 @@ To use a custom image as a worker node image, perform the following process in t
 
 ![nkscustom_image_3.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nkscustom_image_3.png)
 
-
+<a id="extra-volumes"></a>
 ### Additional Block Storage
 You can use additional block storage for node groups. You can specify and create additional block storage when creating clusters and node groups, or you can create and use additional block storage in an existing node group. Additional block storage has the following characteristics
 
@@ -1048,6 +1062,7 @@ You can use additional block storage for node groups. You can specify and create
 [Caution]
 > Changing the settings for additional block storage might affect the services you are using because it involves unmounting existing volumes.
 
+<a id="extra-security-groups"></a>
 ### Additional Security Groups
 You can set additional security groups on node groups. You can specify and create additional security groups when you create clusters and node groups, or you can set additional security groups on existing node groups. Additional security groups have the following characteristics
 
@@ -1063,9 +1078,11 @@ You can set additional security groups on node groups. You can specify and creat
 > When you set an additional security group on a node group, any security groups assigned to existing instances that are not defined in the additional security group are removed.
 Changing additional security groups changes network settings, so communication might be temporarily affected while the settings take effect.
 
+<a id="cluster-management"></a>
 ## Cluster Management
 To run and manage clusters from a remote host, `kubectl` is required, which is the command-line tool (CLI) provided by Kubernetes.
 
+<a id="kubectl-install"></a>
 ### Installing kubectl
 You can use kubectl by downloading an executable file without any special installation process. The download path for each operating system is as follows.
 
@@ -1101,6 +1118,7 @@ $ sudo mv kubectl /usr/local/bin/
 $ export PATH=$PATH:$(pwd)
 ```
 
+<a id="kubectl-set-kubeconfig"></a>
 ### Configuration
 To access Kubernetes cluster with kubectl, cluster configuration file (kubeconfig) is required. On the NHN Cloud web console, open the **Container > NHN Kubernetes Service (NKS)** page and select a cluster to access. From **Basic Information**, click **Download** of **Configuration Files** to download a configuration file. Move the downloaded configuration file to a location of your choice to serve it as a reference for kubectl execution.
 
@@ -1115,6 +1133,7 @@ $ export KUBECONFIG={Path of cluster configuration file}
 
 You may copy cluster configuration file path to `$HOME/.kube/config`, which is the default configuration file of kubectl, if you don't want to save it to an environment variable. However, when there are many clusters, it is easier to change environment variables.
 
+<a id="kubectl-check-connection"></a>
 ### Confirming Connection
 See if it is well set by the `kubectl version` command. If there's no problem, `Server Version` is printed.
 
@@ -1127,6 +1146,7 @@ Server Version: version.Info{Major:"1", Minor:"15", GitVersion:"v1.15.7", GitCom
 * Client Version: Version information of executed kubectl file
 * Server Version: Kubernetes version information comprising a cluster
 
+<a id="certificatesigningrequest"></a>
 ### CSR (CertificateSigningRequest)
 Using Certificate API of Kubernetes, you can request and issue the X.509 certificate for a Kubernetes API client . CSR resource lets you request certificate and decide to accept/reject the request. For more information, see the [Certificate Signing Requests](https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/) document.
 
@@ -1229,6 +1249,7 @@ status:
 > * Pangyo region: Cluster created on December 29, 2020 or later
 > * Pyeongchon region: Cluster created on December 24, 2020 or later
 
+<a id="admission-controller"></a>
 ### Admission Controller plugin
 The admission controller can intercept a Kubernetes API server request and change objects or deny the request. See [Admission Controller]( https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/) for more information about the admission controller. For usage examples of the admission controller, see [Admission Controller Guide](https://kubernetes.io/blog/2019/03/21/a-guide-to-kubernetes-admission-controllers/).
 
@@ -1471,7 +1492,7 @@ The following can happen in this process.
 > 2. For normal communication between Flannel CIDR and Calico-VXLAN CIDR during the CNI change process, CNI change pod network value should not be the same as the existing Flannel CIDR value.
 > 3. Pause containers of the previously distributed pod are all stopped and then regenerated by kubelet. The settings, such as the pod name and local storage space, remain unchanged, but the IP is changed to the IP of Calico-VXLAN CIDR.
 
-<a id="api_endpoint_ipacl"></a>
+<a id="api-endpoint-ipacl"></a>
 ### Enforce IP Access Control to Cluster API Endpoints
 You can enforce or disable IP access control to cluster API endpoints.
 For more information about the IP access control feature, see [IP Access Control](/Network/Load%20Balancer/ko/overview/#ip).
@@ -1485,7 +1506,7 @@ When you add a Cluster API endpoint to IP access control targets, the rules belo
 * The maximum number of IP access control targets you can set is 100.
 * At least one IP access control target must exist.
 
-
+<a id="rotate-certificate"></a>
 ### Renew Cluster Certificate
 Kubernetes requires a PKI certificate for TLS authentication between components. For more information about PKI certificates, see [PKI Certificates and Requirements](https://kubernetes.io/docs/setup/best-practices/certificates/). When you create an NKS cluster, Kubernetes automatically generates the required certificate for the cluster, which has a default validity of 5 years.
 
@@ -1519,6 +1540,7 @@ Here's how to use the certificate renewal feature
 > As a result, the state of nodes in your cluster may temporarily change to Not Ready, or some components of your cluster may not function normally while certificate renewal is in progress.
 > To minimize the impact of these operations, you should avoid performing tasks such as creating new Pods while certificate renewal is in progress.
 
+<a id="k8s-component"></a>
 ### Set Kubernetes Component
 
 You can set a number of options for Kubernetes components. You can set these options at cluster creation time, and you can also change them after cluster creation is complete. This applies to the following components and options.
@@ -1537,7 +1559,8 @@ For more information on each item, see the [Kubernetes official documents](https
 > * If you change the settings of a component running in the control plane, the component in the control plane will restart.
 > * If you change the settings of a component running on a worker node, the component on the worker node will restart.
 
-## OIDC Authentication Settings Feature
+<a id="oidc-auth"></a>
+### OIDC Authentication Settings Feature
 
 OpenID Connect (OIDC) is an interoperable authentication protocol based on the OAuth 2.0 framework. With OIDC, you can authenticate users with external authentication services. To learn more about how OIDC works, see [What is OpenID Connect](https://openid.net/developers/how-connect-works/).
 
@@ -1555,8 +1578,10 @@ The NKS cluster can be set up to handle authentication using OIDC. The configura
 | CA File | X | The certificate file of the CA that signed the OIDC provider's web certificate. |
 | Signing Algs| X | List of allowed JOSE asymmetric signature algorithms. Default: 'RS256' |
 
+<a id="worker-node-management"></a>
 ## Manage Worker Node
 
+<a id="container-management"></a>
 ### Manage Container
 
 #### Clusters of Kubernetes v1.24.3 or older
@@ -1566,7 +1591,7 @@ Clusters of Kubernetes v1.24.3 or older use Docker to comprise the container run
 
 Clusters of Kubernetes v1.24.3 or later use containerd to comprise the container runtime. In the worker node, you can use nerdctl instead of the docker CLI to view the container status and the container image. For more details and usage on nerdctl, see [nerdctl: Docker-compatible CLI for containerd](https://github.com/containerd/nerdctl#nerdctl-docker-compatible-cli-for-containerd).
 
-
+<a id="network-management"></a>
 ### Manage Network
 
 #### Default Network Interface
@@ -1646,6 +1671,7 @@ route del -net 0.0.0.0/0 dev eth1
 route add -net 0.0.0.0/0 gw 192.168.0.1 dev eth1 metric 0
 ```
 
+<a id="kubelet-argument"></a>
 ### Set kubelet Custom Arguments
 A kubelet is a node agent that runs on all worker nodes. The kubelet receives input for many settings using command-line arguments. The kubelet custom arguments setting feature provided by NKS allows you to add arguments that are input at kubelet startup. You can set up kubelet custom arguments and apply them to your system as follows.
 
@@ -1660,6 +1686,7 @@ A kubelet is a node agent that runs on all worker nodes. The kubelet receives in
 > * The kubelet will not behave correctly when you enter an incorrectly formatted custom argument.
 > * The set custom argument will remain in effect even when the system restarts.
 
+<a id="containerd-registry-config"></a>
 ### Custom Containerd Registry Settings
 NKS clusters in v1.24.3 and later use containerd v1.6 as the container runtime. NKS provides the feature to customize several settings in containerd, including those related to the registry, to suit your environment. For registry settings in containerd v1.6, see [Configure Image Registry](https://github.com/containerd/containerd/blob/release/1.6/docs/cri/registry.md).
 
@@ -1757,18 +1784,19 @@ echo '[ { "registry": "user-defined.registry.io", "endpoint_list": [ "http://use
 >     * To use the `docker.io` registry, you must also include settings for the `docker.io` registry. For settings for the `docker`. `io` registry, see Default registry settings.
 >     * If you do not want to use the `docker.io` registry, you can simply not include any settings for the `docker.io` registry. However, at least one registry setting must exist.
 
+<a id="worker-management-caution"></a>
 ### Precautions for Worker Node Management
 * Do not arbitrarily delete container images that are pulled on worker nodes. This may cause the Pods required by the NKS cluster to stop working. 
 * If you arbitrarily stop the system with commands like `shutdown`, `halt`, `poweroff`, etc., you cannot restart it on the console. Use the worker node start/stop feature.
 * You must not modify various configuration files within the worker node or manipulate system services. Critical issues may occur in the NKS cluster.
 
-
+<a id="cni"></a>
 ## Container Network Interface (CNI)
 NHN Kubernetes Service (NKS) provides different types of Container Network Interfaces (CNI) depending on the version. After 7/23/2024, you can choose between Calico-VXLAN and Calico-eBPF CNIs when creating a cluster, with Calico-VXLAN being the default setting. Flannel and Calico-VXLAN CNIs organize container workload into an overlay network and communicate using VXLAN. Calico-eBPF organizes container workloads into BGP routing protocols, communicating directly based on eBPF technology, with some segments communicating using VXLAN. For more information about eBPF in Calico, see [about eBPF](https://docs.tigera.io/calico/latest/about/kubernetes-training/about-ebpf).
 
 In addition, Rocky and Ubuntu are the only OSes for which you can choose Calico-eBPF CNI, while Flannel and Calico-VXLAN support all OSes (Centos, Rocky, Red Hat, Ubuntu).
 
-
+<a id="calico-cni-types"></a>
 ### Calico CNI Types
 Calico-VXLAN and Calic-eBPF provided by the NHN Kubernetes Service (NKS) have the following differences
 
@@ -1786,8 +1814,6 @@ Calico-VXLAN and Calic-eBPF provided by the NHN Kubernetes Service (NKS) have th
 Notes
 
 * <a name="footnote_calico_1">1</a>: The packet's source IP and destination IP are set to the Pod IP. When using enhanced security rules, you must set a security rule for this traffic separately. 
-
-
 
 ### Whether to change the CNI per CNI set at cluster creation
 
@@ -1814,11 +1840,11 @@ Notes
 * <a name="footnote_calico_version_1">1</a>: Flannel is installed in clusters created before 31 March 2023. For clusters of v1.24.3 or higher created after that date, Calico is installed.
 * <a name="footnote_calico_version_2">2</a>: CNI change is only supported on clusters of v1.24.3 or higher, and currently changing from Flannel to Calico-VXLAN is only supported.
 
-
-
+<a id="security-group"></a>
 ## Security Group
 If you set enhanced security rules to True at cluster creation, only mandatory security rules are created at worker node security group creation.
 
+<a id="mandatory-sg-rules"></a>
 ### Required Security Rules for Cluster Worker Nodes
 
 | Direction | IP protocol | Port range | Ether | Remote | Description | Considerations |
@@ -1860,6 +1886,7 @@ When using enhanced security rules, the NodePort type of service and the ports u
 When using Calico-eBPF CNI, communication between pods and communication from nodes to pods is done through the ports set on the pods.
 If you are using enhanced security rules, you must manually add ingress and egress security rules for those pod ports.
 
+<a id="relaxd-sg-rules"></a>
 ### Rules that are generated when you don't use enhanced security rules
 
 If you don't use enhanced security rules, additional security rules are created for services of type NodePort and for external network communication.
@@ -1874,10 +1901,11 @@ If you don't use enhanced security rules, additional security rules are created 
 | egress | Random | 1 - 65535 | IPv4 | Allow all | All ports, direction: Worker node → External |
 | egress | Random | 1 - 65535 | IPv6 | Allow all | All ports, direction: Worker node → External |
 
-
+<a id="loadbalancer-service"></a>
 ## LoadBalancer Service
 Pod is a basic execution unit of a Kubernetes application and it is connected to a cluster network via CNI (container network interface). By default, pods are not accessible from outside the cluster. To expose a pod's services to the outside of the cluster, you need to create a path to expose to the outside using the Kubernetes `LoadBalancer` Service object. Creating a LoadBalancer service object creates an NHN Cloud Load Balancer outside the cluster and associates it with the service object.
 
+<a id="create-webserver-pod"></a>
 ### Creating Web Server Pods
 Write a deployment object manifest file that executes two nginx pods as follows and create an object.
 
@@ -1918,6 +1946,7 @@ nginx-deployment-7fd6966748-pvrzs   1/1     Running   0          4m13s
 nginx-deployment-7fd6966748-wv7rd   1/1     Running   0          4m13s
 ```
 
+<a id="create-lb-service"></a>
 ### Creating LoadBalancer
 To define service object of Kubernetes, a manifest comprised of the following items is required:
 
@@ -1975,7 +2004,7 @@ nginx-svc    LoadBalancer   10.254.134.18   123.123.123.30   8080:30013/TCP   3m
 You can view the created load balancer on the **Network > Load Balancer** page.
 Load balancer IP is a floating IP allowing external access. You can check it on the **Network > Floating IP** page.
 
-
+<a id="internet-test-via-service"></a>
 ### Testing Service on Internet
 Send an HTTP request via floating IP associated with load balancer to see if the web server pod of a Kubernetes cluster responds. Since the TcP/8080 port of a service object is attached to TCP/80 port of a pod, request must be sent to the TCP/8080 port. If external load balancer, service object, and pod are well associated, the web server shall respond to nginx default page.
 
@@ -2008,6 +2037,7 @@ Commercial support is available at
 </html>
 ```
 
+<a id="advanced-lb-configuration"></a>
 ### Setting Detailed Options for Load Balancer
 When defining service objects in Kubernetes, you can set several options for the load balancer. You can set the following.
 
@@ -2657,11 +2687,11 @@ spec:
 ## Ingress Controller
 Ingress Controller routes HTTP and HTTPS requests from cluster externals to internal services, in reference of the rules that are defined at ingress object so as to provide SSL/TSL closure and virtual hosting. For more details on Ingress Controller and Ingress, see [Ingress Controller](https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/), [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/).
 
-
+<a id="install-nginx-ingress-controller"></a>
 ### Installing NGINX Ingress Controller
 NGINX Ingress Controller is one of the most frequently used ingress controllers. For more details, see [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/) and [NGINX Ingress Controller for Kubernetes](https://www.nginx.com/products/nginx-ingress-controller/). For installation of NGINX Ingress Controller, see [Installation Guide](https://kubernetes.github.io/ingress-nginx/deploy/).
 
-
+<a id="uri-based-service-routing"></a>
 ### Diverging Service on URI
 Ingress controller can diverge services based on URI. The following figure shows the structure of a simple example of service divergence based on URI.
 
@@ -2880,6 +2910,7 @@ deployment.apps "tea" deleted
 service "tea-svc" deleted
 ```
 
+<a id="host-based-service-routing"></a>
 ### Service Divergence on Host
 Ingress controller can diverge services based on the host name. The following figure shows the structure of a simple example of service divergence based on the host name.
 
@@ -2975,6 +3006,7 @@ $ curl 123.123.123.44/unknown
 </html>
 ```
 
+<a id="k8s-dashboard"></a>
 ## Kubernetes Dashboard
 NHN Kubernetes Service (NKS) provides the default web UI dashboard. For more details on Kubernetes Dashboard, see [Web UI (Dashboard)](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/).
 
@@ -2983,6 +3015,7 @@ NHN Kubernetes Service (NKS) provides the default web UI dashboard. For more det
 > * If you upgrade your NKS cluster version from v1.25.4 to v1.26.3, the Kubernetes Dashboard pods and related resources will remain in action.
 > * You can view Kubernetes resources from the NHN Cloud console.
 
+<a id="expose-dashboard"></a>
 ### Opening Dashboard Services
 User Kubernetes has the `kubernetes-dashboard` service object which has been already created to publicly open dashboard.
 
@@ -3106,7 +3139,7 @@ eyJhbGc...-QmXA
 
 Enter the printed token in the token input window on the browser, and you can log in as a user that has been granted the cluster admin privileges.
 
-
+<a id="persistent-volume"></a>
 ## Persistent Volume
 Persistent Volume or PV is a Kubernetes resource representing physical storage volume. One PV is attached to one NHN Cloud Block Storage. For more details, see [Persistent Volume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/).
 
@@ -3114,6 +3147,7 @@ Persistent Volume Claims, or PVC is required to attach PV to pods. PVC defines n
 
 With PV and PVC, user can define the attributes of a volume of choice, while the system seperates the use of resources from management by assigning volume resources for each user requirement.
 
+<a id="pv-lifecycle"></a>
 ### Life Cycle of PV/PVC
 PV and PVC support the four-phase life cycle.
 
@@ -3135,6 +3169,7 @@ Volume is reclaimed after it is used up, in three methods: Delete, Retain, or Re
 | Retain | PV is deleted but its attached volumes are not: volumes can be deleted or reused by user. |
 | Recycle | PV is deleted and its attached volumes are made to be reused without being deleted. This method has been deprecated. |
 
+<a id="storageclass"></a>
 ### Storage Class (StorageClass)
 A storage class must be defined before provisioning. Storage classes provide a way to classify storages by certain characteristics. You can set the information such as media type and availability zone by including information about the storage provider (provisioner). 
 
@@ -3355,7 +3390,7 @@ persistentvolumeclaim/pvc-dynamic   Bound    pvc-1056949c-bc67-45cc-abaa-1d1bd9e
 > [Caution]
 A block storage created by dynamic provisioning cannot be deleted from the web console. It is not automatically deleted along with a cluster being deleted. Therefore, before a cluster is deleted, all PVCs must be deleted first; otherwise, you may be charged for PVC usage. The reclaimPolicy of PV created by dynamic provisioning is set to `Delete` by default, so deleting only the PVC will also delete the PV and block storage.
 
-
+<a id="pod-pvc-mount"></a>
 ### Mounting PVC to Pods
 
 To mount PVC to a pod, mount information must be defined at the pod manifest. Enter the PVC name to use in `spec.volumes.persistenVolumeClaim.claimName`; enter paths to mount in `spec.containers.volumeMounts.mountPath`.
@@ -3405,6 +3440,7 @@ Filesystem      Size  Used Avail Use% Mounted on
 
 You can also check block storage attachment information in the **Storage > Block Storage** service page of the NHN Cloud web console.
 
+<a id="volume-expansion"></a>
 ### Volume Expansion
 You can adjust an existing volume by editing the PersistentVolumeClaim (PVC) object. You can change the volume size by editing the **spec.resources.requests.storage** item of the PVC object. Volume shrinking is not supported. To use the volume expansion feature, the **allowVolumeExpansion** property of StorageClass must be **True**.
 
@@ -3458,9 +3494,10 @@ status:
 #### Volume Expansion from v1.20.12 and older
 The storage provider **cinder.csi.openstack.org** from v1.20.12 and later supports the expansion of the volume in use by default. You can change the volume size by modifying the **spec.resources.requests.storage** item of the PVC object to a desired value.
 
-
+<a id="service-integration"></a>
 ## Integrate with NHN Cloud Service
 
+<a id="ncr-integration"></a>
 ### Integrate with NHN Cloud Container Registry (NCR)
 You can use images saved at NHN Cloud Container Registry. To use images registered in the registry, first create a secret to login to user registry.
 
@@ -3510,7 +3547,7 @@ spec:
 > [Note]
 Regarding how to use NHN Cloud Container Registry, see [NHN Cloud Container Registry (NCR) User Guide](/Container/NCR/ko/user-guide).
 
-
+<a id="nas-integration"></a>
 ### Integrate with NHN Cloud NAS
 You can utilize NAS storage provided by NHN Cloud as PV. In order to use NAS services, you must use a cluster of version v1.20 or later. For more information on using NHN Cloud NAS, please refer to the [NAS Console User Guide](/Storage/NAS/en/console-guide).
 
@@ -3993,6 +4030,7 @@ tmpfs                                                                          1
 > csi-driver-nfsworks by creating a subdirectory inside the NFS storage when provisioning.
 > In the process of mounting the PV to the pod, not only the subdirectory is mounted, but the entire nfs storage is mounted, so it is not possible to force the application to use the volume by the provisioned size.
 
+<a id="encrypted-block-storage-integration"></a>
 ### NHN Cloud Encrypted Block Storage Integration
 You can utilize encrypted block storage provided by NHN Cloud as PV. For more information about NHN Cloud encrypted block storage, see [Encrypted Block Storage](/Storage/Block%20Storage/ko/console-guide/#_2).
 

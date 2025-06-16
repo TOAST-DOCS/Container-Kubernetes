@@ -41,13 +41,14 @@ Kubernetesバージョン別の作成可能バージョンに追加/削除する
 
 <a id="cluster-create"></a>
 
+<a id="cluster-create"></a>
 ### クラスター作成
 NHN Kubernetes Service(NKS)を使用するには、まずクラスターを作成する必要があります。
 
 > [注意]クラスタを使用するための権限設定<br>
 >クラスターを作成したいユーザーは、対象プロジェクトに対して必ず基本インフラサービスの**Infrastructure ADMIN**または **Infrastructure LoadBalancer ADMIN**または **Infrastructure NKS ADMIN**権限を持っている必要があります。
 > 当該権限がある場合にのみ、基本インフラサービスをベースとするクラスタを正常に作成し、活用できます。これらのいずれかの権限を持つ状態で他の権限が追加されることは使用に問題がありません。
-> 権限設定については[プロジェクトメンバー管理](/TOAST/ko/console-guide/#_22)をご覧ください。
+> 権限設定については[プロジェクトメンバー管理](/nhncloud/en/console-user-guide/#_3)をご覧ください。
 
 **Container > NHN Kubernetes Service(NKS)** ページで**クラスタ作成**をクリックすると、クラスタ作成ページが表示されます。クラスタの作成に必要な項目は次のとおりです。
 
@@ -1558,6 +1559,78 @@ Kubernetesクラスター構成のために動作するシステムPodアップ�
 > システムPodアップグレードが実行されない場合、一部Podが正常に動作しない可能性があります。
 
 <a id="api_endpoint_ipacl"></a>
+### クラスタCNIの変更
+NHN Kubernetes Service(NKS)は動作中のKubernetesクラスタのCNI(container network interface)変更をサポートします。 
+クラスタCNI変更機能を使用するとNHN Kubernetes Service(NKS)のCNIがFlannel CNIからCalico CNI-VXLANに変更されます。
+
+#### CNI変更ルール
+NKSクラスタCNI変更機能に適用されるルールは次のとおりです。
+
+* CNI変更機能はNHN Kubernetes Service(NKS)バージョン1.24.3以上の場合に使用できます。
+* 既存NHN Kubernetes Service(NKS)で使用しているCNIがFlannelの場合にのみCNI変更を使用できます。
+* CNI変更開始時、コントロールプレーンとすべてのワーカーノードグループに対して一括で作業を行います。
+* Calico-VXLAN、Calico-eBPFからFlannelへのCNI変更はサポートしません。
+* FlannelからCalico-eBPFへのCNI変更はサポートしません。
+* Calico-VXLANからCalico-eBPFへのCNI変更はサポートしません。
+* コントロールプレーンのKubernetesバージョンとすべてのワーカーノードグループのKubernetesバージョンが一致すればCNI変更が可能です。
+
+* 他の機能の動作により、クラスタがアップデート中の状態ではCNIの変更ができません。
+
+次の例は、Kubernetes CNI変更過程で変更できるかどうかを表で示したものです。例に使用された条件は次のとおりです。 
+
+NHN CloudがサポートするKubernetesバージョンリスト：v1.23.3、v1.24.3、v1.25.4
+クラスタはv1.23.3で作成
+
+| 状態 | クラスタバージョン | 現在CNI | CNI変更可否
+| --- | :-: | :-: | :-: | :-: |
+| 初期状態| v1.23.3 | Flannel | 不可 <sup>(注1)(#footnote_calico_change_rule_1)</sup> |
+| クラスタアップグレード後の状態 | v1.24.3 | Flannel | 可能 <sup>(注2)(#footnote_calico_change_rule_2)</sup> | 
+| CNI変更後の状態 | v1.24.3 | Calico-VXLAN | 不可 <sup>(注3)(#footnote_calico_change_rule_3)</sup> |
+
+
+注釈
+
+* <a name="footnote_calico_change_rule_1">(注1)</a>クラスタバージョンが1.24.3未満のためCNI変更不可
+* <a name="footnote_calico_change_rule_2">(注2)</a>クラスタバージョンが1.24.3以上のためCNI変更可能
+* <a name="footnote_calico_change_rule_3">(注3)</a>CNIがすでにCalico-VXLANのためCNI変更不可
+
+#### FlannelからCalico-VXLAN CNIへの変更進行プロセス
+CNIの変更は次の順序で行われます。
+
+1. すべてのワーカーノードグループにバッファノード<sup>(注1)(#footnote_calico_change_step_1)</sup>を追加します。<sup>(注2)(#footnote_calico_change_step_2)</sup>
+2. クラスタにCalico-VXLAN CNIが配布されます。<sup>(注3)(#footnote_calico_change_step_3)</sup>
+3. クラスタオートスケーラ機能を無効化します。<sup>(注4)(#footnote_calico_change_step_4)</sup>
+3. すべてのワーカーノードグループ内のすべてのワーカーノードに対して以下の作業を順次実行します。<sup>(注5)(#footnote_calico_change_step_5)</sup>
+    1. 該当ワーカーノードで動作中のPodを追放し、ノードをスケジュール不可能な状態に切り替えます。
+    2. ワーカーノードのPod IPをCalico-VXLAN CIDRに再割当てします。該当ノードに配布されているすべてのPodは再配布されます。<sup>(注6)(#footnote_calico_change_step_6)</sup>
+    3. ノードをスケジュール可能な状態に切り替えます。
+5. バッファノードで動作中のPodを追放し、バッファノードを削除します。
+6. クラスタオートスケーラ機能を再度有効にします。<sup>(注4)(#footnote_calico_change_step_4)</sup>
+7. Flannel CNIを削除します。
+
+
+注釈
+
+* <a name="footnote_calico_change_step_1">(注1)</a>バッファノードとは、CNI変更過程で既存ワーカーノードから追放されたPodが再びスケジューリングできるように作成しておく空きノードを指します。該当ワーカーノードグループで定義したワーカーノードと同じ規格のノードとして作成され、アップグレードプロセスが終了すると自動的に削除されます。このノードはInstance料金ポリシーに基づいて費用が請求されます。 
+* <a name="footnote_calico_change_step_2">(注2)</a>CNI変更時にバッファノード数を設定できます。デフォルト値は1で、0に設定するとバッファノードを追加しません。最小値は0で、最大値は(ノードグループあたりの最大ノード数クォーター - 該当ワーカーノードグループの現在ノード数)です。
+* <a name="footnote_calico_change_step_3">(注3)</a>クラスタにCalico-VXLAN CNIが配布されると、FlannelとCalico-VXLAN CNIが共存します。この状態で新しいPodが配布されるとPod IPはFlannel CNIに設定されて配布されます。Flannel CIDR IPを持つPodとCalico-VXLAN CIDR IPを持つPodはお互いに通信できます。
+* <a name="footnote_calico_change_step_4">(注4)</a>このステップはアップグレード機能開始前にクラスタオートスケーラ機能が有効になっている場合にのみ有効です。
+* <a name="footnote_calico_change_step_5">(注5)</a>CNI変更時に設定した最大サービス不可ノードの数だけ作業を実行します。デフォルト値は1です。最小値は1で、最大値は現在クラスタのすべてのノード数です。
+* <a name="footnote_calico_change_step_6">(注6)</a>既に配布されているPodのIPは全てFlannel CIDRに割り当てられています。Calico-VXLAN CNIに変更するためにFlannel CIDRのIPが割り当てられてているPodを全て再配布してCalico-VXLAN CIDR IPを割り当てます。新しいPodが配布されるとPod IPはCalico-VXLAN CNIに設定されて配布されます。
+
+この過程で以下のようなことが発生することがあります。
+
+* サービス中のPodが追放され、他のノードにスケジューリングされます。(Podの追放ついては[クラスタアップグレード](/Container/NKS/ko/user-guide/#cluster-upgrade)を参照してください)
+* クラスタに配布されているすべてのPodが再配布されます。(Podの再配布については、以下のPod再配布注意事項を参照してください)
+* オートスケーラ機能が動作しません。 
+
+
+> [Pod再配布注意事項]
+> 1. Pod追放プロセスによって他のノードに移されなかったPodに対して行われます。
+> 2. CNI変更プロセス中にFlannel CIDRとCalico-VXLAN CIDR間の正常な通信のためにCNI変更Podネットワーク値は既存Flannel CIDR値と同じであってはいけません。
+> 3. 既に配布されていたPodのpauseコンテナは全て停止し、kubeletによって再作成されます。Pod名とローカル記憶領域などの設定はそのまま維持されますが、IPはCalico-VXLAN CIDRのIPに変更されます。
+
+<a id="api-endpoint-ipacl"></a>
 ### クラスタAPIエンドポイントにIPアクセス制御を適用
 クラスタAPIエンドポイントにIPアクセス制御を適用または解除できます。
 IPアクセス制御機能の詳細については、[IPアクセス制御](/Network/Load%20Balancer/ko/overview/#ip)文書を参照してください。
@@ -1649,6 +1722,7 @@ Kubernetesのラベルはキーと値のペアで構成され、有効なラベ�
 > [参考]
 > * Kubernetesラベルは最大20個まで指定できます。
 > * Kubernetesラベル設定を変更すると、その後新規に作成されるノードから変更された設定が適用されます。
+
 <a id="oidc-auth"></a>
 ### OIDC認証設定機能
 
@@ -2018,6 +2092,7 @@ NHN Kubernetes Service(NKS)が提供するCalico-VXLAN、Calic-eBPFは下記の�
 
 * <a name="footnote_calico_1">1</a>:パケットの送信元IP、宛先IPがPod IPに設定されます。強化されたセキュリティルールを使用する場合、このトラフィックに対するセキュリティルールを別途設定する必要があります。
 
+
 <a id="security-group"></a>
 ## セキュリティグループ
 クラスタ作成時に強化されたセキュリティルールをTrueに設定すると、ワーカーノードセキュリティグループの作成時に必須のセキュリティルールだけが作成されます。
@@ -2078,6 +2153,7 @@ NHN Kubernetes Service(NKS)が提供するCalico-VXLAN、Calic-eBPFは下記の�
 | ingress | UDP | 1 - 65535 | IPv4 | NKS Control Plane | 全てのポート、方向: NKS Control plane →ワーカーノード |
 | egress | 任意 | 1 - 65535 | IPv4 | すべて許可 | 全てのポート、方向:ワーカーノード→外部 |
 | egress | 任意 | 1 - 65535 | IPv6 | すべて許可 | 全てのポート、方向:ワーカーノード→外部 |
+
 
 <a id="addon-mgmt"></a>
 ## アドオン管理機能
@@ -3694,6 +3770,12 @@ Filesystem      Size  Used Avail Use% Mounted on
 
 NHN Cloud Webコンソール**Storage > Block Storage**サービスページでもブロックストレージの接続情報を確認できます。
 
+<!-- ----------------------
+NOTE(kyungjun.kim)
+> 중복된 내용이 존재하는 것 같습니다. 확인을 부탁드립니다.
+
+> 重複した内容が存在するようです。 ご確認ください. もし重複でしたら、注釈内容の削除をお願いします
+
 #### ボリューム拡張の許可(allowVolumeExpansion)
 作成されたボリュームの拡張を許可するかどうかを設定します(未入力の場合はfalseが設定されます)。
 
@@ -3931,7 +4013,7 @@ Filesystem      Size  Used Avail Use% Mounted on
 ...
 ```
 
-NHN Cloud Webコンソール**Storage > Block Storage**サービスページでもブロックストレージの接続情報を確認できます。
+NHN Cloud Webコンソール**Storage > Block Storage**サービスページでもブロックストレージの接続情報を確認できます。 -->
 
 <a id="volume-expansion"></a>
 ### ボリューム拡張
