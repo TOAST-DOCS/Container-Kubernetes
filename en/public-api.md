@@ -95,7 +95,16 @@ This API does not require a request body.
 | clusters.keypair | Body | UUID | UUID of the key pair applied to the default worker node group |
 | clusters.node_count | Body | Integer| Total number of worker nodes |
 | clusters.stack_id | Body | UUID | UUID of the heat stack associated with the control plane |
-| clusters.status | Body | String | Cluster status |
+| clusters.status | Body | String | Cluster task status |
+| clusters.status_reason | Body | String | Cluster task status reason (Nullable) |
+| clusters.health_status | Body | String | Validity of the k8s API and k8s node status information in the cluster. <br>* `FRESH`: k8s API and k8s node status information is valid <br>* `STALE`: k8s API and node status information has not been updated for a period of time, making the information less valid. <br>* `ROTTEN`: k8s API and node status information has not been updated for a long time, making the information unreliable |
+| clusters.health_status_reason | Body | Object | An object containing detailed information about the k8s API and k8s node status per worker node group in the cluster. |
+| clusters.health_status_reason.timestamp | Body | String | Update time (UTC) of cluster k8s API and k8s node status information |
+| clusters.health_status_reason.cluster.api_status | Body | String | Statistics of status information from the k8s API. <br>* `NORMAL`: The k8s API status is normal. <br>* `STALED_DATA`: k8s API status information has not been updated for a period of time, making the information less valid. <br>* `ROTTEN_DATA`: k8s API status information has not been updated for a long time, making the information unreliable <br>* `K8S_API_NOT_WORKING`: k8s API status is abnormal |
+| clusters.health_status_reason.api | Body | String | Status information for the k8s API. <br>* `OK`: k8s API status is OK <br>* `NOT_OK`: k8s API status is abnormal |
+| clusters.health_status_reason.cluster.node_status | Body | String | Statistics of K8S node health status for all worker node groups. <br>* `NORMAL`: all k8s nodes are Ready <br>* `STALED_DATA`: k8s node status information has not been updated for a period of time, making the information less valid. <br>* `ROTTEN_DATA`: k8s API status information has not been updated for a long time, making the information unreliable <br>* `not_ready_node_exist`: A k8s node in the Not Ready state exists in the cluster. <br>* `all_nodes_not_ready`: The status of all k8s nodes in the cluster is Not Ready. |
+| clusters.health_status_reason.nodegroup.node_status.{WORKER_NODEGROUP_NAME} | Body | String | Statistics of K8s node health status for a specific group of worker nodes. <br>* `NORMAL`: all k8s nodes n the corresponding worker node group are Ready <br>* `STALED_DATA`: k8s node status information has not been updated for a period of time, making the information less valid. <br>* `ROTTEN_DATA`: k8s API status information has not been updated for a long time, making the information unreliable <br>* `NOT_READY_NODE_EXIST`: A k8s node in the Not Ready state exists in the corresponding worker node group. <br>* `ALL_NODES_NOT_READY`: all k8s nodes n the corresponding worker node group are Not Ready |
+| clusters.health_status_reason.nodegroup-stats.{WORKER_NODEGROUP_NAME} | Body | String | K8s node health status for a specific group of worker nodes. {Number of Ready Nodes}:{Number of Not Ready Nodes}. |
 | clusters.labels | Body | Object | Cluster label |
 | clusters.labels.kube_tag | Body |String | Kubernetes version of the control plane |
 | clusters.labels.availability_zone | Body | String | Applied to the default worker node group: Availability zone |
@@ -209,8 +218,16 @@ This API does not require a request body.
 | keypair | Body | UUID | UUID of the key pair applied to the default worker node group |
 | node_count | Body | Integer| Total number of worker nodes |
 | stack_id | Body | UUID | UUID of the heat stack associated with the control plane |
-| status | Body | String | Cluster status |
-| status_reason | Body | String | Reason for the node group status (can be null) |
+| status | Body | String | Cluster task status |
+| status_reason | Body | String | Cluster task status reason (Nullable) |
+| health_status | Body | String | Validity of the k8s API and k8s node status information in the cluster. <br> "FRESH": k8s API and k8s node status information is valid <br> "STALE": k8s API and node status information has not been updated for a period of time, making the information invalid. <br> "ROTTEN": k8s API and node status information has not been updated for a long time, making the information unreliable |
+| health_status_reason | Body | Object | An object with details of the k8s API and k8s node status per worker node group in the cluster. |
+| health_status_reason.timestamp | Body | String | Update time (UTC) of cluster k8s API and k8s node status information |
+| health_status_reason.cluster.api_status | Body | String | Statistics of status information from the k8s API. <br> "NORMAL": k8s API status is normal <br> "STALED_DATA": k8s API status information has not been updated for some time, making the information invalid. <br> "ROTTEN_DATA": k8s API status information has not been updated for a long time, making the information unreliable <br> "K8S_API_NOT_WORKING": k8s API status is abnormal |
+| health_status_reason.api | Body | String | Status information for the k8s API. <br> "OK": k8s API status is normal <br> "NOT_OK": k8s API status is abnormal |
+| health_status_reason.cluster.node_status | Body | String | Statistics of K8S node health status for all worker node groups. <br> "NORMAL": All k8s nodes are Ready <br> "STALED_DATA": k8s node status information has not been updated for a period of time, resulting in invalid information <br> "ROTTEN_DATA": k8s API status information has not been updated for a long time, making the information unreliable <br> "not_ready_node_exist": A k8s node in the Not Ready state exists in the cluster. <br> "all_nodes_not_ready": The status of all k8s nodes in the cluster is Not Ready.  |
+| health_status_reason.nodegroup.node_status.{WORKER_NODEGROUP_NAME} | Body | String | Statistics of K8s node health status for a specific group of worker nodes. <br> "NORMAL": All k8s nodes in that worker node group are Ready <br> "STALED_DATA": k8s node status information has not been updated for a period of time, resulting in invalid information <br> "ROTTEN_DATA": k8s API status information has not been updated for a long time, making the information unreliable <br> "NOT_READY_NODE_EXIST": k8s node in Not Ready state exists in the corresponding worker node group <br> "ALL_NODES_NOT_READY": All k8s nodes in that worker node group have the status Not Ready |
+| health_status_reason.nodegroup-stats.{WORKER_NODEGROUP_NAME} | Body | String | K8s node health status for a specific group of worker nodes. {Number of Ready Nodes}:{Number of Not Ready Nodes}. |
 | api_address | Body | String | Kubernetes API endpoint |
 | project_id | Body | String | Project (tenant) ID |
 | fixed_network | Body | UUID | VPC UUID|
@@ -485,14 +502,16 @@ X-Auth-Token: {tokenId}
 | labels.external_network_id | Body | String | X | UUID of the VPC network attached to the internet gateway<br>Must be set when a router associated with a VPC subnet is attached to the internet gateway |
 | labels.external_subnet_id_list | Body | String | X | List of UUIDs of subnets attached to the internet gateway (separated by colon)<br>Must be set when a router associated with a VPC subnet is attached to the internet gateway |
 | labels.cert_manager_api | Body | String | O | Whether to enable the certificate signing request (CSR) feature. Must be set to "True" |
-| labels.ca_enable | Body | String | O | Applied to the default worker node group: Autoscaler: Whether to enable the feature ("True" / "False") |
-| labels.ca_pod_replicas | Body | String | X | Applied to the default worker node group: Autoscaler: Number of pods |
+| labels.ca_enable | Body | String | CLUSTER_ID_OR_NAME | Applied to the default worker node group: Cluster Autoscaler: Whether to enable the feature (“True” / “False”) |
+| labels.ca_pod_replicas | Body | String | X | Applied to the default worker node group: Cluster Autoscaler: Number of Pods |
 | labels.ca_max_node_count | Body | String | X | Applied to the default worker node group: Autoscaler: Maximum number of nodes |
 | labels.ca_min_node_count | Body | String | X | Applied to the default worker node group: Autoscaler: Minimum number of nodes |
 | labels.ca_scale_down_enable | Body | String | X | Applied to the default worker node group: Autoscaler: Whether to enable scale-down ("True" / "False") |
 | labels.ca_scale_down_unneeded_time | Body | String | X | Applied to the default worker node group: Autoscaler: Scale down unneeded time |
-| labels.ca_scale_down_util_thresh | Body | String | X | Applied to the default worker node group: Autoscaler: Scale down utilization threshold  |
-| labels.ca_scale_down_delay_after_add | Body | String | X | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
+| labels.ca_scale_down_util_thresh | Body | String | X | Applied to the default worker node group: Cluster Autoscaler: Scale down utilization threshold  |
+| labels.ca_scale_down_delay_after_add | Body | String | X | Applied to the default worker node group: Cluster Autoscaler: Scale down delay after add |
+| labels.mba_scale_out | Body | String | X | Applied to the default worker node group: Configure metric-based autoscaler scale-out policy |
+| labels.mba_scale_in | Body | String | X | Applied to the default worker node group: Configure metric-based autoscaler scale-in policy |
 | labels.kube_tag | Body | String | O | Kubernetes Version |
 | labels.user_script | Body | String | X | User script (old) |
 | labels.user_script_v2 | Body | String | X | User script |
@@ -506,18 +525,30 @@ X-Auth-Token: {tokenId}
 | labels.ncr_sgw | Body | String | X | Service gateway UUID of NCR type<br>But, only created in the same VPC as the cluster VPC. |
 | labels.obs_sgw | Body | String | X | Service gateway UUID of OBS type<br>But, only created in the same VPC as the cluster VPC. |
 | labels.cni_driver | Body | String | X | Set up CNI, Selectable CNI list: calico (default),calico-ebpf<br>calico: Created as Calico-VXLAN<br>calico-ebpf: Created as Calico-eBPF |
-| labels.extra_security_groups | UUID | Array | Cluster Pod subnet size. See pods_network_subnet input rules | List of additional security group objects |
+| labels.extra_security_groups | Body | Array | X | Applied to the default worker node group: List of additional security group objects |
 | labels.extra_security_groups[].target_subnet | UUID | X | Cluster Pod subnet size. See pods_network_subnet input rules | The UUID of a subnet to be specified by additional security groups |
 | labels.extra_security_groups[].security_group_ids | Body | String | X | List of additional security group UUIDs (comma-separated) |
-| labels.extra_volumes | Body | Array | X | List of additional block storage objects |
+| labels.extra_volumes | Body | Array | X | Applied to the default worker node group: List of additional block storage objects |
 | labels.extra_volumes[].volume_type | Body | String | X | Additional block storage types |
 | labels.extra_volumes[].volume_size | Body | X | X | Additional block storage size (GB) |
 | labels.extra_volumes[].volume_key_id | Body | String | X | (Symmetric key ID to apply to encrypted block storage (if using encrypted block storage) |
 | labels.extra_volumes[].volume_appkey | Body | String | X | The appkey for the symmetric key to apply to encrypted block storage (if using encrypted block storage) |
 | labels.extra_volumes[].volume_mount_path | Body | String | X | Path where additional block storage will be mounted |
+| labels.control_plane_log | Body | String | X | Enable logging for the K8s control plane |
+| labels.fip_auto_bind_enable | Body | String | X | Auto-assign floating IP: Whether to enable the feature ("True" / "False") |
+| labels.fip_bind_subnet | Body | String | X | Auto-assign floating IP: The subnet of the network interface to which the floating IP is connected |
+| labels.fip_selector | Body | String | X | Auto-assign floating IP: An identifier for selecting a floating IP to assign to a node |
+| labels.fip_auto_bind_enable | Body | String | X | Applied to the default worker node group: Auto-assign floating IP: Whether to enable the feature ("True" / "False") |
+| labels.fip_bind_subnet | Body | String | X | Applied to the default worker node group: Auto-assign floating IP: Subnet of the network interface to which the floating IP is connected |
+| labels.fip_selector | Body | String | X | Applied to the default worker node group: Auto-assign floating IP: Identifier for selecting a floating IP to assign to nodes |
+| labels.k8s_node_labels | Body | String | Applied to the default worker node group: Setting Kubernetes Labels |
 | flavor_id | Body | UUID | O | Applied to the default worker node group: Node instance flavor UUID |
 | fixed_network | Body | UUID | O | VPC Network UUID |
 | fixed_subnet | Body | UUID | O | VPC subnet UUID. Note the rules for entering fixed_subnet, pods_network_cidr, and service_cluster_ip_range. |
+| addons | Body | ipacl_targets.cidr_address | X | List of add-on information to install |
+| addons.name | Body | String | enable | Add-on name |
+| addons.version | Body | String | enable | Add-on versions |
+| addons.options | Body | labels.availability_zone | X | Add-on-specific options |
 
 > [Caution]
 > The CIDRs for fixed_subnet, pods_network_cidr, and service_cluster_ip_range must be entered in the following conventions
@@ -577,7 +608,11 @@ X-Auth-Token: {tokenId}
         ]
     },
     "name": "test-k8s",
-    "node_count": 1
+    "node_count": 1,
+    "addons": [
+        {"name": "calico", "version": "v3.28.2-nks1", "options": {"mode": "vxlan"}},
+        {"name": "coredns", "version": "1.8.4-nks1"}
+    ]
 }
 ```
 
@@ -746,77 +781,6 @@ This API does not require a request body.
 ```json
 {
     "config": "apiVersion: v1\nclusters:\n- cluster:\n    certificate-authority-data: LS0tLS1CRU... \n    server: https://96742ac4-kr2-k8s.container.cloud.toast.com:6443\n  name: \"toast-robot-e2e-1-18\"\ncontexts:\n- context:\n    cluster: \"toast-robot-e2e-1-18\"\n    user: admin\n  name: default\ncurrent-context: default\nkind: Config\npreferences: {}\nusers:\n- name: admin\n  user:\n    client-certificate-data: LS0tLS1CRU...\n    client-key-data: LS0tLS1CRU...\n"
-}
-```
-
-</p>
-</details>
-
-### Change Cluster CNI
-Changes the cluster CNI (container network interface). You can change Flannel CNI to a different CNI. For more information on the types of CNIs you can change and the conditions under which they can be changed, see [User Guide](/Container/NKS/en/user-guide/#cni).
-
-```
-POST /v1/clusters/{CLUSTER_ID_OR_NAME}/actions/cni_update
-Accept: application/json
-Content-Type: application/json
-OpenStack-API-Version: container-infra latest
-X-Auth-Token: {tokenId}
-```
-
-#### Request
-
-| Name | Type | Format | Required | Description |
-|---|---|---|---|---|
-| tokenId | Header | String | O | Token ID |
-| CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
-| cni | Body | String | O | Configure a CNI to change (Selectable CNI list: calico)<br>calico: Changed to Calico-VXLAN | 
-| num_buffer_nodes | Body | Integer | X | Number of buffer nodes. Default: 1, minimum: 0, maximum: number of additional nodes that can be created in each worker node group (maximum number of nodes per worker node group - current number of nodes in that worker node group) |
-| num_max_unavailable_nodes | Body |  Integer | X | Maximum number of unavailable nodes. minimum: 1, maximum: current number of nodes for the cluster, default: 1 |
-| pod_cidr | Body | String | O | calico pod cidr settings, see the input rules of pod_cidr |
-| pod_subnet | Body | String | O | calico pod cidr subnet settings, Default: 24, see the input rules of pod_subnet |
-
-pod_cidr must be entered in the following rules.
-* CIDR cannot overlap with the link-local address band (169.254.0.0/16).
-* CIDR cannot overlap with the service IP band (K8s service network) used in NKS clusters. 
-* CIDR cannot overlap with the IP band (198.18.0.0/19) being used inside the NKS.
-* CIDR cannot overlap with bands of the VPC network subnet or additional network subnets connected to NKS clusters.
-* CIDR cannot overlap with a pod network band that is currently being used for NKS clusters.
-* You cannot enter a CIDR block greater than /24. (The following CIDR blocks are not available: /26, /30)
-
-pod_subnet must be entered in the following rules.
-* Values between 20 and 28 (included) are allowed.
-* The value of pod_subnet must be at least 2 greater than the prefix value of pod_cidr. Normal example (pod subnet size: 24, pod network: 10.100.0.0/22)
-
-
-
-<details><summary>Example</summary>
-<p>
-
-```json
-{
-    "cni": "calico",
-    "num_max_unavailable_nodes": 1,
-    "num_buffer_nodes": 1,
-    "pod_cidr": "10.200.0.0/16"
-}
-```
-
-</p>
-</details>
-
-
-#### Response
-
-| Name | Type | Format | Description |
-|---|---|---|---|
-| uuid | Body | UUID | Cluster UUID |
-
-<details><summary>Example</summary>
-<p>
-
-```json
-{
-    "uuid": "0641db9f-5e71-4df9-9571-089c7964d82e"
 }
 ```
 
@@ -1065,6 +1029,107 @@ X-Auth-Token: {tokenId}
 
 ---
 
+### Store Logs of Kubernetes Control Plane Components
+Stores logs of key Kubernetes components running in the control plane of the NHN Kubernetes Service (NKS) to Log & Crash Search or Object Storage.
+
+```
+PATCH /v1/clusters/{CLUSTER_ID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### Name
+
+| Name | Type | Format | Required | Description |
+|---|---|---|---|---|
+| tokenId | Header | String | O | Token ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
+| String | Body | String | O | Set to `control_plane_log` |
+| control_plane_log | Body | labels.availability_zone | O | control_plane_log object |
+| control_plane_log.enable | Body | bool | O | Enable logging for the K8s control plane |
+| control_plane_log.type | Body | String | enable: required if true | lncs : Delivers control plane logs to Log & Crash Search obs : Delivers control plane logs to Object Storage |
+| control_plane_log.sgw | Body | status | enable: required if true | Differentiated by control_plane_log.type<br>lncs : Log and Crash Search Service Gateway UUID<br>obs : Object storage Search Service Gateway UUID |
+| control_plane_log.upload_interval | Body | project_id | x | Set log delivery interval to OBS (minutes)<br>min : 1<br>max : 60<br>default : 10 |
+| control_plane_log.lncs_appkey | Body | String | enable : true<br>Required if control_plane_log.type = lncs | Appkey information for Log & Crash Search in the same project (tenant) as NKS |
+| control_plane_log.obs_api_url | Body | String | enable : true<br>Required if control_plane_log.type = obs | User's OBS container FULL PATH<br>(storage address in OBS + container name in OBS + desired storage path) |
+| control_plane_log.obs_store_as | Body | String | X | OBS log file delivery method (gzip, text) |
+
+
+<details><summary>Enable Log &amp; Crash Search log delivery</summary>
+<p>
+
+```json
+{
+    "type": "control_plane_log",
+    "control_plane_log" : {
+        "enable": true,
+        "type": "lncs",
+        "sgw": "b6f68830-e688-4d89-ac0a-2f1a5594177a",
+        "upload_interval" : 10,
+        "lncs_appkey" : "3e4jP4LlMGXitafx",
+    }
+}
+```
+
+</p>
+</details>
+
+
+<details><summary>Enable Object Storage log delivery</summary>
+<p>
+
+```json
+{
+    "type": "control_plane_log",
+    "control_plane_log" : {
+        "enable": true,
+        "type": "obs",
+        "sgw": "b6f68830-e688-4d89-ac03-2f1155a4177a",
+        "upload_interval" : 60,
+        "obs_api_url" :"https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_d5b58ab0bb9340909bd7ff5a24f44313/iksoon-obs-container/testpath",
+        "obs_store_as" : "gzip"
+    }
+}
+```
+
+</p>
+</details>
+
+
+<details><summary>Disable log delivery</summary>
+<p>
+
+```json
+{
+    "type": "control_plane_log",
+    "control_plane_log" : {
+        "enable": false,
+    }
+}
+```
+
+</p>
+</details>
+
+#### Type
+
+| Name | Type | Format | Description |
+|---|---|---|---|
+| UUID | Body | cluster_id | Cluster UUID |
+
+<details><summary>Example</summary>
+<p>
+
+```json
+See the Supported Kubernetes Versions
+```
+
+</p>
+</details>
+
+
 ## Node Group
 
 ### List Node Groups
@@ -1174,14 +1239,16 @@ This API does not require a request body.
 | labels.external_network_id | Body | String | UUID of the VPC network attached to the internet gateway |
 | labels.external_subnet_id_list | Body | String | List of UUIDs of subnets attached to the internet gateway (separated by colons) |
 | labels.cert_manager_api | Body | String | Whether to enable the certificate signing request (CSR) feature. Must be set to "True" |
-| labels.ca_enable | Body | String | Applied to the worker node group: Autoscaler: Whether to enable the feature ("True" / "False") |
-| labels.ca_pod_replicas | Body | String | X | Applied to the default worker node group: Autoscaler: Number of pods |
-| labels.ca_max_node_count | Body | String | Applied to the worker node group: Autoscaler: Maximum number of nodes |
-| labels.ca_min_node_count | Body | String | Applied to the worker node group: Autoscaler: Minimum number of nodes |
-| labels.ca_scale_down_enable | Body | String | Applied to the worker node group: Autoscaler: Whether to enable scale-down ("True" / "False") |
-| labels.ca_scale_down_unneeded_time | Body | String | Applied to the worker node group: Autoscaler: Scale down unneeded time |
-| labels.ca_scale_down_util_thresh | Body | String | Applied to the worker node group: Autoscaler: Scale down utilization threshold  |
-| labels.ca_scale_down_delay_after_add | Body | String | Applied to the worker node group: Auto Scaler: Scale down delay after add |
+| labels.ca_enable | Body | String | Applied to the worker node group:  Cluster Autoscaler: Whether to enable the feature ("True" / "False") |
+| labels.ca_pod_replicas | Body | String | Applied to the worker node group:  Cluster Autoscaler: Number of Pods |
+| labels.ca_max_node_count | Body | String | Applied to the worker node group:  Cluster Autoscaler: Maximum number of nodes |
+| labels.ca_min_node_count | Body | String | Applied to the worker node group:  Cluster Autoscaler: Minimum number of nodes |
+| labels.ca_scale_down_enable | Body | String | Applied to the worker node group:  Cluster Autoscaler: Whether to enable scale-down  ("True" / "False") |
+| labels.ca_scale_down_unneeded_time | Applied to the worker node group:  Cluster Autoscaler: Scale down unneeded time |
+| labels.ca_scale_down_util_thresh | Body | String | Applied to the worker node group:  Cluster Autoscaler: Scale down utilization threshold  |
+| labels.ca_scale_down_delay_after_add | Body | String | Applied to the worker node group: Cluster Autoscaler: Scale down delay after add |
+| labels.mba_scale_out | Body | String | Applied to the worker node group:  Configure metric-based autoscaler scale-out policy |
+| labels.mba_scale_in | Body | String | Applied to the worker node group:  Configure metric-based autoscaler scale-in policy |
 | labels.kube_tag | Body | String | Kubernetes version of the worker node group |
 | labels.user_script | Body | String | User Script (old) |
 | labels.user_script_v2 | Body | String | User Script |
@@ -1301,16 +1368,16 @@ X-Auth-Token: {tokenId}
 | labels.availability_zone | Body | String | O | Applied to the default worker node group: Availability zone |
 | labels.boot_volume_type | Body | String | O | Applied to the default worker node group: Block storage type|
 | labels.boot_volume_size | Body | String | O | Applied to the default worker node group: Block storage size (GB) |
-| labels.ca_enable | Body | String | O | Applied to the default worker node group: Autoscaler: Whether to enable the feature ("True" / "False") |
-| labels.ca_max_node_count | Body | String | X | Applied to the default worker node group: Autoscaler: Maximum number of nodes |
+| labels.ca_enable | Body | String | O | Applied to the default worker node group: Cluster Autoscaler: Whether to enable the feature (“True” / “False”) |
+| labels.ca_pod_replicas | Body | String | X | Applied to the default worker node group: Cluster Autoscaler: Number of Pods |
+| labels.ca_max_node_count | Body | String | X |Applied to the default worker node group: Autoscaler: Maximum number of nodes |
 | labels.ca_min_node_count | Body | String | X | Applied to the default worker node group: Autoscaler: Minimum number of nodes |
 | labels.ca_scale_down_enable | Body | String | X | Applied to the default worker node group: Autoscaler: Whether to enable scale-down ("True" / "False") |
-| labels.ca_pod_replicas | Body | String | X | Applied to the default worker node group: Autoscaler: Number of pods |
 | labels.ca_scale_down_unneeded_time | Body | String | X | Applied to the default worker node group: Autoscaler: Scale down unneeded time |
-| labels.ca_scale_down_util_thresh | Body | String | X | Applied to the default worker node group: Autoscaler: Scale down utilization threshold  |
-| labels.ca_scale_down_delay_after_add | Body | String | X | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
-| labels.ca_scale_down_util_thresh | Body | String | X | Applied to the default worker node group: Autoscaler: Scale down utilization threshold  |
-| labels.ca_scale_down_delay_after_add | Body | String | X | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
+| labels.ca_scale_down_util_thresh | Body | String | X | Applied to the default worker node group: Cluster Autoscaler: Scale down utilization threshold  |
+| labels.ca_scale_down_delay_after_add | Body | String | X | Applied to the default worker node group: Cluster Autoscaler: Scale down delay after add |
+| labels.mba_scale_out | Body | String | X | Applied to the default worker node group: Configure metric-based autoscaler scale-out policy |
+| labels.mba_scale_in | Body | String | X | Applied to the default worker node group: Configure metric-based autoscaler scale-in policy |
 | labels.user_script | Body | String | X | User Script (old) |
 | labels.user_script_v2 | Body | String | X | User Script |
 | labels.additional_network_id_list | Body | String | X | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
@@ -1324,6 +1391,10 @@ X-Auth-Token: {tokenId}
 | labels.extra_volumes[].volume_key_id | Body | String | X | (Symmetric key ID to apply to encrypted block storage (if using encrypted block storage) |
 | labels.extra_volumes[].volume_appkey | Body | String | X | The appkey for the symmetric key to apply to encrypted block storage (if using encrypted block storage) |
 | labels.extra_volumes[].volume_mount_path | Body | String | X | Path where additional block storage will be mounted |
+| labels.fip_auto_bind_enable | Body | String | X | Auto-assign floating IP: Whether to enable the feature ("True" / "False") |
+| labels.fip_bind_subnet | Body | String | X | Auto-assign floating IP: The subnet of the network interface to which the floating IP is connected |
+| labels.fip_selector | Body | String | X | Auto-assign floating IP: An identifier for selecting a floating IP to assign to a node |
+| labels.k8s_node_labels | Body | String | Setting up Kubernetes labels |
 | name | Body | String | O | Node Group Name |
 | node_count | Body | Integer | X | Number of nodes (Default: 1) |
 
@@ -1361,14 +1432,16 @@ X-Auth-Token: {tokenId}
 | labels.availability_zone | Body | String | Applied to the default worker node group: Availability zone |
 | labels.boot_volume_type | Body | String | Applied to the default worker node group: Block storage type|
 | labels.boot_volume_size | Body | String | Applied to the default worker node group: Block storage size (GB) |
-| labels.ca_enable | Body | String | Applied to the default worker node group: Autoscaler: Whether to enable the feature ("True" / "False") |
-| labels.ca_pod_replicas | Body | String | X | Applied to the default worker node group: Autoscaler: Number of pods |
+| labels.ca_enable | Body | String | Applied to the default worker node group: Cluster Autoscaler: Whether to enable the feature (“True” / “False”) |
+| labels.ca_pod_replicas | Body | String | Applied to the default worker node group: Cluster Autoscaler: Number of Pods |
 | labels.ca_max_node_count | Body | String | Applied to the default worker node group: Autoscaler: Maximum number of nodes |
 | labels.ca_min_node_count | Body | String | Applied to the default worker node group: Autoscaler: Minimum number of nodes |
 | labels.ca_scale_down_enable | Body | String | Applied to the default worker node group: Autoscaler: Whether to enable scale-down ("True" / "False") |
 | labels.ca_scale_down_unneeded_time | Body | String | Applied to the default worker node group: Autoscaler: Scale down unneeded time |
-| labels.ca_scale_down_util_thresh | Body | String | Applied to the default worker node group: Autoscaler: Scale down utilization threshold  |
-| labels.ca_scale_down_delay_after_add | Body | String | Applied to the default worker node group: Auto Scaler: Scale down delay after add |
+| labels.ca_scale_down_util_thresh | Body | String | Applied to the default worker node group: Cluster Autoscaler: Scale down utilization threshold  |
+| labels.ca_scale_down_delay_after_add | Body | String | Applied to the default worker node group: Cluster Autoscaler: Scale down delay after add |
+| labels.mba_scale_out | Body | String | Applied to the default worker node group: Configure metric-based autoscaler scale-out policy |
+| labels.mba_scale_in | Body | String | Applied to the default worker node group: Configure metric-based autoscaler scale-in policy |
 | labels.user_script | Body | String | User Script (old) |
 | labels.user_script_v2 | Body | String | User Script |
 | labels.additional_network_id_list | Body | String | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
@@ -1561,9 +1634,9 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### View Autoscaler Configuration of a Node Group
+### View Cluster Autoscaler Configuration of a Node Group
 
-Views the autoscaler configuration of a node group.
+Views the cluster autoscaler configuration of a node group.
 
 ```
 GET /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}/autoscale
@@ -1619,9 +1692,9 @@ This API does not require a request body.
 
 ---
 
-### Change Autoscaler Configuration of a Node Group
+### Change Cluster Autoscaler Configuration of a Node Group
 
-Changes the autoscaler configuration of a node group.
+Changes the cluster autoscaler configuration of a node group.
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}/autoscale
@@ -1666,6 +1739,139 @@ X-Auth-Token: {tokenId}
 </p>
 </details>
 
+
+
+#### Response
+
+| Name | Type | Format | Description |
+|---|---|---|---|
+| uuid | Body | UUID | Node group UUID |
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "uuid": "018b06c5-1293-4081-8242-167a1cb9f262"
+}
+```
+
+</p>
+</details>
+
+---
+
+### Change Metric-Based Autoscaler Configuration of a Node Group
+
+Changes the metric-based autoscaler configuration of a node group.
+
+```
+PATCH /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### Request
+
+| Name | Type | Format | Required | Description |
+|---|---|---|---|---|
+| tokenId | Header | String | O | Token ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | Node group UUID or node group name | 
+| type | Body | String | O | Setting metric_base_autoscale |
+| mba_scale_out | Body | Object | X | Configure metric-based autoscale scale-out policy |
+| mba_scale_out.enable | Body | Boolean | X | Whether to enable the feature ("True" / "False") |
+| mba_scale_out.max_node_count | Body | Integer | X | Maximum number of nodes in a node group |
+| mba_scale_out.rules_operator | Body | String | X | Operator Applied Between Scaling-Out Rules ("AND" / "OR") |
+| mba_scale_out.delay | Body | Integer | X | Scale-Out Wait Time (1 to 60 minutes) |
+| mba_scale_out.adjustment_count | Body | Integer | X | Number of scale-out nodes (1 to 10) |
+| mba_scale_out.rules | Body | List of Object | Requires at least one rule to be set if mba_scale_out.enable setting is true | Configure scale-out rules |
+| mba_scale_out.rules.metric | Body | Integer | Required if the mba_scale_out.enable setting is true | Configure metrics |
+| mba_scale_out.rules.threshold | Body | Integer | Required if the mba_scale_out.enable setting is true | Configure thresholds |
+| mba_scale_out.rules.duration | Body | Integer | Required if the mba_scale_out.enable setting is true | Scale down unneeded time (2 to 60 minutes) |
+| mba_scale_in | Body | Object | X | Configure metric-based autoscale scale-in policy |
+| mba_scale_in.enable | Body | Boolean | X | Whether to enable the feature ("True" / "False") |
+| mba_scale_in.min_node_count | Body | Integer | X | Minimum number of nodes in a node group |
+| mba_scale_in.rules_operator | Body | String | X | Operator Applied Between Scaling-In Rules ("AND" / "OR") |
+| mba_scale_in.delay | Body | Integer | X | Scale-In Wait Time (1 to 60 minutes) |
+| mba_scale_in.adjustment_count | Body | Integer | X | Number of scale-in nodes (1 to 10) |
+| mba_scale_in.rules | Body | List of Object | Requires at least one rule to be set if the mba_scale_in.enable setting is true | Configure scale-in rules |
+| mba_scale_in.rules.metric | Body | Integer | Required if the mba_scale_in.enable setting is true | Configure metrics |
+| mba_scale_in.rules.threshold | Body | Integer | Required if the mba_scale_in.enable setting is true | Configure thresholds |
+| mba_scale_in.rules.duration | Body | Integer | Required if the mba_scale_in.enable setting is true | Scale down unneeded time (2 to 60 minutes) |
+
+##### List of metric settings
+
+| System resources | Setting value |
+| --- | --- |
+| CPU usage | GROUP_CPU_USAGE |
+| Memory usage | GROUP_MEMORY_USAGE |
+| Disk transfer rate (read) | GROUP_DISK_READ_BYTES |
+| Disk transfer rate (write) | GROUP_DISK_WRITE_BYTES |
+| Network transfer rate (send) | GROUP_NETWORK_SENT_BYTES |
+| Network transfer rate (receive) | GROUP_NETWORK_RECV_BYTES |
+
+
+<details><summary>Activation example</summary>
+<p>
+
+```json
+{
+    "type": "metric_base_autoscale",
+    "mba_scale_out": {
+        "enable": "True",
+        "max_node_count": 6,
+        "rules_operator": "or",
+        "delay": 10,
+        "adjustment_count": 2,
+        "rules": [
+            {
+                "metric": "GROUP_CPU_USAGE",
+                "threshold": 80,
+                "duration": 2
+            }
+        ]
+    },
+    "mba_scale_in": {
+        "enable": "True",
+        "min_node_count": 2,
+        "rules_operator": "or",
+        "delay": 5,
+        "adjustment_count": 1,
+        "rules": [
+            {
+                "metric": "GROUP_CPU_USAGE",
+                "threshold": 50,
+                "duration": 2
+            }
+        ]
+    }
+}
+```
+
+</p>
+</details>
+
+
+<details><summary>Deactivation examples</summary>
+<p>
+
+```json
+{
+    "type": "metric_base_autoscale",
+    "mba_scale_out": {
+        "enable": false
+    },
+    "mba_scale_in": {
+        "enable": false
+    }
+}
+```
+
+</p>
+</details>
 
 
 #### Response
@@ -1869,11 +2075,583 @@ X-Auth-Token: {tokenId}
 
 ---
 
+### Change Floating IP Auto-assignment Configuration of a Node Group
+
+Changes the Floating IP auto-assignment configuration of a node group.
+
+```
+PATCH /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### Request
+
+| Name | Type | Format | Required | Description |
+|---|---|---|---|---|
+| tokenId | Header | String | O | Token ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | Node group UUID or node group name | 
+| type | Body | String | O | Set to `fip_auto_bind` |
+| fip_auto_bind_update_info | Body | Object | O | Floating IP auto-assign configuration object |
+| fip_auto_bind_update_info.fip_auto_bind_enable | Body | Boolean | O | Whether to enable the feature ("True" / "False") |
+| fip_auto_bind_update_info.fip_bind_subnet | Body |  String | O (when the enable setting is true) | The subnet of the network interface to which the floating IP is connected. <br> The subnet to connect to must be the primary subnet of the cluster or included in the additional subnets of the node group |
+| fip_auto_bind_update_info.fip_selector | Body | String | X | Identifier for selecting a floating IP to assign to nodes |
+
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "type": "fip_auto_bind",
+    "fip_auto_bind_update_info": {
+        "fip_auto_bind_enable": true,
+        "fip_selector": "nks-fip",
+        "fip_bind_subnet": "7f3237f6-ce05-4e9c-bce8-bbaabd22e83a"
+    }
+}
+```
+
+</p>
+</details>
+
+
+#### Response
+
+| Name | Type | Format | Description |
+|---|---|---|---|
+| uuid | Body | UUID | Node group UUID |
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "uuid": "018b06c5-1293-4081-8242-167a1cb9f262"
+}
+```
+
+</p>
+</details>
+
+---
+
+### Change Kubernetes Label Configuration of a Node Group
+
+Changes the Kubernetes label configuration of a node group.
+
+```
+PATCH /v1/clusters/{CLUSTER_ID_OR_NAME}/nodegroups/{NODEGROUP_ID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### Request
+
+| Name | Type | Format | Required | Description |
+|---|---|---|---|---|
+| tokenId | Header | String | O | Token ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
+| UUID or String | URL | UUID or String | O | Node group UUID or node group name | 
+| String | Body | String | O | Set to `k8s_node_labels` |
+| k8s_node_labels | Body | <summary>Example</summary> | O | A configuration object consisting of Kubernetes label key-value pairs. Up to 20 can be configured |
+
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "type": "k8s_node_labels",
+    "k8s_node_labels": {
+        "node_type": "production",
+        "pod_type": "opt"
+    }
+}
+```
+
+</p>
+</details>
+
+
+#### Response
+
+| Name | Type | Format | Description |
+|---|---|---|---|
+| uuid | Body | UUID | Node group UUID |
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "uuid": "018b06c5-1293-4081-8242-167a1cb9f262"
+}
+```
+
+</p>
+</details>
+
+---
+
+## Add-on Management
+
+### View the Types of Add-ons Offered by NHN Cloud
+You can see the types of add-ons offered by NHN Cloud.
+
+```
+GET /v1/addon_types/${ADDON_TYPE_UUID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### Request
+
+| Name | Type | Format | Required | Description |
+|---|---|---|---|---|
+| tokenId | Header | String | O | Token ID |
+| ADDON_TYPE_UUID_OR_NAME | URL | UUID or String | O | UUID or name of the addon type |
+
+#### Response
+
+| Name | Type | Format | Description |
+|---|---|---|---|
+| UUID | Body | <summary>Example</summary> | Add-on type UUID |
+| String | Body | String | Add-on type name |
+| mandatory | Body | boolean | Required |
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "uuid": "123e4567-e89b-12d3-a456-426614174001",
+    "name": "cni",
+    "mandatory": true
+}
+```
+
+</p>
+</details>
+
+---
+
+### View a List of Add-ons Types Offered by NHN Cloud
+You can see a list of the types of add-ons offered by NHN Cloud.
+
+```
+GET /v1/addon_types/
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### Request
+| Name | Type | Format | Required | Description |
+|---|---|---|---|---|
+| tokenId | Header | String | O | Token ID |
+
+#### Response
+
+| Name | Type | Format | Description |
+|---|---|---|---|
+| addon_types | Body | List of object | List of add-on type information |
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "addon_types": [
+        {"uuid": "123e4567-e89b-12d3-a456-426614174001", "name": "cni", "mandatory": true},
+        {"uuid": "123e4567-e89b-12d3-a456-426614174003", "name": "kube-dns", "mandatory": true}
+    ]
+}
+```
+
+</p>
+</details>
+
+---
+
+### View Add-ons Offered by NHN Cloud
+You can see out the add-ons offered by NHN Cloud.
+
+```
+GET /v1/addons/{ADDON_UUID}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### Request
+
+| Name | Type | Format | Required | Description |
+|---|---|---|---|---|
+| ADDON_UUID | URL | UUID | O | Add-on UUID |
+| tokenId | Header | String | O | Token ID |
+
+
+#### Response
+
+| Name | Type | Format | Description |
+|---|---|---|---|
+| UUID | Body | UUID | Add-on type UUID |
+| String | Body | String | Add-on type name |
+| String | Body | String | Add-on version |
+| String | Body | String | Add-on name |
+| deploy_target | Body | String | (For internal use) Add-on deployment type |
+| k8s_min_version | Body | String | (For internal use) Minimum Supported K8s Version |
+| k8s_max_version | Body | String | (For internal use) Maximum Supported K8s Version |
+| description | Body | String | Add-on descriptions |
+| option_schemas | Body | List of object | List of option definitions |
+| option_schemas.name | Body | String | Name of the option |
+| option_schemas.data_type | Body | String | Data type of the option. One of `STRING`, `INTEGER`, or `SELECT`. |
+| option_schemas.default | Body | String | Default value of the option |
+| option_schemas.updatable | Body | Boolean | Modifiable Option |
+| option_schemas.mandatory | Body | Boolean | Required  |
+| option_schemas.choices | Body | List of String | List of selectable values |
+
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "uuid": "23454567-1234-12d3-a456-426614174001",
+    "type": "cni",
+    "version": "v3.28.2-nks1",
+    "name": "calico",
+    "option_schemas": [
+        {
+            "name": "mode",
+            "data_type": "SELECT",
+            "default": "vxlan",
+            "updatable": false,
+            "mandatory": false,
+            "choices": ["vxlan", "ebpf"]
+        }
+    ],
+    "k8s_min_version": "v1.26.0",
+    "k8s_max_version": null,
+    "description": "Calico is a CNI plugin for Kubernetes that provides networking and network security."
+}
+```
+
+</p>
+</details>
+
+---
+
+### View a List of Add-ons Offered by NHN Cloud
+You can see a list of add-ons offered by NHN Cloud.
+
+```
+GET /v1/addons/
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### Request
+
+| Name | Type | Format | Required | Description |
+|---|---|---|---|---|
+| tokenId | Header | String | O | Token ID |
+
+#### Response
+
+| Name | Type | Format | Description |
+|---|---|---|---|
+| addons | Body | List of object | List of add-on information |
+
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "addons": [
+        {"uuid": "23454567-1234-12d3-a456-426614174001", "type": "cni", "version": "v3.28.2-nks1", "name": "calico", "option_schemas": [{"name": "mode", "data_type": "SELECT", "default": "vxlan", "updatable": false, "mandatory": false, "choices": ["vxlan", "ebpf"]}], "k8s_min_version": "v1.26.0", "k8s_max_version": null, "description": "Calico is a CNI plugin for Kubernetes that provides networking and network security."},
+        {"uuid": "23454567-1234-12d3-a456-426614174005", "type": "kube-dns", "version": "1.8.4-nks1", "name": "coredns", "option_schemas": [], "k8s_min_version": "v1.26.0", "k8s_max_version": null, "description": "CoreDNS is the default DNS server for Kubernetes clusters."}
+    ]
+}
+
+
+```
+
+</p>
+</details>
+
+---
+
+### View Add-ons Installed on a Cluster
+You can see which addons are installed on the cluster.
+
+```
+GET /v1/clusters/{CLUSTER_ID_OR_NAME}/addons/{ADDON_UUID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### Request
+
+| Name | Type | Format | Required | Description |
+|---|---|---|---|---|
+| tokenId | Header | String | O | Token ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name |
+| ADDON_UUID_OR_NAME | URL | UUID or String | O | Add-on UUID or add-on name |
+
+
+#### Response
+
+| Name | Type | Format | Description |
+|---|---|---|---|
+| UUID | Body | UUID | Add-on type UUID |
+| String | Body | String | Project ID |
+| UUID | Body | UUID | Cluster UUID |
+| cluster_name | Body | String | Cluster name |
+| String | Body | String | Add-on type name |
+| String | Body | String | Add-on versions |
+| options | Body | Object | Add-on-specific options |
+| String | Body | String | Add-on name |
+| String | Body | String | Add-on status |
+| String | Body | String | Add-on status reasons |
+| scope | Body | String | Coverage |
+| target_uuid | Body | UUID | Target UUID |
+| String | Body | String | Created time (UTC) |
+| String | Body | String | Last updated time (UTC) |
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "uuid": "0b29e253-fb0d-4888-a8fe-d287c65ba76b",
+    "project_id": "1ffeaca9bbf94ab1aa9cffdec29a258a",
+    "cluster_uuid": "6c1284e2-8ead-46a7-ace9-c19d6eec76b3",
+    "cluster_name": "tw-addon3",
+    "type": "cni",
+    "version": "v3.28.2-nks1",
+    "options": {"mode": "vxlan"},
+    "name": "calico",
+    "status": "UPDATE_COMPLETE",
+    "status_reason": null,
+    "scope": "cluster",
+    "target_uuid": "6c1284e2-8ead-46a7-ace9-c19d6eec76b3",
+    "created_at": "2025-04-25T15:11:48+00:00",
+    "updated_at": "2025-04-25T15:17:16+00:00"
+}
+```
+
+</p>
+</details>
+
+---
+
+### View a List of Add-ons Installed on a Cluster
+You can see a list of the addons installed on a cluster.
+
+```
+GET /v1/clusters/{CLUSTER_ID_OR_NAME}/addons/
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### Request
+
+| Name | Type | Format | Required | Description |
+|---|---|---|---|---|
+| tokenId | Header | String | O | Token ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name |
+
+#### Response
+
+| Name | Type | Format | Description |
+|---|---|---|---|
+| addons | Body | List of Object | List of installed add-on information |
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "addons": [
+        {"uuid": "0b29e253-fb0d-4888-a8fe-d287c65ba76b", "project_id": "1ffeaca9bbf94ab1aa9cffdec29a258a", "cluster_uuid": "6c1284e2-8ead-46a7-ace9-c19d6eec76b3", "cluster_name": "tw-addon3", "type": "cni", "version": "v3.28.2-nks1", "options": {"mode": "vxlan"}, "name": "calico", "status": "UPDATE_COMPLETE", "status_reason": null, "scope": "cluster", "target_uuid": "6c1284e2-8ead-46a7-ace9-c19d6eec76b3", "created_at": "2025-04-25T15:11:48+00:00", "updated_at": "2025-04-25T15:17:16+00:00"},
+        {"uuid": "be71a120-7596-4b25-bee5-d5317e5134ee", "project_id": "1ffeaca9bbf94ab1aa9cffdec29a258a", "cluster_uuid": "6c1284e2-8ead-46a7-ace9-c19d6eec76b3", "cluster_name": "tw-addon3", "type": "kube-dns", "version": "1.8.4-nks1", "options": {}, "name": "coredns", "status": "UPDATE_FAILED", "status_reason": null, "scope": "cluster", "target_uuid": "6c1284e2-8ead-46a7-ace9-c19d6eec76b3", "created_at": "2025-05-02T06:16:39+00:00", "updated_at": "2025-05-08T01:03:19+00:00"}
+    ]
+}
+```
+
+</p>
+</details>
+
+---
+
+### Install Add-ons on a Cluster
+Install the add-on on a cluster.
+
+```
+POST /v1/clusters/{CLUSTER_ID_OR_NAME}/addons/
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### Request
+
+| Name | Type | Format | Required | Description |
+|---|---|---|---|---|
+| tokenId | Header | String | O | Token ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name |
+| String | Body | String | O | Add-on name |
+| String | Body | String | O | Add-on versions |
+| resolve_conflicts | Body | String | O | Conflict options. one of `none`, `overwrite`, or `preserve`. |
+
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{"version": "1.8.4-nks1", "name": "coredns", "resolve_conflicts": "overwrite"}
+```
+
+</p>
+</details>
+
+
+#### Response
+
+| Name | Type | Format | Description |
+|---|---|---|---|
+| UUID | Body | UUID | Cluster UUID |
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "uuid": "6c1284e2-8ead-46a7-ace9-c19d6eec76b3"
+}
+```
+
+</p>
+</details>
+
+---
+
+### Update Add-ons to a cluster
+Update the addons installed on a cluster.
+
+```
+PATCH /v1/clusters/{CLUSTER_ID_OR_NAME}/addons/{ADDON_UUID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### Request
+
+| Name | Type | Format | Required | Description |
+|---|---|---|---|---|
+| tokenId | Header | String | O | Token ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name |
+| ADDON_UUID_OR_NAME | URL | UUID or String | O | Add-on UUID or add-on name |
+| String | Body | String | O | Add-on versions |
+| resolve_conflicts | Body | String | O | Conflict options. one of `none`, `overwrite`, or `preserve`. |
+
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{"version": "1.8.4-nks1", "resolve_conflicts": "none"}
+```
+
+</p>
+</details>
+
+
+#### Response
+
+| Name | Type | Format | Description |
+|---|---|---|---|
+| UUID | Body | UUID | Cluster UUID |
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "uuid": "6c1284e2-8ead-46a7-ace9-c19d6eec76b3"
+}
+```
+
+</p>
+</details>
+
+---
+
+### Remove Add-ons from a cluster
+Uninstall the add-on installed on a cluster.
+
+```
+DELETE /v1/clusters/{CLUSTER_ID_OR_NAME}/addons/{ADDON_UUID_OR_NAME}
+Accept: application/json
+Content-Type: application/json
+OpenStack-API-Version: container-infra latest
+X-Auth-Token: {tokenId}
+```
+
+#### Request
+
+| Name | Type | Format | Required | Description |
+|---|---|---|---|---|
+| tokenId | Header | String | O | Token ID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name |
+| ADDON_UUID_OR_NAME | URL | UUID or String | O | Add-on UUID or add-on name |
+
+#### Response
+
+| Name | Type | Format | Description |
+|---|---|---|---|
+| UUID | Body | UUID | Cluster UUID |
+
+<details><summary>Example</summary>
+<p>
+
+```json
+{
+    "uuid": "6c1284e2-8ead-46a7-ace9-c19d6eec76b3"
+}
+```
+
+</p>
+</details>
+
+
+
 ## Other Features
 
-### See the Supported Kubernetes Versions
+### View supported Kubernetes versions and task types
 
-Retrieves the Kubernetes versions supported by NHN Kubernetes Service (NKS).
+You can see the Kubernetes version and task type supported by NHN Kubernetes Service (NKS).
 
 ```
 GET /v1/supports
@@ -1885,7 +2663,7 @@ X-Auth-Token: {tokenId}
 
 #### Request
 
-This API does not require a request body. 
+This API does not require a request body.
 
 | Name | Type | Format | Required | Description |
 |---|---|---|---|---|
@@ -1896,10 +2674,10 @@ This API does not require a request body.
 
 | Name | Type | Format | Description |
 |---|---|---|---|
-| supported_k8s | Body | Object | Supported Kubernetes version object |
-| supported_k8s."version name" | Body | String | Whether the Kubernetes version is valid or not (True/False) |
-| supported_event_type."task type"| Body | Object | Supported task type objects (cluster_events/nodegroup_events) |
-| supported_event_type."task type"."task name"| Body | Object | Task type and description |
+| Object | Body | Object | Supported Kubernetes version object |
+| String | Body | String | Validity of the Kubernetes version (“True”/”False”) |
+| Object| Body | Object | Supported task type object (“cluster_events”/”nodegroup_events”) |
+| Object| Body | Object | Task type and descriptions |
 
 <details><summary>Example</summary>
 <p>
@@ -1918,33 +2696,53 @@ This API does not require a request body.
         "v1.25.4": false,
         "v1.26.3": false,
         "v1.27.3": false,
-        "v1.28.3": true,
+        "v1.28.3": false,
         "v1.29.3": true,
         "v1.30.3": true,
-        "v1.31.4": true      
+        "v1.31.4": true,
+        "v1.32.3": true
     },
     "supported_event_type": {
-        "cluster_events": {
-            "CLUSTER_CREATE": "Create a cluster",
-            "CLUSTER_DELETE": "Delete a cluster",
-            "CLUSTER_HANDOVER": "Cluster OWNER change",
-            "CLUSTER_CNI_UPDATE": "Change CNI"
-        },
-        "nodegroup_events": {
-            "NODEGROUP_CREATE": "Node group creation",
-            "NODEGROUP_DELETE": "Delete a node group",
-            "CLUSTER_RESIZE": "Resize the cluster",
-            "NODEGROUP_UPDATE_FLAVOR": "Change instance type",
-            "NODEGROUP_UPGRADE": "Upgrade a node group",
-            "NODEGROUP_USERSCRIPT_UPDATE": "Change userscript",
-            "NODEGROUP_SET_CLUSTER_AUTOSCALER": "Change Auto Scaler settings",
-            "NODEGROUP_NODE_ACTION_NODE_START": "Start worker node",
-            "NODEGROUP_NODE_ACTION_NODE_STOP": "Stop worker node"
-        }
+        "CLUSTER_CREATE": "Create a cluster",
+        "CLUSTER_DELETE": "Delete a cluster",
+        "CLUSTER_HANDOVER": "Cluster OWNER change",
+        "CLUSTER_UPDATE_VM_AUTH_KEY": "Update key pair",
+        "NODEGROUP_CREATE": "Create a node group",
+        "NODEGROUP_DELETE": "Delete a node group",
+        "CLUSTER_RESIZE": "Resize a cluster",
+        "NODEGROUP_SCALE_OUT": "Scale out nodes",
+        "NODEGROUP_SCALE_IN": "Scale in nodes",
+        "NODEGROUP_UPDATE_FLAVOR": "Change instance type",
+        "NODEGROUP_UPGRADE": "Node group upgrade",
+        "NODEGROUP_USERSCRIPT_UPDATE": "Change userscript",
+        "NODEGROUP_SET_CLUSTER_AUTOSCALER": "Change cluster autoscaler settings",
+        "NODEGROUP_SET_METRIC_BASE_AUTOSCALER": "Change metric-based autoscaler settings",
+        "NODEGROUP_METRIC_BASE_AUTOSCALER_SCALE_OUT": "Scale out nodes with threshold-based autoscaler",
+        "NODEGROUP_METRIC_BASE_AUTOSCALER_SCALE_IN": "Scale in nodes with threshold-based autoscaler",
+        "CLUSTER_API_EP_IPACL_UPDATE": "Cluster API endpoint IP access control change",
+        "NODEGROUP_NODE_ACTION_START_NODE": "Start worker node",
+        "NODEGROUP_NODE_ACTION_STOP_NODE": "Stop worker node",
+        "CLUSTER_UPDATE_SGW": "Update Cluster Service Gateway",
+        "CLUSTER_ROTATE_CERTIFICATE": "Rotate cluster certificate",
+        "CLUSTER_UPDATE_NKS_REGISTRY": "Activate NKS registry",
+        "NODEGROUP_UPDATE_EXTRA_VOLUME": "Update extra block storage",
+        "NODEGROUP_UPDATE_EXTRA_SECURITY_GROUP": "Update Extra security groups",
+        "CLUSTER_UPDATE_K8S_ARGS": "Update to Kubernetes component options",
+        "CLUSTER_UPDATE_OIDC_ARGS": "Update OIDC settings",
+        "NODEGROUP_UPDATE_K8S_NODE_LABELS": "Update node group Kubernetes label settings",
+        "CLUSTER_INSTALL_ADDON": "Install Addon",
+        "CLUSTER_UNINSTALL_ADDON": "Uninstall Addon",
+        "CLUSTER_UPDATE_ADDON": "Update Addon",
+        "CLUSTER_UPDATE_CONTROL_PLANE_LOG": "Update control plane log collection",
+        "NODEGROUP_UPDATE_FIP_AUTO_BIND": "Change node group floating IP auto-assignment settings",
+        "K8S_API_NOT_WORKING": "Stop kube-apiserver",
+        "ALL_NODES_NOT_READY": "All nodes stopped",
+        "AUTO_HEALING": "Auto healing"
     }
 }
 ```
 
 </p>
 </details>
+
 
