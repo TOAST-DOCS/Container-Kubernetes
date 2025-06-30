@@ -560,9 +560,9 @@ For example, if the condition is CPU utilization ≥ 90% and the scale down unne
 | Minimum Node Count | 3 units |
 | Adjusting scale-down nodes | 1 unit |
 | Wait time after scale-down | 10 minutes |
-| Scale-up conditions: Metrics | 3.10 |
-| Scale-up conditions: Scale down unneeded time  | 2 min |
-| Scale-up conditions: Threshold | 30% or less |
+| Scale-down conditions: Metrics | 3.10 |
+| Scale-down conditions: Scale down unneeded time  | 2 min |
+| Scale-down conditions: Threshold | 30% or less |
 
 **Behavior summary**
 
