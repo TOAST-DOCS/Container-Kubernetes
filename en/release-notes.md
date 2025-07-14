@@ -1,5 +1,22 @@
 ## Container > NHN Kubernetes Service (NKS) > Release Notes
 
+### May 27, 2025
+
+#### Added Features
+* Support for Kubernetes v1.32.3.
+* Added the feature to save control plane Kubernetes component logs.
+* Added metric-based autoscaler.
+* The feature to automatically assign floating IPs per node group is available.
+* The feature to set Kubernetes labels by node group is available.
+* Addon management feature is available.
+    * For more information, see [User Guide](/Container/NKS/ko/user-guide/#addon_mgmt).
+
+#### Feature Updates
+* The feature to change cluster CNI is no longer supported.
+* Physical load balancers are no longer supported.
+* Removed the system pod upgrade step during Blue/Green Upgrade.
+    * System pods like Calico, CoreDNS, and others can be updated through the add-on management.
+
 ### March 4, 2025
 
 #### Added Features

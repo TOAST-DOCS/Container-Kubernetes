@@ -22,7 +22,7 @@ NKS's Kubernetes version support policy is as follows.
     * So when a new version is added to the createable versions, the lowest version among the serviceable versions is removed.
 
 For each Kubernetes version, here's when you can expect to see additions/deletions to the createable versions and when versions are listed as end of service.
-(Note that this table is current as of March 4, 2024, and the version names of createable versions and when they are provided are subject to change due to our internal circumstances)
+(Note that this table is current as of May 2025, and the version names of createable versions and when they are provided are subject to change due to our internal circumstances)
 
 | Version    | Add to Createable Versions | Remove from Createable Versions | End of Service Support |
 |:-------:|:-------------------:|:--------------------:|:---------------------:|
@@ -31,12 +31,13 @@ For each Kubernetes version, here's when you can expect to see additions/deletio
 | v1.24.3 | 2022. 09.           | 2024. 02.            | 2024. 05.             |
 | v1.25.4 | 2023. 01.           | 2024. 05.            | 2024. 08.             |
 | v1.26.3 | 2023. 05.           | 2024. 08.            | 2025. 02.             |
-| v1.27.3 | 2023. 08.           | 2025. 02.            | 2025. 05.(Scheduled)       |
-| v1.28.3 | 2024. 02.           | 2025. 05.(Scheduled)      | 2025. 08.(Scheduled)       |
-| v1.29.3 | 2024. 05.           | 2025. 08.(Scheduled)      | 2026. 02.(Scheduled)       |
-| v1.30.3 | 2024. 08.           | 2026. 02.(Scheduled)      | 2026. 05.(Scheduled)       |
-| v1.31.4 | 2025. 02.           | 2026. 05.(Scheduled)      | 2026. 08.(Scheduled)       |
-| v1.32.x | 2025. 05.(Scheduled)     | 2026. 08.(Scheduled)      | 2027. 02.(Scheduled)       |
+| v1.27.3 | 2023. 08.           | 2025. 02.            | 2025. 05.             |
+| v1.28.3 | 2024. 02.           | 2025. 05.            | 2025. 08.(Scheduled)  |
+| v1.29.3 | 2024. 05.           | 2025. 08.(Scheduled) | 2026. 02.(Scheduled)  |
+| v1.30.3 | 2024. 08.           | 2026. 02.(Scheduled) | 2026. 05.(Scheduled)  |
+| v1.31.4 | 2025. 02.           | 2026. 05.(Scheduled) | 2026. 08.(Scheduled)  |
+| v1.32.3 | 2025. 05.           | 2026. 08.(Scheduled) | 2027. 02.(Scheduled)  |
+| v1.33.x | 2025. 08.(Scheduled)| 2027. 02.(Scheduled) | 2027. 05.(Scheduled)  | 
 
 <a id="cluster-create"></a>
 ### Creating Clusters
@@ -45,7 +46,7 @@ To use NHN Kubernetes Service (NKS), you must create clusters first.
 > [Caution] Setting up permissions to use clusters<br>
 > To create a cluster, the user must have **Infrastructure ADMIN**, **Infrastructure LoadBalancer ADMIN**, or **Infrastructure NKS ADMIN** permissions of basic infrastructure services for the project.
 Only with the permissions, the user can normally create and operate clusters running on basic infrastructure services. It is totally possible to add one of the two permissions when the other is already acquired.
-To learn more about setting up permissions, see [Manage Project Members](/TOAST/en/console-guide/#_22).
+To learn more about setting up permissions, see [Manage Project Members](/nhncloud/en/console-user-guide/#_3).
 
 Go to **Container > NHN Kubernetes Service(NKS)** and click **Create Cluster** and a page for creating clusters shows up. The following items are required to create a cluster.
 
@@ -300,6 +301,7 @@ When you stop a node that is started, the node operates in the following order.
 * Turn the node into the SHUTDOWN status at the instance level.
 
 If you start a stopped node, it operates in the following order.
+
 * The node becomes the ACTIVE status at the instance level.
 * The node is added to Kubernetes node resources again.
 
@@ -444,12 +446,22 @@ To prevent workloads that do not require GPU from being allocated to GPU nodes, 
 
 <a id="autoscaler"></a>
 ### Autoscaler
-Autoscaler is a feature that automatically adjusts the number of nodes when a node group does not have enough resources available to schedule pods or when the node's utilization remains below a certain level. Autoscaler can be set for each node group and operates independently of each other. This feature is based on the cluster-autoscaler feature, an officially supported feature of the Kubernetes project. For more information, refer to [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler).
+An autoscaler is a feature that automatically adjusts the number of nodes when a node group runs out of available resources or when the utilization of when node utilization stays below a certain threshold. It can be configured for each node group and operates independently. NKS supports two types of autoscalers.
 
-> [Note]
-The version of the `cluster-autoscaler` applied to NHN Kubernetes Service (NKS) is `1.19.0.`
+* Metric-based autoscaler
+* Cluster Autoscaler
 
-#### Glossary
+The Autoscaler is set up and operates on a per-node group basis. The feature can be set up with the path below
+
+* Set up on the default node groups when creating a cluster.
+* Set up on additional node groups when adding the node groups.
+* Set up on existing node groups.
+
+> [Caution]
+Nodes cannot be manually added to or removed from node groups on which autoscaler is enabled.
+Autoscaler cannot be enabled multiple times. 
+
+**Glossary**
 Terms used in relation to the autoscaler and their meanings are as follows:
 
 | Term | Meaning |
@@ -457,24 +469,138 @@ Terms used in relation to the autoscaler and their meanings are as follows:
 | Scale Up | Increase a number of nodes. |
 | Scaling Down | Decrease a number of nodes. |
 
-> [Caution]
-If worker nodes are working in an environment with no Internet connection, autoscaler container images must be manually installed on the worker nodes. This task is required for the following targets:
-> 
-> * Pangyo Region: Node groups created before November 24, 2020
-> * Pyeongchon Region: Node groups created before November 19, 2020
-> 
-> The container image path of autoscaler is as follows:
->
-> * k8s.gcr.io/autoscaling/cluster-autoscaler:v1.19.0
+<a id="metric-base-autoscaler"></a>
+#### Metric-based autoscaler
+The metrics-based autoscaler operates based on NHN Cloud's [Cloud Monitoring](/Monitoring/Cloud%20Monitoring/ko/overview/) service. A metric collection agent installed on the worker nodes sends system metrics to Cloud Monitoring at one-minute intervals, and automatically adds or removes nodes when the collected metrics exceed or fall below the thresholds you set. The Scale Up and Scale Down features can be enabled independently of each other.
 
-#### Autoscaler Settings
-Autoscaler is set and operated for each node group. Autoscaler can be set up in various ways, as listed below:
+<a id="metric-base-autoscaler-set"></a>
+##### Metric-based Autoscaler Settings
+When enabling metric-based autoscaler, you can set the following items:
 
-* Set up on the default node groups when creating a cluster.
-* Set up on additional node groups when adding the node groups.
-* Set up on existing node groups.
+**Scale-Up Settings**
 
-Activating the autoscaler enables the following options:
+| Settings Item | Meaning | Valid Range | Default |
+| --- | --- | --- | --- |
+| Maximum Node Count | Maximum number of nodes that can be scaled up| 1-10 | 10 |
+| Enabled | Enable or disable the node scale-up autoscaler | Enable/Disable | Disable |
+
+**Scale-Down Settings**
+
+| Settings Item | Meaning | Valid Range | Default |
+| --- | --- | --- | --- |
+| Minimum Node Count | Minimum number of nodes that can be scaled down| 1-10 | 10 |
+| Enabled | Configure whether to enable or disable the node scale-down autoscaler | Enable/Disable | Disable |
+
+**Common Settings**
+
+| Settings Item | Meaning | Valid Range | Default | Unit |
+| --- | --- | --- | --- | --- |
+| Rule operators | Setting the operators applied between auto-scaling triggering conditions<br>AND: Triggered when all conditions are met<br>OR: Triggered if either is met | AND/OR | OR | - |
+| Autoscaling latency | Minimum wait time before the next scaling operation after the previous one completes (can be configured separately for scale-up and scale-down)| 1 - 60 | 10 | minutes |
+| Node performance metrics | Setting the metrics to monitor (see table below) | Metric types | Required settings | - |
+| Number of node adjustments | Number of nodes to add/remove when autoscaling occurs | 1 - 10 | 1 | unit |
+| Configure thresholds | Metric thresholds for triggering conditions | By metric | Required settings | - |
+| Scale Down Unneeded Time| Run a scale action when a threshold condition lasts longer than a set time (2-60 minutes)| 2-60 | Required settings | minutes |
+
+**Node performance metrics**
+
+| System resources | Statistical data provided | Unit |
+| --- | --- | --- |
+| CPU usage | Average CPU usage of all nodes in the node group | % |
+| Memory usage | Average memory usage of all nodes in the node group | % |
+| Disk transfer rate (read) | The average amount of disk read data per second across all nodes in the node group. | Bytes/s |
+| Disk transfer rate (write) | The average amount of data written to disk per second across all nodes in the node group. | Bytes/s |
+| Network transfer rate (Send) | The average amount of data sent to the network per second across all instances in the scaling group. | Bytes/s |
+| Network transmission rate (receive) | The average amount of data received from the network per second across all instances in the scaling group. | Bytes/s |
+
+<a id="metric-base-autoscaler-resize"></a>
+##### Scale-Up/Down Conditions
+Scales up if all of the following conditions are met:
+
+* Selected node performance metrics have exceeded the threshold for longer than the scale down unneeded time.
+* The current number of nodes is below the maximum limit.
+* Autoscaling wait time elapsed
+
+Scales down if all of the following conditions are met:
+
+* Node performance metrics have remained below the threshold for longer than the scale down unneeded time.
+* The current number of nodes exceeds the minimum limit.
+* Autoscaling wait time elapsed
+
+> [Note]
+> Autoscaling wait time can be specified for both scaling up and/down policies.
+> In general, specifying a short scale-up wait time allows you to respond immediately to sudden load increases.
+> Conversely, set a long scale-down wait time to ensure stability by slowly reducing instances.
+> You must continuously monitor the service load and configure appropriate policies to prevent unnecessary instance usage.
+If only one specific node meets the condition, the policy will not be triggered. The evaluation is based on the average of all nodes in the node group.
+Whether a policy is triggered is determined by continuously checking if the specified performance metric exceeds the threshold for the duration of the scale down unneeded time.
+For example, if the condition is CPU utilization ≥ 90% and the scale down unneeded time is 5 minutes, the policy will be triggered only if the CPU utilization stays at or above 90% for the full 5 minutes.
+
+> [Note: Node Scale-down]
+> When the metric-based autoscaler performs scale-down, it removes the most recently created nodes first.
+
+<a id="metric-base-autoscaler-example"></a>
+##### Example
+
+**Scale-up policy**
+
+| Settings Item | Value |
+| --- | --- |
+| Maximum number of nodes | 7 units |
+| Adjusting scale-up nodes | 3 units |
+| Wait time after scale-up | 5 minutes |
+| Scale-up conditions: Metrics | 3.10 |
+| Scale-up conditions: Scale down unneeded time  | 5 minutes |
+| Scale-up conditions: Threshold | 70% or more |
+
+**Scale-down policy**
+
+| Settings Item | Value |
+| --- | --- |
+| Minimum Node Count | 3 units |
+| Adjusting scale-down nodes | 1 unit |
+| Wait time after scale-down | 10 minutes |
+| Scale-down conditions: Metrics | 3.10 |
+| Scale-down conditions: Scale down unneeded time  | 2 min |
+| Scale-down conditions: Threshold | 30% or less |
+
+**Behavior summary**
+
+* Number of nodes in current node group: 5
+* A scale-up is triggered when the average CPU usage of 5 nodes stays above 70% for 5 minutes
+* Although the node adjustment setting in the scale-up policy is 3 nodes, only 2 nodes were actually added because the maximum node count is set to 7 (Node count: 5 → 7)
+* 5 minutes after the node scale-up was completed, the average CPU usage of the 7 nodes stayed below 30% for 2 minutes, triggering a scale-down request
+* Request rejected because the wait time after scale-down is 10 minutes
+* A scale-down operation was performed 10 minutes later
+* Since the scale-down policy is configured to remove 2 nodes, 1 node was removed (Node count: 7 → 6)
+* No additional scale-down occurs during the 10-minute wait time after a scale-down operation.
+
+**Behavioral details**
+
+| Time (minutes) | CPU Average | Node Count | Scale state | Description |
+| ------ | ------ | ---- | ------ | --- |
+| 0 – 3 | 65% | 5 | – | Below threshold (70%) |
+| 4 | 72% | 5 | – | Scale-up condition threshold exceeded → Start measuring 5 minutes of scale down unneeded time  |
+| 4 – 8 | 73% | 5 | – | The scale-up condition was met as the threshold was exceeded for 5 continuous minutes. |
+| 8 | 76% | 5 → 7 | Requesting a scale-up operation | The scale-up node adjustment is set to 3 nodes, but the maximum node limit is 7 → actual +2 nodes<br>Node addition operation started |
+| 8 – 13 | 65% | 7 | – | Node addition operation completed<br>13 minutes after the end of the operation is set as the start time of the 'Wait after scale-down/up' condition |
+| 13 | 28% | 7 | – | Below the scale-up condition threshold → Start measuring 2 minutes of scale down unneeded time |
+| 15 | 27% | 7 | Requesting a scale-down operation (rejected) | The scale-down condition was met as the threshold was exceeded for 2 continuous minutes<br>But rejected because of 10 minutes of post-reduction waiting (13→23) |
+| 15 – 23 | 27% | 7 | – | Wait time after scale-down continues |
+| 23 | 27% | 7 → 6 | Scale-Down | The 10-minute wait time after scale-down has expired, and the scale-down conditions are still met<br>Since the scale-down node adjustment is set to 1, one node was removed |
+| 24 | 28% | 6 |  | Node scale-down operation completed<br>The time 24 minutes after the operation ended is set as the start point of the 'Wait time after scale-up/scale-down' condition |
+| 24 - | 28% | 6 | – | Below the scale-up condition threshold → Start measuring 2 minutes of scale down unneeded time<br>If the 10-minute wait time after scale-down (24 → 34) is satisfied thereafter, nodes will be removed one by one. |
+
+<a id="cluster-autoscaler"></a>
+#### Cluster Autoscaler
+Cluster Autoscaler works based on the cluster-autoscaler feature, which is an officially supported feature of the Kubernetes project. For more information, see [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler).
+
+> [Note]
+The version of the `cluster-autoscaler` applied to NHN Kubernetes Service (NKS) is `1.19.0.`
+
+<a id="cluster-autoscaler-set"></a>
+##### Cluster Autoscaler Settings
+When enabling cluster autoscaler, you can set the following items
 
 | Settings Item | Meaning | Valid Range | Default | Unit |
 | --- | --- | --- | --- | --- |
@@ -485,9 +611,8 @@ Activating the autoscaler enables the following options:
 | Scale Down Unneeded Time| The duration for retaining resource usage of target nodes to scale down below the threshold| 1-1440 | 10 | minutes |
 | Scale Down Delay After Add | Delay before starting to monitor for scale-down targets after scaling up| 10-1440 | 10 | minutes |
 
-> [Caution]
-Nodes cannot be manually added to or deleted from node groups on which autoscaler is enabled.
 
+<a id="cluster-autoscaler-resize"></a>
 #### Scale-up/down Conditions
 Scales up if all of the following conditions are met:
 
@@ -509,10 +634,11 @@ If some nodes contain at least one pod that meets the following conditions, then
 
 For more information on the conditions for scale-up/down, see [Cluster Autoscaler FAQ](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md).
 
+<a id="cluster-autoscaler-example"></a>
 #### Operation Example
 Let's check how the autoscaler work through the following example:
 
-##### 1. Enabling Autoscaler
+**1. Enabling Autoscaler**
 
 Enables autoscaling on the default node group of the cluster you want. For this example, the number of nodes for the default group has been set to 1 and autoscaler settings are configured as follows:
 
@@ -525,7 +651,7 @@ Enables autoscaling on the default node group of the cluster you want. For this 
 | Scale Down Unneeded Time| 3 |
 | Scale Down Delay After Add | 10 |
 
-##### 2. Deploying Pods
+**2. Deploying Pods**
 
 Deploy pods using the following manifest:
 
@@ -581,14 +707,14 @@ nginx-deployment-756fd4cdf-wrj8b   1/1     Running   0          34s
 nginx-deployment-756fd4cdf-x7ns5   0/1     Pending   0          34s
 ```
 
-##### 3. Checking Node Scale-up
+**3. Checking Node Scale-up**
 
 The following is the node list before scale-up:
 
 ```
 # kubectl get nodes
 NAME                                            STATUS   ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   45m   v1.23.3
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   45m   v1.28.3
 ```
 
 After 5-10 minutes, the nodes should be scaled up as shown below:
@@ -596,9 +722,9 @@ After 5-10 minutes, the nodes should be scaled up as shown below:
 ```
 # kubectl get nodes
 NAME                                            STATUS   ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   48m   v1.23.3
-autoscaler-test-default-w-ohw5ab5wpzug-node-1   Ready    <none>   77s   v1.23.3
-autoscaler-test-default-w-ohw5ab5wpzug-node-2   Ready    <none>   78s   v1.23.3
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   48m   v1.28.3
+autoscaler-test-default-w-ohw5ab5wpzug-node-1   Ready    <none>   77s   v1.28.3
+autoscaler-test-default-w-ohw5ab5wpzug-node-2   Ready    <none>   78s   v1.28.3
 ```
 
 The pods that were in `Pending` status are now normally scheduled after the scale-up.
@@ -634,7 +760,7 @@ LAST SEEN   TYPE     REASON             OBJECT                                 M
 ```
 
 
-##### 4. Checking Node Scale-down after Deleting Pods
+**4. Checking Node Scale-down after Deleting Pods**
 
 Deleting the current deployments also deletes the deployed pods.
 
@@ -666,7 +792,7 @@ After a while, you can see nodes are scaled down to 1. The time it takes to scal
 ```
 # kubectl get nodes
 NAME                                            STATUS   ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   71m   v1.23.3
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   71m   v1.28.3
 ```
 
 You can check scale-down events with the following command:
@@ -731,13 +857,14 @@ metadata:
 > [Note]
 As for the status information, the `Cluster-wide` area has the same information as `NodeGroups.`
 
+<a id="cluster-autoscaler-with-hpa"></a>
 #### Example of an action working with HPA (HorizontalPodAutoscale)
 Horizontal Pod Autoscaler (HPA) observes resource usage, such as CPU usage, to auto-scale the number of pods of ReplicationController, Deployment, ReplicaSet, and StatefulSet. As the number of pods is adjusted, there could be too many or too few resources available in the node. At this moment, utilize the Autoscaler feature to increase or decrease the number of nodes. In this example, we will see how HPA and Autoscaler can work together to deal with this issue. For more information on HPA, see [Horizontal Pod Autoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/). 
 
-##### 1. Enabling Autoscaler
+**1. Enabling Autoscaler**
 Enable Autoscaler as shown in the above example.
 
-##### 2. Configuring HPA
+**2. Configuring HPA**
 Deploy a container that creates CPU load for a certain amount of time after receiving a web request. The, expose the service. The following is taken from the `php-apache.yaml` file.
 
 ```yaml
@@ -800,7 +927,7 @@ NAME         REFERENCE               TARGETS   MINPODS   MAXPODS   REPLICAS   AG
 php-apache   Deployment/php-apache   0%/50%    1         30        1          80s
 ```
 
-##### 3. Authorizing Load
+**3. Authorizing Load**
 Now run the pod that triggers load in the new terminal. This pod sends web requests without stopping. You can stop this requesting action with `Ctrl+C`.
 
 ```
@@ -831,7 +958,7 @@ NAME         REFERENCE               TARGETS    MINPODS   MAXPODS   REPLICAS   A
 php-apache   Deployment/php-apache   250%/50%   1         30        5          2m44s
 ```
 
-##### 4. Checking the operation of Autoscaler
+**4. Checking the operation of Autoscaler**
 If you look up pods, due to the increase in the number of pods, you can see some pods are running as they are scheduled to `node-0`, but some are still pending
 
 ```
@@ -884,8 +1011,8 @@ After a while, you can see another node (node-8) has been added.
 ```
 # kubectl get nodes
 NAME                                            STATUS     ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready      <none>   22d   v1.23.3
-autoscaler-test-default-w-ohw5ab5wpzug-node-8   Ready      <none>   90s   v1.23.3
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready      <none>   22d   v1.28.3
+autoscaler-test-default-w-ohw5ab5wpzug-node-8   Ready      <none>   90s   v1.28.3
 ```
 
 You can see all pods that were in Pending state are properly scheduled and now in the Running state.
@@ -915,7 +1042,7 @@ As the number of pods decreases, the resource usage of the node also decreases, 
 ```
 # kubectl get nodes
 NAME                                            STATUS   ROLES    AGE   VERSION
-autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.23.3
+autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.28.3
 ```
 
 <a id="user-script-old"></a>
@@ -1077,6 +1204,25 @@ You can set additional security groups on node groups. You can specify and creat
 [Caution]
 > When you set an additional security group on a node group, any security groups assigned to existing instances that are not defined in the additional security group are removed.
 Changing additional security groups changes network settings, so communication might be temporarily affected while the settings take effect.
+
+<a id="fip-auto-bind"></a>
+### Floating IP Auto-assignment
+You can use the floating IP auto-assignment feature for a node group. When this feature is enabled, a floating IP is automatically assigned to each node when it is created. You can choose whether to enable this feature when creating a cluster or an additional node group. Once set, the option cannot be changed later. The following items are required to enable the floating IP auto-assignment feature:
+
+| Item | Description | 
+| --- | --- | 
+| Subnet to connect to | The subnet of the network interface to which the floating IP will be connected. The subnet must be the primary subnet of the cluster or included in the additional subnets of the node group. |
+| Floating IP labels | Identifier for selecting which floating IPs to assign to the node. If not entered, the assignment will be to all floating IPs. |
+
+
+The Floating IP auto-assignment has the following features
+
+* Does not create a floating IP.
+  * This feature works by assigning floating IPs that the user has created in advance.
+If there are not enough available floating IPs, node scaling may fail.
+* Enabling/disabling the Floating IP Auto-Assign and changing its settings does not affect existing nodes.
+  * Even if you enable the feature for a node group where it was previously disabled, floating IPs will not be assigned to existing nodes.
+  * Even if you disable the feature for a node group where it was previously enabled, floating IPs already assigned to existing nodes will not be disabled.
 
 <a id="cluster-management"></a>
 ## Cluster Management
@@ -1420,78 +1566,6 @@ System Pod upgrade is performed for the Kubernetes cluster configuration.
 > [Caution]
 > If a system Pod upgrade is not performed, some Pods might not function properly.
 
-
-### Change Cluster CNI
-NHN Kubernetes Service (NKS) supports changing the container network interface (CNI) of a running Kubernetes cluster.
-The Change Cluster CNI feature allows you to change the CNI of the NHN Kubernetes Service (NKS) from Flannel CNI to Calico-VXLAN CNI.
-
-#### CNI Change Rules
-The following rules apply to the NKS Cluster CNI change feature in the NHN Cloud.
-
-* The CNI change feature is available for the NHN Kubernetes Service (NKS) v1.24.3 and above.
-* The CNI change is only available if the CNI being used by the existing NHN Kubernetes Service (NKS) is Flannel.
-* At the start of the CNI change, the task is collectively done on the control plane and all worker node groups.
-* The CNI change is possible only when the Kubernetes version of the control plane matches the Kubernetes version of all worker node groups.
-* The CNI change from Calico-VXLAN, Calico-eBPF to Flannel is not supported 
-* The CNI change from Flannel to Calico-eBPF is not supported 
-* The CNI change from Calico-VXLAN to Calico-eBPF is not supported 
-* The CNI change from Calico-VXLAN to Calico-eBPF is not supported.
-* CNI change is not possible when the cluster is being updated due to other features being operated.
-
-The following example shows a table of possible changes during the Kubernetes CNI change process. The conditions used in the example are as follows. 
-
-List of Kubernetes versions supported by NHN Cloud: v1.23.3, v1.24.3, v1.25.4
-Clusters are created as v1.23.3
-
-| Status | Cluster Version | Current CNI | CNI Change Available |
-| --- | :-: | :-: | :-: |
-| Initial state| v1.23.3 | Flannel | Unavailable<sup>[1](#footnote_calico_change_rule_1)</sup> |
-| Status after cluster upgrade | v1.24.3 | Flannel | Available<sup>[2](#footnote_calico_change_rule_2)</sup> |
-| Status after CNI change | v1.24.3 | Calico-VXLAN | Unavailable<sup>[3](#footnote_calico_change_rule_3)</sup> |
-
-
-Notes
-
-* <a name="footnote_calico_change_rule_1">1</a>: CNI change is unavailable because the cluster version is below 1.24.3
-* <a name="footnote_calico_change_rule_2">2</a>: CNI change is available because the cluster version is 1.24.3 or higher.
-* <a name="footnote_calico_change_rule_3">3</a>: CNI change is unavailable because CNI is already Calico-VXLAN.
-
-#### Change Process from Flannel to Calico-VXLAN CNI
-CNI change proceeds in the following order.
-
-1. Add buffer nodes <sup>[1](#footnote_calico_change_step_1)</sup> to all worker node groups.<sup>[2](#footnote_calico_change_step_2)</sup>
-2. Calico-VXLAN CNI is deployed on the cluster.<sup>[3](#footnote_calico_change_step_3)</sup>
-3. Disable the cluster Auto scale feature.<sup>[4](#footnote_calico_change_step_4)</sup>
-3. Perform the following jobs sequentially for all worker nodes in all worker node groups. <sup>[5](#footnote_calico_change_step_5)</sup>
-    1. Evict working pods from the worker node, and make the node not schedulable.
-    2. Reassign the worker node's pod IPs to Calico-VXLAN CIDR. Any pod deployed on the node is to be redeployed. <sup>[6](#footnote_calico_change_step_6)</sup>
-    3. Make the node schedulable.
-5. Evict working pods from the buffer node, and delete the buffer node.
-6. Re-enables cluster Auto scale feature <sup>[4](#footnote_calico_change_step_4)</sup>.
-7. Delete Flannel CNI.
-
-
-Notes
-
-* <a name="footnote_calico_change_step_1">1</a>: A buffer node is a free node that is created so that the pod evicted from the existing worker node can be rescheduled during the CNI change process. It is created as a node of the same specification as the worker node defined in the corresponding worker node group and is automatically deleted at the end of the upgrade process. This node is charged in accordance with the Instance pricing policy. 
-* <a name="footnote_calico_change_step_2">2</a>: You can set the number of buffer nodes when changing CNI. Defaults to 1. If set to 0, no buffer nodes are added. The minimum is 0 and the maximum is (maximum number of nodes per node group - the current number of nodes in that worker node group).
-* <a name="footnote_calico_change_step_3">3</a>: When Calico-VXLAN CNI is deployed in a cluster, the Flannel and Calico-VXLAN CNI coexist. In this state, when a new pod is deployed, the pod IP is set to Flannel CNI and then deployed. A pod with Flannel CIDR IP and a pod with Calico-VXLAN CIDR IP can communicate with each other.
-* <a name="footnote_calico_change_step_4">4</a>: This step is valid only if the cluster Auto scale feature is enabled before starting upgrade features.
-* <a name="footnote_calico_change_step_5">5</a>: Perform jobs as many as the maximum number of unavailable nodes set when changing the CNI. Default value is 1. Minimum value is 1, and maximum value is the number of all nodes in the current cluster.
-* <a name="footnote_calico_change_step_6">6</a>: The IPs of the existing deployed Pods are all assigned with Flannel CIDRs. To change to Calico-VXLAN CNI, redeploy all the pods that have IP assigned to the Flannel CIDR to reassign Calico-VXLAN CIDR IP. When a new pod is deployed, the pod IP is set to Calico-VXLAN CNI and deployed.
-
-The following can happen in this process.
-
-* The pod in service is evicted and scheduled to another node. (For more information on pod eviction, [Cluster Upgrade](/Container/NKS/en/user-guide/#cluster-upgrade).
-* All the pods deployed in the cluster are redeployed. (For more information on redeploying pods, see the precautions for pod redeployment below.)
-* Auto scale feature does not operate. 
-
-
-> [Precautions for pod redeployment]
-> 1. It proceeds for the pod that has not been transferred to another node through the evicting process.
-> 2. For normal communication between Flannel CIDR and Calico-VXLAN CIDR during the CNI change process, CNI change pod network value should not be the same as the existing Flannel CIDR value.
-> 3. Pause containers of the previously distributed pod are all stopped and then regenerated by kubelet. The settings, such as the pod name and local storage space, remain unchanged, but the IP is changed to the IP of Calico-VXLAN CIDR.
-
 <a id="api-endpoint-ipacl"></a>
 ### Enforce IP Access Control to Cluster API Endpoints
 You can enforce or disable IP access control to cluster API endpoints.
@@ -1533,7 +1607,6 @@ Here's how to use the certificate renewal feature
 
 > [Note]
 > The certificate renewal feature is available for clusters using 1.24 or later versions of Calico-VXLAN CNI.
-> If your cluster version is 1.23 or lower, or if your CNI is Flannel, you can renew certificates after version upgrades and CNI changes.
 
 > [Caution]
 > The certificate renewal feature involves a restart of the system components and any kube-system namespace pods initially deployed at cluster creation to reflect the new certificate generation and settings.
@@ -1559,6 +1632,33 @@ For more information on each item, see the [Kubernetes official documents](https
 > * If you change the settings of a component running in the control plane, the component in the control plane will restart.
 > * If you change the settings of a component running on a worker node, the component on the worker node will restart.
 
+<a id="k8s-label"></a>
+### Kubernetes Label Settings
+You can use the Kubernetes label setting for each node group. When this feature is enabled, the user-defined labels are automatically applied to the nodes when they are created. Labels are key-value pairs attached to Kubernetes objects such as pods and nodes, and are used to identify characteristics of those objects. For a detailed description of labels, see [Labels and Selectors](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/).
+
+
+A Kubernetes label consists of a key and value pair, and each valid label key and value must adhere to the following rules.
+
+#### Label Key
+Label keys can have a structure of prefix and name separated by a slash (/), and the prefix can be omitted.
++ Prefixes
+  + It must be 253 characters or less.
+  + It must be in the subdomain format of DNS.
+  + Predefined prefixes cannot be used.
+    + ["kubernetes.io", "k8s.io", "magnum.openstack.org"]
++ Name
+  + It must be 63 characters or less.
+  + Alphabetical case, numbers, dashes (-), underscores (_), and dots (.) and must start and end with an alphanumeric character.
+
+
+#### Label Value
++ It must be blank or 63 characters or less.
++ Alphabetical case, numbers, dashes (-), underscores (_), and dots (.) and must start and end with an alphanumeric character.
+
+> [Note]
+> * You can specify up to 20 Kubernetes labels.
+> * When you change the Kubernetes label settings, new nodes created afterward will have the changed settings.
+
 <a id="oidc-auth"></a>
 ### OIDC Authentication Settings Feature
 
@@ -1577,6 +1677,124 @@ The NKS cluster can be set up to handle authentication using OIDC. The configura
 | Required Claim | X | Key/value pairs that require verification in an ID token |
 | CA File | X | The certificate file of the CA that signed the OIDC provider's web certificate. |
 | Signing Algs| X | List of allowed JOSE asymmetric signature algorithms. Default: 'RS256' |
+
+<a id="control-plane-k8s-log"></a>
+### Store Logs of Kubernetes Control Plane Components
+NHN Kubernetes Service (NKS) provides logs for key Kubernetes components running on the control plane. These logs help you better understand various events and operations occurring within the cluster, and can be useful for diagnosing service status and troubleshooting issues.
+
+The characteristics of the control plane Kubernetes component log storage feature is as follows.
+
+* You can delivery logs to one of two services: Log & Crash Search and Object Storage.
+* The log level being delivered is fixed to `INFO`.
+* The Kubernetes components that provide logs are listed below.
+    * kube-apiserver
+    * kube-scheduler
+    * kube-controller-manager
+
+
+> [Note]
+You can only set one log delivery destination. If you want to manage logs in both Log & Crash Search and Object Storage, you can first set the delivery destination to Log & Crash Search, and then use the "Store logs offsite" feature to store additional logs in Object Storage.
+You can also delivery to Log & Crash Search or Object Storage in other projects.
+
+<a id="control-plane-k8s-log-lncs"></a>
+#### Log Delivery to Log & Crash Search
+
+<a id="control-plane-k8s-log-lncs-forward"></a>
+##### Delivery Interval
+Log delivery occurs after the user-specified delivery interval has elapsed since the log was generated. The delivery interval can be set between 1 and 60 minutes. 
+
+> [Note]
+If the log size exceeds 300KB before the delivery interval ends, it is immediately sent to Log & Crash Search.
+
+<a id="control-plane-k8s-log-lncs-labels"></a>
+##### Log & Crash Search label Information
+The label information applied when logs are delivered to Log & Crash Search is as follows:
+
+| Label | Description 
+| --- | --- |
+| body | "log" fixed value |
+| logSource | "NKS" fixed value |
+| logLevel | "INFO" fixed value |
+| logVersion | "v2" fixed value |
+| projectVersion | "1.0.0" fixed value |
+| host | Master node name |
+| UUID | Body |
+| cluster_name | Cluster Name |
+| nks_version | Cluster Version |
+| component | Component name |
+
+> [Note]
+The four labels cluster_uuid, cluster_name, nks_version, and component are not included in the default fields when viewing logs in the Log & Crash Search console.
+You can add them manually by adding labels in the Selected fields section.
+
+<a id="control-plane-k8s-log-obs"></a>
+#### Log Delivery to Object Storage
+
+<a id="control-plane-k8s-log-obs-forward"></a>
+##### Delivery Interval
+Logs are collected and delivered every user-specified delivery interval. The delivery interval can be set between 1 and 60 minutes.
+
+> [Note]
+If the file size stored in Object Storage exceeds 300KB, it is partitioned.
+Log files are delivered as soon as they exceed 300KB.
+400KB or less: Stored as a single file with the \_index0 suffix
+Over 400 KB: Split into multiple files suffixed with \_index1, \_index2, etc.
+
+<a id="control-plane-k8s-log-obs-compression"></a>
+##### Compressing files
+You can choose to compress them into gzip when storing them in the storage.
+
+<a id="control-plane-k8s-log-obs-authorization"></a>
+##### Granting storage access permissions
+On the NKS page of the console, click **NKS System Account Information**to display the tenant ID and user ID used by NKS. If you set the control plane log store type to Object Storage (OBS), this NKS system account must be granted write permissions to that container, otherwise the NKS system account cannot write data to your OBS.
+
+How to Set
+
+* Access the NHN Cloud console > Object Storage.
+* Select a container to store control plane logs.
+* At the bottom, click Basic info > Change Access Policy Settings.
+* Under Role-Based Access Policy, click Enable.
+* Enter the tenant ID and user ID from the NKS system account information you identified above, and grant Write permission.
+
+> [Caution]
+If a container in Object Storage is deleted during control plane log delivery, or if Write permissions are revoked from the container, log delivery will fail.
+
+<a id="control-plane-k8s-log-path"></a>
+##### Control plane log storage path
+The control plane log storage path is based on OBS endpoint, AUTH tenant, Container, and Path information, and is configured in the following format.
+
+* {OBS_https_endpoint}/{AUTH_OBS_TENANT}/{Container}/{Path}
+
+For example, if the settings are as follows
+
+* OBS https endpoint: https://kr1-api-object-storage.nhncloudservice.com/v1
+* AUTH_OBS_TENANT: AUTH_e670167936434f85a03694184000ffe6
+* Container: nks_log_container
+* Desired storage path: example/my/folder
+
+The actual control plane log storage path is as follows
+
+* https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_e670167936434f85a03694184000ffe6/nks_log_container/example/my/folder
+
+> [Note]
+If the OBS endpoint, AUTH_tenant, and Container information set in obs_api_url does not exist, the setup request will fail.
+
+The actual logs are stored under the URL above with the following structure.
+
+* ${Custom OBS Container Name}/NKS/${Cluster UUID}/${Master Node Name}/${K8S Component Name}/${Year}/${Month}/${Year-Date-Hour-Second}-index${index_count}.gz
+
+For example, if the settings are as follows
+
+* Container: nks_log_container
+* Cluster UUID: f31dd18f-4dab-49fa-97bb-8feba31cb30b
+* Cluster name: nks-test
+* Component: kube-apiserver
+* Stored time: 2025-04-28 10:15:00
+
+Logs are created in the OBS container by the following paths
+
+* nks_log_container/NKS/f31dd18f-4dab-49fa-97bb-8feba31cb30b/
+nks-test-master-0/kube-apiserver/2025/04/20250428-101500-index0.gz
 
 <a id="worker-node-management"></a>
 ## Manage Worker Node
@@ -1815,31 +2033,6 @@ Notes
 
 * <a name="footnote_calico_1">1</a>: The packet's source IP and destination IP are set to the Pod IP. When using enhanced security rules, you must set a security rule for this traffic separately. 
 
-### Whether to change the CNI per CNI set at cluster creation
-
-| Version | CNI Type and Version Installed when creating Cluster | CNI Change Available |
-| :-: | :-: | :-: |
-| v1.17.6 | Flannel v0.12.0 | Unavailable |
-| v1.18.19 | Flannel v0.12.0 | Unavailable |
-| v1.19.13 | Flannel v0.14.0 | Unavailable |
-| v1.20.12 | Flannel v0.14.0 | Unavailable |
-| v1.21.6 | Flannel v0.14.0 | Unavailable |
-| v1.22.3 | Flannel v0.14.0 | Unavailable |
-| v1.23.3 | Flannel v0.14.0 | Unavailable |
-| v1.24.3 | Flannel v0.14.0 or Calico-VXLAN v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | Conditionally Available<sup>[2](#footnote_calico_version_2)</sup> |
-| v1.25.4 | Flannel v0.14.0 or Calico-VXLAN v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | Conditionally Available<sup>[2](#footnote_calico_version_2)</sup> |
-| v1.26.3 | Flannel v0.14.0 or Calico-VXLAN, Calico-eBPF v3.24.1 <sup>[1](#footnote_calico_version_1)</sup> | Conditionally Available<sup>[2](#footnote_calico_version_2)</sup> |
-| v1.27.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | Unavailable|
-| v1.28.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | Unavailable|
-| v1.29.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | Unavailable|
-| v1.30.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | Unavailable|
-| v1.31.4 | Calico-VXLAN, Calico-eBPF v3.28.2 | Unavailable|
-
-Notes
-
-* <a name="footnote_calico_version_1">1</a>: Flannel is installed in clusters created before 31 March 2023. For clusters of v1.24.3 or higher created after that date, Calico is installed.
-* <a name="footnote_calico_version_2">2</a>: CNI change is only supported on clusters of v1.24.3 or higher, and currently changing from Flannel to Calico-VXLAN is only supported.
-
 <a id="security-group"></a>
 ## Security Group
 If you set enhanced security rules to True at cluster creation, only mandatory security rules are created at worker node security group creation.
@@ -1900,6 +2093,86 @@ If you don't use enhanced security rules, additional security rules are created 
 | ingress | UDP | 1 - 65535 | IPv4 | NKS Control Plane | All ports, direction: NKS Control plane → Worker node |
 | egress | Random | 1 - 65535 | IPv4 | Allow all | All ports, direction: Worker node → External |
 | egress | Random | 1 - 65535 | IPv6 | Allow all | All ports, direction: Worker node → External |
+
+<a id="addon-mgmt"></a>
+## Add-on Management
+An add-on is a component that is not a required component of a Kubernetes cluster, but is provided to extend the functionality of an NKS cluster or to provide specialized functionality. Add-ons can include components that perform functions such as networking, service discovery, monitoring, storage provisioning, and more. Users can install/update/remove add-ons provided by NHN Cloud to the cluster through the add-on management feature.
+
+> [Caution]
+Add-on management features are not available for clusters that do not have the NKS registry enabled.
+
+<a id="addon-mgmt-operation"></a>
+### How it works
+This section describes how the add-on management feature works.
+
+#### Server-side apply
+When installing/updating addons to a cluster using the addon management feature, Kubernetes' Server-side apply is used. Client-side apply is where the client computes the resource state locally and sends the entire resource to the API server. Server-side apply, on the other hand, allows the API server to perform resource merging and field ownership management, allowing the API server to perform resource merging and conflict detection. For more information about server-side apply, see [Server-side apply](https://kubernetes.io/docs/reference/using-api/server-side-apply/).
+
+
+#### Conflict Resolution Options
+Conflicts may occur during add-on installation or updates if users have modified fields that are managed by the add-on. Users can resolve these conflicts by selecting the appropriate conflict resolution option during installation or updates. The Add-on Management feature provides the following conflict resolution options.
+
+* None: If a conflict occurs, the install/update will not be applied, and the install/update request will be treated as a failure.
+* Overwrite: In the event of a conflict, overwrites the conflicting field with the default value defined by the add-on.
+* Preserve: When a conflict occurs, the conflicting field is preserved with its existing value.
+
+> [Caution about the Preserve option]
+You can't preserve all changes to the resources that make up an add-on.
+If a conflict occurs in a non-preservable field, the install/update operation will fail.
+
+#### Main Features
+You can install/update/remove add-ons to the cluster using the add-on management feature.
+
+* Installation
+    * Install the add-on on the cluster.
+    * Install by specifying the add-on version and add-on-specific options.
+    * Specify conflict resolution options during installation.
+* Update
+    * Update the addons that are installed in the cluster.
+    * You can change add-on versions, add-on-specific options, and more.
+        * Depending on the add-on, you might not be able to change the option.
+    * Specify conflict resolution options when updating.
+* Removals
+    * Remove all resources that make up the add-on from the cluster.
+    * However, required types cannot be removed.
+
+> [Note]
+Upgrades of components such as CNI and CoreDNS are no longer provided through the Kubernetes version upgrade feature.
+Instead, you can update the version of each add-on using the add-on update feature.
+
+#### Enable Add-on Management
+Existing clusters without the Add-on Management feature enabled can still use it. In clusters where add-ons have not been configured, components such as Calico and CoreDNS may still be running, but the system will show that the add-ons are not installed. In this case, you can install each add-on manually, after which they can be managed through the Add-on Management feature. If you have modified the configuration of resources that make up an add-on, selecting the 'Preserve' option during installation allows you to retain the existing resource settings.
+
+<a id="addon-mgmt-types"></a>
+### Add-on types
+Add-on types classify the add-ons installed in a cluster based on their characteristics.
+
+| Type | Required | Description|
+|---|---|---|
+| CNI | O | The type corresponding to the CNI that will be installed in the cluster. |
+| kube-dns | O | The primary DNS server that operates within the NKS cluster. |
+
+<a id="addon-mgmt-addon-list"></a>
+### Add-on list
+
+<a id="addon-mgmt-addon-calico"></a>
+#### Calico
+Calico is a CNI plugin that provides networking and network security for Kubernetes. For a description of Calico provided by NHN Cloud, see [Calico CNI Types](#calico_cni_types).
+
+* Type: CNI
+* Options
+    * mode
+        * Determine Calico's mode of operation.
+        * Supported modes of operation: VXLAN, EBPF
+* Supported version list: v3.28.1-nks1
+
+<a id="addon_mgmt_addon_coredns"></a>
+#### CoreDNS
+CoreDNS is the default DNS server for a Kubernetes cluster.
+
+* Type: kube-dns
+* Options: None
+* Supported version list: v1.8.3-nks1
 
 <a id="loadbalancer-service"></a>
 ## LoadBalancer Service
@@ -2066,6 +2339,7 @@ When defining service objects in Kubernetes, you can set several options for the
 
 #### Global Setting and Per-Listener Setting
 For each setting item, global setting or per-listener setting is supported. If neither global nor per-listener setting is available, the default value for each setting is used.
+
 * Per-listener setting: A setting that applies only to the target listener.
 * Global setting: If the target listener doesn't have a per-listener setting, this setting is applied.
 
@@ -2441,6 +2715,7 @@ metadata:
 ```
 
 Instead of registering certificate and private key information in the manifest, you can create a listener of type TERMINATED_HTTPS with a certificate registered in Certificate Manager.
+
 * The setting location is loadbalancer.nhncloud/listener-terminated-https-cert-manager-name under .metadata.annotations.
 * The value is the name of the certificate you enrolled in Certificate Manager.
 * Per-listener settings can be applied.
@@ -3608,6 +3883,7 @@ The csi-driver-nfs container images and artifacts are maintained in NHN Cloud NC
 
 ##### 3. Unzip the installation package and run **./install-driver.sh {REGISTRY} {INTERNET_USAGE}** command to install the csi-driver-nfs component.
 Enter the correct {REGISTRY} and {INTERNET_USAGE} values based on the region where the cluster was created and the availability of internet connectivity. 
+
 * {REGISTRY}
   * Korea (Pangyo) Region: **dfe965c3-kr1-registry.container.nhncloud.com**
   * Korea (Pyeongchon) Region: **6e7f43c6-kr2-registry.container.cloud.toast.com**
@@ -3868,6 +4144,7 @@ Filesystem                                                                 Size 
 You can use the automatically created NAS storage as a PV by entering the NAS information when creating the StorageClass and PVC manifest.
 
 In the StorageClass manifest, define the storage provider information, snapshot policy, access control list (ACL), and subnet information of the NAS storage to be created.
+
 * provisioner: Enter**nfs.csi.k8s.io**.
 * parameters: Refer to the table below for input items. If multiple values are defined in the parameter value, use \*\*,** to separate the values.
 
@@ -4081,6 +4358,7 @@ $ kubectl -n kube-system patch daemonset csi-cinder-nodeplugin -p "{\"spec\": {\
 To create a PV, you need the ID of the encrypted block storage. On the Storage > Block Storage service page, select the block storage you want to use from the block storage list. You can find the ID under the block storage name section in the Information tab at the bottom.
 
 When creating the PV manifest, enter the encrypted block storage information. The setting location is under **.spec.csi**.
+
 * driver: Enter `cinder.csi.openstack.org`.
 * fsType: Enter `ext3`. 
 * volumeHandle: Enter the ID of the encrypted block storage you created.
@@ -4113,6 +4391,7 @@ The process of creating a PVC manifest and mounting it to a Pod is the same as s
 You can use automatically generated encrypted block storage as a PV by entering the information required to create encrypted block storage when creating the storage class manifest.
 
 In the storage class manifest, enter the information required to create encrypted block storage. The settings are located under **.parameters**.
+
 * Storage type: Enter the type of storage.
     * **Encrypted HDD**: The storage type is set to Encrypted HDD.
     * **Encrypted SSD**: The storage type is set to Encrypted SSD.
