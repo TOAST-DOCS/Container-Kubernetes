@@ -1,5 +1,12 @@
 ## Container > NHN Kubernetes Service (NKS) > Release Notes
 
+### 2025. 07. 15.
+
+#### Image Update
+* The following images are no longer supported when creating clusters and node groups.
+    * Target image
+        * Ubuntu Server 20.04.3 LTS - Container
+
 ### May 27, 2025
 
 #### Added Features
