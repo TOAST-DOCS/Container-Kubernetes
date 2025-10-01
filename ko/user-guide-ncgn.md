@@ -2015,7 +2015,9 @@ Calico는 Kubernetes의 네트워킹과 네트워크 보안을 제공하는 CNI 
     * mode
         * Calico의 동작 모드를 결정합니다.
         * 지원하는 동작 모드: vxlan, ebpf
-* 지원 버전 목록: v3.28.1-nks1
+* 지원 버전 목록
+    * v3.28.1-nks1
+    * v3.30.2-nks1
 
 <a id="addon_mgmt_addon_coredns"></a>
 #### CoreDNS
