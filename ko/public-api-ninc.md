@@ -162,11 +162,11 @@ X-Auth-Token: {tokenId}
             },
             "links": [
                 {
-                    "href": "https://kr1-api-kubernetes-infrastructure.gov-nhncloudservice.com/v1/clusters/f0af4484-0a16-433a-a15c-295d9ba6537d",
+                    "href": "https://kr4-api-kubernetes-infrastructure.ninc.go.kr/v1/clusters/f0af4484-0a16-433a-a15c-295d9ba6537d",
                     "rel": "self"
                 },
                 {
-                    "href": "https://kr1-api-kubernetes-infrastructure.gov-nhncloudservice.com/clusters/f0af4484-0a16-433a-a15c-295d9ba6537d",
+                    "href": "https://kr4-api-kubernetes-infrastructure.ninc.go.kr/clusters/f0af4484-0a16-433a-a15c-295d9ba6537d",
                     "rel": "bookmark"
                 }
             ],
@@ -299,11 +299,11 @@ X-Auth-Token: {tokenId}
     },
     "links": [
         {
-            "href": "https://kr1-api-kubernetes-infrastructure.gov-nhncloudservice.com/v1/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
+            "href": "https://kr4-api-kubernetes-infrastructure.ninc.go.kr/v1/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
             "rel": "self"
         },
         {
-            "href": "https://kr1-api-kubernetes-infrastructure.gov-nhncloudservice.com/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
+            "href": "https://kr4-api-kubernetes-infrastructure.ninc.go.kr/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
             "rel": "bookmark"
         }
     ],
@@ -1251,11 +1251,11 @@ X-Auth-Token: {tokenId}
     },
     "links": [
         {
-            "href": "https://kr1-api-kubernetes-infrastructure.gov-nhncloudservice.com/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
+            "href": "https://kr4-api-kubernetes-infrastructure.ninc.go.kr/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
             "rel": "self"
         },
         {
-            "href": "https://kr1-api-kubernetes-infrastructure.gov-nhncloudservice.com/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
+            "href": "https://kr4-api-kubernetes-infrastructure.ninc.go.kr/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
             "rel": "bookmark"
         }
     ],
@@ -1416,11 +1416,11 @@ X-Auth-Token: {tokenId}
     },
     "links": [
         {
-            "href": "https://kr1-api-kubernetes-infrastructure.gov-nhncloudservice.com/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
+            "href": "https://kr4-api-kubernetes-infrastructure.ninc.go.kr/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
             "rel": "self"
         },
         {
-            "href": "https://kr1-api-kubernetes-infrastructure.gov-nhncloudservice.com/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
+            "href": "https://kr4-api-kubernetes-infrastructure.ninc.go.kr/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
             "rel": "bookmark"
         }
     ],
