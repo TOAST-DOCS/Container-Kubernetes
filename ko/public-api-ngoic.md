@@ -1025,7 +1025,7 @@ X-Auth-Token: {tokenId}
         "type": "obs",
         "sgw": "b6f68830-e688-4d89-ac03-2f1155a4177a",
         "upload_interval" : 60,
-        "obs_api_url" :"https://kr1-api-object-storage.gov-nhncloudservice.com/v1/AUTH_d5b58ab0bb9340909bd7ff5a24f44313/iksoon-obs-container/testpath",
+        "obs_api_url" :"https://kr4-api-object-storage.ngoic.com/v1/AUTH_d5b58ab0bb9340909bd7ff5a24f44313/iksoon-obs-container/testpath",
         "obs_store_as" : "gzip"
     }
 }
