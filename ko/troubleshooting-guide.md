@@ -336,10 +336,10 @@ kubectl patch clusterrole calico-kube-controllers --type=json -p='[{"op": "remov
 ```
 
 
-### > NKS 레지스트리가 비활성화 된 1.29.3 이하 버전 클러스터에서 노드 그룹 증설 시 calico-node 파드 배포에 실패하여 증설 작업에 실패합니다.
-NKS 레지스트리가 비활성화된 Kubernetes 1.29.3 이하 버전의 클러스터에서 노드 그룹 증설 작업을 수행할 때 calico 관련 파드(calico-node, calico-kube-controllers, calico-typha)가 배포되지 않아 증설 작업이 실패하는 문제가 발생합니다.
+### > NKS 레지스트리가 비활성 상태인 v1.29.3 이하 버전 클러스터에서 노드 증설 혹은 노드 그룹 추가 시 calico-node 파드 배포에 실패하여 노드 초기화 작업에 실패합니다.
+NKS 레지스트리가 활성화 상태인 Kubernetes v1.29.3 이하 버전의 클러스터에서 노드 증설 혹은 노드 그룹 추가 시 calico 관련 파드(calico-node, calico-kube-controllers, calico-typha)가 배포되지 않아 증설 작업이 실패하는 문제가 발생합니다.
 
-이 문제는 2024년 5월 이전에 생성된 클러스터에서 주로 나타납니다. 당시 생성된 클러스터는 NKS 전용 이미지 레지스트리가 기본적으로 비활성화된 상태이며 Calico 컨테이너 이미지의 리포지토리 경로가 올바르지 않아 이미지 다운로드가 불가능한 것이 원인입니다.
+이 문제는 주로 2024년 5월 이전에 생성된 클러스터에서 발생할 수 있습니다. 당시 생성된 클러스터는 NKS 전용 이미지 레지스트리가 기본적으로 비활성 상태이고, Calico 컨테이너 이미지의 리포지토리 경로가 올바르지 않아 이미지 다운로드가 불가능한 것이 원인입니다.
 
 #### 증상 발생 시 확인 방법
 `kubectl get all -n kube-system` 명령 확인 시 증설 작업에 실패한 노드에 배포되어있는 아래의 파드의 상태가 **ImagePullBackOff** 또는 **ErrImagePull** 로 유지됩니다.
@@ -355,14 +355,14 @@ calico 관련 image 리포지터리 url을 public 리포지터리로 변경하�
 3. 노드 증설 작업 진행
 
 calico 관련 image 리포지터리 url을 public 리포지터리로 변경하는 명령어는 아래와 같습니다.
-"${Calico tag}"는 현재 클러스터에서 사용 중인 Calico 버전을 의미합니다.
+"${CALICO_TAG}"는 현재 클러스터에서 사용 중인 Calico 버전을 의미합니다.
 
 **calico-node Daemonset 이미지 repo 변경**
 ```
 kubectl -n kube-system set image daemonset/calico-node \
-  calico-node=calico/node:${Calico tag} \
-  install-cni=calico/cni:${Calico tag} \
-  mount-bpffs=calico/node:${Calico tag}
+  calico-node=calico/node:${CALICO_TAG} \
+  install-cni=calico/cni:${CALICO_TAG} \
+  mount-bpffs=calico/node:${CALICO_TAG}
 
 [예제]
 kubectl -n kube-system set image daemonset/calico-node \
@@ -374,7 +374,7 @@ kubectl -n kube-system set image daemonset/calico-node \
 **calico-typha Deployment 이미지 repo 변경**
 ```
 kubectl -n kube-system set image deployment/calico-typha \
-  calico-typha=calico/typha:${Calico tag}
+  calico-typha=calico/typha:${CALICO_TAG}
 
 [예제]
 kubectl -n kube-system set image deployment/calico-typha \
@@ -384,7 +384,7 @@ kubectl -n kube-system set image deployment/calico-typha \
 **calico-kube-controller Deployment 이미지 repo 변경**
 ```
 kubectl -n kube-system set image deployment/calico-kube-controllers \
-  calico-kube-controllers=calico/kube-controllers:${Calico tag}
+  calico-kube-controllers=calico/kube-controllers:${CALICO_TAG}
 
 [예제]
 kubectl -n kube-system set image deployment/calico-kube-controllers \
