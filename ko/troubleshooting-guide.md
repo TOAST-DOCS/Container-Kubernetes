@@ -337,7 +337,7 @@ kubectl patch clusterrole calico-kube-controllers --type=json -p='[{"op": "remov
 
 
 ### > NKS 레지스트리가 비활성 상태인 v1.29.3 이하 버전 클러스터에서 노드 증설 혹은 노드 그룹 추가 시 calico-node 파드 배포에 실패하여 노드 초기화 작업에 실패합니다.
-NKS 레지스트리가 활성화 상태인 Kubernetes v1.29.3 이하 버전의 클러스터에서 노드 증설 혹은 노드 그룹 추가 시 calico 관련 파드(calico-node, calico-kube-controllers, calico-typha)가 배포되지 않아 증설 작업이 실패하는 문제가 발생합니다.
+잘못된 이미지 리포지터리 설정으로 인해 노드 증설 혹은 노드 그룹 추가 시 calico 관련 파드(calico-node, calico-kube-controllers, calico-typha)가 배포되지 않아 발생하는 문제입니다.
 
 이 문제는 주로 2024년 5월 이전에 생성된 클러스터에서 발생할 수 있습니다. 당시 생성된 클러스터는 NKS 전용 이미지 레지스트리가 기본적으로 비활성 상태이고, Calico 컨테이너 이미지의 리포지토리 경로가 올바르지 않아 이미지 다운로드가 불가능한 것이 원인입니다.
 
