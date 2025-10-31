@@ -2204,6 +2204,14 @@ Snapshot Controller는 볼륨 스냅숏의 생성, 삭제, PVC 연동을 포함�
 * 옵션: 없음
 * 지원 버전 목록: v4.1.1-nks1
 
+<a id="addon-mgmt-addon-nfs-csi-plugin">
+#### NFS CSI Plugin
+NFS CSI Plugin은 NHN Cloud의 NFS를 프로비저닝하고 관리할 수 있는 CSI 드라이버입니다.
+
+* 유형: nfs-csi-plugin
+* 옵션: 없음
+* 지원 버전 목록: v1.0.1-nks1
+
 
 <a id="loadbalancer-service"></a>
 ## LoadBalancer 서비스
