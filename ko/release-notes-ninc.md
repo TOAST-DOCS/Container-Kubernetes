@@ -1,9 +1,14 @@
 ## Container > NHN Kubernetes Service(NKS) > 릴리스 노트
 
-### 2025. 11. xx. -> 배포 전에 수정 필요
+### 2025. 11. 28.
 
-#### 애드온 추가
-* Calico CNI 버전 v3.30.2-nks1가 추가되었습니다.
+#### 애드온 업데이트
+* 다음 애드온이 추가되었습니다.
+    * Calico CNI v3.30.2-nks1
+    * Cinder CSI Plugin v1.27.101-nks1, v1.27.102-nks1
+    * Metrics Server v0.4.4-nks1
+    * Snapshot Controller v4.1.1-nks1
+    * NFS CSI Plugin v1.0.1-nks1
 
 #### 기능 추가
 * 로드 밸런서 상세 옵션 설정에 상태 확인 포트 설정 기능이 추가되었습니다.

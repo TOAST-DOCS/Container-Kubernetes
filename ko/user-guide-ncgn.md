@@ -2003,6 +2003,10 @@ NHN Kubernetes Service(NKS)가 제공하는 Calico-VXLAN, Calic-eBPF는 아래�
 |---|---|---|
 | CNI | O | 클러스터에 설치될 CNI에 해당하는 유형입니다. |
 | kube-dns | O | NKS 클러스터 내에서 동작하는 기본 DNS 서버입니다. |
+| cinder-csi-plugin | X | NHN Cloud의 블록 스토리지를 프로비저닝하고 관리할 수 있는 CSI 드라이버입니다. |
+| metrics-server | X | 오토 스케일링과 모니터링을 위해 노드와 파드로부터 리소스 사용 지표를 수집하는 Kubernetes 구성 요소입니다. |
+| snapshot-controller | X | 볼륨 스냅숏의 생성, 삭제, PVC 연동을 포함한 라이프 사이클을 관리하는 Kubernetes 구성 요소입니다. |
+| nfs-csi-plugin | X | NHN Cloud의 NFS를 프로비저닝하고 관리할 수 있는 CSI 드라이버입니다. |
 
 <a id="addon-mgmt-addon-list"></a>
 ### 애드온 목록
@@ -2020,13 +2024,49 @@ Calico는 Kubernetes의 네트워킹과 네트워크 보안을 제공하는 CNI 
     * v3.28.1-nks1
     * v3.30.2-nks1
 
-<a id="addon_mgmt_addon_coredns"></a>
+<a id="addon-mgmt-addon-coredns"></a>
 #### CoreDNS
 CoreDNS는 Kubernetes 클러스터의 기본 DNS 서버입니다.
 
 * 유형: kube-dns
 * 옵션: 없음
 * 지원 버전 목록: v1.8.3-nks1
+
+<a id="addon-mgmt-addon-cinder-csi-plugin">
+#### Cinder CSI Plugin
+Cinder CSI Plugin은 NHN Cloud에서 블록 스토리지를 프로비저닝하고 관리할 수 있는 CSI 드라이버입니다.
+
+* 유형: cinder-csi-plugin
+* 옵션: 없음
+* 지원 버전 목록
+    * v1.27.101-nks1
+    * v1.27.102-nks1
+
+<a id="adoon-mgmt-addon-metrics-server">
+#### Metrics Server
+Metrics Server는 오토 스케일링과 모니터링을 위해 노드와 파드로부터 리소스 사용 지표를 수집하는 Kubernetes의 구성 요소입니다.
+
+* 유형: metrics-server
+* 옵션: 없음
+* 지원 버전 목록: v0.4.4-nks1
+
+<a id="addon-mgmt-addon-snapshot-controller">
+#### Snapshot Controller
+Snapshot Controller는 볼륨 스냅숏의 생성, 삭제, PVC 연동을 포함한 라이프 사이클을 관리하는 Kubernetes의 구성 요소입니다.
+
+* 유형: snapshot-controller
+* 옵션: 없음
+* 지원 버전 목록: v4.1.1-nks1
+
+
+<a id="addon-mgmt-addon-nfs-csi-plugin">
+#### NFS CSI Plugin
+NFS CSI Plugin은 NHN Cloud의 NFS를 프로비저닝하고 관리할 수 있는 CSI 드라이버입니다.
+
+* 유형: nfs-csi-plugin
+* 옵션: 없음
+* 지원 버전 목록: v1.0.1-nks1
+
 
 <a id="loadbalancer-service"></a>
 ## LoadBalancer 서비스
