@@ -1421,34 +1421,65 @@ Kubernetes 클러스터는 동작 중인 상태에서 Kubernetes 구성 요소�
 <br>
 
 #### NKS 클러스터의 버전 관리
-NKS 클러스터는 클러스터 컨트롤 플레인과 워커 노드 그룹별로 Kubernetes 버전을 관리합니다. 컨트롤 플레인의 Kubernetes 버전은 클러스터 조회 화면에서 확인할 수 있고, 워커 노드 그룹의 Kubernetes 버전은 각 워커 노드 그룹 조회 화면에서 확인할 수 있습니다. 
+NKS 클러스터는 클러스터 컨트롤 플레인과 워커 노드 그룹별로 Kubernetes 버전과 플랫폼 버전을 관리합니다. Kubernetes 버전과 플랫폼 버전은 다음과 같은 차이가 있습니다.
+
+##### Kubernetes 버전
+* 업스트림 Kubernetes에서 정의하는 버전입니다.
+* NKS 클러스터를 구성하는 Kubernetes 주요 구성 요소의 버전을 결정합니다.
+* Kubernetes 버전에 영향 받는 주요 구성 요소는 다음과 같습니다.
+    * kube-apiserver
+    * kube-controller-manager
+    * kube-scheduler
+    * kubelet
+    * kube-proxy
+
+##### 플랫폼 버전
+* NKS 서비스 수준에서 정의하는 버전입니다.
+* NKS 클러스터를 구성하는 여러 가지 구성 요소를 하나의 버전으로 정의해 관리합니다.
+* 플랫폼 버전에 영향 받는 주요 구성 요소는 다음과 같습니다.
+    * containerd, etcd 등 컨트롤 플레인 및 워커 노드 주요 구성 요소
+    * 각종 시스템 구성 요소 및 시스템 관리 도구 등
 
 <br>
 
-##### 업그레이드 규칙
+클러스터의 Kubernetes 버전과 플랫폼 버전의 상태에 따른 업그레이드 대상은 다음과 같습니다.
+
+| Kubernetes 버전 상태 | 플랫폼 버전 상태 | 업그레이드 대상 |
+| --- | --- | --- |
+| 최신이 아님 | 최신이 아님 | Kubernetes 버전 및 플랫폼 버전 |
+| 최신이 아님 | 최신 | Kubernetes 버전 |
+| 최신 | 최신이 아님 | 플랫폼 버전 |
+| 최신 | 최신 | 없음 |
+
+컨트롤 플레인의 Kubernetes 버전과 플랫폼 버전은 클러스터 조회 화면에서 확인할 수 있고, 워커 노드 그룹의 Kubernetes 버전과 플랫폼 버전은 각 워커 노드 그룹 조회 화면에서 확인할 수 있습니다. 
+
+<br>
+
+#### 업그레이드 규칙
 NKS 클러스터 버전 관리 방식과 Kubernetes 버전 차이 지원 정책에 의해 구성 요소별로 순서에 맞게 업그레이드해야 합니다. NKS 클러스터 업그레이드 기능에 적용되는 규칙은 다음과 같습니다.
 
 * 컨트롤 플레인과 각 워커 노드 그룹별로 업그레이드 명령을 실행해야 합니다.
 * 컨트롤 플레인의 Kubernetes 버전과 모든 워커 노드 그룹의 Kubernetes 버전이 일치해야 업그레이드가 가능합니다.
 * 컨트롤 플레인을 먼저 업그레이드한 후 워커 노드 그룹을 업그레이드할 수 있습니다.
-* 현재 버전의 다음 버전(마이너 버전 기준 +1)으로 업그레이드 가능합니다.
-* 다운그레이드는 지원하지 않습니다.
+* Kubernetes 버전은 현재 Kubernetes 버전의 다음 버전(마이너 버전 기준 +1)으로 업그레이드 가능합니다.
+* 플랫폼 버전은 NKS 서비스에서 제공하는 최신 버전으로 업그레이드 가능합니다.
+* Kubernetes 버전과 플랫폼 버전 모두 다운그레이드를 지원하지 않습니다.
 * 다른 기능의 동작으로 인해 클러스터가 업데이트 중인 상태에서는 업그레이드가 불가능합니다.
-* 클러스터 버전을 v1.25.4에서 v1.26.3으로 업그레이드할 때 CNI가 Flannel인 경우 Calico-VXLAN으로 변경해야 합니다.
+* Kubernetes 버전을 v1.25.4에서 v1.26.3으로 업그레이드할 때 CNI가 Flannel인 경우 Calico-VXLAN으로 변경해야 합니다.
 * NKS 레지스트리가 활성화되지 않은 클러스터는 업그레이드가 불가능합니다.
 
 다음 예시는 Kubernetes 버전을 업그레이드 과정에서 업그레이드 가능 여부를 표로 나타낸 것입니다. 예시에 사용된 조건은 다음과 같습니다. 
 
-* NHN Cloud가 지원하는 Kubernetes 버전 목록: v1.28.3, v1.29.3, v1.30.3
-* 클러스터는 v1.28.3으로 생성
+* NHN Cloud가 지원하는 Kubernetes 버전 목록: v1.31.4, v1.32.3, v1.33.4
+* 클러스터는 v1.31.4으로 생성
 
 | 상태 | 컨트롤 플레인 버전 | 컨트롤 플레인 업그레이드 가능 여부 | 워커 노드 그룹 버전 | 워커 노드 그룹 업그레이드 가능 여부
 | --- | :-: | :-: | :-: | :-: |
-| 초기 상태| v1.28.3 | 가능 <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.28.3 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> | 
-| 컨트롤 플레인 업그레이드 후 상태 | v1.29.3 | 불가능 <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.28.3 | 가능 <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
-| 워커 노드 그룹 업그레이드 후 상태 | v1.29.3 | 가능 <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.29.3 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
-| 컨트롤 플레인 업그레이드 후 상태 | v1.30.3 | 불가능 <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.29.3 | 가능 <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
-| 워커 노드 그룹 업그레이드 후 상태 | v1.30.3 | 불가능 <sup>[5](#footnote_cluster_upgrade_rule_5)</sup> | v1.30.3 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
+| 초기 상태| v1.31.4 | 가능 <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.31.4 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> | 
+| 컨트롤 플레인 업그레이드 후 상태 | v1.32.3 | 불가능 <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.31.4 | 가능 <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
+| 워커 노드 그룹 업그레이드 후 상태 | v1.32.3 | 가능 <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.32.3 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
+| 컨트롤 플레인 업그레이드 후 상태 | v1.33.4 | 불가능 <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.32.3 | 가능 <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
+| 워커 노드 그룹 업그레이드 후 상태 | v1.33.4 | 불가능 <sup>[5](#footnote_cluster_upgrade_rule_5)</sup> | v1.33.4 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
 
 주석
 

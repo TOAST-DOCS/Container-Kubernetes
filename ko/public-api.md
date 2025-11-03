@@ -255,6 +255,7 @@ X-Auth-Token: {tokenId}
 | labels.obs_sgw | Body | String | OBS 타입의 서비스 게이트웨이 UUID |
 | labels.term_of_validity | Body | String | 인증서의 유효 기간 |
 | labels.certificate_expiry | Body | String | 인증서 만료 일자 | 
+| labels.platform_version | Body | String | 플랫폼 버전 |
 
 <details><summary>예시</summary>
 <p>
@@ -288,6 +289,7 @@ X-Auth-Token: {tokenId}
         "hypervisor_type": "qemu",
         "kube_tag": "v1.23.3",
         "kube_version_status": "NEED_UPGRADE",
+        "platform_version": "1.202511.0",
         "login_username": "centos",
         "master_lb_floating_ip_enabled": "true",
         "strict_sg_rules": "True",
@@ -1260,6 +1262,7 @@ X-Auth-Token: {tokenId}
 | labels.additional_network_id_list | Body | String | 워커 노드 그룹 적용: 추가 네트워크의 VPC 네트워크 UUID 목록(콜론으로 구분) |
 | labels.additional_subnet_id_list | Body | String | 워커 노드 그룹 적용: 추가 네트워크의 VPC 서브넷 UUID 목록(콜론으로 구분) |
 | labels.strict_sg_rules | Body | String | 워커 노드 보안 그룹에 필수 보안 규칙만 생성("True" / "False"), (2024.02.27. 이후에 생성된 클러스터에서 확인 가능) |
+| labels.platform_version | Body | String | 플랫폼 버전 |
 | max_node_count | Body | Integer | 최대 노드 수 |
 | min_node_count | Body | Integer | 최소 노드 수 |
 | node_addresses | Body | String list | 노드 IP 주소 목록 |
@@ -1304,6 +1307,7 @@ X-Auth-Token: {tokenId}
         "hypervisor_type": "qemu",
         "kube_tag": "v1.19.13",
         "kube_version_status": "LATEST",
+        "platform_version": "1.202511.0",
         "login_username": "centos",
         "master_lb_floating_ip_enabled": "true",
         "strict_sg_rules": "True",
