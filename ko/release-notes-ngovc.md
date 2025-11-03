@@ -5,7 +5,7 @@
 #### 애드온 업데이트
 * 다음 애드온이 추가되었습니다.
     * Calico CNI v3.30.2-nks1
-    * Cinder CSI Plugin v1.27.101-nks, v1.27.102-nks1
+    * Cinder CSI Plugin v1.27.101-nks1, v1.27.102-nks1
     * Metrics Server v0.4.4-nks1
     * Snapshot Controller v4.1.1-nks1
     * NFS CSI Plugin v1.0.1-nks1
