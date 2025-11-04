@@ -2,6 +2,10 @@
 
 ### 2025. 11. 25.
 
+#### 서비스 지원 정책 변경
+* NKS의 Kubernetes 버전 지원 정책이 변경됩니다.
+    * 자세한 내용은 [사용 가이드](/Container/NKS/ko/user-guide/#kubernetes-version-support)를 참고하세요.
+
 #### 애드온 업데이트
 * 다음 애드온이 추가되었습니다.
     * Calico CNI v3.30.2-nks1
