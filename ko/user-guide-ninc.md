@@ -1366,79 +1366,11 @@ NKS 클러스터 컨트롤 플레인은 고가용성을 보장합니다. 컨트�
 ##### 4. Blue 환경(이전 버전의 모든 워커 노드 그룹)을 폐기합니다.
 컨트롤 플레인과 모든 워커 노드 그룹의 버전이 일치하지 않으면 다음 단계인 시스템 파드 업그레이드 수행이 불가능합니다. 클러스터의 모든 노드 그룹을 업그레이드 버전으로 맞추기 위해 Blue 환경을 폐기합니다.
 
-
-### 클러스터 CNI 변경
-NHN Kubernetes Service(NKS)는 동작 중인 Kubernetes 클러스터의 CNI(container network interface) 변경을 지원합니다. 
-클러스터 CNI 변경 기능을 사용하면 NHN Kubernetes Service(NKS)의 CNI가 Flannel CNI에서 Calico-VXLAN CNI로 변경됩니다.
-
-#### CNI 변경 규칙
-NKS 클러스터 CNI 변경 기능에 적용되는 규칙은 다음과 같습니다.
-
-* CNI 변경 기능은 NHN Kubernetes Service(NKS) 버전 1.24.3 이상인 경우에 사용할 수 있습니다.
-* 기존 NHN Kubernetes Service(NKS)에서 사용하고 있는 CNI가 Flannel인 경우에만 CNI 변경을 사용할 수 있습니다.
-* CNI 변경 시작 시 컨트롤 플레인과 모든 워커 노드 그룹에 대해 일괄적으로 작업을 진행합니다.
-* 컨트롤 플레인의 Kubernetes 버전과 모든 워커 노드 그룹의 Kubernetes 버전이 일치해야 CNI 변경이 가능합니다.
-* Calico-VXLAN, Calico-eBPF에서 Flannel로 CNI 변경은 지원하지 않습니다.
-* Flannel에서 Calico-eBPF로 CNI 변경은 지원하지 않습니다.
-* Calico-VXLAN에서 Calico-eBPF로 CNI 변경은 지원하지 않습니다.
-* 다른 기능의 동작으로 인해 클러스터가 업데이트 중인 상태에서는 CNI 변경이 불가능합니다.
-
-다음 예시는 Kubernetes CNI 변경 과정에서 변경 가능 여부를 표로 나타낸 것입니다. 예시에 사용된 조건은 다음과 같습니다. 
-
-NHN Cloud가 지원하는 Kubernetes 버전 목록: v1.23.3, v1.24.3, v1.25.4
-클러스터는 v1.23.3으로 생성
-
-| 상태 | 클러스터 버전 | 현재 CNI | CNI 변경 가능 여부 |
-| --- | :-: | :-: | :-: |
-| 초기 상태| v1.23.3 | Flannel | 불가능 <sup>[1](#footnote_calico_change_rule_1)</sup> |
-| 클러스터 업그레이드 후 상태 | v1.24.3 | Flannel | 가능 <sup>[2](#footnote_calico_change_rule_2)</sup> |
-| CNI 변경 후 상태 | v1.24.3 | Calico-VXLAN | 불가능 <sup>[3](#footnote_calico_change_rule_3)</sup> |
+> [주의]
+> 시스템 파드 업그레이드가 수행되지 않으면 일부 파드가 정상적으로 동작하지 않을 수 있습니다.
 
 
-주석
-
-* <a name="footnote_calico_change_rule_1">1</a>: 클러스터 버전이 1.24.3 미만이기 때문에 CNI 변경 불가능
-* <a name="footnote_calico_change_rule_2">2</a>: 클러스터 버전이 1.24.3 이상이기 때문에 CNI 변경 가능
-* <a name="footnote_calico_change_rule_3">3</a>: CNI가 이미 Calico-VXLAN이므로 CNI 변경 불가능
-
-#### Flannel에서 Calico-VXLAN CNI로 변경 진행 과정
-CNI 변경은 다음 순서로 진행됩니다.
-
-1. 모든 워커 노드 그룹에 버퍼 노드<sup>[1](#footnote_calico_change_step_1)</sup>를 추가합니다.<sup>[2](#footnote_calico_change_step_2)</sup>
-2. 클러스터에 Calico-VXLAN CNI가 배포됩니다.<sup>[3](#footnote_calico_change_step_3)</sup>
-3. 클러스터 오토스케일러 기능을 비활성화합니다.<sup>[4](#footnote_calico_change_step_4)</sup>
-3. 모든 워커 노드 그룹 내의 모든 워커 노드에 대해 순차적으로 아래 작업을 수행합니다.<sup>[5](#footnote_calico_change_step_5)</sup>
-    1. 해당 워커 노드에서 동작 중인 파드를 축출하고, 노드를 스케줄 불가능한 상태로 전환합니다.
-    2. 워커 노드의 파드 IP를 Calico-VXLAN CIDR로 재할당합니다. 해당 노드에 배포되어 있는 모든 파드는 재배포됩니다.<sup>[6](#footnote_calico_change_step_6)</sup>
-    3. 노드를 스케줄 가능한 상태로 전환합니다.
-5. 버퍼 노드에서 동작 중인 파드를 축출하고 버퍼 노드를 삭제합니다.
-6. 클러스터 오토스케일러 기능을 다시 활성화합니다.<sup>[4](#footnote_calico_change_step_4)</sup>
-7. Flannel CNI를 제거합니다.
-
-
-주석
-
-* <a name="footnote_calico_change_step_1">1</a>: 버퍼 노드란 CNI 변경 과정 중 기존 워커 노드에서 축출된 파드가 다시 스케줄링될 수 있도록 생성해 두는 여유 노드를 말합니다. 해당 워커 노드 그룹에서 정의한 워커 노드와 동일한 규격의 노드로 생성되며, 업그레이드 과정이 종료될 때 자동으로 삭제됩니다. 이 노드는 Instance 요금 정책에 따라 비용이 청구됩니다. 
-* <a name="footnote_calico_change_step_2">2</a>: CNI 변경 시 버퍼 노드 수를 설정할 수 있습니다. 기본값은 1이며, 0으로 설정하면 버퍼 노드를 추가하지 않습니다. 최솟값은 0이고, 최댓값은 (노드 그룹당 최대 노드 수 쿼터-해당 워커 노드 그룹의 현재 노드 수)입니다.
-* <a name="footnote_calico_change_step_3">3</a>: 클러스터에 Calico-VXLAN CNI가 배포되면 Flannel과 Calico-VXLAN CNI가 공존하게 됩니다. 이 상태에서 새로운 파드가 배포되면 파드 IP는 Flannel CNI로 설정되어 배포됩니다. Flannel CIDR IP를 가진 파드와 Calico-VXLAN CIDR IP를 가진 파드는 서로 통신할 수 있습니다.
-* <a name="footnote_calico_change_step_4">4</a>: 이 단계는 업그레이드 기능 시작 전 클러스터 오토스케일러 기능이 활성화되어 있는 경우에만 유효합니다.
-* <a name="footnote_calico_change_step_5">5</a>: CNI 변경 시 설정한 최대 서비스 불가 노드 수만큼씩 작업을 수행합니다. 기본값은 1입니다. 최솟값은 1이고, 최댓값은 현재 클러스터의 모든 노드 수입니다.
-* <a name="footnote_calico_change_step_6">6</a>: 기존에 배포된 파드의 IP는 모두 Flannel CIDR로 할당되어 있습니다. Calico-VXLAN CNI로 변경하기 위해 Flannel CIDR의 IP가 할당되어 있는 파드들을 모두 재배포하여 Calico-VXLAN CIDR IP를 할당합니다. 새로운 파드가 배포되면 파드 IP는 Calico-VXLAN CNI로 설정되어 배포됩니다.
-
-이 과정에서 아래와 같은 일들이 발생할 수 있습니다.
-
-* 서비스 중인 파드가 축출되어 다른 노드로 스케줄링됩니다. (파드 축출에 대한 더 자세한 내용은 [클러스터 업그레이드](/Container/NKS/ko/user-guide-ppp/#cluster-upgrade)를 참고하시길 바랍니다.)
-* 클러스터에 배포되어 있는 모든 파드가 재배포됩니다. (파드 재배포에 대한 더 자세한 내용은 아래 파드 재배포 주의 사항을 참고하시길 바랍니다.)
-* 오토스케일러 기능이 동작하지 않습니다. 
-
-
-> [파드 재배포 주의 사항]
-> 1. 파드 축출 과정을 통해 다른 노드로 옮겨지지 않은 파드에 대해 진행됩니다.
-> 2. CNI 변경 과정 중에 Flannel CIDR와 Calico-VXLAN CIDR 간 정상 통신을 위해 CNI 변경 파드 네트워크 값은 기존 Flannel CIDR 값과 동일하면 안 됩니다.
-> 3. 기존에 배포되어 있던 파드들의 pause 컨테이너는 모두 stop 되었다가 kubelet에 의해 다시 재생성됩니다. 파드 이름과 로컬 저장 공간 등 설정은 그대로 유지되지만 IP는 Calico-VXLAN CIDR의 IP로 변경됩니다.
-
-
-<a id="api_endpoint_ipacl"></a>
+<a id="api-endpoint-ipacl"></a>
 ### 클러스터 API 엔드포인트 IP 접근 제어 적용
 클러스터 API 엔드포인트에 IP 접근 제어를 적용하거나 해제할 수 있습니다.
 IP 접근 제어 기능에 대한 자세한 사항은 [IP 접근제어](/Network/Load%20Balancer/ko/overview-ngsc/#ip) 문서를 참고하세요.
@@ -1479,7 +1411,7 @@ Kubernetes는 구성 요소 간의 TLS 인증을 위해 PKI 인증서가 필요�
 
 > [참고]
 > 인증서 갱신 기능은 1.24 이상 버전의 Calico-VXLAN CNI를 사용하는 클러스터에서 사용 가능합니다.
-> 클러스터 버전이 1.23 이하거나, CNI가 Flannel인 경우 버전 업그레이드 및 CNI 변경 이후 인증서 갱신이 가능합니다.
+
 
 > [주의]
 > 인증서 갱신 기능에는 신규 인증서 생성 및 설정 반영을 위해 시스템 구성 요소 및 클러스터 생성 시 초기 배포된 모든 kube-system 네임스페이스 파드의 재시작이 동반됩니다.
@@ -1504,6 +1436,7 @@ Kubernetes 컴포넌트의 여러 가지 옵션을 설정할 수 있습니다. �
 > * 컨트롤 플레인에서 동작하는 컴포넌트의 설정을 변경한 경우 컨트롤 플레인의 컴포넌트들이 재시작됩니다.
 > * 워커 노드에서 동작하는 컴포넌트의 설정을 변경한 경우 워커 노드의 컴포넌트가 재시작됩니다.
 
+<a id="oidc-auth"></a>
 ### OIDC 인증 설정 기능
 
 OIDC(OpenID Connect)는 OAuth 2.0 프레임워크를 기반으로 한 상호 운용 가능한 인증 프로토콜입니다. OIDC를 이용하면 외부 인증 서비스를 통해 사용자를 인증할 수 있습니다. OIDC의 자세한 동작 방식은 [What is OpenID Connect](https://openid.net/developers/how-connect-works/)를 참고하세요.
@@ -1867,18 +1800,9 @@ NHN Kubernetes Service(NKS)가 제공하는 Calico-VXLAN, Calic-eBPF는 아래�
 
 * <a name="footnote_calico_1">1</a>: 패킷의 출발지 IP, 목적지 IP가 파드 IP로 설정됩니다. 강화된 보안 규칙 사용 시 이 트래픽에 대한 보안 규칙을 별도로 설정해야 합니다. 
 
-
-
-### 클러스터 생성 시 설정한 CNI별 CNI 변경 가능 여부
-
-| 버전 | 클러스터 생성 시 설치한 CNI 종류 및 버전 | CNI 변경 가능 여부 |
-| :-: | :-: | :-: |
-| v1.27.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | 불가|
-| v1.28.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | 불가|
-| v1.29.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | 불가|
-| v1.30.3 | Calico-VXLAN, Calico-eBPF v3.28.2 | 불가|
-| v1.31.4 | Calico-VXLAN, Calico-eBPF v3.28.2 | 불가|
-
+> [주의 사항]
+> Calico v3.24.1을 사용하는 기존 클러스터에서는 Rocky 9.5 이상 또는 Ubuntu 24.04 이상 이미지 기반으로 노드 그룹 생성이 불가능합니다.
+> 해당 이미지를 반드시 사용해야 하는 경우, 애드온 업데이트 기능을 통해 Calico를 v3.28.2 이상으로 업데이트해야 정상적으로 노드 그룹을 생성할 수 있습니다.
 
 ## 보안 그룹
 클러스터 생성 시 강화된 보안 규칙을 True로 설정하면 워커 노드 보안 그룹 생성 시 필수 보안 규칙만 생성됩니다.
