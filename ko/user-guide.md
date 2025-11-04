@@ -3887,13 +3887,13 @@ spec:
 
 <a id="nas-integration"></a>
 ### NHN Cloud NAS 서비스 연동
-NHN Cloud에서 제공하는 NAS 스토리지를 PV로 활용할 수 있습니다. NAS 서비스를 사용하기 위해서는 v1.20 이후 버전의 클러스터를 사용해야 합니다. NHN Cloud NAS 사용에 대한 자세한 내용은 [NAS 콘솔 사용 가이드](/Storage/NAS%20(online)/ko/console-guide)를 참고하세요.
+NHN Cloud에서 제공하는 NAS 볼륨을 PV로 활용할 수 있습니다. NAS 서비스를 사용하기 위해서는 v1.20 이후 버전의 클러스터를 사용해야 합니다. NHN Cloud NAS 사용에 대한 자세한 내용은 [NAS 콘솔 사용 가이드](/Storage/NAS%20(online)/ko/console-guide)를 참고하세요.
 
 > [참고]
 > NHN Cloud NAS 서비스는 현재(2024. 08.) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS%20(online)/ko/overview)를 참고하세요.
 
 #### 모든 워커 노드에서 rpcbind 서비스 실행
-NAS 스토리지를 사용하려면 모든 워커 노드에서 rpcbind 서비스를 실행해야 합니다. 모든 워커 노드에 접속한 뒤 아래 명령어를 통해 rpcbind 서비스를 실행합니다.
+NAS 볼륨을 사용하려면 모든 워커 노드에서 rpcbind 서비스를 실행해야 합니다. 모든 워커 노드에 접속한 뒤 아래 명령어를 통해 rpcbind 서비스를 실행합니다.
 
 rpcbind 서비스 실행 명령어는 이미지 종류와 상관없이 동일합니다.
 
@@ -4000,18 +4000,18 @@ NAMESPACE     NAME                    DESIRED   CURRENT   READY   UP-TO-DATE   A
 kube-system   csi-nfs-node            1         1         1       1            1           kubernetes.io/os=linux          4m23s
 ```
 
-#### 프로비저닝 시 기존 NHN Cloud NAS 스토리지를 이용하는 방법
-PV 매니페스트 작성 시 NAS 정보를 입력하거나 StorageClass 매니페스트에 NAS 정보를 입력해 기존 NAS 스토리지를 PV로 사용할 수 있습니다.
+#### 프로비저닝 시 기존 NHN Cloud NAS 볼륨을 이용하는 방법
+PV 매니페스트 작성 시 NAS 정보를 입력하거나 StorageClass 매니페스트에 NAS 정보를 입력해 기존 NAS 볼륨을 PV로 사용할 수 있습니다.
 
-##### 방법 1. PV 매니페스트 작성 시 NAS 스토리지 정보 정의
-PV 매니페스트 작성 시 NHN Cloud NAS 스토리지 정보를 정의합니다. 설정 위치는 .spec 하위의 **csi**입니다.
+##### 방법 1. PV 매니페스트 작성 시 NAS 볼륨 정보 정의
+PV 매니페스트 작성 시 NHN Cloud NAS 볼륨 정보를 정의합니다. 설정 위치는 .spec 하위의 **csi**입니다.
 
 * driver: **nfs.csi.k8s.io**를 입력합니다.
 * readOnly: **false**를 입력합니다.
 * volumeHandle: 클러스터 내에서 중복되지 않는 고유한 id를 입력합니다.
-* volumeAttributes: NAS 스토리지의 연결 정보를 입력합니다.
-  * server: NAS 스토리지의 연결 정보 중 **ip** 부분의 값을 입력합니다.
-  * share: NAS 스토리지의 연결 정보 중 **볼륨 이름** 부분의 값을 입력합니다.
+* volumeAttributes: NAS 볼륨의 연결 정보를 입력합니다.
+  * server: NAS 볼륨의 연결 정보 중 **ip** 부분의 값을 입력합니다.
+  * share: NAS 볼륨의 연결 정보 중 **볼륨 이름** 부분의 값을 입력합니다.
 
 아래는 매니페스트 예제입니다.
 ``` yaml
@@ -4079,18 +4079,18 @@ pv-onas   300Gi      RWX            Retain           Bound    default/pvc-onas  
 ```
 
 ##### 방법 2. StorageClass 매니페스트 작성 시 NAS 정보 정의
-StorageClass 매니페스트 작성 시 스토리지 제공자 정보 및 NHN Cloud NAS 스토리지 정보를 정의합니다.
+StorageClass 매니페스트 작성 시 스토리지 제공자 정보 및 NHN Cloud NAS 볼륨 정보를 정의합니다.
 
 * provisioner: **nfs.csi.k8s.io**를 입력합니다.
 * parameters: 입력 항목은 아래 표를 참고하세요.
 
 | 항목 | 설명 | 예시 |  필수 | 기본값 |
 | ------- |------- | --------------------------- | ---------------------------- | ------------- |
-| server | NAS 스토리지의 연결 정보 중 **ip**를 의미합니다. | 192.168.0.81 | O |  |
-| share | NAS 스토리지의 연결 정보 중 **볼륨 이름**을 의미합니다. | /onas_300gb | O |  |
-| mountPermissions | NAS 스토리지 마운트 포인트 디렉터리에 설정할 권한을 지정합니다. | "0700" | X | 0741 |
-| uid | NAS 스토리지 마운트 포인트 디렉터리에 설정할 UID를 입력합니다. | 1000 | X | root(0) |
-| gid | NAS 스토리지 마운트 포인트 디렉터리에 설정할 GID를 입력합니다. | 1000 | X | root(0) |
+| server | NAS 볼륨의 연결 정보 중 **ip**를 의미합니다. | 192.168.0.81 | O |  |
+| share | NAS 볼륨의 연결 정보 중 **볼륨 이름**을 의미합니다. | /onas_300gb | O |  |
+| mountPermissions | NAS 볼륨 마운트 포인트 디렉터리에 설정할 권한을 지정합니다. | "0700" | X | 0741 |
+| uid | NAS 볼륨 마운트 포인트 디렉터리에 설정할 UID를 입력합니다. | 1000 | X | root(0) |
+| gid | NAS 볼륨 마운트 포인트 디렉터리에 설정할 GID를 입력합니다. | 1000 | X | root(0) |
 
 아래는 매니페스트 예제입니다.
 ``` yaml
@@ -4186,7 +4186,7 @@ spec:
             claimName: pvc-onas-dynamic
 ```
 
-파드를 생성하고 NAS 스토리지가 마운트되어 있는지 확인합니다.
+파드를 생성하고 NAS 볼륨이 마운트되어 있는지 확인합니다.
 ```
 $ kubectl apply -f deployment.yaml
 deployment.apps/nginx created
@@ -4202,10 +4202,10 @@ Filesystem                                                                 Size 
 ...
 ```
 
-#### 프로비저닝 시 새로운 NHN Cloud NAS 스토리지를 생성하는 방법
-StorageClass 및 PVC 매니페스트 작성 시 NAS 정보를 입력해 자동으로 생성된 NAS 스토리지를 PV로 사용할 수 있습니다.
+#### 프로비저닝 시 새로운 NHN Cloud NAS 볼륨을 생성하는 방법
+StorageClass 및 PVC 매니페스트 작성 시 NAS 정보를 입력해 자동으로 생성된 NAS 볼륨을 PV로 사용할 수 있습니다.
 
-StorageClass 매니페스트에 스토리지 제공자 정보 및 생성할 NAS 스토리지의 스냅숏 정책, 접근 제어 목록(ACL), 서브넷 정보를 정의합니다.
+StorageClass 매니페스트에 스토리지 제공자 정보 및 생성할 NAS 볼륨의 스냅숏 정책, 접근 제어 목록(ACL), 서브넷 정보를 정의합니다.
 
 * provisioner: **nfs.csi.k8s.io**를 입력합니다.
 * parameters: 입력 항목은 아래 표를 참고하세요. 파라미터 값에 다중 값을 정의하는 경우 **,**를 이용하여 값을 구분합니다.
@@ -4220,9 +4220,9 @@ StorageClass 매니페스트에 스토리지 제공자 정보 및 생성할 NAS 
 | subnet | 스토리지에 접근할 서브넷입니다. 선택된 VPC의 서브넷만 선택할 수 있습니다. | "59526f1c-c089-4517-86fd-2d3dac369210" | X | O |  |
 | acl | 읽기, 쓰기 권한을 허용할 IP 또는 IP 대역 목록입니다. | "0.0.0.0/0" | O | X | 0.0.0.0/0 |
 | onDelete | PVC 삭제 시 NAS 볼륨 삭제 여부입니다. | "delete" / "retain" | X | X | delete |
-| mountPermissions | NAS 스토리지 마운트 포인트 디렉터리에 설정할 권한을 지정합니다. | "0700"| X | X | 0741 |
-| uid | NAS 스토리지 마운트 포인트 디렉터리에 설정할 UID를 입력합니다. | 1000 | X | X | root(0) |
-| gid | NAS 스토리지 마운트 포인트 디렉터리에 설정할 GID를 입력합니다. | 1000 | X | X | root(0) |
+| mountPermissions | NAS 볼륨 마운트 포인트 디렉터리에 설정할 권한을 지정합니다. | "0700"| X | X | 0741 |
+| uid | NAS 볼륨 마운트 포인트 디렉터리에 설정할 UID를 입력합니다. | 1000 | X | X | root(0) |
+| gid | NAS 볼륨 마운트 포인트 디렉터리에 설정할 GID를 입력합니다. | 1000 | X | X | root(0) |
 
 > [참고]
 > 스냅숏 파라미터 사용 시 관련된 모든 파라미터 값을 정의해야 합니다. 스냅숏 관련 파라미터는 아래와 같습니다.
@@ -4236,8 +4236,8 @@ StorageClass 매니페스트에 스토리지 제공자 정보 및 생성할 NAS 
 
 > [주의] 다중 서브넷 환경에서의 제약 사항
 > 
-> NAS 스토리지는 스토리지 클래스에 정의된 서브넷에 연결됩니다.
-> 파드가 NAS 스토리지와 연동하기 위해서는 모든 워커 노드 그룹이 이 서브넷에 연결되어야 합니다.
+> NAS 볼륨은 스토리지 클래스에 정의된 서브넷에 연결됩니다.
+> 파드가 NAS 볼륨과 연동하기 위해서는 모든 워커 노드 그룹이 이 서브넷에 연결되어야 합니다.
 
 아래는 매니페스트 예제입니다.
 ```yaml
@@ -4262,13 +4262,13 @@ parameters:
   gid: 1000
 ```
 
-PVC 매니페스트의 **Annotation**에 생성할 NAS 스토리지의 이름, 설명, 크기를 정의합니다. 입력 항목은 아래 표를 참고하세요.
+PVC 매니페스트의 **Annotation**에 생성할 NAS 볼륨의 이름, 설명, 크기를 정의합니다. 입력 항목은 아래 표를 참고하세요.
 
 | 항목 | 설명 | 예시 | 필수 |
 | ---- | ------- | --------------------------- | --------- |
 | nfs-volume-name | 생성될 스토리지의 이름입니다. 스토리지 이름을 통해 NFS 접근 경로를 만듭니다. 이름은 100자 이내의 영문자와 숫자, 일부 기호('-', '_')만 입력할 수 있습니다. | "nas_sample_volume_300gb" | O |
-| nfs-volume-description | 생성할 NAS 스토리지의 설명입니다. | "nas sample volume" | X |
-| nfs-volume-sizegb | 생성할 NAS 스토리지의 크기입니다. GB 단위로 설정됩니다. 최소 300부터 최대 10,000까지 입력할 수 있습니다. | "300" | O |
+| nfs-volume-description | 생성할 NAS 볼륨의 설명입니다. | "nas sample volume" | X |
+| nfs-volume-sizegb | 생성할 NAS 볼륨의 크기입니다. GB 단위로 설정됩니다. 최소 300부터 최대 10,000까지 입력할 수 있습니다. | "300" | O |
 
 아래는 매니페스트 예제입니다.
 ```yaml
@@ -4301,8 +4301,8 @@ sc-nfs       nfs.csi.k8s.io   Delete          Immediate           false         
 ```
 
 PV를 따로 생성할 필요가 없어 PVC 매니페스트만 작성합니다. PVC 매니페스트에는 **spec.volumeName**을 설정하지 않습니다.
-볼륨 바인딩 모드를 설정하지 않거나 Immediate로 설정하고 PVC를 생성하면 PV가 자동으로 생성됩니다. NAS 스토리지가 생성된 후 Bound되기까지 약 1분 정도 소요됩니다.
-NHN Cloud 콘솔 **Storage > NAS** 서비스 페이지에서도 생성된 NAS 스토리지의 정보를 확인할 수 있습니다.
+볼륨 바인딩 모드를 설정하지 않거나 Immediate로 설정하고 PVC를 생성하면 PV가 자동으로 생성됩니다. NAS 볼륨이 생성된 후 Bound되기까지 약 1분 정도 소요됩니다.
+NHN Cloud 콘솔 **Storage > NAS** 서비스 페이지에서도 생성된 NAS 볼륨의 정보를 확인할 수 있습니다.
 
 ```
 $ kubectl apply -f pvc.yaml
@@ -4350,7 +4350,7 @@ spec:
             claimName: pvc-nfs
 ```
 
-파드를 생성하고 NAS 스토리지가 마운트되어 있는지 확인합니다.
+파드를 생성하고 NAS 볼륨이 마운트되어 있는지 확인합니다.
 ```
 $ kubectl apply -f deployment.yaml
 deployment.apps/nginx created
