@@ -1963,11 +1963,11 @@ NHN Kubernetes Service(NKS)가 제공하는 Calico-VXLAN, Calic-eBPF는 아래�
 
 * 설치
     * 클러스터에 애드온을 설치합니다.
-    * 애드온 버전, 애드온별 옵션을 지정해 설치합니다.
+    * 애드온 버전, 애드온 별 옵션을 지정해 설치합니다.
     * 설치 시 충돌 처리 옵션을 지정해 설치합니다.
 * 업데이트
     * 클러스터에 설치되어 있는 애드온을 업데이트합니다.
-    * 애드온 버전, 애드온별 옵션 등을 변경할 수 있습니다.
+    * 애드온 버전, 애드온 별 옵션 등을 변경할 수 있습니다.
         * 애드온에 따라 옵션 변경이 불가능할 수 있습니다.
     * 업데이트 시 충돌 처리 옵션을 지정해 업데이트합니다.
 * 제거
@@ -2593,6 +2593,29 @@ metadata:
       u6X+8zlOYDOoS2BuG8d2brfKBLu3As5VAcAPLcJhE//3IVaZHxod
       -----END RSA PRIVATE KEY-----
 ```
+
+인증서 정보와 개인 키 정보를 manifest에 등록하는 대신 Certificate Manager에 등록된 인증서를 이용해 TERMINATED_HTTPS 타입의 리스너를 생성할 수 있습니다.
+
+* 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/listener-terminated-https-cert-manager-name입니다.
+* 설정값은 Certificate Manager에 등록한 인증서의 이름입니다.
+* 리스너별 설정을 적용할 수 있습니다.
+
+다음은 리스너 프로토콜을 TERMINATED_HTTPS로 설정할 때 Certificate Manager에 등록된 인증서를 이용하는 매니페스트 예제입니다.
+
+```yaml
+metadata:
+  name: echosvr-svc
+  labels:
+    app: echosvr
+  annotations:
+    loadbalancer.nhncloud/listener-protocol: TERMINATED_HTTPS
+    loadbalancer.nhncloud/listener-terminated-https-tls-version: TLSv1.2
+    loadbalancer.nhncloud/listener-terminated-https-cert-manager-name: test
+```
+
+> [주의]
+> Certificate Manager에 등록된 인증서를 이용하는 방법은 2024년 5월 28일 이후에 생성됐거나 k8s 버전을 업그레이드한 클러스터에서 설정 가능합니다.
+> 리스너와 연동된 Certificate Manager의 인증서를 삭제하면 로드 밸런서의 동작에 영향을 줄 수 있습니다.
 
 #### 리스너 프록시 프로토콜(Proxy Protocol) 설정
 리스너 프로토콜이 TCP 혹은 HTTPS인 경우 리스너에 프록시 프로토콜을 설정할 수 있습니다. 프록시 프로토콜에 대한 자세한 내용은 [로드 밸런서 프록시 모드](/Network/Load%20Balancer/ko/overview-ngsc/#_4)를 참고하세요.
