@@ -1864,6 +1864,10 @@ NHN Kubernetes Service(NKS)가 제공하는 Calico-VXLAN, Calic-eBPF는 아래�
 
 * <a name="footnote_calico_1">1</a>: 패킷의 출발지 IP, 목적지 IP가 파드 IP로 설정됩니다. 강화된 보안 규칙 사용 시 이 트래픽에 대한 보안 규칙을 별도로 설정해야 합니다. 
 
+> [주의 사항]
+> Calico v3.24.1 eBPF 모드를 사용하는 클러스터는 Rocky 9.5 이상 또는 Ubuntu 24.04 이상 이미지를 사용하는 노드 그룹 생성이 불가능합니다.
+> 해당 이미지를 사용하려면 애드온 관리 기능을 통해 Calico를 v3.28.2 이상으로 업데이트해야 합니다. 
+
 <a id="security-group"></a>
 ## 보안 그룹
 클러스터 생성 시 강화된 보안 규칙을 True로 설정하면 워커 노드 보안 그룹 생성 시 필수 보안 규칙만 생성됩니다.
