@@ -406,22 +406,22 @@ kubectl -n kube-system set image deployment/calico-kube-controllers \
 ```
 
 ### > ingress-nginx 컨트롤러 내부 통신 구조 및 주의 사항
-NKS에서 ingress-nginx 컨트롤러를 배포하면, Ingress Controller 앞단에 로드 밸런서가 생성되어 외부 트래픽의 진입점 역할을 합니다. 외부 요청은 로드 밸런서를 통해 Ingress Controller로 전달되지만, 클러스터 내부 요청은 로드 밸런서를 거치지 않고 직접 Ingress Controller Pod로 전달됩니다.
+ingress-nginx 컨트롤러를 통해 서비스를 외부에 노출할 경우, 요청을 보내는 클라이언트의 위치(클러스터 내부 또는 외부)에 따라 요청이 워크로드로 전달되는 경로가 달라집니다.
 
-따라서 내부 요청은 클러스터 외부로 나갔다가 다시 들어오는 불필요한 경로를 거치지 않으며, 이로 인해 내부 통신 효율이 향상되고 네트워크 대역폭 낭비를 방지할 수 있습니다.
+#### 클러스터 외부 클라이언트
+클러스터 외부 클라이언트가 보내는 요청은 로드 밸런서를 통해 Ingress Controller로 전달됩니다. 로드 밸런서는 Ingress Controller Service의 외부 엔드포인트 역할을 하며, Ingress Controller는 Ingress 규칙에 따라 요청을 목적지 Backend Pod로 라우팅합니다.
 
-#### 외부 요청
-외부 사용자의 요청은 로드 밸런서를 통해 Ingress Controller로 전달됩니다. 로드 밸런서는 Ingress Controller Service의 외부 엔드포인트 역할을 하며, Ingress Controller는 Ingress 규칙에 따라 요청을 목적지 Backend Pod로 라우팅합니다.
 ```
-외부 클라이언트 → 로드 밸런서 → ingress-nginx Service → ingress-nginx Controller Pod → Backend Pod
+클러스터 외부 클라이언트 → 로드 밸런서 → ingress-nginx Service → ingress-nginx Controller Pod → Backend Pod
 ```
 
-#### 클러스터 내부 요청
+#### 클러스터 내부 클라이언트
 클러스터 내부 Pod가 Ingress 주소로 요청할 경우, 트래픽은 로드 밸런서를 거치지 않습니다. 요청은 Ingress Controller Service의 ClusterIP를 통해 내부 경로로 직접 전달되며 이 과정에서 CNI에 따라 다음 방식으로 라우팅됩니다.
-- Calico (VXLAN) : kube-proxy의 iptables 규칙 기반
-- Calico (eBPF) : BPF MAP 기반 데이터 경로 사용
 
-두 방식 모두 내부 네트워크 내에서만 트래픽이 전달되며, 외부 로드 밸런서는 접근하지 않습니다.
+- **Calico (VXLAN)** : kube-proxy의 iptables 규칙 기반
+- **Calico (eBPF)** : BPF MAP 기반 데이터 경로 사용
+
+두 방식 모두 트래픽이 내부 네트워크 내에서만 전달되며, 외부 로드 밸런서를 거치지 않습니다.
 ```
 내부 Pod → ingress-nginx Service (ClusterIP) → ingress-nginx Controller Pod → Backend Pod
 ```
