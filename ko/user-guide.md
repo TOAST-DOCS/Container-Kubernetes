@@ -13,16 +13,16 @@ NKS의 Kubernetes 버전 지원 정책은 다음과 같습니다.
     * NKS는 최신 Kubernetes 버전을 지속적으로 제공해 클러스터가 최신 버전을 유지할 수 있도록 합니다.
     * 클러스터를 새로운 버전으로 생성하거나 기존 클러스터를 새로운 버전으로 업그레이드해 사용할 수 있습니다.
 * 생성 가능 버전
-    * 클러스터로 생성 가능한 Kubernetes 버전은 4개로 유지됩니다.
+    * 클러스터로 생성 가능한 Kubernetes 버전은 3개로 유지됩니다.
     * 따라서 생성 가능한 버전이 하나 추가되면 기존의 생성 가능 버전 목록에서 가장 낮은 버전이 제거됩니다.
 * 서비스 지원 버전
-    * 서비스 지원이 종료된 버전을 사용하는 클러스터는 NKS의 신규 기능 동작을 보장하지 않습니다.
+    * 각 버전은 최초 출시일로부터 약 14개월 동안 서비스를 지원합니다.
+        * '최초 출시일'은 해당 마이너 버전(예: v1.33.x)의 첫 번째 패치 버전(예: v1.33.4)이 NKS에서 지원되기 시작한 날짜를 의미합니다.
+    * 서비스 지원이 종료된 버전을 사용하는 클러스터는 NKS의 기능 동작을 보장하지 않습니다.
     * NKS의 클러스터 버전 업그레이드 기능으로 클러스터의 Kubernetes 버전을 업그레이드할 수 있습니다.
-    * 서비스 지원 Kubernetes 버전은 5개로 유지됩니다.
-    * 따라서 생성 가능한 버전이 하나 추가되면 기존의 서비스 지원 가능 버전 목록에서 가장 낮은 버전이 제거됩니다.
 
 각 Kubernetes 버전별 생성 가능 버전에 추가/삭제하는 시점과 서비스 지원 종료 시점은 다음과 같습니다.
-(단, 이 표는 2025년 5월 기준으로 작성되었으며, 신규 생성 가능 버전의 버전명과 제공 시기는 당사 내부 사정에 의해 변경될 수 있습니다)
+(단, 이 표는 2025년 11월 기준으로 작성되었으며, 신규 생성 가능 버전의 버전명과 제공 시기는 당사 내부 사정에 의해 변경될 수 있습니다)
 
 | 버전    | 생성 가능 버전에 추가 | 생성 가능 버전에서 제거 | 서비스 지원 종료 |
 |:-------:|:-------------------:|:--------------------:|:---------------------:|
@@ -32,19 +32,12 @@ NKS의 Kubernetes 버전 지원 정책은 다음과 같습니다.
 | v1.25.4 | 2023. 01.           | 2024. 05.            | 2024. 08.             |
 | v1.26.3 | 2023. 05.           | 2024. 08.            | 2025. 02.             |
 | v1.27.3 | 2023. 08.           | 2025. 02.            | 2025. 05.             |
-| v1.28.3 | 2024. 02.           | 2025. 05.            | 2025. 11.(예정)        |
-| v1.29.3 | 2024. 05.           | 2025. 11.(예정)       | 2026. 02.(예정)        |
-| v1.30.3 | 2024. 08.           | 2025. 11.(예정)       | 2026. 05.(예정)        |
-| v1.31.4 | 2025. 02.           | 2026. 02.(예정)       | 2026. 08.(예정)        |
-| v1.32.3 | 2025. 05.           | 2026. 05.(예정)       | 2027. 02.(예정)        |
-| v1.33.x | 2025. 11.(예정)      | 2026. 08.(예정)       | 2027. 01.(예정)        | 
-
-> [안내] 2025년 11월부터 Kubernetes 버전 지원 정책이 변경됩니다.<br>
-> - 생성 가능 버전: 클러스터에서 생성 가능한 Kubernetes 버전은 3개로 유지되며, 새로운 버전이 추가되면 기존 목록에서 가장 낮은 버전이 제거됩니다.
-> - 서비스 지원 버전 : 각 버전은 최초 출시일로부터 약 14개월 동안 서비스 지원되며, 지원 기간이 종료된 버전을 사용하는 클러스터는 NKS의 기능 동작이 보장되지 않습니다.
->   - '최초 출시일'은 해당 마이너 버전(예: v1.32.x)의 첫 번째 패치 버전(예: v1.32.3)이 NKS에서 지원되기 시작한 날짜를 의미합니다.
->
-> v1.32.x까지는 기존 정책이 적용되며, 버전 지원 정책 변경에 대한 자세한 내용은 추후 별도로 안내드릴 예정입니다.
+| v1.28.3 | 2024. 02.           | 2025. 05.            | 2025. 11.             |
+| v1.29.3 | 2024. 05.           | 2025. 11.            | 2026. 02.(예정)       |
+| v1.30.3 | 2024. 08.           | 2025. 11.            | 2026. 05.(예정)       |
+| v1.31.4 | 2025. 02.           | 2026. 02.(예정)      | 2026. 08.(예정)       |
+| v1.32.3 | 2025. 05.           | 2026. 05.(예정)      | 2027. 02.(예정)       |
+| v1.33.x | 2025. 11.           | 2026. 08.(예정)      | 2027. 01.(예정)       | 
 
 <a id="cluster-create"></a>
 ### 클러스터 생성
@@ -223,6 +216,7 @@ k8s Node 상태의 아이콘별 의미는 다음과 같습니다.
 | 초록색 솔리드 아이콘 | 작업 정상 종료 |
 | 원형 회전 아이콘 | 작업 진행 중 |
 | 빨간색 솔리드 아이콘 | 작업 실패 |
+| 주황색 솔리드 아이콘 | 일부 노드 작업 성공 |
 | 회색 솔리드 아이콘 | 클러스터 및 노드 그룹 사용 불가능 |
 
 k8s Node 상태의 아이콘별 의미는 다음과 같습니다.
@@ -1138,11 +1132,14 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.28.3
 | Rocky | Rocky Linux 8.10 (2024.08.20)  | 1.6 |
 |  | Rocky Linux 8.10 (2024.11.19)  | 1.7 |
 |  | Rocky Linux 8.10 (2025.02.25)  | 1.8 |
+|  | Rocky Linux 9.5 (2025.11.18)   | 1.9 |
 | Ubuntu | Ubuntu Server 22.04.3 LTS (2023.11.21) | 1.3 |
 |  | Ubuntu Server 22.04.3 LTS (2024.02.20)  | 1.4 |
-|  | Ubuntu Server 22.04.3 LTS (2024.05.21)  | 1.5 |
-|  | Ubuntu Server 22.04.6 LTS (2024.11.19)  | 1.7 |
-|  | Ubuntu Server 22.04.6 LTS (2025.02.25)  | 1.8 |
+|  | Ubuntu Server 22.04.5 LTS (2024.05.21)  | 1.5 |
+|  | Ubuntu Server 22.04.5 LTS (2024.11.19)  | 1.7 |
+|  | Ubuntu Server 22.04.5 LTS (2025.02.25)  | 1.8 |
+|  | Ubuntu Server 22.04.5 LTS (2025.11.18)  | 1.9 |
+|  | Ubuntu Server 24.04.3 LTS (2025.11.18)  | 1.9 |
 
 
 > [참고]
@@ -1439,11 +1436,40 @@ Kubernetes 버전은 `x.y.z`로 표현됩니다. `x`는 메이저 버전, `y`는
 
 Kubernetes 클러스터는 동작 중인 상태에서 Kubernetes 구성 요소를 업그레이드할 수 있습니다. 이를 위해 Kubernetes 구성 요소별로 Kubernetes 버전 차이에 따른 기능 지원 여부를 정의하고 있습니다. 마이너 버전을 기준으로 한 단계의 버전 차이는 상호 기능 호환을 지원함으로써 동작 중인 클러스터의 Kubernetes 구성 요소 업그레이드를 지원합니다. 또 구성 요소 종류별로 업그레이드 순서를 정의하고 있습니다. 좀 더 자세한 내용은 [Version Skew Policy](https://kubernetes.io/releases/version-skew-policy/)를 참고하세요.
 
-
 <br>
 
 #### NKS 클러스터의 버전 관리
-NKS 클러스터는 클러스터 컨트롤 플레인과 워커 노드 그룹별로 Kubernetes 버전을 관리합니다. 컨트롤 플레인의 Kubernetes 버전은 클러스터 조회 화면에서 확인할 수 있고, 워커 노드 그룹의 Kubernetes 버전은 각 워커 노드 그룹 조회 화면에서 확인할 수 있습니다. 
+NKS 클러스터는 클러스터 컨트롤 플레인과 워커 노드 그룹별로 Kubernetes 버전과 플랫폼 버전을 관리합니다. Kubernetes 버전과 플랫폼 버전은 다음과 같은 차이가 있습니다.
+
+##### Kubernetes 버전
+* 업스트림 Kubernetes에서 정의하는 버전입니다.
+* NKS 클러스터를 구성하는 Kubernetes 주요 구성 요소의 버전을 결정합니다.
+* Kubernetes 버전에 영향 받는 주요 구성 요소는 다음과 같습니다.
+    * kube-apiserver
+    * kube-controller-manager
+    * kube-scheduler
+    * kubelet
+    * kube-proxy
+
+##### 플랫폼 버전
+* NKS 서비스 수준에서 정의하는 버전입니다.
+* NKS 클러스터를 구성하는 여러 가지 구성 요소를 하나의 버전으로 정의해 관리합니다.
+* 플랫폼 버전에 영향 받는 주요 구성 요소는 다음과 같습니다.
+    * containerd, etcd 등 컨트롤 플레인 및 워커 노드 주요 구성 요소
+    * 각종 시스템 구성 요소 및 시스템 관리 도구 등
+
+<br>
+
+클러스터의 Kubernetes 버전과 플랫폼 버전의 상태에 따른 업그레이드 대상은 다음과 같습니다.
+
+| Kubernetes 버전 상태 | 플랫폼 버전 상태 | 업그레이드 대상 |
+| --- | --- | --- |
+| 최신이 아님 | 최신이 아님 | Kubernetes 버전 및 플랫폼 버전 |
+| 최신이 아님 | 최신 | Kubernetes 버전 |
+| 최신 | 최신이 아님 | 플랫폼 버전 |
+| 최신 | 최신 | 없음 |
+
+컨트롤 플레인의 Kubernetes 버전과 플랫폼 버전은 클러스터 조회 화면에서 확인할 수 있고, 워커 노드 그룹의 Kubernetes 버전과 플랫폼 버전은 각 워커 노드 그룹 조회 화면에서 확인할 수 있습니다. 
 
 <br>
 
@@ -1453,24 +1479,25 @@ NKS 클러스터 버전 관리 방식과 Kubernetes 버전 차이 지원 정책�
 * 컨트롤 플레인과 각 워커 노드 그룹별로 업그레이드 명령을 실행해야 합니다.
 * 컨트롤 플레인의 Kubernetes 버전과 모든 워커 노드 그룹의 Kubernetes 버전이 일치해야 업그레이드가 가능합니다.
 * 컨트롤 플레인을 먼저 업그레이드한 후 워커 노드 그룹을 업그레이드할 수 있습니다.
-* 현재 버전의 다음 버전(마이너 버전 기준 +1)으로 업그레이드 가능합니다.
-* 다운그레이드는 지원하지 않습니다.
+* Kubernetes 버전은 현재 Kubernetes 버전의 다음 버전(마이너 버전 기준 +1)으로 업그레이드 가능합니다.
+* 플랫폼 버전은 NKS 서비스에서 제공하는 최신 버전으로 업그레이드 가능합니다.
+* Kubernetes 버전과 플랫폼 버전 모두 다운그레이드를 지원하지 않습니다.
 * 다른 기능의 동작으로 인해 클러스터가 업데이트 중인 상태에서는 업그레이드가 불가능합니다.
-* 클러스터 버전을 v1.25.4에서 v1.26.3으로 업그레이드할 때 CNI가 Flannel인 경우 Calico-VXLAN으로 변경해야 합니다.
+* Kubernetes 버전을 v1.25.4에서 v1.26.3으로 업그레이드할 때 CNI가 Flannel인 경우 Calico-VXLAN으로 변경해야 합니다.
 * NKS 레지스트리가 활성화되지 않은 클러스터는 업그레이드가 불가능합니다.
 
 다음 예시는 Kubernetes 버전을 업그레이드 과정에서 업그레이드 가능 여부를 표로 나타낸 것입니다. 예시에 사용된 조건은 다음과 같습니다. 
 
-* NHN Cloud가 지원하는 Kubernetes 버전 목록: v1.28.3, v1.29.3, v1.30.3
-* 클러스터는 v1.28.3으로 생성
+* NHN Cloud가 지원하는 Kubernetes 버전 목록: v1.31.4, v1.32.3, v1.33.4
+* 클러스터는 v1.31.4으로 생성
 
 | 상태 | 컨트롤 플레인 버전 | 컨트롤 플레인 업그레이드 가능 여부 | 워커 노드 그룹 버전 | 워커 노드 그룹 업그레이드 가능 여부
 | --- | :-: | :-: | :-: | :-: |
-| 초기 상태| v1.28.3 | 가능 <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.28.3 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> | 
-| 컨트롤 플레인 업그레이드 후 상태 | v1.29.3 | 불가능 <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.28.3 | 가능 <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
-| 워커 노드 그룹 업그레이드 후 상태 | v1.29.3 | 가능 <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.29.3 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
-| 컨트롤 플레인 업그레이드 후 상태 | v1.30.3 | 불가능 <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.29.3 | 가능 <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
-| 워커 노드 그룹 업그레이드 후 상태 | v1.30.3 | 불가능 <sup>[5](#footnote_cluster_upgrade_rule_5)</sup> | v1.30.3 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
+| 초기 상태| v1.31.4 | 가능 <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.31.4 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> | 
+| 컨트롤 플레인 업그레이드 후 상태 | v1.32.3 | 불가능 <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.31.4 | 가능 <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
+| 워커 노드 그룹 업그레이드 후 상태 | v1.32.3 | 가능 <sup>[1](#footnote_cluster_upgrade_rule_1)</sup> | v1.32.3 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
+| 컨트롤 플레인 업그레이드 후 상태 | v1.33.4 | 불가능 <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.32.3 | 가능 <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
+| 워커 노드 그룹 업그레이드 후 상태 | v1.33.4 | 불가능 <sup>[5](#footnote_cluster_upgrade_rule_5)</sup> | v1.33.4 | 불가능 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
 
 주석
 
@@ -1562,11 +1589,9 @@ NKS 클러스터 컨트롤 플레인은 고가용성을 보장합니다. 컨트�
 ##### 4. Blue 환경(이전 버전의 모든 워커 노드 그룹)을 폐기합니다.
 컨트롤 플레인과 모든 워커 노드 그룹의 버전이 일치하지 않으면 다음 단계인 시스템 파드 업그레이드 수행이 불가능합니다. 클러스터의 모든 노드 그룹을 업그레이드 버전으로 맞추기 위해 Blue 환경을 폐기합니다.
 
-##### 5. 클러스터 조회 화면의 업그레이드 버튼을 통해 시스템 파드를 업그레이드합니다.
-Kubernetes 클러스터 구성을 위해 동작하는 시스템 파드 업그레이드가 수행됩니다.
-
 > [주의]
 > 시스템 파드 업그레이드가 수행되지 않으면 일부 파드가 정상적으로 동작하지 않을 수 있습니다.
+
 
 <a id="api-endpoint-ipacl"></a>
 ### 클러스터 API 엔드포인트 IP 접근 제어 적용
@@ -2037,6 +2062,10 @@ NHN Kubernetes Service(NKS)가 제공하는 Calico-VXLAN, Calic-eBPF는 아래�
 
 * <a name="footnote_calico_1">1</a>: 패킷의 출발지 IP, 목적지 IP가 파드 IP로 설정됩니다. 강화된 보안 규칙 사용 시 이 트래픽에 대한 보안 규칙을 별도로 설정해야 합니다. 
 
+> [주의 사항]
+> Calico v3.24.1 eBPF 모드를 사용하는 클러스터는 Rocky 9.5 이상 또는 Ubuntu 24.04 이상 이미지를 사용하는 노드 그룹 생성이 불가능합니다.
+> 해당 이미지를 사용하려면 애드온 관리 기능을 통해 Calico를 v3.28.2 이상으로 업데이트해야 합니다. 
+
 <a id="security-group"></a>
 ## 보안 그룹
 클러스터 생성 시 강화된 보안 규칙을 True로 설정하면 워커 노드 보안 그룹 생성 시 필수 보안 규칙만 생성됩니다.
@@ -2121,6 +2150,9 @@ NHN Kubernetes Service(NKS)가 제공하는 Calico-VXLAN, Calic-eBPF는 아래�
 * 재정의(overwrite): 충돌 발생 시 충돌하는 필드를 애드온에서 정의하는 기본값으로 재정의합니다.
 * 보존(preserve): 충돌 발생 시 충돌하는 필드는 기존 값으로 보존합니다.
 
+> [버전 변경 시 주의 사항]
+> 애드온 버전 변경 시 필수 구성 요소의 기본 설정값이 변경될 수 있습니다. 사용자가 해당 필드를 직접 변경하지 않은 경우에도 충돌이 발생할 수 있으며, 충돌 처리 옵션을 '없음' 또는 '보존'으로 선택하는 경우 애드온 설치/업데이트가 실패할 수 있습니다. 충돌 처리 옵션을 '재정의'로 선택하여 충돌을 방지할 수 있습니다.
+
 > [보존 옵션에 대한 주의 사항]
 > 애드온을 구성하는 리소스의 모든 변경 사항을 보존할 수는 없습니다.
 > 보존 불가능한 필드에서 충돌 발생 시 설치/업데이트 작업은 실패로 처리됩니다.
@@ -2130,11 +2162,11 @@ NHN Kubernetes Service(NKS)가 제공하는 Calico-VXLAN, Calic-eBPF는 아래�
 
 * 설치
     * 클러스터에 애드온을 설치합니다.
-    * 애드온 버전, 애드온별 옵션을 지정해 설치합니다.
+    * 애드온 버전, 애드온 별 옵션을 지정해 설치합니다.
     * 설치 시 충돌 처리 옵션을 지정해 설치합니다.
 * 업데이트
     * 클러스터에 설치되어 있는 애드온을 업데이트합니다.
-    * 애드온 버전, 애드온별 옵션 등을 변경할 수 있습니다.
+    * 애드온 버전, 애드온 별 옵션 등을 변경할 수 있습니다.
         * 애드온에 따라 옵션 변경이 불가능할 수 있습니다.
     * 업데이트 시 충돌 처리 옵션을 지정해 업데이트합니다.
 * 제거
@@ -2156,6 +2188,10 @@ NHN Kubernetes Service(NKS)가 제공하는 Calico-VXLAN, Calic-eBPF는 아래�
 |---|---|---|
 | CNI | O | 클러스터에 설치될 CNI에 해당하는 유형입니다. |
 | kube-dns | O | NKS 클러스터 내에서 동작하는 기본 DNS 서버입니다. |
+| cinder-csi-plugin | X | NHN Cloud의 블록 스토리지를 프로비저닝하고 관리할 수 있는 CSI 드라이버입니다. |
+| metrics-server | X | 오토 스케일링과 모니터링을 위해 노드와 파드로부터 리소스 사용 지표를 수집하는 Kubernetes 구성 요소입니다. |
+| snapshot-controller | X | 볼륨 스냅숏의 생성, 삭제, PVC 연동을 포함한 라이프 사이클을 관리하는 Kubernetes 구성 요소입니다. |
+| nfs-csi-plugin | X | NHN Cloud의 NFS를 프로비저닝하고 관리할 수 있는 CSI 드라이버입니다. |
 
 <a id="addon-mgmt-addon-list"></a>
 ### 애드온 목록
@@ -2169,15 +2205,52 @@ Calico는 Kubernetes의 네트워킹과 네트워크 보안을 제공하는 CNI 
     * mode
         * Calico의 동작 모드를 결정합니다.
         * 지원하는 동작 모드: vxlan, ebpf
-* 지원 버전 목록: v3.28.1-nks1
+* 지원 버전 목록
+    * v3.28.1-nks1
+    * v3.30.2-nks1
 
-<a id="addon_mgmt_addon_coredns"></a>
+<a id="addon-mgmt-addon-coredns"></a>
 #### CoreDNS
 CoreDNS는 Kubernetes 클러스터의 기본 DNS 서버입니다.
 
 * 유형: kube-dns
 * 옵션: 없음
 * 지원 버전 목록: v1.8.3-nks1
+
+<a id="addon-mgmt-addon-cinder-csi-plugin">
+#### Cinder CSI Plugin
+Cinder CSI Plugin은 NHN Cloud에서 블록 스토리지를 프로비저닝하고 관리할 수 있는 CSI 드라이버입니다.
+
+* 유형: cinder-csi-plugin
+* 옵션: 없음
+* 지원 버전 목록
+    * v1.27.101-nks1
+    * v1.27.102-nks1
+
+<a id="adoon-mgmt-addon-metrics-server">
+#### Metrics Server
+Metrics Server는 오토 스케일링과 모니터링을 위해 노드와 파드로부터 리소스 사용 지표를 수집하는 Kubernetes의 구성 요소입니다.
+
+* 유형: metrics-server
+* 옵션: 없음
+* 지원 버전 목록: v0.4.4-nks1
+
+<a id="addon-mgmt-addon-snapshot-controller">
+#### Snapshot Controller
+Snapshot Controller는 볼륨 스냅숏의 생성, 삭제, PVC 연동을 포함한 라이프 사이클을 관리하는 Kubernetes의 구성 요소입니다.
+
+* 유형: snapshot-controller
+* 옵션: 없음
+* 지원 버전 목록: v4.1.1-nks1
+
+<a id="addon-mgmt-addon-nfs-csi-plugin">
+#### NFS CSI Plugin
+NFS CSI Plugin은 NHN Cloud의 NFS를 프로비저닝하고 관리할 수 있는 CSI 드라이버입니다.
+
+* 유형: nfs-csi-plugin
+* 옵션: 없음
+* 지원 버전 목록: v1.0.1-nks1
+
 
 <a id="loadbalancer-service"></a>
 ## LoadBalancer 서비스
@@ -2326,7 +2399,7 @@ Kubernetes의 서비스 객체를 정의할 때 로드 밸런서의 여러 가�
 * 로드 밸런서 타입 설정
 * 정적 라우트 설정
 * 세션 지속성 설정
-* 로드 밸런서 삭제 시 플로팅 IP 주소 보존 여부 설정
+* 플로팅 IP 주소 보존 여부 설정
 * 로드 밸런서 IP 설정
 * 플로팅 IP 사용 여부 설정
 * VPC 설정
@@ -2340,6 +2413,8 @@ Kubernetes의 서비스 객체를 정의할 때 로드 밸런서의 여러 가�
 * 상태 확인 주기 설정
 * 상태 확인 최대 응답 시간 설정
 * 상태 확인 최대 재시도 횟수 설정
+* 상태 확인 포트 설정
+* 상태 확인 호스트 헤더 설정
 * L7 규칙 및 조건
 
 #### 전역 설정과 리스너별 설정
@@ -2452,14 +2527,22 @@ spec:
 * v1.19.13 이후 클러스터
     * 로드 밸런서 생성 후에도 변경 가능합니다.
 
-#### 로드 밸런서 삭제 시 플로팅 IP 주소 보존 여부 설정
-로드 밸런서에는 플로팅 IP가 연결되어 있습니다. 로드 밸런서 삭제 시 로드 밸런서에 연결된 플로팅 IP의 삭제 혹은 보존 여부를 설정할 수 있습니다.
+#### 플로팅 IP 주소 보존 여부 설정
+로드 밸런서에는 플로팅 IP가 연결되어 있습니다. 로드 밸런서 삭제 및 플로팅 IP 변경 시 로드 밸런서에 연결된 플로팅 IP의 삭제 혹은 보존 여부를 설정할 수 있습니다.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.openstack.org/keep-floatingip입니다.
 * **리스너별 설정을 적용할 수 없습니다.**
 * 다음 중 하나로 설정할 수 있습니다.
     * true: 플로팅 IP를 보존합니다.
     * false: 플로팅 IP를 삭제합니다. 미설정 시 기본값입니다.
+
+> [참고]
+> 플로팅 IP 주소 보존이 설정되어 있지 않은 경우(기본값 false), 로드 밸런서 삭제 또는 플로팅 IP 변경 시 다음 조건을 모두 만족하는 플로팅 IP는 자동으로 삭제됩니다.
+> 
+> * 서비스 객체 생성 시 자동으로 생성된 플로팅 IP인 경우
+> * 플로팅 IP에 삭제 보호가 설정되어 있지 않은 경우
+> 
+> 위 조건에 해당하지 않는 플로팅 IP는 플로팅 IP 주소 보존 여부 설정과 무관하게 삭제 대상이 되지 않습니다.
 
 > [주의]
 > 2021년 10월 26일 이전에 생성된 v1.18.19 클러스터는 로드 밸런서가 삭제될 때 플로팅 IP가 삭제되지 않는 문제가 있습니다. 고객 센터의 1:1 문의를 통해 문의주시면 이 문제를 해결하기 위한 절차에 대해 상세히 알려드리겠습니다.
@@ -2814,6 +2897,22 @@ HTTP 상태 코드는 다음과 같이 설정할 수 있습니다.
 * 리스너별 설정을 적용할 수 있습니다.
 * 최소값 1, 최대값 10입니다.
 * 설정하지 않거나 범위에서 벗어나는 값을 입력하면 기본값인 3으로 설정됩니다.
+
+#### 상태 확인 포트 설정
+헬스 체크의 대상이 되는 멤버 포트를 설정할 수 있습니다.
+
+* 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/healthmonitor-health-check-port입니다.
+* 리스너별 설정을 적용할 수 있습니다.
+* 최대값 0, 최대값 65535입니다.
+* 0을 지정하는 경우 각 멤버별로 지정된 포트 번호를 대상으로 상태 확인을 수행합니다.
+* 설정하지 않거나 범위에서 벗어나는 값을 입력하면 기본값인 0으로 설정됩니다.
+
+#### 상태 확인 호스트 헤더 설정
+상태 확인에 사용할 호스트 헤더의 필드값을 설정할 수 있습니다.
+
+* 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/healthmonitor-http-host-header입니다.
+* 리스너별 설정을 적용할 수 있습니다.
+* 상태 확인 프로토콜을 TCP로 설정한 경우 이 필드에 설정한 값은 무시됩니다.
 
 #### keep-alive 타임아웃 설정
 keep-alive 타임아웃 값을 설정할 수 있습니다.
@@ -3280,6 +3379,35 @@ $ curl 123.123.123.44/unknown
 </body>
 </html>
 ```
+
+<a id="ingress-nginx-internal-communication"></a>
+### ingress-nginx 컨트롤러 내부 통신 구조 및 주의 사항
+ingress-nginx 컨트롤러를 통해 서비스를 외부에 노출할 경우, 요청을 보내는 클라이언트의 위치(클러스터 내부 또는 외부)에 따라 요청이 워크로드로 전달되는 경로가 달라집니다.
+
+#### 클러스터 외부 클라이언트
+클러스터 외부 클라이언트가 보내는 요청은 로드 밸런서를 통해 Ingress Controller로 전달됩니다. 로드 밸런서는 Ingress Controller Service의 외부 엔드포인트 역할을 하며, Ingress Controller는 Ingress 규칙에 따라 요청을 목적지 Backend Pod로 라우팅합니다.
+
+```
+클러스터 외부 클라이언트 → 로드 밸런서 → ingress-nginx Service → ingress-nginx Controller Pod → Backend Pod
+```
+
+#### 클러스터 내부 클라이언트
+클러스터 내부 Pod가 Ingress 주소로 요청할 경우, 트래픽은 로드 밸런서를 거치지 않습니다. 요청은 Ingress Controller Service의 ClusterIP를 통해 내부 경로로 직접 전달되며 이 과정에서 CNI에 따라 다음 방식으로 라우팅됩니다.
+
+- **Calico (VXLAN)** : kube-proxy의 iptables 규칙 기반
+- **Calico (eBPF)** : BPF MAP 기반 데이터 경로 사용
+
+두 방식 모두 트래픽이 내부 네트워크 내에서만 전달되며, 외부 로드 밸런서를 거치지 않습니다.
+```
+내부 Pod → ingress-nginx Service (ClusterIP) → ingress-nginx Controller Pod → Backend Pod
+```
+
+#### 주의 사항
+
+- 내부 요청은 로드 밸런서 정책을 적용받지 않습니다. 로드 밸런서의 TLS 설정, 보안 정책, 방화벽 규칙 등은 내부 트래픽에 영향을 주지 않습니다.
+- Ingress 도메인을 내부에서 그대로 호출할 경우, 로드 밸런서를 거치지 않아 외부와 다른 TLS 또는 Redirect 동작이 발생할 수 있습니다.
+- 내부 통신 시에는 Ingress 도메인 대신 Service DNS를 사용하는 것을 권장합니다. 내부 Pod 간 통신은 직접 Service를 사용하고, 외부 노출용 엔드포인트만 Ingress를 활용하는 것이 바람직합니다.
+
 
 <a id="k8s-dashboard"></a>
 ## Kubernetes 대시보드
@@ -3823,13 +3951,13 @@ spec:
 
 <a id="nas-integration"></a>
 ### NHN Cloud NAS 서비스 연동
-NHN Cloud에서 제공하는 NAS 스토리지를 PV로 활용할 수 있습니다. NAS 서비스를 사용하기 위해서는 v1.20 이후 버전의 클러스터를 사용해야 합니다. NHN Cloud NAS 사용에 대한 자세한 내용은 [NAS 콘솔 사용 가이드](/Storage/NAS%20(online)/ko/console-guide)를 참고하세요.
+NHN Cloud에서 제공하는 NAS 볼륨을 PV로 활용할 수 있습니다. NAS 서비스를 사용하기 위해서는 v1.20 이후 버전의 클러스터를 사용해야 합니다. NHN Cloud NAS 사용에 대한 자세한 내용은 [NAS 콘솔 사용 가이드](/Storage/NAS%20(online)/ko/console-guide)를 참고하세요.
 
 > [참고]
 > NHN Cloud NAS 서비스는 현재(2024. 08.) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS%20(online)/ko/overview)를 참고하세요.
 
 #### 모든 워커 노드에서 rpcbind 서비스 실행
-NAS 스토리지를 사용하려면 모든 워커 노드에서 rpcbind 서비스를 실행해야 합니다. 모든 워커 노드에 접속한 뒤 아래 명령어를 통해 rpcbind 서비스를 실행합니다.
+NAS 볼륨을 사용하려면 모든 워커 노드에서 rpcbind 서비스를 실행해야 합니다. 모든 워커 노드에 접속한 뒤 아래 명령어를 통해 rpcbind 서비스를 실행합니다.
 
 rpcbind 서비스 실행 명령어는 이미지 종류와 상관없이 동일합니다.
 
@@ -3936,18 +4064,18 @@ NAMESPACE     NAME                    DESIRED   CURRENT   READY   UP-TO-DATE   A
 kube-system   csi-nfs-node            1         1         1       1            1           kubernetes.io/os=linux          4m23s
 ```
 
-#### 프로비저닝 시 기존 NHN Cloud NAS 스토리지를 이용하는 방법
-PV 매니페스트 작성 시 NAS 정보를 입력하거나 StorageClass 매니페스트에 NAS 정보를 입력해 기존 NAS 스토리지를 PV로 사용할 수 있습니다.
+#### 프로비저닝 시 기존 NHN Cloud NAS 볼륨을 이용하는 방법
+PV 매니페스트 작성 시 NAS 정보를 입력하거나 StorageClass 매니페스트에 NAS 정보를 입력해 기존 NAS 볼륨을 PV로 사용할 수 있습니다.
 
-##### 방법 1. PV 매니페스트 작성 시 NAS 스토리지 정보 정의
-PV 매니페스트 작성 시 NHN Cloud NAS 스토리지 정보를 정의합니다. 설정 위치는 .spec 하위의 **csi**입니다.
+##### 방법 1. PV 매니페스트 작성 시 NAS 볼륨 정보 정의
+PV 매니페스트 작성 시 NHN Cloud NAS 볼륨 정보를 정의합니다. 설정 위치는 .spec 하위의 **csi**입니다.
 
 * driver: **nfs.csi.k8s.io**를 입력합니다.
 * readOnly: **false**를 입력합니다.
 * volumeHandle: 클러스터 내에서 중복되지 않는 고유한 id를 입력합니다.
-* volumeAttributes: NAS 스토리지의 연결 정보를 입력합니다.
-  * server: NAS 스토리지의 연결 정보 중 **ip** 부분의 값을 입력합니다.
-  * share: NAS 스토리지의 연결 정보 중 **볼륨 이름** 부분의 값을 입력합니다.
+* volumeAttributes: NAS 볼륨의 연결 정보를 입력합니다.
+  * server: NAS 볼륨의 연결 정보 중 **ip** 부분의 값을 입력합니다.
+  * share: NAS 볼륨의 연결 정보 중 **볼륨 이름** 부분의 값을 입력합니다.
 
 아래는 매니페스트 예제입니다.
 ``` yaml
@@ -4015,18 +4143,18 @@ pv-onas   300Gi      RWX            Retain           Bound    default/pvc-onas  
 ```
 
 ##### 방법 2. StorageClass 매니페스트 작성 시 NAS 정보 정의
-StorageClass 매니페스트 작성 시 스토리지 제공자 정보 및 NHN Cloud NAS 스토리지 정보를 정의합니다.
+StorageClass 매니페스트 작성 시 스토리지 제공자 정보 및 NHN Cloud NAS 볼륨 정보를 정의합니다.
 
 * provisioner: **nfs.csi.k8s.io**를 입력합니다.
 * parameters: 입력 항목은 아래 표를 참고하세요.
 
 | 항목 | 설명 | 예시 |  필수 | 기본값 |
 | ------- |------- | --------------------------- | ---------------------------- | ------------- |
-| server | NAS 스토리지의 연결 정보 중 **ip**를 의미합니다. | 192.168.0.81 | O |  |
-| share | NAS 스토리지의 연결 정보 중 **볼륨 이름**을 의미합니다. | /onas_300gb | O |  |
-| mountPermissions | NAS 스토리지 마운트 포인트 디렉터리에 설정할 권한을 지정합니다. | "0700" | X | 0741 |
-| uid | NAS 스토리지 마운트 포인트 디렉터리에 설정할 UID를 입력합니다. | 1000 | X | root(0) |
-| gid | NAS 스토리지 마운트 포인트 디렉터리에 설정할 GID를 입력합니다. | 1000 | X | root(0) |
+| server | NAS 볼륨의 연결 정보 중 **ip**를 의미합니다. | 192.168.0.81 | O |  |
+| share | NAS 볼륨의 연결 정보 중 **볼륨 이름**을 의미합니다. | /onas_300gb | O |  |
+| mountPermissions | NAS 볼륨 마운트 포인트 디렉터리에 설정할 권한을 지정합니다. | "0700" | X | 0741 |
+| uid | NAS 볼륨 마운트 포인트 디렉터리에 설정할 UID를 입력합니다. | 1000 | X | root(0) |
+| gid | NAS 볼륨 마운트 포인트 디렉터리에 설정할 GID를 입력합니다. | 1000 | X | root(0) |
 
 아래는 매니페스트 예제입니다.
 ``` yaml
@@ -4122,7 +4250,7 @@ spec:
             claimName: pvc-onas-dynamic
 ```
 
-파드를 생성하고 NAS 스토리지가 마운트되어 있는지 확인합니다.
+파드를 생성하고 NAS 볼륨이 마운트되어 있는지 확인합니다.
 ```
 $ kubectl apply -f deployment.yaml
 deployment.apps/nginx created
@@ -4138,10 +4266,10 @@ Filesystem                                                                 Size 
 ...
 ```
 
-#### 프로비저닝 시 새로운 NHN Cloud NAS 스토리지를 생성하는 방법
-StorageClass 및 PVC 매니페스트 작성 시 NAS 정보를 입력해 자동으로 생성된 NAS 스토리지를 PV로 사용할 수 있습니다.
+#### 프로비저닝 시 새로운 NHN Cloud NAS 볼륨을 생성하는 방법
+StorageClass 및 PVC 매니페스트 작성 시 NAS 정보를 입력해 자동으로 생성된 NAS 볼륨을 PV로 사용할 수 있습니다.
 
-StorageClass 매니페스트에 스토리지 제공자 정보 및 생성할 NAS 스토리지의 스냅숏 정책, 접근 제어 목록(ACL), 서브넷 정보를 정의합니다.
+StorageClass 매니페스트에 스토리지 제공자 정보 및 생성할 NAS 볼륨의 스냅숏 정책, 접근 제어 목록(ACL), 서브넷 정보를 정의합니다.
 
 * provisioner: **nfs.csi.k8s.io**를 입력합니다.
 * parameters: 입력 항목은 아래 표를 참고하세요. 파라미터 값에 다중 값을 정의하는 경우 **,**를 이용하여 값을 구분합니다.
@@ -4156,9 +4284,9 @@ StorageClass 매니페스트에 스토리지 제공자 정보 및 생성할 NAS 
 | subnet | 스토리지에 접근할 서브넷입니다. 선택된 VPC의 서브넷만 선택할 수 있습니다. | "59526f1c-c089-4517-86fd-2d3dac369210" | X | O |  |
 | acl | 읽기, 쓰기 권한을 허용할 IP 또는 IP 대역 목록입니다. | "0.0.0.0/0" | O | X | 0.0.0.0/0 |
 | onDelete | PVC 삭제 시 NAS 볼륨 삭제 여부입니다. | "delete" / "retain" | X | X | delete |
-| mountPermissions | NAS 스토리지 마운트 포인트 디렉터리에 설정할 권한을 지정합니다. | "0700"| X | X | 0741 |
-| uid | NAS 스토리지 마운트 포인트 디렉터리에 설정할 UID를 입력합니다. | 1000 | X | X | root(0) |
-| gid | NAS 스토리지 마운트 포인트 디렉터리에 설정할 GID를 입력합니다. | 1000 | X | X | root(0) |
+| mountPermissions | NAS 볼륨 마운트 포인트 디렉터리에 설정할 권한을 지정합니다. | "0700"| X | X | 0741 |
+| uid | NAS 볼륨 마운트 포인트 디렉터리에 설정할 UID를 입력합니다. | 1000 | X | X | root(0) |
+| gid | NAS 볼륨 마운트 포인트 디렉터리에 설정할 GID를 입력합니다. | 1000 | X | X | root(0) |
 
 > [참고]
 > 스냅숏 파라미터 사용 시 관련된 모든 파라미터 값을 정의해야 합니다. 스냅숏 관련 파라미터는 아래와 같습니다.
@@ -4172,8 +4300,8 @@ StorageClass 매니페스트에 스토리지 제공자 정보 및 생성할 NAS 
 
 > [주의] 다중 서브넷 환경에서의 제약 사항
 > 
-> NAS 스토리지는 스토리지 클래스에 정의된 서브넷에 연결됩니다.
-> 파드가 NAS 스토리지와 연동하기 위해서는 모든 워커 노드 그룹이 이 서브넷에 연결되어야 합니다.
+> NAS 볼륨은 스토리지 클래스에 정의된 서브넷에 연결됩니다.
+> 파드가 NAS 볼륨과 연동하기 위해서는 모든 워커 노드 그룹이 이 서브넷에 연결되어야 합니다.
 
 아래는 매니페스트 예제입니다.
 ```yaml
@@ -4198,13 +4326,13 @@ parameters:
   gid: 1000
 ```
 
-PVC 매니페스트의 **Annotation**에 생성할 NAS 스토리지의 이름, 설명, 크기를 정의합니다. 입력 항목은 아래 표를 참고하세요.
+PVC 매니페스트의 **Annotation**에 생성할 NAS 볼륨의 이름, 설명, 크기를 정의합니다. 입력 항목은 아래 표를 참고하세요.
 
 | 항목 | 설명 | 예시 | 필수 |
 | ---- | ------- | --------------------------- | --------- |
 | nfs-volume-name | 생성될 스토리지의 이름입니다. 스토리지 이름을 통해 NFS 접근 경로를 만듭니다. 이름은 100자 이내의 영문자와 숫자, 일부 기호('-', '_')만 입력할 수 있습니다. | "nas_sample_volume_300gb" | O |
-| nfs-volume-description | 생성할 NAS 스토리지의 설명입니다. | "nas sample volume" | X |
-| nfs-volume-sizegb | 생성할 NAS 스토리지의 크기입니다. GB 단위로 설정됩니다. 최소 300부터 최대 10,000까지 입력할 수 있습니다. | "300" | O |
+| nfs-volume-description | 생성할 NAS 볼륨의 설명입니다. | "nas sample volume" | X |
+| nfs-volume-sizegb | 생성할 NAS 볼륨의 크기입니다. GB 단위로 설정됩니다. 최소 300부터 최대 10,000까지 입력할 수 있습니다. | "300" | O |
 
 아래는 매니페스트 예제입니다.
 ```yaml
@@ -4237,8 +4365,8 @@ sc-nfs       nfs.csi.k8s.io   Delete          Immediate           false         
 ```
 
 PV를 따로 생성할 필요가 없어 PVC 매니페스트만 작성합니다. PVC 매니페스트에는 **spec.volumeName**을 설정하지 않습니다.
-볼륨 바인딩 모드를 설정하지 않거나 Immediate로 설정하고 PVC를 생성하면 PV가 자동으로 생성됩니다. NAS 스토리지가 생성된 후 Bound되기까지 약 1분 정도 소요됩니다.
-NHN Cloud 콘솔 **Storage > NAS** 서비스 페이지에서도 생성된 NAS 스토리지의 정보를 확인할 수 있습니다.
+볼륨 바인딩 모드를 설정하지 않거나 Immediate로 설정하고 PVC를 생성하면 PV가 자동으로 생성됩니다. NAS 볼륨이 생성된 후 Bound되기까지 약 1분 정도 소요됩니다.
+NHN Cloud 콘솔 **Storage > NAS** 서비스 페이지에서도 생성된 NAS 볼륨의 정보를 확인할 수 있습니다.
 
 ```
 $ kubectl apply -f pvc.yaml
@@ -4286,7 +4414,7 @@ spec:
             claimName: pvc-nfs
 ```
 
-파드를 생성하고 NAS 스토리지가 마운트되어 있는지 확인합니다.
+파드를 생성하고 NAS 볼륨이 마운트되어 있는지 확인합니다.
 ```
 $ kubectl apply -f deployment.yaml
 deployment.apps/nginx created

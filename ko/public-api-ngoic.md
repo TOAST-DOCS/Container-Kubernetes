@@ -1,14 +1,13 @@
 ## Container > NHN Kubernetes Service(NKS) > API v2 가이드
 
 Kubernetes 클러스터를 구성하기 위한 API를 기술합니다.
-API를 사용하려면 API 엔드포인트와 토큰 등이 필요합니다. [API 사용 준비](/Compute/Compute/ko/identity-api-gov/)를 참고하여 API 사용에 필요한 정보를 준비합니다.
+API를 사용하려면 API 엔드포인트와 토큰 등이 필요합니다. [API 사용 준비](/Compute/Compute/ko/identity-api-ngoic/)를 참고하여 API 사용에 필요한 정보를 준비합니다.
 
 모든 API는 `kubernetes` 타입 엔드포인트를 이용해 호출합니다.
 
 | 타입 | 리전 | 엔드포인트 |
 |---|---|---|
-| kubernetes | 한국(판교) 리전| https://kr1-api-kubernetes-infrastructure.gov-nhncloudservice.com |
-| kubernetes | 한국(평촌) 리전| https://kr2-api-kubernetes-infrastructure.gov-nhncloudservice.com |
+| kubernetes | 한국(대구) 리전| https://kr4-api-kubernetes-infrastructure.ngoic.com |
 
 
 API 응답에 가이드에 명시되지 않은 필드가 나타날 수 있습니다. 이런 필드는 NHN Cloud 내부 용도로 사용되며 사전 공지 없이 변경될 수 있으므로 사용하지 않습니다.
@@ -25,41 +24,41 @@ NHN Kubernetes Service(NKS) API는 클러스터 및 노드 그룹 구성을 위�
 GET /v2.0/networks?router:external=True
 ```
 
-네트워크 목록 조회 API에 대한 좀 더 자세한 내용은 [네트워크 목록 보기](/Network/VPC/ko/public-api-gov/#_2)를 참고하세요.
+네트워크 목록 조회 API에 대한 좀 더 자세한 내용은 [네트워크 목록 보기](/Network/VPC/ko/public-api-ngoic/#_2)를 참고하세요.
 
 
 ### 인터넷 게이트웨이에 연결된 서브넷 UUID 목록
 
-인터넷 게이트웨이에 연결된 VPC 네트워크와 연결된 서브넷 UUID를 입력합니다. 여러 서브넷이 조회됐다면 콜론(`:`)으로 연결해 입력합니다. 서브넷 목록 조회 API에 대한 좀 더 자세한 내용은 [서브넷 목록 보기](/Network/VPC/ko/public-api-gov/#_6)를 참고하세요.
+인터넷 게이트웨이에 연결된 VPC 네트워크와 연결된 서브넷 UUID를 입력합니다. 여러 서브넷이 조회됐다면 콜론(`:`)으로 연결해 입력합니다. 서브넷 목록 조회 API에 대한 좀 더 자세한 내용은 [서브넷 목록 보기](/Network/VPC/ko/public-api-ngoic/#_6)를 참고하세요.
 
 
 ### VPC 네트워크 UUID
 
-노드와 연결할 내부 VPC 네트워크 UUID를 입력합니다. 네트워크 목록 조회 API에 대한 좀 더 자세한 내용은 [네트워크 목록 보기](/Network/VPC/ko/public-api-gov/#_2)를 참고하세요.
+노드와 연결할 내부 VPC 네트워크 UUID를 입력합니다. 네트워크 목록 조회 API에 대한 좀 더 자세한 내용은 [네트워크 목록 보기](/Network/VPC/ko/public-api-ngoic/#_2)를 참고하세요.
 
 ### VPC 서브넷 UUID
 
-노드와 연결할 내부 VPC 네트워크와 연결된 서브넷 UUID를 입력합니다. 서브넷 목록 조회 API에 대한 좀 더 자세한 내용은 [서브넷 목록 보기](/Network/VPC/ko/public-api-gov/#_6)를 참고하세요.
+노드와 연결할 내부 VPC 네트워크와 연결된 서브넷 UUID를 입력합니다. 서브넷 목록 조회 API에 대한 좀 더 자세한 내용은 [서브넷 목록 보기](/Network/VPC/ko/public-api-ngoic/#_6)를 참고하세요.
 
 ### 가용성 영역 UUID
 
-노드를 생성할 가용성 영역 UUID를 입력합니다. 가용성 영역 목록 조회 API에 대한 좀 더 자세한 내용은 [가용성 목록 보기](/Compute/Instance/ko/public-api-gov/#_9)를 참고하세요.
+노드를 생성할 가용성 영역 UUID를 입력합니다. 가용성 영역 목록 조회 API에 대한 좀 더 자세한 내용은 [가용성 목록 보기](/Compute/Instance/ko/public-api-ngoic/#_9)를 참고하세요.
 
 ### 키페어 UUID
 
-노드 접속 시 사용할 키페어를 입력합니다. 키페어 목록 조회 API에 대한 좀 더 자세한 내용은 [키페어 목록 보기](/Compute/Instance/ko/public-api-gov/#_13)를 참고하세요.
+노드 접속 시 사용할 키페어를 입력합니다. 키페어 목록 조회 API에 대한 좀 더 자세한 내용은 [키페어 목록 보기](/Compute/Instance/ko/public-api-nogic/#_13)를 참고하세요.
 
 ### 베이스 이미지 UUID
 
-노드 생성에 사용할 베이스 이미지 UUID를 입력합니다. NKS 노드 생성에 사용되는 베이스 이미지만을 필터링하기 위해 API 호출 시 쿼리 스트링 파라미터에 `nhncloud_allow_nks_cpu_flavor=true&visibility=public` 값을 입력합니다. 베이스 이미지 목록 조회 API에 대한 좀 더 자세한 내용은 [이미지 목록 조회](/Compute/Image/ko/public-api-gov/#_2)를 참고하세요.
+노드 생성에 사용할 베이스 이미지 UUID를 입력합니다. NKS 노드 생성에 사용되는 베이스 이미지만을 필터링하기 위해 API 호출 시 쿼리 스트링 파라미터에 `nhncloud_allow_nks_cpu_flavor=true&visibility=public` 값을 입력합니다. 베이스 이미지 목록 조회 API에 대한 좀 더 자세한 내용은 [이미지 목록 조회](/Compute/Image/ko/public-api-ngoic/#_2)를 참고하세요.
 
 ### 블록 스토리지 종류
 
-노드에 사용할 블록 스토리지 UUID를 입력합니다. 블록 스토리지 타입 목록 조회 API에 대한 좀 더 자세한 내용은 [볼륨 타입 목록 보기](/Storage/Block%20Storage/ko/public-api-gov/#_2)를 참고하세요.
+노드에 사용할 블록 스토리지 UUID를 입력합니다. 블록 스토리지 타입 목록 조회 API에 대한 좀 더 자세한 내용은 [볼륨 타입 목록 보기](/Storage/Block%20Storage/ko/public-api-ngoic/#_2)를 참고하세요.
 
 ### 인스턴스 타입 UUID
 
-생성할 노드의 인스턴스 타입 UUID를 입력합니다. 인스턴스 타입 목록 조회 API에 대한 좀 더 자세한 내용은 [인스턴스 타입 목록 보기](/Compute/Instance/ko/public-api-gov/#_2)를 참고하세요.
+생성할 노드의 인스턴스 타입 UUID를 입력합니다. 인스턴스 타입 목록 조회 API에 대한 좀 더 자세한 내용은 [인스턴스 타입 목록 보기](/Compute/Instance/ko/public-api-ngoic/#_2)를 참고하세요.
 
 
 
@@ -163,11 +162,11 @@ X-Auth-Token: {tokenId}
             },
             "links": [
                 {
-                    "href": "https://kr1-api-kubernetes-infrastructure.gov-nhncloudservice.com/v1/clusters/f0af4484-0a16-433a-a15c-295d9ba6537d",
+                    "href": "https://kr4-api-kubernetes-infrastructure.ngoic.com/v1/clusters/f0af4484-0a16-433a-a15c-295d9ba6537d",
                     "rel": "self"
                 },
                 {
-                    "href": "https://kr1-api-kubernetes-infrastructure.gov-nhncloudservice.com/clusters/f0af4484-0a16-433a-a15c-295d9ba6537d",
+                    "href": "https://kr4-api-kubernetes-infrastructure.ngoic.com/clusters/f0af4484-0a16-433a-a15c-295d9ba6537d",
                     "rel": "bookmark"
                 }
             ],
@@ -302,11 +301,11 @@ X-Auth-Token: {tokenId}
     },
     "links": [
         {
-            "href": "https://kr1-api-kubernetes-infrastructure.gov-nhncloudservice.com/v1/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
+            "href": "https://kr4-api-kubernetes-infrastructure.ngoic.com/v1/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
             "rel": "self"
         },
         {
-            "href": "https://kr1-api-kubernetes-infrastructure.gov-nhncloudservice.com/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
+            "href": "https://kr4-api-kubernetes-infrastructure.ngoic.com/clusters/2b778d83-8b67-45b1-920e-b0c5ad5c2f30",
             "rel": "bookmark"
         }
     ],
@@ -1028,7 +1027,7 @@ X-Auth-Token: {tokenId}
         "type": "obs",
         "sgw": "b6f68830-e688-4d89-ac03-2f1155a4177a",
         "upload_interval" : 60,
-        "obs_api_url" :"https://kr1-api-object-storage.gov-nhncloudservice.com/v1/AUTH_d5b58ab0bb9340909bd7ff5a24f44313/iksoon-obs-container/testpath",
+        "obs_api_url" :"https://kr4-api-object-storage.ngoic.com/v1/AUTH_d5b58ab0bb9340909bd7ff5a24f44313/iksoon-obs-container/testpath",
         "obs_store_as" : "gzip"
     }
 }
@@ -1256,11 +1255,11 @@ X-Auth-Token: {tokenId}
     },
     "links": [
         {
-            "href": "https://kr1-api-kubernetes-infrastructure.gov-nhncloudservice.com/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
+            "href": "https://kr4-api-kubernetes-infrastructure.ngoic.com/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
             "rel": "self"
         },
         {
-            "href": "https://kr1-api-kubernetes-infrastructure.gov-nhncloudservice.com/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
+            "href": "https://kr4-api-kubernetes-infrastructure.ngoic.com/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/018b06c5-1293-4081-8242-167a1cb9f262",
             "rel": "bookmark"
         }
     ],
@@ -1421,11 +1420,11 @@ X-Auth-Token: {tokenId}
     },
     "links": [
         {
-            "href": "https://kr1-api-kubernetes-infrastructure.gov-nhncloudservice.com/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
+            "href": "https://kr4-api-kubernetes-infrastructure.ngoic.com/v1/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
             "rel": "self"
         },
         {
-            "href": "https://kr1-api-kubernetes-infrastructure.gov-nhncloudservice.com/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
+            "href": "https://kr4-api-kubernetes-infrastructure.ngoic.com/clusters/96742ac4-02e7-4b1d-a242-02876c0bd3f8/nodegroups/a3366f2f-a1f3-45ef-8390-10536e8060ff",
             "rel": "bookmark"
         }
     ],
