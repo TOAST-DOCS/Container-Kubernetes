@@ -192,7 +192,7 @@ NKS 레지스트리를 활성화하면 폐쇄망 환경에서 컨테이너 이�
 
 ### > `quay.io`로부터 Flannel CNI 관련 이미지 pull이 실패합니다.
 
-Flannel 관련 컨테이너 이미지의 리포지터리 주소는 `quay.io`를 기반으로 설정되어 있습니다. `quay.io`에서 해당 이미지에 대한 pull 서비스가 종료되어 이제 해당 이미지를 pull 할 수 없습니다.
+Flannel 관련 컨테이너 이미지의 리포지터리 주소는 `quay.io`를 기반으로 설정되어 있습니다. `quay.io`에서 해당 이미지에 대한 pull 서비스가 종료되어 이제 해당 이미지를 pull할 수 없습니다.
 
 이 문제를 해결하기 위한 방법은 다음과 같습니다.
 
@@ -356,13 +356,13 @@ kubectl patch clusterrole calico-kube-controllers --type=json -p='[{"op": "remov
 이 문제는 주로 2024년 5월 이전에 생성된 클러스터에서 발생할 수 있습니다. 당시 생성된 클러스터는 NKS 전용 이미지 레지스트리가 기본적으로 비활성 상태이고, Calico 컨테이너 이미지의 리포지토리 경로가 올바르지 않아 이미지 다운로드가 불가능한 것이 원인입니다.
 
 #### 증상 발생 시 확인 방법
-`kubectl get all -n kube-system` 명령 확인 시 증설 작업에 실패한 노드에 배포되어있는 아래의 파드의 상태가 **ImagePullBackOff** 또는 **ErrImagePull** 로 유지됩니다.
+`kubectl get all -n kube-system` 명령 확인 시 증설 작업에 실패한 노드에 배포되어 있는 아래 파드의 상태가 **ImagePullBackOff** 또는 **ErrImagePull**로 유지됩니다.
 - calico-node
 - calico-kube-controllers
 - calico-typha
 
 #### 해결 방안
-calico 관련 image 리포지터리 url을 public 리포지터리로 변경하여 문제를 해결할 수 있습니다. 단, **인터넷에 연결 가능한 클러스터**에만 적용 가능합니다. 작업 진행 중 **일시적으로 클러스터 파드 네트워킹이 단절될 수 있으므로 작업 진행 시 주의**가 필요합니다. 작업 단계는 아래와 같습니다.
+calico 관련 image 리포지터리 url을 public 리포지터리로 변경하여 문제를 해결할 수 있습니다. 단, 인터넷에 연결 가능한 클러스터에만 적용 가능합니다. 작업 진행 중 일시적으로 클러스터 파드 네트워킹이 단절될 수 있으므로 작업 진행 시 주의가 필요합니다. 작업 단계는 아래와 같습니다.
 
 1. 증설에 실패한 노드 제거
 2. calico 관련 image 리포지터리 url을 public 리포지터리로 변경
