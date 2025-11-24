@@ -254,6 +254,7 @@ This API does not require a request body.
 | labels.obs_sgw | Body | String | Service gateway UUID of OBS type |
 | labels.term_of_validity | Body | String | Certificate validity period |
 | labels.certificate_expiry | Body | String | Certificate expiration date | 
+| labels.platform_version | Body | String | Platform version |
 
 <details><summary>Example</summary>
 <p>
@@ -287,6 +288,7 @@ This API does not require a request body.
         "hypervisor_type": "qemu",
         "kube_tag": "v1.23.3",
         "kube_version_status": "NEED_UPGRADE",
+        "platform_version": "1.202511.0",
         "login_username": "centos",
         "master_lb_floating_ip_enabled": "true",
         "strict_sg_rules": "True",
@@ -1255,6 +1257,7 @@ This API does not require a request body.
 | labels.additional_network_id_list | Body | String | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
 | labels.additional_subnet_id_list | Body | String | Applied to the default worker node group: List of VPC subnet UUIDs for additional networks (separated by colons) |
 | labels.strict_sg_rules | Body | String | Create only required security rules in worker node security groups ("True" / "False"), (available for clusters created on or after February 27, 2024) |
+| labels.platform_version | Body | String | Platform version |
 | max_node_count | Body | Integer | Maximum Node Count |
 | min_node_count | Body | Integer | Minimum Node Count |
 | node_addresses | Body | String list | List of node IP addresses |
@@ -1299,6 +1302,7 @@ This API does not require a request body.
         "hypervisor_type": "qemu",
         "kube_tag": "v1.19.13",
         "kube_version_status": "LATEST",
+        "platform_version": "1.202511.0",
         "login_username": "centos",
         "master_lb_floating_ip_enabled": "true",
         "strict_sg_rules": "True",

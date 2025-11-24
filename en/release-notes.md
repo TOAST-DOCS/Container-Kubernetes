@@ -1,9 +1,30 @@
 ## Container > NHN Kubernetes Service (NKS) > Release Notes
 
-### 2025. 07. 15.
+### November 25, 2025
+
+#### Changed Service Support Policy
+* Changed the support policy for the Kubernetes version of NKS.
+    * For more information, refer to the [Version Guide](/Container/NKS/ko/version-guide).
+
+#### Updated Add-on
+* The following add-ons are added:
+    * Calico CNI v3.30.2-nks1
+    * Cinder CSI Plugin v1.27.101-nks1, v1.27.102-nks1
+    * Metrics Server v0.4.4-nks1
+    * Snapshot Controller v4.1.1-nks1
+    * NFS CSI Plugin v1.0.1-nks1
+
+#### Added Features
+* Added support for Kubernetes v1.33.4.
+* Added the feature to query and upgrade the platform version of the control plane and worker node groups.
+* Added the feature to configure the health check port in the load balancer detailed options.
+* Added the feature to configure the health check host header in the load balancer detailed options.
+
+
+### July 15, 2025
 
 #### Image Update
-* The following images are no longer supported when creating clusters and node groups.
+* The following images are no longer supported when creating clusters and node groups:
     * Target image
         * Ubuntu Server 20.04.3 LTS - Container
 
@@ -16,7 +37,7 @@
 * The feature to automatically assign floating IPs per node group is available.
 * The feature to set Kubernetes labels by node group is available.
 * Addon management feature is available.
-    * For more information, see [User Guide](/Container/NKS/ko/user-guide/#addon_mgmt).
+    * For more information, see [User Guide](/Container/NKS/ko/user-guide/addon-mgmt).
 
 #### Feature Updates
 * The feature to change cluster CNI is no longer supported.
@@ -158,7 +179,7 @@ Changed the minimum disk size required to create worker nodes in images.
 * You can set the properties of Kubernetes API endpoint when creating a cluster.
 * You can use encrypted block storage on worker nodes.
 * Provided more detailed status information on the cluster and node group query screen.
-* Added a feature to create new NAS storage upon provisioning.
+* Added a feature to create new NAS Volume upon provisioning.
 
 #### Feature Updates
 * Changed the distribution version of the images used at the time of generating clusters or node groups.
