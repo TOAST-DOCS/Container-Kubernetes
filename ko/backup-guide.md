@@ -62,13 +62,13 @@ kubeconfig 설정에 대한 자세한 내용은 [kubectl 설치](/Container/NKS/
 #### Velero 클라이언트 다운로드
 
 ```
-$ wget https://github.com/vmware-tanzu/velero/releases/download/v1.9.4/velero-v1.9.4-linux-amd64.tar.gz
+$ wget https://github.com/vmware-tanzu/velero/releases/download/v1.17.0/velero-v1.17.0-linux-amd64.tar.gz
 ```
 
 #### 압축 해제
 
 ```
-$ tar xzf velero-v1.9.4-linux-amd64.tar.gz
+$ tar xzf velero-v1.17.0-linux-amd64.tar.gz
 ```
 
 #### 위치 변경 또는 경로 지정
@@ -78,7 +78,7 @@ $ tar xzf velero-v1.9.4-linux-amd64.tar.gz
 * 환경 변수에 지정된 경로로 위치 변경
 
 ```
-$ sudo mv velero-v1.9.4-linux-amd64/velero /usr/local/bin
+$ sudo mv velero-v1.17.0-linux-amd64/velero /usr/local/bin
 ```
 
 * 환경 변수에 경로 추가
@@ -123,57 +123,37 @@ $ helm repo add vmware-tanzu https://vmware-tanzu.github.io/helm-charts
 
 Velero 서버는 `백업 클러스터`와 `복구 클러스터`에 각각 설치해야 합니다. 동일한 Object Storage를 사용하도록 `두 클러스터에 동일한 helm 명령어`를 사용하여 설치하시길 권장합니다.
 
-1.26 이하 버전의 클러스터에 Velero 서버를 설치하는 경우 아래의 명령어를 실행합니다. 
-
 ```
 $ helm install velero vmware-tanzu/velero \
 --namespace velero \
 --create-namespace \
---version 2.32.6 \
---set configuration.provider=community.openstack.org/openstack \
+--version 11.0.0 \
 --set initContainers[0].name=velero-plugin-for-openstack \
---set initContainers[0].image=lirt/velero-plugin-for-openstack:v0.3.0 \
---set initContainers[0].volumeMounts[0].mountPath=/target \
+--set initContainers[0].image=lirt/velero-plugin-for-openstack:v0.6.1 \
 --set initContainers[0].volumeMounts[0].name=plugins \
---set deployRestic=true \
---set configuration.defaultVolumesToRestic=true \
---set configuration.defaultResticPruneFrequency=0h1m0s \
---set configuration.backupStorageLocation.bucket={Container} \
---set configuration.backupStorageLocation.config.region={Region} \
---set configuration.backupStorageLocation.config.resticRepoPrefix=swift:{Container}:/restic \
---set configuration.extraEnvVars.OS_AUTH_URL={신원 서비스(Identity)} \
---set configuration.extraEnvVars.OS_TENANT_ID={테넌트 ID} \
---set configuration.extraEnvVars.OS_USERNAME={NHN Cloud 아이디} \
---set configuration.extraEnvVars.OS_PASSWORD={API 비밀번호} \
---set configuration.extraEnvVars.OS_REGION_NAME={Region} \
---set configuration.extraEnvVars.OS_DOMAIN_ID=default
-```
-
-1.27 이상 버전의 클러스터에 Velero 서버를 설치하는 경우 아래의 명령어를 실행합니다. 
-
-```
-$ helm install velero vmware-tanzu/velero \
---namespace velero \
---create-namespace \
---version 2.32.6 \
---set configuration.provider=community.openstack.org/openstack \
---set initContainers[0].name=velero-plugin-for-openstack \
---set initContainers[0].image=lirt/velero-plugin-for-openstack:v0.3.0 \
 --set initContainers[0].volumeMounts[0].mountPath=/target \
---set initContainers[0].volumeMounts[0].name=plugins \
---set kubectl.image.tag=1.26.14-debian-11-r6 \
---set deployRestic=true \
 --set configuration.defaultVolumesToRestic=true \
---set configuration.defaultResticPruneFrequency=0h1m0s \
---set configuration.backupStorageLocation.bucket={Container} \
---set configuration.backupStorageLocation.config.region={Region} \
---set configuration.backupStorageLocation.config.resticRepoPrefix=swift:{Container}:/restic \
---set configuration.extraEnvVars.OS_AUTH_URL={신원 서비스(Identity)} \
---set configuration.extraEnvVars.OS_TENANT_ID={테넌트 ID} \
---set configuration.extraEnvVars.OS_USERNAME={NHN Cloud 아이디} \
---set configuration.extraEnvVars.OS_PASSWORD={API 비밀번호} \
---set configuration.extraEnvVars.OS_REGION_NAME={Region} \
---set configuration.extraEnvVars.OS_DOMAIN_ID=default
+--set configuration.defaultResticPruneFrequency=1m \
+--set configuration.backupStorageLocation[0].name=default \
+--set configuration.backupStorageLocation[0].provider=community.openstack.org/openstack \
+--set-string configuration.backupStorageLocation[0].bucket={Container} \
+--set-string configuration.backupStorageLocation[0].config.region={Region} \
+--set-string configuration.backupStorageLocation[0].config.resticRepoPrefix="swift:{Container}:/restic" \
+--set configuration.volumeSnapshotLocation[0].name=default \
+--set configuration.volumeSnapshotLocation[0].provider=community.openstack.org/openstack-cinder \
+--set configuration.volumeSnapshotLocation[0].config.region={Region} \
+--set configuration.extraEnvVars[0].name=OS_AUTH_URL \
+--set-string configuration.extraEnvVars[0].value="{신원 서비스(Identity)}" \
+--set configuration.extraEnvVars[1].name=OS_TENANT_ID \
+--set-string configuration.extraEnvVars[1].value="{테넌트 ID}" \
+--set configuration.extraEnvVars[2].name=OS_USERNAME \
+--set-string configuration.extraEnvVars[2].value="{NHN Cloud 아이디}" \
+--set configuration.extraEnvVars[3].name=OS_PASSWORD \
+--set-string configuration.extraEnvVars[3].value="{API 비밀번호}" \
+--set configuration.extraEnvVars[4].name=OS_REGION_NAME \
+--set-string configuration.extraEnvVars[4].value="{Region}" \
+--set configuration.extraEnvVars[5].name=OS_DOMAIN_ID \
+--set-string configuration.extraEnvVars[5].value="default" 
 ```
 
 | 항목 | 설명 |
@@ -198,7 +178,7 @@ $ velero backup create {name} --exclude-namespaces kube-system,velero
 ```
 
 * name은 원하는 백업 이름으로 지정합니다.
-* 클러스터 백업 시 Resource Filtering을 설정할 수 있습니다. 자세한 내용은 [resource-filtering](https://velero.io/docs/v1.7/resource-filtering/)을 참고하세요.
+* 클러스터 백업 시 Resource Filtering을 설정할 수 있습니다. 자세한 내용은 [resource-filtering](https://velero.io/docs/v1.17/resource-filtering/)을 참고하세요.
 
 > [주의]
 > `kube-system`, `velero`와 같이 백업이 필요하지 않은 namespace는 제외해야 합니다.
@@ -209,7 +189,7 @@ $ velero backup create {name} --exclude-namespaces kube-system,velero
 ```
 $ velero backup get
 NAME         STATUS      ERRORS   WARNINGS   CREATED                         EXPIRES   STORAGE LOCATION   SELECTOR
-my-backup    Completed   0        0          2022-02-09 10:13:44 +0900 KST   29d       default            <none>
+my-backup    Completed   0        0          2025-10-13 11:01:53 +0900 KST   29d       default            <none>
 ```
 
 * 백업된 정보는 Object Storage 서비스 페이지에서 확인할 수 있습니다.
@@ -246,7 +226,7 @@ $ velero backup create my-backup --exclude-namespaces kube-system,velero
 ```
 $ velero backup get
 NAME         STATUS      ERRORS   WARNINGS   CREATED                         EXPIRES   STORAGE LOCATION   SELECTOR
-my-backup    Completed   0        0          2022-02-09 13:23:13 +0900 KST   29d       default            <none>
+my-backup    Completed   0        0          2025-10-13 11:01:53 +0900 KST   29d       default            <none>
 ```
 
 * 복구 클러스터에서 velero restore create 명령어를 사용하여 복구합니다.
@@ -263,7 +243,7 @@ $ kubectl get pod --all-namespaces
 
 #### 주기적 백업 설정 예시
 
-`velero schedule create` 명령어로 주기적 백업을 설정할 수 있습니다. 자세한 내용은 [schedule-a-backup](https://velero.io/docs/v1.7/backup-reference/#schedule-a-backup)을 참고하세요.
+`velero schedule create` 명령어로 주기적 백업을 설정할 수 있습니다. 자세한 내용은 [schedule-a-backup](https://velero.io/docs/v1.17/backup-reference/#schedule-a-backup)을 참고하세요.
 
 * 백업 클러스터에서 velero schedule create 명령어를 사용하여 주기적 백업을 설정합니다. (예시는 10분 간격)
 
@@ -275,9 +255,9 @@ $ velero schedule create my-schedule --schedule="*/10 * * * *" --exclude-namespa
 
 ```
 $ velero backup get
-NAME                          STATUS      ERRORS   WARNINGS   CREATED                         EXPIRES   STORAGE LOCATION   SELECTOR
-my-schedule-20220209044049    Completed   0        0          2022-02-09 13:40:49 +0900 KST   29d       default            <none>
-my-schedule-20220209043115    Completed   0        0          2022-02-09 13:31:15 +0900 KST   29d       default            <none>
+NAME                         STATUS      ERRORS   WARNINGS   CREATED                         EXPIRES   STORAGE LOCATION   SELECTOR
+my-schedule-20251013055022   Completed   0        0          2025-10-13 14:50:22 +0900 KST   29d       default            <none>
+my-schedule-20251013054022   Completed   0        0          2025-10-13 14:40:22 +0900 KST   29d       default            <none>
 ```
 
 #### 주기적 백업 설정 해제 예시
@@ -287,8 +267,8 @@ my-schedule-20220209043115    Completed   0        0          2022-02-09 13:31:1
 
 ```
 $ velero schedule get
-NAME          STATUS    CREATED                         SCHEDULE       BACKUP TTL   LAST BACKUP   SELECTOR
-my-schedule   Enabled   2022-03-17 13:48:53 +0900 KST   */10 * * * *   720h0m0s     4s ago        <none>
+NAME          STATUS    CREATED                         SCHEDULE       BACKUP TTL   LAST BACKUP   SELECTOR   PAUSED
+my-schedule   Enabled   2025-10-13 14:38:11 +0900 KST   */10 * * * *   0s           18s ago       <none>     false
 ```
 
 
