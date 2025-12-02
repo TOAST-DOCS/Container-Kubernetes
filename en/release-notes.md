@@ -16,7 +16,7 @@
 * The feature to automatically assign floating IPs per node group is available.
 * The feature to set Kubernetes labels by node group is available.
 * Addon management feature is available.
-    * For more information, see [User Guide](/Container/NKS/ko/user-guide/#addon_mgmt).
+    * For more information, see [User Guide](/Container/NKS/en/user-guide/#addon_mgmt).
 
 #### Feature Updates
 * The feature to change cluster CNI is no longer supported.
@@ -194,7 +194,7 @@ Changed the minimum disk size required to create worker nodes in images.
 
 * Added support for Kubernetes v1.26.3.
 * Added a feature to use common images as worker images.
-    * For more information, see [User Guide](/Container/NKS/ko/user-guide/#_24).
+    * For more information, see [User Guide](/Container/NKS/en/user-guide/#_24).
 * Added a feature to change the size of cluster service network, pod network, and pod subnet.
 
 #### Feature Updates
