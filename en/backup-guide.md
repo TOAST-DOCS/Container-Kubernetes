@@ -62,13 +62,13 @@ For more information on kubeconfig settings, see [Installing kubectl](/Container
 #### Download the Velero Client
 
 ```
-$ wget https://github.com/vmware-tanzu/velero/releases/download/v1.9.4/velero-v1.9.4-linux-amd64.tar.gz
+$ wget https://github.com/vmware-tanzu/velero/releases/download/v1.17.0/velero-v1.17.0-linux-amd64.tar.gz
 ```
 
 #### Decompress the File
 
 ```
-$ tar xzf velero-v1.9.4-linux-amd64.tar.gz
+$ tar xzf velero-v1.17.0-linux-amd64.tar.gz
 ```
 
 #### Change the Location or Set the Path
@@ -78,7 +78,7 @@ Move the file to the path specified in the environment variable so that you can 
 * Change the location to the path specified in the environment variable
 
 ```
-$ sudo mv velero-v1.9.4-linux-amd64/velero /usr/local/bin
+$ sudo mv velero-v1.17.0-linux-amd64/velero /usr/local/bin
 ```
 
 * Add the path to environment variable
@@ -123,57 +123,37 @@ $ helm repo add vmware-tanzu https://vmware-tanzu.github.io/helm-charts
 
 The Velero server must be installed on a `backup cluster` and a `restore cluster` respectively. We recommend that you install using `the same helm command on both clusters` to use the same Object Storage.
 
-If you are installing Velero Server on a cluster with a version of 1.26 or earlier, run the command below. 
-
 ```
 $ helm install velero vmware-tanzu/velero \
 --namespace velero \
 --create-namespace \
---version 2.32.6 \
---set configuration.provider=community.openstack.org/openstack \
+--version 11.0.0 \
 --set initContainers[0].name=velero-plugin-for-openstack \
---set initContainers[0].image=lirt/velero-plugin-for-openstack:v0.3.0 \
---set initContainers[0].volumeMounts[0].mountPath=/target \
+--set initContainers[0].image=lirt/velero-plugin-for-openstack:v0.6.1 \
 --set initContainers[0].volumeMounts[0].name=plugins \
---set deployRestic=true \
---set configuration.defaultVolumesToRestic=true \
---set configuration.defaultResticPruneFrequency=0h1m0s \
---set configuration.backupStorageLocation.bucket={Container} \
---set configuration.backupStorageLocation.config.region={Region} \
---set configuration.backupStorageLocation.config.resticRepoPrefix=swift:{Container}:/restic \
---set configuration.extraEnvVars.OS_AUTH_URL={Identity Service (Identity)} \
---set configuration.extraEnvVars.OS_TENANT_ID={Tenant ID} \
---set configuration.extraEnvVars.OS_USERNAME={NHN Cloud ID} \
---set configuration.extraEnvVars.OS_PASSWORD={API Password} \
---set configuration.extraEnvVars.OS_REGION_NAME={Region} \
---set configuration.extraEnvVars.OS_DOMAIN_ID=default
-```
-
-If you are installing a Velero server in a cluster with a version of 1.27 or later, run the command below. 
-
-```
-$ helm install velero vmware-tanzu/velero \
---namespace velero \
---create-namespace \
---version 2.32.6 \
---set configuration.provider=community.openstack.org/openstack \
---set initContainers[0].name=velero-plugin-for-openstack \
---set initContainers[0].image=lirt/velero-plugin-for-openstack:v0.3.0 \
 --set initContainers[0].volumeMounts[0].mountPath=/target \
---set initContainers[0].volumeMounts[0].name=plugins \
---set kubectl.image.tag=1.26.14-debian-11-r6 \
---set deployRestic=true \
 --set configuration.defaultVolumesToRestic=true \
---set configuration.defaultResticPruneFrequency=0h1m0s \
---set configuration.backupStorageLocation.bucket={Container} \
---set configuration.backupStorageLocation.config.region={Region} \
---set configuration.backupStorageLocation.config.resticRepoPrefix=swift:{Container}:/restic \
---set configuration.extraEnvVars.OS_AUTH_URL={Identity service (Identity)} \
---set configuration.extraEnvVars.OS_TENANT_ID={Tenant ID} \
---set configuration.extraEnvVars.OS_USERNAME={NHN Cloud ID} \
---set configuration.extraEnvVars.OS_PASSWORD={API password} \
---set configuration.extraEnvVars.OS_REGION_NAME={Region} \
---set configuration.extraEnvVars.OS_DOMAIN_ID=default
+--set configuration.defaultResticPruneFrequency=1m \
+--set configuration.backupStorageLocation[0].name=default \
+--set configuration.backupStorageLocation[0].provider=community.openstack.org/openstack \
+--set-string configuration.backupStorageLocation[0].bucket={Container} \
+--set-string configuration.backupStorageLocation[0].config.region={Region} \
+--set-string configuration.backupStorageLocation[0].config.resticRepoPrefix="swift:{Container}:/restic" \
+--set configuration.volumeSnapshotLocation[0].name=default \
+--set configuration.volumeSnapshotLocation[0].provider=community.openstack.org/openstack-cinder \
+--set configuration.volumeSnapshotLocation[0].config.region={Region} \
+--set configuration.extraEnvVars[0].name=OS_AUTH_URL \
+--set-string configuration.extraEnvVars[0].value="{Identity}" \
+--set configuration.extraEnvVars[1].name=OS_TENANT_ID \
+--set-string configuration.extraEnvVars[1].value="{Tenant ID}" \
+--set configuration.extraEnvVars[2].name=OS_USERNAME \
+--set-string configuration.extraEnvVars[2].value="{NHN Cloud ID}" \
+--set configuration.extraEnvVars[3].name=OS_PASSWORD \
+--set-string configuration.extraEnvVars[3].value="{API password}" \
+--set configuration.extraEnvVars[4].name=OS_REGION_NAME \
+--set-string configuration.extraEnvVars[4].value="{Region}" \
+--set configuration.extraEnvVars[5].name=OS_DOMAIN_ID \
+--set-string configuration.extraEnvVars[5].value="default" 
 ```
 
 | Item | Description |
@@ -198,7 +178,7 @@ $ velero backup create {name} --exclude-namespaces kube-system,velero
 ```
 
 * Specify the name as the name of the backup you want.
-* You can set up resource filtering when backing up a cluster. See [resource-filtering](https://velero.io/docs/v1.7/resource-filtering/) for details.
+* You can set up resource filtering when backing up a cluster. See [resource-filtering](https://velero.io/docs/v1.17/resource-filtering/) for details.
 
 > [Caution]
 > You must exclude the namespaces that do not require backup such as `kube-system` and `velero`.
@@ -209,7 +189,7 @@ You can check the cluster backup status with the `velero backup get` command.
 ```
 $ velero backup get
 NAME         STATUS      ERRORS   WARNINGS   CREATED                         EXPIRES   STORAGE LOCATION   SELECTOR
-my-backup    Completed   0        0          2022-02-09 10:13:44 +0900 KST   29d       default            <none>
+my-backup    Completed   0        0          2025-10-13 11:01:53 +0900 KST   29d       default            <none>
 ```
 
 * You can view the backed up information on the Object Storage service page.
@@ -246,7 +226,7 @@ $ velero backup create my-backup --exclude-namespaces kube-system,velero
 ```
 $ velero backup get
 NAME         STATUS      ERRORS   WARNINGS   CREATED                         EXPIRES   STORAGE LOCATION   SELECTOR
-my-backup    Completed   0        0          2022-02-09 13:23:13 +0900 KST   29d       default            <none>
+my-backup    Completed   0        0          2025-10-13 11:01:53 +0900 KST   29d       default            <none>
 ```
 
 * Perform restoration using the velero restore create command on the restore cluster.
@@ -263,7 +243,7 @@ $ kubectl get pod --all-namespaces
 
 #### Example of Setting Periodic Backups
 
-You can configure periodic backups with the `velero schedule create` command. See [schedule-a-backup](https://velero.io/docs/v1.7/backup-reference/#schedule-a-backup) for details.
+You can configure periodic backups with the `velero schedule create` command. See [schedule-a-backup](https://velero.io/docs/v1.17/backup-reference/#schedule-a-backup) for details.
 
 * In the backup cluster, use the velero schedule create command to configure periodic backups. (Example is every 10 minutes)
 
@@ -275,9 +255,9 @@ $ velero schedule create my-schedule --schedule="*/10 * * * *" --exclude-namespa
 
 ```
 $ velero backup get
-NAME                          STATUS      ERRORS   WARNINGS   CREATED                         EXPIRES   STORAGE LOCATION   SELECTOR
-my-schedule-20220209044049    Completed   0        0          2022-02-09 13:40:49 +0900 KST   29d       default            <none>
-my-schedule-20220209043115    Completed   0        0          2022-02-09 13:31:15 +0900 KST   29d       default            <none>
+NAME                         STATUS      ERRORS   WARNINGS   CREATED                         EXPIRES   STORAGE LOCATION   SELECTOR
+my-schedule-20251013055022   Completed   0        0          2025-10-13 14:50:22 +0900 KST   29d       default            <none>
+my-schedule-20251013054022   Completed   0        0          2025-10-13 14:40:22 +0900 KST   29d       default            <none>
 ```
 
 #### Example of Clearing Periodic Backups
@@ -287,8 +267,8 @@ Periodic backups can be cleared with the `velero schedule delete` command.
 
 ```
 $ velero schedule get
-NAME          STATUS    CREATED                         SCHEDULE       BACKUP TTL   LAST BACKUP   SELECTOR
-my-schedule   Enabled   2022-03-17 13:48:53 +0900 KST   */10 * * * *   720h0m0s     4s ago        <none>
+NAME          STATUS    CREATED                         SCHEDULE       BACKUP TTL   LAST BACKUP   SELECTOR   PAUSED
+my-schedule   Enabled   2025-10-13 14:38:11 +0900 KST   */10 * * * *   0s           18s ago       <none>     false
 ```
 
 
