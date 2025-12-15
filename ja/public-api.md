@@ -255,6 +255,7 @@ X-Auth-Token: {tokenId}
 | labels.obs_sgw | Body | String | OBSタイプのサービスゲートウェイUUID |
 | labels.term_of_validity | Body | String | 証明書の有効期間 |
 | labels.certificate_expiry | Body | String | 証明書の有効期限 | 
+| labels.platform_version | Body | String | プラットフォームバージョン |
 
 <details><summary>例</summary>
 <p>
@@ -288,6 +289,7 @@ X-Auth-Token: {tokenId}
         "hypervisor_type": "qemu",
         "kube_tag": "v1.23.3",
         "kube_version_status": "NEED_UPGRADE",
+        "platform_version": "1.202511.0",        
         "login_username": "centos",
         "master_lb_floating_ip_enabled": "true",
         "strict_sg_rules": "True",
@@ -1264,6 +1266,7 @@ X-Auth-Token: {tokenId}
 | labels.additional_network_id_list | Body | String | ワーカーノードグループ適用：追加ネットワークのVPCネットワークUUIDリスト(コロン区切り) |
 | labels.additional_subnet_id_list | Body | String | ワーカーノードグループ適用：追加ネットワークのVPCサブネットUUIDリスト(コロン区切り) |
 | labels.strict_sg_rules | Body | String | ワーカーノードセキュリティグループに必須セキュリティルールのみ作成("True" / "False"), (2024.02.27. 以降に作成されたクラスタで確認可能) |
+| labels.platform_version | Body | String | プラットフォームバージョン |
 | max_node_count | Body | Integer | 最大ノード数 |
 | min_node_count | Body | Integer | 最小ノード数 |
 | node_addresses | Body | String list | ノードIPアドレスリスト |
@@ -1308,6 +1311,7 @@ X-Auth-Token: {tokenId}
         "hypervisor_type": "qemu",
         "kube_tag": "v1.19.13",
         "kube_version_status": "LATEST",
+        "platform_version": "1.202511.0",        
         "login_username": "centos",
         "master_lb_floating_ip_enabled": "true",
         "strict_sg_rules": "True",
