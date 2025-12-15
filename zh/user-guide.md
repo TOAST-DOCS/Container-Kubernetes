@@ -2844,7 +2844,7 @@ NAME                                       CAPACITY   ACCESS MODES   RECLAIM POL
 pv-onas                                    300Gi      RWX            Retain           Available                                                      101s   Filesystem
 ```
 
-After creating PV, the process of creating a PVC and mounting a volume to the pod is the same as the basic static provisioning process. For more information on static provisioning, see [Static Provisioning](/Container/NKS/ko/user-guide/#_51).
+After creating PV, the process of creating a PVC and mounting a volume to the pod is the same as the basic static provisioning process. For more information on static provisioning, see [Static Provisioning](/Container/NKS/zh/user-guide/#_51).
 
 #### Dynamic Provisioning
 In order to utilize NHN Cloud NAS storage as PV through dynamic provisioning, storage provider information and NHN Cloud NAS storage connection information must be defined when creating the StorageClass manifest.
@@ -2877,7 +2877,7 @@ NAME                                  PROVISIONER      RECLAIMPOLICY   VOLUMEBIN
 storageclass.storage.k8s.io/onas-sc   nfs.csi.k8s.io   Retain          Immediate           false                  15s
 ```
 
-After creating the StorageClass, the process of creating a PVC and mounting the volume to the pod is the same as the basic dynamic provisioning process. For more information on dynamic provisioning, see [Dynamic Provisioning](/Container/NKS/ko/user-guide/#_52).
+After creating the StorageClass, the process of creating a PVC and mounting the volume to the pod is the same as the basic dynamic provisioning process. For more information on dynamic provisioning, see [Dynamic Provisioning](/Container/NKS/zh/user-guide/#_52).
 
 > [Note] 
 nfs-csi-driver works by creating a subdirectory inside the nfs storage when creating a PV through dynamic provisioning. 

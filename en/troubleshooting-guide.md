@@ -241,7 +241,7 @@ $ reboot
 This issue may not always occur, and may depend on the nature of your application. If you are concerned about this issue, you can use the custom image feature in NKS to use a worker node image with the above workaround applied from the start.
 
 #### Apply the workaround to newly created clusters using the NKS Custom Image feature
-NKS provides the feature to create a group of worker nodes based on your custom image. You can use the NKS custom image feature to create an image with kernel object accounting disabled for memory cgroups and utilize it when creating a cluster. For more information about the feature, see [](/Container/NKS/ko/user-guide/#_25)Use Custom Image as Worker Image[](/Container/NKS/ko/user-guide/#custom-image).
+NKS provides the feature to create a group of worker nodes based on your custom image. You can use the NKS custom image feature to create an image with kernel object accounting disabled for memory cgroups and utilize it when creating a cluster. For more information about the feature, see [](/Container/NKS/en/user-guide/#_25)Use Custom Image as Worker Image[](/Container/NKS/en/user-guide/#custom-image).
 
 1. While creating the image template, enter the following in the user script.
 ```
@@ -381,7 +381,7 @@ kubectl -n kube-system set image daemonset/calico-node \
   install-cni=calico/cni:${CALICO_TAG} \
   mount-bpffs=calico/node:${CALICO_TAG}
 
-[예제]
+[Example]
 kubectl -n kube-system set image daemonset/calico-node \
   calico-node=calico/node:v3.24.1 \
   install-cni=calico/cni:v3.24.1 \

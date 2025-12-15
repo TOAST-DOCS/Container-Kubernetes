@@ -4,7 +4,7 @@
 
 #### 서비스 지원 정책 변경
 * NKS의 Kubernetes 버전 지원 정책이 변경됩니다.
-    * 자세한 내용은 [사용 가이드](/Container/NKS/ko/version-guide)를 참고하세요.
+    * 자세한 내용은 [사용 가이드](/Container/NKS/ko/version-guide-gov)를 참고하세요.
 
 #### 애드온 업데이트
 * 다음 애드온이 추가되었습니다.
@@ -37,7 +37,7 @@
 * 노드 그룹 별 플로팅 IP 자동 할당 기능을 사용할 수 있습니다.
 * 노드 그룹 별 Kubernetes 레이블 설정 기능을 사용할 수 있습니다.
 * Addon 관리 기능을 사용할 수 있습니다.
-    * 자세한 내용은 [사용 가이드](/Container/NKS/ko/user-guide/#addon-mgmt)를 참고하세요.
+    * 자세한 내용은 [사용 가이드](/Container/NKS/ko/user-guide-gov/#addon-mgmt)를 참고하세요.
 
 #### 기능 개선/변경
 * 클러스터 CNI 변경 기능은 더 이상 지원하지 않습니다.
@@ -142,7 +142,7 @@
 * 로드 밸런서 상세 옵션 설정으로 멤버 서브넷 설정 기능이 추가되었습니다.
 * 로드 밸런서 상세 옵션 설정으로 keep-alive 타임아웃 값 설정 기능이 추가되었습니다.
 * 커스텀 이미지를 워커 이미지로 활용하는 기능이 추가되었습니다.
-    * 자세한 내용은 [사용자 가이드](/Container/NKS/ko/gov-user-guide/#custom-image)를 참고하세요.
+    * 자세한 내용은 [사용자 가이드](/Container/NKS/ko/user-guide-gov/#custom-image)를 참고하세요.
 
 #### 이미지 업데이트
 * 클러스터 및 노드 그룹 생성 시 사용 가능한 신규 이미지가 추가되었습니다.
@@ -233,7 +233,7 @@
 #### 기능 추가
 
 * 클러스터 CNI 변경 기능이 추가되었습니다.
-    * 자세한 내용은 [사용 가이드](/Container/NKS/ko/gov-user-guide/#cni)를 참고하세요.
+    * 자세한 내용은 [사용 가이드](/Container/NKS/ko/user-guide-gov/#cni)를 참고하세요.
 * 노드 그룹의 인스턴스 타입을 변경할 수 있습니다.
 * 콘솔에서 Kubernetes 자원 조회 기능을 사용할 수 있습니다.
 
@@ -255,7 +255,7 @@
 #### 기능 추가
 
 * 클러스터 OWNER 변경 기능이 추가되었습니다.
-    * 자세한 내용은 [사용 가이드](/Container/NKS/ko/gov-user-guide/#owner)를 참고하세요.
+    * 자세한 내용은 [사용 가이드](/Container/NKS/ko/user-guide-gov/#owner)를 참고하세요.
 * Kubernetes v1.25.4를 지원합니다.
 * 클러스터 생성 시 Kubernetes v1.21.6은 더 이상 지원하지 않습니다. 단, 사용 중인 클러스터에는 영향이 없습니다.
 * 로드 밸런서의 리스너에 프록시 프로토콜(Proxy Protocol)을 설정할 수 있습니다.

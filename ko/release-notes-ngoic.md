@@ -4,7 +4,7 @@
 
 #### 서비스 지원 정책 변경
 * NKS의 Kubernetes 버전 지원 정책이 변경됩니다.
-    * 자세한 내용은 [사용 가이드](/Container/NKS/ko/version-guide)를 참고하세요.
+    * 자세한 내용은 [사용 가이드](/Container/NKS/ko/version-guide-ngoic)를 참고하세요.
 
 #### 애드온 업데이트
 * 다음 애드온이 추가되었습니다.

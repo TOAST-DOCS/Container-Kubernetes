@@ -4,7 +4,7 @@
 
 #### 서비스 지원 정책 변경
 * NKS의 Kubernetes 버전 지원 정책이 변경됩니다.
-    * 자세한 내용은 [사용 가이드](/Container/NKS/ko/version-guide)를 참고하세요.
+    * 자세한 내용은 [사용 가이드](/Container/NKS/ko/version-guide-ncgn)를 참고하세요.
 
 #### 애드온 업데이트
 * 다음 애드온이 추가되었습니다.
@@ -37,7 +37,7 @@
 * 노드 그룹 별 플로팅 IP 자동 할당 기능을 사용할 수 있습니다.
 * 노드 그룹 별 Kubernetes 레이블 설정 기능을 사용할 수 있습니다.
 * Addon 관리 기능을 사용할 수 있습니다.
-    * 자세한 내용은 [사용 가이드](/Container/NKS/ko/user-guide/#addon-mgmt)를 참고하세요.
+    * 자세한 내용은 [사용 가이드](/Container/NKS/ko/user-guide-ncgn/#addon-mgmt)를 참고하세요.
 
 #### 기능 개선/변경
 * 클러스터 CNI 변경 기능은 더 이상 지원하지 않습니다.
@@ -227,7 +227,7 @@
 #### 기능 추가
 
 * 클러스터 CNI 변경 기능이 추가되었습니다.
-    * 자세한 내용은 [사용 가이드](/Container/NKS/ko/user-guide-gov/#cni)를 참고하세요.
+    * 자세한 내용은 [사용 가이드](/Container/NKS/ko/user-guide-ncgn/#cni)를 참고하세요.
 * 노드 그룹의 인스턴스 타입을 변경할 수 있습니다.
 * 콘솔에서 Kubernetes 자원 조회 기능을 사용할 수 있습니다.
 
