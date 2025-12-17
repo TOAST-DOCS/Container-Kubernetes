@@ -1,5 +1,20 @@
 ## Container > NHN Kubernetes Service(NKS) > 릴리스 노트
 
+### 2025. 12. 23
+
+#### 플랫폼 버전 업데이트
+* 1.202511.1이 추가되었습니다.
+    * 헬스 체크 확인 포트 설정 오류를 수정했습니다.
+
+#### 애드온 업데이트
+* Cinder CSI Plugin v1.27.101-nks2, v1.27.102-nks2가 추가되었습니다.
+    * 내부 컨테이너 버전이 다음과 같이 변경되었습니다.
+        * csi-attacher: v3.0.2 -> v3.3.0
+        * csi-provisioner: v2.0.4 -> v2.2.2
+        * csi-snapshotter: v3.0.2 -> v3.0.3
+        * csi-resizer: v1.0.1 -> v1.3.0
+        * csi-node-driver-registrar: v2.0.1 -> v2.3.0
+
 ### 2025. 12. 02.
 
 #### 서비스 지원 정책 변경
