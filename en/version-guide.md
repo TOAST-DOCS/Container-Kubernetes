@@ -92,3 +92,4 @@ To ensure stable service operation, we apply a service support policy for each K
 |------|------------|--------------------|-----|
 | 1.202505.0 | 2025.11 | v1.28–v1.32 | Indicates a cluster that does not have a platform version applied. |
 | 1.202511.0 | 2025.11 | v1.28–v1.33 | Initial release of the platform version |
+| 1.202511.1 | 2025.12 | v1.28–v1.33 | Fixed an error in the confirmation port setting for health checks |
