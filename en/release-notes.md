@@ -1,12 +1,27 @@
 ## Container > NHN Kubernetes Service (NKS) > Release Notes
 
+### December 23, 2025
+
+#### Platform Version Update
+* Added 1.202511.1.
+    * Fixed an error in the confirmation port setting for health checks.
+
+#### Add-on Update
+* Added Cinder CSI Plugin v1.27.101-nks2, v1.27.102-nks2.
+    * The internal container version has changed as follows:
+        * csi-attacher: v3.0.2 → v3.3.0
+        * csi-provisioner: v2.0.4 → v2.2.2
+        * csi-snapshotter: v3.0.2 → v3.0.3
+        * csi-resizer: v1.0.1 → v1.3.0
+        * csi-node-driver-registrar: v2.0.1 → v2.3.0
+
 ### November 25, 2025
 
 #### Changed Service Support Policy
 * Changed the support policy for the Kubernetes version of NKS.
     * For more information, refer to the [Version Guide](/Container/NKS/en/version-guide).
 
-#### Updated Add-on
+#### Add-on Update
 * The following add-ons are added:
     * Calico CNI v3.30.2-nks1
     * Cinder CSI Plugin v1.27.101-nks1, v1.27.102-nks1
