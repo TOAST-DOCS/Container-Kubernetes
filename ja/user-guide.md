@@ -2228,7 +2228,19 @@ Cinder CSI Pluginは、NHN Cloudでブロックストレージをプロビジョ
 * オプション: なし
 * サポートバージョンリスト
     * v1.27.101-nks1
+    * v1.27.101-nks2: 内部コンテナのバージョンが変更されました。
+        * csi-attacher: v3.0.2 → v3.3.0
+        * csi-provisioner: v2.0.4 → v2.2.2
+        * csi-snapshotter: v3.0.2 → v3.0.3
+        * csi-resizer: v1.0.1 → v1.3.0
+        * csi-node-driver-registrar: v2.0.1 → v2.3.0
     * v1.27.102-nks1
+    * v1.27.102-nks2: 内部コンテナのバージョンが変更されました。
+        * csi-attacher: v3.0.2 → v3.3.0
+        * csi-provisioner: v2.0.4 → v2.2.2
+        * csi-snapshotter: v3.0.2 → v3.0.3
+        * csi-resizer: v1.0.1 → v1.3.0
+        * csi-node-driver-registrar: v2.0.1 → v2.3.0
 
 <a id="adoon-mgmt-addon-metrics-server">
 #### Metrics Server
