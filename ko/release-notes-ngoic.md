@@ -1,6 +1,12 @@
 ## Container > NHN Kubernetes Service(NKS) > 릴리스 노트
 
-### 2025. 12. xx. -> 배포 전에 수정 필요
+### 2026. 02. xx.
+
+#### 애드온 업데이트
+* 다음 애드온이 추가되었습니다.
+    * Cilium CNI v1.18.0-nks1
+
+### 2025. 12. 28.
 
 #### 서비스 지원 정책 변경
 * NKS의 Kubernetes 버전 지원 정책이 변경됩니다.
