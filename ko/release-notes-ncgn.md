@@ -1,10 +1,16 @@
 ## Container > NHN Kubernetes Service(NKS) > 릴리스 노트
 
-### 2026. 02. xx.
+### 2026. 03. 17.
 
 #### 애드온 업데이트
 * 다음 애드온이 추가되었습니다.
-    * Cilium CNI v1.18.0-nks1
+    * cilium v1.18.0-nks1
+    * calico v3.30.2-nks2
+    * coredns 1.8.4-nks2
+    * metrics_server v0.4.4-nks2
+    * cinder_csi_plugin v1.27.102-nks3
+    * snapshot_controller v4.1.1-nks2
+    * nfs_csi_plugin v1.0.1-nks2
 
 #### 기능 추가
 * Kubernetes v1.34.3을 지원합니다.
