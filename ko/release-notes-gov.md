@@ -14,6 +14,7 @@
 
 #### 기능 추가
 * Kubernetes v1.34.3을 지원합니다.
+* Kubernetes 컴포넌트 설정 기능으로 kubelet의 --max-pods을 설정할 수 있습니다.
 
 ### 2025. 12. 23.
 
