@@ -4,7 +4,7 @@
 
 #### 플랫폼 버전 업데이트
 * 1.202602.0이 추가되었습니다.
-    * Kubernetes 호환 버전: v1.29–v1.34
+    * Kubernetes 호환 버전: v1.29–v1.33
     * 기능 추가
         * Kubernetes 테인트 설정 기능
         * Kubernetes 컴포넌트 설정 기능 max-pods 설정 지원
