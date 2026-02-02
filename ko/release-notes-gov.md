@@ -2,6 +2,18 @@
 
 ### 2026. 03. 17.
 
+#### 플랫폼 버전 업데이트
+* 1.202602.0이 추가되었습니다.
+    * Kubernetes 호환 버전: v1.29–v1.34
+    * 기능 추가
+        * Kubernetes 테인트 설정 기능
+        * Kubernetes 컴포넌트 설정 기능 max-pods 설정 지원
+        * Secure Key Manager를 이용한 etcd 데이터 암호화 지원
+        * CGroup v2 OS 이미지 지원
+        * Cilium CNI 지원
+    * 기능 개선
+        * 노드 및 노드 그룹 삭제 시 로드 밸런서 트래픽 유실 개선
+
 #### 애드온 업데이트
 * 다음 애드온이 추가되었습니다.
     * cilium v1.18.0-nks1
@@ -13,6 +25,8 @@
     * nfs_csi_plugin v1.0.1-nks2
 
 #### 기능 추가
+* CGroup이v2로 설정된 OS 이미지를 지원합니다.
+    * 2026년 3월 이후 배포되는 OS 이미지는 CGroup이 v2로 설정되어 있습니다.
 * Kubernetes 컴포넌트 설정 기능으로 kubelet의 --max-pods을 설정할 수 있습니다.
 * Kubernetes 테인트 설정 기능이 추가되었습니다.
 * Secure Key Manager 서비스를 이용해 클러스터의 기밀 데이터를 암/복호화할 수 있습니다.
