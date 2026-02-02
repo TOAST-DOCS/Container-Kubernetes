@@ -13,8 +13,8 @@
     * nfs_csi_plugin v1.0.1-nks2
 
 #### 기능 추가
-* Kubernetes v1.34.3을 지원합니다.
 * Kubernetes 테인트 설정 기능이 추가되었습니다.
+* Secure Key Manager 서비스를 이용해 클러스터의 기밀 데이터를 암/복호화할 수 있습니다.
 
 ### 2025. 12. 23.
 
