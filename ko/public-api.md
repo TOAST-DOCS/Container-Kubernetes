@@ -529,7 +529,6 @@ X-Auth-Token: {tokenId}
 | labels.pods_network_subnet | Body | Integer | X |  클러스터 파드 서브넷 크기. pods_network_subnet 입력 규칙 참고 |
 | labels.ncr_sgw | Body | String | X | NCR 타입의 서비스 게이트웨이 UUID<br>단, 클러스터 VPC와 동일한 VPC에 생성된 것에 한함. |
 | labels.obs_sgw | Body | String | X | OBS 타입의 서비스 게이트웨이 UUID<br>단, 클러스터 VPC와 동일한 VPC에 생성된 것에 한함. |
-| labels.cni_driver | Body | String | X | CNI 설정, 선택 가능 CNI 목록: calico(기본), calico-ebpf<br>calico: Calico-VXLAN으로 생성<br>calico-ebpf: Calico-eBPF로 생성 |
 | labels.extra_security_groups | Body | Array | X | 기본 워커 노드 그룹 적용: 추가 보안 그룹 객체 목록 |
 | labels.extra_security_groups[].target_subnet | Body | String | X | 추가 보안 그룹 지정 대상 서브넷 UUID |
 | labels.extra_security_groups[].security_group_ids | Body | String | X | 추가 보안 그룹 UUID 목록(쉼표로 구분) |
