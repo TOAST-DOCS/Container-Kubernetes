@@ -25,9 +25,11 @@
     * nfs_csi_plugin v1.0.1-nks2
 
 #### 기능 추가
-* Kubernetes v1.34.3을 지원합니다.
 * CGroup이v2로 설정된 OS 이미지를 지원합니다.
     * 2026년 3월 이후 배포되는 OS 이미지는 CGroup이 v2로 설정되어 있습니다.
+* Kubernetes 컴포넌트 설정 기능으로 kubelet의 --max-pods을 설정할 수 있습니다.
+* Kubernetes 테인트 설정 기능이 추가되었습니다.
+* Secure Key Manager 서비스를 이용해 클러스터의 기밀 데이터를 암/복호화할 수 있습니다.
 
 ### 2025. 12. 28.
 
