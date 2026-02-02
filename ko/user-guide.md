@@ -4577,17 +4577,18 @@ parameters:
 PVC 매니페스트 작성 및 파드에 마운트하는 과정은 일반 블록 스토리지의 동적 프로비저닝과 동일합니다. 자세한 내용은 [동적 프로비저닝](/Container/NKS/ko/user-guide/#dynamic-provisioning)을 참고하세요.
 
 
-#### 기밀 데이터 암/복호화 시 Secure Key Manager 서비스 연동
+<a id="etcd-encryption-with-skm"></a>
+### 기밀 데이터 암/복호화 시 Secure Key Manager 서비스 연동
 
 NKS 클러스터는 secret 리소스를 데이터 저장소(etcd)에 저장할 때 데이터를 암호화해 저장합니다. NKS는 이 데이터를 암호화하기 위해 두 가지 방식을 제공합니다.
 
-##### 기본 방식
+#### 기본 방식
 
 * 클러스터 생성 시 대칭키를 자동 생성하여 컨트롤 플레인에 저장
 * 해당 키로 etcd 데이터를 암호화
 * 키 관리가 클러스터 내부에서 이루어짐
 
-##### SKM 연동 방식
+#### SKM 연동 방식
 
 * 저장소 암호화 제공자를 Secure Key Manager(SKM)으로 설정
 * etcd 데이터 암/복호화 시 SKM API를 통해 암/복호화 작업 수행
