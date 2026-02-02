@@ -546,7 +546,7 @@ X-Auth-Token: {tokenId}
 | labels.fip_auto_bind_enable | Body | String | X | 기본 워커 노드 그룹 적용: 플로팅 IP 자동 할당: 기능 활성화 여부 ("True" / "False") |
 | labels.fip_bind_subnet | Body | String | X | 기본 워커 노드 그룹 적용: 플로팅 IP 자동 할당: 플로팅 IP가 연결되는 네트워크 인터페이스의 서브넷 |
 | labels.fip_selector | Body | String | X | 기본 워커 노드 그룹 적용: 플로팅 IP 자동 할당: 노드에 할당할 플로팅 IP를 선별하기 위한 식별자 |
-| labels.k8s_node_labels | Body | String | 기본 워커 노드 그룹 적용: Kubernetes 레이블 설정 |
+| labels.k8s_node_labels | Body | String | X | 기본 워커 노드 그룹 적용: Kubernetes 레이블 설정 |
 | flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
 | fixed_network | Body | UUID | O | VPC 네트워크 UUID |
 | fixed_subnet | Body | UUID | O | VPC 서브넷 UUID. fixed_subnet, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
@@ -1405,7 +1405,7 @@ X-Auth-Token: {tokenId}
 | labels.fip_auto_bind_enable | Body | String | X | 플로팅 IP 자동 할당: 기능 활성화 여부 ("True" / "False") |
 | labels.fip_bind_subnet | Body | String | X | 플로팅 IP 자동 할당: 플로팅 IP가 연결되는 네트워크 인터페이스의 서브넷 |
 | labels.fip_selector | Body | String | X | 플로팅 IP 자동 할당: 노드에 할당할 플로팅 IP를 선별하기 위한 식별자 |
-| labels.k8s_node_labels | Body | String | Kubernetes 레이블 설정 |
+| labels.k8s_node_labels | Body | String | X | Kubernetes 레이블 설정 |
 | name | BODY | String | O | 노드 그룹 이름 |
 | node_count | Body | Integer | X | 노드 수(기본값: 1) |
 
