@@ -10,13 +10,11 @@
         * Kubernetes 컴포넌트 설정 기능 max-pods 설정 지원
         * Secure Key Manager를 이용한 etcd 데이터 암호화 지원
         * CGroup v2 OS 이미지 지원
-        * Cilium CNI 지원
     * 기능 개선
         * 노드 및 노드 그룹 삭제 시 로드 밸런서 트래픽 유실 개선
 
 #### 애드온 업데이트
 * 다음 애드온이 추가되었습니다.
-    * cilium v1.18.0-nks1
     * calico v3.30.2-nks2
     * coredns 1.8.4-nks2
     * metrics_server v0.4.4-nks2
