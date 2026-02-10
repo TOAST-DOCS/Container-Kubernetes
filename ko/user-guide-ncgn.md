@@ -2026,21 +2026,6 @@ Calico는 Kubernetes의 네트워킹과 네트워크 보안을 제공하는 CNI 
     * v3.30.2-nks1
     * v3.30.2-nks2: 애드온 관리 기능의 안정성을 강화했습니다.
 
-<a id="addon-mgmt-addon-cilium"></a>
-#### Cilium
-Cilium은 Kubernetes의 네트워킹과 네트워크 보안을 제공하는 CNI 플러그인입니다.
-
-* 유형: CNI
-* 옵션: 없음
-* 사용자 변경 불가능 리소스 및 필드
-    * DaemonSet/cilium, 네임스페이스 kube-system
-        * .spec.template.spec.containers[name="cilium-agent"].image
-        * .spec.template.spec.containers[name="cilium-envoy"].image
-    * Deployment/cilium-operator, 네임스페이스 kube-system
-        * .spec.template.spec.containers[name="cilium-operator"].image
-* 지원 버전 목록
-    * v1.18.0-nks1
-
 <a id="addon-mgmt-addon-coredns"></a>
 #### CoreDNS
 CoreDNS는 Kubernetes 클러스터의 기본 DNS 서버입니다.
