@@ -1096,6 +1096,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.28.3
 |  | Rocky Linux 8.10 (2024.11.19)  | 1.7 |
 |  | Rocky Linux 8.10 (2025.02.25)  | 1.8 |
 |  | Rocky Linux 9.5 (2025.11.18)   | 1.9 |
+|  | Rocky Linux 9.7 (2026.03.10)   | 1.9 |
 | Ubuntu | Ubuntu Server 22.04.3 LTS (2023.11.21) | 1.3 |
 |  | Ubuntu Server 22.04.3 LTS (2024.02.20)  | 1.4 |
 |  | Ubuntu Server 22.04.5 LTS (2024.05.21)  | 1.5 |
@@ -1103,7 +1104,8 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.28.3
 |  | Ubuntu Server 22.04.5 LTS (2025.02.25)  | 1.8 |
 |  | Ubuntu Server 22.04.5 LTS (2025.11.18)  | 1.9 |
 |  | Ubuntu Server 24.04.3 LTS (2025.11.18)  | 1.9 |
-
+|  | Ubuntu Server 22.04.3 LTS (2026.03.10)  | 1.10 |
+|  | Ubuntu Server 24.04.3 LTS (2026.03.10)  | 1.10 |
 
 > [참고]
 > 커스텀 이미지를 워커 노드 이미지로 변환하는 과정에서 선택한 옵션에 따라 GPU 드라이버가 설치됩니다.
