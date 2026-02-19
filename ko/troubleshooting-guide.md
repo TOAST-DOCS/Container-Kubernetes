@@ -404,6 +404,3 @@ kubectl -n kube-system set image deployment/calico-kube-controllers \
 kubectl -n kube-system set image deployment/calico-kube-controllers \
   calico-kube-controllers=calico/kube-controllers:v3.24.1
 ```
-
-### > v1.34.3 클러스터의 kube-apiserver 로그에서 `grpc: addrConn.createTransport failed to connect` 에러 메시지가 반복적으로 확인됩니다.
-이는 Kubernetes 커뮤니티에 보고된 알려진 이슈(Known Issue)로, kube-apiserver와 etcd 간의 실제 연결에는 문제가 없는 단순 로깅 오류입니다. 이 로그는 kube-apiserver가 1분 간격으로 수행하는 etcd 상태 점검(Health Check) 과정에서 생성됩니다. 이로 인해 약 1분마다 에러 메시지가 반복적으로 기록되며, 동일한 점검 방식을 사용하는 kubectl get ComponentStatus 명령 실행 시에도 해당 로그가 출력됩니다. 실제 서비스 운영에는 영향이 없으므로, 운영 시 해당 내용을 참고하시기 바랍니다.
