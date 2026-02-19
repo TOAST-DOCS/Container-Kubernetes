@@ -2010,7 +2010,8 @@ Calico는 Kubernetes의 네트워킹과 네트워크 보안을 제공하는 CNI 
         * .spec.template.spec.initContainers[name="mount-bpffs"].image
         * .spec.template.spec.containers[name="calico-node"].image
 * 지원 버전 목록
-    * v3.28.1-nks1
+    * v3.28.2-nks1
+    * v3.28.2-nks2: 애드온 관리 기능의 안정성을 강화했습니다.
     * v3.30.2-nks1
     * v3.30.2-nks2: 애드온 관리 기능의 안정성을 강화했습니다.
 
