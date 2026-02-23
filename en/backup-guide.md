@@ -159,7 +159,7 @@ $ helm install velero vmware-tanzu/velero \
 | Item | Description |
 | --- | --- |
 | Container | Name of the container used in Object Storage |
-| Region | Korea (Pangyo) Region: `KR1`<br>Korea (Pyeongchon) Region: `KR2` |
+| Region | Korea (Pangyo) Region: `KR1`<br>Korea (Pyeongchon) Region: `KR2`<br>Korea (Gwangju) Region: `KR3` |
 | Identity service | Identity service in API Endpoint settings |
 | Tenant ID | Tenant ID in API Endpoint Settings |
 | NHN Cloud ID | NHN Cloud ID |

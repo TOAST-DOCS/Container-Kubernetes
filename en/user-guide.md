@@ -234,6 +234,12 @@ Only the user who created the cluster can create node groups.
 ### Deleting Node Groups
 Select a node group to delete from the list of node groups, and click **Delete Node Groups** and it is deleted. It takes about 5 minutes to delete a node group; more time may be required depending on the node group status.
 
+All nodes in a node group are deleted in the following order:
+* If a node is part of a LoadBalancer-type service, its status is changed to INACTIVE within the LB. (this feature is supported in platform version 1.202602.0 or later)
+* The node is drained.
+* The node is deleted from the Kubernetes node resource.
+* The node is deleted from the instance level.
+
 <a id="nodegroup-scale-out"></a>
 ### Adding node to node group
 Nodes can be added to operating node groups. The current list of nodes will appear upon clicking the node list tab on the node group information query page. Nodes can be added by selecting the Add Node button and entering the number of nodes you want.
@@ -245,14 +251,14 @@ Nodes cannot be manually added to node groups on which autoscaler is enabled.
 ### Deleting node from node group
 Nodes can be deleted from operating node groups. The current list of nodes will appear upon clicking the node list tab on the node group information query page. A confirmation dialog box will appear when a user selects nodes for deletion and clicks the Delete Node button. When the user confirms the node name and selects the OK button, the node will be deleted.
 
->[Caution]
-Pods that were operating in the deleted node will go through force shutdown. To safely transfer pods from the currently operating nodes to be deleted to other nodes, you must run the "drain" command. New pods can be scheduled on nodes even after they are drained. To prevent new pods from being scheduled in nodes that are to be deleted, you must run the "cordon" command. For more information on safe node management, see the document below.
+All nodes in a node group are deleted in the following order:
+* If a node is part of a LoadBalancer-type service, its status is changed to INACTIVE within the LB. (this feature is supported in platform version 1.202602.0 or later)
+* The node is drained.
+* The node is deleted from the Kubernetes node resource.
+* The node is deleted from the instance level.
 
 >[Caution]
 Nodes cannot be manually deleted from node groups on which autoscaler is enabled.
-
-* [Safe node drain](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)
-* [Manual node management](https://kubernetes.io/docs/concepts/architecture/nodes/#manual-node-administration)
 
 <a id="node-start-stop"></a>
 ### Stop and start node
@@ -262,6 +268,7 @@ Nodes can be stopped from node groups and started again. The current list of nod
 
 When you stop a node that is started, the node operates in the following order.
 
+* If a node is part of a LoadBalancer-type service, its status is changed to INACTIVE within the LB. (this feature is supported in platform version 1.202602.0 or later)
 * The node is drained
 * The node is deleted from Kubernetes node resources.
 * Turn the node into the SHUTDOWN status at the instance level.
@@ -1607,21 +1614,30 @@ Here's how to use the certificate renewal feature
 <a id="k8s-component"></a>
 ### Set Kubernetes Component
 
-You can set a number of options for Kubernetes components. You can set these options at cluster creation time, and you can also change them after cluster creation is complete. This applies to the following components and options.
+You can set a number of options for Kubernetes components. You can set these options at cluster creation time, and you can also change them after cluster creation is complete.
 
-| Component | Behavior Arear | Option | Description |
-| --- | --- | --- | --- |
-| kube-apiserver | Control plane | default-not-ready-toleration-seconds | Defines how long pods running on a node will be allowed when the node is in the NotReady state:<br>(unit: seconds, default: 300, minimum: 0, maximum: 86400) |
-| kube-apiserver | Control plane | default-unreachable-toleration-seconds | Defines how long pods running on a node will be allowed when the node is not connected to the network:<br>(unit: seconds, default: 300, minimum: 0, maximum: 86400) |
-| kube-controller-manager | Control plane | node-monitor-grace-period | Defines how long to wait when a node is in an unhealthy state before considering it unhealthy.<br>(unit: seconds, default: 40, minimum: 0, maximum: 86400) |
-| kube-controller-manager | Control plane | unhealthy-zone-threshold | Defines the threshold for the percentage of NotReady nodes to consider a zone unhealthy:<br>(Unit: percentage, Default: 55, Minimum: 0, Maximum: 100) |
-| kubelet | Worker node | node-status-update-frequency | Defines how often the kubelet should report the node state of the kubelet:<br>(unit: seconds, default: 10, minimum: 0, maximum: 86400) |
-
-For more information on each item, see the [Kubernetes official documents](https://kubernetes.io/docs/).
+The following components and options can be configured for each functional area. For more information on each item, see the [Kubernetes official documents](https://kubernetes.io/docs/).
 
 > [Caution]
 > * If you change the settings of a component running in the control plane, the component in the control plane will restart.
 > * If you change the settings of a component running on a worker node, the component on the worker node will restart.
+> * You can configure settings for worker node components individually for each node group. (requires platform version 1.202602.0+)
+
+### Control Plain Options
+
+| Component | Option | Description |
+| --- | --- | --- |
+| kube-apiserver | default-not-ready-toleration-seconds | Defines how long pods running on a node will be tolerated when the node is in the NotReady state.<br>(in seconds, default: 300, min: 0, max: 86,400) |
+| kube-apiserver | default-unreachable-toleration-seconds | Defines how long pods running on a node will be tolerated when the node is not connected to the network.<br>(in seconds, default: 300, min: 0, max: 86,400) |
+| kube-controller-manager | node-monitor-grace-period | Defines how long to wait before considering a node unhealthy when it is in the NotReady state.<br>(in seconds, default: 40, min: 0, max: 86,400) |
+| kube-controller-manager | unhealthy-zone-threshold | Defines the threshold for the percentage of NotReady nodes that will be considered unhealthy for an availability zone.<br>(unit: percentage, default: 55, min: 0, max: 100) |
+
+### Worker Node Options
+
+| Component | Option | Description |
+| --- | --- | --- |
+| kubelet | node-status-update-frequency | Defines the node status reporting cycle of the kubelet.<br>(unit: seconds, default: 10, min: 0, max: 86,400) |
+| kubelet | max-pods | Defines the maximum number of pods that can run on a node.<br>(default: 110, min: 1, max: maximum number of pod IPs that can be created, calculated based on pod network and subnet size settings)<br>requires platform version 1.202602.0+ |
 
 <a id="k8s-label"></a>
 ### Kubernetes Label Settings
@@ -1632,19 +1648,20 @@ A Kubernetes label consists of a key and value pair, and each valid label key an
 
 #### Label Key
 Label keys can have a structure of prefix and name separated by a slash (/), and the prefix can be omitted.
-+ Prefixes
-  + It must be 253 characters or less.
-  + It must be in the subdomain format of DNS.
-  + Predefined prefixes cannot be used.
-    + ["kubernetes.io", "k8s.io", "magnum.openstack.org"]
-+ Name
-  + It must be 63 characters or less.
-  + Alphabetical case, numbers, dashes (-), underscores (_), and dots (.) and must start and end with an alphanumeric character.
+
+* Prefixes
+  * It must be 253 characters or less.
+  * It must be in the subdomain format of DNS.
+  * Predefined prefixes cannot be used.
+    * ["kubernetes.io", "k8s.io", "magnum.openstack.org"]
+* Name
+  * It must be 63 characters or less.
+  * Alphabetical case, numbers, dashes (-), underscores (_), and dots (.) and must start and end with an alphanumeric character.
 
 
 #### Label Value
-+ It must be blank or 63 characters or less.
-+ Alphabetical case, numbers, dashes (-), underscores (_), and dots (.) and must start and end with an alphanumeric character.
+* It must be blank or 63 characters or less.
+* Alphabetical case, numbers, dashes (-), underscores (_), and dots (.) and must start and end with an alphanumeric character.
 
 > [Note]
 > * You can specify up to 20 Kubernetes labels.
@@ -1659,7 +1676,7 @@ The NKS cluster can be set up to handle authentication using OIDC. The configura
 
 | Item | Required | Description |
 | --- | --- | --- |
-| Issuer URL | O | 'https://'로 OIDC provider URL starting with |
+| Issuer URL | O | OIDC provider URL starting with 'https://' |
 | Client ID | O | Client ID of the OIDC provider |
 | Username claim | X | The claim to use as username. Default: 'sub'<br>Non-email claims are prefixed with the provider URL. |
 | Groups claim | X | Claims to use as groups |
@@ -1786,6 +1803,46 @@ Logs are created in the OBS container by the following paths
 
 * nks_log_container/NKS/f31dd18f-4dab-49fa-97bb-8feba31cb30b/
 nks-test-master-0/kube-apiserver/2025/04/20250428-101500-index0.gz
+
+<a id="k8s-taint"></a>
+### Kubernetes taint configuration
+Kubernetes taint configuration is available for each node group. The node group created with this feature will be reset to the state which the user configured. For more information about Taint, refer to [Taints and Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/).
+
+Kubernetes taint consist of a key, value, and effect, each of which must adhere to the following rules:
+
+#### Taint Key
+
+The prefix and name in a taint key are separated by a forward slash (/), with the prefix being an optional component.
+
+* Prefix
+    * Must be 253 characters or less.
+    * Must be DNS's sub-domain format.
+    * Pre-configured prefixes are unavailable.
+        * ["kubernetes.io", "k8s.io", "magnum.openstack.org"]
+* Name
+    * Must be 63 characters or less.
+    * Only alphanumeric characters, dashes (-), underscores (_), and dots (.) are allowed. It must begin and end with an alphanumeric character.
+
+#### Taint value
+
+* Must be blank, or 63 characters or less.
+* Only alphanumeric characters, dashes (-), underscores (_), and dots (.) are allowed. It must begin and end with an alphanumeric character.
+
+#### Taint effect
+
+You must specify one of the following three values:
+
+* NoSchedule
+    * If a pod does not tolerate the taint, it cannot be scheduled on that node.
+    * Existing pods are not affected.
+* PreferNoSchedule
+    * Scheduling will avoid this node whenever possible, but may occur if necessary.
+* NoExecute
+    * Existing pods that do not tolerate the taint will be evicted immediately, and new pods will not be scheduled.
+
+[Note]
+* Up to 30 Kubernetes taints can be defined per node group.
+* Updated Kubernetes taint configuration apply only to newly created nodes.
 
 <a id="worker-node-management"></a>
 ## Manage Worker Node
@@ -2001,9 +2058,16 @@ echo '[ { "registry": "user-defined.registry.io", "endpoint_list": [ "http://use
 
 <a id="cni"></a>
 ## Container Network Interface (CNI)
-NHN Kubernetes Service (NKS) provides different types of Container Network Interfaces (CNI) depending on the version. After 7/23/2024, you can choose between Calico-VXLAN and Calico-eBPF CNIs when creating a cluster, with Calico-VXLAN being the default setting. Flannel and Calico-VXLAN CNIs organize container workload into an overlay network and communicate using VXLAN. Calico-eBPF organizes container workloads into BGP routing protocols, communicating directly based on eBPF technology, with some segments communicating using VXLAN. For more information about eBPF in Calico, see [about eBPF](https://docs.tigera.io/calico/latest/about/kubernetes-training/about-ebpf).
+NHN Kubernetes Service (NKS) provides alternative Container Network Interface (CNI) options through its add-on features. As of February 2026, you can select either Calico-VXLAN or Calico-eBPF during cluster creation, with Calico-VXLAN assigned as the default configuration. Calico-eBPF utilizes the BGP routing protocol for container workloads and leverages eBPF technology for direct communication, while certain segments—such as NodePort—rely on VXLAN.
 
-In addition, Rocky and Ubuntu are the only OSes for which you can choose Calico-eBPF CNI, while Flannel and Calico-VXLAN support all OSes (Centos, Rocky, Red Hat, Ubuntu).
+OS limitations selectable by CNI are as follows:
+
+| CNI | Available OS |
+| :-: | :-: |
+| Flannel |Centos, Rocky, Red Hat, Ubuntu |
+| Calico-VXLAN |Centos, Rocky, Red Hat, Ubuntu |
+| Calico-eBPF | Rocky, Ubuntu |
+
 
 <a id="calico-cni-types"></a>
 ### Calico CNI Types
@@ -2091,7 +2155,7 @@ If you don't use enhanced security rules, additional security rules are created 
 
 <a id="addon-mgmt"></a>
 ## Add-on Management
-An add-on is a component that is not a required component of a Kubernetes cluster, but is provided to extend the functionality of an NKS cluster or to provide specialized functionality. Add-ons can include components that perform functions such as networking, service discovery, monitoring, storage provisioning, and more. Users can install/update/remove add-ons provided by NHN Cloud to the cluster through the add-on management feature.
+An add-on is a component that is not a required component of a Kubernetes cluster, but is provided to extend the functionality of an NKS cluster or to provide specialized functionality. Add-ons can include components that perform functions such as networking, service discovery, monitoring, storage provisioning, and more. Users can install/change/remove add-ons provided by NHN Cloud to the cluster through the add-on management feature.
 
 > [Caution]
 Add-on management features are not available for clusters that do not have the NKS registry enabled.
@@ -2101,42 +2165,42 @@ Add-on management features are not available for clusters that do not have the N
 This section describes how the add-on management feature works.
 
 #### Server-side apply
-When installing/updating addons to a cluster using the addon management feature, Kubernetes' Server-side apply is used. Client-side apply is where the client computes the resource state locally and sends the entire resource to the API server. Server-side apply, on the other hand, allows the API server to perform resource merging and field ownership management, allowing the API server to perform resource merging and conflict detection. For more information about server-side apply, see [Server-side apply](https://kubernetes.io/docs/reference/using-api/server-side-apply/).
+When installing/changing addons to a cluster using the addon management feature, Kubernetes' Server-side apply is used. Client-side apply is where the client computes the resource state locally and sends the entire resource to the API server. Server-side apply, on the other hand, allows the API server to perform resource merging and field ownership management, allowing the API server to perform resource merging and conflict detection. For more information about server-side apply, see [Server-side apply](https://kubernetes.io/docs/reference/using-api/server-side-apply/).
 
 
 #### Conflict Resolution Options
-Conflicts may occur during add-on installation or updates if users have modified fields that are managed by the add-on. Users can resolve these conflicts by selecting the appropriate conflict resolution option during installation or updates. The Add-on Management feature provides the following conflict resolution options.
+Conflicts may occur during add-on installation or updates if users have modified fields that are managed by the add-on. Users can resolve these conflicts by selecting the appropriate conflict resolution option during installation or changes. The Add-on Management feature provides the following conflict resolution options.
 
-* None: If a conflict occurs, the install/update will not be applied, and the install/update request will be treated as a failure.
+* None: If a conflict occurs, the install/change will not be applied, and the install/change request will be treated as a failure.
 * Overwrite: In the event of a conflict, overwrites the conflicting field with the default value defined by the add-on.
 * Preserve: When a conflict occurs, the conflicting field is preserved with its existing value.
 
 > [Caution when changing versions]
-> When changing add-on versions, the default settings for required components may change. Conflicts can occur even if the user doesn't directly change these fields. Selecting "None" or "Preserve" for the conflict handling option may cause add-on installation/update failure. You can prevent conflicts by selecting "Override" for the conflict handling option.
+> When changing add-on versions, the default settings for required components may change. Conflicts can occur even if the user doesn't directly change these fields. Selecting "None" or "Preserve" for the conflict handling option may cause add-on installation/change failure. You can prevent conflicts by selecting "Override" for the conflict handling option.
 
 > [Caution about the Preserve option]
 You can't preserve all changes to the resources that make up an add-on.
-If a conflict occurs in a non-preservable field, the install/update operation will fail.
+If a conflict occurs in a non-preservable field, the install/change operation will fail.
 
 #### Main Features
-You can install/update/remove add-ons to the cluster using the add-on management feature.
+You can install/change/remove add-ons to the cluster using the add-on management feature.
 
 * Installation
     * Install the add-on on the cluster.
     * Install by specifying the add-on version and add-on-specific options.
     * Specify conflict resolution options during installation.
-* Update
-    * Update the addons that are installed in the cluster.
+* Change
+    * Change the addons that are installed in the cluster.
     * You can change add-on versions, add-on-specific options, and more.
         * Depending on the add-on, you might not be able to change the option.
-    * Specify conflict resolution options when updating.
+    * Specify conflict resolution options when changing.
 * Removals
     * Remove all resources that make up the add-on from the cluster.
     * However, required types cannot be removed.
 
 > [Note]
 Upgrades of components such as CNI and CoreDNS are no longer provided through the Kubernetes version upgrade feature.
-Instead, you can update the version of each add-on using the add-on update feature.
+Instead, you can change the version of each add-on using the add-on change feature.
 
 #### Enable Add-on Management
 Existing clusters without the Add-on Management feature enabled can still use it. In clusters where add-ons have not been configured, components such as Calico and CoreDNS may still be running, but the system will show that the add-ons are not installed. In this case, you can install each add-on manually, after which they can be managed through the Add-on Management feature. If you have modified the configuration of resources that make up an add-on, selecting the 'Preserve' option during installation allows you to retain the existing resource settings.
@@ -2166,9 +2230,20 @@ Calico is a CNI plugin that provides networking and network security for Kuberne
     * mode
         * Determine Calico's mode of operation.
         * Supported modes of operation: VXLAN, EBPF
+* Immutable resources and fields
+    * Deployment/calico-kube-controllers, namespace kube-system
+        * .spec.template.spec.containers[name="calico-kube-controllers"].image 
+    * Deployment/calico-typha, namespace kube-system
+        * .spec.template.spec.containers[name="calico-typha"].image
+    * DaemonSet/calico-node, namespace kube-system
+        * .spec.template.spec.initContainers[name="install-cni"].image
+        * .spec.template.spec.initContainers[name="mount-bpffs"].image
+        * .spec.template.spec.containers[name="calico-node"].image
 * Supported version list
-    * v3.28.1-nks1
+* v3.28.2-nks1
+    * v3.28.2-nks2: Improved stability for add-on management.
     * v3.30.2-nks1
+    * v3.30.2-nks2: Improved stability for add-on management.
 
 <a id="addon-mgmt-addon-coredns"></a>
 #### CoreDNS
@@ -2176,7 +2251,20 @@ CoreDNS is the default DNS server for a Kubernetes cluster.
 
 * Type: kube-dns
 * Options: None
-* Supported version list: v1.8.3-nks1
+* Immutable resources and fields
+    * Deployment/coredns, namespace kube-system
+        * .spec.template.spec.containers[name="coredns"].image'
+* Supported versions
+    * 1.8.4-nks1
+    * 1.8.4-nks2
+        * Improved stability for add-on management.
+        * Adjusted immutable resources and fields.
+            * Deployment/coredns, namespace kube-system
+                * Removed .metadata.labels.k8s-app
+                * Removed .metadata.labels.kubernetes.io/name
+                * Removed .spec.template.spec.nodeSelector
+                * Removed .spec.template.spec.serviceAccountName
+
 
 <a id="addon-mgmt-addon-cinder-csi-plugin">
 #### Cinder CSI Plugin
@@ -2184,9 +2272,30 @@ The Cinder CSI Plugin is a CSI driver that allows you to provision and manage bl
 
 * Type: cinder-csi-plugin
 * Options: None
+* Immutable resources and fields
+    * StatefulSet/csi-cinder-controllerplugin, namespace kube-system
+        * .spec.template.spec.containers[name="csi-attacher"].image
+        * .spec.template.spec.containers[name="csi-provisioner"].image
+        * .spec.template.spec.containers[name="csi-snapshotter"].image
+        * .spec.template.spec.containers[name="csi-resizer"].image
+        * .spec.template.spec.containers[name="cinder-csi-plugin"].image
+
 * Supported Versions
     * v1.27.101-nks1
+    * v1.27.101-nks2: Changed internal container versions.
+        * csi-attacher: v3.0.2 → v3.3.0
+        * csi-provisioner: v2.0.4 → v2.2.2
+        * csi-snapshotter: v3.0.2 → v3.0.3
+        * csi-resizer: v1.0.1 → v1.3.0
+        * csi-node-driver-registrar: v2.0.1 → v2.3.0
     * v1.27.102-nks1
+    * v1.27.102-nks2: Changed internal container versions.
+        * csi-attacher: v3.0.2 → v3.3.0
+        * csi-provisioner: v2.0.4 → v2.2.2
+        * csi-snapshotter: v3.0.2 → v3.0.3
+        * csi-resizer: v1.0.1 → v1.3.0
+        * csi-node-driver-registrar: v2.0.1 → v2.3.0
+    * v1.27.102-nks3: Improved stability for add-on management.
 
 <a id="adoon-mgmt-addon-metrics-server">
 #### Metrics Server
@@ -2195,6 +2304,12 @@ Metrics Server is a Kubernetes component that collects resource usage metrics fr
 * Type: metrics-server
 * Options: None
 * Supported Versions: v0.4.4-nks1
+* Immutable resources and fields
+    * Deployment/metrics-server, namespace kube-system
+        * .spec.template.spec.containers[name="metrics-server"].image
+* Supported versions
+    * v0.4.4-nks1
+    * v0.4.4-nks2: Improved stability for add-on management.
 
 <a id="addon-mgmt-addon-snapshot-controller">
 #### Snapshot Controller
@@ -2202,7 +2317,12 @@ The Snapshot Controller is a Kubernetes component that manages the lifecycle of 
 
 * Type: snapshot-controller
 * Options: None
-* Supported Versions: v4.1.1-nks1
+* Immutable resources and fields
+    * Deployment/snapshot-controller, namespace kube-system
+        * .spec.template.spec.containers[name="snapshot-controller"].image
+* Supported versions
+    * v4.1.1-nks1
+    * v4.1.1-nks2: Improved stability for add-on management.
 
 <a id="addon-mgmt-addon-nfs-csi-plugin">
 #### NFS CSI Plugin
@@ -2210,8 +2330,21 @@ The NFS CSI Plugin is a CSI driver that allows you to provision and manage NFS o
 
 * Type: nfs-csi-plugin
 * Options: None
-* Supported Versions: v1.0.1-nks1
-
+* Immutable resources and fields
+    * Deployment/csi-nfs-controller, namespace kube-system
+        * .spec.template.spec.containers[name="csi-provisioner"].image
+        * .spec.template.spec.containers[name="csi-snapshotter"].image
+        * .spec.template.spec.containers[name="liveness-probe"].image
+        * .spec.template.spec.containers[name="nfs"].image
+    * DaemonSet/csi-nfs-node, namespace kube-system
+        * .spec.template.spec.containers[name="liveness-probe"].image
+        * .spec.template.spec.containers[name="node-driver-registrar"].image
+        * .spec.template.spec.containers[name="nfs"].image
+* Supported versions
+    * v1.0.1-nks1
+    * v1.0.1-nks2
+        * Improved stability for add-on management.
+        * Fixed missing validation for immutable resources/fields.
 
 <a id="loadbalancer-service"></a>
 ## LoadBalancer Service
@@ -3555,8 +3688,9 @@ The storage class allows you to set the following parameters:
     * **General HDD**: The storage type is set to HDD.
     * **General SSD**: The storage type is set to SSD.
 * Availability zone (availability): Set the availability zone. (If not entered, it will be set randomly.)
-    * Pangyo Region: **kr-pub-a** or **kr-pub-b**
+    * Pangyo region: **kr-pub-a** or **kr-pub-b**
     * Pyeongchon region: **kr2-pub-a** or **kr2-pub-b**
+    * Gwangju region: **kr3-pub-a** or **kr3-pub-b**    
 
 #### Volume Binding Mode (VolumeBindingMode)
 A volume binding mode controls the time when volume binding and dynamic provisioning start. This setting is configurable only if the storage provider is cinder.csi.openstack.org. 
@@ -3970,7 +4104,8 @@ Refer to [](https://oras.land/docs/installation)ORAS installation[](https://oras
 | | X | oras pull private-dfe965c3-kr1-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v1 |
 | Korea (Pyengchon) region | O | oras pull 6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/oci/nfs-deploy-tool:v1 |
 | | X | oras pull private-6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/oci/nfs-deploy-tool:v1 |
-
+| 한국(Gwangju) 리전 | O | oras pull d6628457-kr3-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v2 |
+| | X | oras pull private-d6628457-kr3-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v2 |
 
 > [Note]
 The csi-driver-nfs container images and artifacts are maintained in NHN Cloud NCR. Since the cluster configured in a closed network environment is not connected to the Internet, it is necessary to configure the environment to use a private URI in order to receive images and artifacts normally. For information on how to use Private URI, refer to the [NHN Cloud Container Registry (NCR) User Guide](Container/NCR/ko/user-guide/#private-uri).
@@ -3979,8 +4114,9 @@ The csi-driver-nfs container images and artifacts are maintained in NHN Cloud NC
 Enter the correct {REGISTRY} and {INTERNET_USAGE} values based on the region where the cluster was created and the availability of internet connectivity. 
 
 * {REGISTRY}
-  * Korea (Pangyo) Region: **dfe965c3-kr1-registry.container.nhncloud.com**
-  * Korea (Pyeongchon) Region: **6e7f43c6-kr2-registry.container.cloud.toast.com**
+  * Korea (Pangyo) region: **dfe965c3-kr1-registry.container.nhncloud.com**
+  * Korea (Pyeongchon) region: **6e7f43c6-kr2-registry.container.cloud.toast.com**
+  * Korea (Gwangju) region: **d6628457-kr3-registry.container.nhncloud.com**
 * {INTERNET_USAGE}
   * Cluster available for internet connection: **true**
   * Cluster unavailable for internet connection: **false**
@@ -4434,6 +4570,8 @@ If the tag of the cinder-csi-plugin image is less than v1.27.101, you can update
 | | X | private-dfe965c3-kr1-registry.container.nhncloud.com/container_service/cinder-csi-plugin:v1.27.101 |
 | Korea (Pyeongchon) region | O | 6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/cinder-csi-plugin:v1.27.101 |
 | | X | private-6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/cinder-csi-plugin:v1.27.101 |
+| Korea (Gwangju) region | O | d6628457-kr3-registry.container.nhncloud.com/container_service/cinder-csi-plugin:v1.27.101 |
+| | X | private-d6628457-kr3-registry.container.nhncloud.com/container_service/cinder-csi-plugin:v1.27.101 |
 
 ##### 1. Enter a valid cinder-csi-plugin image value for container_image.
 ```
@@ -4512,3 +4650,34 @@ parameters:
 ```
 
 The process of creating a PVC manifest and mounting it to a Pod is the same as dynamic provisioning for general block storage. For more information, see [Dynamic Provisioning](/Container/NKS/en/user-guide/#dynamic-provisioning).
+
+
+
+
+<a id="etcd-encryption-with-skm"></a>
+### Secure Key Manager Service Integration for Secret Data Encryption and Decryption
+
+NKS cluster encrypts secret resources before storing them in the data store (etcd). NKS offers two distinct methods for encrypting this sensitive data.
+
+#### Standard
+
+* Automatically generate symmetric keys during cluster creation and stores them in the control plane
+* Encrypt etcd data with the key
+* Key management is handled internally within the cluster
+
+#### SKM Integration
+
+* Configure Secure Key Manager (SKM) as the storage encryption provider
+* Perform encryption and decryption of etcd data via the SKM API
+* Enable centralized key management and audit logging
+
+> [Caution]
+> Deleting SKM symmetric keys or rotated key versions associated with the cluster will result in critical system failures.
+> * Cluster startup failure due to the inability to decrypt etcd data
+> * Inaccessibility of encrypted resources
+> * Potential for permanent and irrecoverable data loss
+
+> Note: how to safely delete the rotated key version
+> Forcing a rewrite of all secret resources triggers a re-encryption of the data using the latest key version.
+> Once all secret resources have been re-encrypted using the command below, you can safely delete the rotated key versions.
+> `kubectl get secrets --all-namespaces -o json | kubectl replace -f -`

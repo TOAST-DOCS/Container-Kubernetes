@@ -7,7 +7,7 @@ All API calls are made using the `kubernetes` type endpoint.
 
 | Type | Region | Endpoint |
 |---|---|---|
-| kubernetes | Korea (Pangyo) Region <br> Korea (Pyeongchon) Region | https://kr1-api-kubernetes-infrastructure.nhncloudservice.com <br>https://kr2-api-kubernetes-infrastructure.nhncloudservice.com |
+| kubernetes | Korea (Pangyo) Region <br> Korea (Pyeongchon) Region<br>Korea (Gwangju) Region | https://kr1-api-kubernetes-infrastructure.nhncloudservice.com <br>https://kr2-api-kubernetes-infrastructure.nhncloudservice.com <br>https://kr3-api-kubernetes-infrastructure.nhncloudservice.com |
 
 
 Fields not specified in the guide may appear in API responses. These fields are used for internal use by NHN Cloud and are subject to change without prior notice, so we advise you not to use them.
@@ -526,7 +526,6 @@ X-Auth-Token: {tokenId}
 | labels.pods_network_subnet | Body | Integer | X |  Cluster Pod subnet size. See pods_network_subnet input rules |
 | labels.ncr_sgw | Body | String | X | Service gateway UUID of NCR type<br>But, only created in the same VPC as the cluster VPC. |
 | labels.obs_sgw | Body | String | X | Service gateway UUID of OBS type<br>But, only created in the same VPC as the cluster VPC. |
-| labels.cni_driver | Body | String | X | Set up CNI, Selectable CNI list: calico (default),calico-ebpf<br>calico: Created as Calico-VXLAN<br>calico-ebpf: Created as Calico-eBPF |
 | labels.extra_security_groups | Body | Array | X | Applied to the default worker node group: List of additional security group objects |
 | labels.extra_security_groups[].target_subnet | UUID | X | Cluster Pod subnet size. See pods_network_subnet input rules | The UUID of a subnet to be specified by additional security groups |
 | labels.extra_security_groups[].security_group_ids | Body | String | X | List of additional security group UUIDs (comma-separated) |
@@ -543,7 +542,7 @@ X-Auth-Token: {tokenId}
 | labels.fip_auto_bind_enable | Body | String | X | Applied to the default worker node group: Auto-assign floating IP: Whether to enable the feature ("True" / "False") |
 | labels.fip_bind_subnet | Body | String | X | Applied to the default worker node group: Auto-assign floating IP: Subnet of the network interface to which the floating IP is connected |
 | labels.fip_selector | Body | String | X | Applied to the default worker node group: Auto-assign floating IP: Identifier for selecting a floating IP to assign to nodes |
-| labels.k8s_node_labels | Body | String | Applied to the default worker node group: Setting Kubernetes Labels |
+| labels.k8s_node_labels | Body | String | X | Applied to the default worker node group: Setting Kubernetes Labels |
 | flavor_id | Body | UUID | O | Applied to the default worker node group: Node instance flavor UUID |
 | fixed_network | Body | UUID | O | VPC Network UUID |
 | fixed_subnet | Body | UUID | O | VPC subnet UUID. Note the rules for entering fixed_subnet, pods_network_cidr, and service_cluster_ip_range. |
@@ -1398,7 +1397,7 @@ X-Auth-Token: {tokenId}
 | labels.fip_auto_bind_enable | Body | String | X | Auto-assign floating IP: Whether to enable the feature ("True" / "False") |
 | labels.fip_bind_subnet | Body | String | X | Auto-assign floating IP: The subnet of the network interface to which the floating IP is connected |
 | labels.fip_selector | Body | String | X | Auto-assign floating IP: An identifier for selecting a floating IP to assign to a node |
-| labels.k8s_node_labels | Body | String | Setting up Kubernetes labels |
+| labels.k8s_node_labels | Body | String | X | Setting up Kubernetes labels |
 | name | Body | String | O | Node Group Name |
 | node_count | Body | Integer | X | Number of nodes (Default: 1) |
 
