@@ -115,6 +115,7 @@ X-Auth-Token: {tokenId}
 | clusters.labels.cert_manager_api | Body | String | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
 | clusters.labels.strict_sg_rules | Body | String | 워커 노드 보안 그룹에 필수 보안 규칙만 생성("True" / "False"), (2024.03.05. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.skm | Body | String | etcd 암호화에 적용된 SKM 대칭 키 ID. `{"key_id": "${SKM_KEY_ID}"}` 형식의 JSON 객체를 스트링으로 출력 |
 | clusters.labels.additional_network_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 네트워크 UUID 목록(콜론으로 구분) |
 | clusters.labels.additional_subnet_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 서브넷 UUID 목록(콜론으로 구분) |
 | clusters.labels.cni_driver | Body | String | 클러스터 CNI(2023.03.31. 이후에 생성된 클러스터에서 확인 가능) |
@@ -243,6 +244,7 @@ X-Auth-Token: {tokenId}
 | labels.cert_manager_api | Body | String | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
 | labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
 | labels.strict_sg_rules | Body | String | 워커 노드 보안 그룹에 필수 보안 규칙만 생성("True" / "False"), (2024.03.05. 이후에 생성된 클러스터에서 확인 가능) |
+| labels.skm | Body | String | etcd 암호화에 적용된 SKM 대칭 키 ID. `{"key_id": "${SKM_KEY_ID}"}` 형식의 JSON 객체를 스트링으로 출력 |
 | labels.additional_network_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 네트워크 UUID 목록(콜론으로 구분) |
 | labels.additional_subnet_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 서브넷 UUID 목록(콜론으로 구분) |
 | labels.cni_driver | Body | String | 클러스터 CNI(2023.03.31. 이후에 생성된 클러스터에서 확인 가능) |
@@ -531,6 +533,7 @@ X-Auth-Token: {tokenId}
 | labels.extra_volumes[].volume_appkey | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키의 앱키 |
 | labels.extra_volumes[].volume_mount_path | Body | String | X | 추가 블록 스토리지가 마운트될 경로 |
 | labels.control_plane_log | Body | String | X | K8S 컨트롤 플레인 로그 저장 활성화 |
+| labels.skm | Body | String | X | SKM 연동해 etcd 암호화 적용. `{"key_id": "${SKM_KEY_ID}"}` 형식의 JSON 객체를 스트링으로 출력한 값을 사용 |
 | labels.fip_auto_bind_enable | Body | String | X | 플로팅 IP 자동 할당: 기능 활성화 여부 ("True" / "False") |
 | labels.fip_bind_subnet | Body | String | X | 플로팅 IP 자동 할당: 플로팅 IP가 연결되는 네트워크 인터페이스의 서브넷 |
 | labels.fip_selector | Body | String | X | 플로팅 IP 자동 할당: 노드에 할당할 플로팅 IP를 선별하기 위한 식별자 |
