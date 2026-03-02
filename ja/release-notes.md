@@ -1,5 +1,34 @@
 ## Container > Kubernetes > リリースノート
 
+### 2026. 03. 10.
+
+#### プラットフォームバージョンアップデート
+* 1.202602.0が追加されました。
+    * Kubernetes互換バージョン：v1.29–v1.33
+    * 機能追加
+        * Kubernetesテイント設定機能
+        * Kubernetesコンポーネント設定機能 max-pods設定対応
+        * Secure Key Managerを使用したetcdデータ暗号化対応
+        * CGroup v2 OSイメージ対応
+    * 機能改善
+        * ノード及びノードグループ削除時のロードバランサートラフィック消失改善
+
+#### アドオンアップデート
+* 次のアドオンが追加されました。
+    * calico v3.30.2-nks2
+    * coredns 1.8.4-nks2
+    * metrics_server v0.4.4-nks2
+    * cinder_csi_plugin v1.27.102-nks3
+    * snapshot_controller v4.1.1-nks2
+    * nfs_csi_plugin v1.0.1-nks2
+
+#### 機能追加
+* CGroupがv2に設定されたOSイメージに対応します。
+    * 2026年3月以降に配布されるOSイメージは、CGroupがv2に設定されています。
+* Kubernetesコンポーネント設定機能により、kubeletの--max-podsを設定できます。
+* Kubernetesテイント設定機能が追加されました。
+* Secure Key Managerサービスを利用して、クラスターの機密データを暗号化/復号できます。
+
 ### 2025. 12. 23.
 
 #### プラットフォームバージョンのアップデート
