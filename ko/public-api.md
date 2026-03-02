@@ -7,7 +7,7 @@ API를 사용하려면 API 엔드포인트와 토큰 등이 필요합니다. [AP
 
 | 타입 | 리전 | 엔드포인트 |
 |---|---|---|
-| kubernetes | 한국(판교) 리전<br>한국(평촌) 리전 | https://kr1-api-kubernetes-infrastructure.nhncloudservice.com <br>https://kr2-api-kubernetes-infrastructure.nhncloudservice.com |
+| kubernetes | 한국(판교) 리전<br>한국(평촌) 리전<br>한국(광주) 리전 | https://kr1-api-kubernetes-infrastructure.nhncloudservice.com <br>https://kr2-api-kubernetes-infrastructure.nhncloudservice.com <br>https://kr3-api-kubernetes-infrastructure.nhncloudservice.com |
 
 
 API 응답에 가이드에 명시되지 않은 필드가 나타날 수 있습니다. 이런 필드는 NHN Cloud 내부 용도로 사용되며 사전 공지 없이 변경될 수 있으므로 사용하지 않습니다.
@@ -114,6 +114,7 @@ X-Auth-Token: {tokenId}
 | clusters.labels.cert_manager_api | Body | String | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
 | clusters.labels.strict_sg_rules | Body | String | 워커 노드 보안 그룹에 필수 보안 규칙만 생성("True" / "False"), (2024.02.27. 이후에 생성된 클러스터에서 확인 가능) |
+| clusters.labels.skm | Body | String | etcd 암호화에 적용된 SKM 대칭 키 ID. `{"key_id": "${SKM_KEY_ID}"}` 형식의 JSON 객체를 스트링으로 출력 |
 | clusters.labels.additional_network_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 네트워크 UUID 목록(콜론으로 구분) |
 | clusters.labels.additional_subnet_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 서브넷 UUID 목록(콜론으로 구분) |
 | clusters.labels.cni_driver | Body | String | 클러스터 CNI(2023.03.31. 이후에 생성된 클러스터에서 확인 가능) |
@@ -245,6 +246,7 @@ X-Auth-Token: {tokenId}
 | labels.cert_manager_api | Body | String | CSR(Certificate Signing Request) 기능 활성화 여부. 반드시 "True" 로 설정 |
 | labels.master_lb_floating_ip_enabled | Body | String | Kubernetes API 엔드포인트에 공인 도메인 주소 생성 여부 ("True" / "False") |
 | labels.strict_sg_rules | Body | String | 워커 노드 보안 그룹에 필수 보안 규칙만 생성("True" / "False"), (2024.02.27. 이후에 생성된 클러스터에서 확인 가능) |
+| labels.skm | Body | String | etcd 암호화에 적용된 SKM 대칭 키 ID. `{"key_id": "${SKM_KEY_ID}"}` 형식의 JSON 객체를 스트링으로 출력 |
 | labels.additional_network_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 네트워크 UUID 목록(콜론으로 구분) |
 | labels.additional_subnet_id_list | Body | String | 기본 워커 노드 그룹 적용: 추가 네트워크의 VPC 서브넷 UUID 목록(콜론으로 구분) |
 | labels.cni_driver | Body | String | 클러스터 CNI(2023.03.31. 이후에 생성된 클러스터에서 확인 가능) |
@@ -529,7 +531,6 @@ X-Auth-Token: {tokenId}
 | labels.pods_network_subnet | Body | Integer | X |  클러스터 파드 서브넷 크기. pods_network_subnet 입력 규칙 참고 |
 | labels.ncr_sgw | Body | String | X | NCR 타입의 서비스 게이트웨이 UUID<br>단, 클러스터 VPC와 동일한 VPC에 생성된 것에 한함. |
 | labels.obs_sgw | Body | String | X | OBS 타입의 서비스 게이트웨이 UUID<br>단, 클러스터 VPC와 동일한 VPC에 생성된 것에 한함. |
-| labels.cni_driver | Body | String | X | CNI 설정, 선택 가능 CNI 목록: calico(기본), calico-ebpf<br>calico: Calico-VXLAN으로 생성<br>calico-ebpf: Calico-eBPF로 생성 |
 | labels.extra_security_groups | Body | Array | X | 기본 워커 노드 그룹 적용: 추가 보안 그룹 객체 목록 |
 | labels.extra_security_groups[].target_subnet | Body | String | X | 추가 보안 그룹 지정 대상 서브넷 UUID |
 | labels.extra_security_groups[].security_group_ids | Body | String | X | 추가 보안 그룹 UUID 목록(쉼표로 구분) |
@@ -540,13 +541,14 @@ X-Auth-Token: {tokenId}
 | labels.extra_volumes[].volume_appkey | Body | String | X | (암호화된 블록 스토리지를 사용하는 경우) 암호화된 블록 스토리지에 적용할 대칭 키의 앱키 |
 | labels.extra_volumes[].volume_mount_path | Body | String | X | 추가 블록 스토리지가 마운트될 경로 |
 | labels.control_plane_log | Body | String | X | K8S 컨트롤 플레인 로그 저장 활성화 |
+| labels.skm | Body | String | X | SKM 연동해 etcd 암호화 적용. `{"key_id": "${SKM_KEY_ID}"}` 형식의 JSON 객체를 스트링으로 출력한 값을 사용 |
 | labels.fip_auto_bind_enable | Body | String | X | 플로팅 IP 자동 할당: 기능 활성화 여부 ("True" / "False") |
 | labels.fip_bind_subnet | Body | String | X | 플로팅 IP 자동 할당: 플로팅 IP가 연결되는 네트워크 인터페이스의 서브넷 |
 | labels.fip_selector | Body | String | X | 플로팅 IP 자동 할당: 노드에 할당할 플로팅 IP를 선별하기 위한 식별자 |
 | labels.fip_auto_bind_enable | Body | String | X | 기본 워커 노드 그룹 적용: 플로팅 IP 자동 할당: 기능 활성화 여부 ("True" / "False") |
 | labels.fip_bind_subnet | Body | String | X | 기본 워커 노드 그룹 적용: 플로팅 IP 자동 할당: 플로팅 IP가 연결되는 네트워크 인터페이스의 서브넷 |
 | labels.fip_selector | Body | String | X | 기본 워커 노드 그룹 적용: 플로팅 IP 자동 할당: 노드에 할당할 플로팅 IP를 선별하기 위한 식별자 |
-| labels.k8s_node_labels | Body | String | 기본 워커 노드 그룹 적용: Kubernetes 레이블 설정 |
+| labels.k8s_node_labels | Body | String | X | 기본 워커 노드 그룹 적용: Kubernetes 레이블 설정 |
 | flavor_id | Body | UUID | O | 기본 워커 노드 그룹 적용: 노드 인스턴스 타입 UUID |
 | fixed_network | Body | UUID | O | VPC 네트워크 UUID |
 | fixed_subnet | Body | UUID | O | VPC 서브넷 UUID. fixed_subnet, pods_network_cidr, service_cluster_ip_range 입력 규칙 참고 |
@@ -1405,7 +1407,7 @@ X-Auth-Token: {tokenId}
 | labels.fip_auto_bind_enable | Body | String | X | 플로팅 IP 자동 할당: 기능 활성화 여부 ("True" / "False") |
 | labels.fip_bind_subnet | Body | String | X | 플로팅 IP 자동 할당: 플로팅 IP가 연결되는 네트워크 인터페이스의 서브넷 |
 | labels.fip_selector | Body | String | X | 플로팅 IP 자동 할당: 노드에 할당할 플로팅 IP를 선별하기 위한 식별자 |
-| labels.k8s_node_labels | Body | String | Kubernetes 레이블 설정 |
+| labels.k8s_node_labels | Body | String | X | Kubernetes 레이블 설정 |
 | name | BODY | String | O | 노드 그룹 이름 |
 | node_count | Body | Integer | X | 노드 수(기본값: 1) |
 
