@@ -160,7 +160,7 @@ $ helm install velero vmware-tanzu/velero \
 | 項目 | 説明 |
 | --- | --- |
 | Container | Object Sotrageで使用するコンテナ名 |
-| Region | 韓国(パンギョ)リージョン：`KR1`<br>韓国(坪村)リージョン：`KR2` |
+| Region | 韓国(パンギョ)リージョン：`KR1`<br>韓国(坪村)リージョン：`KR2`<br>韓国(クァンジュ)リージョン: `KR3` |
 | IDサービス(Identity) | API Endpoint設定のIDサービス(Identity) |
 | テナントID | API Endpoint設定のテナントID |
 | NHN Cloud ID | NHN Cloud ID |

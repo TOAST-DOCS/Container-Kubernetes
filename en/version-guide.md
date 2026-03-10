@@ -78,7 +78,7 @@ To ensure stable service operation, we apply a service support policy for each K
 | Version | Release | End of Service Support (Upgrade Support) | End of Service Support (EOS) |
 |------|--------|---------------------------------|---------------------|
 | v1.28.3 | 2024.02 | 2025.11.30 | 2025.11.30 |
-| v1.29.3 | 2024.05 | 2026.02.28 (Planned) | February 28, 2026 (Planned) |
+| v1.29.3 | 2024.05 | 2026.02.28 | February 28, 2026 |
 | v1.30.3 | August 2024 | May 31, 2026 (Planned) | May 31, 2026 (Planned) |
 | v1.31.4 | February 2025 | August 31, 2026 (Planned) | August 31, 2026 (Planned) |
 | v1.32.3 | May 2025 | February 28, 2027 (Planned) | February 28, 2027 (Planned) |
@@ -92,3 +92,5 @@ To ensure stable service operation, we apply a service support policy for each K
 |------|------------|--------------------|-----|
 | 1.202505.0 | 2025.11 | v1.28–v1.32 | Indicates a cluster that does not have a platform version applied. |
 | 1.202511.0 | 2025.11 | v1.28–v1.33 | Initial release of the platform version |
+| 1.202511.1 | 2025.12 | v1.28–v1.33 | Fixed an issue for health check port configuration |
+| 1.202602.0 | 2026.02 | v1.29–v1.33 | Added features<br>- Kubernetes taint configuration <br>- Support for Kubernetes component configuration for max-pods <br>- Support for etcd data encryption with Secure Key Manager <br>- Support for CGroup v2 OS image<br><br>Feature Updates<br>- Support for improved traffic handling during node and node group deletion |

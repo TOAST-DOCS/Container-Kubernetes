@@ -34,6 +34,8 @@ $ REGISTRY="{リージョン別レジストリ}"
 | | X | private-dfe965c3-kr1-registry.container.nhncloud.com/container_service/istio |
 | 韓国(ピョンチョン)リージョン | O | 6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/istio |
 | | X | private-6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/istio |
+| 韓国(クァンジュ)リージョン | O | d6628457-kr3-registry.container.nhncloud.com/container_service/istio |
+| | X | private-d6628457-kr3-registry.container.nhncloud.com/container_service/istio |
 
 > [参考]
 > インターネットに接続されていないクラスタがNCRレジストリを使用するためには、Private URIを使用するための環境設定が必要です。Private URIの使用方法の詳細は[NHN Cloud Container Registry(NCR)ユーザーガイド](/Container/NCR/ja/user-guide/#private-uri)を参照してください。
