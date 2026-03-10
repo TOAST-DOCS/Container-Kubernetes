@@ -1,5 +1,49 @@
 ## Container > NHN Kubernetes Service (NKS) > Release Notes
 
+### March 10, 2026
+
+#### Platform Version Updates
+* Added 1.202602.0.
+    * Kubernetes compatible version: v1.29–v1.33
+    * Added Features
+        * Kubernetes taint configuration
+        * Support for Kubernetes component configuration for max-pods
+        * Support for etcd data encryption with Secure Key Manager
+        * Support for CGroup v2 OS image
+    * Feature Updates
+        * Support for improved traffic handling during node and node group deletion
+
+#### Add-on Updates
+* The following add-ons are added:
+    * calico v3.30.2-nks2
+    * coredns 1.8.4-nks2
+    * metrics_server v0.4.4-nks2
+    * cinder_csi_plugin v1.27.102-nks3
+    * snapshot_controller v4.1.1-nks2
+    * nfs_csi_plugin v1.0.1-nks2
+
+#### Added Features
+* Support for OS images with CGroup v2 enabled.
+    * Starting from March 2026, all new OS image deployments will be configured with CGroup v2.
+* Configure the kubelet --max-pods parameter through the Kubernetes configuration.
+* Added Kubernetes taint configuration feature.
+* Enable encryption and decryption of sensitive cluster data using the Secure Key Manager service.
+
+### December 23, 2025
+
+#### Platform Version Updates
+* Added 1.202511.1.
+    * Fixed an issue for configurating health check port configuration.
+
+#### Add-on Updates
+* Added Cinder CSI Plugin v1.27.101-nks2, v1.27.102-nks2.
+    * Updated internal container versions as follows:
+        * csi-attacher: v3.0.2 → v3.3.0
+        * csi-provisioner: v2.0.4 → v2.2.2
+        * csi-snapshotter: v3.0.2 → v3.0.3
+        * csi-resizer: v1.0.1 → v1.3.0
+        * csi-node-driver-registrar: v2.0.1 → v2.3.0
+
 ### November 25, 2025
 
 #### Changed Service Support Policy
