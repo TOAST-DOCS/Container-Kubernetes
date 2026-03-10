@@ -34,6 +34,9 @@ NKS provides installation only for the Istio versions specified in the table abo
 | | X | private-dfe965c3-kr1-registry.container.nhncloud.com/container_service/istio |
 | Korea (Pyeongchon) region | O | 6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/istio |
 | | X | private-6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/istio |
+| Korea (Gwangju) Region | O | d6628457-kr3-registry.container.nhncloud.com/container_service/istio |
+| | X | private-d6628457-kr3-registry.container.nhncloud.com/container_service/istio |
+
 
 > [Note]
 For clusters to use NCR registries that are not connected to the internet, it is necessary to configure an environment to use a private URI. For information on how to use Private URI, refer to the [](/Container/NCR/ko/user-guide/#private-uri)NHN Cloud Container Registry (NCR) User Guide[](/Container/NCR/ko/user-guide/#private-uri).
