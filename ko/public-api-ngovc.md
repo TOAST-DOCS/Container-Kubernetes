@@ -44,7 +44,7 @@ GET /v2.0/networks?router:external=True
 
 노드를 생성할 가용성 영역 UUID를 입력합니다. 가용성 영역 목록 조회 API에 대한 좀 더 자세한 내용은 [가용성 목록 보기](/Compute/Instance/ko/public-api-ngovc/#_9)를 참고하세요.
 
-### 키페어 UUID
+### 키페어 명
 
 노드 접속 시 사용할 키페어를 입력합니다. 키페어 목록 조회 API에 대한 좀 더 자세한 내용은 [키페어 목록 보기](/Compute/Instance/ko/public-api-ngovc/#_13)를 참고하세요.
 
@@ -92,7 +92,7 @@ X-Auth-Token: {tokenId}
 | clusters.uuid | Body | UUID | 클러스터 UUID |
 | clusters.name | Body | String | 클러스터 이름 |
 | clusters.flavor_id | Body | UUID | 기본 워커 노드의 인스턴스 타입 UUID|
-| clusters.keypair | Body | UUID | 기본 워커 노드 그룹에 적용된 키페어 UUID |
+| clusters.keypair | Body | UUID | 기본 워커 노드 그룹에 적용된 키페어 명 |
 | clusters.node_count | Body | Integer| 전체 워커 노드 수 |
 | clusters.stack_id | Body | UUID | 컨트롤 플레인과 연결된 heat stack UUID |
 | clusters.status | Body | String | 클러스터 작업 상태 |
@@ -214,7 +214,7 @@ X-Auth-Token: {tokenId}
 | uuid | Body | UUID | 클러스터 UUID |
 | name | Body | String | 클러스터 이름 |
 | flavor_id | Body | UUID | 기본 워커 노드의 인스턴스 타입 UUID|
-| keypair | Body | UUID | 기본 워커 노드 그룹에 적용된 키페어 UUID |
+| keypair | Body | UUID | 기본 워커 노드 그룹에 적용된 키페어 명 |
 | node_count | Body | Integer| 전체 워커 노드 수 |
 | stack_id | Body | UUID | 컨트롤 플레인과 연결된 heat stack UUID |
 | status | Body | String | 클러스터 작업 상태 |
@@ -490,7 +490,7 @@ X-Auth-Token: {tokenId}
 | 이름 | 종류 | 형식 | 필수 | 설명 |
 |---|---|---|---|---|
 | tokenId | Header | String | O | 토큰 ID |
-| keypair | Body | String | O | 기본 워커 노드 그룹에 적용할 키페어 UUID |
+| keypair | Body | String | O | 기본 워커 노드 그룹에 적용할 키페어 명 |
 | name | Body | String | O | 클러스터 이름 |
 | cluster_template_id | Body | String | O | 클러스터 템플릿 ID. 반드시 "iaas_console"로 설정 |
 | node_count | Body | String | O | 기본 워커 노드 그룹에 적용할 노드 수 |

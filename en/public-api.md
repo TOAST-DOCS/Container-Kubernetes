@@ -92,7 +92,7 @@ This API does not require a request body.
 | clusters.uuid | Body | UUID | Cluster UUID |
 | clusters.name | Body | String | Cluster name |
 | clusters.flavor_id | Body | UUID | UUID of the flavor for the default worker node|
-| clusters.keypair | Body | UUID | UUID of the key pair applied to the default worker node group |
+| clusters.keypair | Body | UUID | name of the key pair applied to the default worker node group |
 | clusters.node_count | Body | Integer| Total number of worker nodes |
 | clusters.stack_id | Body | UUID | UUID of the heat stack associated with the control plane |
 | clusters.status | Body | String | Cluster task status |
@@ -215,7 +215,7 @@ This API does not require a request body.
 | uuid | Body | UUID | Cluster UUID |
 | name | Body | String | Cluster name |
 | flavor_id | Body | UUID | UUID of the flavor for the default worker node|
-| keypair | Body | UUID | UUID of the key pair applied to the default worker node group |
+| keypair | Body | UUID | name of the key pair applied to the default worker node group |
 | node_count | Body | Integer| Total number of worker nodes |
 | stack_id | Body | UUID | UUID of the heat stack associated with the control plane |
 | status | Body | String | Cluster task status |
@@ -490,7 +490,7 @@ X-Auth-Token: {tokenId}
 | Name | Type | Format | Required | Description |
 |---|---|---|---|---|
 | tokenId | Header | String | O | Token ID |
-| keypair | Body | String | O | UUID of the key pair applied to the default worker node group |
+| keypair | Body | String | O | name of the key pair applied to the default worker node group |
 | name | Body | String | O | Cluster name |
 | cluster_template_id | Body | String | O | Cluster template ID. Must be set to "iaas_console" |
 | node_count | Body | String | O | Number of nodes to apply to the default worker node group |
