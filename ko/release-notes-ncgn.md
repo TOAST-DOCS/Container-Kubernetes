@@ -1,5 +1,11 @@
 ## Container > NHN Kubernetes Service(NKS) > 릴리스 노트
 
+### 2026. 06. 02.
+
+#### 애드온 업데이트
+* 다음 애드온이 추가되었습니다.
+    * nfs-csi-plugin v1.0.2-nks1
+
 ### 2026. 03. 17.
 
 #### 플랫폼 버전 업데이트
