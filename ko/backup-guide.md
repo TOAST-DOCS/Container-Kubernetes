@@ -123,47 +123,56 @@ $ helm repo add vmware-tanzu https://vmware-tanzu.github.io/helm-charts
 
 Velero 서버는 `백업 클러스터`와 `복구 클러스터`에 각각 설치해야 합니다. 동일한 Object Storage를 사용하도록 `두 클러스터에 동일한 helm 명령어`를 사용하여 설치하시길 권장합니다.
 
+##### OBS S3 인증 secret 생성
+
+OBS 콘솔에서 **S3 API 자격 증명**으로 access_key, secret_key 생성하여 다음과 같이 파일을 생성합니다.
+```
+cat > credentials-velero <<EOF
+[default]
+aws_access_key_id=${access_key 값}
+aws_secret_access_key=${secret_key 값}
+EOF
+```
+
+velero에서 OBS 접근 시 인증에 사용하기 위한 secret을 생성합니다.
+```
+kubectl create namespace velero --dry-run=client -o yaml | kubectl apply -f -
+kubectl create secret generic cloud-credentials \
+  --namespace velero \
+  --from-file=cloud=credentials-velero
+```
+
+##### velero install helm
+
 ```
 $ helm install velero vmware-tanzu/velero \
---namespace velero \
---create-namespace \
+--namespace velero --create-namespace \
 --version 11.0.0 \
---set initContainers[0].name=velero-plugin-for-openstack \
---set initContainers[0].image=lirt/velero-plugin-for-openstack:v0.6.1 \
+--set snapshotsEnabled=false \
+--set credentials.useSecret=true \
+--set credentials.existingSecret=cloud-credentials \
+--set deployNodeAgent=true \
+--set-string configuration.backupStorageLocation[0].config.checksumAlgorithm="" \
+--set configuration.defaultVolumesToFsBackup=true \
+--set configuration.uploaderType=kopia \
+--set initContainers[0].name=velero-plugin-for-aws \
+--set initContainers[0].image=velero/velero-plugin-for-aws:v1.13.2 \
 --set initContainers[0].volumeMounts[0].name=plugins \
 --set initContainers[0].volumeMounts[0].mountPath=/target \
---set configuration.defaultVolumesToRestic=true \
---set configuration.defaultResticPruneFrequency=1m \
+--set configuration.defaultRepoMaintainFrequency=1m \
 --set configuration.backupStorageLocation[0].name=default \
---set configuration.backupStorageLocation[0].provider=community.openstack.org/openstack \
+--set configuration.backupStorageLocation[0].provider=aws \
 --set-string configuration.backupStorageLocation[0].bucket={Container} \
---set-string configuration.backupStorageLocation[0].config.region={Region} \
---set-string configuration.backupStorageLocation[0].config.resticRepoPrefix="swift:{Container}:/restic" \
---set configuration.volumeSnapshotLocation[0].name=default \
---set configuration.volumeSnapshotLocation[0].provider=community.openstack.org/openstack-cinder \
---set configuration.volumeSnapshotLocation[0].config.region={Region} \
---set configuration.extraEnvVars[0].name=OS_AUTH_URL \
---set-string configuration.extraEnvVars[0].value="{신원 서비스(Identity)}" \
---set configuration.extraEnvVars[1].name=OS_TENANT_ID \
---set-string configuration.extraEnvVars[1].value="{테넌트 ID}" \
---set configuration.extraEnvVars[2].name=OS_USERNAME \
---set-string configuration.extraEnvVars[2].value="{NHN Cloud 아이디}" \
---set configuration.extraEnvVars[3].name=OS_PASSWORD \
---set-string configuration.extraEnvVars[3].value="{API 비밀번호}" \
---set configuration.extraEnvVars[4].name=OS_REGION_NAME \
---set-string configuration.extraEnvVars[4].value="{Region}" \
---set configuration.extraEnvVars[5].name=OS_DOMAIN_ID \
---set-string configuration.extraEnvVars[5].value="default" 
+--set-string configuration.backupStorageLocation[0].config.region="{Region}" \
+--set-string configuration.backupStorageLocation[0].config.s3Url="${OBS endpoint}" \   
+--set-string configuration.backupStorageLocation[0].config.s3ForcePathStyle=true
 ```
 
 | 항목 | 설명 |
 | --- | --- |
 | Container | Object Sotrage에서 사용하는 컨테이너 이름 |
 | Region | 한국(판교) 리전: `KR1`<br>한국(평촌) 리전: `KR2`<br>한국(광주) 리전: `KR3` |
-| 신원 서비스(Identity) | API Endpoint 설정의 신원 서비스(Identity) |
-| 테넌트 ID | API Endpoint 설정의 테넌트 ID |
-| NHN Cloud 아이디 | NHN Cloud 아이디 |
-| API 비밀번호 | API Endpoint 설정에 입력한 API 비밀번호 |
+| OBS endpoint | OBS API Endpoint |
 
 #### Velero 서버 삭제
 Velero 서버는 `velero uninstall` 명령어로 삭제할 수 있습니다.
