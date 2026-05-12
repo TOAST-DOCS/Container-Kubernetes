@@ -2133,6 +2133,8 @@ NFS CSI Plugin은 NHN Cloud의 NFS를 프로비저닝하고 관리할 수 있는
     * v1.0.1-nks2
         * 애드온 관리 기능의 안정성을 강화했습니다.
         * 사용자 변경 불가능 리소스/필드를 검사하지 않는 문제를 해결했습니다.
+    * v1.0.2-nks1
+        * 선택 항목인 snapshot 설정이 필수로 요구되던 문제를 해결했습니다.
 
 <a id="loadbalancer-service"></a>
 ## LoadBalancer 서비스
