@@ -2136,11 +2136,10 @@ CNI별로 선택할 수 있는 OS의 제약사항은 아래와 같습니다.
 
 | CNI | 사용 가능한 OS |
 | :-: | :-: |
-| Flannel |Centos, Rocky, Red Hat, Ubuntu |
-| Calico-VXLAN |Centos, Rocky, Red Hat, Ubuntu |
+| Flannel | Centos, Rocky, Red Hat, Ubuntu |
+| Calico-VXLAN | Centos, Rocky, Red Hat, Ubuntu |
 | Calico-eBPF | Rocky, Ubuntu |
 | Cilium | Rocky, Ubuntu |
-
 
 <a id="calico-cni-types"></a>
 ### Calico CNI 종류
@@ -2241,7 +2240,6 @@ Cilium CNI를 사용하는 클러스터에서 Hubble, Envoy, Prometheus 같은 �
 > [참고]
 > Cilium 기본 설치에는 위 선택적 기능이 포함되어 있지 않습니다.
 > 선택적 기능을 사용하려면 Cilium 설정 변경 및 해당 기능에 필요한 보안 그룹 규칙을 수동으로 추가해야 합니다.
-
 
 <a id="relaxd-sg-rules"></a>
 ### 강화된 보안 규칙을 사용하지 않는 경우 생성되는 규칙

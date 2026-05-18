@@ -98,7 +98,7 @@ NKS 클러스터는 클러스터 컨트롤 플레인과 워커 노드 그룹별�
 | 1.202511.1 | 2025.12 | v1.28–v1.33 | 헬스 체크 확인 포트 설정 오류 수정 |
 | 1.202602.0 | 2026.02 | v1.29–v1.33 | 기능 추가<br>- Kubernetes 테인트 설정 기능 <br>- Kubernetes 컴포넌트 설정 기능 max-pods 설정 지원 <br>- Secure Key Manager를 이용한 etcd 데이터 암호화 지원 <br>- CGroup v2 OS 이미지 지원<br><br>기능 개선<br>- 노드 및 노드 그룹 삭제 시 로드 밸런서 트래픽 유실 개선 |
 | 1.202602.1 | 2026.03 | v1.29–v1.33 | 기능 개선<br>- Service 객체로 생성된 LB의 안정성 강화 | 
-| 1.202605.0 | 2026.05 | v1.30–v1.34 | 기능 개선<br>- 워커 노드 CGroup v1 -> v2 마이그레이션 지원<br>- Kubernetes v1.34 클러스터의 `ImageVolume` feature gate 활성화<br>- kube-apiserver와 pod 간의 통신을 위한 konnectivity 지원 |
+| 1.202605.0 | 2026.05 | v1.30–v1.34 | 기능 개선<br>- 워커 노드 CGroup v1 -> v2 마이그레이션 지원<br>- Kubernetes v1.34 클러스터의 `ImageVolume` feature gate 활성화<br>- kube-apiserver와 pod 간의 통신을 위한 konnectivity 지원<br>- etcd 업그레이드 지원 |
 
 <a id="platform-component-versions"></a>
 ### 플랫폼 버전별 주요 컴포넌트 버전
@@ -110,7 +110,6 @@ NKS 클러스터는 클러스터 컨트롤 플레인과 워커 노드 그룹별�
 | **1.202511.1** | v3.4.16 | 1.6.21 |
 | **1.202602.0** | v3.4.16 | 1.6.21 |
 | **1.202605.0** | v3.5.29 | k8s v1.33 이하 : 1.7.27 </br> k8s v1.34 이상 : 2.2.1 |
-
 
 <a id="platform-version-cgroup-v2-support"></a>
 ### CGroup v2 OS 이미지 사용을 위한 플랫폼 버전
