@@ -1401,7 +1401,7 @@ Kubernetes는 구성 요소 간의 TLS 인증을 위해 PKI 인증서가 필요�
     * 인증서 설정이 포함된 파드가 존재하는 경우 갱신된 CA 인증서 적용을 위해 재시작이 필요합니다.
 
 > [참고]
-> 인증서 갱신 기능은 1.24 이상 버전의 Calico-VXLAN CNI를 사용하는 클러스터에서 사용 가능합니다.
+> 인증서 갱신 기능은 1.24 이상 버전의 Calico-VXLAN CNI를 사용하는 클러스터 혹은 Cilium CNI를 사용하는 클러스터에서 사용 가능합니다.
 
 
 > [주의]
@@ -1642,6 +1642,29 @@ Kubernetes 테인트는 키, 값, 효과(effect)로 이루어지며, 각 항목�
 * Kubernetes 테인트는 노드 그룹당 최대 30개까지 지정할 수 있습니다.
 * Kubernetes 테인트 설정을 변경하면, 이후에 신규로 생성되는 노드부터 변경된 설정이 적용됩니다.
 
+<a id="konnectivity-description"></a>
+### konnectivity
+
+Konnectivity는 Kubernetes에서 컨트롤 플레인(API 서버)과 워커 노드 간의 네트워크 통신을 안전하게 프록시해주는 컴포넌트입니다. 기존에는 API 서버가 노드의 kubelet이나 파드에 직접 접근해야 했는데, 이로 인해 네트워크 구성이 복잡한 문제가 있었습니다.
+
+Konnectivity는 이를 해결하기 위해 두 부분으로 구성됩니다.
+* Konnectivity Server: 컨트롤 플레인에 존재하며 API 서버로부터 받은 요청을 Konnectivity Agent에게 전달합니다.
+* Konnectivity Agent: 워커 노드에 존재하며 Konnectivity Server로부터 받은 요청을 대상 파드에게 전달하고, 그 응답을 다시 Konnectivity Server에게 전달합니다.
+
+Konnectivity Server와 Konnectivity Agent가 먼저 연결을 맺어 터널을 생성하고, API 서버는 이 터널을 통해 파드와 통신합니다. 
+
+> [주의]
+> 아래 리소스는 Konnectivity Agent와 관련한 리소스로서 대상 리소스에 대한 설정 변경, 리소스 삭제 등은 클러스터의 동작에 치명적인 영향을 끼칠 수 있습니다. 
+> 
+> | 종류 | 네임스페이스 | 이름 |
+> | --- | --- | --- |
+> | ServiceAccount | kube-system | konnectivity-agent |
+> | ClusterRoleBinding | kube-system | konnectivity-server-auth-delegator |
+> | Deployment | kube-system | konnectivity-agent |
+
+> [참고] 
+> Konnectivity는 플랫폼 버전 1.202605.0 이상에서 제공됩니다.
+
 <a id="worker-node-management"></a>
 ## 워커 노드 관리
 
@@ -1745,7 +1768,13 @@ kubelet은 모든 워커 노드에서 동작하는 노드 에이전트입니다.
 > * 설정된 사용자 정의 아규먼트는 시스템 재시작 시에도 그대로 적용됩니다.
 
 <a id="containerd-registry-config"></a>
-### 사용자 정의 containerd 레지스트리 설정 기능
+### 사용자 정의 containerd 레지스트리 설정 기능(deprecated)
+
+> [주의]
+> 이 기능은 Kubernetes v1.34 이상에서 동작하지 않습니다.
+> containerd 2.2를 사용하는 Kubernetes v1.34 이상에서는 hosts.toml 파일을 이용해 레지스트리 별 설정을 적용할 수 있습니다.
+> 자세한 정보는 [Registry Configuration](https://github.com/containerd/containerd/blob/main/docs/hosts.md)을 참고하시길 바랍니다.
+
 v1.24.3 이상의 NKS 클러스터는 컨테이너 런타임으로 containerd v1.6을 사용합니다. NKS에서는 containerd의 여러 가지 설정 중 레지스트리와 관련된 항목을 사용자 환경에 맞게 설정할 수 있는 기능을 제공합니다. containerd v1.6의 레지스트리 설정은 [Configure Image Registry](https://github.com/containerd/containerd/blob/release/1.6/docs/cri/registry.md)를 참고하세요.
 
 워커 노드가 초기화되는 과정 중 사용자 정의 containerd 레지스트리 설정 파일(`/etc/containerd/registry-config.json`)이 존재하면 이 파일의 내용을 containerd 설정 파일(`/etc/containerd/config.toml`)에 적용합니다. 사용자 정의 containerd 레지스트리 설정 파일이 존재하지 않으면 containerd 설정 파일에는 기본 레지스트리 설정이 적용됩니다. 기본 레지스트리 설정의 내용은 다음과 같습니다.
@@ -1842,6 +1871,35 @@ echo '[ { "registry": "user-defined.registry.io", "endpoint_list": [ "http://use
 >     * `docker.io` 레지스트리를 사용하려면 `docker.io` 레지스트리에 대한 설정도 포함되어야 합니다. `docker.io` 레지스트리의 설정은 기본 레지스트리 설정을 참고하세요.
 >     * `docker.io` 레지스트리를 사용하지 않으려면 `docker.io` 레지스트리에 대한 설정을 포함하지 않으면 됩니다. 단, 하나 이상의 레지스트리 설정이 존재해야 합니다.
 
+<a id="constraints-on-cgroup"></a>
+### Kubernetes 버전과 CGroup 버전에 따른 제약 사항
+CGroup(Control Group)은 리눅스 커널 기능으로, 프로세스 그룹의 CPU, 메모리, 디스크 I/O, 네트워크 등 시스템 리소스 사용량을 제한하고 격리하며 모니터링할 수 있게 해줍니다. Kubernetes를 포함한 컨테이너 기술의 핵심 기반 중 하나입니다. CGroup은 최초 버전1(v1)부터 시작했으며 메모리·I/O 제어 기능을 강화하며 버전2(v2)로 발전하게 되었습니다. 리눅스 커널의 기능이다보니 CGroup v2는 리눅스 커널에 의존성을 가집니다. 그래서 비교적 최신의 배포판/버전에서만 CGroup v2가 지원됩니다.
+
+NKS 클러스터 v1.34부터는 워커 노드가 CGroup v2로 동작해야 합니다. 이는 쿠버네티스 진영에서 앞으로 containerd 1.x 대신 containerd 2.x를 사용하도록 하고, CGroup v1 대신 v2를 기반으로 동작하겠다는 의미에서 나온 제약 사항입니다. 
+
+NKS의 워커 노드는 다음의 경우 CGroup v2로 동작합니다.
+* CGroup v2로 설정된 OS 이미지를 이용해 워커 노드 그룹 생성
+* CGroup v1으로 설정된 OS 이미지를 이용해 워커 노드 그룹 생성한 후 v1.34로 롤링 업그레이드
+
+OS 이미지의 릴리스 날짜에 따라 기본 CGroup 버전을 확인할 수 있습니다.
+* 2026/03/10 이전 릴리스 이미지: CGroup v1
+* 2026/03/10 이후 릴리스 이미지: CGroup v2
+
+OS 이미지의 기본 CGroup 버전이 v1이라도 v2로 설정을 변경할 수 있습니다. 기본 CGroup 버전이 v1인 OS 이미지를 이용해 생성한 워커 노드 그룹에 대해 다음의 경우 워커 노드의 CGroup 버전을 v1에서 v2로 변경합니다.
+* Kubernetes v1.34로 롤링 업그레이드 시
+* Kubernetes v1.34로 롤링 업그레이드한 후 워커 노드 증설 시
+
+CGroup 버전을 v1에서 v2로 변경할 수 있는 OS 이미지 배포판의 종류와 버전은 다음과 같습니다.
+* Ubuntu 22.04 이상
+* Rocky 9.0 이상
+
+> [주의]
+> * 워커 노드의 CGroup 설정을 v1에서 v2로 변경하는 과정에서 **워커 노드의 리부팅**이 포함됩니다.
+> * grub.conf의 무단 변경 등 노드 리부팅이 불가능한 상황인 경우 CGroup 버전 변경이 실패함은 물론 인스턴스가 부팅되지 않는 상황이 이를 수 있습니다.
+> * 인스턴스의 리부팅에 문제가 없는 상태에서 워커 노드 그룹의 Kubernetes 버전 업그레이드를 진행해야 합니다.
+
+기본 CGroup 버전이 v1이고 CGroup 버전을 v2로 변경하지 못하는 OS 이미지로 생성한 워커 노드 그룹은 롤링 업그레이드 방식으로 Kubernetes v1.34로 업그레이드할 수 없습니다. 이 경우 Blue-Green 방식으로 워커 노드 그룹을 업그레이드할 수 있습니다.
+
 <a id="worker-management-caution"></a>
 ### 워커 노드 관리 주의 사항
 * 워커 노드에 pull되어 있는 container image를 임의로 삭제하면 안 됩니다. NKS 클러스터에 필요한 파드가 동작하지 않을 수도 있습니다. 
@@ -1850,7 +1908,7 @@ echo '[ { "registry": "user-defined.registry.io", "endpoint_list": [ "http://use
 
 <a id="cni"></a>
 ## CNI(Container Network Interface)
-NHN Kubernetes Service(NKS)는 Addon 기능을 통해 다른 종류의 Container Network Interface(CNI)를 제공합니다. 2026년 2월 기준 클러스터 생성 시 Calico-VXLAN, Calico-eBPF 중 하나의 CNI를 선택할 수 있으며, 기본 설정은 Calico-VXLAN입니다. Calico-eBPF는 컨테이너 워크로드를 BGP 라우팅 프로토콜로 구성하고, eBPF 기술을 기반으로 직접 통신하며 일부 구간(NodePort 등)은 VXLAN을 이용해 통신합니다.
+NHN Kubernetes Service(NKS)는 Addon 기능을 통해 다른 종류의 Container Network Interface(CNI)를 제공합니다. 클러스터 생성 시 Calico-VXLAN, Calico-eBPF, Cilium 중 하나의 CNI를 선택할 수 있으며, 기본 설정은 Calico-VXLAN입니다. Calico-eBPF는 컨테이너 워크로드를 BGP 라우팅 프로토콜로 구성하고, eBPF 기술을 기반으로 직접 통신하며 일부 구간(NodePort 등)은 VXLAN을 이용해 통신합니다. Cilium은 VXLAN 오버레이 네트워크를 기반으로 하며, eBPF 기술을 활용하여 높은 네트워크 성능을 제공합니다.[about eBPF](https://docs.tigera.io/calico/latest/about/kubernetes-training/about-ebpf)을, Cilium의 eBPF 관련 내용은 [eBPF Datapath](https://docs.cilium.io/en/stable/network/ebpf/)를 참고하세요.
 
 CNI별로 선택할 수 있는 OS의 제약사항은 아래와 같습니다.
 
@@ -1859,6 +1917,7 @@ CNI별로 선택할 수 있는 OS의 제약사항은 아래와 같습니다.
 | Flannel | Centos, Rocky, Red Hat, Ubuntu |
 | Calico-VXLAN | Centos, Rocky, Red Hat, Ubuntu |
 | Calico-eBPF | Rocky, Ubuntu |
+| Cilium | Rocky, Ubuntu |
 
 <a id="calico-cni-types"></a>
 ### Calico CNI 종류
@@ -1901,6 +1960,10 @@ NHN Kubernetes Service(NKS)가 제공하는 Calico-VXLAN, Calic-eBPF는 아래�
 | ingress | UDP | 8472 | IPv4 | 워커 노드 | flannel vxlan overlay network 포트, 방향: pod(NKS Control plane) → pod(워커 노드) | CNI가 flannel인 경우 생성됨 |
 | ingress | UDP | 4789 | IPv4 | 워커 노드 | calico-node vxlan overlay network 포트, 방향: pod(워커 노드) → pod(워커 노드) | CNI가 Calico-VXLAN, Calico-eBPF인 경우 생성됨 |
 | ingress | UDP | 4789 | IPv4 | NKS Control Plane | calico-node vxlan overlay network 포트, 방향: pod(NKS Control plane) → pod(워커 노드) | CNI가 Calico-VXLAN, Calico-eBPF인 경우 생성됨 |
+| ingress | TCP | 4240 | IPv4 | 워커 노드 | cilium-agent health check 포트, 방향: cilium-agent(워커 노드) → cilium-agent(워커 노드) | CNI가 Cilium인 경우 생성됨 |
+| ingress | ICMP | - | IPv4 | 워커 노드 | cilium ping health monitoring, 방향: cilium-agent(워커 노드) → 워커 노드 | CNI가 Cilium인 경우 생성됨 |
+| ingress | UDP | 8472 | IPv4 | 워커 노드 | cilium vxlan overlay network 포트, 방향: pod(워커 노드) → pod(워커 노드) | CNI가 Cilium인 경우 생성됨 |
+| ingress | UDP | 8472 | IPv4 | NKS Control Plane | cilium vxlan overlay network 포트, 방향: pod(NKS Control plane) → pod(워커 노드) | CNI가 Cilium인 경우 생성됨 |
 | egress | TCP | 2379 | IPv4 | NKS Control Plane | etcd 포트, 방향: calico-kube-controller(워커 노드) → etcd(NKS Control plane)| |
 | egress | TCP | 6443 | IPv4 | Kubernetes API 엔드포인트 | kube-apiserver 포트, 방향: kubelet, kube-proxy(워커 노드) → kube-apiserver(NKS Control plane) | |
 | egress | TCP | 6443 | IPv4 | NKS Control Plane | kube-apiserver 포트, 방향: default kubernetes service(워커 노드) → kube-apiserver(NKS Control plane) | |
@@ -1914,6 +1977,10 @@ NHN Kubernetes Service(NKS)가 제공하는 Calico-VXLAN, Calic-eBPF는 아래�
 | egress | UDP | 8472 | IPv4 | NKS Control Plane | flannel vxlan overlay network 포트, 방향: pod(워커 노드) → pod(NKS Control plane) | CNI가 flannel인 경우 생성됨 |
 | egress | UDP | 4789 | IPv4 | 워커 노드 | calico-node vxlan overlay network 포트, 방향: pod(워커 노드) → pod(워커 노드) | CNI가 Calico-VXLAN, Calico-eBPF인 경우 생성됨 |
 | egress | UDP | 4789 | IPv4 | NKS Control Plane | calico-node vxlan overlay network 포트, 방향: pod(워커 노드) → pod(NKS Control plane) | CNI가 Calico-VXLAN, Calico-eBPF인 경우 생성됨 |
+| egress | TCP | 4240 | IPv4 | 워커 노드 | cilium-agent health check 포트, 방향: cilium-agent(워커 노드) → cilium-agent(워커 노드) | CNI가 Cilium인 경우 생성됨 |
+| egress | ICMP | - | IPv4 | 워커 노드 | cilium ping health monitoring, 방향: 워커 노드 → cilium-agent(워커 노드) | CNI가 Cilium인 경우 생성됨 |
+| egress | UDP | 8472 | IPv4 | 워커 노드 | cilium vxlan overlay network 포트, 방향: pod(워커 노드) → pod(워커 노드) | CNI가 Cilium인 경우 생성됨 |
+| egress | UDP | 8472 | IPv4 | NKS Control Plane | cilium vxlan overlay network 포트, 방향: pod(워커 노드) → pod(NKS Control plane) | CNI가 Cilium인 경우 생성됨 |
 | egress | UDP | 53 | IPv4 | 모두 허용 | DNS 포트, 방향: 워커 노드 → 외부 | |
 
 강화된 보안 규칙 사용 시 NodePort 타입의 서비스와 NHN Cloud NAS 서비스에서 사용하는 포트에 대한 보안 규칙에 추가되어 있지 않습니다. 필요에 따라 아래 보안 규칙을 추가 설정해야 합니다. 
@@ -1928,6 +1995,29 @@ NHN Kubernetes Service(NKS)가 제공하는 Calico-VXLAN, Calic-eBPF는 아래�
 > [Calico-eBPF CNI 사용 시 주의]
 > Calico-eBPF CNI를 사용할 경우 파드 간 통신과 노드에서 파드로의 통신은 파드에 설정된 포트를 통해 이루어집니다.
 > 강화된 보안 규칙을 사용하는 경우 해당 파드 포트에 대한 ingress, egress 보안 규칙을 수동으로 추가해야 합니다.
+
+<a id="cilium-optional-security-group-rules"></a>
+### Cilium CNI 선택적 기능 사용 시 추가 보안 그룹 규칙
+
+Cilium CNI를 사용하는 클러스터에서 Hubble, Envoy, Prometheus 같은 선택적 기능을 활성화하려면 해당 기능에 필요한 보안 그룹 규칙을 추가로 설정해야 합니다.
+
+##### 선택적 기능별 필요 포트
+
+| 기능 | 방향 | IP 프로토콜 | 포트 범위 | 원격 | 설명 |
+| :-: | :-: | :-: | :-: | :-: | :-: |
+| Hubble Observability | ingress, egress | TCP | 4244 | 워커 노드 | hubble server 포트, 방향: hubble-relay(워커 노드) → hubble-server(워커 노드) |
+| Hubble UI | ingress, egress | TCP | 4245 | 워커 노드 | hubble relay 포트, 방향: hubble-ui(워커 노드) → hubble-relay(워커 노드) |
+| Cilium Agent Metrics | ingress, egress | TCP | 9962 | 워커 노드 | cilium-agent prometheus metrics 포트 |
+| Cilium Operator Metrics | ingress, egress | TCP | 9963 | 워커 노드 | cilium-operator prometheus metrics 포트 |
+| Cilium Envoy Metrics | ingress, egress | TCP | 9964 | 워커 노드 | cilium-envoy prometheus metrics 포트 |
+| WireGuard 암호화 | ingress, egress | UDP | 51871 | 워커 노드 | WireGuard transparent encryption 포트 |
+| IPsec 암호화 | ingress, egress | UDP | 500 | 워커 노드 | IPsec IKE 포트 |
+| IPsec 암호화 | ingress, egress | UDP | 4500 | 워커 노드 | IPsec NAT-T 포트 |
+| IPsec 암호화 | ingress, egress | ESP (50) | - | 워커 노드 | IPsec ESP 프로토콜 |
+
+> [참고]
+> Cilium 기본 설치에는 위 선택적 기능이 포함되어 있지 않습니다.
+> 선택적 기능을 사용하려면 Cilium 설정 변경 및 해당 기능에 필요한 보안 그룹 규칙을 수동으로 추가해야 합니다.
 
 <a id="relaxd-sg-rules"></a>
 ### 강화된 보안 규칙을 사용하지 않는 경우 생성되는 규칙
@@ -2033,8 +2123,47 @@ Calico는 Kubernetes의 네트워킹과 네트워크 보안을 제공하는 CNI 
 * 지원 버전 목록
     * v3.28.2-nks1
     * v3.28.2-nks2: 애드온 관리 기능의 안정성을 강화했습니다.
+    * v3.28.2-nks3: 데이터 저장소를 k8s로 변경해 안정성을 강화했습니다.
     * v3.30.2-nks1
     * v3.30.2-nks2: 애드온 관리 기능의 안정성을 강화했습니다.
+    * v3.30.2-nks3: 데이터 저장소를 k8s로 변경해 안정성을 강화했습니다.
+    * v3.31.4-nks1: 신규 버전 출시. 데이터 저장소는 k8s 입니다. 
+
+<a id="addon-mgmt-addon-calico-datastore"></a>
+##### Calico의 데이터 저장소
+calico는 pod IP, 노드 별 IP 대역 등 여러 가지 정보를 데이터 저장소에 저장합니다. 기존에 제공되던 버전에서는 데이터 저장소를 etcd로 사용했으나 신규 제공되는 버전에서는 데이터 저장소를 KDD(Kubernetes Datastore Driver)로 사용합니다. KDD는 Kubernetes CRD를 이용해 각종 정보를 Kubernetes 수준의 리소스/객체에 저장합니다. KDD를 사용하면 네트워크 토폴로지가 단순해지고, 관련 정보가 모두 CR로 노출되어 관리의 장점이 있습니다.
+
+아래 버전은 데이터 저장소를 etcd로 사용합니다.
+* v3.28.2-nks1
+* v3.28.2-nks2
+* v3.30.2-nks1
+* v3.30.2-nks2
+
+아래 버전은 데이터 저장소를 KDD로 사용합니다.
+* v3.28.2-nks3 및 이후 세부 버전
+* v3.30.2-nks3 및 이후 세부 버전
+* v3.31.4 이상의 버전(세부 버전 무관)
+
+> [주의]
+> * 데이터 저장소가 etcd인 버전은 플랫폼 버전 1.202605.0 미만의 클러스터에 설치할 수 있습니다.
+> * 데이터 저장소가 KDD인 버전은 플랫폼 버전 1.202605.0 이상의 클러스터에 설치할 수 있습니다.
+> * 데이터 저장소가 etcd -> KDD로 변경하는 애드온 업데이트 시 충돌 옵션은 '재정의(overwrite)'만 지원합니다.
+> * 데이터 저장소를 KDD -> etcd로 변경하는 애드온 업데이트는 지원되지 않습니다. 
+
+<a id="addon-mgmt-addon-cilium"></a>
+#### Cilium
+Cilium은 Kubernetes의 네트워킹과 네트워크 보안을 제공하는 CNI 플러그인입니다.
+
+* 유형: CNI
+* 옵션: 없음
+* 사용자 변경 불가능 리소스 및 필드
+    * DaemonSet/cilium, 네임스페이스 kube-system
+        * .spec.template.spec.containers[name="cilium-agent"].image
+        * .spec.template.spec.containers[name="cilium-envoy"].image
+    * Deployment/cilium-operator, 네임스페이스 kube-system
+        * .spec.template.spec.containers[name="cilium-operator"].image
+* 지원 버전 목록
+    * v1.18.0-nks1
 
 <a id="addon-mgmt-addon-coredns"></a>
 #### CoreDNS
@@ -2279,8 +2408,6 @@ Commercial support is available at
 ### 로드 밸런서 상세 옵션 설정
 Kubernetes의 서비스 객체를 정의할 때 로드 밸런서의 여러 가지 옵션을 설정할 수 있습니다. 설정 가능한 항목은 아래와 같습니다.
 
-* 전역 설정과 리스너별 설정
-* 리스너별 설정 형식
 * 로드 밸런서 이름 설정
 * keep-alive 타임아웃 설정
 * 로드 밸런서 타입 설정
@@ -2358,6 +2485,20 @@ spec:
 > [주의]
 > 아래 기능의 설정값은 모두 문자열 형식으로 입력해야 합니다. YAML 파일 입력 형식에서 입력값 형태에 관계없이 문자열 형식으로 입력하기 위해서는 입력값을 큰따옴표(")로 감싸주면 됩니다. YAML 파일 형식에 대한 더 자세한 내용은 [Yaml Cookbook](https://yaml.org/YAML_for_ruby.html) 문서를 참조하세요.
 >
+
+<a id="loadbalancer-update-without-modification"></a>
+#### 설정을 변경하지 않고 로드 밸런서를 업데이트하는 방법
+
+인증서 업데이트 등 로드 밸런서의 설정 변경없이 로드 밸런서의 업데이트가 필요한 경우 아래의 명령으로 로드 밸런서를 업데이트할 수 있습니다.
+
+```
+# 아래 명령으로 anootation 설정
+kubectl annotate svc <name> loadbalancer.nhncloud/force-reconcile=true
+```
+로드 밸런서의 업데이트가 시작되면 위 명령으로 설정한 annotation은 자동으로 삭제됩니다. 
+
+> [주의]
+> 이 기능은 플랫폼 버전이 1.202605.0 이상인 클러스터에서 동작합니다.
 
 #### 로드 밸런서 이름 설정
 

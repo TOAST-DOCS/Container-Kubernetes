@@ -2314,6 +2314,9 @@ X-Auth-Token: {tokenId}
 | 이름 | 종류 | 형식 | 필수 | 설명 |
 |---|---|---|---|---|
 | tokenId | Header | String | O | 토큰 ID |
+| k8s_version | Query | String | X | 쿠버네티스 버전(예: `v1.30.0`). 지정 시 해당 버전과 호환되는 애드온만 반환합니다. |
+| image | Query | UUID | X | 베이스 이미지 UUID. 지정 시 해당 이미지에 설치 가능한 애드온만 반환합니다. |
+| platform_version | Query | String | X | 플랫폼 버전(예: `1.202605.0`). 지정 시 해당 플랫폼 버전에서 사용 가능한 애드온만 반환합니다. |
 
 #### 응답
 
