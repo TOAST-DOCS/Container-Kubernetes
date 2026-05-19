@@ -3947,7 +3947,7 @@ $ systemctl start rpcbind
 | egress | TCP | 635 | IPv4 | NAS IP 주소 |  rpc의 mountd 포트, 방향: csi-nfs-node(워커 노드) → NAS |
 
 #### csi-driver-nfs 설치
-NHN Cloud NAS 서비스를 사용하기 위해 클러스터에 NHN Kubernetes Service(NKS)의 Addon 기능으로 [nfs-csi-plugin](/Container/NKS/ko/user-guide/#addon-mgmt-addon-nfs-csi-plugin)을 배포해야합니다.
+NHN Cloud NAS 서비스를 사용하기 위해 클러스터에 NHN Kubernetes Service(NKS)의 Addon 기능으로 [nfs-csi-plugin](/Container/NKS/ko/user-guide-ngsc/#addon-mgmt-addon-nfs-csi-plugin)을 배포해야합니다.
 
 csi-driver-nfs는 NFS 스토리지에 새 하위 디렉터리를 생성하는 방식으로 동작하는 NFS 스토리지 프로비저닝을 지원하는 드라이버입니다.
 csi-driver-nfs는 스토리지 클래스에 NFS 스토리지 정보를 제공하는 방식으로 동작하여 사용자가 관리해야 하는 대상을 줄여 줍니다.
