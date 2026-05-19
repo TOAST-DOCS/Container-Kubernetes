@@ -3947,7 +3947,7 @@ $ systemctl start rpcbind
 | egress | TCP | 635 | IPv4 | NAS IP 주소 |  rpc의 mountd 포트, 방향: csi-nfs-node(워커 노드) → NAS |
 
 #### csi-driver-nfs 설치
-NHN Cloud NAS 서비스를 사용하기 위해 클러스터에 csi-driver-nfs 컴포넌트를 배포해야 합니다.
+NHN Cloud NAS 서비스를 사용하기 위해 클러스터에 NHN Kubernetes Service(NKS)의 Addon 기능으로 [nfs-csi-plugin](/Container/NKS/ko/user-guide/#addon-mgmt-addon-nfs-csi-plugin)을 배포해야합니다.
 
 csi-driver-nfs는 NFS 스토리지에 새 하위 디렉터리를 생성하는 방식으로 동작하는 NFS 스토리지 프로비저닝을 지원하는 드라이버입니다.
 csi-driver-nfs는 스토리지 클래스에 NFS 스토리지 정보를 제공하는 방식으로 동작하여 사용자가 관리해야 하는 대상을 줄여 줍니다.
@@ -3955,84 +3955,6 @@ csi-driver-nfs는 스토리지 클래스에 NFS 스토리지 정보를 제공하
 csi-driver-nfs를 사용하여 여러 개의 PV를 구성하는 경우 csi-driver-nfs가 NFS 스토리지 정보를 StorageClass에 등록하여 NFS-Provisoner pod를 구성할 필요가 없습니다.
 <br>
 ![nfs-csi-driver-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nfs-csi-driver-02.png)
-
-> [참고]
-> csi-driver-nfs 설치 스크립트의 내부 실행 과정에서 kubectl apply 명령이 수행됩니다. 따라서 `kubectl` 명령어가 정상적으로 동작하는 상태에서 설치를 진행해야 합니다.
-> csi-driver-nfs 설치 과정은 Linux 환경을 기준으로 작성되었습니다.
-
-##### 1. 클러스터 설정 파일 절대경로를 환경 변수에 저장합니다.
-```
-$ export KUBECONFIG={클러스터 설정 파일 절대경로}
-```
-
-##### 2. ORAS 명령줄 도구를 사용하여 csi-driver-nfs 설치 패키지를 다운로드합니다.
-ORAS(OCI Registry As Storage)는 OCI 레지스트리에서 OCI 아티팩트를 push 및 pull 하는 방법을 제공하는 툴입니다.
-[ORAS installation](https://oras.land/docs/installation)을 참고하여 ORAS 명령줄 도구를 설치합니다. ORAS 명령줄 도구의 자세한 사용법은 [ORAS docs](https://oras.land/docs/)를 참고하세요.
-
-
-| 리전 | 인터넷 연결 | 다운로드 커맨드 |
-| --- | --- | --- |
-| 한국(대구) 리전 | O | oras pull 4b251859-kr4-registry.container.ngsc.go.kr/container_service/oci/nfs-deploy-tool:v2 |
-| | X | oras pull private-4b251859-kr4-registry.container.ngsc.go.kr/container_service/oci/nfs-deploy-tool:v2 |
-
-> [참고]
-> csi-driver-nfs 컨테이너 이미지 및 아티팩트는 NHN Cloud NCR에서 관리되고 있습니다. 폐쇄망 환경에 구성된 클러스터는 인터넷에 연결되어 있지 않기 때문에 이미지 및 아티팩트를 정상적으로 받아 오기 위해서는 Private URI를 사용하기 위한 환경 구성이 필요합니다. Private URI 사용법에 대한 자세한 내용은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/user-guide-ninc/#private-uri)를 참고하세요.
-
-##### 3. 설치 패키지를 압축 해제한 후 **./install-driver.sh {REGISTRY} {INTERNET_USAGE}** 명령어를 사용하여 csi-driver-nfs 구성 요소를 설치합니다.
-클러스터가 생성된 리전 및 인터넷 연결 가능 여부에 따라 올바른 {REGISTRY} 및 {INTERNET_USAGE} 값을 입력합니다.
-
-* {REGISTRY}
-  * 한국(판교) 리전: **4019c2fb-kr1-registry.container.gncloud.go.kr**
-* {INTERNET_USAGE}
-  * 인터넷 연결 가능한 클러스터: **true**
-  * 인터넷 연결 불가능한 클러스터: **false**
-
-아래는 한국(판교) 리전에 생성된 인터넷 연결이 가능한 클러스터에 csi-driver-nfs를 설치하는 예시입니다.
-
-```
-$ tar -xvf nfs-deploy-tool.tar
-
-$ ./install-driver.sh 4019c2fb-kr1-registry.container.gncloud.go.kr public
-INTERNET_USAGE set to true. Container image registry set with value 4019c2fb-kr1-registry.container.gncloud.go.kr
-Installing NFS CSI driver
-serviceaccount/csi-nfs-controller-sa created
-serviceaccount/csi-nfs-node-sa created
-clusterrole.rbac.authorization.k8s.io/nfs-external-provisioner-role created
-clusterrolebinding.rbac.authorization.k8s.io/nfs-csi-provisioner-binding created
-csidriver.storage.k8s.io/nfs.csi.k8s.io created
-deployment.apps/csi-nfs-controller created
-daemonset.apps/csi-nfs-node created
-NFS CSI driver installed successfully.
-```
-
-##### 4. 구성 요소가 정상적으로 설치되었는지 확인합니다.
-```
-$ kubectl get pods -n kube-system
-NAMESPACE     NAME                                         READY   STATUS    RESTARTS   AGE
-kube-system   csi-nfs-controller-844d5989dc-scphc          3/3     Running   0          53s
-kube-system   csi-nfs-node-hmps6                           3/3     Running   0          52s
-
-$ kubectl get clusterrolebinding
-NAME                                                                                                ROLE                                                               AGE
-clusterrolebinding.rbac.authorization.k8s.io/nfs-csi-provisioner-binding                            ClusterRole/nfs-external-provisioner-role                          52s
-
-$ kubectl get clusterrole
-NAME                                                                                                         CREATED AT
-clusterrole.rbac.authorization.k8s.io/nfs-external-provisioner-role                                          2022-08-09T06:21:20Z
-
-$ kubectl get csidriver
-NAME                                                ATTACHREQUIRED   PODINFOONMOUNT   MODES                  AGE
-csidriver.storage.k8s.io/nfs.csi.k8s.io             false            false            Persistent,Ephemeral   47s
-
-$ kubectl get deployment -n kube-system
-NAMESPACE     NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
-kube-system   coredns                     2/2     2            2           22d
-kube-system   csi-nfs-controller          1/1     1            1           4m32s
-
-$ kubectl get daemonset -n kube-system
-NAMESPACE     NAME                    DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR                   AGE
-kube-system   csi-nfs-node            1         1         1       1            1           kubernetes.io/os=linux          4m23s
-```
 
 #### 프로비저닝 시 기존 NHN Cloud NAS 볼륨을 이용하는 방법
 PV 매니페스트 작성 시 NAS 정보를 입력하거나 StorageClass 매니페스트에 NAS 정보를 입력해 기존 NAS 볼륨을 PV로 사용할 수 있습니다.
