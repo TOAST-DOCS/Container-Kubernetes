@@ -1,7 +1,7 @@
 ## Container > NHN Kubernetes Service (NKS) > API v2 Guide
 
 This guide describes the API for configuring Kubernetes clusters.
-To use the API, you need an API endpoint, token, etc. Refer to [API Preparations](/Compute/Compute/en/identity-api/) to prepare the necessary information to use the API.
+NKS uses IaaS tokens for authentication and authorization when making API calls. The IaaS token is an authentication token used for NHN Cloud's OpenStack-based infrastructure services (IaaS). For more information on issuing and using IaaS tokens, please refer to the [IaaS Token](/nhncloud/en/public-api/iaas-token).
 
 All API calls are made using the `kubernetes` type endpoint.
 
