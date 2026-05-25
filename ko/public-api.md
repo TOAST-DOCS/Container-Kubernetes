@@ -1,7 +1,7 @@
 ## Container > NHN Kubernetes Service(NKS) > API v2 가이드
 
 Kubernetes 클러스터를 구성하기 위한 API를 기술합니다.
-API를 사용하려면 API 엔드포인트와 토큰 등이 필요합니다. [API 사용 준비](/Compute/Compute/ko/identity-api/)를 참고하여 API 사용에 필요한 정보를 준비합니다.
+NKS는 API 호출 시 인증/인가를 위해 IaaS 토큰을 사용합니다. IaaS 토큰은 NHN Cloud의 OpenStack 기반 인프라 서비스(IaaS)에서 사용하는 인증 토큰입니다. IaaS 토큰 발급 및 사용에 대한 자세한 내용은 [IaaS 토큰](/nhncloud/ko/public-api/iaas-token)을 참고하세요.
 
 모든 API는 `kubernetes` 타입 엔드포인트를 이용해 호출합니다.
 
@@ -2381,6 +2381,9 @@ X-Auth-Token: {tokenId}
 | 이름 | 종류 | 형식 | 필수 | 설명 |
 |---|---|---|---|---|
 | tokenId | Header | String | O | 토큰 ID |
+| k8s_version | Query | String | X | Kubernetes 버전(예: `v1.30.0`). 지정 시 해당 버전과 호환되는 애드온만 반환합니다. |
+| image | Query | UUID | X | 베이스 이미지 UUID. 지정 시 해당 이미지에 설치 가능한 애드온만 반환합니다. |
+| platform_version | Query | String | X | 플랫폼 버전(예: `1.202605.0`). 지정 시 해당 플랫폼 버전에서 사용 가능한 애드온만 반환합니다. |
 
 #### 응답
 
