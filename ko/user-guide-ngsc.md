@@ -1402,7 +1402,7 @@ Kubernetes는 구성 요소 간의 TLS 인증을 위해 PKI 인증서가 필요�
     * 인증서 설정이 포함된 파드가 존재하는 경우 갱신된 CA 인증서 적용을 위해 재시작이 필요합니다.
 
 > [참고]
-> 인증서 갱신 기능은 1.24 이상 버전의 Calico-VXLAN CNI를 사용하는 클러스터 혹은 Cilium CNI를 사용하는 클러스터에서 사용 가능합니다.
+> 인증서 갱신 기능은 1.24 이상 버전의 Calico-VXLAN CNI 또는 Cilium CNI를 사용하는 클러스터에서 사용 가능합니다.
 
 
 > [주의]
@@ -1646,7 +1646,7 @@ Kubernetes 테인트는 키, 값, 효과(effect)로 이루어지며, 각 항목�
 <a id="konnectivity-description"></a>
 ### konnectivity
 
-Konnectivity는 Kubernetes에서 컨트롤 플레인(API 서버)과 워커 노드 간의 네트워크 통신을 안전하게 프록시해주는 컴포넌트입니다. 기존에는 API 서버가 노드의 kubelet이나 파드에 직접 접근해야 했는데, 이로 인해 네트워크 구성이 복잡한 문제가 있었습니다.
+Konnectivity는 Kubernetes에서 컨트롤 플레인(API 서버)과 워커 노드 간의 네트워크 통신을 안전하게 프록시해 주는 컴포넌트입니다. 기존에는 API 서버가 노드의 kubelet이나 파드에 직접 접근해야 하여 네트워크 구성이 복잡한 문제가 있었습니다.
 
 Konnectivity는 이를 해결하기 위해 두 부분으로 구성됩니다.
 * Konnectivity Server: 컨트롤 플레인에 존재하며 API 서버로부터 받은 요청을 Konnectivity Agent에게 전달합니다.
@@ -1773,8 +1773,8 @@ kubelet은 모든 워커 노드에서 동작하는 노드 에이전트입니다.
 
 > [주의]
 > 이 기능은 Kubernetes v1.34 이상에서 동작하지 않습니다.
-> containerd 2.2를 사용하는 Kubernetes v1.34 이상에서는 hosts.toml 파일을 이용해 레지스트리 별 설정을 적용할 수 있습니다.
-> 자세한 정보는 [Registry Configuration](https://github.com/containerd/containerd/blob/main/docs/hosts.md)을 참고하시길 바랍니다.
+> containerd 2.2를 사용하는 Kubernetes v1.34 이상에서는 hosts.toml 파일을 이용해 레지스트리별 설정을 적용할 수 있습니다.
+> 자세한 정보는 [Registry Configuration](https://github.com/containerd/containerd/blob/main/docs/hosts.md)을 참고하세요.
 
 v1.24.3 이상의 NKS 클러스터는 컨테이너 런타임으로 containerd v1.6을 사용합니다. NKS에서는 containerd의 여러 가지 설정 중 레지스트리와 관련된 항목을 사용자 환경에 맞게 설정할 수 있는 기능을 제공합니다. containerd v1.6의 레지스트리 설정은 [Configure Image Registry](https://github.com/containerd/containerd/blob/release/1.6/docs/cri/registry.md)를 참고하세요.
 
@@ -1874,9 +1874,9 @@ echo '[ { "registry": "user-defined.registry.io", "endpoint_list": [ "http://use
 
 <a id="constraints-on-cgroup"></a>
 ### Kubernetes 버전과 CGroup 버전에 따른 제약 사항
-CGroup(Control Group)은 리눅스 커널 기능으로, 프로세스 그룹의 CPU, 메모리, 디스크 I/O, 네트워크 등 시스템 리소스 사용량을 제한하고 격리하며 모니터링할 수 있게 해줍니다. Kubernetes를 포함한 컨테이너 기술의 핵심 기반 중 하나입니다. CGroup은 최초 버전1(v1)부터 시작했으며 메모리·I/O 제어 기능을 강화하며 버전2(v2)로 발전하게 되었습니다. 리눅스 커널의 기능이다보니 CGroup v2는 리눅스 커널에 의존성을 가집니다. 그래서 비교적 최신의 배포판/버전에서만 CGroup v2가 지원됩니다.
+CGroup(Control Group)은 Linux 커널 기능으로, 프로세스 그룹의 CPU, 메모리, 디스크 I/O, 네트워크 등 시스템 리소스 사용량을 제한하고 격리하며 모니터링할 수 있게 해 줍니다. Kubernetes를 포함한 컨테이너 기술의 핵심 기반 중 하나입니다. CGroup은 최초 버전1(v1)부터 시작했으며 메모리·I/O 제어 기능을 강화하며 버전2(v2)로 발전하게 되었습니다. Linux 커널의 기능이므로 CGroup v2는 Linux 커널에 의존성을 가집니다. 따라서 비교적 최신의 배포판/버전에서만 CGroup v2가 지원됩니다.
 
-NKS 클러스터 v1.34부터는 워커 노드가 CGroup v2로 동작해야 합니다. 이는 쿠버네티스 진영에서 앞으로 containerd 1.x 대신 containerd 2.x를 사용하도록 하고, CGroup v1 대신 v2를 기반으로 동작하겠다는 의미에서 나온 제약 사항입니다. 
+NKS 클러스터 v1.34부터는 워커 노드가 CGroup v2로 동작해야 합니다. 이는 Kubernetes 진영에서 앞으로 containerd 1.x 대신 containerd 2.x를 사용하도록 하고, CGroup v1 대신 v2를 기반으로 동작하겠다는 의미로 나온 제약 사항입니다. 
 
 NKS의 워커 노드는 다음의 경우 CGroup v2로 동작합니다.
 * CGroup v2로 설정된 OS 이미지를 이용해 워커 노드 그룹 생성
@@ -1909,9 +1909,9 @@ CGroup 버전을 v1에서 v2로 변경할 수 있는 OS 이미지 배포판의 �
 
 <a id="cni"></a>
 ## CNI(Container Network Interface)
-NHN Kubernetes Service(NKS)는 Addon 기능을 통해 다른 종류의 Container Network Interface(CNI)를 제공합니다. 클러스터 생성 시 Calico-VXLAN, Calico-eBPF, Cilium 중 하나의 CNI를 선택할 수 있으며, 기본 설정은 Calico-VXLAN입니다. Calico-eBPF는 컨테이너 워크로드를 BGP 라우팅 프로토콜로 구성하고, eBPF 기술을 기반으로 직접 통신하며 일부 구간(NodePort 등)은 VXLAN을 이용해 통신합니다. Cilium은 VXLAN 오버레이 네트워크를 기반으로 하며, eBPF 기술을 활용하여 높은 네트워크 성능을 제공합니다.[about eBPF](https://docs.tigera.io/calico/latest/about/kubernetes-training/about-ebpf)을, Cilium의 eBPF 관련 내용은 [eBPF Datapath](https://docs.cilium.io/en/stable/network/ebpf/)를 참고하세요.
+NHN Kubernetes Service(NKS)는 Addon 기능을 통해 다른 종류의 Container Network Interface(CNI)를 제공합니다. 클러스터 생성 시 Calico-VXLAN, Calico-eBPF, Cilium 중 하나의 CNI를 선택할 수 있으며, 기본 설정은 Calico-VXLAN입니다. Calico-eBPF는 컨테이너 워크로드를 BGP 라우팅 프로토콜로 구성하고, eBPF 기술을 기반으로 직접 통신하며 일부 구간(NodePort 등)은 VXLAN을 이용해 통신합니다. Calico의 eBPF 관련 내용은 [about eBPF](https://docs.tigera.io/calico/latest/about/kubernetes-training/about-ebpf)를 참고하세요. Cilium은 VXLAN 오버레이 네트워크를 기반으로 하며, eBPF 기술을 활용하여 높은 네트워크 성능을 제공합니다. Cilium의 eBPF 관련 내용은 [eBPF Datapath](https://docs.cilium.io/en/stable/network/ebpf/)를 참고하세요.
 
-CNI별로 선택할 수 있는 OS의 제약사항은 아래와 같습니다.
+CNI별로 선택할 수 있는 OS의 제약 사항은 아래와 같습니다.
 
 | CNI | 사용 가능한 OS |
 | :-: | :-: |
@@ -2138,7 +2138,7 @@ Calico는 Kubernetes의 네트워킹과 네트워크 보안을 제공하는 CNI 
 
 <a id="addon-mgmt-addon-calico-datastore"></a>
 ##### Calico의 데이터 저장소
-calico는 pod IP, 노드 별 IP 대역 등 여러 가지 정보를 데이터 저장소에 저장합니다. 기존에 제공되던 버전에서는 데이터 저장소를 etcd로 사용했으나 신규 제공되는 버전에서는 데이터 저장소를 KDD(Kubernetes Datastore Driver)로 사용합니다. KDD는 Kubernetes CRD를 이용해 각종 정보를 Kubernetes 수준의 리소스/객체에 저장합니다. KDD를 사용하면 네트워크 토폴로지가 단순해지고, 관련 정보가 모두 CR로 노출되어 관리의 장점이 있습니다.
+calico는 pod IP, 노드별 IP 대역 등 여러 가지 정보를 데이터 저장소에 저장합니다. 기존에 제공되던 버전에서는 데이터 저장소를 etcd로 사용했으나 신규 제공되는 버전에서는 데이터 저장소를 KDD(Kubernetes Datastore Driver)로 사용합니다. KDD는 Kubernetes CRD를 이용해 각종 정보를 Kubernetes 수준의 리소스/객체에 저장합니다. KDD를 사용하면 네트워크 토폴로지가 단순해지고, 관련 정보가 모두 CR로 노출되어 관리의 장점이 있습니다.
 
 아래 버전은 데이터 저장소를 etcd로 사용합니다.
 * v3.28.2
@@ -2490,7 +2490,7 @@ spec:
 <a id="loadbalancer-update-without-modification"></a>
 #### 설정을 변경하지 않고 로드 밸런서를 업데이트하는 방법
 
-인증서 업데이트 등 로드 밸런서의 설정 변경없이 로드 밸런서의 업데이트가 필요한 경우 아래의 명령으로 로드 밸런서를 업데이트할 수 있습니다.
+인증서 업데이트 등 로드 밸런서의 설정 변경 없이 로드 밸런서 업데이트가 필요한 경우 아래의 명령을 사용할 수 있습니다.
 
 ```
 # 아래 명령으로 anootation 설정
@@ -3947,7 +3947,7 @@ $ systemctl start rpcbind
 | egress | TCP | 635 | IPv4 | NAS IP 주소 |  rpc의 mountd 포트, 방향: csi-nfs-node(워커 노드) → NAS |
 
 #### csi-driver-nfs 설치
-NHN Cloud NAS 서비스를 사용하기 위해 클러스터에 NHN Kubernetes Service(NKS)의 Addon 기능으로 [nfs-csi-plugin](/Container/NKS/ko/user-guide-ngsc/#addon-mgmt-addon-nfs-csi-plugin)을 배포해야합니다.
+NHN Cloud NAS 서비스를 사용하기 위해 클러스터에 NHN Kubernetes Service(NKS)의 Addon 기능으로 [nfs-csi-plugin](/Container/NKS/ko/user-guide-ngsc/#addon-mgmt-addon-nfs-csi-plugin)을 배포해야 합니다.
 
 csi-driver-nfs는 NFS 스토리지에 새 하위 디렉터리를 생성하는 방식으로 동작하는 NFS 스토리지 프로비저닝을 지원하는 드라이버입니다.
 csi-driver-nfs는 스토리지 클래스에 NFS 스토리지 정보를 제공하는 방식으로 동작하여 사용자가 관리해야 하는 대상을 줄여 줍니다.

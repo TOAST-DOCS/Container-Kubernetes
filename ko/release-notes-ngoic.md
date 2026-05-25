@@ -12,7 +12,7 @@
 * 1.202605.0이 추가되었습니다.
     * Kubernetes 호환 버전: v1.30–v1.34
     * 기능 추가
-        * 워커 노드 CGroup v1 -> v2 마이그레이션 지원
+        * 워커 노드 CGroup v1 → v2 마이그레이션 지원
         * kube-apiserver와 pod 간의 통신을 위한 konnectivity 지원
         * k8s v1.34 클러스터의 `ImageVolume` feature gate 활성화
 

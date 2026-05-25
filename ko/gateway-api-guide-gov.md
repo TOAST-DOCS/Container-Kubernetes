@@ -4,9 +4,9 @@
 
 Gateway API는 Kubernetes에서 트래픽 라우팅을 관리하기 위한 차세대 표준 API입니다. 기존 Ingress API의 한계를 극복하고 보다 표현력 있고 확장 가능한 방식으로 클러스터 외부에서 내부 서비스로의 HTTP, HTTPS, TCP 등 다양한 트래픽을 라우팅할 수 있습니다. Gateway API와 관련 리소스에 대한 자세한 내용은 [Gateway API](https://gateway-api.sigs.k8s.io/) 문서를 참고하세요.
 
-Gateway API는 다양한 구현체를 지원하며, 사용 환경에 따라 적합한 구현체를 선택할 수 있습니다. 이 문서에서는 NGINX Gateway Fabric를 예제로 설명합니다. 다른 구현체에 대한 정보는 [Gateway API 구현체 목록](https://gateway-api.sigs.k8s.io/implementations/)을 참고하세요.
+Gateway API는 다양한 구현체를 지원하며, 사용 환경에 따라 적합한 것을 선택할 수 있습니다. 이 문서에서는 NGINX Gateway Fabric을 예제로 설명합니다. 다른 구현체에 대한 정보는 [Gateway API 구현체 목록](https://gateway-api.sigs.k8s.io/implementations/)을 참고하세요.
 
-**NGINX Gateway Fabric(NGF)** 은 NGINX를 data plane으로 사용하는 Gateway API 구현체입니다. NGF의 control plane은 Gateway API 및 관련 Kubernetes 리소스를 감시하며, 각 Gateway에 대해 NGINX data plane Deployment와 Service를 생성하고 관리합니다. 자세한 내용은 [NGINX Gateway Fabric](https://docs.nginx.com/nginx-gateway-fabric/) 문서를 참고하세요.
+**NGINX Gateway Fabric(NGF)**은 NGINX를 data plane으로 사용하는 Gateway API 구현체입니다. NGF의 control plane은 Gateway API 및 관련 Kubernetes 리소스를 감시하며, 각 Gateway에 대해 NGINX data plane Deployment와 Service를 생성하고 관리합니다. 자세한 내용은 [NGINX Gateway Fabric](https://docs.nginx.com/nginx-gateway-fabric/) 문서를 참고하세요.
 
 > [참고] Gateway API는 Kubernetes SIG-Network에서 관리하는 API로, Ingress의 한계를 보완하기 위해 설계된 확장 가능한 트래픽 관리 모델입니다.
 
@@ -22,11 +22,11 @@ Gateway API는 역할에 따라 리소스를 분리하여 운영자와 애플리
 |---|---|---|
 | **GatewayClass** | 플랫폼/인프라 운영자 | Gateway를 관리할 구현체를 지정하고 공통 설정(parametersRef)을 정의하는 클러스터 수준 리소스 |
 | **Gateway** | 클러스터 운영자 | 외부 트래픽 진입점(Listener)을 정의하며, Listener에 프로토콜/포트 및 TLS(mode, certificate 등) 설정을 포함 |
-| **HTTPRoute** | 애플리케이션 개발자 | HTTP 트래픽 라우팅 규칙 정의 (경로, 헤더, 메서드 기반) |
-| **GRPCRoute** | 애플리케이션 개발자 | gRPC 트래픽 라우팅 규칙 정의 (서비스/메서드 기반) |
-| **TLSRoute** | 애플리케이션 개발자 | TLS 트래픽 라우팅 규칙 정의 (SNI 기반, TLS 처리 방식은 Gateway Listener 설정에 따름) |
-| **TCPRoute** | 애플리케이션 개발자 | TCP 트래픽 라우팅 규칙 정의 (L4 passthrough) (Experimental) |
-| **UDPRoute** | 애플리케이션 개발자 | UDP 트래픽 라우팅 규칙 정의 (connectionless L4 routing) (Experimental) |
+| **HTTPRoute** | 애플리케이션 개발자 | HTTP 트래픽 라우팅 규칙 정의(경로, 헤더, 메서드 기반) |
+| **GRPCRoute** | 애플리케이션 개발자 | gRPC 트래픽 라우팅 규칙 정의(서비스/메서드 기반) |
+| **TLSRoute** | 애플리케이션 개발자 | TLS 트래픽 라우팅 규칙 정의(SNI 기반, TLS 처리 방식은 Gateway Listener 설정에 따름) |
+| **TCPRoute** | 애플리케이션 개발자 | TCP 트래픽 라우팅 규칙 정의(L4 passthrough) (Experimental) |
+| **UDPRoute** | 애플리케이션 개발자 | UDP 트래픽 라우팅 규칙 정의(connectionless L4 routing) (Experimental) |
 | **ReferenceGrant** | 네임스페이스 소유자 | 다른 네임스페이스 리소스를 참조할 수 있도록 명시적으로 허용 |
 
 > [참고] NGF에서는 NginxProxy 리소스를 통해 NGINX data plane 동작(서비스 설정, 레플리카 수 등)을 추가로 구성할 수 있습니다.
@@ -126,7 +126,7 @@ kubectl apply -f cafe.yaml
 
 #### GatewayClass 확인
 
-NGINX Gateway Fabric은 Helm 설치 시 `nginx`라는 이름의 GatewayClass가 생성됩니다. 설치 방식에 따라 GatewayClass가 자동 생성되지 않을 수 있으므로, 필요 시 직접 생성해야 합니다.
+NGINX Gateway Fabric은 Helm 설치 시 `nginx`라는 이름의 GatewayClass가 생성됩니다. 설치 방식에 따라 GatewayClass가 자동 생성되지 않을 수 있으므로, 필요시 직접 생성해야 합니다.
 
 ```bash
 kubectl get gatewayclass

@@ -123,9 +123,9 @@ $ helm repo add vmware-tanzu https://vmware-tanzu.github.io/helm-charts
 
 Velero 서버는 `백업 클러스터`와 `복구 클러스터`에 각각 설치해야 합니다. 동일한 Object Storage를 사용하도록 `두 클러스터에 동일한 helm 명령어`를 사용하여 설치하시길 권장합니다.
 
-##### OBS S3 인증 secret 생성
+##### Object Storage S3 인증 secret 생성
 
-OBS 콘솔에서 **S3 API 자격 증명**으로 access_key, secret_key 생성하여 다음과 같이 파일을 생성합니다.
+Object Storage 콘솔에서 **S3 API 자격 증명**으로 access_key, secret_key를 생성하여 다음과 같이 파일을 생성합니다.
 ```
 cat > credentials-velero <<EOF
 [default]
@@ -134,7 +134,7 @@ aws_secret_access_key=${secret_key 값}
 EOF
 ```
 
-velero에서 OBS 접근 시 인증에 사용하기 위한 secret을 생성합니다.
+velero에서 Object Storage 접근 시 인증에 사용하기 위한 secret을 생성합니다.
 ```
 kubectl create namespace velero --dry-run=client -o yaml | kubectl apply -f -
 kubectl create secret generic cloud-credentials \
@@ -172,7 +172,7 @@ $ helm install velero vmware-tanzu/velero \
 | --- | --- |
 | Container | Object Sotrage에서 사용하는 컨테이너 이름 |
 | Region | 한국(판교) 리전: `KR1`<br>한국(평촌) 리전: `KR2`<br>한국(광주) 리전: `KR3` |
-| OBS endpoint | OBS API Endpoint |
+| OBS endpoint | Object Storage API Endpoint |
 
 #### Velero 서버 삭제
 Velero 서버는 `velero uninstall` 명령어로 삭제할 수 있습니다.
