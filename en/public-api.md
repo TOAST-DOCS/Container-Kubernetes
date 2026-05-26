@@ -1,16 +1,16 @@
 ## Container > NHN Kubernetes Service (NKS) > API v2 Guide
 
-This guide describes the API for configuring Kubernetes clusters.
-To use the API, you need an API endpoint, token, etc. Refer to [API Preparations](/Compute/Compute/en/identity-api/) to prepare the necessary information to use the API.
+This document describes the API for configuring Kubernetes clusters.
+NKS uses IaaS tokens for authentication and authorization when making API calls. IaaS tokens are authentication tokens used in NHN Cloud's OpenStack-based Infrastructure as a Service (IaaS). For more information on issuing and using IaaS tokens, refer to [IaaS Token](/nhncloud/en/public-api/iaas-token).
 
-All API calls are made using the `kubernetes` type endpoint.
+All APIs are called using the `kubernetes` type endpoint.
 
 | Type | Region | Endpoint |
 |---|---|---|
-| kubernetes | Korea (Pangyo) Region <br> Korea (Pyeongchon) Region<br>Korea (Gwangju) Region | https://kr1-api-kubernetes-infrastructure.nhncloudservice.com <br>https://kr2-api-kubernetes-infrastructure.nhncloudservice.com <br>https://kr3-api-kubernetes-infrastructure.nhncloudservice.com |
+| kubernetes | Korea (Pangyo) Region<br>Korea (Pyeongchon) Region<br>Korea (Gwangju) Region | https://kr1-api-kubernetes-infrastructure.nhncloudservice.com <br>https://kr2-api-kubernetes-infrastructure.nhncloudservice.com <br>https://kr3-api-kubernetes-infrastructure.nhncloudservice.com |
 
 
-Fields not specified in the guide may appear in API responses. These fields are used for internal use by NHN Cloud and are subject to change without prior notice, so we advise you not to use them.
+API responses may contain fields that are not specified in this guide. Such fields are used for NHN Cloud internal purposes and may be changed without prior notice, so they should not be used.
 
 ## Check the Information of Resources Used in API
 
@@ -59,6 +59,7 @@ Enter the block storage UUID to use for the node. For more information about the
 ### Flavor UUID
 
 Enter the UUID of flavor for the node to be created. For more information about the flavor list query API, refer to [List Flavors](/Compute/Instance/en/public-api/#list-flavors).
+
 
 
 
@@ -1129,6 +1130,7 @@ See the Supported Kubernetes Versions
 
 </p>
 </details>
+
 
 
 ## Node Group
@@ -2202,6 +2204,7 @@ X-Auth-Token: {tokenId}
 
 ---
 
+
 ## Add-on Management
 
 ### View the Types of Add-ons Offered by NHN Cloud
@@ -2650,6 +2653,7 @@ X-Auth-Token: {tokenId}
 
 
 
+
 ## Other Features
 
 ### View supported Kubernetes versions and task types
@@ -2747,5 +2751,4 @@ This API does not require a request body.
 
 </p>
 </details>
-
 
