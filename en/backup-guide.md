@@ -123,47 +123,56 @@ $ helm repo add vmware-tanzu https://vmware-tanzu.github.io/helm-charts
 
 The Velero server must be installed on a `backup cluster` and a `restore cluster` respectively. We recommend that you install using `the same helm command on both clusters` to use the same Object Storage.
 
+##### Create an Object Storage S3 authentication secret
+
+In the Object Storage console, go to **S3 API Credentials** to create an access_key and secret_key, then create a file as follows:
+```
+cat > credentials-velero <<EOF
+[default]
+aws_access_key_id=${access_key 값}
+aws_secret_access_key=${secret_key 값}
+EOF
+```
+
+Creates a secret to be used for authentication when accessing Object Storage from Velero.
+```
+kubectl create namespace velero --dry-run=client -o yaml | kubectl apply -f -
+kubectl create secret generic cloud-credentials \
+  --namespace velero \
+  --from-file=cloud=credentials-velero
+```
+
+##### velero install helm
+
 ```
 $ helm install velero vmware-tanzu/velero \
---namespace velero \
---create-namespace \
+--namespace velero --create-namespace \
 --version 11.0.0 \
---set initContainers[0].name=velero-plugin-for-openstack \
---set initContainers[0].image=lirt/velero-plugin-for-openstack:v0.6.1 \
+--set snapshotsEnabled=false \
+--set credentials.useSecret=true \
+--set credentials.existingSecret=cloud-credentials \
+--set deployNodeAgent=true \
+--set-string configuration.backupStorageLocation[0].config.checksumAlgorithm="" \
+--set configuration.defaultVolumesToFsBackup=true \
+--set configuration.uploaderType=kopia \
+--set initContainers[0].name=velero-plugin-for-aws \
+--set initContainers[0].image=velero/velero-plugin-for-aws:v1.13.2 \
 --set initContainers[0].volumeMounts[0].name=plugins \
 --set initContainers[0].volumeMounts[0].mountPath=/target \
---set configuration.defaultVolumesToRestic=true \
---set configuration.defaultResticPruneFrequency=1m \
+--set configuration.defaultRepoMaintainFrequency=1m \
 --set configuration.backupStorageLocation[0].name=default \
---set configuration.backupStorageLocation[0].provider=community.openstack.org/openstack \
+--set configuration.backupStorageLocation[0].provider=aws \
 --set-string configuration.backupStorageLocation[0].bucket={Container} \
---set-string configuration.backupStorageLocation[0].config.region={Region} \
---set-string configuration.backupStorageLocation[0].config.resticRepoPrefix="swift:{Container}:/restic" \
---set configuration.volumeSnapshotLocation[0].name=default \
---set configuration.volumeSnapshotLocation[0].provider=community.openstack.org/openstack-cinder \
---set configuration.volumeSnapshotLocation[0].config.region={Region} \
---set configuration.extraEnvVars[0].name=OS_AUTH_URL \
---set-string configuration.extraEnvVars[0].value="{Identity}" \
---set configuration.extraEnvVars[1].name=OS_TENANT_ID \
---set-string configuration.extraEnvVars[1].value="{Tenant ID}" \
---set configuration.extraEnvVars[2].name=OS_USERNAME \
---set-string configuration.extraEnvVars[2].value="{NHN Cloud ID}" \
---set configuration.extraEnvVars[3].name=OS_PASSWORD \
---set-string configuration.extraEnvVars[3].value="{API password}" \
---set configuration.extraEnvVars[4].name=OS_REGION_NAME \
---set-string configuration.extraEnvVars[4].value="{Region}" \
---set configuration.extraEnvVars[5].name=OS_DOMAIN_ID \
---set-string configuration.extraEnvVars[5].value="default" 
+--set-string configuration.backupStorageLocation[0].config.region="{Region}" \
+--set-string configuration.backupStorageLocation[0].config.s3Url="${OBS endpoint}" \   
+--set-string configuration.backupStorageLocation[0].config.s3ForcePathStyle=true
 ```
 
 | Item | Description |
 | --- | --- |
 | Container | Name of the container used in Object Storage |
 | Region | Korea (Pangyo) Region: `KR1`<br>Korea (Pyeongchon) Region: `KR2`<br>Korea (Gwangju) Region: `KR3` |
-| Identity service | Identity service in API Endpoint settings |
-| Tenant ID | Tenant ID in API Endpoint Settings |
-| NHN Cloud ID | NHN Cloud ID |
-| API password | API password entered in API Endpoint settings |
+| OBS endpoint | Object Storage API Endpoint |
 
 #### Delete the Velero Server
 You can uninstall the Velero server with the `velero uninstall` command.

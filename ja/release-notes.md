@@ -1,5 +1,29 @@
 ## Container > Kubernetes > リリースノート
 
+### 2026. 05. 27.
+
+#### 機能追加
+* Kubernetes v1.34.3をサポートします。
+    * k8s v1.34以上のバージョンにおいて、ワーカーノードイメージのCGroupバージョンによる制約事項が存在します。詳細は、[KubernetesバージョンとCGroupバージョンによる制約事項](/Container/NKS/ko/version-guide/#constraints-on-cgroup)を参照してください。
+    * k8s v1.34以上のバージョンにおいて、カスタムcontainerdレジストリ設定機能が動作しません。詳細は、[カスタムcontainerdレジストリ設定機能](/Container/NKS/ko/version-guide/#containerd-registry-config)を参照してください。
+* Cilium CNIをサポートします。
+
+#### プラットフォームバージョンのアップデート
+* 1.202605.0が追加されました。
+    * Kubernetes互換バージョン：v1.30～v1.34
+    * 機能追加
+        * ワーカーノードCGroup v1 → v2のマイグレーションサポート
+        * kube-apiserverとpod間の通信のためのkonnectivityサポート
+        * k8s v1.34クラスターの`ImageVolume` feature gate有効化
+
+#### アドオンのアップデート
+* 次のアドオンが追加されました。
+    * nfs_csi_plugin v1.0.2-nks1
+    * cilium v1.18.0-nks1
+    * calico v3.31.4-nks1
+    * calico v3.28.2-nks3
+    * calico v3.30.2-nks3
+    
 ### 2026. 03. 10.
 
 #### プラットフォームバージョンアップデート

@@ -1470,6 +1470,20 @@ NKSクラスタバージョン管理方式とKubernetesバージョン違いサ�
 
 <br>
 
+### etcdバージョン変更に伴う注意事項
+クラスターのアップグレード作業の進行時、アップグレード対象のプラットフォームバージョンに定義された[etcdバージョン](/Container/NKS/ko/user-guide/#platform-version-etcd-version)が現在のクラスターのetcdバージョンと異なる場合に限り、etcdのアップグレード作業が併せて進行されます。該当作業を開始する前に注意事項を必ず認知し、事前の告知/メンテナンス時間の確保などの措置を推奨します。
+
+##### データの整合性確認のため頻繁なリソース変更は自制
+etcdのアップグレード時にリソースのデプロイ/削除作業が頻繁に発生すると、データの整合性確認に失敗してアップグレードが失敗する可能性があります。安全なアップグレードのため、次のような環境でアップグレードすることを推奨します。
+* クラスターリソースの変更作業が少ない時間帯に実施
+* 運用への影響が少ない時間帯(メンテナンス時間など)にアップグレードを実施
+* アップグレード直前の大規模なデプロイ/削除、バッチ作業の実行などを避け、トラフィックが安定した後に進行
+
+##### etcdアップグレード失敗時の自動復旧中にクラスター運用を一時中断
+etcdのアップグレードが失敗すると、クラスターを以前の状態に戻す自動復旧手順が動作し、この手順が進行している間はクラスターの運用(Kubernetes APIレスポンス)が一時中断する可能性があります。すでに実行中のワークロード(Pod)には影響しませんが、kubectlの呼び出しが一時的に遅延したり、新規リソースの作成/変更作業が一時中断したりする可能性があります。
+
+<br>
+
 #### アップグレード戦略
 NKSクラスターはRolling Upgrade、Blue/Green Upgradeの2種類のアップグレード戦略を提供します。ユーザーは運営政策によって適切な戦略を選択してクラスターをアップグレードできます。
 
@@ -1659,7 +1673,7 @@ Kubernetesはコンポーネント間のTLS認証のためにPKI証明書が必�
     * 証明書設定が含まれているPodの場合、更新されたCA証明書を適用するために再起動が必要です。
 
 > [参考]
-> 証明書更新機能は、1.24以上のバージョンのCalico-VXLAN CNIを使用するクラスタで使用可能です。
+> 証明書更新機能は、1.24以上のバージョンのCalico-VXLAN CNIまたはCilium CNIを使用するクラスターで使用できます。
 
 > [注意]
 > 証明書の更新機能には、新規証明書の作成と設定を反映するために、システムコンポーネントとクラスタの作成時に初期配布されたすべてのkube-system名前空間Podの再起動が伴います。
@@ -1892,10 +1906,35 @@ Kubernetesテイントはキー、値、効果(effect)で構成され、各項�
 * Kubernetesテイントは、ノードグループあたり最大30個まで指定できます。
 * Kubernetesテイントの設定を変更すると、それ以降に新規作成されるノードから変更された設定が適用されます。
 
+<a id="konnectivity-description"></a>
+### konnectivity
+
+Konnectivityは、Kubernetesにおいてコントロールプレーン(APIサーバー)とワーカーノード間のネットワーク通信を安全にプロキシするコンポーネントです。従来はAPIサーバーがノードのkubeletやPodに直接アクセスする必要があり、ネットワーク構成が複雑になるという問題がありました。
+
+Konnectivityはこれを解決するために、2つの部分で構成されます。
+* Konnectivity Server：コントロールプレーンに存在し、APIサーバーから受信したリクエストをKonnectivity Agentに転送します。
+* Konnectivity Agent：ワーカーノードに存在し、Konnectivity Serverから受信したリクエストを対象のPodに転送し、そのレスポンスを再びKonnectivity Serverに転送します。
+
+Konnectivity ServerとKonnectivity Agentが先に接続を確立してトンネルを作成し、APIサーバーはこのトンネルを通じてPodと通信します。 
+
+> [注意]
+> 以下のリソースはKonnectivity Agentに関連するリソースであり、対象リソースに対する設定変更、リソースの削除などはクラスターの動作に致命的な影響を及ぼす可能性があります。 
+> 
+> | 種類 | ネームスペース | 名前 |
+> | --- | --- | --- |
+> | ServiceAccount | kube-system | konnectivity-agent |
+> | ClusterRoleBinding | kube-system | konnectivity-server-auth-delegator |
+> | Deployment | kube-system | konnectivity-agent |
+
+> [参考] 
+> Konnectivityはプラットフォームバージョン1.202605.0以降で提供されます。
+
 <a id="worker-node-management"></a>
+
 ## ワーカーノード管理
 
 <a id="container-management"></a>
+
 ### コンテナ管理
 
 #### Kubernetes v1.24.3以前のバージョンのクラスタ
@@ -2001,7 +2040,13 @@ kubeletはすべてのワーカーノードで動作するノードエージェ�
 > * 設定されたユーザー定義引数はシステム再起動時にもそのまま適用されます。
 
 <a id="containerd-registry-config"></a>
-### ユーザー定義containerdレジストリ設定機能
+
+### カスタムcontainerdレジストリ設定機能(deprecated)
+
+> [注意]
+> この機能はKubernetes v1.34以上では動作しません。
+> containerd 2.2を使用するKubernetes v1.34以上では、hosts.tomlファイルを利用してレジストリ別の設定を適用できます。
+> 詳細については、[Registry Configuration](https://github.com/containerd/containerd/blob/main/docs/hosts.md)を参照してください。
 v1.24.3以上のNKSクラスタはコンテナランタイムとしてcontainerd v1.6を使用します。NKSではcontainerdの様々な設定のうち、レジストリに関連する項目をユーザーの環境に合わせて設定できる機能を提供します。containerd v1.6のレジストリ設定は[Configure Image Registry](https://github.com/containerd/containerd/blob/release/1.6/docs/cri/registry.md)を参照してください。
 
 ワーカーノードが初期化される過程で、ユーザー定義のcontainerdレジストリ設定ファイル(`/etc/containerd/registry-config.json`)が存在する場合、このファイルの内容をcontainerd設定ファイル(`/etc/containerd/config.toml`)に適用します。ユーザー定義containerdレジストリ設定ファイルが存在しない場合、containerd設定ファイルには基本レジストリ設定が適用されます。基本レジストリ設定の内容は次のとおりです。
@@ -2098,25 +2143,59 @@ echo '[ { "registry": "user-defined.registry.io", "endpoint_list": [ "http://use
 >     * `docker.io`レジストリを使用するには、`docker.io` レジストリの設定も含める必要があります。`docker.io`レジストリの設定は基本レジストリ設定を参照してください。
 >     * `docker.io`レジストリを使用しない場合は、`docker.io` レジストリの設定を含まないようにします。ただし、1つ以上のレジストリ設定が存在する必要があります。
 
+<a id="constraints-on-cgroup"></a>
+
+### KubernetesバージョンとCGroupバージョンによる制約事項
+CGroup(Control Group)はLinuxカーネルの機能であり、プロセスグループのCPU、メモリ、ディスクI/O、ネットワークなどシステムリソースの使用量を制限、隔離し、監視できるようにします。Kubernetesを含むコンテナ技術の核心的な基盤の1つです。CGroupは最初のバージョン1(v1)から始まり、メモリ・I/O制御機能を強化してバージョン2(v2)へと発展しました。Linuxカーネルの機能であるため、CGroup v2はLinuxカーネルへの依存性を持ちます。したがって、比較的最新のディストリビューション及びバージョンでのみCGroup v2がサポートされます。
+
+NKSクラスターv1.34からは、ワーカーノードがCGroup v2で動作する必要があります。これは、Kubernetesコミュニティにおいて、今後はcontainerd 1.xの代わりにcontainerd 2.xを使用し、CGroup v1の代わりにv2を基盤として動作させるという方針から出された制約事項です。 
+
+NKSのワーカーノードは、次の場合にCGroup v2で動作します。
+* CGroup v2に設定されたOSイメージを利用してワーカーノードグループを作成
+* CGroup v1に設定されたOSイメージを利用してワーカーノードグループを作成した後、v1.34へローリングアップグレード
+
+OSイメージのリリース日に応じて、デフォルトのCGroupバージョンを確認できます。
+* 2026/03/10以前のリリースイメージ：CGroup v1
+* 2026/03/10以降のリリースイメージ：CGroup v2
+
+OSイメージのデフォルトのCGroupバージョンがv1であっても、v2に設定を変更できます。デフォルトのCGroupバージョンがv1であるOSイメージを利用して作成したワーカーノードグループに対し、次の場合にワーカーノードのCGroupバージョンをv1からv2に変更します。
+* Kubernetes v1.34へのローリングアップグレード時
+* Kubernetes v1.34へローリングアップグレードした後、ワーカーノードの増設時
+
+CGroupバージョンをv1からv2に変更できるOSイメージのディストリビューションの種類とバージョンは次のとおりです。
+* Ubuntu 22.04以上
+* Rocky 9.0以上
+
+> [注意]
+> * ワーカーノードのCGroup設定をv1からv2に変更する過程で、**ワーカーノードの再起動**が行われます。
+> * grub.confの無断変更など、ノードの再起動が不可能な状況である場合、CGroupバージョンの変更が失敗するだけでなく、インスタンスが起動しなくなる状況に至る可能性があります。
+> * インスタンスの再起動に問題がない状態で、ワーカーノードグループのKubernetesバージョンのアップグレードを実施する必要があります。
+
+デフォルトのCGroupバージョンがv1であり、CGroupバージョンをv2に変更できないOSイメージで作成したワーカーノードグループは、ローリングアップグレード方式でKubernetes v1.34へアップグレードできません。この場合、Blue-Green方式でワーカーノードグループをアップグレードできます。
+
 <a id="worker-management-caution"></a>
+
 ### ワーカーノード管理上の注意事項
 * ワーカーノードにpullされているcontainer imageを削除してはいけません。NKSクラスタに必要なPodが動作しなくなる可能性があります。
 * `shutdown`, `halt`, `poweroff`などのコマンドでシステムを停止させると、コンソールから再起動できません。ワーカーノードの開始/停止機能を使ってください。
 * ワーカーノード内の様々な設定ファイルを勝手に修正したり、システムサービスを操作してはいけません。NKSクラスタに致命的な問題が発生する可能性があります。
 
 <a id="cni"></a>
+
 ## CNI(Container Network Interface)
-NHN Kubernetes Service(NKS)は、Addon機能を通じて異なる種類のContainer Network Interface(CNI)を提供します。2026年2月時点でクラスター作成時、Calico-VXLAN、Calico-eBPFのいずれかのCNIを選択でき、デフォルト設定はCalico-VXLANです。Calico-eBPFは、コンテナーワークロードをBGPルーティングプロトコルで構成し、eBPF技術に基づいて直接通信し、一部の区間(NodePortなど)はVXLANを利用して通信します。
+NHN Kubernetes Service(NKS)は、アドオン機能を通じて他の種類のContainer Network Interface(CNI)を提供します。クラスター作成時にCalico-VXLAN、Calico-eBPF、Ciliumの中から1つのCNIを選択でき、デフォルト設定はCalico-VXLANです。Calico-eBPFは、コンテナワークロードをBGPルーティングプロトコルで構成し、eBPF技術を基盤として直接通信し、一部の区間(NodePortなど)はVXLANを利用して通信します。CalicoのeBPF関連の内容は[about eBPF](https://docs.tigera.io/calico/latest/about/kubernetes-training/about-ebpf)を参照してください。CiliumはVXLANオーバーレイネットワークを基盤とし、eBPF技術を活用して高いネットワークパフォーマンスを提供します。CiliumのeBPF関連の内容は[eBPF Datapath](https://docs.cilium.io/en/stable/network/ebpf/)を参照してください。
 
 CNI別に選択できるOSの制約事項は次のとおりです。
 
 | CNI | 使用可能なOS |
 | :-: | :-: |
-| Flannel |Centos, Rocky, Red Hat, Ubuntu |
-| Calico-VXLAN |Centos, Rocky, Red Hat, Ubuntu |
+| Flannel | Centos, Rocky, Red Hat, Ubuntu |
+| Calico-VXLAN | Centos, Rocky, Red Hat, Ubuntu |
 | Calico-eBPF | Rocky, Ubuntu |
+| Cilium | Rocky, Ubuntu |
 
 <a id="calico-cni-types"></a>
+
 ### Calico CNIの種類
 NHN Kubernetes Service(NKS)が提供するCalico-VXLAN、Calic-eBPFは下記のような違いがあります。
 
@@ -2140,10 +2219,12 @@ NHN Kubernetes Service(NKS)が提供するCalico-VXLAN、Calic-eBPFは下記の�
 > 該当イメージを使用するには、アドオン管理機能を通じてCalicoをv3.28.2以上にアップデートする必要があります。
 
 <a id="security-group"></a>
+
 ## セキュリティグループ
 クラスタ作成時に強化されたセキュリティルールをTrueに設定すると、ワーカーノードセキュリティグループの作成時に必須のセキュリティルールだけが作成されます。
 
 <a id="mandatory-sg-rules"></a>
+
 ### クラスタワーカーノード必須セキュリティルール
 
 | 方向 | IPプロトコル | ポート範囲 | Ether | 遠隔 | 説明 | 特記事項 |
@@ -2157,6 +2238,10 @@ NHN Kubernetes Service(NKS)が提供するCalico-VXLAN、Calic-eBPFは下記の�
 | ingress | UDP | 8472 | IPv4 | ワーカーノード | flannel vxlan overlay networkポート、方向: pod(NKS Control plane) → pod(ワーカーノード) | CNIがflannel場合に作成される |
 | ingress | UDP | 4789 | IPv4 | ワーカーノード | calico-node vxlan overlay networkポート、方向: pod(ワーカーノード) → pod(ワーカーノード) | CNIがCalico-VXLAN, Calico-eBPFの場合に作成される |
 | ingress | UDP | 4789 | IPv4 | NKS Control Plane | calico-node vxlan overlay networkポート、方向: pod(NKS Control plane) → pod(ワーカーノード) | CNIがCalico-VXLAN, Calico-eBPFの場合に作成される |
+| ingress | TCP | 4240 | IPv4 | ワーカーノード | cilium-agentのヘルスチェックポート、方向：cilium-agent(ワーカーノード) → cilium-agent(ワーカーノード) | CNIがCiliumの場合に作成されます |
+| ingress | ICMP | - | IPv4 | ワーカーノード | cilium pingによるヘルスモニタリング、方向：cilium-agent(ワーカーノード) → ワーカーノード | CNIがCiliumの場合に作成されます |
+| ingress | UDP | 8472 | IPv4 | ワーカーノード | cilium vxlanオーバーレイネットワークポート、方向：ポッド(ワーカーノード) → ポッド(ワーカーノード) | CNIがCiliumの場合に作成されます |
+| ingress | UDP | 8472 | IPv4 | NKSコントロールプレーン | cilium vxlanオーバーレイネットワークポート、方向：ポッド(NKSコントロールプレーン) → ポッド(ワーカーノード) | CNIがCiliumの場合に作成されます |
 | egress | TCP | 2379 | IPv4 | NKS Control Plane | etcdポート、方向: calico-kube-controller(ワーカーノード) → etcd(NKS Control plane)| |
 | egress | TCP | 6443 | IPv4 | Kubernetes APIエンドポイント | kube-apiserverポート、方向: kubelet, kube-proxy(ワーカーノード) → kube-apiserver(NKS Control plane) | |
 | egress | TCP | 6443 | IPv4 | NKS Control Plane | kube-apiserverポート、方向: default kubernetes service(ワーカーノード) → kube-apiserver(NKS Control plane) | |
@@ -2170,6 +2255,10 @@ NHN Kubernetes Service(NKS)が提供するCalico-VXLAN、Calic-eBPFは下記の�
 | egress | UDP | 8472 | IPv4 | NKS Control Plane | flannel vxlan overlay networkポート、方向: pod(ワーカーノード) → pod(NKS Control plane) | CNIがflannel場合に作成される |
 | egress | UDP | 4789 | IPv4 | ワーカーノード | calico-node vxlan overlay networkポート、方向: pod(ワーカーノード) → pod(ワーカーノード) | CNIがCalico-VXLAN, Calico-eBPFの場合に作成される |
 | egress | UDP | 4789 | IPv4 | NKS Control Plane | calico-node vxlan overlay networkポート、方向: pod(ワーカーノード) → pod(NKS Control plane) | CNIがCalico-VXLAN, Calico-eBPFの場合に作成される |
+| egress | TCP | 4240 | IPv4 | ワーカーノード | cilium-agentのヘルスチェックポート、方向：cilium-agent(ワーカーノード) → cilium-agent(ワーカーノード) | CNIがCiliumの場合に作成されます |
+| egress | ICMP | - | IPv4 | ワーカーノード | cilium pingによるヘルスモニタリング、方向：ワーカーノード → cilium-agent(ワーカーノード) | CNIがCiliumの場合に作成されます |
+| egress | UDP | 8472 | IPv4 | ワーカーノード | cilium vxlanオーバーレイネットワークポート、方向：ポッド(ワーカーノード) → ポッド(ワーカーノード) | CNIがCiliumの場合に作成されます |
+| egress | UDP | 8472 | IPv4 | NKSコントロールプレーン | cilium vxlanオーバーレイネットワークポート、方向：ポッド(ワーカーノード) → ポッド(NKSコントロールプレーン) | CNIがCiliumの場合に作成されます |
 | egress | UDP | 53 | IPv4 | すべて許可 | DNSポート、方向:ワーカーノード→外部 | |
 
 強化されたセキュリティルールを使用する場合、NodePortタイプのサービスとNHN Cloud NASサービスで使用するポートに対するセキュリティルールに追加されていません。必要に応じて以下のセキュリティルールを追加設定する必要があります。
@@ -2185,7 +2274,31 @@ NHN Kubernetes Service(NKS)が提供するCalico-VXLAN、Calic-eBPFは下記の�
 > > Calico-eBPF CNIを使用する場合、Pod間の通信とノードからPodへの通信は、Podに設定されたポートを介して行われます。
 > 強化されたセキュリティルールを使用する場合、該当Podのポートに対するingress、egressセキュリティルールを手動で追加する必要があります。
 
+<a id="cilium-optional-security-group-rules"></a>
+### Cilium CNIのオプション機能使用時の追加セキュリティグループルール
+
+Cilium CNIを使用するクラスターでHubble、Envoy、Prometheusのようなオプション機能を有効にするには、該当機能に必要なセキュリティグループルールを追加で設定する必要があります。
+
+##### オプション機能別の必要ポート
+
+| 機能 | 方向 | IPプロトコル | ポート範囲 | リモート | 説明 |
+| :-: | :-: | :-: | :-: | :-: | :-: |
+| Hubble Observability | ingress, egress | TCP | 4244 | ワーカーノード | hubble serverポート、方向：hubble-relay(ワーカーノード) → hubble-server(ワーカーノード) |
+| Hubble UI | ingress, egress | TCP | 4245 | ワーカーノード | hubble relayポート、方向：hubble-ui(ワーカーノード) → hubble-relay(ワーカーノード) |
+| Cilium Agent Metrics | ingress, egress | TCP | 9962 | ワーカーノード | cilium-agentのprometheus metricsポート |
+| Cilium Operator Metrics | ingress, egress | TCP | 9963 | ワーカーノード | cilium-operatorのprometheus metricsポート |
+| Cilium Envoy Metrics | ingress, egress | TCP | 9964 | ワーカーノード | cilium-envoyのprometheus metricsポート |
+| WireGuard暗号化 | ingress, egress | UDP | 51871 | ワーカーノード | WireGuard transparent encryptionポート |
+| IPsec暗号化 | ingress, egress | UDP | 500 | ワーカーノード | IPsec IKEポート |
+| IPsec暗号化 | ingress, egress | UDP | 4500 | ワーカーノード | IPsec NAT-Tポート |
+| IPsec暗号化 | ingress, egress | ESP (50) | - | ワーカーノード | IPsec ESPプロトコル |
+
+> [参考]
+> Ciliumのデフォルトインストールには、上記のオプション機能は含まれていません。
+> オプション機能を使用するには、Ciliumの設定変更及び該当機能に必要なセキュリティグループルールを手動で追加する必要があります。
+
 <a id="relaxd-sg-rules"></a>
+
 ### 強化されたセキュリティールールを使用しない場合に作成されるルール
 
 強化されたセキュリティルールを使用しない場合、NodePortタイプのサービスと外部ネットワーク通信に必要なセキュリティルールが追加で作成されます。
@@ -2284,13 +2397,55 @@ CalicoはKubernetesのネットワーキングとネットワークセキュリ�
         * .spec.template.spec.initContainers[name="install-cni"].image
         * .spec.template.spec.initContainers[name="mount-bpffs"].image
         * .spec.template.spec.containers[name="calico-node"].image
-* サポートバージョンリスト
+* サポートバージョン一覧
     * v3.28.2-nks1
-    * v3.28.2-nks2:アドオン管理機能の安定性を強化しました。
+    * v3.28.2-nks2：アドオン管理機能の安定性を強化しました。
+    * v3.28.2-nks3：konnectivity環境をサポートします。
     * v3.30.2-nks1
-    * v3.30.2-nks2:アドオン管理機能の安定性を強化しました。
+    * v3.30.2-nks2：アドオン管理機能の安定性を強化しました。
+    * v3.30.2-nks3：konnectivity環境をサポートします。
+    * v3.31.4-nks1：データストアはKDD(Kubernetes Datastore Driver)であり、konnectivity環境をサポートします。
+
+> [参考]
+> * konnectivityをサポートするプラットフォームバージョン(1.202605.0以上)でインストール/アップデート可能なcalicoバージョンは次のとおりです。
+>     * v3.28.2-nks3以上
+>     * v3.30.2-nks3以上
+>     * v3.31.4以上
+
+<a id="addon-mgmt-addon-calico-datastore"></a>
+
+##### Calicoのデータストア
+calicoは、ポッドIP、ノード別のIP範囲など様々な情報をデータストアに保存します。従来提供されていたバージョンではデータストアとしてetcdを使用していましたが、新しく提供されるバージョンではデータストアとしてKDD(Kubernetes Datastore Driver)を使用します。KDDはKubernetes CRDを利用して各種情報をKubernetesレベルのリソース/オブジェクトに保存します。KDDを使用すると、ネットワークトポロジーが単純になり、関連情報が全てCRとして公開されるため、管理上のメリットがあります。
+
+以下のバージョンは、データストアとしてetcdを使用します。
+* v3.28.2
+* v3.30.2
+
+以下のバージョンは、データストアとしてKDDを使用します。
+* v3.31.4以上
+
+> [注意]
+> * データストアをetcdからKDDに変更するアドオンアップデート時、競合オプションは「再定義(overwrite)」のみサポートします。
+> * データストアをKDDからetcdに変更するアドオンアップデートはサポートされていません。 
+
+<a id="addon-mgmt-addon-cilium"></a>
+
+#### Cilium
+Ciliumは、Kubernetesのネットワーキングとネットワークセキュリティを提供するCNIプラグインです。
+
+* タイプ：CNI
+* オプション：なし
+* ユーザー変更不可能なリソース及びフィールド
+    * DaemonSet/cilium、ネームスペース kube-system
+        * .spec.template.spec.containers[name="cilium-agent"].image
+        * .spec.template.spec.containers[name="cilium-envoy"].image
+    * Deployment/cilium-operator、ネームスペース kube-system
+        * .spec.template.spec.containers[name="cilium-operator"].image
+* サポートバージョン一覧
+    * v1.18.0-nks1
     
 <a id="addon_mgmt_addon_coredns"></a>
+
 #### CoreDNS
 CoreDNSはKubernetesクラスターの基本DNSサーバーです。
 
@@ -2311,6 +2466,7 @@ CoreDNSはKubernetesクラスターの基本DNSサーバーです。
                 * .spec.template.spec.serviceAccountName 削除
 
 <a id="addon-mgmt-addon-cinder-csi-plugin">
+
 #### Cinder CSI Plugin
 Cinder CSI Pluginは、NHN Cloudでブロックストレージをプロビジョニングして管理できるCSIドライバーです。
 
@@ -2342,6 +2498,7 @@ Cinder CSI Pluginは、NHN Cloudでブロックストレージをプロビジョ
     * v1.27.102-nks3:アドオン管理機能の安定性を強化しました。
     
 <a id="adoon-mgmt-addon-metrics-server">
+
 #### Metrics Server
 Metrics Serverは、オートスケーリングとモニタリングのためにノードとPodからリソース使用指標を収集するKubernetesのコンポーネントです。
 
@@ -2355,6 +2512,7 @@ Metrics Serverは、オートスケーリングとモニタリングのために
     * v0.4.4-nks2:アドオン管理機能の安定性を強化しました。
 
 <a id="addon-mgmt-addon-snapshot-controller">
+
 #### Snapshot Controller
 Snapshot Controllerは、ボリュームスナップショットの作成、削除、PVC連携を含むライフサイクルを管理するKubernetesのコンポーネントです。
 
@@ -2368,6 +2526,7 @@ Snapshot Controllerは、ボリュームスナップショットの作成、削�
     * v4.1.1-nks2:アドオン管理機能の安定性を強化しました。
 
 <a id="addon-mgmt-addon-nfs-csi-plugin">
+
 #### NFS CSI Plugin
 NFS CSI Pluginは、NHN CloudのNFSをプロビジョニングして管理できるCSIドライバーです。
 
@@ -2388,12 +2547,16 @@ NFS CSI Pluginは、NHN CloudのNFSをプロビジョニングして管理でき
     * v1.0.1-nks2
         * アドオン管理機能の安定性を強化しました。
         * ユーザー変更不可のリソース/フィールドを検査しない問題を解決しました。
+    * v1.0.2-nks1
+        * オプション項目であるsnapshot設定が必須として要求されていた問題を解決しました。
 
 <a id="addon-mgmt-addon-coredns"></a>
+
 ## LoadBalancerサービス
 Kubernetesアプリケーションの基本実行単位Podは、CNI(container network interface)でクラスターネットワークに接続されます。基本的にクラスターの外部からPodにはアクセスできません。Podのサービスをクラスターの外部に公開するにはKubernetesの`LoadBalancer`サービス(Service)オブジェクト(object)を利用して外部に公開するパスを作成する必要があります。LoadBalancerサービスオブジェクトを作成すると、クラスターの外部にNHN Cloud Load Balancerが作成され、サービスオブジェクトと接続されます。
 
 <a id="create-webserver-pod"></a>
+
 ### WebサーバーPod作成
 次のように2個のnginx Podを実行するデフォルトデプロイメント(deployment)オブジェクトマニフェストファイルを作成し、オブジェクトを作成します。
 
@@ -2435,6 +2598,7 @@ nginx-deployment-7fd6966748-wv7rd   1/1     Running   0          4m13s
 ```
 
 <a id="create-lb-service"></a>
+
 ### LoadBalancerサービスの作成
 Kubernetesのサービスオブジェクトを定義するには、次の項目で構成されたマニフェストが必要です。
 
@@ -2493,6 +2657,7 @@ nginx-svc    LoadBalancer   10.254.134.18   123.123.123.30   8080:30013/TCP   3m
 > ロードバランサーのIPは、外部からアクセスできるFloating IPです。**Network > Floating IP**ページで確認できます。
 
 <a id="internet-test-via-service"></a>
+
 ### インターネットによるサービステスト
 ロードバランサーに接続されたFloating IPにHTTPリクエストを送ってKubernetesクラスターのWebサーバーPodが応答するかを確認します。サービスオブジェクトのTCP/8080ポートをPodのTCP/80ポートと接続するように設定したため、TCP/8080ポートにリクエストを送る必要があります。外部ロードバランサーとサービスオブジェクト、Podが正常に接続されていれば、Webサーバーはnginx基本ページをレスポンスします。
 
@@ -2526,11 +2691,10 @@ Commercial support is available at
 ```
 
 <a id="advanced-lb-configuration"></a>
+
 ### ロードバランサー詳細オプション設定
 Kubernetesのサービスオブジェクトを定義する時、ロードバランサーの複数のオプションを設定できます。設定可能な項目は次のとおりです。
 
-* グローバル設定とリスナーごとの設定
-* リスナー別設定形式
 * ロードバランサー名設定
 * keep-aliveタイムアウト設定
 * ロードバランサータイプ設定
@@ -2611,6 +2775,21 @@ spec:
 > [注意]
 > 以下の機能の設定値は全て文字列形式で入力する必要があります。YAMLファイル入力形式で入力値の形式に関係なく文字列形式で入力するには入力値を二重引用符(")で囲んでください。 YAMLファイル形式の詳しい内容は[Yaml Cookbook](https://yaml.org/YAML_for_ruby.html)文書を参照してください。
 >
+
+<a id="loadbalancer-update-without-modification"></a>
+
+#### 設定を変更せずにロードバランサーをアップデートする方法
+
+証明書の更新など、ロードバランサーの設定変更なしにロードバランサーのアップデートが必要な場合は、以下のコマンドを使用できます。
+
+```
+# 以下のコマンドでannotationを設定
+kubectl annotate svc <name> loadbalancer.nhncloud/force-reconcile=true
+```
+ロードバランサーのアップデートが開始されると、上記のコマンドで設定したannotationは自動的に削除されます。 
+
+> [注意]
+> この機能はプラットフォームバージョンが1.202605.0以上であるクラスターで動作します。
 
 #### ロードバランサー名設定
 
@@ -4348,7 +4527,7 @@ $ systemctl start rpcbind
 | egress | TCP | 635 | IPv4 | NAS IPアドレス |  rpcのmountdポート、方向: csi-nfs-node(worker node) → NAS |
 
 #### csi-driver-nfsのインストール
-NHN Cloud NASサービスを使用するにはクラスタにcsi-driver-nfsコンポーネントを配布する必要があります。
+NHN Cloud NASサービスを使用するには、クラスターにNHN Kubernetes Service(NKS)のアドオン機能として[nfs-csi-plugin](/Container/NKS/ko/user-guide/#addon-mgmt-addon-nfs-csi-plugin)をデプロイする必要があります。
 
 csi-driver-nfsはNFSストレージに新たなサブディレクトリを作成する方式で動作するNFSストレージプロビジョニングをサポートするドライバーです。
 csi-driver-nfsはストレージクラスにNFSストレージ情報を提供する方式で動作してユーザーが管理しなければならない対象を減らします。
@@ -4356,90 +4535,6 @@ csi-driver-nfsはストレージクラスにNFSストレージ情報を提供す
 csi-driver-nfsを使用して複数のPVを構成する場合、csi-driver-nfsがNFSストレージ情報をStorageClassに登録してNFS-Provisoner podを構成する必要がありません。
 <br>
 ![nfs-csi-driver-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nfs-csi-driver-02.png)
-
-> [参考]
-> csi-driver-nfsインストールスクリプトの内部実行プロセスでkubectl applyコマンドが実行されます。したがって`kubectl`コマンドが正常に動作する状態でインストールを進める必要があります。
-> csi-driver-nfsインストール手順はLinux環境を基準に作成されました。
-
-##### 1. クラスタ設定ファイルの絶対パスを環境変数に保存します。
-```
-$ export KUBECONFIG={クラスタ設定ファイルの絶対パス}
-```
-
-##### 2. ORASコマンドラインツールを使用してcsi-driver-nfsインストールパッケージをダウンロードします。
-ORAS(OCI Registry As Storage)はOCIレジストリからOCIアーティファクトをpushおよびpullする方法を提供するツールです。
-[ORAS installation](https://oras.land/docs/installation)を参考してORASコマンドラインツールをインストールします。 ORASコマンドラインツールの詳しい使用方法は[ORAS docs](https://oras.land/docs/)を参照してください。
-
-
-| リージョン | インターネット接続 | ダウンロードコマンド |
-| --- | --- | --- |
-| 韓国(パンギョ)リージョン | O | oras pull dfe965c3-kr1-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v2 |
-| | X | oras pull private-dfe965c3-kr1-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v2 |
-| 韓国(ピョンチョン)リージョン | O | oras pull 6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/oci/nfs-deploy-tool:v2 |
-| | X | oras pull private-6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/oci/nfs-deploy-tool:v2 |
-| 韓国(クァンジュ)リージョン | O | oras pull d6628457-kr3-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v2 |
-| | X | oras pull private-d6628457-kr3-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v2 |
-
-> [参考]
-> csi-driver-nfsコンテナイメージとアーティファクトはNHN Cloud NCRで管理されています。クローズドネットワーク環境で構成されたクラスターはインターネットに接続されていないため、イメージやアーティファクトを正常に受け取るためにはPrivate URIを使用するための環境設定が必要です。Private URIの使用方法の詳細は、[NHN Cloud Container Registry(NCR)ユーザーガイド](/Container/NCR/ja/user-guide/#private-uri)を参照してください。
-
-##### 3.インストールパッケージを解凍した後、**./install-driver.sh {REGISTRY} {INTERNET_USAGE}**コマンドを使用してcsi-driver-nfsコンポーネントをインストールします。
-クラスターが作成されたリージョン及びインターネット接続可否に応じて、正しい{REGISTRY}及び{INTERNET_USAGE}値を入力します。 
-
-* {REGISTRY}
-  * 韓国(パンギョ)リージョン: **dfe965c3-kr1-registry.container.nhncloud.com**
-  * 韓国(ピョンチョン)リージョン: **6e7f43c6-kr2-registry.container.cloud.toast.com**
-    * 韓国(クァンジュ)リージョン：**d6628457-kr3-registry.container.nhncloud.com**
-* {INTERNET_USAGE}
-  * インターネット接続可能なクラスター： **true**
-  * インターネット接続できないクラスター： **false**
-
-以下は、韓国(パンギョ)リージョンに作成されたインターネット接続が可能なクラスターにcsi-driver-nfsをインストールする例です。
-
-```
-$ tar -xvf nfs-deploy-tool.tar
-
-$ ./install-driver.sh dfe965c3-kr1-registry.container.nhncloud.com public
-INTERNET_USAGE set to true. Container image registry set with value dfe965c3-kr1-registry.container.nhncloud.com
-Installing NFS CSI driver
-serviceaccount/csi-nfs-controller-sa created
-serviceaccount/csi-nfs-node-sa created
-clusterrole.rbac.authorization.k8s.io/nfs-external-provisioner-role created
-clusterrolebinding.rbac.authorization.k8s.io/nfs-csi-provisioner-binding created
-csidriver.storage.k8s.io/nfs.csi.k8s.io created
-deployment.apps/csi-nfs-controller created
-daemonset.apps/csi-nfs-node created
-NFS CSI driver installed successfully.
-```
-
-##### 4. コンポーネントが正常にインストールされていることを確認します。
-```
-$ kubectl get pods -n kube-system
-NAMESPACE     NAME                                         READY   STATUS    RESTARTS   AGE
-kube-system   csi-nfs-controller-844d5989dc-scphc          3/3     Running   0          53s
-kube-system   csi-nfs-node-hmps6                           3/3     Running   0          52s
-
-$ kubectl get clusterrolebinding
-NAME                                                                                                ROLE                                                               AGE
-clusterrolebinding.rbac.authorization.k8s.io/nfs-csi-provisioner-binding                            ClusterRole/nfs-external-provisioner-role                          52s
-
-$ kubectl get clusterrole
-NAME                                                                                                         CREATED AT
-clusterrole.rbac.authorization.k8s.io/nfs-external-provisioner-role                                          2022-08-09T06:21:20Z
-
-$ kubectl get csidriver
-NAME                                                ATTACHREQUIRED   PODINFOONMOUNT   MODES                  AGE
-csidriver.storage.k8s.io/nfs.csi.k8s.io             false            false            Persistent,Ephemeral   47s
-
-$ kubectl get deployment -n kube-system
-NAMESPACE     NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
-kube-system   coredns                     2/2     2            2           22d
-kube-system   csi-nfs-controller          1/1     1            1           4m32s
-
-$ kubectl get daemonset -n kube-system
-NAMESPACE     NAME                    DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR                   AGE
-kube-system   csi-nfs-node            1         1         1       1            1           kubernetes.io/os=linux          4m23s
-```
 
 #### プロビジョニング時に既存のNHN Cloud NASボリュームを利用する方法
 PVマニフェスト作成時にNAS情報を入力するか、StorageClassマニフェストにNAS情報を入力して既存のNASボリュームをPVとして使用できます。

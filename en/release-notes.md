@@ -1,5 +1,36 @@
 ## Container > NHN Kubernetes Service (NKS) > Release Notes
 
+### May 27, 2026
+
+#### Added Features
+* Added support for Kubernetes v1.34.3.
+    * There are constraints based on the CGroup version of the worker node image for k8s v1.34 and later. For more information, see [Constraints based on Kubernetes version and CGroup version](/Container/NKS/ko/version-guide/#constraints-on-cgroup).
+    * The custom containerd registry configuration feature does not work for k8s v1.34 and later. For more information, see [Custom containerd registry configuration feature](/Container/NKS/ko/version-guide/#containerd-registry-config).
+* Added support for Cilium CNI.
+
+#### Platform Version Updates
+* Added 1.202605.0.
+    * Compatible Kubernetes versions: v1.30–v1.34
+    * Added Features
+        * Added support for worker node CGroup v1 → v2 migration
+        * Added support for konnectivity for communication between kube-apiserver and pods
+        * Enabled `ImageVolume` feature gate for k8s v1.34 clusters
+
+#### Add-on Updates
+* The following add-ons are added:
+    * nfs_csi_plugin v1.0.2-nks1
+    * cilium v1.18.0-nks1
+    * calico v3.31.4-nks1
+    * calico v3.28.2-nks3
+    * calico v3.30.2-nks3
+
+### March 17, 2026
+
+#### Platform Version Updates
+* Added 1.202602.1.
+    * Feature Updates
+        * Enhanced stability of LBs created with Service objects
+
 ### March 10, 2026
 
 #### Platform Version Updates

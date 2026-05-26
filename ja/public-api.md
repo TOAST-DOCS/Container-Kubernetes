@@ -1,7 +1,7 @@
 ## Container > NHN Kubernetes Service(NKS) > API v2ガイド
 
 Kubernetesクラスタを構成するためのAPIを記述します。
-APIを使用するにはAPIエンドポイントとトークンなどが必要です。 [API使用準備](/Compute/Compute/ja/identity-api/)を参照してAPIの使用に必要な情報を準備します。
+NKSは、API呼び出し時の認証/認可のためにIaaSトークンを使用します。IaaSトークンは、NHN CloudのOpenStackベースのインフラサービス(IaaS)で使用する認証トークンです。IaaSトークンの発行及び使用に関する詳細は、[IaaSトークン](/nhncloud/ja/public-api/iaas-token)を参照してください。
 
 すべてのAPIは`kubernetes`タイプエンドポイントを利用して呼び出します。
 
@@ -2350,6 +2350,9 @@ X-Auth-Token: {tokenId}
 | 名前 | 種類 | 形式 | 必須 | 説明 |
 |---|---|---|---|---|
 | tokenId | Header | String | O | トークンID |
+| k8s_version | Query | String | X | Kubernetesバージョン(例：`v1.30.0`)。指定時、該当バージョンと互換性のあるアドオンのみを返却します。 |
+| image | Query | UUID | X | ベースイメージのUUID。指定時、該当イメージにインストール可能なアドオンのみを返却します。 |
+| platform_version | Query | String | X | プラットフォームバージョン(例：`1.202605.0`)。指定時、該当プラットフォームバージョンで使用可能なアドオンのみを返却します。 |
 
 #### レスポンス
 
