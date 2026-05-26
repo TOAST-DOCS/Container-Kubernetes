@@ -2350,6 +2350,9 @@ X-Auth-Token: {tokenId}
 | 名前 | 種類 | 形式 | 必須 | 説明 |
 |---|---|---|---|---|
 | tokenId | Header | String | O | トークンID |
+| k8s_version | Query | String | X | Kubernetesバージョン(例：`v1.30.0`)。指定時、該当バージョンと互換性のあるアドオンのみを返却します。 |
+| image | Query | UUID | X | ベースイメージのUUID。指定時、該当イメージにインストール可能なアドオンのみを返却します。 |
+| platform_version | Query | String | X | プラットフォームバージョン(例：`1.202605.0`)。指定時、該当プラットフォームバージョンで使用可能なアドオンのみを返却します。 |
 
 #### レスポンス
 
