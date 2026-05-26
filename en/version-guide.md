@@ -72,6 +72,7 @@ To ensure stable service operation, we apply a service support policy for each K
 | Version | Release | End of Service Support (Upgrade Support) | End of Service Support (EOS) |
 |------|--------|---------------------------------|---------------------|
 | v1.33 | November, 2025 | January 31, 2027 | November 30, 2027 |
+| v1.34 | May, 2026 | July 31, 2027 | May 31, 2028 |
 
 ### Old Policy Applied Version (v1.32 or earlier)
 
@@ -79,13 +80,14 @@ To ensure stable service operation, we apply a service support policy for each K
 |------|--------|---------------------------------|---------------------|
 | v1.28.3 | 2024.02 | 2025.11.30 | 2025.11.30 |
 | v1.29.3 | 2024.05 | 2026.02.28 | February 28, 2026 |
-| v1.30.3 | August 2024 | May 31, 2026 (Planned) | May 31, 2026 (Planned) |
+| v1.30.3 | August 2024 | May 31, 2026 | May 31, 2026 |
 | v1.31.4 | February 2025 | August 31, 2026 (Planned) | August 31, 2026 (Planned) |
 | v1.32.3 | May 2025 | February 28, 2027 (Planned) | February 28, 2027 (Planned) |
 
 <a id="platform-version"></a>
 ## Platform Version
 
+<a id="platform-version-info"></a>
 ### Platform Version-Specific Information
 
 | Version | Release Date | Kubernetes Compatible Version | Description |
@@ -94,3 +96,24 @@ To ensure stable service operation, we apply a service support policy for each K
 | 1.202511.0 | 2025.11 | v1.28–v1.33 | Initial release of the platform version |
 | 1.202511.1 | 2025.12 | v1.28–v1.33 | Fixed an issue for health check port configuration |
 | 1.202602.0 | 2026.02 | v1.29–v1.33 | Added features<br>- Kubernetes taint configuration <br>- Support for Kubernetes component configuration for max-pods <br>- Support for etcd data encryption with Secure Key Manager <br>- Support for CGroup v2 OS image<br><br>Feature Updates<br>- Support for improved traffic handling during node and node group deletion |
+| 1.202605.0 | 2026.05 | v1.30–v1.34 | Feature Updates<br>- Added support for worker node CGroup v1 → v2 migration<br>- Enabled `ImageVolume` feature gate for Kubernetes v1.34 clusters<br>- Added support for konnectivity for communication between kube-apiserver and pods<br>- Added support for etcd upgrade |
+
+<a id="platform-component-versions"></a>
+### Key component versions by platform version
+
+| Platform Version | etcd | containerd |
+| :--- | :--- | :--- |
+| **1.202505.0** | v3.4.16 | 1.6.21 |
+| **1.202511.0** | v3.4.16 | 1.6.21 |
+| **1.202511.1** | v3.4.16 | 1.6.21 |
+| **1.202602.0** | v3.4.16 | 1.6.21 |
+| **1.202605.0** | v3.5.29 | k8s v1.33 or earlier: 1.7.27 </br> k8s v1.34 or later: 2.2.1 |
+
+<a id="platform-version-cgroup-v2-support"></a>
+### Platform version for using CGroup v2 OS images
+* Clusters with a platform version earlier than 1.202602.0 cannot use OS images configured with CGroup v2.
+* The configured CGroup version differs based on the release date of the OS image.
+  * Images released before 2026/03/10: CGroup v1
+  * Images released after 2026/03/10: CGroup v2
+* Therefore, clusters with a platform version earlier than 1.202602.0 may have no available images when adding a node group.
+* To use OS images with CGroup v2, the platform version must be upgraded to 1.202602.0 or later.
