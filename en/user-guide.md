@@ -444,7 +444,7 @@ Terms used in relation to the autoscaler and their meanings are as follows:
 
 <a id="metric-base-autoscaler"></a>
 #### Metric-based autoscaler
-The metrics-based autoscaler operates based on NHN Cloud's [Cloud Monitoring](/Monitoring/Cloud%20Monitoring/ko/overview/) service. A metric collection agent installed on the worker nodes sends system metrics to Cloud Monitoring at one-minute intervals, and automatically adds or removes nodes when the collected metrics exceed or fall below the thresholds you set. The Scale Up and Scale Down features can be enabled independently of each other.
+The metrics-based autoscaler operates based on NHN Cloud's [Cloud Monitoring](/Monitoring/Cloud%20Monitoring/en/overview/) service. A metric collection agent installed on the worker nodes sends system metrics to Cloud Monitoring at one-minute intervals, and automatically adds or removes nodes when the collected metrics exceed or fall below the thresholds you set. The Scale Up and Scale Down features can be enabled independently of each other.
 
 <a id="metric-base-autoscaler-set"></a>
 ##### Metric-based Autoscaler Settings
@@ -1091,7 +1091,7 @@ You can only change an instance to another flavor that is compatible with its cu
 <a id="custom-image"></a>
 ### Use Custom Image as Worker Image
 
-You can create a worker node group using your custom images. This requires additional work (conversion to NKS worker node) in NHN Cloud Image Builder so that the custom image can be used as a worker node image. In Image Builder, you can create custom worker node images by creating image templates with the worker node application of NHN Kubernetes Service (NKS). For more information on Image Builder, see [](/Compute/Image%20Builder/ko/console-guide/#_1)Image Builder User Guide[](/Compute/Image%20Builder/ko/console-guide/#_1).
+You can create a worker node group using your custom images. This requires additional work (conversion to NKS worker node) in NHN Cloud Image Builder so that the custom image can be used as a worker node image. In Image Builder, you can create custom worker node images by creating image templates with the worker node application of NHN Kubernetes Service (NKS). For more information on Image Builder, see [](/Compute/Image%20Builder/en/console-guide/#_1)Image Builder User Guide[](/Compute/Image%20Builder/en/console-guide/#_1).
 
 > [Caution]
 Conversion to NKS worker node involves installing packages and changing settings, so if you work with images that don't work properly, it may fail.
@@ -1486,6 +1486,20 @@ Notes
 
 <br>
 
+#### Considerations for etcd version changes
+When performing a cluster upgrade, the etcd upgrade is performed together only when the [etcd version](/Container/NKS/en/user-guide/#platform-version-etcd-version) defined in the target platform version differs from the etcd version of the current cluster. Before starting the upgrade, make sure to review the following considerations and take appropriate measures such as scheduling advance notifications and maintenance windows.
+
+##### Avoid frequent resource changes to ensure data consistency
+If resource deployment or deletion operations occur frequently during an etcd upgrade, the data consistency check may fail and the upgrade may fail as a result. For a safe upgrade, it is recommended to perform the upgrade under the following conditions:
+* Perform the upgrade during periods of low cluster resource changes.
+* Perform the upgrade during periods of low operational impact (such as maintenance windows).
+* Avoid large-scale deployments, deletions, or batch job executions immediately before the upgrade, and proceed after traffic has stabilized.
+
+##### Temporary cluster operation suspension during automatic recovery from etcd upgrade failure
+If an etcd upgrade fails, an automatic recovery procedure is triggered to restore the cluster to its previous state. During this procedure, cluster operations (Kubernetes API responses) may be temporarily suspended. Running workloads (Pod) are not affected, but kubectl calls may be temporarily delayed and new resource creation or modification operations may be temporarily suspended.
+
+<br>
+
 #### Upgrade Strategy
 NKS clusters provide two upgrade strategies: Rolling Upgrade and Blue/Green Upgrade. Users can choose the appropriate strategy to upgrade the cluster based on their operational policies.
 
@@ -1567,7 +1581,7 @@ Discarding all resources in the Blue environment will cause the control plane an
 <a id="api-endpoint-ipacl"></a>
 ### Enforce IP Access Control to Cluster API Endpoints
 You can enforce or disable IP access control to cluster API endpoints.
-For more information about the IP access control feature, see [IP Access Control](/Network/Load%20Balancer/ko/overview/#ip).
+For more information about the IP access control feature, see [IP Access Control](/Network/Load%20Balancer/en/overview/#ip).
 
 #### IP Access Control Rules
 When you add a Cluster API endpoint to IP access control targets, the rules below apply.
@@ -1604,7 +1618,7 @@ Here's how to use the certificate renewal feature
     * If a pod with certificate settings exists, a restart is required to apply the updated CA certificate.
 
 > [Note]
-> The certificate renewal feature is available for clusters using 1.24 or later versions of Calico-VXLAN CNI.
+> The certificate renewal feature is available for clusters using 1.24 or later versions of Calico-VXLAN CNI or Cilium CNI.
 
 > [Caution]
 > The certificate renewal feature involves a restart of the system components and any kube-system namespace pods initially deployed at cluster creation to reflect the new certificate generation and settings.
@@ -1844,6 +1858,29 @@ You must specify one of the following three values:
 * Up to 30 Kubernetes taints can be defined per node group.
 * Updated Kubernetes taint configuration apply only to newly created nodes.
 
+<a id="konnectivity-description"></a>
+### konnectivity
+
+Konnectivity is a component in Kubernetes that securely proxies network communication between the control plane (API server) and worker nodes. Previously, the API server had to directly access the kubelet or pods on nodes, which made network configuration complex.
+
+Konnectivity consists of two parts to address this issue.
+* Konnectivity Server: Exists in the control plane and forwards requests received from the API server to the Konnectivity Agent.
+* Konnectivity Agent: Exists on worker nodes, forwards requests received from the Konnectivity Server to the target Pod, and returns the response back to the Konnectivity Server.
+
+The Konnectivity Server and Konnectivity Agent first establish a connection to create a tunnel, and the API server communicates with Pods through this tunnel.
+
+> [Caution]
+> The following resources are related to the Konnectivity Agent. Modifying settings or deleting these resources may have a critical impact on cluster operations.
+>
+> | Type | Namespace | Name |
+> | --- | --- | --- |
+> | ServiceAccount | kube-system | konnectivity-agent |
+> | ClusterRoleBinding | kube-system | konnectivity-server-auth-delegator |
+> | Deployment | kube-system | konnectivity-agent |
+
+> [Note]
+> Konnectivity is available in platform version 1.202605.0 or later.
+
 <a id="worker-node-management"></a>
 ## Manage Worker Node
 
@@ -1953,7 +1990,14 @@ A kubelet is a node agent that runs on all worker nodes. The kubelet receives in
 > * The set custom argument will remain in effect even when the system restarts.
 
 <a id="containerd-registry-config"></a>
-### Custom Containerd Registry Settings
+### Custom Containerd Registry Settings (deprecated)
+
+
+> [Caution]
+> This feature does not work in Kubernetes v1.34 or later.
+> containerd 2.2 Kubernetes v1.34 or later using containerd 2.2 can apply configuration per registry by using hosts.toml file.
+> For more information, see [Registry Configuration](https://github.com/containerd/containerd/blob/main/docs/hosts.md).
+
 NKS clusters in v1.24.3 and later use containerd v1.6 as the container runtime. NKS provides the feature to customize several settings in containerd, including those related to the registry, to suit your environment. For registry settings in containerd v1.6, see [Configure Image Registry](https://github.com/containerd/containerd/blob/release/1.6/docs/cri/registry.md).
 
 While initializing worker nodes, if a custom containerd registry configuration file`(``/etc/containerd/registry-config``.json`) exists, the contents of this file are applied to the containerd configuration file`(/etc/containerd/config.toml`). If a custom containerd registry configuration file does not exist, the containerd configuration file applies the default registry settings. The default registry settings include the following
@@ -2050,6 +2094,35 @@ echo '[ { "registry": "user-defined.registry.io", "endpoint_list": [ "http://use
 >     * To use the `docker.io` registry, you must also include settings for the `docker.io` registry. For settings for the `docker`. `io` registry, see Default registry settings.
 >     * If you do not want to use the `docker.io` registry, you can simply not include any settings for the `docker.io` registry. However, at least one registry setting must exist.
 
+<a id="constraints-on-cgroup"></a>
+### Constraints based on Kubernetes version and CGroup version
+CGroup (Control Group) is a Linux kernel feature that allows you to limit, isolate, and monitor the system resource usage — such as CPU, memory, disk I/O, and network — of process groups. It is one of the core foundations of container technologies, including Kubernetes. CGroup started with the original version 1 (v1) and evolved into version 2 (v2) with enhanced memory and I/O control capabilities. Since it is a Linux kernel feature, CGroup v2 has a dependency on the Linux kernel. Therefore, CGroup v2 is only supported on relatively recent distributions and versions.
+
+Starting from NKS cluster v1.34, worker nodes must operate with CGroup v2. This is a constraint introduced by the Kubernetes community, signaling a shift to use containerd 2.x instead of containerd 1.x and to operate based on CGroup v2 instead of v1.
+
+Worker nodes in NKS operate with CGroup v2 in the following cases:
+* Creating a worker node group using an OS image configured with CGroup v2
+* Creating a worker node group using an OS image configured with CGroup v1, then performing a rolling upgrade to v1.34
+
+The default CGroup version can be confirmed based on the release date of the OS image.
+* Images released before 2026/03/10: CGroup v1
+* Images released after 2026/03/10: CGroup v2
+
+Even if the default CGroup version of an OS image is v1, it can be changed to v2. For worker node groups created using an OS image with a default CGroup version of v1, the CGroup version of the worker nodes is changed from v1 to v2 in the following cases:
+* When performing a rolling upgrade to Kubernetes v1.34
+* When adding worker nodes after a rolling upgrade to Kubernetes v1.34
+
+The OS image distributions and versions that support changing the CGroup version from v1 to v2 are as follows:
+* Ubuntu 22.04 or later
+* Rocky 9.0 or later
+
+> [Caution]
+> * The process of changing the CGroup configuration of worker nodes from v1 to v2 includes a **worker node reboot**.
+> * If a node reboot is not possible — for example, due to unauthorized changes to grub.conf — the CGroup version change will fail and the instance may fail to boot.
+> * The Kubernetes version upgrade of the worker node group must be performed when there are no issues with instance rebooting.
+
+Worker node groups created using an OS image whose default CGroup version is v1 and that cannot be changed to v2 are not eligible for a rolling upgrade to Kubernetes v1.34. In this case, the worker node group can be upgraded using the Blue-Green method.
+
 <a id="worker-management-caution"></a>
 ### Precautions for Worker Node Management
 * Do not arbitrarily delete container images that are pulled on worker nodes. This may cause the Pods required by the NKS cluster to stop working. 
@@ -2058,16 +2131,16 @@ echo '[ { "registry": "user-defined.registry.io", "endpoint_list": [ "http://use
 
 <a id="cni"></a>
 ## Container Network Interface (CNI)
-NHN Kubernetes Service (NKS) provides alternative Container Network Interface (CNI) options through its add-on features. As of February 2026, you can select either Calico-VXLAN or Calico-eBPF during cluster creation, with Calico-VXLAN assigned as the default configuration. Calico-eBPF utilizes the BGP routing protocol for container workloads and leverages eBPF technology for direct communication, while certain segments—such as NodePort—rely on VXLAN.
+NHN Kubernetes Service (NKS) provides alternative Container Network Interface (CNI) options through its add-on features. You can select either Calico-VXLAN, Calico-eBPF, and Cilium during cluster creation, with Calico-VXLAN assigned as the default configuration. Calico-eBPF utilizes the BGP routing protocol for container workloads and leverages eBPF technology for direct communication, while certain segments—such as NodePort—rely on VXLAN. For the information about Calico's' eBPF, see [about eBPF](https://docs.tigera.io/calico/latest/about/kubernetes-training/about-ebpf). Cilium is based on a VXLAN overlay network and provides high network performance using eBPF technology. For more information on Cilium's eBPF-related content, see [eBPF Datapath](https://docs.cilium.io/en/stable/network/ebpf/).
 
 OS limitations selectable by CNI are as follows:
 
 | CNI | Available OS |
 | :-: | :-: |
-| Flannel |Centos, Rocky, Red Hat, Ubuntu |
-| Calico-VXLAN |Centos, Rocky, Red Hat, Ubuntu |
+| Flannel | Centos, Rocky, Red Hat, Ubuntu |
+| Calico-VXLAN | Centos, Rocky, Red Hat, Ubuntu |
 | Calico-eBPF | Rocky, Ubuntu |
-
+| Cilium | Rocky, Ubuntu |
 
 <a id="calico-cni-types"></a>
 ### Calico CNI Types
@@ -2110,6 +2183,10 @@ If you set enhanced security rules to True at cluster creation, only mandatory s
 | ingress | UDP | 8472 | IPv4 | Worker node | flannel vxlan overlay network port, direction: pod (NKS Control plane) → pod (worker node) | Created when CNI is flannel |
 | ingress | UDP | 4789 | IPv4 | Worker node | calico-node vxlan overlay network port, direction: pod (worker node) → pod (worker node) | Created when CNI is Calico-VXLAN, Calico-eBPF |
 | ingress | UDP | 4789 | IPv4 | NKS Control Plane | calico-node vxlan overlay network port, direction: pod (NKS Control plane) → pod (worker node) | Created when CNI is Calico-VXLAN, Calico-eBPF |
+| ingress | TCP | 4240 | IPv4 | Worker node | cilium-agent health check port, direction: cilium-agent (worker node) → cilium-agent (worker node) | Created when CNI is Cilium |
+| ingress | ICMP | - | IPv4 | Worker node | cilium ping health monitoring, direction: cilium-agent (worker node) → worker node | Created when CNI is Cilium |
+| ingress | UDP | 8472 | IPv4 | Worker node | cilium VXLAN overlay network port, direction: Pod (worker node) → Pod (worker node) | Created when CNI is Cilium |
+| ingress | UDP | 8472 | IPv4 | NKS Control Plane | cilium VXLAN overlay network port, direction: Pod (NKS Control Plane) → Pod (worker node) | Created when CNI is Cilium |
 | egress | TCP | 2379 | IPv4 | NKS Control Plane | etcd port, direction: calico-kube-controller (worker node) → etcd (NKS Control plane)| |
 | egress | TCP | 6443 | IPv4 | Kubernetes API endpoint | kube-apiserver port, direction: kubelet, kube-proxy (worker node) → kube-apiserver (NKS Control plane) | |
 | egress | TCP | 6443 | IPv4 | NKS Control Plane | kube-apiserver port, direction: default kubernetes service (worker node) → kube-apiserver (NKS Control plane) | |
@@ -2123,6 +2200,10 @@ If you set enhanced security rules to True at cluster creation, only mandatory s
 | egress | UDP | 8472 | IPv4 | NKS Control Plane | flannel vxlan overlay network port, direction: pod (worker node) → pod (NKS Control plane) | Created when CNI is flannel |
 | egress | UDP | 4789 | IPv4 | Worker node | calico-node vxlan overlay network port, direction: pod (worker node) → pod (worker node) | Created when CNI is Calico-VXLAN, Calico-eBPF |
 | egress | UDP | 4789 | IPv4 | NKS Control Plane | calico-node vxlan overlay network port, direction: pod (worker node) → pod (NKS Control plane) | Created when CNI is Calico-VXLAN, Calico-eBPF |
+| egress | TCP | 4240 | IPv4 | Worker node | cilium-agent health check port, direction: cilium-agent (worker node) → cilium-agent (worker node) | Created when CNI is Cilium |
+| egress | ICMP | - | IPv4 | Worker node | cilium ping health monitoring, direction: worker node → cilium-agent (worker node) | Created when CNI is Cilium |
+| egress | UDP | 8472 | IPv4 | Worker node | cilium VXLAN overlay network port, direction: Pod (worker node) → Pod (worker node) | Created when CNI is Cilium |
+| egress | UDP | 8472 | IPv4 | NKS Control Plane | cilium VXLAN overlay network port, direction: Pod (worker node) → Pod (NKS Control Plane) | Created when CNI is Cilium |
 | egress | UDP | 53 | IPv4 | Allow all | DNS port, direction: Worker node → External | |
 
 When using enhanced security rules, the NodePort type of service and the ports used by the NHN Cloud NAS service are not added to the security rules. You need to set the following security rules as needed. 
@@ -2137,6 +2218,29 @@ When using enhanced security rules, the NodePort type of service and the ports u
 > [Caution when using Calico-eBPF CNI].
 When using Calico-eBPF CNI, communication between pods and communication from nodes to pods is done through the ports set on the pods.
 If you are using enhanced security rules, you must manually add ingress and egress security rules for those pod ports.
+
+<a id="cilium-optional-security-group-rules"></a>
+### Additional security group rules when using Cilium CNI optional features
+
+To enable optional features such as Hubble, Envoy, and Prometheus in a cluster using Cilium CNI, additional security group rules required for those features must be configured.
+
+##### Required ports per optional feature
+
+| Feature | Direction | IP protocol | Port range | Remote | Description |
+| :-: | :-: | :-: | :-: | :-: | :-: |
+| Hubble Observability | ingress, egress | TCP | 4244 | Worker node | hubble-server port, direction: hubble-relay (worker node) → hubble-server (worker node) |
+| Hubble UI | ingress, egress | TCP | 4245 | Worker node | hubble-relay port, direction: hubble-ui (worker node) → hubble-relay (worker node) |
+| Cilium Agent Metrics | ingress, egress | TCP | 9962 | Worker node | cilium-agent Prometheus metrics port |
+| Cilium Operator Metrics | ingress, egress | TCP | 9963 | Worker node | cilium-operator Prometheus metrics port |
+| Cilium Envoy Metrics | ingress, egress | TCP | 9964 | Worker node | cilium-envoy Prometheus metrics port |
+| WireGuard encryption | ingress, egress | UDP | 51871 | Worker node | WireGuard transparent encryption port |
+| IPsec encryption | ingress, egress | UDP | 500 | Worker node | IPsec IKE port |
+| IPsec encryption | ingress, egress | UDP | 4500 | Worker node | IPsec NAT-T port |
+| IPsec encryption | ingress, egress | ESP (50) | - | Worker node | IPsec ESP protocol |
+
+> [Note]
+> The optional features above are not included in the default Cilium installation.
+> To use optional features, you must manually modify the Cilium configuration and add the security group rules required for those features.
 
 <a id="relaxd-sg-rules"></a>
 ### Rules that are generated when you don't use enhanced security rules
@@ -2242,8 +2346,47 @@ Calico is a CNI plugin that provides networking and network security for Kuberne
 * Supported version list
 * v3.28.2-nks1
     * v3.28.2-nks2: Improved stability for add-on management.
+    * v3.28.2-nks3: Supprted for konnectivity environment.
     * v3.30.2-nks1
     * v3.30.2-nks2: Improved stability for add-on management.
+    * v3.30.2-nks3: Supported for konnectivity environment.
+    * v3.31.4-nks1: The datastore is Kubernetes Datastore Driver (KDD), and it supports konnectivity environment.
+
+> [Noate]
+> * The following Calico versions can be installed or updated on platform versions that support konnectivity (1.202605.0 or later):
+>     * v3.28.2-nks3 or later
+>     * v3.30.2-nks3 or later
+>     * v3.31.4 or later
+
+<a id="addon-mgmt-addon-calico-datastore"></a>
+##### Calico datastore
+Calico stores various information such as Pod IPs and per-node IP ranges in a datastore. Previously provided versions used etcd as the datastore, while newly provided versions use KDD (Kubernetes Datastore Driver). KDD uses Kubernetes CRDs to store various information in Kubernetes-level resources and objects. Using KDD simplifies the network topology and provides management advantages as all related information is exposed as CRs.
+
+The following versions use etcd as the datastore:
+* v3.28.2
+* v3.30.2
+
+The following versions use KDD as the datastore:
+* v3.31.4 and later
+
+> [Caution]
+> * When performing an add-on update that changes the datastore from etcd to KDD, only the "Overwrite" conflict option is supported.
+> * Add-on updates that change the datastore from KDD to etcd are not supported.
+
+<a id="addon-mgmt-addon-cilium"></a>
+#### Cilium
+Cilium is a CNI plugin that provides Kubernetes's networking and network security.
+
+* Type: CNI
+* Option: None
+* Immutable resources and fields
+    * DaemonSet/cilium, namespace kube-system
+        * .spec.template.spec.containers[name="cilium-agent"].image
+        * .spec.template.spec.containers[name="cilium-envoy"].image
+    * Deployment/cilium-operator, namespace kube-system
+        * .spec.template.spec.containers[name="cilium-operator"].image
+* Supported version
+    * v1.18.0-nks1
 
 <a id="addon-mgmt-addon-coredns"></a>
 #### CoreDNS
@@ -2345,6 +2488,8 @@ The NFS CSI Plugin is a CSI driver that allows you to provision and manage NFS o
     * v1.0.1-nks2
         * Improved stability for add-on management.
         * Fixed missing validation for immutable resources/fields.
+    * v1.0.2-nks1
+        * Fixed an issue where the optional snapshot setting was incorrectly required as mandatory.      
 
 <a id="loadbalancer-service"></a>
 ## LoadBalancer Service
@@ -2486,8 +2631,6 @@ Commercial support is available at
 ### Setting Detailed Options for Load Balancer
 When defining service objects in Kubernetes, you can set several options for the load balancer. You can set the following.
 
-* Global Setting and Per-Listener Setting
-* Format of Per-Listener Setting
 * Setting Load Balancer Name
 * Setting keep-alive timeout
 * Set load balancer type
@@ -2569,6 +2712,21 @@ For clusters of Kubernetes v1.19.13 version, per-listener settings apply only to
 > [Caution]
 All setting values for the features below must be entered in string format. In the YAML file input format, to enter in string format regardless of the input value, enclose the input value in double quotation marks ("). For more information about the YAML file format, see [Yaml Cookbook](https://yaml.org/YAML_for_ruby.html).
 >
+
+<a id="loadbalancer-update-without-modification"></a>
+#### How to update a load balancer without changing settings
+
+If a load balancer update is required without changing its settings — such as for a certificate update — the following command can be used.
+
+```
+# Use the following command to set the annotation:
+kubectl annotate svc <name> loadbalancer.nhncloud/force-reconcile=true
+```
+
+Once the load balancer update begins, the annotation set by the above command is automatically deleted.
+
+> [Caution]
+> This feature works on clusters with platform version 1.202605.0 or later.
 
 #### Setting Load Balancer Name
 
@@ -4048,7 +4206,7 @@ spec:
 ```
 
 > [Note]
-Regarding how to use NHN Cloud Container Registry, see [NHN Cloud Container Registry (NCR) User Guide](/Container/NCR/ko/user-guide).
+Regarding how to use NHN Cloud Container Registry, see [NHN Cloud Container Registry (NCR) User Guide](/Container/NCR/en/user-guide).
 
 <a id="nas-integration"></a>
 ### Integrate with NHN Cloud NAS
@@ -4075,7 +4233,7 @@ For clusters that are using enforced security rules, you must add security rules
 | egress | TCP | 635 | IPv4 | NAS IP address |  rpc's mountd port, direction: csi-nfs-node(worker node) → NAS |
 
 #### Install csi-driver-nfs
-To use the NHN Cloud NAS service, you must deploy the csi-driver-nfs components.
+To use the NHN Cloud NAS service, you must deploy [nfs-csi-plugin](/Container/NKS/en/user-guide/#addon-mgmt-addon-nfs-csi-plugin) to the cluster using the add-on feature of NHN Kubernetes Service (NKS).
 
 csi-driver-nfs is a driver that supports NFS storage provisioning that works by creating new subdirectories on NFS storage.
 csi-driver-nfs works by presenting NFS storage information to storage classes, reducing what you have to manage.
@@ -4083,90 +4241,6 @@ csi-driver-nfs works by presenting NFS storage information to storage classes, r
 If you configure multiple PVs using the nfs-csi-driver, the nfs-csi-driver registers the NFS storage information in the StorageClass, removing the need to configure an NFS-Provisioner pod.
 <br>
 ![nfs-csi-driver-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nfs-csi-driver-02.png)
-
-> [Note]
-During the internal execution of the csi-driver-nfs execution script, the kubectl apply command is performed. Therefore, the installation should proceed with the `kubectl` command operating normally.
-The csi-driver-nfs installation process is based on the Linux environment.
-
-##### 1. Save the absolute path of a cluster configuration file in an environment variable.
-```
-$ export KUBECONFIG={Absolute path of a cluster configruration file}
-```
-
-##### 
-ORAS (OCI Registry As Storage) is a tool that provides a way to push and pull OCI artifacts from an OCI registry.
-Refer to [](https://oras.land/docs/installation)ORAS installation[](https://oras.land/docs/installation) to install ORAS command line tools. For detailed usage of the ORAS command line tools, see the [](https://oras.land/docs/)ORAS docs[](https://oras.land/docs/).
-
-
-| Region | Internet Connection | Download Command |
-| --- | --- | --- |
-| Korea (Pangyo) region | O |  oras pull dfe965c3-kr1-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v1 |
-| | X | oras pull private-dfe965c3-kr1-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v1 |
-| Korea (Pyengchon) region | O | oras pull 6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/oci/nfs-deploy-tool:v1 |
-| | X | oras pull private-6e7f43c6-kr2-registry.container.cloud.toast.com/container_service/oci/nfs-deploy-tool:v1 |
-| 한국(Gwangju) 리전 | O | oras pull d6628457-kr3-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v2 |
-| | X | oras pull private-d6628457-kr3-registry.container.nhncloud.com/container_service/oci/nfs-deploy-tool:v2 |
-
-> [Note]
-The csi-driver-nfs container images and artifacts are maintained in NHN Cloud NCR. Since the cluster configured in a closed network environment is not connected to the Internet, it is necessary to configure the environment to use a private URI in order to receive images and artifacts normally. For information on how to use Private URI, refer to the [NHN Cloud Container Registry (NCR) User Guide](Container/NCR/ko/user-guide/#private-uri).
-
-##### 3. Unzip the installation package and run **./install-driver.sh {REGISTRY} {INTERNET_USAGE}** command to install the csi-driver-nfs component.
-Enter the correct {REGISTRY} and {INTERNET_USAGE} values based on the region where the cluster was created and the availability of internet connectivity. 
-
-* {REGISTRY}
-  * Korea (Pangyo) region: **dfe965c3-kr1-registry.container.nhncloud.com**
-  * Korea (Pyeongchon) region: **6e7f43c6-kr2-registry.container.cloud.toast.com**
-  * Korea (Gwangju) region: **d6628457-kr3-registry.container.nhncloud.com**
-* {INTERNET_USAGE}
-  * Cluster available for internet connection: **true**
-  * Cluster unavailable for internet connection: **false**
-
-The following is an example of installing csi-driver-nfs on an internet-connected cluster created in the Korea (Pangyo) region.
-
-```
-$ tar -xvf nfs-deploy-tool.tar
-
-$ ./install-driver.sh dfe965c3-kr1-registry.container.nhncloud.com public
-INTERNET_USAGE set to true. Container image registry set with value dfe965c3-kr1-registry.container.nhncloud.com
-Installing NFS CSI driver
-serviceaccount/csi-nfs-controller-sa created
-serviceaccount/csi-nfs-node-sa created
-clusterrole.rbac.authorization.k8s.io/nfs-external-provisioner-role created
-clusterrolebinding.rbac.authorization.k8s.io/nfs-csi-provisioner-binding created
-csidriver.storage.k8s.io/nfs.csi.k8s.io created
-deployment.apps/csi-nfs-controller created
-daemonset.apps/csi-nfs-node created
-NFS CSI driver installed successfully.
-```
-
-##### 4. Check that the components are installed properly.
-```
-$ kubectl get pods -n kube-system
-NAMESPACE     NAME                                         READY   STATUS    RESTARTS   AGE
-kube-system   csi-nfs-controller-844d5989dc-scphc          3/3     Running   0          53s
-kube-system   csi-nfs-node-hmps6                           3/3     Running   0          52s
-
-$ kubectl get clusterrolebinding
-NAME                                                                                                ROLE                                                               AGE
-clusterrolebinding.rbac.authorization.k8s.io/nfs-csi-provisioner-binding                            ClusterRole/nfs-external-provisioner-role                          52s
-
-$ kubectl get clusterrole
-NAME                                                                                                         CREATED AT
-clusterrole.rbac.authorization.k8s.io/nfs-external-provisioner-role                                          2022-08-09T06:21:20Z
-
-$ kubectl get csidriver
-NAME                                                ATTACHREQUIRED   PODINFOONMOUNT   MODES                  AGE
-csidriver.storage.k8s.io/nfs.csi.k8s.io             false            false            Persistent,Ephemeral   47s
-
-$ kubectl get deployment -n kube-system
-NAMESPACE     NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
-kube-system   coredns                     2/2     2            2           22d
-kube-system   csi-nfs-controller          1/1     1            1           4m32s
-
-$ kubectl get daemonset -n kube-system
-NAMESPACE     NAME                    DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR                   AGE
-kube-system   csi-nfs-node            1         1         1       1            1           kubernetes.io/os=linux          4m23s
-```
 
 #### How to Use existing NHN Cloud NAS Volume When Provisioning
 You can use existing NAS volume as a PV by entering the NAS information when creating the PV manifest or by entering the NAS information in the StorageClass manifest.
@@ -4542,7 +4616,7 @@ tmpfs                                                                          1
 
 <a id="encrypted-block-storage-integration"></a>
 ### NHN Cloud Encrypted Block Storage Integration
-You can utilize encrypted block storage provided by NHN Cloud as PV. For more information about NHN Cloud encrypted block storage, see [Encrypted Block Storage](/Storage/Block%20Storage/ko/console-guide/#_2).
+You can utilize encrypted block storage provided by NHN Cloud as PV. For more information about NHN Cloud encrypted block storage, see [Encrypted Block Storage](/Storage/Block%20Storage/en/console-guide/#_2).
 
 > [Note]
 The Encrypted Block Storage service integration is available for clusters in v1.24.3 and later versions.
@@ -4586,7 +4660,7 @@ $ kubectl -n kube-system patch daemonset csi-cinder-nodeplugin -p "{\"spec\": {\
 ```
 
 > [Note]
-> The cinder-csi-plugin container image is maintained in NHN Cloud NCR. Since the cluster configured in a closed network environment is not connected to the Internet, it is necessary to configure the environment to use a private URI in order to receive images normally. For information on how to use Private URI, refer to the [NHN Cloud Container Registry (NCR)](/Container/NCR/ko/user-guide/#private-uri).
+> The cinder-csi-plugin container image is maintained in NHN Cloud NCR. Since the cluster configured in a closed network environment is not connected to the Internet, it is necessary to configure the environment to use a private URI in order to receive images normally. For information on how to use Private URI, refer to the [NHN Cloud Container Registry (NCR)](/Container/NCR/en/user-guide/#private-uri).
 
 
 #### Static Provisioning
