@@ -1,16 +1,16 @@
 ## Container > NHN Kubernetes Service(NKS) > API v2ガイド
 
-Kubernetesクラスタを構成するためのAPIを記述します。
-APIを使用するにはAPIエンドポイントとトークンなどが必要です。 [API使用準備](/Compute/Compute/ja/identity-api/)を参照してAPIの使用に必要な情報を準備します。
+Kubernetesクラスタを構成するためのAPIについて記述します。
+NKSはAPI呼び出し時の認証/認可のためにIaaSトークンを使用します。IaaSトークンはNHN CloudのOpenStackベースのインフラストラクチャサービス(IaaS)で使用される認証トークンです。IaaSトークンの発行および使用の詳細については[IaaSトークン](/nhncloud/ja/public-api/iaas-token)を参照してください。
 
 すべてのAPIは`kubernetes`タイプエンドポイントを利用して呼び出します。
 
 | タイプ | リージョン | エンドポイント |
 |---|---|---|
-| kubernetes | 韓国(パンギョ)リージョン<br>韓国(坪村)リージョン<br>韓国(クァンジュ)リージョン | https://kr1-api-kubernetes-infrastructure.nhncloudservice.com <br>https://kr2-api-kubernetes-infrastructure.nhncloudservice.com <br>https://kr3-api-kubernetes-infrastructure.nhncloudservice.com |
+| kubernetes | 韓国(パンギョ)リージョン<br>韓国(ピョンチョン)リージョン<br>韓国(光州)リージョン | https://kr1-api-kubernetes-infrastructure.nhncloudservice.com <br>https://kr2-api-kubernetes-infrastructure.nhncloudservice.com <br>https://kr3-api-kubernetes-infrastructure.nhncloudservice.com |
 
 
-APIレスポンスにガイドに明示されていないフィールドが表示されることがあります。これらのフィールドはNHN Cloud内部用途で使用され、予告なしに変更されることがあるため使用しません。
+APIレスポンスにはガイドに明記されていないフィールドが表示される場合があります。これらのフィールドはNHN Cloud内部用途で使用され、事前通知なく変更される可能性があるため使用しません。
 
 ## APIに使用されるリソース情報の確認
 
@@ -59,6 +59,7 @@ GET /v2.0/networks?router:external=True
 ### インスタンスタイプUUID
 
 作成するノードのインスタンスタイプUUIDを入力します。インスタンスタイプリスト照会APIの詳細については[インスタンスタイプリスト表示](/Compute/Instance/ja/public-api/#_2)を参照してください。
+
 
 
 
@@ -1140,6 +1141,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+
 ## ノードグループ
 
 ### ノードグループリスト表示
@@ -2181,6 +2183,7 @@ X-Auth-Token: {tokenId}
 
 ---
 
+
 ## アドオン管理機能
 
 ### NHN Cloudが提供するアドオンタイプ表示
@@ -2626,6 +2629,7 @@ X-Auth-Token: {tokenId}
 
 </p>
 </details>
+
 
 
 
