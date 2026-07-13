@@ -1,22 +1,27 @@
-## Container > NHN Kubernetes Service(NKS) > バージョンガイド
+<!-- pre-align:aligned sig=c2b4f6b0a381 -->
+
+<a id="container-nhn-kubernetes-servicenks-version-guide"></a>
+## Container > NHN Kubernetes Service(NKS) > バージョンガイド { #container-nhn-kubernetes-servicenks-version-guide }
 
 <a id="cluster-version-management"></a>
-
-## クラスタバージョン管理
+## クラスタバージョン管理 { #cluster-version-management }
 
 NKSクラスタは、クラスタコントロールプレーンとワーカーノードグループごとにKubernetesバージョンとプラットフォームバージョンを管理します。両バージョンの違いは次のとおりです。
 
-### Kubernetesバージョン
+<a id="kubernetes-version"></a>
+### Kubernetesバージョン { #kubernetes-version }
 - アップストリームKubernetesで定義するバージョンです。
 - NKSクラスタを構成するKubernetesの主要コンポーネントのバージョンを決定します。
 - 主要コンポーネント: `kube-apiserver`, `kube-controller-manager`, `kube-scheduler`, `kubelet`, `kube-proxy`
 
-### プラットフォームバージョン
+<a id="cluster-version-management-platform-version"></a>
+### プラットフォームバージョン { #cluster-version-management-platform-version }
 - NKSサービスレベルで定義するバージョンです。
 - クラスタを構成する複数のコンポーネントを1つのバージョンとして定義して管理します。
 - 主要コンポーネント: `containerd`, `etcd`などコントロールプレーン及びワーカーノードの主要コンポーネント、各種システムコンポーネント及びシステム管理ツールなど
 
-### バージョン状態に応じたアップグレード対象
+<a id="upgrade-targets-by-version-status"></a>
+### バージョン状態に応じたアップグレード対象 { #upgrade-targets-by-version-status }
 
 | Kubernetesバージョンは最新か | プラットフォームバージョンは最新か | アップグレード対象 |
 |----------------------------|----------------------|----------------|
@@ -28,15 +33,16 @@ NKSクラスタは、クラスタコントロールプレーンとワーカー�
 > コントロールプレーンのバージョン情報は**クラスタ照会**画面で、ワーカーノードグループのバージョン情報は各**ワーカーノードグループ照会**画面で確認できます。
 
 <a id="support-policy"></a>
+## Kubernetesバージョンサポートポリシー { #support-policy }
 
-## Kubernetesバージョンサポートポリシー
-
-### クラスタ作成可能バージョン
+<a id="available-cluster-versions"></a>
+### クラスタ作成可能バージョン { #available-cluster-versions }
 - NKSでリリースしたKubernetesバージョンのうち最新3つのバージョンで新規クラスタを作成できます。
 - 新規バージョンがリリースされると、既存の作成可能バージョンリストのうち最も低いバージョンは自動的に削除されます。
 - Kubernetesバージョンのパッチバージョンは内部ポリシーに従ってアップデートされる場合があります。
 
-### サービスサポートポリシー
+<a id="service-support-policy"></a>
+### サービスサポートポリシー { #service-support-policy }
 安定したサービス運営のために、Kubernetesバージョンごとのサービスサポートポリシーを適用します。
 
 - NKSは**Kubernetesバージョン**を基準にサービスサポート可否が決定されます。
@@ -48,6 +54,7 @@ NKSクラスタは、クラスタコントロールプレーンとワーカー�
 | **サービスサポート** | Kubernetesバージョンリリース後約14か月未満 | 保証 | 可能 |
 | **サービス未サポート** | Kubernetesバージョンリリース後約14か月以上 | 保証しない | ただし、サービスサポート終了後10か月間アップグレードサポート |
 
+<a id="service-support-policy-example-lifecycle-of-version-v133-released-in-november-2025"></a>
 #### 例: 2025年11月にリリースされたv1.33バージョンのライフサイクル
 
 | 区分 | 期間 | 主な特徴 |
@@ -63,22 +70,23 @@ NKSクラスタは、クラスタコントロールプレーンとワーカー�
 
 
 <a id="k8s-version-support-time-table"></a>
-
-## Kubernetesバージョン別サポート日程
+## Kubernetesバージョン別サポート日程 { #k8s-version-support-time-table }
 
 > [案内] 2025年11月からKubernetesバージョンサポートポリシーが変更されます。
 > - v1.32までは既存の日程とポリシーが適用されます。
 > - v1.33からは新規ポリシーが適用されます。
 > - 表の日付はUTC+00:00基準です。
 
-### 新規ポリシー適用バージョン (v1.33以上)
+<a id="new-policy-applied-version-v133-or-later"></a>
+### 新規ポリシー適用バージョン (v1.33以上) { #new-policy-applied-version-v133-or-later }
 
 | バージョン | リリース | サービスサポート終了(アップグレードサポート) | サービスサポート終了(EOS) |
 |------|--------|---------------------------------|---------------------|
 | v1.33 | 2025.11 | 2027.01.31 | 2027.11.30 |
 | v1.34 | 2026.05 | 2027.07.31 | 2028.05.31 |
 
-### 既存ポリシー適用バージョン (v1.32以下)
+<a id="old-policy-applied-version-v132-or-earlier"></a>
+### 既存ポリシー適用バージョン (v1.32以下) { #old-policy-applied-version-v132-or-earlier }
 
 | バージョン | リリース | サービスサポート終了(アップグレードサポート) | サービスサポート終了(EOS) |
 |------|--------|---------------------------------|---------------------|
@@ -89,12 +97,10 @@ NKSクラスタは、クラスタコントロールプレーンとワーカー�
 | v1.32.3 | 2025.05 | 2027.02.28 (予定) | 2027.02.28 (予定) |
 
 <a id="platform-version"></a>
-
-## プラットフォームバージョン
+## プラットフォームバージョン { #platform-version }
 
 <a id="platform-version-info"></a>
-
-### プラットフォームバージョン別情報
+### プラットフォームバージョン別情報 { #platform-version-info }
 
 | バージョン | リリース時点 | Kubernetes互換バージョン | 説明 |
 |------|------------|--------------------|-----|
@@ -105,8 +111,7 @@ NKSクラスタは、クラスタコントロールプレーンとワーカー�
 | 1.202605.0 | 2026.05 | v1.30～v1.34 | 機能改善<br>- ワーカーノードCGroup v1 → v2のマイグレーションサポート<br>- Kubernetes v1.34クラスターの`ImageVolume` feature gate有効化<br>- kube-apiserverとpod間の通信のためのkonnectivityサポート<br>- etcdアップグレードサポート |
 
 <a id="platform-component-versions"></a>
-
-### プラットフォームバージョン別の主要コンポーネントバージョン
+### プラットフォームバージョン別の主要コンポーネントバージョン { #platform-component-versions }
 
 | プラットフォームバージョン | etcd | containerd |
 | :--- | :--- | :--- |
@@ -117,8 +122,7 @@ NKSクラスタは、クラスタコントロールプレーンとワーカー�
 | **1.202605.0** | v3.5.29 | k8s v1.33以下：1.7.27 </br> k8s v1.34以上：2.2.1 |
 
 <a id="platform-version-cgroup-v2-support"></a>
-
-### CGroup v2 OSイメージ使用のためのプラットフォームバージョン
+### CGroup v2 OSイメージ使用のためのプラットフォームバージョン { #platform-version-cgroup-v2-support }
 * プラットフォームバージョン1.202602.0未満のクラスターは、CGroupバージョンがv2に設定されたOSイメージを使用できません。
 * OSイメージのリリース日に応じて、設定されているCGroupバージョンが異なります。
   * 2026/03/10以前のリリースイメージ：CGroup v1

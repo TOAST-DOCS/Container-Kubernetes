@@ -1,4 +1,5 @@
-## Container > NHN Kubernetes Service(NKS) > API v2ガイド
+<a id="container-nhn-kubernetes-service-nks-api-v2-guide"></a>
+## Container > NHN Kubernetes Service(NKS) > API v2ガイド { #container-nhn-kubernetes-service-nks-api-v2-guide }
 
 Kubernetesクラスタを構成するためのAPIを記述します。
 NKSは、API呼び出し時の認証/認可のためにIaaSトークンを使用します。IaaSトークンは、NHN CloudのOpenStackベースのインフラサービス(IaaS)で使用する認証トークンです。IaaSトークンの発行及び使用に関する詳細は、[IaaSトークン](/nhncloud/ja/public-api/iaas-token)を参照してください。
@@ -12,11 +13,13 @@ NKSは、API呼び出し時の認証/認可のためにIaaSトークンを使用
 
 APIレスポンスにガイドに明示されていないフィールドが表示されることがあります。これらのフィールドはNHN Cloud内部用途で使用され、予告なしに変更されることがあるため使用しません。
 
-## APIに使用されるリソース情報の確認
+<a id="check-the-information-of-resources-used-in-api"></a>
+## APIに使用されるリソース情報の確認 { #check-the-information-of-resources-used-in-api }
 
 NHN Kubernetes Service(NKS)APIは、クラスタおよびノードグループを構成するために複数のリソースを使用します。各リソースの情報確認方法は次のとおりです。
 
-### インターネットゲートウェイに接続されたVPCネットワークUUID
+<a id="uuid-of-the-vpc-network-attached-to-the-internet-gateway"></a>
+### インターネットゲートウェイに接続されたVPCネットワークUUID { #uuid-of-the-vpc-network-attached-to-the-internet-gateway }
 
 インターネットゲートウェイに接続されたVPCネットワークは、VPCネットワークリスト照会APIに**router:external=True**クエリパラメータを利用して照会できます。
 
@@ -27,44 +30,54 @@ GET /v2.0/networks?router:external=True
 ネットワークリスト照会APIの詳細については、[ネットワークリスト表示](/Network/VPC/ja/public-api/#_2)を参照してください。
 
 
-### インターネットゲートウェイに接続されたサブネットUUIDリスト
+<a id="list-of-uuids-of-subnets-attached-to-the-internet-gateway"></a>
+### インターネットゲートウェイに接続されたサブネットUUIDリスト { #list-of-uuids-of-subnets-attached-to-the-internet-gateway }
 
 インターネットゲートウェイに接続されたVPCネットワークに接続されたサブネットUUIDを入力します。複数のサブネットが検索された場合はコロン(`:`)でつなげて入力します。サブネットリスト照会APIの詳細については、[サブネットリスト表示](/Network/VPC/ja/public-api/#vpc_7)を参照してください。
 
 
-### VPCネットワークUUID
+<a id="vpc-network-uuid"></a>
+### VPCネットワークUUID { #vpc-network-uuid }
 
 ノードと接続する内部VPCネットワークUUIDを入力します。ネットワークリスト照会APIの詳細については[ネットワークリスト表示](/Network/VPC/ja/public-api/#vpc_1)を参照してください。
 
-### VPCサブネットUUID
+<a id="vpc-subnet-uuid"></a>
+### VPCサブネットUUID { #vpc-subnet-uuid }
 
 ノードと接続する内部VPCネットワークに接続されたサブネットUUIDを入力します。サブネットリスト照会APIの詳細については[サブネットリスト表示](/Network/VPC/ja/public-api/#vpc_7)を参照してください。
 
-### アベイラビリティゾーンUUID
+<a id="availability-zone-uuid"></a>
+### アベイラビリティゾーンUUID { #availability-zone-uuid }
 
 ノードを作成するアベイラビリティゾーンUUIDを入力します。アベイラビリティゾーンリスト照会APIの詳細については[可用性リスト表示](/Compute/Instance/ja/public-api/#_9)を参照してください。
 
-### キーペアUUID
+<a id="key-pair-uuid"></a>
+### キーペアUUID { #key-pair-uuid }
 
 ノード接続時に使用するキーペアを入力します。キーペアリスト照会APIの詳細については[キーペアリスト表示](/Compute/Instance/ja/public-api/#_13)を参照してください。
 
-### ベースイメージUUID
+<a id="base-image-uuid"></a>
+### ベースイメージUUID { #base-image-uuid }
 
 ノードの作成に使用するベースイメージのUUIDを入力します。NKSノードの作成に使用されるベースイメージだけをフィルタリングするため、API呼び出し時にクエリ文字列パラメータに`nhncloud_allow_nks_cpu_flavor=true&visibility=public`を入力します。ベースイメージリスト照会APIの詳細については、[イメージリスト照会](/Compute/Image/ja/public-api/#_2)を参照してください。
 
-### ブロックストレージの種類
+<a id="block-storage-type"></a>
+### ブロックストレージの種類 { #block-storage-type }
 
 ノードに使用するブロックストレージUUIDを入力します。ブロックストレージタイプリスト照会APIの詳細については[ボリュームタイプリスト表示](/Storage/Block%20Storage/ja/public-api/#_2)を参照してください。
 
-### インスタンスタイプUUID
+<a id="flavor-uuid"></a>
+### インスタンスタイプUUID { #flavor-uuid }
 
 作成するノードのインスタンスタイプUUIDを入力します。インスタンスタイプリスト照会APIの詳細については[インスタンスタイプリスト表示](/Compute/Instance/ja/public-api/#_2)を参照してください。
 
 
 
-## クラスタ
+<a id="cluster"></a>
+## クラスタ { #cluster }
 
-### クラスタリスト表示
+<a id="list-clusters"></a>
+### クラスタリスト表示 { #list-clusters }
 
 クラスタリストを照会します。
 
@@ -76,6 +89,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="list-clusters-request"></a>
 #### リクエスト
 
 このAPIはリクエスト本文を要求しません。
@@ -84,6 +98,7 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|---|
 | tokenId | Header | String | O | トークンID |
 
+<a id="list-clusters-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -188,7 +203,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### クラスタ表示
+<a id="get-a-cluster"></a>
+### クラスタ表示 { #get-a-cluster }
 
 個別クラスタ情報を照会します。
 
@@ -200,6 +216,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="get-a-cluster-request"></a>
 #### リクエスト
 
 このAPIはリクエスト本文を要求しません。
@@ -209,6 +226,7 @@ X-Auth-Token: {tokenId}
 | tokenId | Header | String | O | トークンID |
 | CLUSTER_ID_OR_NAME| URL | UUID or String | O | クラスタUUIDまたはクラスタ名 |
 
+<a id="get-a-cluster-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -334,7 +352,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 作業履歴リストの表示
+<a id="view-task-history-list"></a>
+### 作業履歴リストの表示 { #view-task-history-list }
 
 クラスタの作業履歴リストを照会します。
 
@@ -346,6 +365,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="view-task-history-list-request"></a>
 #### リクエスト
 
 このAPIはリクエスト本文を要求しません。
@@ -356,6 +376,7 @@ X-Auth-Token: {tokenId}
 | CLUSTER_UUID | URL | UUID | O | クラスタUUID |
 
 
+<a id="view-task-history-list-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -407,7 +428,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 作業履歴の表示
+<a id="list-task-history"></a>
+### 作業履歴の表示 { #list-task-history }
 
 クラスタの作業履歴を照会します。
 
@@ -419,6 +441,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="list-task-history-request"></a>
 #### リクエスト
 
 このAPIはリクエスト本文を要求しません。
@@ -430,6 +453,7 @@ X-Auth-Token: {tokenId}
 | EVENT_UUID | URL | UUID | O | 作業UUID |
 
 
+<a id="list-task-history-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -476,7 +500,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### クラスタ作成
+<a id="create-a-cluster"></a>
+### クラスタ作成 { #create-a-cluster }
 
 クラスタを作成します。
 
@@ -488,6 +513,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="create-a-cluster-request"></a>
 #### リクエスト
 
 | 名前 | 種類 | 形式 | 必須 | 説明 |
@@ -627,6 +653,7 @@ X-Auth-Token: {tokenId}
 </p>
 </details>
 
+<a id="create-a-cluster-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -647,7 +674,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### クラスタ削除
+<a id="delete-a-cluster"></a>
+### クラスタ削除 { #delete-a-cluster }
 
 クラスタを削除します。
 
@@ -659,6 +687,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="delete-a-cluster-request"></a>
 #### リクエスト
 
 このAPIはリクエスト本文を要求しません。
@@ -669,13 +698,15 @@ X-Auth-Token: {tokenId}
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
 
 
+<a id="delete-a-cluster-response"></a>
 #### レスポンス
 
 このAPIはレスポンス本文を返しません。
 
 ---
 
-### リサイズ
+<a id="resize"></a>
+### リサイズ { #resize }
 
 クラスタのノード数を調整します。
 
@@ -687,6 +718,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="resize-request"></a>
 #### リクエスト
 
 | 名前 | 種類 | 形式 | 必須 | 説明 |
@@ -733,6 +765,7 @@ X-Auth-Token: {tokenId}
 
 
 
+<a id="resize-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -754,7 +787,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### クラスタkubeconfig照会
+<a id="get-kubeconfig-of-a-cluster"></a>
+### クラスタkubeconfig照会 { #get-kubeconfig-of-a-cluster }
 
 クラスタ設定ファイル(kubeconfig)を照会します。
 
@@ -766,6 +800,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="get-kubeconfig-of-a-cluster-request"></a>
 #### リクエスト
 
 このAPIはリクエスト本文を要求しません。
@@ -776,6 +811,7 @@ X-Auth-Token: {tokenId}
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
 
 
+<a id="get-kubeconfig-of-a-cluster-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -796,7 +832,8 @@ X-Auth-Token: {tokenId}
 </details>
 
 
-### クラスタAPIエンドポイントIPアクセス制御適用
+<a id="enforce-ip-access-control-to-cluster-api-endpoints"></a>
+### クラスタAPIエンドポイントIPアクセス制御適用 { #enforce-ip-access-control-to-cluster-api-endpoints }
 クラスタAPIエンドポイントにIPアクセス制御を適用または解除できます。
 IPアクセス制御機能の詳細については、 [IPアクセス制御](/Network/Load%20Balancer/ja/overview/#ip)文書を参照してください。
 クラスタAPIエンドポイントへのIPアクセス制御ルールに関する詳細については、 [ユーザーガイド](/Container/NKS/ja/user-guide/#api_endpoint_ipacl)を参照してください。
@@ -809,6 +846,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="enforce-ip-access-control-to-cluster-api-endpoints-request"></a>
 #### リクエスト
 
 | 名前 | 種類 | 形式 | 必須 | 説明 |
@@ -845,6 +883,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="enforce-ip-access-control-to-cluster-api-endpoints-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -864,7 +903,8 @@ X-Auth-Token: {tokenId}
 </details>
 
 
-### クラスタAPIエンドポイントのIPアクセス制御照会
+<a id="get-cluster-api-endpoint-ip-access-control"></a>
+### クラスタAPIエンドポイントのIPアクセス制御照会 { #get-cluster-api-endpoint-ip-access-control }
 クラスタAPIエンドポイントに適用されたIPアクセス制御情報を確認できます。
 
 ```
@@ -875,6 +915,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="get-cluster-api-endpoint-ip-access-control-request"></a>
 #### リクエスト
 このAPIはリクエスト本文を要求しません。
 
@@ -884,6 +925,7 @@ X-Auth-Token: {tokenId}
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
 
 
+<a id="get-cluster-api-endpoint-ip-access-control-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -932,7 +974,8 @@ X-Auth-Token: {tokenId}
 </details>
 
 ---
-### クラスタ証明書の更新
+<a id="renew-cluster-certificate"></a>
+### クラスタ証明書の更新 { #renew-cluster-certificate }
 
 クラスタの証明書を更新します。
 ```
@@ -943,6 +986,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="renew-cluster-certificate-name"></a>
 #### リクエスト
 | 名前 | 種類 | 形式 | 必須 | 説明 |
 |---|---|---|---|---|
@@ -962,6 +1006,7 @@ X-Auth-Token: {tokenId}
 </p>
 </details>
 
+<a id="renew-cluster-certificate-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -983,7 +1028,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### サービスゲートウェイを変更する
+<a id="change-service-gateway"></a>
+### サービスゲートウェイを変更する { #change-service-gateway }
 
 クラスタ作成時、サービスゲートウェイを設定した場合、他のサービスゲートウェイに変更できます。
 ```
@@ -994,6 +1040,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="change-service-gateway-request"></a>
 #### リクエスト
 
 | 名前 | 種類 | 形式 | 必須 | 説明 |
@@ -1016,6 +1063,7 @@ X-Auth-Token: {tokenId}
 </p>
 </details>
 
+<a id="change-service-gateway-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -1037,7 +1085,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### コントロールプレーンKubernetesコンポーネントログ保存
+<a id="store-logs-of-kubernetes-control-plane-components"></a>
+### コントロールプレーンKubernetesコンポーネントログ保存 { #store-logs-of-kubernetes-control-plane-components }
 NHN Kubernetes Service(NKS)のコントロールプレーンで実行中の主要KubernetesコンポーネントのログをLog & Crash SearchまたはObject Storageに保存します。
 
 ```
@@ -1048,6 +1097,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="store-logs-of-kubernetes-control-plane-components-name"></a>
 #### リクエスト
 
 | 名前 | 種類 | 形式 | 必須 | 説明 |
@@ -1121,6 +1171,7 @@ X-Auth-Token: {tokenId}
 </p>
 </details>
 
+<a id="store-logs-of-kubernetes-control-plane-components-type"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -1140,9 +1191,11 @@ X-Auth-Token: {tokenId}
 </details>
 
 
-## ノードグループ
+<a id="node-group"></a>
+## ノードグループ { #node-group }
 
-### ノードグループリスト表示
+<a id="list-node-groups"></a>
+### ノードグループリスト表示 { #list-node-groups }
 
 ノードグループリストを照会します。
 
@@ -1154,6 +1207,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="list-node-groups-request"></a>
 #### リクエスト
 
 このAPIはリクエスト本文を要求しません。
@@ -1164,6 +1218,7 @@ X-Auth-Token: {tokenId}
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
 
 
+<a id="list-node-groups-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -1208,7 +1263,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### ノードグループ表示
+<a id="get-a-node-group"></a>
+### ノードグループ表示 { #get-a-node-group }
 
 個別ノードグループ情報を照会します。
 
@@ -1220,6 +1276,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="get-a-node-group-request"></a>
 #### リクエスト
 
 このAPIはリクエスト本文を要求しません。
@@ -1230,6 +1287,7 @@ X-Auth-Token: {tokenId}
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
 | NODEGROUP_ID_OR_NAME | URL | UUID or String | O | ノードグループUUIDまたはノードグループ名 | 
 
+<a id="get-a-node-group-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -1356,7 +1414,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### ノードグループ作成
+<a id="create-a-node-group"></a>
+### ノードグループ作成 { #create-a-node-group }
 
 ノードグループを作成します。
 
@@ -1368,6 +1427,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="create-a-node-group-request"></a>
 #### リクエスト
 
 | 名前 | 種類 | 形式 | 必須 | 説明 |
@@ -1434,6 +1494,7 @@ X-Auth-Token: {tokenId}
 </p>
 </details>
 
+<a id="create-a-node-group-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -1514,7 +1575,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### ノードグループ削除
+<a id="delete-a-node-group"></a>
+### ノードグループ削除 { #delete-a-node-group }
 
 指定したノードグループを削除します。
 ```
@@ -1525,6 +1587,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="delete-a-node-group-request"></a>
 #### リクエスト
 
 このAPIはリクエスト本文を要求しません。
@@ -1535,6 +1598,7 @@ X-Auth-Token: {tokenId}
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスタUUIDまたはクラスタ名 | 
 | NODEGROUP_ID_OR_NAME | URL | UUID or String | O | ノードグループUUIDまたはノードグループ名 | 
 
+<a id="delete-a-node-group-response"></a>
 #### レスポンス
 
 このAPIはレスポンス本文を返しません。
@@ -1542,7 +1606,8 @@ X-Auth-Token: {tokenId}
 ---
 
 
-### ノードを停止する
+<a id="stop-a-node-group"></a>
+### ノードを停止する { #stop-a-node-group }
 
 指定したノードリストを停止させます。
 
@@ -1554,6 +1619,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="stop-a-node-group-request"></a>
 #### リクエスト
 
 | 名前 | 種類 | 形式 | 必須 | 説明 |
@@ -1576,6 +1642,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="stop-a-node-group-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -1596,7 +1663,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### ノードを起動する
+<a id="start-a-node"></a>
+### ノードを起動する { #start-a-node }
 
 指定したノードリストを起動させます。
 
@@ -1608,6 +1676,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="start-a-node-request"></a>
 #### リクエスト
 
 | 名前 | 種類 | 形式 | 必須 | 説明 |
@@ -1629,6 +1698,7 @@ X-Auth-Token: {tokenId}
 </p>
 </details>
 
+<a id="start-a-node-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -1649,7 +1719,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### ノードグループのクラスターオートスケーラー設定表示
+<a id="view-cluster-autoscaler-configuration-of-a-node-group"></a>
+### ノードグループのクラスターオートスケーラー設定表示 { #view-cluster-autoscaler-configuration-of-a-node-group }
 
 ノードグループのクラスターオートスケーラー設定を照会します。
 
@@ -1661,6 +1732,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="view-cluster-autoscaler-configuration-of-a-node-group-request"></a>
 #### リクエスト
 
 このAPIはリクエスト本文を要求しません。
@@ -1672,6 +1744,7 @@ X-Auth-Token: {tokenId}
 | NODEGROUP_ID_OR_NAME | URL | UUID or String | O | ノードグループUUIDまたはノードグループ名 | 
 
 
+<a id="view-cluster-autoscaler-configuration-of-a-node-group-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -1707,7 +1780,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### ノードグループのクラスターオートスケーラー設定の変更
+<a id="change-cluster-autoscaler-configuration-of-a-node-group"></a>
+### ノードグループのクラスターオートスケーラー設定の変更 { #change-cluster-autoscaler-configuration-of-a-node-group }
 
 ノードグループのクラスターオートスケーラー設定を変更します。
 
@@ -1719,6 +1793,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="change-cluster-autoscaler-configuration-of-a-node-group-request"></a>
 #### リクエスト
 
 | 名前 | 種類 | 形式 | 必須 | 説明 |
@@ -1754,6 +1829,17 @@ X-Auth-Token: {tokenId}
 </p>
 </details>
 
+<a id="change-cluster-autoscaler-configuration-of-a-node-group-response"></a>
+#### レスポンス
+
+<!-- TODO: translate body -->
+
+<a id="change-metric-based-autoscaler-configuration-of-a-node-group"></a>
+### ノードグループの指標ベースオートスケーラー設定の変更 { #change-metric-based-autoscaler-configuration-of-a-node-group }
+
+<!-- TODO: translate body -->
+
+<a id="change-metric-based-autoscaler-configuration-of-a-node-group-request"></a>
 #### リクエスト
 
 | 名前 | 種類 | 形式 | 必須 | 説明 |
@@ -1855,6 +1941,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="change-metric-based-autoscaler-configuration-of-a-node-group-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -1875,7 +1962,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### クラスタのアップグレード
+<a id="upgrade-a-cluster"></a>
+### クラスタのアップグレード { #upgrade-a-cluster }
 
 ノードグループをアップグレードします。
 
@@ -1887,6 +1975,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="upgrade-a-cluster-request"></a>
 #### リクエスト
 
 | 名前 | 種類 | 形式 | 必須 | 説明 |
@@ -1920,6 +2009,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="upgrade-a-cluster-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -1940,7 +2030,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### ユーザースクリプトを変更する
+<a id="change-user-script"></a>
+### ユーザースクリプトを変更する { #change-user-script }
 
 ノードグループのユーザースクリプトを変更します。
 
@@ -1952,6 +2043,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="change-user-script-request"></a>
 #### リクエスト
 
 | 名前 | 種類 | 形式 | 必須 | 説明 |
@@ -1975,6 +2067,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="change-user-script-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -1995,7 +2088,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### インスタンスタイプを変更する
+<a id="change-instance-flavor"></a>
+### インスタンスタイプを変更する { #change-instance-flavor }
 
 ノードグループのインスタンスタイプを変更します。
 
@@ -2007,6 +2101,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="change-instance-flavor-request"></a>
 #### リクエスト
 
 | 名前 | 種類 | 形式 | 必須 | 説明 |
@@ -2036,6 +2131,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="change-instance-flavor-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -2056,7 +2152,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### ノードグループのフローティングIP自動割り当て設定の変更
+<a id="change-floating-ip-auto-assignment-configuration-of-a-node-group"></a>
+### ノードグループのフローティングIP自動割り当て設定の変更 { #change-floating-ip-auto-assignment-configuration-of-a-node-group }
 
 ノードグループのフローティングIP自動割り当て設定を変更します。
 
@@ -2068,6 +2165,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="change-floating-ip-auto-assignment-configuration-of-a-node-group-request"></a>
 #### リクエスト
 
 
@@ -2101,6 +2199,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="change-floating-ip-auto-assignment-configuration-of-a-node-group-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -2121,7 +2220,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### ノードグループのKubernetesラベル設定変更
+<a id="change-kubernetes-label-configuration-of-a-node-group"></a>
+### ノードグループのKubernetesラベル設定変更 { #change-kubernetes-label-configuration-of-a-node-group }
 
 ノードグループのKubernetesラベル設定を変更します。
 
@@ -2133,6 +2233,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="change-kubernetes-label-configuration-of-a-node-group-request"></a>
 #### リクエスト
 
 | 名前 | 種類 | 形式 | 必須 | 説明 |
@@ -2161,6 +2262,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="change-kubernetes-label-configuration-of-a-node-group-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -2181,9 +2283,11 @@ X-Auth-Token: {tokenId}
 
 ---
 
-## アドオン管理機能
+<a id="add-on-management"></a>
+## アドオン管理機能 { #add-on-management }
 
-### NHN Cloudが提供するアドオンタイプ表示
+<a id="view-the-types-of-add-ons-offered-by-nhn-cloud"></a>
+### NHN Cloudが提供するアドオンタイプ表示 { #view-the-types-of-add-ons-offered-by-nhn-cloud }
 NHN Cloudが提供するアドオンタイプを確認できます。
 
 ```
@@ -2194,6 +2298,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="view-the-types-of-add-ons-offered-by-nhn-cloud-request"></a>
 #### リクエスト
 
 | 名前 | 種類 | 形式 | 必須 | 説明 |
@@ -2201,6 +2306,7 @@ X-Auth-Token: {tokenId}
 | tokenId | Header | String | O | トークンID |
 | ADDON_TYPE_UUID_OR_NAME | URL | UUID or String | O | アドオンタイプのUUIDまたは名前 |
 
+<a id="view-the-types-of-add-ons-offered-by-nhn-cloud-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -2225,7 +2331,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### NHN Cloudが提供するアドオンタイプリスト表示
+<a id="view-a-list-of-add-ons-types-offered-by-nhn-cloud"></a>
+### NHN Cloudが提供するアドオンタイプリスト表示 { #view-a-list-of-add-ons-types-offered-by-nhn-cloud }
 NHN Cloudが提供するアドオンタイプのリストを確認できます。
 
 ```
@@ -2236,11 +2343,13 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="view-a-list-of-add-ons-types-offered-by-nhn-cloud-request"></a>
 #### リクエスト
 | 名前 | 種類 | 形式 | 必須 | 説明 |
 |---|---|---|---|---|
 | tokenId | Header | String | O | トークンID |
 
+<a id="view-a-list-of-add-ons-types-offered-by-nhn-cloud-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -2264,7 +2373,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### NHN Cloudが提供するアドオン表示
+<a id="view-add-ons-offered-by-nhn-cloud"></a>
+### NHN Cloudが提供するアドオン表示 { #view-add-ons-offered-by-nhn-cloud }
 NHN Cloudが提供するアドオンを確認できます。
 
 ```
@@ -2275,6 +2385,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="view-add-ons-offered-by-nhn-cloud-request"></a>
 #### リクエスト
 
 | 名前 | 種類 | 形式 | 必須 | 説明 |
@@ -2283,6 +2394,7 @@ X-Auth-Token: {tokenId}
 | tokenId | Header | String | O | トークンID |
 
 
+<a id="view-add-ons-offered-by-nhn-cloud-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -2334,7 +2446,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### NHN Cloudが提供するアドオンリスト表示
+<a id="view-a-list-of-add-ons-offered-by-nhn-cloud"></a>
+### NHN Cloudが提供するアドオンリスト表示 { #view-a-list-of-add-ons-offered-by-nhn-cloud }
 NHN Cloudが提供するアドオンリストを確認できます。
 
 ```
@@ -2345,6 +2458,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="view-a-list-of-add-ons-offered-by-nhn-cloud-request"></a>
 #### リクエスト
 
 | 名前 | 種類 | 形式 | 必須 | 説明 |
@@ -2354,6 +2468,7 @@ X-Auth-Token: {tokenId}
 | image | Query | UUID | X | ベースイメージのUUID。指定時、該当イメージにインストール可能なアドオンのみを返却します。 |
 | platform_version | Query | String | X | プラットフォームバージョン(例：`1.202605.0`)。指定時、該当プラットフォームバージョンで使用可能なアドオンのみを返却します。 |
 
+<a id="view-a-list-of-add-ons-offered-by-nhn-cloud-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -2380,7 +2495,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### クラスターにインストールされたアドオン表示
+<a id="view-add-ons-installed-on-a-cluster"></a>
+### クラスターにインストールされたアドオン表示 { #view-add-ons-installed-on-a-cluster }
 クラスターにインストールされたアドオンを確認できます。
 
 ```
@@ -2391,6 +2507,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="view-add-ons-installed-on-a-cluster-request"></a>
 #### リクエスト
 
 | 名前 | 種類 | 形式 | 必須 | 説明 |
@@ -2400,6 +2517,7 @@ X-Auth-Token: {tokenId}
 | ADDON_UUID_OR_NAME | URL | UUID or String | O | アドオンUUIDまたはアドオン名 |
 
 
+<a id="view-add-ons-installed-on-a-cluster-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -2446,7 +2564,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### クラスターにインストールされたアドオンリスト表示
+<a id="view-a-list-of-add-ons-installed-on-a-cluster"></a>
+### クラスターにインストールされたアドオンリスト表示 { #view-a-list-of-add-ons-installed-on-a-cluster }
 クラスターにインストールされたアドオンリストを確認できます。
 
 ```
@@ -2457,6 +2576,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="view-a-list-of-add-ons-installed-on-a-cluster-request"></a>
 #### リクエスト
 
 | 名前 | 種類 | 形式 | 必須 | 説明 |
@@ -2464,6 +2584,7 @@ X-Auth-Token: {tokenId}
 | tokenId | Header | String | O | トークンID |
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスターUUIDまたはクラスター名 |
 
+<a id="view-a-list-of-add-ons-installed-on-a-cluster-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -2487,7 +2608,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### クラスターにアドオンをインストール
+<a id="install-add-ons-on-a-cluster"></a>
+### クラスターにアドオンをインストール { #install-add-ons-on-a-cluster }
 クラスターにアドオンをインストールします。
 
 ```
@@ -2498,6 +2620,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="install-add-ons-on-a-cluster-request"></a>
 #### リクエスト
 
 | 名前 | 種類 | 形式 | 必須 | 説明 |
@@ -2520,6 +2643,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="install-add-ons-on-a-cluster-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -2540,7 +2664,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### クラスターにアドオンを更新
+<a id="update-add-ons-to-a-cluster"></a>
+### クラスターにアドオンを更新 { #update-add-ons-to-a-cluster }
 クラスターにインストールされたアドオンを更新します。
 
 ```
@@ -2551,6 +2676,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="update-add-ons-to-a-cluster-request"></a>
 #### リクエスト
 
 | 名前 | 種類 | 形式 | 必須 | 説明 |
@@ -2573,6 +2699,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="update-add-ons-to-a-cluster-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -2593,7 +2720,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### クラスターにインストールされたアドオンの削除
+<a id="remove-add-ons-from-a-cluster"></a>
+### クラスターにインストールされたアドオンの削除 { #remove-add-ons-from-a-cluster }
 クラスターにインストールされたアドオンを削除します。
 
 ```
@@ -2604,6 +2732,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="remove-add-ons-from-a-cluster-request"></a>
 #### リクエスト
 
 | 名前 | 種類 | 形式 | 必須 | 説明 |
@@ -2612,6 +2741,7 @@ X-Auth-Token: {tokenId}
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスターUUIDまたはクラスター名 |
 | ADDON_UUID_OR_NAME | URL | UUID or String | O | アドオンUUIDまたはアドオン名 |
 
+<a id="remove-add-ons-from-a-cluster-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |
@@ -2632,9 +2762,11 @@ X-Auth-Token: {tokenId}
 
 
 
-## その他機能
+<a id="other-features"></a>
+## その他機能 { #other-features }
 
-### サポートされるKubernetesバージョン及び作業の種類を表示
+<a id="view-supported-kubernetes-versions-and-task-types"></a>
+### サポートされるKubernetesバージョン及び作業の種類を表示 { #view-supported-kubernetes-versions-and-task-types }
 
 NHN Kubernetes Service(NKS)でサポートするKubernetesバージョン及び作業タイプを照会します。
 
@@ -2646,6 +2778,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="view-supported-kubernetes-versions-and-task-types-request"></a>
 #### リクエスト
 
 このAPIはリクエスト本文を要求しません。
@@ -2655,6 +2788,7 @@ X-Auth-Token: {tokenId}
 | tokenId | Header | String | O | トークンID |
 
 
+<a id="view-supported-kubernetes-versions-and-task-types-response"></a>
 #### レスポンス
 
 | 名前 | 種類 | 形式 | 説明 |

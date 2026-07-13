@@ -1,14 +1,20 @@
-## Container > NHN Kubernetes Service(NKS) > 外部サービス連動ガイド > Istio
+<!-- pre-align:aligned sig=f2738c580f82 -->
 
-### 概要
+<a id="container-nhn-kubernetes-service-nks-application-guide-istio"></a>
+## Container > NHN Kubernetes Service(NKS) > 外部サービス連動ガイド > Istio { #container-nhn-kubernetes-service-nks-application-guide-istio }
+
+<a id="overview"></a>
+### 概要 { #overview }
 この文書はユーザーがNKS(NHN Kubernetes Service(NKS)クラスタにIstioを構成してテストできる例について説明したガイド文書です。NKSでは、インターネットに接続されていないクラスタでもIstioを構成できるように、ガイドとNCRレジストリを通じたIstioイメージを提供しています。ユーザーはこのガイド文書を通じてNKSが提供するイメージを使用してIstioを構成したり、Istio公式ガイド文書を参考にして直接Istioを構成できます。
 
-### Istio
+<a id="istio"></a>
+### Istio { #istio }
 サービスメッシュ(Service Mesh)は、分散システムでサービス間の通信を制御し、効率的に管理できるようにすることに特化したマイクロサービスのためのインフラ層です。
 Istioはよく使われるオープンソースのサービスメッシュの一つです。 この例では、クラスタにdemoプロファイルのIstioサービスを配布した後、動作することを示します。Istioの詳細は[Istio](https://istio.io/latest/about/service-mesh/)を参照してください。
 
 
-### Istio 配布のための事前準備
+<a id="prerequisites-for-istio-deployment"></a>
+### Istio 配布のための事前準備 { #prerequisites-for-istio-deployment }
 配布するIstioのバージョンとクラスタに合う正しいレジストリ情報を確認した後、変数に指定します。設定した変数は以降の配布過程で使用されます。
 
 ```
@@ -16,6 +22,7 @@ $ VERSION="{ダウンロードするistioのバージョン}"
 $ REGISTRY="{リージョン別レジストリ}"
 ```
 
+<a id="prerequisites-for-istio-deployment-supported-kubernetes-versions-by-istio-version"></a>
 #### IstioのバージョンごとにサポートされるKubernetesのバージョン
 
 | バージョン | サポートされるKubernetesバージョン |
@@ -27,6 +34,7 @@ $ REGISTRY="{リージョン別レジストリ}"
 > NKSは上記の表に記載されたIstioのバージョンに対してのみインストールを提供します。NKSが提供しないバージョンを使用するには、ユーザーが直接Istioを構成する必要があります。 サポートされるIstioバージョンに関する情報は[istioサポートポリシー](https://istio.io/latest/docs/releases/supported-releases/)を参考してください。
 
 
+<a id="prerequisites-for-istio-deployment-registry-information-by-region-and-internet-environment"></a>
 #### リージョン及びインターネット環境別レジストリ情報
 | リージョン | インターネット接続 | レジストリ |
 | --- | --- | --- |
@@ -41,6 +49,7 @@ $ REGISTRY="{リージョン別レジストリ}"
 > インターネットに接続されていないクラスタがNCRレジストリを使用するためには、Private URIを使用するための環境設定が必要です。Private URIの使用方法の詳細は[NHN Cloud Container Registry(NCR)ユーザーガイド](/Container/NCR/ja/user-guide/#private-uri)を参照してください。
 
 
+<a id="prerequisites-for-istio-deployment-install-the-oras-command-line-tool"></a>
 #### ORASコマンドラインツールのインストール
 アーティファクトをpullするためにORAS(OCI Registry As Storage)コマンドラインツールをダウンロードします。ORASはOCIレジストリでOCIアーティファクトをpushおよびpullする方法を提供するツールです。
 下記のコマンドを実行してORASコマンドラインツールをインストールします。ORASコマンドラインツールの詳しい使い方は[ORAS docs](https://oras.land/docs/)を参照してください。
@@ -56,8 +65,10 @@ $ export PATH="/usr/local/bin:$PATH"
 ```
 
 
-### Istioのインストール
+<a id="install-istio"></a>
+### Istioのインストール { #install-istio }
 
+<a id="install-istio-download-and-install-istioctl-using-the-oras-command-line-tool"></a>
 #### 1. ORASコマンドラインツールを使ってistioctlをダウンロードしてインストールします。
 istioctlはIstioが提供するサービスメッシュディストリビューションをデバッグして診断することができる構成コマンドラインユーティリティで、Istioディストリビューション構成オプションの設定など多様な機能を提供します。istioctlの詳しい説明は[istioctl](https://istio.io/latest/docs/reference/commands/istioctl/)を参照してください。
 
@@ -69,6 +80,7 @@ $ cd istio-${VERSION}
 $ export PATH=$PWD/bin:$PATH
 ```
 
+<a id="install-istio-deploy-istio-components-using-istioctl"></a>
 #### 2. istioctlを使用してIstioコンポーネントを配布します。
 プロファイルは、Istioコントロールプレーンとデータプレーンのサイドカーのユーザー定義配布機能を提供します。設定されたプロファイルによって、配布時に有効化されるコンポーネントが異なります。ユーザーはクラスタの環境構成に応じて基本提供されるプロファイルを使用するか、特定の要求に合わせて構成をユーザー定義できます。 Istioプロファイルの詳しい説明は[Istioインストール構成プロファイル](https://istio.io/latest/docs/setup/additional-setup/config-profiles/)を参照してください。この例では、基本的に提供されるdemoプロファイルを使用して配布します。
 
@@ -158,9 +170,11 @@ replicaset.apps/istio-ingressgateway-b8844867c   1         1         1       86s
 replicaset.apps/istiod-8c7fbbdc8                 1         1         1       90s
 ```
 
-### アプリケーション配布
+<a id="deploy-application"></a>
+### アプリケーション配布 { #deploy-application }
 Istioが正常にインストールされ、動作することを確認するためアプリケーションを配布します。この例では、Istioが基本的に提供するBookinfoサンプルアプリケーションを使います。サンプルアプリケーションはproductpage, details, reviews, ratingsの4つのマイクロサービスで構成されています。Bookinfoサンプルアプリケーションの詳細は[Istio Bookinfo Application](https://istio.io/latest/docs/examples/bookinfo/)を参照してください。
 
+<a id="deploy-application-label-namespace"></a>
 #### 1. 名前空間にラベルを指定する
 Istioサイドカープロキシを使用するためには、Podが作成される名前空間にラベルを指定する必要があります。ラベルはIstioコンポーネントを配布する名前空間を識別するために使用されます。ラベルが設定された名前空間にPodが配布されると、Istioサイドカープロキシが自動的にPodに配布されます。
 
@@ -170,6 +184,7 @@ $ kubectl label namespace default istio-injection=enabled
 namespace/default labeled
 ```
 
+<a id="deploy-application-components"></a>
 #### 2. アプリケーションコンポーネント配布する
 アプリケーションコンポーネントを配布し、正常に配布されたか確認します。
 
@@ -217,9 +232,11 @@ $ kubectl exec "$(kubectl get pod -l app=ratings -o jsonpath='{.items[0].metadat
 <title>Simple Bookstore App</title>
 ```
 
-### サービス表示
+<a id="expose-service"></a>
+### サービス表示 { #expose-service }
 上のプロセスまで実行した時、サービスはクラスタ内のホストだけアクセスできる`ClusterIP`の形で設定されています。 Kubernetesではサービスを公開するために`NodePort`、`LoadBalancer`など様々なタイプの`Service`オブジェクトを提供していますが、Istioではより幅広い範囲のネットワークトラフィックを処理するためのgatewayオブジェクトを提供しています。下記の例ではIstioが基本的に提供するサンプルbookinfo gatewayを使用してサービスを公開する過程を示しています。Istio gatewayの詳しい説明は[Istio Gateway](https://istio.io/latest/docs/concepts/traffic-management/#gateways)を参照してください。
 
+<a id="expose-service-configure-ingress-gateway"></a>
 #### イングレスゲートウェイを構成する
 サービスを公開するためのIstioイングレスゲートウェイを追加で構成します。
 
@@ -236,6 +253,7 @@ $ istioctl analyze
 ✔ No validation issues found when analyzing namespace: default.
 ```
 
+<a id="expose-service-access-service"></a>
 #### サービスにアクセスする
 公開されたサービスにアクセスするため、ゲートウェイURL情報を確認します。ゲートウェイURLは基本的に`イングレスホスト:イングレスIP`の構成になっています。クラスタがインターネット上またはクローズドネットワーク環境に構成されたかによって、ゲートウェイURL情報を確認する方法が異なります。インターネット上に構成されたクラスタはロードバランサーの `EXTERNAL-IP` 情報に基づいてゲートウェイ URL が構成され、クローズドネットワーク環境に構成されたクラスタはノードポートに基づいてゲートウェイ URL が構成されます。
 
@@ -271,7 +289,8 @@ $ curl http://114.110.160.79:80/productpage
 ```
 
 
-### Istio削除
+<a id="delete-istio"></a>
+### Istio削除 { #delete-istio }
 下記のコマンドを実行して例題で使ったbookinfoアプリケーション関連コンポーネントを削除します。
 ```
 $ kubectl delete -f samples/bookinfo/networking/bookinfo-gateway.yaml

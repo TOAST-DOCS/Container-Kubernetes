@@ -1,4 +1,5 @@
-## Container > NHN Kubernetes Service (NKS) > API v2 Guide
+<a id="container-nhn-kubernetes-service-nks-api-v2-guide"></a>
+## Container > NHN Kubernetes Service (NKS) > API v2 Guide { #container-nhn-kubernetes-service-nks-api-v2-guide }
 
 This guide describes the API for configuring Kubernetes clusters.
 NKS uses IaaS tokens for authentication and authorization when making API calls. The IaaS token is an authentication token used for NHN Cloud's OpenStack-based infrastructure services (IaaS). For more information on issuing and using IaaS tokens, see the [IaaS token](/nhncloud/ko/public-api/iaas-token).
@@ -11,11 +12,13 @@ All API calls are made using the `kubernetes` type endpoint.
 
 Fields not specified in the guide may appear in API responses. These fields are used for internal use by NHN Cloud and are subject to change without prior notice, so we advise you not to use them.
 
-## Check the Information of Resources Used in API
+<a id="check-the-information-of-resources-used-in-api"></a>
+## Check the Information of Resources Used in API { #check-the-information-of-resources-used-in-api }
 
 The NHN Kubernetes Service (NKS) API uses several resources for configuring clusters and node groups. You can check the information of each resource as follows.
 
-### UUID of the VPC Network Attached to the Internet Gateway
+<a id="uuid-of-the-vpc-network-attached-to-the-internet-gateway"></a>
+### UUID of the VPC Network Attached to the Internet Gateway { #uuid-of-the-vpc-network-attached-to-the-internet-gateway }
 
 You can query the VPC network attached to the internet gateway by using the **router:external=True** query parameter in the VPC network list query API.
 
@@ -26,44 +29,54 @@ GET /v2.0/networks?router:external=True
 For more information about the network list query API, refer to [List Networks](/Network/VPC/en/public-api/#list-networks).
 
 
-### List of UUIDs of Subnets Attached to the Internet Gateway
+<a id="list-of-uuids-of-subnets-attached-to-the-internet-gateway"></a>
+### List of UUIDs of Subnets Attached to the Internet Gateway { #list-of-uuids-of-subnets-attached-to-the-internet-gateway }
 
 Enter the UUID of subnet associated with the VPC network attached to the internet gateway. If multiple subnets are found, enter them by concatenating them with a colon (`:`). For more information about the subnet list query API, refer to [List Subnets](/Network/VPC/en/public-api/#list-vpc-subnets).
 
 
-### VPC Network UUID
+<a id="vpc-network-uuid"></a>
+### VPC Network UUID { #vpc-network-uuid }
 
 Enter the UUID of internal VPC network to associate with the node. For more information about the network list query API, refer to [List Networks](/Network/VPC/en/public-api/#view-vpc-list).
 
-### VPC Subnet UUID
+<a id="vpc-subnet-uuid"></a>
+### VPC Subnet UUID { #vpc-subnet-uuid }
 
 Enter the UUID of subnet associated with the internal VPC network to associate with the node. For more information about the subnet list query API, refer to [List Subnets](/Network/VPC/en/public-api/#list-vpc-subnets).
 
-### Availability Zone UUID
+<a id="availability-zone-uuid"></a>
+### Availability Zone UUID { #availability-zone-uuid }
 
 Enter the UUID of availability zone in which to create the node. For more information about the availability zone list query API, see [List Availability Zones](/Compute/Instance/en/public-api/#list-availability-zones).
 
-### Key Pair UUID
+<a id="key-pair-uuid"></a>
+### Key Pair UUID { #key-pair-uuid }
 
 Enter the key pair to use when connecting to the node. For more information about the key pair list query API, refer to [List Key Pairs](/Compute/Instance/en/public-api/#list-key-pairs).
 
-### Base Image UUID
+<a id="base-image-uuid"></a>
+### Base Image UUID { #base-image-uuid }
 
 Enter the base image UUID to use for node creation. To filter only the base images used to create NKS nodes, enter the value `nhncloud_allow_nks_cpu_flavor=true&visibility=public` in the query string parameter when calling the API. For more information on the retrieve base image list API, see [Retrieve Image list](/Compute/Image/en/public-api/#_2).
 
-### Block Storage Type
+<a id="block-storage-type"></a>
+### Block Storage Type { #block-storage-type }
 
 Enter the block storage UUID to use for the node. For more information about the block storage type list query API, refer to [List Volume Types](/Storage/Block%20Storage/en/public-api/#list-volume-types) .
 
-### Flavor UUID
+<a id="flavor-uuid"></a>
+### Flavor UUID { #flavor-uuid }
 
 Enter the UUID of flavor for the node to be created. For more information about the flavor list query API, refer to [List Flavors](/Compute/Instance/en/public-api/#list-flavors).
 
 
 
-## Cluster
+<a id="cluster"></a>
+## Cluster { #cluster }
 
-### List Clusters
+<a id="list-clusters"></a>
+### List Clusters { #list-clusters }
 
 Retrieves a list of clusters.
 
@@ -75,6 +88,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="list-clusters-request"></a>
 #### Request
 
 This API does not require a request body. 
@@ -83,6 +97,7 @@ This API does not require a request body.
 |---|---|---|---|---|
 | tokenId | Header | String | O | Token ID |
 
+<a id="list-clusters-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -186,7 +201,8 @@ This API does not require a request body.
 
 ---
 
-### Get a Cluster
+<a id="get-a-cluster"></a>
+### Get a Cluster { #get-a-cluster }
 
 Retrieves information of an individual cluster.
 
@@ -198,6 +214,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="get-a-cluster-request"></a>
 #### Request
 
 This API does not require a request body. 
@@ -207,6 +224,7 @@ This API does not require a request body.
 | tokenId | Header | String | O | Token ID |
 | CLUSTER_ID_OR_NAME| URL | UUID or String | O | Cluster UUID or cluster name |
 
+<a id="get-a-cluster-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -332,7 +350,8 @@ This API does not require a request body.
 
 ---
 
-### View Task History List
+<a id="view-task-history-list"></a>
+### View Task History List { #view-task-history-list }
 
 Views a list of the cluster's job history.
 
@@ -344,6 +363,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="view-task-history-list-request"></a>
 #### Request
 
 This API does not require a request body.
@@ -354,6 +374,7 @@ This API does not require a request body.
 | CLUSTER_UUID | URL | UUID | O | Cluster UUID |
 
 
+<a id="view-task-history-list-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -404,7 +425,8 @@ This API does not require a request body.
 
 ---
 
-### List Task History
+<a id="list-task-history"></a>
+### List Task History { #list-task-history }
 
 Lists the job history of a cluster.
 
@@ -416,6 +438,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="list-task-history-request"></a>
 #### Request
 
 This API does not require a request body.
@@ -427,6 +450,7 @@ This API does not require a request body.
 | EVENT_UUID | URL | UUID | O | Task UUID |
 
 
+<a id="list-task-history-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -472,7 +496,8 @@ This API does not require a request body.
 
 ---
 
-### Create a Cluster
+<a id="create-a-cluster"></a>
+### Create a Cluster { #create-a-cluster }
 
 Creates a cluster.
 
@@ -484,6 +509,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="create-a-cluster-request"></a>
 #### Request
 
 | Name | Type | Format | Required | Description |
@@ -619,6 +645,7 @@ X-Auth-Token: {tokenId}
 </p>
 </details>
 
+<a id="create-a-cluster-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -639,7 +666,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### Delete a Cluster
+<a id="delete-a-cluster"></a>
+### Delete a Cluster { #delete-a-cluster }
 
 Deletes a Cluster.
 
@@ -651,6 +679,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="delete-a-cluster-request"></a>
 #### Request
 
 This API does not require a request body. 
@@ -661,13 +690,15 @@ This API does not require a request body.
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
 
 
+<a id="delete-a-cluster-response"></a>
 #### Response
 
 This API does not return a response body.
 
 ---
 
-### Resize
+<a id="resize"></a>
+### Resize { #resize }
 
 Adjusts the number of nodes in the cluster.
 
@@ -679,6 +710,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="resize-request"></a>
 #### Request
 
 | Name | Type | Format | Required | Description |
@@ -725,6 +757,7 @@ X-Auth-Token: {tokenId}
 
 
 
+<a id="resize-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -746,7 +779,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### Get kubeconfig of a Cluster
+<a id="get-kubeconfig-of-a-cluster"></a>
+### Get kubeconfig of a Cluster { #get-kubeconfig-of-a-cluster }
 
 Retrieves the cluster configuration file (kubeconfig).
 
@@ -758,6 +792,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="get-kubeconfig-of-a-cluster-request"></a>
 #### Request
 
 This API does not require a request body. 
@@ -768,6 +803,7 @@ This API does not require a request body.
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
 
 
+<a id="get-kubeconfig-of-a-cluster-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -787,7 +823,8 @@ This API does not require a request body.
 </p>
 </details>
 
-### Enforce IP Access Control to Cluster API Endpoints
+<a id="enforce-ip-access-control-to-cluster-api-endpoints"></a>
+### Enforce IP Access Control to Cluster API Endpoints { #enforce-ip-access-control-to-cluster-api-endpoints }
 You can enforce or disable IP access control to cluster API endpoints.
 For more information about IP access control features, see [IP access control](/Network/Load%20Balancer/en/overview/#ip).
 For more information about IP access control rules for Cluster API endpoints, see the [user guide](/Container/NKS/en/user-guide/#api_endpoint_ipacl).
@@ -800,6 +837,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="enforce-ip-access-control-to-cluster-api-endpoints-request"></a>
 #### Request
 
 | Name | Type | Format | Required | Description |
@@ -836,6 +874,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="enforce-ip-access-control-to-cluster-api-endpoints-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -855,7 +894,8 @@ X-Auth-Token: {tokenId}
 </details>
 
 
-### Get Cluster API Endpoint IP Access Control 
+<a id="get-cluster-api-endpoint-ip-access-control"></a>
+### Get Cluster API Endpoint IP Access Control { #get-cluster-api-endpoint-ip-access-control }
 You can view IP access control information applied to your cluster API endpoints.
 
 ```
@@ -866,6 +906,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="get-cluster-api-endpoint-ip-access-control-request"></a>
 #### Request
 This API does not require a request body.
 
@@ -875,6 +916,7 @@ This API does not require a request body.
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
 
 
+<a id="get-cluster-api-endpoint-ip-access-control-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -924,7 +966,8 @@ This API does not require a request body.
 
 
 ---
-### Renew Cluster Certificate
+<a id="renew-cluster-certificate"></a>
+### Renew Cluster Certificate { #renew-cluster-certificate }
 
 Renews the certificate for the cluster.
 ```
@@ -935,25 +978,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
-#### Name
-| Format | Type | Format | Required | Description |
-|---|---|---|---|---|
-| tokenId | Header | String | O | Token ID |
-| CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
-| term_of_validity | Body | Integer | O | Validity period of the certificate. Can be entered in years. Minimum: 1, maximum: 5 |
-
-<details><summary>Example</summary>
-<p>
-
-```json
-{
-    "term_of_validity": 5
-}
-```
-
-</p>
-</details>
-
+<a id="renew-cluster-certificate-name"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -975,7 +1000,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### Change Service Gateway
+<a id="change-service-gateway"></a>
+### Change Service Gateway { #change-service-gateway }
 
 If you set a service gateway when you created the cluster, you can change it to a different service gateway. 
 ```
@@ -986,6 +1012,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="change-service-gateway-request"></a>
 #### Request
 
 | Name | Type | Format | Required | Description |
@@ -1008,6 +1035,7 @@ X-Auth-Token: {tokenId}
 </p>
 </details>
 
+<a id="change-service-gateway-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -1029,7 +1057,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### Store Logs of Kubernetes Control Plane Components
+<a id="store-logs-of-kubernetes-control-plane-components"></a>
+### Store Logs of Kubernetes Control Plane Components { #store-logs-of-kubernetes-control-plane-components }
 Stores logs of key Kubernetes components running in the control plane of the NHN Kubernetes Service (NKS) to Log & Crash Search or Object Storage.
 
 ```
@@ -1040,99 +1069,11 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
-#### Name
+<a id="node-group"></a>
+## Node Group { #node-group }
 
-| Name | Type | Format | Required | Description |
-|---|---|---|---|---|
-| tokenId | Header | String | O | Token ID |
-| CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
-| String | Body | String | O | Set to `control_plane_log` |
-| control_plane_log | Body | labels.availability_zone | O | control_plane_log object |
-| control_plane_log.enable | Body | bool | O | Enable logging for the K8s control plane |
-| control_plane_log.type | Body | String | enable: required if true | lncs : Delivers control plane logs to Log & Crash Search obs : Delivers control plane logs to Object Storage |
-| control_plane_log.sgw | Body | status | enable: required if true | Differentiated by control_plane_log.type<br>lncs : Log and Crash Search Service Gateway UUID<br>obs : Object storage Search Service Gateway UUID |
-| control_plane_log.upload_interval | Body | project_id | x | Set log delivery interval to OBS (minutes)<br>min : 1<br>max : 60<br>default : 10 |
-| control_plane_log.lncs_appkey | Body | String | enable : true<br>Required if control_plane_log.type = lncs | Appkey information for Log & Crash Search in the same project (tenant) as NKS |
-| control_plane_log.obs_api_url | Body | String | enable : true<br>Required if control_plane_log.type = obs | User's OBS container FULL PATH<br>(storage address in OBS + container name in OBS + desired storage path) |
-| control_plane_log.obs_store_as | Body | String | X | OBS log file delivery method (gzip, text) |
-
-
-<details><summary>Enable Log &amp; Crash Search log delivery</summary>
-<p>
-
-```json
-{
-    "type": "control_plane_log",
-    "control_plane_log" : {
-        "enable": true,
-        "type": "lncs",
-        "sgw": "b6f68830-e688-4d89-ac0a-2f1a5594177a",
-        "upload_interval" : 10,
-        "lncs_appkey" : "3e4jP4LlMGXitafx",
-    }
-}
-```
-
-</p>
-</details>
-
-
-<details><summary>Enable Object Storage log delivery</summary>
-<p>
-
-```json
-{
-    "type": "control_plane_log",
-    "control_plane_log" : {
-        "enable": true,
-        "type": "obs",
-        "sgw": "b6f68830-e688-4d89-ac03-2f1155a4177a",
-        "upload_interval" : 60,
-        "obs_api_url" :"https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_d5b58ab0bb9340909bd7ff5a24f44313/iksoon-obs-container/testpath",
-        "obs_store_as" : "gzip"
-    }
-}
-```
-
-</p>
-</details>
-
-
-<details><summary>Disable log delivery</summary>
-<p>
-
-```json
-{
-    "type": "control_plane_log",
-    "control_plane_log" : {
-        "enable": false,
-    }
-}
-```
-
-</p>
-</details>
-
-#### Type
-
-| Name | Type | Format | Description |
-|---|---|---|---|
-| UUID | Body | cluster_id | Cluster UUID |
-
-<details><summary>Example</summary>
-<p>
-
-```json
-See the Supported Kubernetes Versions
-```
-
-</p>
-</details>
-
-
-## Node Group
-
-### List Node Groups
+<a id="list-node-groups"></a>
+### List Node Groups { #list-node-groups }
 
 Retrieves a list of node groups.
 
@@ -1144,6 +1085,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="list-node-groups-request"></a>
 #### Request
 
 This API does not require a request body. 
@@ -1154,6 +1096,7 @@ This API does not require a request body.
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
 
 
+<a id="list-node-groups-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -1198,7 +1141,8 @@ This API does not require a request body.
 
 ---
 
-### Get a Node Group
+<a id="get-a-node-group"></a>
+### Get a Node Group { #get-a-node-group }
 
 Retrieves information of an individual node group.
 
@@ -1210,6 +1154,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="get-a-node-group-request"></a>
 #### Request
 
 This API does not require a request body. 
@@ -1220,6 +1165,7 @@ This API does not require a request body.
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
 | NODEGROUP_ID_OR_NAME | URL | UUID or String | O | Node group UUID or node group name | 
 
+<a id="get-a-node-group-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -1346,7 +1292,8 @@ This API does not require a request body.
 
 ---
 
-### Create a Node Group
+<a id="create-a-node-group"></a>
+### Create a Node Group { #create-a-node-group }
 
 Creates a node group.
 
@@ -1358,6 +1305,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="create-a-node-group-request"></a>
 #### Request
 
 | Name | Type | Format | Required | Description |
@@ -1422,6 +1370,7 @@ X-Auth-Token: {tokenId}
 </p>
 </details>
 
+<a id="create-a-node-group-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -1502,7 +1451,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### Delete a Node Group
+<a id="delete-a-node-group"></a>
+### Delete a Node Group { #delete-a-node-group }
 
 Deletes the specified node group.
 ```
@@ -1513,6 +1463,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="delete-a-node-group-request"></a>
 #### Request
 
 This API does not require a request body. 
@@ -1523,13 +1474,15 @@ This API does not require a request body.
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
 | NODEGROUP_ID_OR_NAME | URL | UUID or String | O | Node group UUID or node group name | 
 
+<a id="delete-a-node-group-response"></a>
 #### Response
 
 This API does not return a response body.
 
 ---
 
-### Stop a Node Group
+<a id="stop-a-node-group"></a>
+### Stop a Node Group { #stop-a-node-group }
 
 Stops the specified node group.
 
@@ -1541,6 +1494,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="stop-a-node-group-request"></a>
 #### Request
 
 | Name | Type | Format | Required | Description |
@@ -1563,6 +1517,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="stop-a-node-group-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -1583,7 +1538,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### Start a Node
+<a id="start-a-node"></a>
+### Start a Node { #start-a-node }
 
 Start the specified node list.
 
@@ -1595,6 +1551,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="start-a-node-request"></a>
 #### Request
 
 | Name | Type | Format | Required | Description |
@@ -1616,6 +1573,7 @@ X-Auth-Token: {tokenId}
 </p>
 </details>
 
+<a id="start-a-node-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -1636,7 +1594,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### View Cluster Autoscaler Configuration of a Node Group
+<a id="view-cluster-autoscaler-configuration-of-a-node-group"></a>
+### View Cluster Autoscaler Configuration of a Node Group { #view-cluster-autoscaler-configuration-of-a-node-group }
 
 Views the cluster autoscaler configuration of a node group.
 
@@ -1648,6 +1607,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="view-cluster-autoscaler-configuration-of-a-node-group-request"></a>
 #### Request
 
 This API does not require a request body. 
@@ -1659,6 +1619,7 @@ This API does not require a request body.
 | NODEGROUP_ID_OR_NAME | URL | UUID or String | O | Node group UUID or node group name | 
 
 
+<a id="view-cluster-autoscaler-configuration-of-a-node-group-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -1694,7 +1655,8 @@ This API does not require a request body.
 
 ---
 
-### Change Cluster Autoscaler Configuration of a Node Group
+<a id="change-cluster-autoscaler-configuration-of-a-node-group"></a>
+### Change Cluster Autoscaler Configuration of a Node Group { #change-cluster-autoscaler-configuration-of-a-node-group }
 
 Changes the cluster autoscaler configuration of a node group.
 
@@ -1706,6 +1668,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="change-cluster-autoscaler-configuration-of-a-node-group-request"></a>
 #### Request
 
 | Name | Type | Format | Required | Description |
@@ -1743,6 +1706,7 @@ X-Auth-Token: {tokenId}
 
 
 
+<a id="change-cluster-autoscaler-configuration-of-a-node-group-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -1763,7 +1727,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### Change Metric-Based Autoscaler Configuration of a Node Group
+<a id="change-metric-based-autoscaler-configuration-of-a-node-group"></a>
+### Change Metric-Based Autoscaler Configuration of a Node Group { #change-metric-based-autoscaler-configuration-of-a-node-group }
 
 Changes the metric-based autoscaler configuration of a node group.
 
@@ -1775,6 +1740,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="change-metric-based-autoscaler-configuration-of-a-node-group-request"></a>
 #### Request
 
 | Name | Type | Format | Required | Description |
@@ -1876,6 +1842,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="change-metric-based-autoscaler-configuration-of-a-node-group-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -1896,7 +1863,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### Upgrade a Cluster
+<a id="upgrade-a-cluster"></a>
+### Upgrade a Cluster { #upgrade-a-cluster }
 
 Upgrades a cluster.
 
@@ -1908,6 +1876,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="upgrade-a-cluster-request"></a>
 #### Request
 
 | Name | Type | Format | Required | Description |
@@ -1941,6 +1910,7 @@ To upgrade a cluster, you must upgrade the control plane and then upgrade the wo
 </details>
 
 
+<a id="upgrade-a-cluster-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -1961,7 +1931,8 @@ To upgrade a cluster, you must upgrade the control plane and then upgrade the wo
 
 ---
 
-### Change User Script
+<a id="change-user-script"></a>
+### Change User Script { #change-user-script }
 
 Changes the user script of the node group.
 
@@ -1973,6 +1944,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="change-user-script-request"></a>
 #### Request
 
 | Name | Type | Format | Required | Description |
@@ -1996,6 +1968,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="change-user-script-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -2016,7 +1989,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### Change Instance Flavor
+<a id="change-instance-flavor"></a>
+### Change Instance Flavor { #change-instance-flavor }
 
 You can change the instance flavor of a node group.
 
@@ -2028,6 +2002,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="change-instance-flavor-request"></a>
 #### Request
 
 | Name | Type | Format | Required | Description |
@@ -2057,6 +2032,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="change-instance-flavor-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -2077,7 +2053,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### Change Floating IP Auto-assignment Configuration of a Node Group
+<a id="change-floating-ip-auto-assignment-configuration-of-a-node-group"></a>
+### Change Floating IP Auto-assignment Configuration of a Node Group { #change-floating-ip-auto-assignment-configuration-of-a-node-group }
 
 Changes the Floating IP auto-assignment configuration of a node group.
 
@@ -2089,6 +2066,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="change-floating-ip-auto-assignment-configuration-of-a-node-group-request"></a>
 #### Request
 
 | Name | Type | Format | Required | Description |
@@ -2121,6 +2099,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="change-floating-ip-auto-assignment-configuration-of-a-node-group-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -2141,7 +2120,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### Change Kubernetes Label Configuration of a Node Group
+<a id="change-kubernetes-label-configuration-of-a-node-group"></a>
+### Change Kubernetes Label Configuration of a Node Group { #change-kubernetes-label-configuration-of-a-node-group }
 
 Changes the Kubernetes label configuration of a node group.
 
@@ -2153,6 +2133,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="change-kubernetes-label-configuration-of-a-node-group-request"></a>
 #### Request
 
 | Name | Type | Format | Required | Description |
@@ -2181,6 +2162,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="change-kubernetes-label-configuration-of-a-node-group-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -2201,9 +2183,11 @@ X-Auth-Token: {tokenId}
 
 ---
 
-## Add-on Management
+<a id="add-on-management"></a>
+## Add-on Management { #add-on-management }
 
-### View the Types of Add-ons Offered by NHN Cloud
+<a id="view-the-types-of-add-ons-offered-by-nhn-cloud"></a>
+### View the Types of Add-ons Offered by NHN Cloud { #view-the-types-of-add-ons-offered-by-nhn-cloud }
 You can see the types of add-ons offered by NHN Cloud.
 
 ```
@@ -2214,6 +2198,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="view-the-types-of-add-ons-offered-by-nhn-cloud-request"></a>
 #### Request
 
 | Name | Type | Format | Required | Description |
@@ -2221,6 +2206,7 @@ X-Auth-Token: {tokenId}
 | tokenId | Header | String | O | Token ID |
 | ADDON_TYPE_UUID_OR_NAME | URL | UUID or String | O | UUID or name of the addon type |
 
+<a id="view-the-types-of-add-ons-offered-by-nhn-cloud-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -2245,7 +2231,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### View a List of Add-ons Types Offered by NHN Cloud
+<a id="view-a-list-of-add-ons-types-offered-by-nhn-cloud"></a>
+### View a List of Add-ons Types Offered by NHN Cloud { #view-a-list-of-add-ons-types-offered-by-nhn-cloud }
 You can see a list of the types of add-ons offered by NHN Cloud.
 
 ```
@@ -2256,11 +2243,13 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="view-a-list-of-add-ons-types-offered-by-nhn-cloud-request"></a>
 #### Request
 | Name | Type | Format | Required | Description |
 |---|---|---|---|---|
 | tokenId | Header | String | O | Token ID |
 
+<a id="view-a-list-of-add-ons-types-offered-by-nhn-cloud-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -2284,7 +2273,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### View Add-ons Offered by NHN Cloud
+<a id="view-add-ons-offered-by-nhn-cloud"></a>
+### View Add-ons Offered by NHN Cloud { #view-add-ons-offered-by-nhn-cloud }
 You can see out the add-ons offered by NHN Cloud.
 
 ```
@@ -2295,6 +2285,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="view-add-ons-offered-by-nhn-cloud-request"></a>
 #### Request
 
 | Name | Type | Format | Required | Description |
@@ -2303,6 +2294,7 @@ X-Auth-Token: {tokenId}
 | tokenId | Header | String | O | Token ID |
 
 
+<a id="view-add-ons-offered-by-nhn-cloud-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -2354,7 +2346,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### View a List of Add-ons Offered by NHN Cloud
+<a id="view-a-list-of-add-ons-offered-by-nhn-cloud"></a>
+### View a List of Add-ons Offered by NHN Cloud { #view-a-list-of-add-ons-offered-by-nhn-cloud }
 You can see a list of add-ons offered by NHN Cloud.
 
 ```
@@ -2365,6 +2358,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="view-a-list-of-add-ons-offered-by-nhn-cloud-request"></a>
 #### Request
 
 | Name | Type | Format | Required | Description |
@@ -2374,6 +2368,7 @@ X-Auth-Token: {tokenId}
 | image | Query | UUID | X | Base image UUID. If specified, only add-ons that can be installed in the image are returned. |
 | platform_version | Query | String | X | Platform version (e.g., `1.202605.0`). If specified, only add-ons available on the platform version are returend. |
 
+<a id="view-a-list-of-add-ons-offered-by-nhn-cloud-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -2400,7 +2395,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### View Add-ons Installed on a Cluster
+<a id="view-add-ons-installed-on-a-cluster"></a>
+### View Add-ons Installed on a Cluster { #view-add-ons-installed-on-a-cluster }
 You can see which addons are installed on the cluster.
 
 ```
@@ -2411,6 +2407,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="view-add-ons-installed-on-a-cluster-request"></a>
 #### Request
 
 | Name | Type | Format | Required | Description |
@@ -2420,6 +2417,7 @@ X-Auth-Token: {tokenId}
 | ADDON_UUID_OR_NAME | URL | UUID or String | O | Add-on UUID or add-on name |
 
 
+<a id="view-add-ons-installed-on-a-cluster-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -2466,7 +2464,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### View a List of Add-ons Installed on a Cluster
+<a id="view-a-list-of-add-ons-installed-on-a-cluster"></a>
+### View a List of Add-ons Installed on a Cluster { #view-a-list-of-add-ons-installed-on-a-cluster }
 You can see a list of the addons installed on a cluster.
 
 ```
@@ -2477,6 +2476,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="view-a-list-of-add-ons-installed-on-a-cluster-request"></a>
 #### Request
 
 | Name | Type | Format | Required | Description |
@@ -2484,6 +2484,7 @@ X-Auth-Token: {tokenId}
 | tokenId | Header | String | O | Token ID |
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name |
 
+<a id="view-a-list-of-add-ons-installed-on-a-cluster-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -2507,7 +2508,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### Install Add-ons on a Cluster
+<a id="install-add-ons-on-a-cluster"></a>
+### Install Add-ons on a Cluster { #install-add-ons-on-a-cluster }
 Install the add-on on a cluster.
 
 ```
@@ -2518,6 +2520,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="install-add-ons-on-a-cluster-request"></a>
 #### Request
 
 | Name | Type | Format | Required | Description |
@@ -2540,6 +2543,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="install-add-ons-on-a-cluster-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -2560,7 +2564,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### Update Add-ons to a cluster
+<a id="update-add-ons-to-a-cluster"></a>
+### Update Add-ons to a cluster { #update-add-ons-to-a-cluster }
 Update the addons installed on a cluster.
 
 ```
@@ -2571,6 +2576,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="update-add-ons-to-a-cluster-request"></a>
 #### Request
 
 | Name | Type | Format | Required | Description |
@@ -2593,6 +2599,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="update-add-ons-to-a-cluster-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -2613,7 +2620,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### Remove Add-ons from a cluster
+<a id="remove-add-ons-from-a-cluster"></a>
+### Remove Add-ons from a cluster { #remove-add-ons-from-a-cluster }
 Uninstall the add-on installed on a cluster.
 
 ```
@@ -2624,6 +2632,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="remove-add-ons-from-a-cluster-request"></a>
 #### Request
 
 | Name | Type | Format | Required | Description |
@@ -2632,6 +2641,7 @@ X-Auth-Token: {tokenId}
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name |
 | ADDON_UUID_OR_NAME | URL | UUID or String | O | Add-on UUID or add-on name |
 
+<a id="remove-add-ons-from-a-cluster-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
@@ -2652,9 +2662,11 @@ X-Auth-Token: {tokenId}
 
 
 
-## Other Features
+<a id="other-features"></a>
+## Other Features { #other-features }
 
-### View supported Kubernetes versions and task types
+<a id="view-supported-kubernetes-versions-and-task-types"></a>
+### View supported Kubernetes versions and task types { #view-supported-kubernetes-versions-and-task-types }
 
 You can see the Kubernetes version and task type supported by NHN Kubernetes Service (NKS).
 
@@ -2666,6 +2678,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="view-supported-kubernetes-versions-and-task-types-request"></a>
 #### Request
 
 This API does not require a request body.
@@ -2675,6 +2688,7 @@ This API does not require a request body.
 | tokenId | Header | String | O | Token ID |
 
 
+<a id="view-supported-kubernetes-versions-and-task-types-response"></a>
 #### Response
 
 | Name | Type | Format | Description |
