@@ -1,14 +1,20 @@
-## Container > NHN Kubernetes Service (NKS) > Application Guide > Istio
+<!-- pre-align:aligned sig=f2738c580f82 -->
 
-### Overview
+<a id="container-nhn-kubernetes-service-nks-application-guide-istio"></a>
+## Container > NHN Kubernetes Service (NKS) > Application Guide > Istio { #container-nhn-kubernetes-service-nks-application-guide-istio }
+
+<a id="overview"></a>
+### Overview { #overview }
 This document is a guide that describes examples of configuring and testing Istio on NHN Kubernetes Service (NKS) clusters. NKS provides guides and Istio images from the NCR registry to help you configure Istio on clusters that are not connected to the internet. You can use this guide to configure Istio using the images provided by NKS, or you can configure Istio yourself by referring to the official Istio document.
 
-### Istio
+<a id="istio"></a>
+### Istio { #istio }
 A service mesh is an infrastructure layer for microservices that specializes in controlling and efficiently managing communication between services in a distributed system. 
 Istio is one of the mostly used open source service meshes. This example shows how the Istio service of demo profile works after being deployed to clusters. For more information about Istio, see [Istio](https://istio.io/latest/about/service-mesh/).
 
 
-### Prerequisites for istio deployment
+<a id="prerequisites-for-istio-deployment"></a>
+### Prerequisites for istio deployment { #prerequisites-for-istio-deployment }
 Check the correct registry information for the Istio version and cluster to deploy and set them in the variables. The variables you set will be used during the deployment process.
 
 ```
@@ -16,6 +22,7 @@ $VERSION="{Version of istio you want to download}"
 $ REGISTRY="{Region-specific registry}"
 ```
 
+<a id="prerequisites-for-istio-deployment-supported-kubernetes-versions-by-istio-version"></a>
 #### Supported Kubernetes versions by Istio version
 
 | Version | Supported Kubernetes versions |
@@ -27,6 +34,7 @@ $ REGISTRY="{Region-specific registry}"
 NKS provides installation only for the Istio versions specified in the table above. If you want to use a version not provided by NKS, you must configure Istio yourself. For information about supported Istio versions, see the [istio support policy](https://istio.io/latest/docs/releases/supported-releases/).
 
 
+<a id="prerequisites-for-istio-deployment-registry-information-by-region-and-internet-environment"></a>
 #### Registry information by region and Internet environment
 | Region | Internet Connection | Registry |
 | --- | --- | --- |
@@ -42,6 +50,7 @@ NKS provides installation only for the Istio versions specified in the table abo
 For clusters to use NCR registries that are not connected to the internet, it is necessary to configure an environment to use a private URI. For information on how to use Private URI, refer to the [](/Container/NCR/ko/user-guide/#private-uri)NHN Cloud Container Registry (NCR) User Guide[](/Container/NCR/ko/user-guide/#private-uri).
 
 
+<a id="prerequisites-for-istio-deployment-install-the-oras-command-line-tool"></a>
 #### Install the ORAS command-line tool
 Download the OCI Registry As Storage (ORAS) command-line tool to pull artifacts. ORAS is a tool that provides a way to push and pull OCI artifacts from the OCI Registry.
 Run the command below to install the ORAS command-line tool. For detailed instructions on how to use the ORAS command line tool, see the [ORAS docs](https://oras.land/docs/).
@@ -57,8 +66,10 @@ $ export PATH="/usr/local/bin:$PATH"
 ```
 
 
-### Install Istio
+<a id="install-istio"></a>
+### Install Istio { #install-istio }
 
+<a id="install-istio-download-and-install-istioctl-using-the-oras-command-line-tool"></a>
 #### 1. Download and install istioctl using the ORAS command line tool.
 istioctl is a configuration command-line utility that allows you to debug and diagnose the service mesh deployment provided by Istio, offering various features, such as setting Istio deployment configuration options. For more information on istioctl, see [istioctl](https://istio.io/latest/docs/reference/commands/istioctl/). 
 
@@ -70,6 +81,7 @@ $ cd istio-${VERSION}
 $ export PATH=$PWD/bin:$PATH
 ```
 
+<a id="install-istio-deploy-istio-components-using-istioctl"></a>
 #### 2. Deploy Istio components using istioctl.
 Profiles provide custom deployment features for sidecars in the Istio control plane and data plane. The profile that is set up determines which components are enabled upon deployment. Depending on the environmental configuration of your cluster, you can use the default profile or customize the configuration to meet your specific needs. For more information on Istio profiles, see [Istio installation configuration profiles](https://istio.io/latest/docs/setup/additional-setup/config-profiles/). In this example, demo profile that is provided by default is used for deployment.
 
@@ -159,9 +171,11 @@ replicaset.apps/istio-ingressgateway-b8844867c 1 1 1 86s
 replicaset.apps/istiod-8c7fbbdc8 1 1 1 90s
 ```
 
-### Deploy application
+<a id="deploy-application"></a>
+### Deploy application { #deploy-application }
 Deploy an application to verify that Istio is installed and works properly. For this example, the Bookinfo sample application that comes with Istio is used. The sample application consists of four microservices: productpage, details, reviews, and ratings. For more information about the Bookinfo sample application, see [Istio Bookinfo Application](https://istio.io/latest/docs/examples/bookinfo/).
 
+<a id="deploy-application-label-namespace"></a>
 #### 1. Label namespace
 To use the Istio sidecar proxy, you need to label the namespace where the pods will be created. The label is used to identify the namespace where you want to deploy Istio components. When a Pod is deployed to a labeled namespace, the Istio sidecar proxy is automatically deployed to the Pod.
 
@@ -171,6 +185,7 @@ $ kubectl label namespace default istio-injection=enabled
 namespace/default labeled
 ```
 
+<a id="deploy-application-components"></a>
 #### 2. Deploy application components
 Deploy the application components and check whether they are deployed successfully.
 
@@ -218,9 +233,11 @@ $ kubectl exec "$(kubectl get pod -l app=ratings -o jsonpath='{.items[0].metadat
 <title>Simple Bookstore App</title>
 ```
 
-### Expose service
+<a id="expose-service"></a>
+### Expose service { #expose-service }
 Up to this point, the service is set up as a `ClusterIP`, which is only accessible to hosts inside the cluster. While Kubernetes provides various types of `Service` objects ( `NodePort`, `LoadBalancer`, etc.) for exposing services, Istio provides gateway objects to handle a wider range of network traffic. The following example shows the process of exposing a service using the sample bookinfo gateway provided by Istio. For more information on Istio gateways, see [Istio Gateways](https://istio.io/latest/docs/concepts/traffic-management/#gateways).
 
+<a id="expose-service-configure-ingress-gateway"></a>
 #### Configure ingress gateway
 Further configure the Istio ingress gateway to expose the service.
 
@@ -237,6 +254,7 @@ $ istioctl analyze
 ✔ No validation issues found when analyzing namespace: default.
 ```
 
+<a id="expose-service-access-service"></a>
 #### Access service
 Check the gateway URL information to access the exposed service. The gateway URL defaults to the configuration `Ingress Host:Ingress IP`. How you find the gateway URL information depends on whether the cluster is configured in the Internet or an isolated network environment. Clusters configured on the Internet have the gateway URL configured based on the `EXTERNAL-IP` information of the load balancer, and clusters configured in an isolated network environment have the gateway URL configured based on the node ports.
 
@@ -272,7 +290,8 @@ $ curl http://114.110.160.79:80/productpage
 ```
 
 
-### Delete Istio
+<a id="delete-istio"></a>
+### Delete Istio { #delete-istio }
 Perform the command below to remove the components related to the bookinfo application that were used in the example.
 ```
 $ kubectl delete -f samples/bookinfo/networking/bookinfo-gateway.yaml
