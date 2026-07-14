@@ -3,8 +3,7 @@
 
 <a id="cluster-headings"></a>
 ## クラスター { #cluster-headings }
-
-<!-- TODO: translate body -->
+クラスターは、ユーザーのKubernetesを構成するインスタンスのグループです。
 
 <a id="cluster-create"></a>
 ### クラスター作成 { #cluster-create }
@@ -59,6 +58,7 @@ NHN Kubernetes Service(NKS)を使用するには、まずクラスターを作�
 > クラスタ作成時に設定したサブネットのインターネットゲートウェイ接続の有無を変更しないでください。
 >  - クラスタ作成時に設定したサブネットのインターネットゲートウェイ接続の有無によって、イメージ/バイナリを受け取るレジストリが変わります。
 >  - クラスタ作成後、サブネットのインターネットゲートウェイ接続の有無が変更されると、設定されたレジストリに接続できず、クラスタが正常に動作しません。
+
 > [最大作成可能なノード数]
 > クラスタ作成時に作成可能な最大ノード数はPodネットワーク、 Podサブネットサイズ設定で決定されます。
 > 計算方法 : 2 ^ (Podサブネットサイズ - Podネットワークのホストビット) - 3
@@ -66,12 +66,14 @@ NHN Kubernetes Service(NKS)を使用するには、まずクラスターを作�
 >  - Podサブネットサイズ= 24
 >  - Podネットワーク= 10.100.0.0/16
 >  - 計算 : 2 ^ (24 - 16) - 3 = 最大253個ノード作成可能
+
 > [ノードごとにPodに割り当てることができる最大IP数]
 > 一つのノードで使用可能な最大IP数と、作成可能な最大ノード数はPodサブネットサイズ設定で決定されます。
 > 計算方法 : 2 ^ (32 - pods_network_subnet) - 2
 > 例:
 >  - Podサブネットサイズ= 24
 >  - 計算 : 2 ^ (32 - 24) - 2 =最大254個のIPを使用可能
+
 > [クラスタでPodに割り当てることができる最大IP数]
 > 計算方法 :ノードごとにPodに割り当てることができる最大IP数 * 最大作成可能なノード数
 > 例:
@@ -252,7 +254,6 @@ k8s Node状態のアイコン別の意味は次のとおりです。
 ### ノードグループからノード削除 { #nodegroup-scale-in }
 動作中のノードグループからノードを削除できます。ノードグループ情報照会ページのノードリストタブを押すと、現在のノードリストが表示されます。ノードリストの中から削除するノードを選択し、ノード削除ボタンを押すと、確認ダイアログボックスが表示されます。削除するノード名をもう一度確認して確認ボタンを押すとノードが削除されます。
 
->[注意]
 ノードグループに含まれる全てのノードは、次の順序で削除されます。
 * 該当ノードがLoadBalancerタイプのServiceのメンバーである場合、該当LBのメンバーをINACTIVE状態にします。(プラットフォームバージョン1.202602.0以上の場合のみ対応)
 * 該当ノードがdrainされます。
@@ -263,6 +264,7 @@ k8s Node状態のアイコン別の意味は次のとおりです。
 >オートスケーラーが有効になっているノードグループは、手動でノードを削除できません。
 
 <a id="node-start-stop"></a>
+
 ### ノードの停止と起動 { #node-start-stop }
 ノードグループに属すノードのうち一部を停止させ、停止したノードを再度起動できます。ノードグループ情報照会ページのノードリストタブをクリックすると現在のノードリストが現れます。停止するノードを選択し、ノード停止ボタンをクリックするとノードが停止します。停止したノードを選択し、ノード起動ボタンをクリックするとノードが再び起動します。
 
@@ -304,6 +306,7 @@ k8s Node状態のアイコン別の意味は次のとおりです。
 * 赤色：異常状態のノード
 
 <a id="use-gpu-nodegroup"></a>
+
 ### GPUノードグループ使用 { #use-gpu-nodegroup }
 KubernetesでGPU基盤ワークロードの実行が必要な場合、 GPUインスタンスで構成されたノードグループを作成できます。
 クラスターまたはノードグループ作成プロセスでインスタンスタイプを選択する時、 `g2`タイプを選択するとGPUノードグループを作成できます。
@@ -426,6 +429,7 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 > GPUが必要ないワークロードがGPUノードに割り当てられることを防ぎたい場合は[TaintおよびTolerationの概要](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)を参照してください。
 
 <a id="autoscaler"></a>
+
 ### オートスケーラー { #autoscaler }
 オートスケーラーは、ノードグループの利用可能なリソースが不足したり、ノードの使用率が一定レベル以下で維持される場合、ノードの数を自動的に調整する機能です。この機能は、ノードグループごとに設定することができ、互いに独立して動作します。NKSでは2つの方式のオートスケーラーをサポートしています。
 
@@ -452,8 +456,9 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 | 削除 | ノードの数を減らすことです。 |
 
 <a id="metric-base-autoscaler"></a>
+
 #### 指標ベースのオートスケーラー
-指標ベースのオートスケーラーはNHN Cloudの[Cloud Monitoring](/Monitoring/Cloud%20Monitoring/ko/overview/)サービスに基づいて動作します。ワーカーノードにインストールされた指標収集エージェントが1分周期でシステム指標をCloud Monitoringに送信し、収集された指標が設定したしきい値を超えたり、下回る場合、自動的にノードを追加または削除します。増設(Scale Out)と削減(Scale In)機能はそれぞれ独立して有効化できます。
+指標ベースのオートスケーラーはNHN Cloudの[Cloud Monitoring](/Monitoring/Cloud%20Monitoring/ja/overview/)サービスに基づいて動作します。ワーカーノードにインストールされた指標収集エージェントが1分周期でシステム指標をCloud Monitoringに送信し、収集された指標が設定したしきい値を超えたり、下回る場合、自動的にノードを追加または削除します。増設(Scale Out)と削減(Scale In)機能はそれぞれ独立して有効化できます。
 
 <a id="metric-base-autoscaler-set"></a>
 ##### 指標ベースのオートスケーラー設定
@@ -482,7 +487,7 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 | ノード性能指標 | モニタリング対象指標設定(下表参照) | 指標種類 | 必須設定 | - |
 | ノード調整数 | オートスケーリング発生時追加/削除するノード数 | 1 - 10 | 1 | 台 |
 | しきい値設定 | 条件発動のための指標しきい値 | 指標ごと | 必須設定 | - |
-| しきい値領域維持時間| しきい値状態が設定時間(2–60 分)以上持続するとスケール動作実行| 2-60 | 必須設定 | 分 |
+| しきい値領域維持時間| しきい値状態が設定時間(2–60 分)以上持続するとスケール動作実行| 2-60 | 必須設定 | 分 |
 
 **ノード性能指標**
 
@@ -510,7 +515,7 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 * オートスケーリング待機時間経過
 
 > [参考]
-> オートスケーリング待機時間は増設ポリシーと削減ポリシーをそれぞれ指定できます。
+> オートスケーリング待機時間は増設ポリシーと削減ポリシーをそれぞれ指定できます。
 > 通常、増設待機時間は短く設定することで、急激な負荷上昇に即座に対応できます。
 > 逆に削減待機時間は長く設定して、インスタンスを徐々に減らしていくことで安定性を確保します。
 > サービスの負荷状況を継続的にモニタリングして適切なポリシーを設定することで、インスタンスが無駄になるのを防ぐことができます。
@@ -518,8 +523,9 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 > 指定された性能指標がしきい値領域維持時間の間、基準値を超えるかどうかを継続的に観察して、ポリシーの発動可否を決定します。
 > 例えば、条件がCPU使用率が90％以上で、しきい値領域維持時間が5分の場合、5分間CPU使用率が90％を下回らない場合、ポリシーが発動します。
 
-> [ノード削減について］
-> 指標ベースのオートスケーラーが削減を行うと、最も最近に作成されたノードから順に削除します。
+> [ノード削減について]
+> 指標ベースのオートスケーラーが削減を行うと、最も最近に作成されたノードから順に削除します。
+
 <a id="metric-base-autoscaler-example"></a>
 ##### 動作例
 
@@ -527,11 +533,11 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 
 | 設定項目 | 設定値 |
 | --- | --- |
-| 最大 ノード数 | 7台 |
+| 最大 ノード数 | 7台 |
 | 増設ノード調整 | 3台 |
-| 増設後待機時間 | 5 分 |
+| 増設後待機時間 | 5 分 |
 | 増設条件:指標 | CPU |
-| 増設条件:しきい値領域維持時間 | 5 分 |
+| 増設条件:しきい値領域維持時間 | 5 分 |
 | 増設条件:しきい値 | 70%以上 |
 
 **削減ポリシー**
@@ -540,21 +546,21 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 | --- | --- |
 | 最小ノード数 | 3台 |
 | 削減ノード調整 | 1台 |
-| 削減後の待機時間 | 10 分 |
+| 削減後の待機時間 | 10 分 |
 | 増設条件:指標 | CPU |
-| 増設条件:しきい値領域維持時間 | 2 分 |
+| 増設条件:しきい値領域維持時間 | 2 分 |
 | 増設条件:しきい値 | 30%以下 |
 
 **動作要約**
 
 * 現在ノードグループのノード数: 5台
 * 5台ノードのCPU使用量平均が70%以上の状況が5分持続し、ノード増設がリクエストされる。
-* 増設ポリシーの増設ノード調整設定が3台ですが、最大ノード数が7台なので、実際に+2台増設される。(ノード数: 5 → 7)
+* 増設ポリシーの増設ノード調整設定が3台ですが、最大ノード数が7台なので、実際に+2台増設される。(ノード数: 5 → 7)
 * ノード増設作業完了5分後、7台ノードのCPU使用量平均が30%以下の状況が2分持続し、ノード削減がリクエストされる。
 * 削減後の待機時間が10分のため、リクエストが拒否される。
 * 10分経過後、ノード削減が進行される
-* 削減ポリシーの削減ノード調整設定が2台のため1台ノード削除(ノード数: 7 → 6)
-* 削減後、10 分待機中は追加削減が発生しません。
+* 削減ポリシーの削減ノード調整設定が2台のため1台ノード削除(ノード数: 7 → 6)
+* 削減後、10 分待機中は追加削減が発生しません。
 
 **動作プロセスの詳細**
 
@@ -573,6 +579,7 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 | 24 - | 28% | 6 | – | 増設条件しきい値以下→しきい値領域維持時間2分測定開始<br>その後、削減後待機10分(24→34)条件を満たすと1台ずつ削減される |
 
 <a id="cluster-autoscaler"></a>
+
 #### クラスターオートスケーラー
 クラスターオートスケーラーはKubernetesプロジェクトの公式サポート機能であるcluster-autoscaler機能をベースに動作します。詳細については、 [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler)を参照してください。
 
@@ -628,7 +635,7 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 | 削除 | 有効 |
 | リソース使用量しきい値 | 50 |
 | しきい値維持時間| 3 |
-| 増設後の遅延時間 | 5 |
+| 増設後の遅延時間 | 10 |
 
 **2. Pod配布**
 
@@ -636,6 +643,7 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 
 > [注意]
 > このマニフェストのようにコンテナのリソースリクエストが明示されている必要があります。
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -805,7 +813,8 @@ data:
       ScaleDown:   NoCandidates (candidates=0)
                    LastProbeTime:      2020-11-03 12:39:12.185954244 +0000 UTC m=+43.664545435
                    LastTransitionTime: 2020-11-03 12:38:41.705407217 +0000 UTC m=+13.183998415
-    NodeGroups:
+
+NodeGroups:
       Name:        default-worker-f9a9ee5e
       Health:      Healthy (ready=1 unready=0 notStarted=0 longNotStarted=0 registered=1 longUnregistered=0 cloudProviderTarget=1 (minSize=1, maxSize=5))
                    LastProbeTime:      2020-11-03 12:39:12.185954244 +0000 UTC m=+43.664545435
@@ -816,6 +825,7 @@ data:
       ScaleDown:   NoCandidates (candidates=0)
                    LastProbeTime:      2020-11-03 12:39:12.185954244 +0000 UTC m=+43.664545435
                    LastTransitionTime: 2020-11-03 12:38:41.705407217 +0000 UTC m=+13.183998415
+
 kind: ConfigMap
 metadata:
   annotations:
@@ -887,7 +897,7 @@ deployment.apps/php-apache created
 service/php-apache created
 ```
 
-HPAを設定します。上で作成したphp-apache deploymentオブジェクトに対して最小Pod数1、最大Pod数、目標CPU loadは50%に設定します。
+HPAを設定します。上で作成したphp-apache deploymentオブジェクトに対して最小Pod数1、最大Pod数30、目標CPU loadは50%に設定します。
 
 ```
 # kubectl autoscale deployment php-apache --cpu-percent=50 --min=1 --max=30
@@ -967,7 +977,7 @@ data:
                    LastProbeTime:      2020-11-24 13:00:39.930763305 +0000 UTC m=+1246178.729396969
                    LastTransitionTime: 2020-11-20 01:42:32.287146552 +0000 UTC m=+859891.085780205
 
-    NodeGroups:
+NodeGroups:
       Name:        default-worker-bf5999ab
       Health:      Healthy (ready=1 unready=0 notStarted=0 longNotStarted=0 registered=1 longUnregistered=0 cloudProviderTarget=2 (minSize=1, maxSize=3))
                    LastProbeTime:      2020-11-24 13:00:39.930763305 +0000 UTC m=+1246178.729396969
@@ -1021,6 +1031,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.28.3
 ```
 
 <a id="user-script-old"></a>
+
 ### ユーザースクリプト(old) { #user-script-old }
 クラスタを作成する時と追加ノードグループを作成する時、ユーザースクリプトを登録できます。ユーザースクリプト機能には次のような特徴があります。
 
@@ -1041,6 +1052,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.28.3
         * スクリプト標準出力および標準エラーストリーム：`/var/log/userscript.output`
 
 <a id="user-script"></a>
+
 ### ユーザースクリプト { #user-script }
 2022年7月26日以降に作成されるノードグループには新しいバージョンのユーザースクリプト機能が搭載されます。以前のバージョンの機能と比較して次のような特徴があります。
 
@@ -1061,6 +1073,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.28.3
         2. 新規バージョンのユーザースクリプト
 
 <a id="instance-flavor-update"></a>
+
 ### インスタンスタイプの変更 { #instance-flavor-update }
 ワーカーノードグループのインスタンスタイプを変更します。ワーカーノードグループに属す全てのワーカーノードのインスタンスタイプが変更されます。
 
@@ -1092,13 +1105,15 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.28.3
 * u2タイプのインスタンスは作成後にタイプを変更できません。同じu2タイプへの変更もできません。
 
 <a id="custom-image"></a>
+
 ### カスタムイメージをワーカーイメージとして活用 { #custom-image }
 
-ユーザーのカスタムイメージをベースにしたウォーカーノードグループを作成することができます。カスタムイメージがワーカーノードイメージとして活用できるようにNHN Cloud Image Builderサービスで追加作業(NKSワーカーノード化)が必要です。 Image BuilderサービスでNHN Kubernetes Service(NKS)ワーカーノードアプリケーションでイメージテンプレートを作成してカスタムワーカーノードイメージを作成できます。 Image Builderサービスの詳細については[Image Builderユーザーガイド](/Compute/Image%20Builder/ko/console-guide/#_1)を参照してください。
+ユーザーのカスタムイメージをベースにしたウォーカーノードグループを作成することができます。カスタムイメージがワーカーノードイメージとして活用できるようにNHN Cloud Image Builderサービスで追加作業(NKSワーカーノード化)が必要です。 Image BuilderサービスでNHN Kubernetes Service(NKS)ワーカーノードアプリケーションでイメージテンプレートを作成してカスタムワーカーノードイメージを作成できます。 Image Builderサービスの詳細については[Image Builderユーザーガイド](/Compute/Image%20Builder/ja/console-guide/#_1)を参照してください。
 
 > [注意]
 > NKSワーカーノード化作業にはパッケージのインストールや設定変更などが含まれているため、正常に動作しないイメージで作業を進める場合、失敗する可能性があります。
 > Image Builderサービスの使用に対して課金される場合があります。
+
 <a id="custom-image-constraints"></a>
 #### 制約事項
 サポートされるOSイメージとOSイメージごとに選択しなければならないアプリケーションのバージョン情報は以下の表の通りです。カスタムイメージを作成するベースインスタンスのイメージに合わせて正しいバージョンのアプリケーションを選択する必要があります。
@@ -1124,6 +1139,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.28.3
 > [参考]
 > カスタムイメージをワーカーノードイメージに変換する過程で選択したオプションによってGPUドライバーがインストールされます。
 > したがって、 カスタムGPUワーカーノードイメージを作成する場合にも、カスタムイメージの作成をGPUインスタンスで行う必要はありません。
+
 <a id="custom-image-process"></a>
 #### 進行過程
 
@@ -1146,6 +1162,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.28.3
 ![nkscustom_image_3.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nkscustom_image_3.png)
 
 <a id="extra-volumes"></a>
+
 ### 追加ブロックストレージ { #extra-volumes }
 ノードグループに追加ブロックストレージを使用できます。クラスターおよびノードグループを作成する際に追加ブロックストレージを指定して作成したり、既存のノードグループに追加ブロックストレージを作成して使用できます。追加ブロックストレージには次のような特徴があります。
 
@@ -1164,6 +1181,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.28.3
 > 追加ブロックストレージの設定変更は、既存ボリュームのマウント解除を含むため、使用中のサービスに影響を与える可能性があります。
 
 <a id="extra-security-groups"></a>
+
 ### 追加セキュリティグループ { #extra-security-groups }
 ノードグループに追加セキュリティグループを設定できます。クラスター及びノードグループを作成する際に追加セキュリティグループを指定して作成したり、既存のノードグループに追加セキュリティグループを設定できます。追加セキュリティグループの特徴は次のとおりです。
 
@@ -1174,11 +1192,13 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.28.3
 
 [参考]
 > コンソールでノードグループ作成時に指定した追加セキュリティグループは、基本ネットワークと全ての追加ネットワークに適用されます。個別ネットワークの追加セキュリティグループに対する変更は、ノードグループ作成後に可能です。
+
 [注意]
 > ノードグループに追加セキュリティグループを設定すると、既存のインスタンスに割り当てられたセキュリティグループのうち、追加セキュリティグループに定義されていない対象は削除されます。
 > 追加セキュリティグループを変更すると、ネットワーク設定が変更されるため、設定が適用される間、一時的に通信に影響が出る可能性があります。
 
 <a id="fip-auto-bind"></a>
+
 ### フローティングIP自動割り当て { #fip-auto-bind }
 ノードグループにフローティングIP自動割り当て機能を使用できます。この機能が有効化されたノードグループは、ノード作成時にフローティングIPを自動的に割り当てます。クラスター及び追加ノードグループを作成する際に、機能を有効にするかどうかを選択することができ、設定したオプションは後から変更できます。フローティングIP自動割り当て機能を有効にするために必要な項目は次のとおりです。
 
@@ -1197,10 +1217,12 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.28.3
   * 機能が有効になっているノードグループで機能を無効にしても、既存のノードに割り当てられたフローティングIPは解除されません。
 
 <a id="cluster-management"></a>
+
 ## クラスター管理 { #cluster-management }
 遠隔のホストからクラスターを操作し、管理するには、Kubernetesが提供するコマンドラインツール(CLI)、`kubectl`が必要です。
 
 <a id="kubectl-install"></a>
+
 ### kubectlインストール { #kubectl-install }
 kubectlは、インストール不要で、実行ファイルをダウンロードしてすぐに使用できます。各OSのダウンロードパスは次のとおりです。
 
@@ -1239,6 +1261,7 @@ $ export PATH=$PATH:$(pwd)
 ```
 
 <a id="kubectl-set-kubeconfig"></a>
+
 ### 設定 { #kubectl-set-kubeconfig }
 kubectlでKubernetesクラスターにアクセスするには、クラスター設定ファイル(kubeconfig)が必要です。NHN Cloud Webコンソールで**Container > NHN Kubernetes Service(NKS)**サービスページを開き、アクセスするクラスターを選択します。下部、**基本情報**タブで**設定ファイル**項目の**ダウンロード**ボタンを押して設定ファイルをダウンロードします。ダウンロードした設定ファイルは、任意の位置へ移動させ、kubectl実行時に参照できるように準備します。
 
@@ -1254,6 +1277,7 @@ $ export KUBECONFIG={クラスター設定ファイルパス}
 クラスター設定ファイルのパスを環境変数に保存したくない場合は、kubectlの基本設定ファイル、`$HOME/.kube/config`にコピーして使用することもできます。しかし、クラスターを複数運用する場合は、環境変数の値を変更する方法が便利です。
 
 <a id="kubectl-check-connection"></a>
+
 ### 接続確認 { #kubectl-check-connection }
 `kubectl version`コマンドで、正常に設定できているかを確認します。問題がなければ`Server Version`が出力されます。
 
@@ -1267,6 +1291,7 @@ Server Version: version.Info{Major:"1", Minor:"15", GitVersion:"v1.15.7", GitCom
 * Server Version：クラスターを構成しているKubernetesのバージョン情報
 
 <a id="certificatesigningrequest"></a>
+
 ### CSR(CertificateSigningRequest) { #certificatesigningrequest }
 Kubernetesの認証API(Certificate API)を通してKubernetes APIクライアントのためのX.509証明書(certificate)をリクエストして発行できます。 CSRリソースは証明書をリクエストして、リクエストに対して承認/拒否を決定できるようにします。詳細事項は[Certificate Signing Requests](https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/)文書を参照してください。
 
@@ -1323,6 +1348,7 @@ certificatesigningrequest.certificates.k8s.io/dev-user1 approved
 ```
 
 CSRをもう一度確認すると`Approved,Issued`状態に変更されたことを確認できます。
+
 ```
 $ kubectl get csr
 NAME        AGE   SIGNERNAME                            REQUESTOR   REQUESTEDDURATION   CONDITION
@@ -1347,16 +1373,17 @@ spec:
   groups:
   - system:masters
   - system:authenticated
-  request: LS0tLS...(以下省略)
+  request: LS0t..(以下省略)
   signerName: kubernetes.io/kube-apiserver-client
   usages:
   - client auth
   username: admin
 status:
-  certificate: LS0tLS...(以下省略)
+  certificate: LS0t..(以下省略)
   conditions:
   - lastTransitionTime: "2023-09-15T05:53:26Z"
     lastUpdateTime: "2023-09-15T05:53:26Z"
+    message: This CSR was approved by kubectl certificate approve.
     reason: KubectlApprove
     status: "True"
     type: Approved
@@ -1369,6 +1396,7 @@ status:
 > * 坪村リージョン：2020年12月24日以降に作成したクラスター
 
 <a id="admission-controller"></a>
+
 ### 承認コントローラー(admission controller)プラグイン { #admission-controller }
 承認コントローラーはKubernetes APIサーバーリクエストを奪ってオブジェクトを変更したり、リクエストを拒否できます。承認コントローラーの詳細は[承認コントローラー](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/)を参照してください。また承認コントローラーの使用例は[承認コントローラーガイド](https://kubernetes.io/blog/2019/03/21/a-guide-to-kubernetes-admission-controllers/)を参照してください。
 
@@ -1409,14 +1437,15 @@ Kubernetesバージョン別の基本アクティブ承認コントローラー�
 * PodSecurityPolicy
 
 <a id="cluster-upgrade"></a>
+
 ### クラスタアップグレード { #cluster-upgrade }
 NHN Kubernetes Service(NKS)は動作中のKubernetesクラスタのKubernetesコンポーネントのアップグレードをサポートします。 
 
 <a id="cluster-upgrade-policy-of-supporting-different-kubernetes-versions"></a>
 #### Kubernetesバージョン違いサポートポリシー
-Kubernetesのバージョンは`x.y.z`で表現されます。 `x`はメジャーバージョン、`y`はマイナーバージョン、`z`はパッチバージョンです。機能が追加される場合、メジャーバージョンまたはマイナーバージョンをアップロードし、バグ修正など以前のバージョンと互換性のある機能を提供する場合はパッチバージョンをアップロードします。詳しい内容は[こちら](https://semver.org/)を参照してください。
+Kubernetesのバージョンは`x.y.z`で表現されます。 `x`はメジャーバージョン、`y`はマイナーバージョン、`z`はパッチバージョンです。機能が追加される場合、メジャーバージョンまたはマイナーバージョンをアップロードし、バグ修正など以前のバージョンと互換性のある機能を提供する場合はパッチバージョンをアップロードします。詳しい内容は[Semantic Versioning 2.0.0](https://semver.org/)を参照してください。
 
-Kubernetesクラスタは、動作中の状態でKubernetesコンポーネントをアップグレードできます。そのため、KubernetesコンポーネントごとにKubernetesバージョンの違いによる機能をサポートするかどうかを定義しています。マイナーバージョンを基準にした段階のバージョンの違いは相互機能互換をサポートすることで動作中のクラスタのKubernetesコンポーネントアップグレードをサポートします。またコンポーネントの種類ごとにアップグレード順序を定義しています。詳しい内容は[こちら](https://kubernetes.io/releases/version-skew-policy/)を参照してください。
+Kubernetesクラスタは、動作中の状態でKubernetesコンポーネントをアップグレードできます。そのため、KubernetesコンポーネントごとにKubernetesバージョンの違いによる機能をサポートするかどうかを定義しています。マイナーバージョンを基準にした段階のバージョンの違いは相互機能互換をサポートすることで動作中のクラスタのKubernetesコンポーネントアップグレードをサポートします。またコンポーネントの種類ごとにアップグレード順序を定義しています。詳しい内容は[Version Skew Policy](https://kubernetes.io/releases/version-skew-policy/)を参照してください。
 
 <br>
 
@@ -1486,22 +1515,24 @@ NKSクラスタバージョン管理方式とKubernetesバージョン違いサ�
 | コントロールプレーンアップグレード後の状態 | v1.33.4 | 不可 <sup>[3](#footnote_cluster_upgrade_rule_3)</sup> | v1.32.3 | 可能 <sup>[4](#footnote_cluster_upgrade_rule_4)</sup> | 
 | ワーカーノードグループアップグレード後の状態 | v1.33.4 | 不可 <sup>[5](#footnote_cluster_upgrade_rule_5)</sup> | v1.33.4 | 不可 <sup>[2](#footnote_cluster_upgrade_rule_2)</sup> |
 
-* <a name="footnote_cluster_upgrade_rule_1">(注1)</a>コントロールプレーンとすべてのワーカーノードグループのバージョンが一致する状態のためアップグレード可能
-* <a name="footnote_cluster_upgrade_rule_1">(注2)</a>ワーカーノードグループはコントロールプレーンがアップグレードされた後にアップグレード可能
-* <a name="footnote_cluster_upgrade_rule_1">(注3)</a>コントロールプレーンとすべてのワーカーノードグループのバージョンが一致する時のみアップグレード可能
-* <a name="footnote_cluster_upgrade_rule_1">(注4)</a>コントロールプレーンがアップグレードされたためアップグレード可能
-* <a name="footnote_cluster_upgrade_rule_1">(注5)</a> NHN Cloudでサポートする最新バージョンを使用しているためアップグレード不可
+注釈
+
+* <a name="footnote_cluster_upgrade_rule_1">1</a>: コントロールプレーンとすべてのワーカーノードグループのバージョンが一致する状態のためアップグレード可能
+* <a name="footnote_cluster_upgrade_rule_1">2</a>: ワーカーノードグループはコントロールプレーンがアップグレードされた後にアップグレード可能
+* <a name="footnote_cluster_upgrade_rule_1">3</a>: コントロールプレーンとすべてのワーカーノードグループのバージョンが一致する時のみアップグレード可能
+* <a name="footnote_cluster_upgrade_rule_1">4</a>: コントロールプレーンがアップグレードされたためアップグレード可能
+* <a name="footnote_cluster_upgrade_rule_1">5</a>: NHN Cloudでサポートする最新バージョンを使用しているためアップグレード不可
 
 <br>
 
 <a id="cluster-upgrade-considerations-for-etcd-version-changes"></a>
 #### etcdバージョン変更に伴う注意事項
-クラスターのアップグレード作業の進行時、アップグレード対象のプラットフォームバージョンに定義された[etcdバージョン](/Container/NKS/ko/user-guide/#platform-version-etcd-version)が現在のクラスターのetcdバージョンと異なる場合に限り、etcdのアップグレード作業が併せて進行されます。該当作業を開始する前に注意事項を必ず認知し、事前の告知/メンテナンス時間の確保などの措置を推奨します。
+クラスターのアップグレード作業の進行時、アップグレード対象のプラットフォームバージョンに定義された[etcdバージョン](/Container/NKS/ja/user-guide/#platform-version-etcd-version)が現在のクラスターのetcdバージョンと異なる場合に限り、etcdのアップグレード作業が併せて進行されます。該当作業を開始する前に注意事項を必ず認知し、事前の告知/メンテナンス時間の確保などの措置を推奨します。
 
 ##### データの整合性確認のため頻繁なリソース変更は自制
 etcdのアップグレード時にリソースのデプロイ/削除作業が頻繁に発生すると、データの整合性確認に失敗してアップグレードが失敗する可能性があります。安全なアップグレードのため、次のような環境でアップグレードすることを推奨します。
 * クラスターリソースの変更作業が少ない時間帯に実施
-* 運用への影響が少ない時間帯(メンテナンス時間など)にアップグレードを実施
+* 運営への影響が少ない時間帯(メンテナンス時間など)にアップグレードを実施
 * アップグレード直前の大規模なデプロイ/削除、バッチ作業の実行などを避け、トラフィックが安定した後に進行
 
 ##### etcdアップグレード失敗時の自動復旧中にクラスター運用を一時中断
@@ -1541,6 +1572,8 @@ NKSクラスターのコントロールプレーンは高可用性を保証し�
 4. バッファノードで動作中のPodを追放してバッファノードを削除します。
 5. クラスタオートスケーラー機能を再度有効にします。<sup>[(注1)](#footnote_worker_component_upgrade_1)</sup> 
 
+注釈
+
 * <a name="footnote_worker_component_upgrade_1">(注1)</a>この段階はアップグレード機能開始前にクラスタオートスケーラー機能が有効になっている場合にのみ有効です。
 * <a name="footnote_worker_component_upgrade_2">(注2)</a>バッファノードとは、アップグレード中に既存ワーカーノードから追放されたPodがもう一度スケジューリングできるように作成しておく余裕ノードのことです。該当ワーカーノードグループで定義したワーカーノードと同じ規格のノードで作成され、アップグレードが終了する時に自動的に削除されます。このノードはInstance料金ポリシーに基づいて費用が請求されます。 
 * <a name="footnote_worker_component_upgrade_3">(注3)</a>アップグレード時のバッファノード数を設定できます。デフォルト値は1で、0に設定するとバッファノードを追加しません。最小値は0で、最大値は(ノードグループ当たりの最大ノード数クォーター - 該当のワーカーノードグループの現在ノード数)です。
@@ -1562,7 +1595,7 @@ NKSクラスターのコントロールプレーンは高可用性を保証し�
 > 4. PodDisruptionBudgets(PDB)設定により追放に失敗したり、遅くなることがあります。
 > PodDisruptionBudgets(PDB)設定で維持する必要があるPod数を定義できます。この機能設定によりアップグレード過程でPodの追放ができない場合もあり、Pod追放時間が長くなることがあります。Pod追放に失敗するとアップグレードが失敗します。したがってPDB設定が行われている場合は、適切なPDB設定でPod追放が円滑に動作するように設定する必要があります。 PDB設定の詳細は[こちら](https://kubernetes.io/docs/tasks/run-application/configure-pdb/)を参照してください。
 
-安全なPod追放については[こちら](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)を参照してください。
+安全なPod追放については[Safely Drain a Node](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)を参照してください。
 
 
 <br>
@@ -1587,85 +1620,11 @@ NKSクラスターのコントロールプレーンは高可用性を保証し�
 ##### 4. Blue環境(以前バージョンの全てのワーカーノードグループ)を廃棄します。
 Blue環境のリソースを全て破棄すると、コントロールプレーンと全てのワーカーノードグループのバージョンが全て一致することになります。
 
-<!-- pre-align: ko에 대응 섹션 없음 — 검토 필요 (クラスタCNIの変更 — target has a section on changing cluster CNI (Flannel to Calico-VXLAN) with no corresponding ko heading) -->
-<a id="api_endpoint_ipacl"></a>
-### クラスタCNIの変更 { #api_endpoint_ipacl }
-NHN Kubernetes Service(NKS)は動作中のKubernetesクラスタのCNI(container network interface)変更をサポートします。 
-クラスタCNI変更機能を使用するとNHN Kubernetes Service(NKS)のCNIがFlannel CNIからCalico CNI-VXLANに変更されます。
-
-<!-- pre-align: ko에 대응 섹션 없음 — 검토 필요 (CNI変更ルール — sub-heading under extra t68, no ko counterpart) -->
-#### CNI変更ルール
-NKSクラスタCNI変更機能に適用されるルールは次のとおりです。
-
-* CNI変更機能はNHN Kubernetes Service(NKS)バージョン1.24.3以上の場合に使用できます。
-* 既存NHN Kubernetes Service(NKS)で使用しているCNIがFlannelの場合にのみCNI変更を使用できます。
-* CNI変更開始時、コントロールプレーンとすべてのワーカーノードグループに対して一括で作業を行います。
-* Calico-VXLAN、Calico-eBPFからFlannelへのCNI変更はサポートしません。
-* FlannelからCalico-eBPFへのCNI変更はサポートしません。
-* Calico-VXLANからCalico-eBPFへのCNI変更はサポートしません。
-* コントロールプレーンのKubernetesバージョンとすべてのワーカーノードグループのKubernetesバージョンが一致すればCNI変更が可能です。
-
-* 他の機能の動作により、クラスタがアップデート中の状態ではCNIの変更ができません。
-
-次の例は、Kubernetes CNI変更過程で変更できるかどうかを表で示したものです。例に使用された条件は次のとおりです。 
-
-NHN CloudがサポートするKubernetesバージョンリスト：v1.23.3、v1.24.3、v1.25.4
-クラスタはv1.23.3で作成
-
-| 状態 | クラスタバージョン | 現在CNI | CNI変更可否
-| --- | :-: | :-: | :-: | :-: |
-| 初期状態| v1.23.3 | Flannel | 不可 <sup>(注1)(#footnote_calico_change_rule_1)</sup> |
-| クラスタアップグレード後の状態 | v1.24.3 | Flannel | 可能 <sup>(注2)(#footnote_calico_change_rule_2)</sup> | 
-| CNI変更後の状態 | v1.24.3 | Calico-VXLAN | 不可 <sup>(注3)(#footnote_calico_change_rule_3)</sup> |
-
-
-注釈
-
-* <a name="footnote_calico_change_rule_1">(注1)</a>クラスタバージョンが1.24.3未満のためCNI変更不可
-* <a name="footnote_calico_change_rule_2">(注2)</a>クラスタバージョンが1.24.3以上のためCNI変更可能
-* <a name="footnote_calico_change_rule_3">(注3)</a>CNIがすでにCalico-VXLANのためCNI変更不可
-
-<!-- pre-align: ko에 대응 섹션 없음 — 검토 필요 (FlannelからCalico-VXLAN CNIへの変更進行プロセス — sub-heading under extra t68, no ko counterpart) -->
-#### FlannelからCalico-VXLAN CNIへの変更進行プロセス
-CNIの変更は次の順序で行われます。
-
-1. すべてのワーカーノードグループにバッファノード<sup>(注1)(#footnote_calico_change_step_1)</sup>を追加します。<sup>(注2)(#footnote_calico_change_step_2)</sup>
-2. クラスタにCalico-VXLAN CNIが配布されます。<sup>(注3)(#footnote_calico_change_step_3)</sup>
-3. クラスタオートスケーラ機能を無効化します。<sup>(注4)(#footnote_calico_change_step_4)</sup>
-3. すべてのワーカーノードグループ内のすべてのワーカーノードに対して以下の作業を順次実行します。<sup>(注5)(#footnote_calico_change_step_5)</sup>
-    1. 該当ワーカーノードで動作中のPodを追放し、ノードをスケジュール不可能な状態に切り替えます。
-    2. ワーカーノードのPod IPをCalico-VXLAN CIDRに再割当てします。該当ノードに配布されているすべてのPodは再配布されます。<sup>(注6)(#footnote_calico_change_step_6)</sup>
-    3. ノードをスケジュール可能な状態に切り替えます。
-5. バッファノードで動作中のPodを追放し、バッファノードを削除します。
-6. クラスタオートスケーラ機能を再度有効にします。<sup>(注4)(#footnote_calico_change_step_4)</sup>
-7. Flannel CNIを削除します。
-
-
-注釈
-
-* <a name="footnote_calico_change_step_1">(注1)</a>バッファノードとは、CNI変更過程で既存ワーカーノードから追放されたPodが再びスケジューリングできるように作成しておく空きノードを指します。該当ワーカーノードグループで定義したワーカーノードと同じ規格のノードとして作成され、アップグレードプロセスが終了すると自動的に削除されます。このノードはInstance料金ポリシーに基づいて費用が請求されます。 
-* <a name="footnote_calico_change_step_2">(注2)</a>CNI変更時にバッファノード数を設定できます。デフォルト値は1で、0に設定するとバッファノードを追加しません。最小値は0で、最大値は(ノードグループあたりの最大ノード数クォーター - 該当ワーカーノードグループの現在ノード数)です。
-* <a name="footnote_calico_change_step_3">(注3)</a>クラスタにCalico-VXLAN CNIが配布されると、FlannelとCalico-VXLAN CNIが共存します。この状態で新しいPodが配布されるとPod IPはFlannel CNIに設定されて配布されます。Flannel CIDR IPを持つPodとCalico-VXLAN CIDR IPを持つPodはお互いに通信できます。
-* <a name="footnote_calico_change_step_4">(注4)</a>このステップはアップグレード機能開始前にクラスタオートスケーラ機能が有効になっている場合にのみ有効です。
-* <a name="footnote_calico_change_step_5">(注5)</a>CNI変更時に設定した最大サービス不可ノードの数だけ作業を実行します。デフォルト値は1です。最小値は1で、最大値は現在クラスタのすべてのノード数です。
-* <a name="footnote_calico_change_step_6">(注6)</a>既に配布されているPodのIPは全てFlannel CIDRに割り当てられています。Calico-VXLAN CNIに変更するためにFlannel CIDRのIPが割り当てられてているPodを全て再配布してCalico-VXLAN CIDR IPを割り当てます。新しいPodが配布されるとPod IPはCalico-VXLAN CNIに設定されて配布されます。
-
-この過程で以下のようなことが発生することがあります。
-
-* サービス中のPodが追放され、他のノードにスケジューリングされます。(Podの追放ついては[クラスタアップグレード](/Container/NKS/ja/user-guide/#cluster-upgrade)を参照してください)
-* クラスタに配布されているすべてのPodが再配布されます。(Podの再配布については、以下のPod再配布注意事項を参照してください)
-* オートスケーラ機能が動作しません。 
-
-
-> [Pod再配布注意事項]
-> 1. Pod追放プロセスによって他のノードに移されなかったPodに対して行われます。
-> 2. CNI変更プロセス中にFlannel CIDRとCalico-VXLAN CIDR間の正常な通信のためにCNI変更Podネットワーク値は既存Flannel CIDR値と同じであってはいけません。
-> 3. 既に配布されていたPodのpauseコンテナは全て停止し、kubeletによって再作成されます。Pod名とローカル記憶領域などの設定はそのまま維持されますが、IPはCalico-VXLAN CIDRのIPに変更されます。
-
 <a id="api-endpoint-ipacl"></a>
+
 ### クラスタAPIエンドポイントにIPアクセス制御を適用 { #api-endpoint-ipacl }
 クラスタAPIエンドポイントにIPアクセス制御を適用または解除できます。
-IPアクセス制御機能の詳細については、[IPアクセス制御](/Network/Load%20Balancer/ko/overview/#ip)文書を参照してください。
+IPアクセス制御機能の詳細については、[IPアクセス制御](/Network/Load%20Balancer/ja/overview/#ip)文書を参照してください。
 
 <a id="api-endpoint-ipacl-ip-access-control-rules"></a>
 #### IPアクセス制御対象ルール
@@ -1678,6 +1637,7 @@ IPアクセス制御機能の詳細については、[IPアクセス制御](/Net
 * IP アクセス制御対象は1つ以上存在する必要があります。
 
 <a id="rotate-certificate"></a>
+
 ### クラスタ証明書の更新 { #rotate-certificate }
 Kubernetesはコンポーネント間のTLS認証のためにPKI証明書が必要です。PKI証明書の詳細については、[PKI証明書及び要件](https://kubernetes.io/ko/docs/setup/best-practices/certificates/)を参照してください。 NKSクラスタを作成する場合クラスタに必要な証明書を自動的に作成し、この証明書の基本有効期間は5年に設定されています。
 
@@ -1708,9 +1668,10 @@ Kubernetesはコンポーネント間のTLS認証のためにPKI証明書が必�
 > [注意]
 > 証明書の更新機能には、新規証明書の作成と設定を反映するために、システムコンポーネントとクラスタの作成時に初期配布されたすべてのkube-system名前空間Podの再起動が伴います。
 > したがって、証明書の更新が進行中、クラスタのノードの状態が一時的にNot Readyに変更されたり、クラスタの一部のコンポーネントが正常に動作しない場合があります。
-> > このような作業の影響を最小限に抑えるためには、証明書の更新作業が進行中、新規Podの作成などの作業を行わないようにしてください。
+> このような作業の影響を最小限に抑えるためには、証明書の更新作業が進行中、新規Podの作成などの作業を行わないようにしてください。
 
 <a id="k8s-component"></a>
+
 ### Kubernetesコンポーネント設定機能 { #k8s-component }
 
 Kubernetesコンポーネントの様々なオプションを設定できます。クラスター作成時に設定でき、設定したオプションはクラスター作成完了後に変更することもできます。
@@ -1723,6 +1684,7 @@ Kubernetesコンポーネントの様々なオプションを設定できます�
 > * ワーカーノードで動作するコンポーネントの設定は、ワーカーノードグループ別に設定できます。(プラットフォームバージョン1.202602.0以降のバージョンに限る)
 
 <a id="control-plain-options"></a>
+
 ### コントロールプレーンオプション { #control-plain-options }
 
 | コンポーネント | オプション | 説明 |
@@ -1733,6 +1695,7 @@ Kubernetesコンポーネントの様々なオプションを設定できます�
 | kube-controller-manager | unhealthy-zone-threshold | アベイラビリティゾーン(zone)を異常とみなすNotReadyノードの割合のしきい値を定義します。<br>(単位：パーセント、デフォルト値：55、最小値：0、最大値：100) |
 
 <a id="worker-node-options"></a>
+
 ### ワーカーノードオプション { #worker-node-options }
 
 | コンポーネント | オプション | 説明 |
@@ -1741,6 +1704,7 @@ Kubernetesコンポーネントの様々なオプションを設定できます�
 | kubelet | max-pods | ノードで実行可能な最大Pod数を定義します。<br>(デフォルト値：110、最小値：1、最大値：Podネットワーク及びサブネットサイズの設定に応じて計算された最大作成可能Pod IP数)<br>プラットフォームバージョン1.202602.0以降のバージョンで対応します。 |
 
 <a id="k8s-label"></a>
+
 ### Kubernetesラベル設定機能 { #k8s-label }
 ノードグループごとにKubernetesラベル設定機能を使用できます。この機能でラベルが設定されたノードグループは、ノード作成時にユーザーが設定したラベルを自動的に追加します。ラベルはPod、ノードなどのオブジェクトに添付されたキーと値のペアで、オブジェクトの特性を識別するために使用されます。ラベルの詳細については[Labels and Selectors](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/)を参照してください。
 
@@ -1751,13 +1715,13 @@ Kubernetesのラベルはキーと値のペアで構成され、有効なラベ�
 #### ラベルキー
 ラベルキーはスラッシュ(/)で区切られたプレフィックスと名前の構造を持つことができ、プレフィックスは省略可能です。
 * プレフィックス
-    * 253文字以下である必要があります。
-    * DNSのサブドメイン形式である必要があります。
-    * 事前定義されたプレフィックスは使用できません。
+    * 253文字以下である必要があります。
+    * DNSのサブドメイン形式である必要があります。
+    * 事前定義されたプレフィックスは使用できません。
         * ["kubernetes.io", "k8s.io", "magnum.openstack.org"]
 * 名前
-    * 63文字以下である必要があります。
-    * アルファベット大文字小文字、数字、ハイフン(-)、アンダースコア(_)、ドット(.)のみ許可され、英数字で開始及び終了する必要があります。
+    * 63文字以下である必要があります。
+    * アルファベット大文字小文字、数字、ハイフン(-)、アンダースコア(_)、ドット(.)のみ許可され、英数字で開始及び終了する必要があります。
 
 
 <a id="k8s-label-label-value"></a>
@@ -1770,6 +1734,7 @@ Kubernetesのラベルはキーと値のペアで構成され、有効なラベ�
 > * Kubernetesラベル設定を変更すると、その後新規に作成されるノードから変更された設定が適用されます。
 
 <a id="oidc-auth"></a>
+
 ### OIDC認証設定機能 { #oidc-auth }
 
 OIDC(OpenID Connect)は、OAuth 2.0フレームワークをベースにした相互運用可能な認証プロトコルです。OIDCを利用すれば、外部認証サービスを介してユーザーを認証できます。OIDCの詳しい動作方式は[What is OpenID Connect](https://openid.net/developers/how-connect-works/)を参照してください。
@@ -1789,6 +1754,7 @@ NKSクラスターは、OIDCを利用した認証を処理するように設定�
 | Signing Algs| X | 許可されたJOSE非対称署名アルゴリズムリスト。デフォルト値: 'RS256' |
 
 <a id="control-plane-k8s-log"></a>
+
 ### コントロールプレーンKubernetesコンポーネントログ保存 { #control-plane-k8s-log }
 NHN Kubernetes Service(NKS)はコントロールプレーンで実行中の主要なKubernetesコンポーネントのログを提供します。これにより、クラスター内で発生する様々なイベントと動作をより明確に把握することができ、サービスの状態診断や問題解決に有用に活用できます。
 
@@ -1883,6 +1849,7 @@ Log & Crash Searchにログを送信する際に設定されるラベル情報�
 
 > [参考]
 > obs_api_urlに設定されたOBS endpoint, AUTH_tenant, Container情報が存在しない場合、設定リクエストが失敗します。
+
 実際のログは上記のURLの下に次の構造で保存されます。
 
 * ${ユーザー設定OBSコンテナ名}/NKS/${クラスターUUID}/${マスターノード名}/${K8Sコンポーネント名}/${年度}/${月}/${年月日-時分秒}-index${index_count}.gz
@@ -1901,6 +1868,7 @@ OBSコンテナにログが作成されるパスは次のとおりです。
   nks-test-master-0/kube-apiserver/2025/04/20250428-101500-index0.gz
 
 <a id="k8s-taint"></a>
+
 ### Kubernetesテイント設定機能 { #k8s-taint }
 ノードグループごとにKubernetesテイント(taint)設定機能を使用できます。この機能を通じて作成されたノードグループは、ユーザーが設定したテイントを設定した状態で初期化されます。Taintの詳細については、[Taints and Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)を参照してください。
 
@@ -1912,13 +1880,13 @@ Kubernetesテイントはキー、値、効果(effect)で構成され、各項�
 テイントのキーはスラッシュ(/)で区切られるプレフィックスと名前の構造を持つことができ、プレフィックスは省略可能です。
 
 * プレフィックス
-    * 253文字以下である必要があります。
-    * DNSのサブドメイン形式である必要があります。
-    * 事前定義されたプレフィックスは使用できません。
+    * 253文字以下である必要があります。
+    * DNSのサブドメイン形式である必要があります。
+    * 事前定義されたプレフィックスは使用できません。
         * ["kubernetes.io", "k8s.io", "magnum.openstack.org"]
 * 名前
-    * 63文字以下である必要があります。
-    * アルファベット大文字小文字、数字、ハイフン(-)、アンダースコア(_)、ドット(.)のみ許可され、英数字で開始及び終了する必要があります。
+    * 63文字以下である必要があります。
+    * アルファベット大文字小文字、数字、ハイフン(-)、アンダースコア(_)、ドット(.)のみ許可され、英数字で開始及び終了する必要があります。
 
 <a id="k8s-taint-taint-value"></a>
 #### テイントの値
@@ -1932,18 +1900,19 @@ Kubernetesテイントはキー、値、効果(effect)で構成され、各項�
 次の3つの値のいずれかを指定する必要があります。
 
 * NoSchedule
-    * 該当のTaintを許容(Toleration)しないPodは、ノードにスケジューリングされません。
-    * 既に実行中のPodは影響を受けません。
+    * 該当のTaintを許容(Toleration)しないPodは、ノードにスケジューリングされません。
+    * 既に実行中のPodは影響を受けません。
 * PreferNoSchedule
-    * 可能であれば該当ノードを避けてスケジューリングしますが、不可能な場合はスケジューリングされることがあります。
+    * 可能であれば該当ノードを避けてスケジューリングしますが、不可能な場合はスケジューリングされることがあります。
 * NoExecute
-    * 該当のTaintを許容しない既存のPodは、ノードから即時に削除(eviction)され、新規Podもスケジューリングされません。
+    * 該当のTaintを許容しない既存のPodは、ノードから即時に削除(eviction)され、新規Podもスケジューリングされません。
 
 [参考]
 * Kubernetesテイントは、ノードグループあたり最大30個まで指定できます。
 * Kubernetesテイントの設定を変更すると、それ以降に新規作成されるノードから変更された設定が適用されます。
 
 <a id="konnectivity-description"></a>
+
 ### konnectivity { #konnectivity-description }
 
 Konnectivityは、Kubernetesにおいてコントロールプレーン(APIサーバー)とワーカーノード間のネットワーク通信を安全にプロキシするコンポーネントです。従来はAPIサーバーがノードのkubeletやPodに直接アクセスする必要があり、ネットワーク構成が複雑になるという問題がありました。
@@ -1967,9 +1936,11 @@ Konnectivity ServerとKonnectivity Agentが先に接続を確立してトンネ�
 > Konnectivityはプラットフォームバージョン1.202605.0以降で提供されます。
 
 <a id="worker-node-management"></a>
+
 ## ワーカーノード管理 { #worker-node-management }
 
 <a id="container-management"></a>
+
 ### コンテナ管理 { #container-management }
 
 <a id="container-management-clusters-of-kubernetes-v1243-or-older"></a>
@@ -1982,6 +1953,7 @@ Kubernetes v1.24.3以前のバージョンのクラスタはDockerを利用し�
 Kubernetes v1.24.3以降のバージョンのクラスタはcontainerdを利用してコンテナランタイムを構成します。ワーカーノードでdocker CLIの代わりにnerdctlを利用してコンテナ状態照会、コンテナイメージ照会などの作業ができます。Nerdctlの詳細な説明と使用方法については[nerdctl: Docker-compatible CLI for containerd](https://github.com/containerd/nerdctl#nerdctl-docker-compatible-cli-for-containerd)を参照してください。
 
 <a id="network-management"></a>
+
 ### ネットワーク管理 { #network-management }
 
 <a id="network-management-default-network-interface"></a>
@@ -1994,7 +1966,7 @@ Kubernetes v1.24.3以降のバージョンのクラスタはcontainerdを利用�
 
 <a id="network-management-default-route-settings"></a>
 #### 基本パス(default route)設定
-ワーカーノードに複数のネットワークインタフェースが存在する場合、ネットワークインタフェースごとに基本パスが設定されます。あるシステムに複数の基本パスが設定されている場合、マトリックス(metric)値が最も低い基本パスがシステム基本パスとして動作します。ネットワークインタフェースごとの基本パスはインタフェース番号が小さいほど小さいマトリックス値が設定されています。このため動作中のネットワークインタフェースのうち最も小さい番号のネットワークインタフェースがシステム基本パスとして動作します。
+ワーカーノードに複数のネットワークインタフェースが存在する場合、ネットワークインタフェースごとに基本パスが設定されます。あるシステムに複数の基本パスが設定されている場合、マトリックス(metric)値が最も低い基本パスがシステム基本パスとして動作します。ネットワークインタフェースごとの基本パスはインターフェース番号が小さいほど小さいマトリックス値が設定されています。このため動作中のネットワークインタフェースのうち最も小さい番号のネットワークインタフェースがシステム基本パスとして動作します。
 
 システム基本パスを追加ネットワークインタフェースとして設定するには、以下のような作業が必要です。
 
@@ -2002,10 +1974,10 @@ Kubernetes v1.24.3以降のバージョンのクラスタはcontainerdを利用�
 ワーカーノードのすべてのネットワークインタフェースはDHCPサーバーを介してIPアドレスを割り当てられます。DHCPサーバーからIPアドレスを割り当てられる時、ネットワークインタフェースごとに基本パスを設定します。この時、各基本パスのマトリックス値はインタフェースごとにあらかじめ設定されています。各Linuxディストリビューションの保存位置および設定項目は次のとおりです。
 
 * CentOS
-    * 設定ファイルの位置：/etc/sysconfig/network-scripts/ifcfg-{ネットワークインタフェース名}
+    * 設定ファイルの位置：/etc/sysconfig/network-scripts/ifcfg-{ネットワークインターフェース名}
     * マトリックス値設定項目； METRIC
 * Ubuntu
-    * 設定ファイルの位置：/etc/systemd/network/toastcloud-{ネットワークインタフェース名}.network
+    * 設定ファイルの位置：/etc/systemd/network/toastcloud-{ネットワークインターフェース名}.network
     * マトリックス値設定項目：DHCPセクションのRouteMetric
 
 > [注意]
@@ -2066,10 +2038,11 @@ route add -net 0.0.0.0/0 gw 192.168.0.1 dev eth1 metric 0
 ```
 
 <a id="kubelet-argument"></a>
+
 ### kubeletユーザー定義引数設定機能 { #kubelet-argument }
 kubeletはすべてのワーカーノードで動作するノードエージェントです。kubeletはコマンドラインアギュメントを利用して様々な設定を入力します。NKSが提供するkubeletユーザー定義引数設定機能を利用すると、kubelet起動時に入力される引数を追加できます。kubeletカスタム引数は次のように設定し、システムに適用できます。
 
-* ワーカーノードの`/etc/kubernetes/kubelet-user-args`ファイルに`KUBELET_USER_ARGS="User Defined Argument"`形式でユーザー定義引数を入力します。
+* ワーカーノードの`/etc/kubernetes/kubelet-user-args`ファイルに`KUBELET_USER_ARGS="ユーザー定義引数"`形式でユーザー定義引数を入力します。
 * `systemctl daemon-reload`コマンドを実行します。
 * `systemctl restart kubelet`コマンドを実行します。
 * `systemctl status kubelet`コマンドで、kubeletが正常に動作していることを確認します。
@@ -2081,12 +2054,14 @@ kubeletはすべてのワーカーノードで動作するノードエージェ�
 > * 設定されたユーザー定義引数はシステム再起動時にもそのまま適用されます。
 
 <a id="containerd-registry-config"></a>
+
 ### カスタムcontainerdレジストリ設定機能(deprecated) { #containerd-registry-config }
 
 > [注意]
 > この機能はKubernetes v1.34以上では動作しません。
 > containerd 2.2を使用するKubernetes v1.34以上では、hosts.tomlファイルを利用してレジストリ別の設定を適用できます。
 > 詳細については、[Registry Configuration](https://github.com/containerd/containerd/blob/main/docs/hosts.md)を参照してください。
+
 v1.24.3以上のNKSクラスタはコンテナランタイムとしてcontainerd v1.6を使用します。NKSではcontainerdの様々な設定のうち、レジストリに関連する項目をユーザーの環境に合わせて設定できる機能を提供します。containerd v1.6のレジストリ設定は[Configure Image Registry](https://github.com/containerd/containerd/blob/release/1.6/docs/cri/registry.md)を参照してください。
 
 ワーカーノードが初期化される過程で、ユーザー定義のcontainerdレジストリ設定ファイル(`/etc/containerd/registry-config.json`)が存在する場合、このファイルの内容をcontainerd設定ファイル(`/etc/containerd/config.toml`)に適用します。ユーザー定義containerdレジストリ設定ファイルが存在しない場合、containerd設定ファイルには基本レジストリ設定が適用されます。基本レジストリ設定の内容は次のとおりです。
@@ -2187,6 +2162,7 @@ echo '[ { "registry": "user-defined.registry.io", "endpoint_list": [ "http://use
 >     * `docker.io`レジストリを使用しない場合は、`docker.io` レジストリの設定を含まないようにします。ただし、1つ以上のレジストリ設定が存在する必要があります。
 
 <a id="constraints-on-cgroup"></a>
+
 ### KubernetesバージョンとCGroupバージョンによる制約事項 { #constraints-on-cgroup }
 CGroup(Control Group)はLinuxカーネルの機能であり、プロセスグループのCPU、メモリ、ディスクI/O、ネットワークなどシステムリソースの使用量を制限、隔離し、監視できるようにします。Kubernetesを含むコンテナ技術の核心的な基盤の1つです。CGroupは最初のバージョン1(v1)から始まり、メモリ・I/O制御機能を強化してバージョン2(v2)へと発展しました。Linuxカーネルの機能であるため、CGroup v2はLinuxカーネルへの依存性を持ちます。したがって、比較的最新のディストリビューション及びバージョンでのみCGroup v2がサポートされます。
 
@@ -2216,12 +2192,14 @@ CGroupバージョンをv1からv2に変更できるOSイメージのディス�
 デフォルトのCGroupバージョンがv1であり、CGroupバージョンをv2に変更できないOSイメージで作成したワーカーノードグループは、ローリングアップグレード方式でKubernetes v1.34へアップグレードできません。この場合、Blue-Green方式でワーカーノードグループをアップグレードできます。
 
 <a id="worker-management-caution"></a>
+
 ### ワーカーノード管理上の注意事項 { #worker-management-caution }
 * ワーカーノードにpullされているcontainer imageを削除してはいけません。NKSクラスタに必要なPodが動作しなくなる可能性があります。
 * `shutdown`, `halt`, `poweroff`などのコマンドでシステムを停止させると、コンソールから再起動できません。ワーカーノードの開始/停止機能を使ってください。
 * ワーカーノード内の様々な設定ファイルを勝手に修正したり、システムサービスを操作してはいけません。NKSクラスタに致命的な問題が発生する可能性があります。
 
 <a id="cni"></a>
+
 ## CNI(Container Network Interface) { #cni }
 NHN Kubernetes Service(NKS)は、アドオン機能を通じて他の種類のContainer Network Interface(CNI)を提供します。クラスター作成時にCalico-VXLAN、Calico-eBPF、Ciliumの中から1つのCNIを選択でき、デフォルト設定はCalico-VXLANです。Calico-eBPFは、コンテナワークロードをBGPルーティングプロトコルで構成し、eBPF技術を基盤として直接通信し、一部の区間(NodePortなど)はVXLANを利用して通信します。CalicoのeBPF関連の内容は[about eBPF](https://docs.tigera.io/calico/latest/about/kubernetes-training/about-ebpf)を参照してください。CiliumはVXLANオーバーレイネットワークを基盤とし、eBPF技術を活用して高いネットワークパフォーマンスを提供します。CiliumのeBPF関連の内容は[eBPF Datapath](https://docs.cilium.io/en/stable/network/ebpf/)を参照してください。
 
@@ -2247,7 +2225,7 @@ NHN Kubernetes Service(NKS)が提供するCalico-VXLAN、Calic-eBPFは下記の�
 | Service ClusterIP to Pod通信 | VXLANカプセル化されて通信 | 直接通信 |
 | Service NodePort to Pod通信 | VXLANカプセル化されて通信 | VXLANカプセル化されて通信 |
 | ネットワークポリシー適用 | iptablesベース | eBPFベース(カーネル水準) |
-| ネットワーク性能 | VXLANカプセル化による性能低下｜直接通信による高い性能(少ない遅延時間) |
+| ネットワーク性能 | VXLANカプセル化による性能低下 | 直接通信による高い性能(少ない遅延時間) |
 
 注釈
 
@@ -2258,6 +2236,7 @@ NHN Kubernetes Service(NKS)が提供するCalico-VXLAN、Calic-eBPFは下記の�
 > 該当イメージを使用するには、アドオン管理機能を通じてCalicoをv3.28.2以上にアップデートする必要があります。
 
 <a id="security-group"></a>
+
 ## セキュリティグループ { #security-group }
 クラスタ作成時に強化されたセキュリティルールをTrueに設定すると、ワーカーノードセキュリティグループの作成時に必須のセキュリティルールだけが作成されます。
 
@@ -2278,7 +2257,7 @@ NHN Kubernetes Service(NKS)が提供するCalico-VXLAN、Calic-eBPFは下記の�
 | ingress | TCP | 4240 | IPv4 | ワーカーノード | cilium-agentのヘルスチェックポート、方向：cilium-agent(ワーカーノード) → cilium-agent(ワーカーノード) | CNIがCiliumの場合に作成されます |
 | ingress | ICMP | - | IPv4 | ワーカーノード | cilium pingによるヘルスモニタリング、方向：cilium-agent(ワーカーノード) → ワーカーノード | CNIがCiliumの場合に作成されます |
 | ingress | UDP | 8472 | IPv4 | ワーカーノード | cilium vxlanオーバーレイネットワークポート、方向：ポッド(ワーカーノード) → ポッド(ワーカーノード) | CNIがCiliumの場合に作成されます |
-| ingress | UDP | 8472 | IPv4 | NKSコントロールプレーン | cilium vxlanオーバーレイネットワークポート、方向：ポッド(NKSコントロールプレーン) → ポッド(ワーカーノード) | CNIがCiliumの場合に作成されます |
+| ingress | UDP | 8472 | IPv4 | NKS Control Plane | cilium vxlanオーバーレイネットワークポート、方向：ポッド(NKSコントロールプレーン) → ポッド(ワーカーノード) | CNIがCiliumの場合に作成されます |
 | egress | TCP | 2379 | IPv4 | NKS Control Plane | etcdポート、方向: calico-kube-controller(ワーカーノード) → etcd(NKS Control plane)| |
 | egress | TCP | 6443 | IPv4 | Kubernetes APIエンドポイント | kube-apiserverポート、方向: kubelet, kube-proxy(ワーカーノード) → kube-apiserver(NKS Control plane) | |
 | egress | TCP | 6443 | IPv4 | NKS Control Plane | kube-apiserverポート、方向: default kubernetes service(ワーカーノード) → kube-apiserver(NKS Control plane) | |
@@ -2295,7 +2274,7 @@ NHN Kubernetes Service(NKS)が提供するCalico-VXLAN、Calic-eBPFは下記の�
 | egress | TCP | 4240 | IPv4 | ワーカーノード | cilium-agentのヘルスチェックポート、方向：cilium-agent(ワーカーノード) → cilium-agent(ワーカーノード) | CNIがCiliumの場合に作成されます |
 | egress | ICMP | - | IPv4 | ワーカーノード | cilium pingによるヘルスモニタリング、方向：ワーカーノード → cilium-agent(ワーカーノード) | CNIがCiliumの場合に作成されます |
 | egress | UDP | 8472 | IPv4 | ワーカーノード | cilium vxlanオーバーレイネットワークポート、方向：ポッド(ワーカーノード) → ポッド(ワーカーノード) | CNIがCiliumの場合に作成されます |
-| egress | UDP | 8472 | IPv4 | NKSコントロールプレーン | cilium vxlanオーバーレイネットワークポート、方向：ポッド(ワーカーノード) → ポッド(NKSコントロールプレーン) | CNIがCiliumの場合に作成されます |
+| egress | UDP | 8472 | IPv4 | NKS Control Plane | cilium vxlanオーバーレイネットワークポート、方向：ポッド(ワーカーノード) → ポッド(NKSコントロールプレーン) | CNIがCiliumの場合に作成されます |
 | egress | UDP | 53 | IPv4 | すべて許可 | DNSポート、方向:ワーカーノード→外部 | |
 
 強化されたセキュリティルールを使用する場合、NodePortタイプのサービスとNHN Cloud NASサービスで使用するポートに対するセキュリティルールに追加されていません。必要に応じて以下のセキュリティルールを追加設定する必要があります。
@@ -2308,7 +2287,7 @@ NHN Kubernetes Service(NKS)が提供するCalico-VXLAN、Calic-eBPFは下記の�
 | egress | TCP | 635 | IPv4 | NHN Cloud NASサービスIPアドレス | csi-nfs-nodeのrpc mountdポート、方向: csi-nfs-node(ワーカーノード) → NHN Cloud NASサービス |
 
 > [Calico-eBPF CNI使用時の注意] 
-> > Calico-eBPF CNIを使用する場合、Pod間の通信とノードからPodへの通信は、Podに設定されたポートを介して行われます。
+> Calico-eBPF CNIを使用する場合、Pod間の通信とノードからPodへの通信は、Podに設定されたポートを介して行われます。
 > 強化されたセキュリティルールを使用する場合、該当Podのポートに対するingress、egressセキュリティルールを手動で追加する必要があります。
 
 <a id="cilium-optional-security-group-rules"></a>
@@ -2351,6 +2330,7 @@ Cilium CNIを使用するクラスターでHubble、Envoy、Prometheusのよう�
 
 
 <a id="addon-mgmt"></a>
+
 ## アドオン管理機能 { #addon-mgmt }
 アドオンとは、Kubernetesクラスターの必須コンポーネントではありませんが、NKSクラスターの機能を拡張したり、特化した機能を提供するために用意されたコンポーネントを指します。アドオンには、ネットワーキング、サービスディスカバリー、モニタリング、ストレージプロビジョニングなどの機能を持つコンポーネントが含まれることがあります。ユーザーはアドオン管理機能を通じて、NHN Cloudが提供するアドオンをクラスターにインストール・変更・削除できます。
 
@@ -2481,8 +2461,8 @@ Ciliumは、Kubernetesのネットワーキングとネットワークセキュ�
         * .spec.template.spec.containers[name="cilium-operator"].image
 * サポートバージョン一覧
     * v1.18.0-nks1
-    
-<a id="addon_mgmt_addon_coredns"></a>
+
+<a id="addon-mgmt-addon-coredns"></a>
 #### CoreDNS
 CoreDNSはKubernetesクラスターの基本DNSサーバーです。
 
@@ -2495,15 +2475,15 @@ CoreDNSはKubernetesクラスターの基本DNSサーバーです。
     * 1.8.4-nks1
     * 1.8.4-nks2
         * アドオン管理機能の安定性を強化しました。
-        * ユーザー変更不可のリソース及びフィールドを調整しました。
+        * ユーザー変更不可のリソース及びフィールドを調整しました。
             * Deployment/coredns、ネームスペースkube-system
-                * .metadata.labels.k8s-app 削除
-                * .metadata.labels.kubernetes.io/name 削除
-                * .spec.template.spec.nodeSelector 削除
-                * .spec.template.spec.serviceAccountName 削除
+                * .metadata.labels.k8s-app 削除
+                * .metadata.labels.kubernetes.io/name 削除
+                * .spec.template.spec.nodeSelector 削除
+                * .spec.template.spec.serviceAccountName 削除
 
 <a id="addon-mgmt-addon-cinder-csi-plugin">
-
+<a id="addon-mgmt-addon-list-cinder-csi-plugin"></a>
 #### Cinder CSI Plugin
 Cinder CSI Pluginは、NHN Cloudでブロックストレージをプロビジョニングして管理できるCSIドライバーです。
 
@@ -2519,23 +2499,23 @@ Cinder CSI Pluginは、NHN Cloudでブロックストレージをプロビジョ
         
 * サポートバージョンリスト
     * v1.27.101-nks1
-    * v1.27.101-nks2: 内部コンテナのバージョンが変更されました。
+    * v1.27.101-nks2: 内部コンテナのバージョンが変更されました。
         * csi-attacher: v3.0.2 → v3.3.0
         * csi-provisioner: v2.0.4 → v2.2.2
         * csi-snapshotter: v3.0.2 → v3.0.3
         * csi-resizer: v1.0.1 → v1.3.0
         * csi-node-driver-registrar: v2.0.1 → v2.3.0
     * v1.27.102-nks1
-    * v1.27.102-nks2: 内部コンテナのバージョンが変更されました。
+    * v1.27.102-nks2: 内部コンテナのバージョンが変更されました。
         * csi-attacher: v3.0.2 → v3.3.0
         * csi-provisioner: v2.0.4 → v2.2.2
         * csi-snapshotter: v3.0.2 → v3.0.3
         * csi-resizer: v1.0.1 → v1.3.0
         * csi-node-driver-registrar: v2.0.1 → v2.3.0
     * v1.27.102-nks3:アドオン管理機能の安定性を強化しました。
-    
-<a id="adoon-mgmt-addon-metrics-server">
 
+<a id="adoon-mgmt-addon-metrics-server">
+<a id="addon-mgmt-addon-list-metrics-server"></a>
 #### Metrics Server
 Metrics Serverは、オートスケーリングとモニタリングのためにノードとPodからリソース使用指標を収集するKubernetesのコンポーネントです。
 
@@ -2549,7 +2529,7 @@ Metrics Serverは、オートスケーリングとモニタリングのために
     * v0.4.4-nks2:アドオン管理機能の安定性を強化しました。
 
 <a id="addon-mgmt-addon-snapshot-controller">
-
+<a id="addon-mgmt-addon-list-snapshot-controller"></a>
 #### Snapshot Controller
 Snapshot Controllerは、ボリュームスナップショットの作成、削除、PVC連携を含むライフサイクルを管理するKubernetesのコンポーネントです。
 
@@ -2563,7 +2543,7 @@ Snapshot Controllerは、ボリュームスナップショットの作成、削�
     * v4.1.1-nks2:アドオン管理機能の安定性を強化しました。
 
 <a id="addon-mgmt-addon-nfs-csi-plugin">
-
+<a id="addon-mgmt-addon-list-nfs-csi-plugin"></a>
 #### NFS CSI Plugin
 NFS CSI Pluginは、NHN CloudのNFSをプロビジョニングして管理できるCSIドライバーです。
 
@@ -2583,15 +2563,17 @@ NFS CSI Pluginは、NHN CloudのNFSをプロビジョニングして管理でき
     * v1.0.1-nks1
     * v1.0.1-nks2
         * アドオン管理機能の安定性を強化しました。
-        * ユーザー変更不可のリソース/フィールドを検査しない問題を解決しました。
+        * ユーザー変更不可のリソース/フィールドを検査しない問題を解決しました。
     * v1.0.2-nks1
         * オプション項目であるsnapshot設定が必須として要求されていた問題を解決しました。
 
-<a id="addon-mgmt-addon-coredns"></a>
-#### LoadBalancerサービス
+<a id="loadbalancer-service"></a>
+
+## LoadBalancerサービス { #loadbalancer-service }
 Kubernetesアプリケーションの基本実行単位Podは、CNI(container network interface)でクラスターネットワークに接続されます。基本的にクラスターの外部からPodにはアクセスできません。Podのサービスをクラスターの外部に公開するにはKubernetesの`LoadBalancer`サービス(Service)オブジェクト(object)を利用して外部に公開するパスを作成する必要があります。LoadBalancerサービスオブジェクトを作成すると、クラスターの外部にNHN Cloud Load Balancerが作成され、サービスオブジェクトと接続されます。
 
 <a id="create-webserver-pod"></a>
+
 ### WebサーバーPod作成 { #create-webserver-pod }
 次のように2個のnginx Podを実行するデフォルトデプロイメント(deployment)オブジェクトマニフェストファイルを作成し、オブジェクトを作成します。
 
@@ -2633,6 +2615,7 @@ nginx-deployment-7fd6966748-wv7rd   1/1     Running   0          4m13s
 ```
 
 <a id="create-lb-service"></a>
+
 ### LoadBalancerサービスの作成 { #create-lb-service }
 Kubernetesのサービスオブジェクトを定義するには、次の項目で構成されたマニフェストが必要です。
 
@@ -2691,6 +2674,7 @@ nginx-svc    LoadBalancer   10.254.134.18   123.123.123.30   8080:30013/TCP   3m
 > ロードバランサーのIPは、外部からアクセスできるFloating IPです。**Network > Floating IP**ページで確認できます。
 
 <a id="internet-test-via-service"></a>
+
 ### インターネットによるサービステスト { #internet-test-via-service }
 ロードバランサーに接続されたFloating IPにHTTPリクエストを送ってKubernetesクラスターのWebサーバーPodが応答するかを確認します。サービスオブジェクトのTCP/8080ポートをPodのTCP/80ポートと接続するように設定したため、TCP/8080ポートにリクエストを送る必要があります。外部ロードバランサーとサービスオブジェクト、Podが正常に接続されていれば、Webサーバーはnginx基本ページをレスポンスします。
 
@@ -2724,6 +2708,7 @@ Commercial support is available at
 ```
 
 <a id="advanced-lb-configuration"></a>
+
 ### ロードバランサー詳細オプション設定 { #advanced-lb-configuration }
 Kubernetesのサービスオブジェクトを定義する時、ロードバランサーの複数のオプションを設定できます。設定可能な項目は次のとおりです。
 
@@ -2751,6 +2736,7 @@ Kubernetesのサービスオブジェクトを定義する時、ロードバラ�
 * L7ルール及び条件
 
 <a id="advanced-lb-configuration-global-setting-and-per-listener-setting"></a>
+
 #### グローバル設定とリスナー別設定
 設定項目ごとにグローバル設定とリスナー別設定が可能です。グローバル設定とリスナー別設定がどちらもない場合、設定別デフォルト値を使用します。
 
@@ -2758,6 +2744,7 @@ Kubernetesのサービスオブジェクトを定義する時、ロードバラ�
 * グローバル設定：対象リスナーにリスナー別設定がない場合にこの設定を適用します。
 
 <a id="advanced-lb-configuration-format-of-per-listener-setting"></a>
+
 #### リスナー別設定形式
 リスナー別設定は、グローバル設定キーにリスナーを表すprefixをつけて設定できます。リスナーを表すprefixはサービスオブジェクトのポートプロトコル(`spec.ports[].protocol`)とポート番号(`spec.ports[].port`)をダッシュ(`-`)でつなげたものです。例えばプロトコルがTCPで、ポート番号が80の場合、prefixは`TCP-80`です。このポートに接続しているリスナーにセッション持続性設定を行いたい場合は.metadata.annotations下のTCP-80.loadbalancer.nhncloud/pool-session-persistenceに設定できます。
 
@@ -2795,6 +2782,7 @@ spec:
 ```
 
 このマニフェストを適用すると、リスナー別設定は次の表のように設定されます。
+
 | 項目 | TCP-80リスナー | TCP-433リスナー| 説明 |
 | --- | --- | --- | --- |
 | ロードバランシング方式 | SOURCE_IP | LEAST_CONNECTIONS | TCP-80リスナーはグローバル設定に基づいてSOURCE_IPに設定<br>TCP-443リスナーはリスナー別設定に基づいてLEAST_CONNECTIONSに設定 |
@@ -2811,6 +2799,7 @@ spec:
 >
 
 <a id="loadbalancer-update-without-modification"></a>
+
 #### 設定を変更せずにロードバランサーをアップデートする方法
 
 証明書の更新など、ロードバランサーの設定変更なしにロードバランサーのアップデートが必要な場合は、以下のコマンドを使用できます。
@@ -2825,6 +2814,7 @@ kubectl annotate svc <name> loadbalancer.nhncloud/force-reconcile=true
 > この機能はプラットフォームバージョンが1.202605.0以上であるクラスターで動作します。
 
 <a id="advanced-lb-configuration-setting-load-balancer-name"></a>
+
 #### ロードバランサー名設定
 
 ロードバランサーの名前を設定できます。
@@ -2842,23 +2832,18 @@ kubectl annotate svc <name> loadbalancer.nhncloud/force-reconcile=true
 > * プロジェクト内に同じ名前のロードバランサーを作成
 
 <a id="advanced-lb-configuration-set-load-balancer-type"></a>
+
 #### ロードバランサータイプ設定
-ロードバランサーのタイプを設定できます。ロードバランサーの詳細については[ロードバランサーコンソール使用ガイド](/Network/Load%20Balancer/ko/console-guide/)を参照してください。
+ロードバランサーのタイプを設定できます。ロードバランサーの詳細については[ロードバランサーコンソール使用ガイド](/Network/Load%20Balancer/ja/console-guide/)を参照してください。
 
 * 設定位置は.metadata.annotations下のloadbalancer.nhncloud/loadbalancer-typeです。
 * リスナーごとの設定は適用できません。
 * 次のいずれかに設定できます。
     * shared：「一般」タイプのロードバランサーを作成します。未設定時のデフォルト値です。
     * dedicated：「専用」タイプのロードバランサーを作成します。
-    * physical_basic：「物理Basic」タイプのロードバランサーを作成します。
-    * physical_premium：「物理Premium」タイプのロードバランサーを作成します。
-
-> [注意]
-> 物理ロードバランサーは韓国(ピョンチョン)リージョンにのみ提供されます。
-> 物理ロードバランサーはFloating IPを接続できません。その代わり、物理ロードバランサー作成時に自動で割り当てられたパブリックIP1つをバランシング対象トラフィックを受信するIPとして使用します。このパブリックIPはサービスIPという名前でコンソールに表示されます。
-> このような特性によりKubernetesサービスオブジェクトを通じてロードバランサーの正確な状態(接続されたFloating IPなど)を取得できません。物理ロードバランサーの状態などはコンソールでご確認ください。
 
 <a id="advanced-lb-configuration-set-static-routes"></a>
+
 #### 静的ルート設定
 ロードバランサーの静的ルートを適用するかどうかを設定できます。
 
@@ -2872,6 +2857,7 @@ kubectl annotate svc <name> loadbalancer.nhncloud/force-reconcile=true
 > 静的ルート設定は、2024年8月27日以降に作成されたクラスター、またはk8sバージョンをアップグレードしたクラスターで設定可能です。
 
 <a id="advanced-lb-configuration-set-the-session-affinity"></a>
+
 #### セッション持続性設定
 ロードバランサーのセッション持続性を設定できます。
 
@@ -2887,8 +2873,9 @@ kubectl annotate svc <name> loadbalancer.nhncloud/force-reconcile=true
     * ロードバランサーの作成後も変更可能です。
 
 <a id="advanced-lb-configuration-set-whether-to-keep-a-floating-ip-address"></a>
+
 #### ロードバランサーを削除する時にFloating IPアドレスを保存するかどうかの設定
-ロードバランサーにはFloating IPが接続されています。ロードバランサーの削除時にロードバランサーに接続されたFloating IPを削除あるいは保存するかどうかを設定できます。
+ロードバランサーにはFloating IPが接続されています。ロードバランサーの削除やFloating IPの変更時に、ロードバランサーに接続されたFloating IPを削除あるいは保存するかどうかを設定できます。
 
 * 設定位置は.metadata.annotations下のloadbalancer.openstack.org/keep-floatingipです。
 * **リスナー別設定を適用できません。**
@@ -2896,10 +2883,19 @@ kubectl annotate svc <name> loadbalancer.nhncloud/force-reconcile=true
     * true：Floating IPを保存します。
     * false：Floating IPを削除します。未設定時のデフォルト値です。
 
+> [参考]
+> Floating IPアドレス保存が設定されていない場合（デフォルト値false）、ロードバランサーの削除またはFloating IPの変更時に、以下の条件をすべて満たすFloating IPは自動的に削除されます。
+> 
+> * サービスオブジェクト作成時に自動的に作成されたFloating IPである場合
+> * Floating IPに削除保護が設定されていない場合
+> 
+> 上記の条件に該当しないFloating IPは、Floating IPアドレス保存有無設定に関わらず削除対象になりません。
+
 > [注意]
 > 2021年10月26日以前に作成されたv1.18.19クラスタは、ロードバランサーが削除される時、Floating IPが削除されない問題があります。サポートの1:1お問い合わせを通してお問い合わせください。この問題を解決するための手順を詳しくお伝えします。
 
 <a id="advanced-lb-configuration-set-the-load-balancer-ip"></a>
+
 #### ロードバランサーIP設定
 ロードバランサーを作成するときにロードバランサーのIPを設定できます。
 
@@ -2931,6 +2927,7 @@ spec:
 ```
 
 <a id="advanced-lb-configuration-set-whether-to-use-the-floating-ip"></a>
+
 #### Floating IP使用設定
 ロードバランサーを作成するときにFloating IPを使用するかどうかを設定できます。
 
@@ -2975,6 +2972,7 @@ Floating IP使用設定とロードバランサーIP設定の組み合わせに�
 
 
 <a id="advanced-lb-configuration-set-vpc"></a>
+
 #### VPC設定
 ロードバランサー作成時、ロードバランサーが接続されるVPCを設定できます。
 
@@ -2983,6 +2981,7 @@ Floating IP使用設定とロードバランサーIP設定の組み合わせに�
 * 設定しない場合はクラスタ作成時に設定したVPCに設定します。
 
 <a id="advanced-lb-configuration-set-subnet"></a>
+
 #### サブネット設定
 ロードバランサー作成時、ロードバランサーが接続されるサブネットを設定できます。設定されたサブネットにロードバランサーのプライベートIPが接続されます。メンバーサブネット設定がない場合、このサブネットに接続されたワーカーノードがロードバランサーメンバーとして追加されます。
 
@@ -3013,6 +3012,7 @@ spec:
 ```
 
 <a id="advanced-lb-configuration-set-member-subnet"></a>
+
 #### メンバーサブネット設定
 ロードバランサー作成時、ロードバランサーメンバーが接続されるサブネットを設定できます。このサブネットに接続されたワーカーノードがロードバランサーメンバーとして追加されます。
 
@@ -3073,20 +3073,22 @@ spec:
 
 
 <a id="advanced-lb-configuration-set-the-listener-connection-limit"></a>
+
 #### リスナー接続制限設定
 リスナーの接続制限を設定できます。
 
 * 設定位置は .metadata.annotations下のloadbalancer.nhncloud/connection-limitです。
 * リスナー別設定を適用できます。
-* v1.17.6, v1.18.19クラスタ
+* v1.17.6, v1.18.19クラスター
     * 最小値1、最大値60000です。
     * 設定しない場合は-1に設定され、実際のロードバランサーに適用される値は2000です。
-* v1.19.13以降のクラスタ
+* v1.19.13以降のクラスター
     * 最小値1、最大値60000です。
     * 設定しない場合や範囲外の値を入力した場合はデフォルト値の60000に設定されます。
 
 
 <a id="advanced-lb-configuration-set-the-listener-protocol"></a>
+
 #### リスナープロトコル設定
 リスナーのプロトコルを設定できます。
 
@@ -3118,7 +3120,6 @@ SSLバージョンは次のように設定できます。
 
 > [注意]
 > TLSv1.3は2022年3月29日以降に作成されたクラスタで設定可能です。
-
 
 証明書情報は次のように設定できます。
 
@@ -3179,8 +3180,9 @@ metadata:
 > リスナーと連動したCertificate Managerの証明書を削除すると、ロードバランサーの動作に影響を与える可能性があります。
 
 <a id="advanced-lb-configuration-set-the-listener-proxy-protocol"></a>
+
 #### リスナープロキシプロトコル(Proxy Protocol)設定
-リスナープロトコルがTCPまたはHTTPSの場合、リスナーにプロキシプロトコルを設定できます。プロキシプロトコルの詳細については[ロードバランサープロキシモード](/Network/Load%20Balancer/ko/overview/#_4)をご覧ください。
+リスナープロトコルがTCPまたはHTTPSの場合、リスナーにプロキシプロトコルを設定できます。プロキシプロトコルの詳細については[ロードバランサープロキシモード](/Network/Load%20Balancer/ja/overview/#_4)をご覧ください。
 
 * 設定位置は.metadata.annotations下位のloadbalancer.nhncloud/proxy-protocolです。
 * リスナーごとに設定を適用できます。
@@ -3189,6 +3191,7 @@ metadata:
     * false：プロキシプロトコルを無効にします。未設定時のデフォルト値です。
 
 <a id="advanced-lb-configuration-set-the-load-balancing-method"></a>
+
 #### ロードバランシング方式設定
 ロードバランシング方式を設定できます。
 
@@ -3201,6 +3204,7 @@ metadata:
 
 
 <a id="advanced-lb-configuration-set-the-health-check-protocol"></a>
+
 #### ヘルスチェックプロトコル設定
 ヘルスチェックプロトコルを設定できます。
 
@@ -3232,6 +3236,7 @@ HTTPステータスコードは次のように設定できます。
 * 設定しない場合やルールに合わない値を入力するとデフォルト値の200に設定されます。
 
 <a id="advanced-lb-configuration-set-the-health-check-interval"></a>
+
 #### ヘルスチェックサイクルの設定
 ヘルスチェック周期を設定できます。
 
@@ -3242,6 +3247,7 @@ HTTPステータスコードは次のように設定できます。
 * 設定しない場合や範囲外の値を入力するとデフォルト値の60に設定されます。
 
 <a id="advanced-lb-configuration-set-the-health-check-maximum-response-time"></a>
+
 #### ヘルスチェック最大レスポンス時間設定
 ヘルスチェック最大レスポンス時間を設定できます。
 
@@ -3254,6 +3260,7 @@ HTTPステータスコードは次のように設定できます。
 * ただし、入力値または設定値がヘルスチェックサイクル設定より大きい場合は、ヘルスチェックサイクル設定の1/2に設定されます。
 
 <a id="advanced-lb-configuration-set-the-maximum-number-of-retries-for-a-health-check"></a>
+
 #### ヘルスチェック最大再試行回数設定
 ヘルスチェック最大再試行回数を設定できます。
 
@@ -3263,21 +3270,27 @@ HTTPステータスコードは次のように設定できます。
 * 設定しない場合や範囲外の値を入力するとデフォルト値の3に設定されます。
 
 <a id="advanced-lb-configuration-health-check-port-settings"></a>
+
 #### ヘルスチェックポート設定
 ヘルスチェックの対象となるメンバーポートを設定できます。
+
 * 設定位置は .metadata.annotations 下の loadbalancer.nhncloud/healthmonitor-health-check-port です。
 * リスナーごとの設定を適用できます。
 * 最小値0、最大値65535です。
 * 0を指定する場合、各メンバーごとに指定されたポート番号を対象にヘルスチェックを実行します。
 * 設定しないか範囲外の値を入力すると、デフォルト値の0に設定されます。
+
 <a id="advanced-lb-configuration-health-check-host-header-settings"></a>
+
 #### ヘルスチェックホストヘッダ設定
 ヘルスチェックに使用するホストヘッダのフィールド値を設定できます。
+
 * 設定位置は .metadata.annotations 下の loadbalancer.nhncloud/healthmonitor-http-host-header です。
 * リスナーごとの設定を適用できます。
 * ヘルスチェックプロトコルをTCPに設定した場合、このフィールドに設定した値は無視されます。
 
 <a id="advanced-lb-configuration-setting-keep-alive-timeout"></a>
+
 #### keep-aliveタイムアウト設定
 keep-aliveタイムアウト値を設定できます。
 
@@ -3291,6 +3304,7 @@ keep-aliveタイムアウト値を設定できます。
 > keep-alive timeoutは2023年11月28日以降にv1.24.3以上のバージョンにアップグレードされたか、新規に作成されたクラスタで設定可能です。
 
 <a id="advanced-lb-configuration-l7-rules"></a>
+
 #### L7ルール
 リスナーごとにL7ルールを設定できます。 L7ルールは次のように動作します。
 
@@ -3314,6 +3328,7 @@ L7ルールは次のように設定できます。
 > [参考]
 > * {LISTENER_SPEC}は`[TCP|UDP]-%d`の形式で`%d`はポート番号です。 (例：TCP-80)
 > * {L7POLICY}は`l7policy-%d`の形式で`%d`は0から始まるインデックスです。 (例：l7policy-0)
+
 L7ルール設定には以下の制約があります。
 
 * L7ルール設定に使用されるインデックスは、0-9の間の整数値を使用できます。
@@ -3321,6 +3336,7 @@ L7ルール設定には以下の制約があります。
 * 一つのリスナーに設定されるL7ルールは、異なる名前で設定する必要があります。
 
 <a id="advanced-lb-configuration-l7-conditions"></a>
+
 #### L7条件
 L7ルールごとにL7条件を設定できます。L7条件は次のように動作します。
 
@@ -3331,7 +3347,6 @@ L7条件は次のように設定できます。
 
 * 一つのL7ルールにL7条件を最大10個まで設定可能です。
 * 各L7条件を識別するために、設定位置に`rule-%d`(`%d`は0から始まるインデックス)の形式を使用します。
-*
 
 | 設定位置 | 意味 | 必須かどうか | 値 |
 | --- | --- | :-: | --- |
@@ -3342,6 +3357,7 @@ L7条件は次のように設定できます。
 
 > [参考]
 > * {RULE}は`rule-%d`の形式で`%d`は0から始まるインデックスです。 (例：rule-0)
+
 L7条件には以下の制約があります。
 
 * L7条件の設定に使用されるインデックスは、0-9の間の整数値を使用できます。
@@ -3350,6 +3366,7 @@ L7条件には以下の制約があります。
 
 > [注意]
 > L7ルールおよびL7条件は、2024年7月23日以降にv1.24.3以上のバージョンにアップグレードされた、または新規に作成されたクラスタで設定可能です。
+
 以下はL7ルール及び条件を設定する例です。
 
 ```yaml
@@ -3422,14 +3439,17 @@ spec:
 ```
 
 <a id="ingress-controller"></a>
+
 ## イングレスコントローラー { #ingress-controller }
 イングレスコントローラー(Ingress Controller)は、イングレスオブジェクトに定義されているルールを参照してクラスタ外部から内部サービスにHTTPとHTTPSリクエストをルーティングし、SSL/TSL終了、仮想ホスティングなどを提供します。イングレスコントローラーとイングレスの詳細については[イングレスコントローラー](https://kubernetes.io/ko/docs/concepts/services-networking/ingress-controllers/)、[イングレス](https://kubernetes.io/ko/docs/concepts/services-networking/ingress/)文書を参照してください。
 
 <a id="install-nginx-ingress-controller"></a>
+
 ### NGINX Ingress Controllerのインストール { #install-nginx-ingress-controller }
 NGINX Ingress Controllerは、よく使われるイングレスコントローラーの1つです。詳細については[NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/)と[NGINX Ingress Controller for Kubernetes](https://www.nginx.com/products/nginx-ingress-controller/)文書を参照してください。 NGINX Ingress Controllerのインストールは[Installation Guide](https://kubernetes.github.io/ingress-nginx/deploy/)文書を参照してください。
 
 <a id="uri-based-service-routing"></a>
+
 ### URIベースのサービス分岐 { #uri-based-service-routing }
 イングレスコントローラーはURIに基づいてサービスを分岐できます。次の図はURIに基づいてサービスを分岐する簡単な例の構造を表しています。
 
@@ -3653,6 +3673,7 @@ service "tea-svc" deleted
 ```
 
 <a id="host-based-service-routing"></a>
+
 ### ホストベースのサービス分岐 { #host-based-service-routing }
 イングレスコントローラーはホスト名に基づいてサービスを分岐できます。次の図はホスト名に基づいてサービスを分岐する簡単な例の構造を表しています。
 
@@ -3752,6 +3773,7 @@ $ curl 123.123.123.44/unknown
 ```
 
 <a id="ingress-nginx-internal-communication"></a>
+
 ### ingress-nginxコントローラー内部通信構造及び注意事項 { #ingress-nginx-internal-communication }
 ingress-nginxコントローラーを通じてサービスを外部に公開する場合、リクエストを送信するクライアントの位置(クラスタ内部または外部)によって、リクエストがワークロードに伝達される経路が異なります。
 
@@ -3784,7 +3806,8 @@ ingress-nginxコントローラーを通じてサービスを外部に公開す�
 
 
 <a id="k8s-dashboard"></a>
-## Kubernetesダッシュボード { #k8s-dashboard }
+
+## Kubernetes ダッシュボード { #k8s-dashboard }
 NHN Kubernetes Service(NKS)は基本Web UIダッシュボード(dashboard)を提供します。 Kubernetesダッシュボードの詳細については[Web UI (ダッシュボード)](https://kubernetes.io/ko/docs/tasks/access-application-cluster/web-ui-dashboard/)文書を参照してください。
 
 > [注意]
@@ -3848,7 +3871,7 @@ kubernetes-dashboard   LoadBalancer   10.254.95.176   123.123.123.81   443:30963
 > 作成されたロードバランサーは **Network > Load Balancer**ページで確認できます。
 > ロードバランサーのIPは外部からアクセスできるFloating IPです。 **Network > Floating IP**ページで確認できます。
 
-Webブラウザで`https://{EXTERNAL-IP}`に接続するとKubernetesダッシュボードページがローディングされます。ログインのために必要なトークンは[ダッシュボードアクセストークン](/Container/NKS/ja/user-guide/#dashboard-access-token)を参照してください。
+Webブラウザで`https://{EXTERNAL-IP}`に接続するとKubernetesダッシュボードページがローディングされます。ログインのために必要なトークンは[ダッシュボードアクセストークン](/Container/NKS/ko/user-guide/#dashboard-access-token)を参照してください。
 
 > [参考]
 > Kubernetesダッシュボードは自動作成されるプライベート証明書を使用するため、Webブラウザの種類とセキュリティ設定によっては安全ではないページと表示されることがあります。
@@ -3903,7 +3926,7 @@ NAME                    CLASS   HOSTS   ADDRESS          PORTS     AGE
 k8s-dashboard-ingress   nginx   *       123.123.123.44   80, 443   34s
 ```
 
-Webブラウザで`https://{ADDRESS}`に接続するとKubernetesダッシュボードページがローディングされます。ログインのために必要なトークンは[ダッシュボードアクセストークン](/Container/NKS/ja/user-guide/#dashboard-access-token)を参照してください。
+Webブラウザで`https://{ADDRESS}`に接続するとKubernetesダッシュボードページがローディングされます。ログインのために必要なトークンは[ダッシュボードアクセストークン](/Container/NKS/ko/user-guide/#dashboard-access-token)を参照してください。
 
 <a id="dashboard-access-token"></a>
 ### ダッシュボードアクセストークン { #dashboard-access-token }
@@ -3919,6 +3942,7 @@ eyJhbGc...-QmXA
 出力されたトークンをブラウザのトークン入力ウィンドウに入力すると、クラスタ管理者権限を付与されたユーザーとしてログインできます。
 
 <a id="persistent-volume"></a>
+
 ## パシステントボリューム { #persistent-volume }
 パシステントボリューム(Persistent Volume, PV)は物理記憶装置(volume)を表すKubernetesのリソースです。1つのPVは1つのNHN Cloud Block Storageに接続されます。詳細については[パシステントボリューム](https://kubernetes.io/ko/docs/concepts/storage/persistent-volumes/)文書を参照してください。
 
@@ -3927,6 +3951,7 @@ PVをPodに接続して使用するにはパシステントボリュームクレ
 PVとPVCでユーザーは使用したいボリュームのプロパティを定義し、システムはユーザーの要求事項に合ったボリュームリソースを割り当てる方式でリソースの使用と管理を分離します。
 
 <a id="pv-lifecycle"></a>
+
 ### PV/PVCのライフサイクル { #pv-lifecycle }
 PVとPVCは4段階のライフサイクル(life cycle)に従います。
 
@@ -3949,6 +3974,7 @@ PVをPodにマウントして使用します。
 | 再利用(Recycle) | PVを削除するとき、接続しているボリュームを削除せず、再利用できる状態にします。この方法は停止(deprecated)しています。 |
 
 <a id="storageclass"></a>
+
 ### ストレージクラス(StorageClass) { #storageclass }
 プロビジョニングを行うには、まずストレージクラスが定義されている必要があります。ストレージクラスは特定の特性でストレージを分類できる方法を提供します。ストレージ提供者(provisioner)の情報を含め、メディアの種類やアベイラビリティゾーンなどを設定できます。 
 
@@ -3969,8 +3995,8 @@ PVをPodにマウントして使用します。
 * アベイラビリティゾーン(availability)：アベイラビリティゾーンを設定します。(未入力の場合はランダムに設定されます)
     * パンギョリージョン：**kr-pub-a**または**kr-pub-b**
     * 坪村リージョン：**kr2-pub-a**または**kr2-pub-b**
-    * クァンジュリージョン：**kr3-pub-a** または **kr3-pub-b**
-    
+    * クァンジュリージョン：**kr3-pub-a** または **kr3-pub-b**
+
 <a id="storageclass-volume-binding-mode-volumebindingmode"></a>
 #### ボリュームバインディングモード(VolumeBindingMode)
 ボリュームバインディングモードは、ボリュームバインディングと動的プロビジョニングの開始時点を制御します。この設定はストレージ提供者がcinder.csi.openstack.orgの場合にのみ設定できます。
@@ -4038,18 +4064,19 @@ csi-storageclass   cinder.csi.openstack.org   Delete          WaitForFirstConsum
 ```
 
 <a id="static-provisioning"></a>
+
 ### 静的プロビジョニング { #static-provisioning }
 
-静的プロビジョニング(static provisioning)は、ユーザーが直接ブロックストレージを準備する必要があります。 NHN Cloud Webコンソールの**Storage > Block Storage**サービスページで**ブロックストレージ作成**ボタンをクリックしてPVに接続するブロックストレージを作成します。ブロックストレージガイドの[ブロックストレージ作成](/Storage/Block%20Storage/ko/console-guide/#_1)を参照してください。
+静的プロビジョニング(static provisioning)は、ユーザーが直接ブロックストレージを準備する必要があります。 NHN Cloud Webコンソールの**Storage > Block Storage**サービスページで**ブロックストレージ作成**ボタンをクリックしてPVに接続するブロックストレージを作成します。ブロックストレージガイドの[ブロックストレージ作成](/Storage/Block%20Storage/ja/console-guide/#_1)を参照してください。
 
-PVを作成するにはブロックストレージのIDが必要です。**Storage > Block Storage**サービスページのブロックストレージリストから使用するブロックストレージを選択します。下の**情報**タブのブロックストレージ名項目でIDを確認できます。
+PVを作成するにはブロックストレージのIDが必要です。**Storage > Block Storage**サービスページのブロックストレージリストから使用するブロックストレージを選択します。下部の**情報**タブのブロックストレージ名項目でIDを確認できます。
 
-ブロックストレージと接続するPVマニフェストを作成します。**spec.storageClassName**にはストレージクラス名を入力します。 NHN Cloud Block Storageを使用するには**spec.accessModes**は必ず`ReadWriteOnce`に設定する必要があります。**spec.presistentVolumeReclaimPolicy**は`Delete`または`Retain`に設定できます。
+ブロックストレージと接続するPVマニフェストを作成します。**spec.storageClassName**にはストレージクラス名を入力します。NHN Cloud Block Storageを使用するには**spec.accessModes**は必ず`ReadWriteOnce`に設定する必要があります。**spec.presistentVolumeReclaimPolicy**は`Delete`または`Retain`に設定できます。
 
-v1.20.12以降のバージョンのクラスタは**cinder.csi.openstack.org**ストレージプロバイダを使用する必要があります。ストレージプロバイダを定義するには、**spec.annotations**の下に`pv.kubernetes.io/provisioned-by: cinder.csi.openstack.org`を指定し、**csi**の下に`driver: cinder.csi.openstack.org`を指定します。
+v1.20.12以降のバージョンのクラスターは**cinder.csi.openstack.org**ストレージプロバイダーを使用する必要があります。ストレージプロバイダーを定義するには、**spec.annotations**の下に`pv.kubernetes.io/provisioned-by: cinder.csi.openstack.org`を指定し、**csi**の下に`driver: cinder.csi.openstack.org`を指定します。
 
 > [注意]
-> Kubernetesバージョンに合ったストレージ提供者が定義されているストレージクラスを設定する必要があります。
+> Kubernetesバージョンに合ったストレージプロバイダーが定義されているストレージクラスを設定する必要があります。
 
 ```yaml
 # pv-static.yaml
@@ -4070,7 +4097,7 @@ spec:
   csi:
     driver: cinder.csi.openstack.org
     fsType: "ext3"
-    volumeHandle: "e6f95191-d58b-40c3-a191-9984ce7532e5"
+    volumeHandle: "e6f95191-d58b-40c3-a191-9984ce7532e5" # ブロックストレージのUUID
 ```
 
 PVを作成して確認します。
@@ -4123,257 +4150,8 @@ pv-static-001   10Gi       RWO            Delete           Bound    default/pvc-
 ```
 
 <a id="dynamic-provisioning"></a>
+
 ### 動的プロビジョニング { #dynamic-provisioning }
-
-動的プロビジョニング(dynamic provisioning)はストレージクラスに定義されているプロパティを参照して自動的にブロックストレージを作成します。動的プロビジョニングを使用するには、ストレージクラスのボリュームバインディングモード設定を行わないか、**Immediate**に設定する必要があります。
-
-```yaml
-# storage_class_csi_dynamic.yaml
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: csi-storageclass-dynamic
-provisioner: cinder.csi.openstack.org
-volumeBindingMode: Immediate
-```
-
-動的プロビジョニングはPVを作成する必要がありません。したがってPVCマニフェストには**spec.volumeName**を設定しません。
-
-```yaml
-# pvc-dynamic.yaml
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: pvc-dynamic
-  namespace: default
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi
-  storageClassName: csi-storageclass-dynamic
-```
-
-ボリュームバインディングモードを設定しない場合や**Immediate**に設定してPVCを作成する場合はPVが自動的に作成されます。 PVに接続されたブロックストレージも自動的に作成され、NHN Cloud Webコンソール**Storage > Block Storage**サービスページのブロックストレージリストで確認できます。
-
-```
-$ kubectl apply -f pvc-dynamic.yaml
-persistentvolumeclaim/pvc-dynamic created
-
-$ kubectl get sc,pv,pvc
-NAME                                                   PROVISIONER                RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
-storageclass.storage.k8s.io/csi-storageclass-dynamic   cinder.csi.openstack.org   Delete          Immediate           false                  50s
-
-NAME                                                        CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                 STORAGECLASS               REASON   AGE
-persistentvolume/pvc-1056949c-bc67-45cc-abaa-1d1bd9e51467   10Gi       RWO            Delete           Bound    default/pvc-dynamic   csi-storageclass-dynamic            5s
-
-NAME                                STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS               AGE
-persistentvolumeclaim/pvc-dynamic   Bound    pvc-1056949c-bc67-45cc-abaa-1d1bd9e51467   10Gi       RWO            csi-storageclass-dynamic   9s
-```
-
-> [注意]
-> 動的プロビジョニングで作成されたブロックストレージはWebコンソールから削除できません。またクラスタを削除するとき、自動的に削除されません。したがってクラスタを削除する前にPVCをすべて削除する必要があります。PVCを削除せずにクラスタを削除すると課金されることがあります。動的プロビジョニングを作成されたPVCのreclaimPolicyは基本的に`Delete`に設定されるため、PVを削除するだけでPVとブロックストレージが削除されます。
-
-<a id="pod-pvc-mount"></a>
-### PodにPVCマウント { #pod-pvc-mount }
-
-PodにPVCをマウントするにはPodマニフェストにマウント情報を定義する必要があります。 `spec.volumes.persistenVolumeClaim.claimName`に使用するPVC名を入力します。そして`spec.containers.volumeMounts.mountPath`にマウントするパスを入力します。
-
-次の例は静的プロビジョニングで作成したPVCをPodの`/usr/share/nginx/html`にマウントします。
-
-```yaml
-# pod-pvc.yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: nginx-with-static-pv
-spec:
-  containers:
-    - name: web
-      image: nginx
-      ports:
-        - name: web
-          containerPort: 80
-          hostPort: 8082
-          protocol: TCP
-      volumeMounts:
-        - name: html-volume
-          mountPath: "/usr/share/nginx/html"
-  volumes:
-    - name: html-volume
-      persistentVolumeClaim:
-        claimName: pvc-static
-```
-
-Podを作成し、ブロックストレージがマウントされていることを確認します。
-
-```
-$ kubectl apply -f pod-static-pvc.yaml
-pod/nginx-with-static-pv created
-
-$ kubectl get pods
-NAME                   READY   STATUS    RESTARTS   AGE
-nginx-with-static-pv   1/1     Running   0          50s
-
-$ kubectl exec -ti nginx-with-static-pv -- df -h
-Filesystem      Size  Used Avail Use% Mounted on
-...
-/dev/vdc        9.8G   23M  9.7G   1% /usr/share/nginx/html
-...
-```
-
-NHN Cloud Webコンソール**Storage > Block Storage**サービスページでもブロックストレージの接続情報を確認できます。
-
-<!-- ----------------------
-NOTE(kyungjun.kim)
-> 重複した内容が存在するようです。確認をお願いします。
-
-> 重複した内容が存在するようです。 ご確認ください. もし重複でしたら、注釈内容の削除をお願いします
-
-<!-- pre-align: ko에 대응 섹션 없음 — 검토 필요 (ボリューム拡張の許可(allowVolumeExpansion) — appears as sub-heading under t198 (PodにPVCマウント) with no ko counterpart) -->
-#### ボリューム拡張の許可(allowVolumeExpansion)
-作成されたボリュームの拡張を許可するかどうかを設定します(未入力の場合はfalseが設定されます)。
-
-* **True**：ボリュームの拡張を許可します。
-* **False**：ボリュームの拡張を許可しません。
-
-<!-- pre-align: ko에 대응 섹션 없음 — 검토 필요 (例1 — appears as sub-heading under t198 with no ko counterpart) -->
-#### 例1
-以下のストレージクラスマニフェストはv1.19.13以前のバージョンを使用するKubernetesクラスタで使用できます。パラメータを利用してアベイラビリティゾーンとボリュームタイプを指定できます。
-
-```yaml
-# storage_class.yaml
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: sc-ssd
-provisioner: kubernetes.io/cinder
-parameters:
-  type: General SSD
-  availability: kr-pub-a
-```
-
-ストレージクラスを作成し、確認します。
-
-```
-$ kubectl apply -f storage_class.yaml
-storageclass.storage.k8s.io/sc-ssd created
-
-$ kubectl get sc
-NAME     PROVISIONER            RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
-sc-ssd   kubernetes.io/cinder   Delete          Immediate           false                  3s
-```
-
-<!-- pre-align: ko에 대응 섹션 없음 — 검토 필요 (例2 — appears as sub-heading under t198 with no ko counterpart) -->
-#### 例2
-以下のストレージクラスマニフェストはv1.20.12以降のバージョンを使用するKubernetesクラスタで使用できます。ボリュームバインディングモードをWaitForFirstConsumerに設定してパシステントボリュームクレームがPodに接続される時にボリュームバインディングと動的プロビジョニングを開始します。
-
-```yaml
-# storage_class_csi.yaml
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: csi-storageclass
-provisioner: cinder.csi.openstack.org
-volumeBindingMode: WaitForFirstConsumer
-```
-
-ストレージクラスを作成し、確認します。
-
-```
-$ kubectl apply -f storage_class_csi.yaml
-storageclass.storage.k8s.io/csi-storageclass created
-
-$ kubectl get sc
-NAME               PROVISIONER                RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
-csi-storageclass   cinder.csi.openstack.org   Delete          WaitForFirstConsumer   false                  7s
-```
-
-
-<!-- pre-align: ko에 대응 섹션 없음 — 검토 필요 (静的プロビジョニング — duplicate heading under t187, already matched via t196 to k194) -->
-### 静的プロビジョニング
-
-静的プロビジョニング(static provisioning)はユーザーが直接ブロックストレージを準備する必要があります。NHN Cloud Webコンソールの**Storage > Block Storage**サービスページで**ブロックストレージ作成**ボタンをクリックしてPVと接続するブロックストレージを作成します。ブロックストレージガイドの[ブロックストレージ作成](/Storage/Block%20Storage/ko/console-guide/#_2)を参照してください。
-
-PVを作成するにはブロックストレージのIDが必要です。**Storage > Block Storage**サービスページのブロックストレージリストから使用するブロックストレージを選択します。下部の**情報**タブのブロックストレージ名項目でIDを確認できます。
-
-ブロックストレージと接続するPVマニフェストを作成します。**spec.storageClassName**にはストレージクラス名を入力します。NHN Cloud Block Storageを使用するには**spec.accessModes**は必ず`ReadWriteOnce`に設定する必要があります。**spec.presistentVolumeReclaimPolicy**は`Delete`または`Retain`に設定できます。
-
-> [注意]
-> Kubernetesバージョンに合ったストレージプロバイダーが定義されたストレージクラスを設定する必要があります。
-
-```yaml
-# pv-static.yaml
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: pv-static-001
-spec:
-  capacity:
-    storage: 10Gi
-  volumeMode: Filesystem
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Delete
-  storageClassName: sc-default
-  cinder:
-    fsType: "ext3"
-    volumeID: "e6f95191-d58b-40c3-a191-9984ce7532e5"
-```
-
-PVを作成し、確認します。
-
-```
-$ kubectl apply -f pv-static.yaml
-persistentvolume/pv-static-001 created
-
-$ kubectl get pv -o wide
-NAME            CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS   REASON   AGE   VOLUMEMODE
-pv-static-001   10Gi       RWO            Delete           Available           sc-default              7s    Filesystem
-```
-
-作成したPVを使用するためのPVCマニフェストを作成します。**spec.volumeName**にはPVの名前を指定する必要があります。他の項目はPVマニフェストの内容と同じように設定します。
-
-```yaml
-# pvc-static.yaml
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: pvc-static
-  namespace: default
-spec:
-  volumeName: pv-static-001
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi
-  storageClassName: sc-default
-```
-
-PVCを作成し、確認します。
-
-```
-$ kubectl apply -f pvc-static.yaml
-persistentvolumeclaim/pvc-static created
-
-$ kubectl get pvc -o wide
-NAME         STATUS   VOLUME          CAPACITY   ACCESS MODES   STORAGECLASS   AGE   VOLUMEMODE
-pvc-static   Bound    pv-static-001   10Gi       RWO            sc-default     7s    Filesystem
-```
-
-PVCを作成した後、PVの状態を照会してみると、**CLAIM**項目にPVC名が指定され、**STATUS**項目が`Bound`に変更されていることを確認できます。
-
-```
-$ kubectl get pv -o wide
-NAME            CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                STORAGECLASS   REASON   AGE   VOLUMEMODE
-pv-static-001   10Gi       RWO            Delete           Bound    default/pvc-static   sc-default              79s   Filesystem
-```
-
-
-<!-- pre-align: ko에 대응 섹션 없음 — 검토 필요 (動的プロビジョニング — duplicate heading under t187, already matched via t197 to k195) -->
-### 動的プロビジョニング
 
 動的プロビジョニング(dynamic provisioning)はストレージクラスに定義されたプロパティを参照して自動的にブロックストレージを作成します。動的プロビジョニングを使用するにはストレージクラスのボリュームバインディングモードを設定しないか、**Immediate**に設定する必要があります。
 
@@ -4423,15 +4201,15 @@ persistentvolumeclaim/pvc-dynamic   Bound    pvc-1056949c-bc67-45cc-abaa-1d1bd9e
 ```
 
 > [注意]
-> 動的プロビジョニングによって作成されたブロックストレージはWebコンソールから削除できません。またクラスタを削除する時に自動的に削除されません。したがってクラスタを削除する前にPVCを全て削除する必要があります。PVCを削除せずにクラスタを削除すると課金される可能性があります。動的プロビジョニングを作成されたPVのreclaimPolicyは基本的に`Delete`に設定されるため、PVCのみ削除してもPVとブロックストレージが削除されます。
+> 動的プロビジョニングで作成されたブロックストレージはWebコンソールから削除できません。またクラスタを削除するとき、自動的に削除されません。したがってクラスタを削除する前にPVCをすべて削除する必要があります。PVCを削除せずにクラスタを削除すると課金されることがあります。動的プロビジョニングを作成されたPVのreclaimPolicyは基本的に`Delete`に設定されるため、PVCのみ削除してもPVとブロックストレージが削除されます。
 
+<a id="pod-pvc-mount"></a>
 
-<!-- pre-align: ko에 대응 섹션 없음 — 검토 필요 (PodにPVCマウント — duplicate heading under t187, already matched via t198 to k196) -->
-### PodにPVCマウント
+### PodにPVCマウント { #pod-pvc-mount }
 
 PodにPVCをマウントするにはPodマニフェストにマウント情報を定義する必要があります。`spec.volumes.persistenVolumeClaim.claimName`に使用するPVC名を入力します。そして`spec.containers.volumeMounts.mountPath`にマウントするパスを入力します。
 
-以下の例は静的プロビジョニングで作成したPVCをPodの`/usr/share/nginx/html`にマウントします。
+次の例は静的プロビジョニングで作成したPVCをPodの`/usr/share/nginx/html`にマウントします。
 
 ```yaml
 # pod-pvc.yaml
@@ -4474,16 +4252,17 @@ Filesystem      Size  Used Avail Use% Mounted on
 ...
 ```
 
-NHN Cloud Webコンソール**Storage > Block Storage**サービスページでもブロックストレージの接続情報を確認できます。 -->
+NHN Cloud Webコンソール**Storage > Block Storage**サービスページでもブロックストレージの接続情報を確認できます。
 
 <a id="volume-expansion"></a>
+
 ### ボリューム拡張 { #volume-expansion }
 PersistentVolumeClaim (PVC)オブジェクトを編集して既存ボリュームのサイズを調整できます。PVCオブジェクトの**spec.resources.requests.storage**項目を修正することでボリュームサイズを変更できます。ボリューム縮小はサポートされません。ボリューム拡張機能を使用するにはStorageClassの**allowVolumeExpansion**プロパティが**True**である必要があります。
 
 
 <a id="volume-expansion-from-v11913-and-older"></a>
 #### v1.19.13以前のバージョンのボリューム拡張
-v1.19.13以前のバージョンのストレージプロバイダー**kubernetes.io/cinder**は使用中のボリュームの拡張機能を提供しません。使用中のボリュームの拡張機能を使用するにはv1.20.12以降のバージョンの**cinder.csi.openstack.org**ストレージプロバイダーを使用する必要があります。クラスタアップグレード機能を利用してv1.20.12以降のバージョンにアップグレードして**cinder.csi.openstack.org**ストレージプロバイダーを使用できます。
+v1.19.13以前のバージョンのストレージプロバイダー**kubernetes.io/cinder**は使用中のボリュームの拡張機能を提供しません。使用中のボリュームの拡張機能を使用するにはv1.20.12以降のバージョンの**cinder.csi.openstack.org**ストレージプロバイダーを使用する必要があります。クラスターアップグレード機能を利用してv1.20.12以降のバージョンにアップグレードして**cinder.csi.openstack.org**ストレージプロバイダーを使用できます。
 
 v1.19.13以前のバージョンの**kubernetes.io/cinder**ストレージプロバイダーの代わりにv1.20.12以降のバージョンの**cinder.csi.openstack.org**ストレージプロバイダーを使用するためにPVCのアノテーションを以下のように修正する必要があります。
 
@@ -4533,9 +4312,11 @@ status:
 v1.20.12以降のバージョンのストレージプロバイダー**cinder.csi.openstack.org**は基本的に使用中のボリュームの拡張機能をサポートします。PVCオブジェクトの**spec.resources.requests.storage**項目の値を修正してボリュームサイズを変更できます。
 
 <a id="service-integration"></a>
+
 ## NHN Cloudサービス連動 { #service-integration }
 
 <a id="ncr-integration"></a>
+
 ### NHN Cloud Container Registry(NCR)サービス連動 { #ncr-integration }
 NHN Cloud Container Registryに保存したイメージを使うことができます。レジストリに保存したイメージを使うためには、ユーザーレジストリにログインするためのシークレット(secret)を作成する必要があります。
 
@@ -4544,6 +4325,7 @@ NHN Cloud (Old) Container Registryを使用するには次のようにシーク�
 ```
 $ kubectl create secret docker-registry registry-credential --docker-server={ユーザーレジストリアドレス} --docker-username={NHN Cloudアカウントemailアドレス} --docker-password={サービスAppkeyまたは統合Appkey}
 secret/registry-credential created
+
 $ kubectl get secrets
 NAME                  TYPE                             DATA   AGE
 registry-credential   kubernetes.io/dockerconfigjson   1      30m
@@ -4555,6 +4337,7 @@ NHN Cloud Container Registryを使用するには次のようにシークレッ�
 ```
 $ kubectl create secret docker-registry registry-credential --docker-server={ユーザーレジストリアドレス} --docker-username={User Access Key ID} --docker-password={Secret Access Key}
 secret/registry-credential created
+
 $ kubectl get secrets
 NAME                  TYPE                             DATA   AGE
 registry-credential   kubernetes.io/dockerconfigjson   1      30m
@@ -4581,37 +4364,39 @@ spec:
 ```
 
 > [参考]
-> NHN Cloud Container Registryの使い方は[NHN Cloud Container Registry(NCR)ユーザーガイド](/Container/NCR/ko/user-guide)文書を参照してください。
+> NHN Cloud Container Registryの使い方は[NHN Cloud Container Registry(NCR)ユーザーガイド](/Container/NCR/ja/user-guide)文書を参照してください。
 
 <a id="nas-integration"></a>
+
 ### NHN Cloud NASサービス連動 { #nas-integration }
-NHN Cloudで提供するNASボリュームをPVとして活用できます。NASサービスを使用するにはv1.20以降のバージョンのクラスタを使用する必要があります。NHN Cloud NASに関する詳細は[NASコンソール利用ガイド](/Storage/NAS%20(online)/ko/console-guide)を参照してください。
+NHN Cloudで提供するNASボリュームをPVとして活用できます。NASサービスを使用するにはv1.20以降のバージョンのクラスターを使用する必要があります。NHN Cloud NASに関する詳細は[NASコンソール利用ガイド](/Storage/NAS%20(online)/ja/console-guide)を参照してください。
 
 > [参考]
-> NHN Cloud NASサービスは現在(2024年08月基準)、一部リージョンでのみ提供されています。NHN Cloud NASサービスのサポートリージョンの詳細については[NASサービス概要](/Storage/NAS%20(online)/ko/overview)を参照してください。
+> NHN Cloud NASサービスは現在(2024年08月基準)、一部リージョンでのみ提供されています。NHN Cloud NASサービスのサポートリージョンの詳細については[NASサービス概要](/Storage/NAS%20(online)/ja/overview)を参照してください。
 
 <a id="nas-integration-run-the-rpcbind-service-on-all-worker-nodes"></a>
+
 #### すべてのワーカーノードでrpcbindサービスを実行
 NASボリュームを使用するには全てのワーカーノードでrpcbindサービスを実行する必要があります。全てのワーカーノードに接続した後、以下のコマンドでrpcbindサービスを実行します。
 
 rpcbindサービス実行コマンドはイメージの種類に関係なく同じです。
 
-
 ```
 $ systemctl start rpcbind
 ```
 
-強化されたセキュリティルールを使用しているクラスタの場合、セキュリティルールを追加する必要があります。
+強化されたセキュリティルールを使用しているクラスターの場合、セキュリティルールを追加する必要があります。
 
 | 方向 | IPプロトコル | ポート範囲 | Ether | 遠隔 | 説明 | 
 | :-: | :-: | :-: | :-: | :-: | :-: | 
-| egress | TCP | 2049 | IPv4 | NAS IPアドレス | rpcのNFSポート、方向: csi-nfs-node(worker node) → NAS |
-| egress | TCP | 111 | IPv4 | NAS IPアドレス | rpcのportmapperポート、方向: csi-nfs-node(worker node) → NAS |
-| egress | TCP | 635 | IPv4 | NAS IPアドレス |  rpcのmountdポート、方向: csi-nfs-node(worker node) → NAS |
+| egress | TCP | 2049 | IPv4 | NAS IPアドレス | rpcのNFSポート、方向: csi-nfs-node(ワーカーノード) → NAS |
+| egress | TCP | 111 | IPv4 | NAS IPアドレス | rpcのportmapperポート、方向: csi-nfs-node(ワーカーノード) → NAS |
+| egress | TCP | 635 | IPv4 | NAS IPアドレス | rpcのmountdポート、方向: csi-nfs-node(ワーカーノード) → NAS |
 
 <a id="nas-integration-install-csi-driver-nfs"></a>
+
 #### csi-driver-nfsのインストール
-NHN Cloud NASサービスを使用するには、クラスターにNHN Kubernetes Service(NKS)のアドオン機能として[nfs-csi-plugin](/Container/NKS/ko/user-guide/#addon-mgmt-addon-nfs-csi-plugin)をデプロイする必要があります。
+NHN Cloud NASサービスを使用するには、クラスターにNHN Kubernetes Service(NKS)のアドオン機能として[nfs-csi-plugin](/Container/NKS/ja/user-guide/#addon-mgmt-addon-nfs-csi-plugin)をデプロイする必要があります。
 
 csi-driver-nfsはNFSストレージに新たなサブディレクトリを作成する方式で動作するNFSストレージプロビジョニングをサポートするドライバーです。
 csi-driver-nfsはストレージクラスにNFSストレージ情報を提供する方式で動作してユーザーが管理しなければならない対象を減らします。
@@ -4621,6 +4406,7 @@ csi-driver-nfsを使用して複数のPVを構成する場合、csi-driver-nfs�
 ![nfs-csi-driver-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nfs-csi-driver-02.png)
 
 <a id="nas-integration-how-to-use-existing-nhn-cloud-nas-volume-when-provisioning"></a>
+
 #### プロビジョニング時に既存のNHN Cloud NASボリュームを利用する方法
 PVマニフェスト作成時にNAS情報を入力するか、StorageClassマニフェストにNAS情報を入力して既存のNASボリュームをPVとして使用できます。
 
@@ -4629,7 +4415,7 @@ PVマニフェスト作成時にNHN Cloud NASボリューム情報を定義し�
 
 * driver：**nfs.csi.k8s.io**を入力します。
 * readOnly：**false**を入力します。
-* volumeHandle：クラスタ内で重複していない固有のidを入力します。
+* volumeHandle：クラスター内で重複していない固有のidを入力します。
 * volumeAttributes: NASボリュームの接続情報を入力します。
   * server: NASボリュームの接続情報のうち**ip**部分の値を入力します。
   * share: NASボリュームの接続情報のうち**ボリューム名**部分の値を入力します。
@@ -4666,7 +4452,7 @@ NAME                                       CAPACITY   ACCESS MODES   RECLAIM POL
 pv-onas                                    300Gi      RWX            Retain           Available                                                      101s   Filesystem
 ```
 
-作成したPVを使用するためのPVCマニフェストを作成します。**spec.volumeName**にはPVの名前を指定する必要があります。他の項目はPVマニフェストの内容と同じに設定します。
+作成したPVを使用するためのPVCマニフェストを作成します。**spec.volumeName**にはPVの名前を指定する必要があります。他の項目はPVマニフェストの内容と同じように設定します。
 ```yaml
 # pvc.yaml
 kind: PersistentVolumeClaim
@@ -4686,6 +4472,7 @@ PVCを作成して確認します。
 ```
 $ kubectl apply -f pvc.yaml
 persistentvolumeclaim/pvc-onas created
+
 $ kubectl get pvc -o wide
 NAME              STATUS   VOLUME    CAPACITY   ACCESS MODES   STORAGECLASS   AGE    VOLUMEMODE
 pvc-onas   Bound    pv-onas   300Gi      RWX                           2m8s   Filesystem
@@ -4698,7 +4485,7 @@ NAME      CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM             
 pv-onas   300Gi      RWX            Retain           Bound    default/pvc-onas                           3m20s   Filesystem
 ```
 
-##### 方法2.StorageClassマニフェスト作成時にNAS情報を定義
+##### 方法2. StorageClassマニフェスト作成時にNAS情報を定義
 StorageClassマニフェスト作成時、ストレージプロバイダー情報及びNHN Cloud NASボリューム情報を定義します。
 
 * provisioner：**nfs.csi.k8s.io**を入力します。
@@ -4734,6 +4521,7 @@ StorageClassを作成し、確認します。
 ```
 $ kubectl apply -f storageclass.yaml
 storageclass.storage.k8s.io/onas-sc created
+
 $ kubectl get sc
 NAME      PROVISIONER      RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
 onas-sc   nfs.csi.k8s.io   Retain          Immediate           false                  3s
@@ -4763,6 +4551,7 @@ persistentvolumeclaim/pvc-onas created
 $ kubectl get sc,pv,pvc
 NAME                                  PROVISIONER      RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
 storageclass.storage.k8s.io/onas-sc   nfs.csi.k8s.io   Retain          Immediate           false                  25s
+
 NAME                                                        CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                      STORAGECLASS   REASON   AGE
 persistentvolume/pvc-71392e58-5d8e-43b2-9798-5b59de34b203   300Gi      RWX            Retain           Bound    default/pvc-onas   onas-sc                 3s
 
@@ -4770,9 +4559,9 @@ NAME                                     STATUS   VOLUME                        
 persistentvolumeclaim/pvc-onas   Bound    pvc-71392e58-5d8e-43b2-9798-5b59de34b203   300Gi      RWX            onas-sc        4s
 ```
 
-PodにPVCをマウントするにはPodマニフェストにマウント情報を定義する必要があります。 **spec.volumes.persistenVolumeClaim.claimName**に使用するPVC名を入力します。そして**spec.containers.volumeMounts.mountPath**にマウントするパスを入力します。
+PodにPVCをマウントするには、Podマニフェストにマウント情報を定義する必要があります。**spec.volumes.persistenVolumeClaim.claimName**に使用するPVC名を入力します。そして**spec.containers.volumeMounts.mountPath**にマウントするパスを入力します。
 
-以下は作成したPVCをPodの`/tmp/nfs`にマウントするマニフェスト例です。
+以下は作成したPVCをPodの`/tmp/nfs`にマウントするマニフェストの例です。
 ```yaml
 # deployment.yaml
 apiVersion: apps/v1
@@ -4804,13 +4593,15 @@ spec:
             claimName: pvc-onas-dynamic
 ```
 
-Podを作成し、NASボリュームがマウントされたか確認します。
+Podを作成し、NASボリュームがマウントされているか確認します。
 ```
 $ kubectl apply -f deployment.yaml
 deployment.apps/nginx created
+
 $ kubectl get pods
 NAME                             READY   STATUS    RESTARTS   AGE
 nginx-5fbc846574-q28cf   1/1     Running   0          26s
+
 $ kubectl exec -it nginx-5fbc846574-q28cf -- df -h
 Filesystem                                                                 Size  Used Avail Use% Mounted on
 ...
@@ -4819,6 +4610,7 @@ Filesystem                                                                 Size 
 ```
 
 <a id="nas-integration-how-to-create-new-nhn-cloud-nas-volume-when-provisioning"></a>
+
 #### プロビジョニング時に新規NHN Cloud NASボリュームを作成する方法
 StorageClass及びPVCマニフェスト作成時にNAS情報を入力すると、自動的に作成されたNASボリュームをPVとして使用できます。
 
@@ -4829,11 +4621,11 @@ StorageClassマニフェストにストレージプロバイダー情報と作�
 
 | 項目 | 説明 | 例 | 複数値 | 必須 | デフォルト値 |
 | ------- |------- | --------------------------- | ---------------------------- | --------- | ------------- |
-| maxscheduledcount | 保存可能な最大スナップショット数です。最大保存数に達すると、自動的に作成されたスナップショットのうち、最初に作成されたスナップショットが削除されます。1～20の数字のみ入力可能です。 | "7" | X | X |  |
-| reservepercent | 最大保存可能なスナップショット保存容量です。スナップショット容量の合計が設定したサイズを超える場合、すべてのスナップショットのうち最初に作成されたスナップショットが削除されます。0～80の間の数字のみ入力可能です。 | "80" | X | X |  |
+| maxscheduledcount | 保存可能な最大スナップショット数です。最大保存数に達すると、自動的に作成されたスナップショットのうち、最初に作成されたスナップショットが削除されます。1〜20の数字のみ入力可能です。 | "7" | X | X |  |
+| reservepercent | 最大保存可能なスナップショット保存容量です。スナップショット容量の合計が設定したサイズを超える場合、すべてのスナップショットのうち最初に作成されたスナップショットが削除されます。0〜80の間の数字のみ入力可能です。 | "80" | X | X |  |
 | scheduletime | スナップショットが作成される時刻です。 | "09:00" | X | X |  |
-| scheduletimeoffset | スナップショット作成時刻に対するオフセットです。 UTC基準で、KSTで使用する時は+09:00値を指定します。 | "+09:00" | X | X |  |
-| scheduleweekdays | スナップショット作成周期です。日曜日から土曜日までそれぞれ0～6の数字で表現されます。 | "6" | O | X |  |
+| scheduletimeoffset | スナップショット作成時刻に対するオフセットです。UTC基準で、KSTで使用する時は+09:00値を指定します。 | "+09:00" | X | X |  |
+| scheduleweekdays | スナップショット作成周期です。日曜日から土曜日までそれぞれ0〜6の数字で表現されます。 | "6" | O | X |  |
 | subnet | ストレージにアクセスするサブネットです。選択されたVPCのサブネットのみ選択できます。 | "59526f1c-c089-4517-86fd-2d3dac369210" | X | O |  |
 | acl | 読み取り、書き込み権限を許可するIPまたはIP帯域のリストです。 | "0.0.0.0/0" | O | X | 0.0.0.0/0 |
 | onDelete | PVC削除時にNASボリュームを削除するかどうかです。 | "delete" / "retain" | X | X | delete |
@@ -4851,10 +4643,10 @@ StorageClassマニフェストにストレージプロバイダー情報と作�
 
 <br>
 
-> [注意]マルチサブネット環境での制約事項
+> [注意] マルチサブネット環境での制約事項
 > 
 > NASボリュームはストレージクラスに定義されたサブネットに接続されます。
-> PodがNASボリュームと連携するためには、全てのワーカーノードグループが該当サブネットに接続されている必要があります。
+> PodがNASボリュームと連携するためには、すべてのワーカーノードグループが該当サブネットに接続されている必要があります。
 
 以下はマニフェストの例です。
 ```yaml
@@ -4911,6 +4703,7 @@ StorageClassおよびPVCを作成し、確認します。
 ```
 $ kubectl apply -f storage_class.yaml
 storageclass.storage.k8s.io/sc-nfs created
+
 $ kubectl get sc
 NAME         PROVISIONER      RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
 sc-nfs       nfs.csi.k8s.io   Delete          Immediate           false                  50s
@@ -4923,16 +4716,18 @@ NHN Cloudコンソール **Storage > NAS** サービスページでも作成さ�
 ```
 $ kubectl apply -f pvc.yaml
 persistentvolumeclaim/pvc-nfs created
+
 $ kubectl get pv,pvc
 NAME                                                        CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM             STORAGECLASS   REASON   AGE
 persistentvolume/pvc-a8ea2054-0849-4fe8-8207-ee0e43b8a103   50Gi       RWX            Delete           Bound    default/pvc-nfs   sc-nfs                  2s
+
 NAME                            STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
 persistentvolumeclaim/pvc-nfs   Bound    pvc-a8ea2054-0849-4fe8-8207-ee0e43b8a103   50Gi       RWX            sc-nfs         75s
 ```
 
-PVCをPodにマウントするには、Podマニフェストにマウント情報を定義する必要があります。**spec.volumes.persistenVolumeClaim.claimName**に使うPVCの名前を入力します。そして、**spec.containers.volumeMounts.mountPath**にマウントするパスを入力します。
+PodにPVCをマウントするには、Podマニフェストにマウント情報を定義する必要があります。**spec.volumes.persistenVolumeClaim.claimName**に使うPVCの名前を入力します。そして、**spec.containers.volumeMounts.mountPath**にマウントするパスを入力します。
 
-以下は作成したPVCをパッドの`/tmp/nfs`にマウントするマニフェストの例です。
+以下は作成したPVCをPodの`/tmp/nfs`にマウントするマニフェストの例です。
 ```yaml
 # deployment.yaml
 apiVersion: apps/v1
@@ -4968,9 +4763,11 @@ Podを作成し、NASボリュームがマウントされたか確認します�
 ```
 $ kubectl apply -f deployment.yaml
 deployment.apps/nginx created
+
 $ kubectl get pods
 NAME                             READY   STATUS    RESTARTS   AGE
 nginx-9f448b9f7-xw92w   1/1     Running   0          12s
+
 $ kubectl exec -it nginx-9f448b9f7-xw92w -- df -h
 Filesystem                                                                     Size  Used Avail Use% Mounted on
 overlay                                                                         20G   16G  4.2G  80% /
@@ -4982,25 +4779,28 @@ tmpfs                                                                          1
 
 > [参考]
 > csi-driver-nfsはプロビジョニング時にNFSストレージ内部にsubdirectoryを作成する方式で動作します。
-> podにPVをマウントするプロセスでsubdirectoryのみマウントされるのではなく、nfsストレージ全体がマウントされるため、アプリケーションがプロビジョニングされたサイズだけボリュームを使用するように強制できません。
+> PodにPVをマウントするプロセスでsubdirectoryのみマウントされるのではなく、NFSストレージ全体がマウントされるため、アプリケーションがプロビジョニングされたサイズだけボリュームを使用するように強制できません。
 
 <a id="encrypted-block-storage-integration"></a>
+
 ### NHN Cloud暗号化ブロックストレージ連動 { #encrypted-block-storage-integration }
 NHN Cloudが提供する暗号化ブロックストレージをPVとして活用できます。NHN Cloudの暗号化ブロックストレージの詳細については、[暗号化ブロックストレージ](/Storage/Block%20Storage/ja/console-guide/#_2)を参照してください。
 
 > [参考]
 > 暗号化ブロックストレージサービス連動機能はv1.24.3以上のバージョンのクラスタで使用可能です。
 > 2023年11月28日以降に新規作成されたクラスタは、基本的に暗号化ブロックストレージ連動機能が内蔵されています。
-> 2023年11月28日以前に生成されたクラスタは、v1.24.3以上のバージョンにアップグレードするか、csi-cinder-cinder-controllerpluginステートフルセットとcsi-cinder-nodepluginデーモンセットのcinder-csi-pluginイメージを最新バージョンに置き換えることで暗号化ブロックストレージ連動機能を使用できます。
+> 2023年11月28日以前に生成されたクラスタは、v1.24.3以上のバージョンにアップグレードするか、csi-cinder-controllerpluginステートフルセットとcsi-cinder-nodepluginデーモンセットのcinder-csi-pluginイメージを最新バージョンに置き換えることで暗号化ブロックストレージ連動機能を使用できます。
 
 > [注意]
 > v1.24.3以前のバージョンのクラスタをアップグレードせずにcinder-csi-pluginコンテナイメージだけを交換して使用する場合、誤動作を引き起こす可能性があります。
+
 <a id="encrypted-block-storage-integration-updating-cinder-csi-plugin-image-for-encrypted-block-storage-integration"></a>
 #### 暗号化ブロックストレージ連動のためのcinder-csi-pluginイメージアップデート
 下記のコマンドを実行して、現在のクラスタに配布されたcinder-csi-pluginイメージのタグを確認できます。
 
 ```
 $ kubectl -n kube-system get statefulset csi-cinder-controllerplugin -o=jsonpath="{$.spec.template.spec.containers[?(@.name=='cinder-csi-plugin')].image}"
+
 > registry.k8s.io/provider-os/cinder-csi-plugin:v1.27.101
 ```
 
@@ -5024,6 +4824,7 @@ $ container_image={cinder-csi-pluginイメージ}
 ##### 2. コンテナイメージを置き換えます。
 ```
 $ kubectl -n kube-system patch statefulset csi-cinder-controllerplugin -p "{\"spec\": {\"template\": {\"spec\": {\"containers\": [{\"name\": \"cinder-csi-plugin\", \"image\": \"${container_image}\"}]}}}}"
+
 $ kubectl -n kube-system patch daemonset csi-cinder-nodeplugin -p "{\"spec\": {\"template\": {\"spec\": {\"containers\": [{\"name\": \"cinder-csi-plugin\", \"image\": \"${container_image}\"}]}}}}"
 ```
 
@@ -5033,7 +4834,7 @@ $ kubectl -n kube-system patch daemonset csi-cinder-nodeplugin -p "{\"spec\": {\
 
 <a id="encrypted-block-storage-integration-static-provisioning"></a>
 #### 静的プロビジョニング
-PVを生成するには、暗号ブロックストレージのIDが必要です。Storage > Block Storageサービスページのブロックストレージ一覧から使用するブロックストレージを選択します。下部の情報タブのブロックストレージ名項目でIDを確認できます。
+PVを生成するには、暗号化ブロックストレージのIDが必要です。Storage > Block Storageサービスページのブロックストレージ一覧から使用するブロックストレージを選択します。下部の情報タブのブロックストレージ名項目でIDを確認できます。
 
 PVマニフェスト作成時に暗号化ブロックストレージの情報を入力します。設定場所は**.spec.csi**の下にあります。
 
@@ -5095,7 +4896,9 @@ parameters:
 
 PVCマニフェストの作成およびPodにマウントするプロセスは一般的なブロックストレージの動的プロビジョニングと同じです。詳細は[動的プロビジョニング](/Container/NKS/ja/user-guide/#dynamic-provisioning)を参照してください。
 
+
 <a id="etcd-encryption-with-skm"></a>
+
 ### 機密データの暗号化/復号時のSecure Key Managerサービス連携 { #etcd-encryption-with-skm }
 
 NKSクラスターは、secretリソースをデータストア(etcd)に保存する際、データを暗号化して保存します。NKSは、このデータを暗号化するために2つの方式を提供します。
