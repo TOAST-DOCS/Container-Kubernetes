@@ -1,3 +1,5 @@
+<!-- pre-align:aligned sig=98b43adf5be7 -->
+
 <a id="container-nhn-kubernetes-service-nks-user-guide"></a>
 ## Container > NHN Kubernetes Service(NKS) > 사용 가이드 { #container-nhn-kubernetes-service-nks-user-guide }
 
