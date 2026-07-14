@@ -1,9 +1,9 @@
-<a id="container-nhn-kubernetes-service-nks-user-guide"></a>
+<!-- pre-align:aligned sig=98b43adf5be7 -->
 
+<a id="container-nhn-kubernetes-service-nks-user-guide"></a>
 ## Container > NHN Kubernetes Service(NKS) > User Guide { #container-nhn-kubernetes-service-nks-user-guide }
 
 <a id="cluster-headings"></a>
-
 ## Cluster { #cluster-headings }
 A cluster is a group of instances that make up the user's Kubernetes.
 
@@ -159,12 +159,10 @@ A cluster with a key pair configured operates under the permissions of the servi
 > * The cluster owner change feature is no longer provided. To allow a cluster to operate under the service user's permissions, use the key pair change feature.
 
 <a id="nodegroup-headings"></a>
-
 ## Node Group { #nodegroup-headings }
 A node group is a group of worker node instances that make up Kubernetes.
 
 <a id="nodegroup-show"></a>
-
 ### Query Node Groups { #nodegroup-show }
 Click the cluster name in the cluster list to view the list of node groups. The node group list shows brief information about each node group.
 
@@ -217,7 +215,6 @@ You can view the following information on the **Basic Information** tab:
 On the **Node List** tab, you can view the list of instances that make up the node group.
 
 <a id="nodegroup-create"></a>
-
 ### Create Node Groups { #nodegroup-create }
 Along with a new cluster, a default node group is created, but more node groups can be created depending on the needs. If higher specifications are required to run a container, or more worker node instances are required to scale out, node groups may be additionally created. Click **Create Node Groups** from the page of node group list, and the page of creating a node group shows up. The following items are required to create a node group:
 
@@ -238,7 +235,6 @@ Enter information as required and click **Create Node Groups**, and a node group
 > Only the user who created the cluster can create node groups.
 
 <a id="nodegroup-delete"></a>
-
 ### Delete Node Groups { #nodegroup-delete }
 Select the node group to delete from the node group list and click **Delete Node Group** to proceed with deletion. It takes about 5 minutes to delete a node group; more time may be required depending on the node group status.
 
@@ -249,7 +245,6 @@ All nodes included in the node group are deleted in the following order:
 * The node is deleted at the instance level.
 
 <a id="nodegroup-scale-out"></a>
-
 ### Add Nodes to a Node Group { #nodegroup-scale-out }
 You can add nodes to an operating node group. The current list of nodes will appear upon clicking the node list tab on the node group information query page. Click the Add Node button and enter the number of nodes to add them.
 
@@ -257,7 +252,6 @@ You can add nodes to an operating node group. The current list of nodes will app
 > Nodes cannot be added manually to a node group with the autoscaler enabled.
 
 <a id="nodegroup-scale-in"></a>
-
 ### Delete Nodes from a Node Group { #nodegroup-scale-in }
 Nodes can be deleted from operating node groups. The current list of nodes will appear upon clicking the node list tab on the node group information query page. A confirmation dialog box will appear when a user selects nodes for deletion and clicks the Delete Node button. When the user confirms the node name and selects the OK button, the node will be deleted.
 
@@ -271,7 +265,6 @@ All nodes included in the node group are deleted in the following order:
 > Nodes cannot be deleted manually from a node group with the autoscaler enabled.
 
 <a id="node-start-stop"></a>
-
 ### Stop and Start Nodes { #node-start-stop }
 Nodes can be stopped from node groups and started again. The current list of nodes will appear upon clicking the node list tab on the node group information query page. Nodes can be stopped when a user selects nodes and clicks the stop button. The stopped nodes can be restarted when the user selects them and clicks the start button.
 
@@ -313,7 +306,6 @@ The status icon on the node list tab is displayed based on the node's status. Th
 * Red: Node in an abnormal state
 
 <a id="use-gpu-nodegroup"></a>
-
 ### Use GPU Node Groups { #use-gpu-nodegroup }
 When you need to run GPU-based workloads through Kubernetes, you can create a node group composed of GPU instances.
 Select the `g2` type when selecting a flavor while creating the clusters or node groups to create a GPU node group.
@@ -436,7 +428,6 @@ totalMemory: 14.73GiB freeMemory: 14.62GiB
 > If you want to prevent workloads that do not require a GPU from being assigned to GPU nodes, refer to [Taints and Tolerations Overview](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/).
 
 <a id="autoscaler"></a>
-
 ### Autoscaler { #autoscaler }
 An autoscaler is a feature that automatically adjusts the number of nodes when a node group runs out of available resources or when node utilization stays below a certain threshold. It can be configured for each node group and operates independently. NKS supports two types of autoscalers.
 
@@ -462,7 +453,6 @@ The terms used in the autoscaler feature and their meanings are as follows:
 | Scale-in | Decreasing the number of nodes |
 
 <a id="metric-base-autoscaler"></a>
-
 #### Metric-Based Autoscaler
 The metric-based autoscaler operates based on NHN Cloud's [Cloud Monitoring](/Monitoring/Cloud%20Monitoring/en/overview/) service. A metric collection agent installed on worker nodes sends system metrics to Cloud Monitoring every minute. If the collected metrics exceed or fall below the configured threshold, nodes are automatically added or removed. The scale-out and scale-in features can each be enabled independently.
 
@@ -585,7 +575,6 @@ Nodes are scaled in when all of the following conditions are met:
 | 24 - | 28% | 6 | – | Below scale-out threshold → scale-down unneeded time measurement of 2 minutes begins<br>If the 10-minute wait time after scale-in (24 → 34) is satisfied thereafter, nodes will be removed one by one. |
 
 <a id="cluster-autoscaler"></a>
-
 #### Cluster Autoscaler
 Cluster Autoscaler works based on the cluster-autoscaler feature, which is an officially supported feature of the Kubernetes project. For more information, see [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler).
 
@@ -1038,7 +1027,6 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.28.3
 ```
 
 <a id="user-script-old"></a>
-
 ### User script (old) { #user-script-old }
 You can register a user script when creating clusters and additional node groups. A user script has the following features.
 
@@ -1059,7 +1047,6 @@ You can register a user script when creating clusters and additional node groups
         * Script standard output and standard error stream: `/var/log/userscript.output`
 
 <a id="user-script"></a>
-
 ### User script { #user-script }
 The features of a new version of user script are included in the node groups created after July 26, 2022. The following features are found in the new version.
 
@@ -1080,7 +1067,6 @@ The features of a new version of user script are included in the node groups cre
         2. New version user script
 
 <a id="instance-flavor-update"></a>
-
 ### Change instance flavor { #instance-flavor-update }
 Changes the instance flavor of a worker node group. The instance flavor of all worker nodes belonging to the worker node group is changed.
 
@@ -1112,7 +1098,6 @@ The flavors that can be changed to depend on the current instance flavor.
 * u2 flavor instances cannot have their flavor changed after creation. Changing to another u2 flavor is also not supported.
 
 <a id="custom-image"></a>
-
 ### Use Custom Images as Worker Images { #custom-image }
 
 You can create a worker node group using your custom images. This requires additional work (conversion to NKS worker node) in NHN Cloud Image Builder so that the custom image can be used as a worker node image. In Image Builder, you can create custom worker node images by creating image templates with the worker node application of NHN Kubernetes Service (NKS). For more information on Image Builder, see [Image Builder User Guide](/Compute/Image%20Builder/en/console-guide/#_1).
@@ -1170,7 +1155,6 @@ To use a custom image as a worker node image, perform the following steps in the
 ![nkscustom_image_3.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nkscustom_image_3.png)
 
 <a id="extra-volumes"></a>
-
 ### Additional Block Storage { #extra-volumes }
 You can use additional block storage for a node group. You can specify additional block storage when creating a cluster or node group, or add additional block storage to an existing node group. Additional block storage has the following characteristics:
 
@@ -1189,7 +1173,6 @@ You can use additional block storage for a node group. You can specify additiona
 > Changing the settings of additional block storage involves unmounting existing volumes, which may affect services that are currently in use.
 
 <a id="extra-security-groups"></a>
-
 ### Additional Security Groups { #extra-security-groups }
 You can configure additional security groups for a node group. You can specify additional security groups when creating a cluster or node group, or configure additional security groups for an existing node group. Additional security groups have the following characteristics:
 
@@ -1206,7 +1189,6 @@ You can configure additional security groups for a node group. You can specify a
 > Changing additional security groups modifies the network settings, which may temporarily affect communication while the settings are being applied.
 
 <a id="fip-auto-bind"></a>
-
 ### Floating IP Auto-Assignment { #fip-auto-bind }
 You can use the floating IP auto-assignment feature for a node group. When this feature is enabled, a floating IP is automatically assigned to each node when it is created. You can choose whether to enable this feature when creating a cluster or an additional node group. Once set, the option cannot be changed later. The following items are required to enable the floating IP auto-assignment feature:
 
@@ -1225,12 +1207,10 @@ The floating IP auto-assignment feature has the following characteristics:
   * Even if the feature is disabled for a node group that had it enabled, the floating IPs assigned to existing nodes are not released.
 
 <a id="cluster-management"></a>
-
 ## Cluster Management { #cluster-management }
 To manage and operate a cluster from a remote host, you need `kubectl`, the command-line tool (CLI) provided by Kubernetes.
 
 <a id="kubectl-install"></a>
-
 ### Install kubectl { #kubectl-install }
 kubectl can be used immediately by downloading the executable file without any special installation process. The download commands for each operating system are as follows:
 
@@ -1269,7 +1249,6 @@ $ export PATH=$PATH:$(pwd)
 ```
 
 <a id="kubectl-set-kubeconfig"></a>
-
 ### Configuration { #kubectl-set-kubeconfig }
 To access Kubernetes cluster with kubectl, cluster configuration file (kubeconfig) is required. On the NHN Cloud web console, open the **Container > NHN Kubernetes Service(NKS)** page and select a cluster to access. From **Basic Information**, click **Download** of **Configuration Files** to download a configuration file. Move the downloaded configuration file to a location of your choice to serve it as a reference for kubectl execution.
 
@@ -1285,7 +1264,6 @@ $ export KUBECONFIG={cluster configuration file path}
 You may copy cluster configuration file path to `$HOME/.kube/config`, which is the default configuration file of kubectl, if you don't want to save it to an environment variable. However, when there are many clusters, it is easier to change environment variables.
 
 <a id="kubectl-check-connection"></a>
-
 ### Check Connection { #kubectl-check-connection }
 Use the `kubectl version` command to verify that the configuration is correct. If there are no issues, `Server Version` is displayed.
 
@@ -1299,7 +1277,6 @@ Server Version: version.Info{Major:"1", Minor:"15", GitVersion:"v1.15.7", GitCom
 * Server Version: Version information of Kubernetes that makes up the cluster
 
 <a id="certificatesigningrequest"></a>
-
 ### CSR(CertificateSigningRequest) { #certificatesigningrequest }
 Using the Certificate API of Kubernetes, you can request and issue the X.509 certificate for a Kubernetes API client. CSR resource lets you request a certificate and decide to accept/reject the request. For more information, see the [Certificate Signing Requests](https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/) document.
 
@@ -1404,7 +1381,6 @@ status:
 > * Pyeongchon region: Clusters created on December 24, 2020, or later
 
 <a id="admission-controller"></a>
-
 ### Admission Controller Plugin { #admission-controller }
 The admission controller can intercept a Kubernetes API server request and change objects or deny the request. See [Admission Controller](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/) for more information about the admission controller. For usage examples of the admission controller, see [Admission Controller Guide](https://kubernetes.io/blog/2019/03/21/a-guide-to-kubernetes-admission-controllers/).
 
@@ -1445,7 +1421,6 @@ All default active admission controllers per Kubernetes version are enabled. The
 * PodSecurityPolicy
 
 <a id="cluster-upgrade"></a>
-
 ### Cluster Upgrade { #cluster-upgrade }
 NHN Kubernetes Service (NKS) supports upgrading Kubernetes components in operating Kubernetes clusters.
 
@@ -1626,7 +1601,6 @@ Verify that the resources that existing users have been operating are compatible
 When all resources in the Blue environment are decommissioned, the versions of the control plane and all worker node groups will all match.
 
 <a id="api-endpoint-ipacl"></a>
-
 ### Apply IP Access Control to Cluster API Endpoints { #api-endpoint-ipacl }
 You can enforce or disable IP access control to cluster API endpoints.
 For more information about the IP access control feature, see [IP Access Control](/Network/Load%20Balancer/en/overview/#ip).
@@ -1642,7 +1616,6 @@ The following rules apply when adding IP access control targets for a cluster AP
 * At least one IP access control target must exist.
 
 <a id="rotate-certificate"></a>
-
 ### Renew Cluster Certificates { #rotate-certificate }
 Kubernetes requires PKI certificates for TLS authentication between components. For more information about PKI certificates, see [PKI Certificates and Requirements](https://kubernetes.io/docs/setup/best-practices/certificates/). When you create an NKS cluster, the required certificates are generated automatically, and the default validity period for these certificates is set to 5 years.
 
@@ -1677,7 +1650,6 @@ To use the certificate renewal feature, follow the steps below:
 > To minimize the impact of these operations, you should avoid performing tasks such as creating new Pods while certificate renewal is in progress.
 
 <a id="k8s-component"></a>
-
 ### Kubernetes Component Configuration { #k8s-component }
 
 You can configure various options for Kubernetes components. These options can be set when creating a cluster and can also be changed after the cluster is created.
@@ -1690,7 +1662,6 @@ The components and options supported for configuration by operation area are as 
 > * The configuration of components running on worker nodes can be set per worker node group. (Only available for platform version 1.202602.0 and later)
 
 <a id="control-plain-options"></a>
-
 ### Control Plane Options { #control-plain-options }
 
 | Component | Option | Description |
@@ -1701,7 +1672,6 @@ The components and options supported for configuration by operation area are as 
 | kube-controller-manager | unhealthy-zone-threshold | Defines the threshold for the ratio of NotReady nodes at which a zone is considered unhealthy.<br>(Unit: percentage, Default: 55, Min: 0, Max: 100) |
 
 <a id="worker-node-options"></a>
-
 ### Worker Node Options { #worker-node-options }
 
 | Component | Option | Description |
@@ -1710,7 +1680,6 @@ The components and options supported for configuration by operation area are as 
 | kubelet | max-pods | Defines the maximum number of pods that can run on a node.<br>(Default: 110, Min: 1, Max: the maximum number of pod IPs that can be created, calculated based on the pod network and subnet size settings)<br>Supported in platform version 1.202602.0 and later. |
 
 <a id="k8s-label"></a>
-
 ### Kubernetes Label Configuration { #k8s-label }
 You can use the Kubernetes label setting for each node group. When this feature is enabled, the user-defined labels are automatically applied to the nodes when they are created. Labels are key-value pairs attached to Kubernetes objects such as pods and nodes, and are used to identify characteristics of those objects. For a detailed description of labels, see [Labels and Selectors](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/).
 
@@ -1740,7 +1709,6 @@ A label key can have a prefix and a name separated by a slash (/), and the prefi
 > * When you change the Kubernetes label configuration, the updated settings are applied starting from newly created nodes.
 
 <a id="oidc-auth"></a>
-
 ### OIDC Authentication Configuration { #oidc-auth }
 
 OIDC (OpenID Connect) is an interoperable authentication protocol based on the OAuth 2.0 framework. With OIDC, you can authenticate users through an external authentication service. For detailed information on how OIDC works, see [What is OpenID Connect](https://openid.net/developers/how-connect-works/).
@@ -1760,7 +1728,6 @@ NKS clusters can be configured to handle authentication using OIDC. The configur
 | Signing Algs | X | List of allowed JOSE asymmetric signing algorithms. Default: 'RS256' |
 
 <a id="control-plane-k8s-log"></a>
-
 ### Store Control Plane Kubernetes Component Logs { #control-plane-k8s-log }
 NHN Kubernetes Service (NKS) provides logs for key Kubernetes components running on the control plane. These logs help you better understand various events and operations occurring within the cluster, and can be useful for diagnosing service status and troubleshooting issues.
 
@@ -1879,7 +1846,6 @@ The path where logs are created in the OBS container is as follows:
   nks-test-master-0/kube-apiserver/2025/04/20250428-101500-index0.gz
 
 <a id="k8s-taint"></a>
-
 ### Kubernetes Taint Configuration { #k8s-taint }
 You can use the Kubernetes taint configuration feature for each node group. Node groups created with this feature are initialized with the taints that you configured. For more information about taints, see [Taints and Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/).
 
@@ -1923,7 +1889,6 @@ You must specify one of the following three values:
 * If you change the Kubernetes taint configuration, the updated configuration is applied to newly created nodes going forward.
 
 <a id="konnectivity-description"></a>
-
 ### konnectivity { #konnectivity-description }
 
 Konnectivity is a component in Kubernetes that securely proxies network communication between the control plane (API server) and worker nodes. Previously, the API server had to access the kubelet or pods on a node directly, which made network configuration complex.
@@ -1947,11 +1912,9 @@ The Konnectivity Server and Konnectivity Agent first establish a connection to c
 > Konnectivity is available on platform version 1.202605.0 or later.
 
 <a id="worker-node-management"></a>
-
 ## Manage Worker Nodes { #worker-node-management }
 
 <a id="container-management"></a>
-
 ### Manage Containers { #container-management }
 
 <a id="container-management-clusters-of-kubernetes-v1243-or-older"></a>
@@ -1964,7 +1927,6 @@ Clusters of Kubernetes v1.24.3 or older use Docker to comprise the container run
 Clusters of Kubernetes v1.24.3 or later use containerd to comprise the container runtime. In the worker node, you can use nerdctl instead of the docker CLI to view the container status and the container image. For more details and usage on nerdctl, see [nerdctl: Docker-compatible CLI for containerd](https://github.com/containerd/nerdctl#nerdctl-docker-compatible-cli-for-containerd).
 
 <a id="network-management"></a>
-
 ### Network Management { #network-management }
 
 <a id="network-management-default-network-interface"></a>
@@ -2049,7 +2011,6 @@ route add -net 0.0.0.0/0 gw 192.168.0.1 dev eth1 metric 0
 ```
 
 <a id="kubelet-argument"></a>
-
 ### Kubelet Custom Arguments Setting Feature { #kubelet-argument }
 A kubelet is a node agent that runs on all worker nodes. The kubelet receives input for many settings using command-line arguments. The kubelet custom arguments setting feature provided by NKS allows you to add arguments that are input at kubelet startup. You can set up kubelet custom arguments and apply them to your system as follows.
 
@@ -2065,7 +2026,6 @@ A kubelet is a node agent that runs on all worker nodes. The kubelet receives in
 > * The configured custom arguments are applied even after a system restart.
 
 <a id="containerd-registry-config"></a>
-
 ### Custom containerd Registry Settings Feature (deprecated) { #containerd-registry-config }
 
 > [Caution]
@@ -2173,7 +2133,6 @@ echo '[ { "registry": "user-defined.registry.io", "endpoint_list": [ "http://use
 >     * If you do not want to use the `docker.io` registry, you can simply not include any settings for the `docker.io` registry. However, at least one registry setting must exist.
 
 <a id="constraints-on-cgroup"></a>
-
 ### Constraints Based on Kubernetes Version and CGroup Version { #constraints-on-cgroup }
 CGroup (Control Group) is a Linux kernel feature that allows you to limit, isolate, and monitor the usage of system resources such as CPU, memory, disk I/O, and network for groups of processes. It is one of the core foundations of container technologies, including Kubernetes. CGroup started with version 1 (v1) and evolved to version 2 (v2) with enhanced memory and I/O control capabilities. Because it is a Linux kernel feature, CGroup v2 has a dependency on the Linux kernel. Therefore, CGroup v2 is only supported on relatively recent distributions and versions.
 
@@ -2203,14 +2162,12 @@ The OS image distributions and versions that support changing the CGroup version
 Node groups created using an OS image whose default CGroup version is v1 and that cannot be changed to v2 cannot be upgraded to Kubernetes v1.34 using the rolling upgrade method. In this case, you can upgrade the node group using the Blue-Green method.
 
 <a id="worker-management-caution"></a>
-
 ### Worker Node Management Precautions { #worker-management-caution }
 * You must not arbitrarily delete container images that have been pulled to worker nodes. Pods required by the NKS cluster may fail to run.
 * If you forcibly stop the system using commands such as `shutdown`, `halt`, or `poweroff`, you will not be able to restart it from the console. Use the worker node start/stop feature instead.
 * You must not modify various configuration files within the worker node or manipulate system services. Critical issues may occur in the NKS cluster.
 
 <a id="cni"></a>
-
 ## CNI (Container Network Interface) { #cni }
 NHN Kubernetes Service (NKS) provides different types of Container Network Interface (CNI) through the Addon feature. When creating a cluster, you can select one of the following CNIs: Calico-VXLAN, Calico-eBPF, or Cilium. The default setting is Calico-VXLAN. Calico-eBPF utilizes the BGP routing protocol for container workloads and leverages eBPF technology for direct communication, while certain segments—such as NodePort—rely on VXLAN. For more information about Calico's eBPF, see [about eBPF](https://docs.tigera.io/calico/latest/about/kubernetes-training/about-ebpf). Cilium is based on a VXLAN overlay network and uses eBPF technology to provide high network performance. For more information about Cilium's eBPF, see [eBPF Datapath](https://docs.cilium.io/ko/stable/network/ebpf/).
 
@@ -2247,7 +2204,6 @@ Notes
 > To use those images, you must update Calico to v3.28.2 or later through the addon management feature.
 
 <a id="security-group"></a>
-
 ## Security Group { #security-group }
 When you set Enhanced Security Rules to True during cluster creation, only required security rules are created when creating a worker node security group.
 
@@ -2341,7 +2297,6 @@ If you don't use enhanced security rules, additional security rules are created 
 
 
 <a id="addon-mgmt"></a>
-
 ## Add-on Management Feature { #addon-mgmt }
 An add-on is a component that is not a required component of a Kubernetes cluster, but is provided to extend the functionality of an NKS cluster or to provide specialized functionality. Add-ons can include components that perform functions such as networking, service discovery, monitoring, storage provisioning, and more. Users can install/update/remove add-ons provided by NHN Cloud to the cluster through the add-on management feature.
 
@@ -2582,12 +2537,10 @@ NFS CSI Plugin is a CSI driver that can provision and manage NFS in NHN Cloud.
         * Fixed an issue where the optional snapshot configuration was being required as mandatory.
 
 <a id="loadbalancer-service"></a>
-
 ## LoadBalancer Service { #loadbalancer-service }
 A pod is the basic execution unit of a Kubernetes application and is connected to the cluster network via a CNI (container network interface). By default, pods are not accessible from outside the cluster. To expose a pod's services to the outside of the cluster, you need to create a path to expose to the outside using the Kubernetes `LoadBalancer` Service object. Creating a LoadBalancer service object creates an NHN Cloud Load Balancer outside the cluster and associates it with the service object.
 
 <a id="create-webserver-pod"></a>
-
 ### Create a web server pod { #create-webserver-pod }
 Write a manifest file for a Deployment object that runs two nginx pods as shown below, and create the object.
 
@@ -2629,7 +2582,6 @@ nginx-deployment-7fd6966748-wv7rd   1/1     Running   0          4m13s
 ```
 
 <a id="create-lb-service"></a>
-
 ### Create a LoadBalancer service { #create-lb-service }
 To define a service object in Kubernetes, you need a manifest composed of the following items.
 
@@ -2688,7 +2640,6 @@ nginx-svc    LoadBalancer   10.254.134.18   123.123.123.30   8080:30013/TCP   3m
 > Load balancer IP is a floating IP allowing external access. You can check it on the **Network > Floating IP** page.
 
 <a id="internet-test-via-service"></a>
-
 ### Test the service via the internet { #internet-test-via-service }
 Send an HTTP request to a floating IP associated with a load balancer to see whether the web server pod in a Kubernetes cluster responds. Since the TCP/8080 port of a service object is attached to the TCP/80 port of a pod, the request must be sent to the TCP/8080 port. If the external load balancer, service object, and pod are well associated, the web server shall respond to the nginx default page.
 
@@ -2722,7 +2673,6 @@ Commercial support is available at
 ```
 
 <a id="advanced-lb-configuration"></a>
-
 ### Configure advanced load balancer options { #advanced-lb-configuration }
 When defining service objects in Kubernetes, you can set several options for the load balancer. You can set the following.
 
@@ -2750,7 +2700,6 @@ When defining service objects in Kubernetes, you can set several options for the
 * L7 rules and conditions
 
 <a id="advanced-lb-configuration-global-setting-and-per-listener-setting"></a>
-
 #### Global settings and per-listener settings
 Each setting item can be configured as either a global setting or a per-listener setting. If neither a global setting nor a per-listener setting is configured, the default value for that setting is used.
 
@@ -2758,7 +2707,6 @@ Each setting item can be configured as either a global setting or a per-listener
 * Global setting: Applied to the target listener when no per-listener setting exists for that listener.
 
 <a id="advanced-lb-configuration-format-of-per-listener-setting"></a>
-
 #### Per-listener setting format
 Per-listener settings can be set by appending a prefix representing the listener to the global settings key. The prefix representing the listener is the service object's port protocol (`spec.ports[].protocol`) and port number (`spec.ports[].port`) concatenated with a dash (`-`). For example, if the protocol is TCP and the port number is 80, the prefix is `TCP-80`. If you want to set session affinity for the listener associated with this port, you can set it in TCP-80.loadbalancer.nhncloud/pool-session-persistence under .metadata.annotations.
 
@@ -2813,7 +2761,6 @@ When this manifest is applied, the per-listener settings are configured as shown
 >
 
 <a id="loadbalancer-update-without-modification"></a>
-
 #### Update a load balancer without changing its settings
 
 If you need to update a load balancer without changing its settings — for example, to update a certificate — you can use the following command.
@@ -2828,7 +2775,6 @@ Once the load balancer update starts, the annotation set by the above command is
 > This feature works on clusters with a platform version of 1.202605.0 or later.
 
 <a id="advanced-lb-configuration-setting-load-balancer-name"></a>
-
 #### Set load balancer name
 
 You can set the name of the load balancer.
@@ -2846,7 +2792,6 @@ You can set the name of the load balancer.
 > * Creating a load balancer with the same name within the same project
 
 <a id="advanced-lb-configuration-set-load-balancer-type"></a>
-
 #### Set load balancer type
 You can set the type of the load balancer. For more information about load balancers, see the [Load Balancer Console User Guide](/Network/Load%20Balancer/en/console-guide/).
 
@@ -2857,7 +2802,6 @@ You can set the type of the load balancer. For more information about load balan
     * dedicated: Creates a 'dedicated' type load balancer.
 
 <a id="advanced-lb-configuration-set-static-routes"></a>
-
 #### Configure static routes
 You can configure whether to apply static routes to the load balancer.
 
@@ -2871,7 +2815,6 @@ You can configure whether to apply static routes to the load balancer.
 > The static route setting is available for clusters created after August 27, 2024 or clusters that have had their k8s version upgraded.
 
 <a id="advanced-lb-configuration-set-the-session-affinity"></a>
-
 #### Configure session affinity
 You can configure session affinity for the load balancer.
 
@@ -2887,7 +2830,6 @@ You can configure session affinity for the load balancer.
     * Can be changed after the load balancer is created.
 
 <a id="advanced-lb-configuration-set-whether-to-keep-a-floating-ip-address"></a>
-
 #### Set whether to keep the floating IP address
 A floating IP is associated with the load balancer. When deleting a load balancer or changing the floating IP, you can configure whether to delete or retain the floating IP associated with the load balancer.
 
@@ -2910,7 +2852,6 @@ A floating IP is associated with the load balancer. When deleting a load balance
 
 
 <a id="advanced-lb-configuration-set-the-load-balancer-ip"></a>
-
 #### Set load balancer IP
 You can set the IP of the load balancer when creating it.
 
@@ -2942,7 +2883,6 @@ spec:
 ```
 
 <a id="advanced-lb-configuration-set-whether-to-use-the-floating-ip"></a>
-
 #### Set Whether to Use Floating IPs
 You can set whether to use floating IPs when creating the load balancer.
 
@@ -2987,7 +2927,6 @@ Depending on the combination of floating IP usage and load balancer IP setting, 
 
 
 <a id="advanced-lb-configuration-set-vpc"></a>
-
 #### Set VPC
 You can set a VPC to which the load balancer is connected when creating a load balancer.
 
@@ -2996,7 +2935,6 @@ You can set a VPC to which the load balancer is connected when creating a load b
 * If not set, the VPC configured when the cluster was created is used.
 
 <a id="advanced-lb-configuration-set-subnet"></a>
-
 #### Set Subnet
 You can set a subnet to which the load balancer is connected when creating a load balancer. The load balancer's private IP is connected to the set subnet. If no member subnet is set, worker nodes connected to this subnet are added as load balancer members.
 
@@ -3027,7 +2965,6 @@ spec:
 ```
 
 <a id="advanced-lb-configuration-set-member-subnet"></a>
-
 #### Set Member Subnets
 When creating a load balancer, you can set a subnet to which load balancer members will be connected. Worker nodes connected to this subnet are added as load balancer members.
 
@@ -3089,7 +3026,6 @@ spec:
 
 
 <a id="advanced-lb-configuration-set-the-listener-connection-limit"></a>
-
 #### Set Listener Connection Limit
 You can set the connection limit for a listener.
 
@@ -3104,7 +3040,6 @@ You can set the connection limit for a listener.
 
 
 <a id="advanced-lb-configuration-set-the-listener-protocol"></a>
-
 #### Set the listener protocol
 You can set the protocol for a listener.
 
@@ -3196,7 +3131,6 @@ metadata:
 > Deleting a certificate from Certificate Manager that is associated with a listener might affect the behavior of the load balancer.
 
 <a id="advanced-lb-configuration-set-the-listener-proxy-protocol"></a>
-
 #### Set the listener proxy protocol (Proxy Protocol)
 When the listener protocol is TCP or HTTPS, you can set the proxy protocol to the listener. For more information on proxy protocol, see [Load Balancer Proxy Mode](/Network/Load%20Balancer/en/overview/#_4).
 
@@ -3207,7 +3141,6 @@ When the listener protocol is TCP or HTTPS, you can set the proxy protocol to th
     * false: Disables the proxy protocol. This is the default value if not set.
 
 <a id="advanced-lb-configuration-set-the-load-balancing-method"></a>
-
 #### Set the load balancing method
 You can set the load balancing method.
 
@@ -3220,7 +3153,6 @@ You can set the load balancing method.
 
 
 <a id="advanced-lb-configuration-set-the-health-check-protocol"></a>
-
 #### Set the health check protocol
 You can set the health check protocol.
 
@@ -3252,7 +3184,6 @@ The HTTP status code can be configured as follows:
 * If you do not set a value or enter a value that does not conform to the rule, it is set to the default value of 200.
 
 <a id="advanced-lb-configuration-set-the-health-check-interval"></a>
-
 #### Set the health check interval
 You can set the health check interval.
 
@@ -3263,7 +3194,6 @@ You can set the health check interval.
 * If you do not set a value or enter a value outside the range, it is set to the default value of 60.
 
 <a id="advanced-lb-configuration-set-the-health-check-maximum-response-time"></a>
-
 #### Set the health check maximum response time
 You can set the health check maximum response time.
 
@@ -3276,7 +3206,6 @@ You can set the health check maximum response time.
 * However, if the entered value or configured value is greater than the health check interval, it is set to 1/2 of the health check interval setting.
 
 <a id="advanced-lb-configuration-set-the-maximum-number-of-retries-for-a-health-check"></a>
-
 #### Set the maximum number of retries for a health check
 You can set the maximum number of retries for a health check.
 
@@ -3286,7 +3215,6 @@ You can set the maximum number of retries for a health check.
 * If you do not set a value or enter a value outside the range, it is set to the default value of 3.
 
 <a id="advanced-lb-configuration-health-check-port-settings"></a>
-
 #### Set the health check port
 You can set the member port to be targeted for health checks.
 
@@ -3297,7 +3225,6 @@ You can set the member port to be targeted for health checks.
 * If you do not set a value or enter a value outside the range, it is set to the default value of 0.
 
 <a id="advanced-lb-configuration-health-check-host-header-settings"></a>
-
 #### Set the health check host header
 You can set the field value of the host header to use for health checks.
 
@@ -3306,7 +3233,6 @@ You can set the field value of the host header to use for health checks.
 * If the health check protocol is set to TCP, the value configured in this field is ignored.
 
 <a id="advanced-lb-configuration-setting-keep-alive-timeout"></a>
-
 #### Set keep-alive timeout
 You can set the keep-alive timeout value.
 
@@ -3320,7 +3246,6 @@ You can set the keep-alive timeout value.
 > keep-alive timeout can be set up on clusters that have been upgraded to v1.24.3 or later after November 28, 2023, or are newly created.
 
 <a id="advanced-lb-configuration-l7-rules"></a>
-
 #### L7 rules
 You can set L7 rules per listener. L7 rules work as follows:
 
@@ -3352,7 +3277,6 @@ The following constraints apply to L7 rule settings:
 * L7 rules configured for the same listener must use different names.
 
 <a id="advanced-lb-configuration-l7-conditions"></a>
-
 #### L7 Conditions
 You can set L7 conditions for each L7 rule. L7 conditions work as follows:
 
@@ -3455,17 +3379,14 @@ spec:
 ```
 
 <a id="ingress-controller"></a>
-
 ## Ingress Controller { #ingress-controller }
 Ingress Controller routes HTTP and HTTPS requests from cluster externals to internal services, in reference of the rules that are defined at ingress object so as to provide SSL/TSL closure and virtual hosting. For more details on Ingress Controller and Ingress, see [Ingress Controller](https://kubernetes.io/ko/docs/concepts/services-networking/ingress-controllers/), [Ingress](https://kubernetes.io/ko/docs/concepts/services-networking/ingress/).
 
 <a id="install-nginx-ingress-controller"></a>
-
 ### Install NGINX Ingress Controller { #install-nginx-ingress-controller }
 NGINX Ingress Controller is one of the most frequently used ingress controllers. For more details, see [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/) and [NGINX Ingress Controller for Kubernetes](https://www.nginx.com/products/nginx-ingress-controller/). For installation of NGINX Ingress Controller, see [Installation Guide](https://kubernetes.github.io/ingress-nginx/deploy/).
 
 <a id="uri-based-service-routing"></a>
-
 ### URI-Based Service Routing { #uri-based-service-routing }
 Ingress controller can diverge services based on URI. The following figure shows the structure of a simple example of service divergence based on URI.
 
@@ -3689,7 +3610,6 @@ service "tea-svc" deleted
 ```
 
 <a id="host-based-service-routing"></a>
-
 ### Host-Based Service Routing { #host-based-service-routing }
 Ingress controller can diverge services based on the host name. The following figure shows the structure of a simple example of service divergence based on the host name.
 
@@ -3789,7 +3709,6 @@ $ curl 123.123.123.44/unknown
 ```
 
 <a id="ingress-nginx-internal-communication"></a>
-
 ### ingress-nginx Controller Internal Communication Structure and Cautions { #ingress-nginx-internal-communication }
 When exposing a service externally through the ingress-nginx controller, the path through which requests are forwarded to the workload differs depending on the location of the client sending the request (inside or outside the cluster).
 
@@ -3821,7 +3740,6 @@ Internal Pod → ingress-nginx Service (ClusterIP) → ingress-nginx Controller 
 - We recommend that you use the Service DNS instead of the Ingress domain for internal communication. For communication between internal Pods, use the Service directly, and use Ingress only for externally exposed endpoints.
 
 <a id="k8s-dashboard"></a>
-
 ## Kubernetes Dashboard { #k8s-dashboard }
 NHN Kubernetes Service (NKS) provides a default web UI dashboard. For more information about the Kubernetes dashboard, see [Web UI (Dashboard)](https://kubernetes.io/ko/docs/tasks/access-application-cluster/web-ui-dashboard/).
 
@@ -3957,7 +3875,6 @@ eyJhbGc...-QmXA
 Enter the output token in the token input field of the browser to log in as a user with cluster administrator privileges.
 
 <a id="persistent-volume"></a>
-
 ## Persistent Volume { #persistent-volume }
 Persistent Volume or PV is a Kubernetes resource representing physical storage volume. One PV is attached to one NHN Cloud Block Storage. For more details, see [Persistent Volumes](https://kubernetes.io/ko/docs/concepts/storage/persistent-volumes/).
 
@@ -3966,7 +3883,6 @@ Persistent Volume Claims, or PVC is required to attach PV to pods. PVC defines n
 With PV and PVC, users can define the attributes of a volume of choice, while the system separates the use of resources from management by assigning volume resources for each user requirement.
 
 <a id="pv-lifecycle"></a>
-
 ### PV/PVC Lifecycle { #pv-lifecycle }
 PV and PVC follow a four-stage lifecycle.
 
@@ -3989,7 +3905,6 @@ Reclaims the volume after use. Reclaim methods include Delete, Retain, and Recyc
 | Recycle | Does not delete the connected volume when the PV is deleted, but puts it in a state ready for reuse. This method is deprecated. |
 
 <a id="storageclass"></a>
-
 ### Storage Class (StorageClass) { #storageclass }
 A storage class must be defined before provisioning. Storage classes provide a way to classify storage by certain characteristics. You can set the information, such as media type and availability zone, by including information about the storage provider (provisioner).
 
@@ -4079,7 +3994,6 @@ csi-storageclass   cinder.csi.openstack.org   Delete          WaitForFirstConsum
 ```
 
 <a id="static-provisioning"></a>
-
 ### Static Provisioning { #static-provisioning }
 
 Static provisioning requires the user to prepare a block storage manually. On the **Storage > Block Storage** service page of the NHN Cloud web console, click the **Create Block Storage** button to create a block storage to attach to the PV. See [Create Block Storage](/Storage/Block%20Storage/en/console-guide/#_1) in the Block Storage guide.
@@ -4165,7 +4079,6 @@ pv-static-001   10Gi       RWO            Delete           Bound    default/pvc-
 ```
 
 <a id="dynamic-provisioning"></a>
-
 ### Dynamic Provisioning { #dynamic-provisioning }
 
 With Dynamic Provisioning, block storage is automatically created in reference of attributes defined at storage class. To use Dynamic Provisioning, do not set Volume Binding Mode of storage class or set it to **Immediate**.
@@ -4219,7 +4132,6 @@ persistentvolumeclaim/pvc-dynamic   Bound    pvc-1056949c-bc67-45cc-abaa-1d1bd9e
 > A block storage created by dynamic provisioning cannot be deleted from the web console. It is not automatically deleted along with a cluster being deleted. Therefore, before a cluster is deleted, all PVCs must be deleted first; otherwise, you may be charged for PVC usage. The reclaimPolicy of PV created by dynamic provisioning is set to `Delete` by default, so deleting only the PVC will also delete the PV and block storage.
 
 <a id="pod-pvc-mount"></a>
-
 ### Mount PVC to a Pod { #pod-pvc-mount }
 
 To mount PVC to a pod, mount information must be defined at the pod manifest. Enter the PVC name to use in `spec.volumes.persistenVolumeClaim.claimName` and enter paths to mount in `spec.containers.volumeMounts.mountPath`.
@@ -4270,7 +4182,6 @@ Filesystem      Size  Used Avail Use% Mounted on
 You can also check block storage attachment information in the **Storage > Block Storage** service page of the NHN Cloud web console.
 
 <a id="volume-expansion"></a>
-
 ### Volume Expansion { #volume-expansion }
 You can adjust an existing volume by editing the PersistentVolumeClaim (PVC) object. You can change the volume size by editing the **spec.resources.requests.storage** item of the PVC object. Volume shrinking is not supported. To use the volume expansion feature, the **allowVolumeExpansion** property of StorageClass must be **True**.
 
@@ -4327,11 +4238,9 @@ status:
 The storage provider **cinder.csi.openstack.org** from v1.20.12 and later supports the expansion of the volume in use by default. You can change the volume size by modifying the **spec.resources.requests.storage** item of the PVC object to a desired value.
 
 <a id="service-integration"></a>
-
 ## NHN Cloud Service Integration { #service-integration }
 
 <a id="ncr-integration"></a>
-
 ### NHN Cloud Container Registry (NCR) Service Integration { #ncr-integration }
 You can use images saved at NHN Cloud Container Registry. To use images registered in the registry, first create a secret to login to user registry.
 
@@ -4381,7 +4290,6 @@ spec:
 > For information on how to use NHN Cloud Container Registry, see the [NHN Cloud Container Registry (NCR) User Guide](/Container/NCR/en/user-guide) document.
 
 <a id="nas-integration"></a>
-
 ### NHN Cloud NAS Service Integration { #nas-integration }
 You can utilize NAS volumes provided by NHN Cloud as PV. In order to use NAS services, you must use a cluster of version v1.20 or later. For more information on using NHN Cloud NAS, please refer to the [NAS Console User Guide](/Storage/NAS%20(online)/en/console-guide).
 
@@ -4389,7 +4297,6 @@ You can utilize NAS volumes provided by NHN Cloud as PV. In order to use NAS ser
 > As of the current date (August 2024), the NHN Cloud NAS service is only available in select regions. For more information on the supported regions for the NHN Cloud NAS service, see the [NAS Service Overview](/Storage/NAS%20(online)/en/overview).
 
 <a id="nas-integration-run-the-rpcbind-service-on-all-worker-nodes"></a>
-
 #### Run the rpcbind Service on All Worker Nodes
 To use NAS volumes, you must run the rpcbind service on all worker nodes. Connect to all worker nodes and run the rpcbind service by using the following command.
 
@@ -4408,7 +4315,6 @@ For clusters using enhanced security rules, additional security rules must be ad
 | egress | TCP | 635 | IPv4 | NAS IP address | mountd port for rpc, direction: csi-nfs-node (worker node) → NAS |
 
 <a id="nas-integration-install-csi-driver-nfs"></a>
-
 #### Install csi-driver-nfs
 To use the NHN Cloud NAS service, you must deploy [nfs-csi-plugin](/Container/NKS/en/user-guide/#addon-mgmt-addon-nfs-csi-plugin) to the cluster using the Addon feature of NHN Kubernetes Service (NKS).
 
@@ -4420,7 +4326,6 @@ If you configure multiple PVs using the csi-driver-nfs, the csi-driver-nfs regis
 ![nfs-csi-driver-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/nfs-csi-driver-02.png)
 
 <a id="nas-integration-how-to-use-existing-nhn-cloud-nas-volume-when-provisioning"></a>
-
 #### How to use an existing NHN Cloud NAS volume when provisioning
 You can use existing NAS storage as a PV by entering the NAS information when creating the PV manifest or by entering the NAS information in the StorageClass manifest.
 
@@ -4624,7 +4529,6 @@ Filesystem                                                                 Size 
 ```
 
 <a id="nas-integration-how-to-create-new-nhn-cloud-nas-volume-when-provisioning"></a>
-
 #### How to create a new NHN Cloud NAS volume during provisioning
 You can use an automatically created NAS volume as a PV by entering NAS information when creating a StorageClass and PVC manifest.
 
@@ -4796,7 +4700,6 @@ tmpfs                                                                          1
 > In the process of mounting the PV to the pod, not only the subdirectory is mounted, but the entire NFS storage is mounted, so it is not possible to force the application to use the volume by the provisioned size.
 
 <a id="encrypted-block-storage-integration"></a>
-
 ### NHN Cloud Encrypted Block Storage Integration { #encrypted-block-storage-integration }
 You can utilize encrypted block storage provided by NHN Cloud as PV. For more information about NHN Cloud encrypted block storage, see [Encrypted Block Storage](/Storage/Block%20Storage/en/console-guide/#_2).
 
@@ -4912,7 +4815,6 @@ The process of creating a PVC manifest and mounting it to a Pod is the same as d
 
 
 <a id="etcd-encryption-with-skm"></a>
-
 ### Integrate Secure Key Manager for Encrypting and Decrypting Sensitive Data { #etcd-encryption-with-skm }
 
 NKS clusters encrypt data when storing secret resources in the data store (etcd). NKS provides two methods for encrypting this data.
