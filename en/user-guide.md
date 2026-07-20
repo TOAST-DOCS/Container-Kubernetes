@@ -1498,10 +1498,10 @@ The following example shows a table of whether upgrades are possible during the 
 Notes
 
 * <a name="footnote_cluster_upgrade_rule_1">1</a>: Upgrade is possible because the versions of the control plane and all worker node groups match.
-* <a name="footnote_cluster_upgrade_rule_1">2</a>: Worker node groups can be upgraded only after the control plane has been upgraded.
-* <a name="footnote_cluster_upgrade_rule_1">3</a>: Upgrade requires the versions of the control plane and all worker node groups to match.
-* <a name="footnote_cluster_upgrade_rule_1">4</a>: Upgrade is possible because the control plane has been upgraded.
-* <a name="footnote_cluster_upgrade_rule_1">5</a>: Upgrade is not possible because the latest version supported by NHN Cloud is already in use.
+* <a name="footnote_cluster_upgrade_rule_2">2</a>: Worker node groups can be upgraded only after the control plane has been upgraded.
+* <a name="footnote_cluster_upgrade_rule_3">3</a>: Upgrade requires the versions of the control plane and all worker node groups to match.
+* <a name="footnote_cluster_upgrade_rule_4">4</a>: Upgrade is possible because the control plane has been upgraded.
+* <a name="footnote_cluster_upgrade_rule_5">5</a>: Upgrade is not possible because the latest version supported by NHN Cloud is already in use.
 
 <br>
 
@@ -2369,7 +2369,7 @@ Add-on types categorize the add-ons installed in a cluster according to their ch
 
 <a id="addon-mgmt-addon-calico"></a>
 #### Calico
-Calico is a CNI plugin that provides networking and network security for Kubernetes. For more information about Calico provided by NHN Cloud, see [Calico CNI types](#calico_cni_types).
+Calico is a CNI plugin that provides networking and network security for Kubernetes. For more information about Calico provided by NHN Cloud, see [Calico CNI types](#calico-cni-types).
 
 * Type: CNI
 * Options

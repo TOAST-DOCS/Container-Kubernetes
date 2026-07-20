@@ -1497,10 +1497,10 @@ NKS クラスターのバージョン管理方式と Kubernetes バージョン�
 注釈
 
 * <a name="footnote_cluster_upgrade_rule_1">1</a>: コントロールプレーンとすべてのワーカーノードグループのバージョンが一致しているためアップグレード可能
-* <a name="footnote_cluster_upgrade_rule_1">2</a>: ワーカーノードグループはコントロールプレーンがアップグレードされた後にアップグレード可能
-* <a name="footnote_cluster_upgrade_rule_1">3</a>: コントロールプレーンとすべてのワーカーノードグループのバージョンが一致している必要があるためアップグレード不可能
-* <a name="footnote_cluster_upgrade_rule_1">4</a>: コントロールプレーンがアップグレードされたためアップグレード可能
-* <a name="footnote_cluster_upgrade_rule_1">5</a>: NHN Cloud でサポートされている最新バージョンを使用しているためアップグレード不可能
+* <a name="footnote_cluster_upgrade_rule_2">2</a>: ワーカーノードグループはコントロールプレーンがアップグレードされた後にアップグレード可能
+* <a name="footnote_cluster_upgrade_rule_3">3</a>: コントロールプレーンとすべてのワーカーノードグループのバージョンが一致している必要があるためアップグレード不可能
+* <a name="footnote_cluster_upgrade_rule_4">4</a>: コントロールプレーンがアップグレードされたためアップグレード可能
+* <a name="footnote_cluster_upgrade_rule_5">5</a>: NHN Cloud でサポートされている最新バージョンを使用しているためアップグレード不可能
 
 <br>
 
@@ -2369,7 +2369,7 @@ Cilium CNI を使用するクラスターで Hubble、Envoy、Prometheus など�
 
 <a id="addon-mgmt-addon-calico"></a>
 #### Calico
-Calico は Kubernetes のネットワーキングとネットワークセキュリティを提供する CNI プラグインです。NHN Cloud が提供する Calico の詳細については、[Calico CNI の種類](#calico_cni_types) を参照してください。
+Calico は Kubernetes のネットワーキングとネットワークセキュリティを提供する CNI プラグインです。NHN Cloud が提供する Calico の詳細については、[Calico CNI の種類](#calico-cni-types) を参照してください。
 
 * タイプ: CNI
 * オプション
