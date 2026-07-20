@@ -1,9 +1,14 @@
-## Container > NHN Kubernetes Service (NKS) > Troubleshooting Guide
+<!-- pre-align:aligned sig=d435f80f360f -->
+
+<a id="container-nhn-kubernetes-service-nks-troubleshooting-guide"></a>
+## Container > NHN Kubernetes Service (NKS) > Troubleshooting Guide { #container-nhn-kubernetes-service-nks-troubleshooting-guide }
 
 This guide explains how to solve various problems that you might encounter while using NHN Kubernetes Service (NKS).
 
-### > Disk space is reduced as the size of the worker node's container log file increases.
+<a id="disk-space-is-reduced-as-the-size-of-the-worker-nodes-container-log-file-increases"></a>
+### > Disk space is reduced as the size of the worker node's container log file increases. { #disk-space-is-reduced-as-the-size-of-the-worker-nodes-container-log-file-increases }
 
+<a id="disk-space-is-reduced-as-the-size-of-the-worker-nodes-container-log-file-increases-set-log-rotation"></a>
 #### Set log rotation
 For container log file management (setting the maximum file size, the number of log files, and so on), add the following setting to the worker node.
 
@@ -29,6 +34,7 @@ In the worker node, container log rotation based on the setting above is perform
 > [Note] For instance images later than `CentOS 7.8 - Container (2021.07.27)`, the log rotation setting as above is provided by default.
 <br>
 
+<a id="disk-space-is-reduced-as-the-size-of-the-worker-nodes-container-log-file-increases-synchronize-log-rotation-setting"></a>
 #### Synchronize log rotation setting
 
 While operating clusters, log rotation setting for some of the worker nodes might change in the following cases.
@@ -127,7 +133,8 @@ $
 > [Note] The description above is only one of the methods for synchronization. If there is a better way for your environment, you can use it to perform synchronization.
 
 
-### > The status of the Pod appears as ImagePullBackOff.
+<a id="the-status-of-the-pod-appears-as-imagepullbackoff"></a>
+### > The status of the Pod appears as ImagePullBackOff. { #the-status-of-the-pod-appears-as-imagepullbackoff }
 
 Since November 20, 2020, dockerhub has implemented a policy that places the following limits on the number of pull requests for container image. For more information on limits, see [Understanding Docker Hub Rate Limiting](https://www.docker.com/increase-rate-limits) and [Pricing & Subscriptions](https://www.docker.com/pricing).
 
@@ -146,7 +153,8 @@ The workaround is as follows.
 * If you want to be limited by an independent public IP without logging in to dockerhub, assign a floating IP to the worker node. 
 
 
-### > Failed to pull image `k8s.gcr.io/pause:3.2` in a closed network environment.
+<a id="failed-to-pull-image-k8sgcriopause32-in-a-closed-network-environment"></a>
+### > Failed to pull image `k8s.gcr.io/pause:3.2` in a closed network environment. { #failed-to-pull-image-k8sgcriopause32-in-a-closed-network-environment }
 This issue is caused by clusters in a closed network environment not receiving images from the public registry, and can occur in clusters created before August 2024. Images that are deployed by default, such as the `k8s.gcr.io/pause:3.2` image, are pulled from the NHN Cloud internal registry when a worker node is created. However, if the image is deleted after the initial image is pulled, the problem may occur. The list of images that are deployed by default when creating a cluster is shown below.
 
 * kubernetesui/dashboard
@@ -186,11 +194,13 @@ imageGCHighThresholdPercent=85: Always run image Garbage Collection to remove un
 imageGCLowThresholdPercent=80: Do not run image Garbage Collection when disk utilization is 80% or less.
 ```
 
+<a id="failed-to-pull-image-k8sgcriopause32-in-a-closed-network-environment-workaround"></a>
 #### Workaround
 By enabling NKS registry, you can change the cluster settings to receive container images from the NHN Cloud internal registry instead of from a public registry in a closed network environment. You can enable the NKS registry from the Cluster inquiry screen.
 
 
-### > Image pull for Flannel CNI related images from `quay.io` fails.
+<a id="image-pull-for-flannel-cni-related-images-from-quayio-fails"></a>
+### > Image pull for Flannel CNI related images from `quay.io` fails. { #image-pull-for-flannel-cni-related-images-from-quayio-fails }
 
 The repository address for Flannel-related container images is based on `quay.io`. The pull service for these images on `quay.io` has been terminated, so they can no longer be pulled.
 
@@ -205,7 +215,8 @@ Here's how to solve the problem:
     * AS-IS: `quay.io/coreos/flannel*`
     * TO-BE: `ghcr.io/flannel-io/flannel*`
 
-### > In k8s v1.24 and later, the `pull from host docker.pkg.github.com failed` error occurs and the image pull fails. 
+<a id="in-k8s-v124-and-later-the-pull-from-host-dockerpkggithubcom-failed-error-occurs-and-the-image-pull-fails"></a>
+### > In k8s v1.24 and later, the `pull from host docker.pkg.github.com failed` error occurs and the image pull fails. { #in-k8s-v124-and-later-the-pull-from-host-dockerpkggithubcom-failed-error-occurs-and-the-image-pull-fails }
 
 This issue is caused by the change of the package registry on github from the Docker registry to the Container registry. Clusters in v1.24 or earlier used Docker as the container runtime and could pull images from the `docker.pkg.github.com` registry, but NKS clusters in v1.24 and later use cotainerd as the container runtime and can no longer pull images from the `docker.pkg.github.com` registry. For more information about package registry migration, see Migration to Container registry from the Docker registry[migrating](https://docs.github.com/en/packages/working-with-a-github-packages-registry/migrating-to-the-container-registry-from-the-docker-registry).
 
@@ -213,10 +224,12 @@ This issue is caused by the change of the package registry on github from the Do
 The workaround is as follows
 Change the base of the image URL defined in the Pod manifest `from docker.pkg.github.com` to `gchr.io`.
 
-### > `cannot allocate memory` error occurs and the Pod's status appears `as FailedCreatePodContainer`.
+<a id="cannot-allocate-memory-error-occurs-and-the-pods-status-appears-as-failedcreatepodcontainer"></a>
+### > `cannot allocate memory` error occurs and the Pod's status appears `as FailedCreatePodContainer`. { #cannot-allocate-memory-error-occurs-and-the-pods-status-appears-as-failedcreatepodcontainer }
 
 A bug in the Linux kernel's kernel object accounting feature for memory cgroups. It occurs primarily in versions 3.x and 4.x of the Linux kernel and is known as the dying memory cgroup problem issue. Users can bypass this issue by disabling the kernel object accounting feature for memory cgroups at the image level. 
 
+<a id="cannot-allocate-memory-error-occurs-and-the-pods-status-appears-as-failedcreatepodcontainer-apply-the-workaround-to-existing-clusters"></a>
 #### Apply the workaround to existing clusters
 Connect to the worker node, change the boot options, and restart it.
 
@@ -240,6 +253,7 @@ $ reboot
 
 This issue may not always occur, and may depend on the nature of your application. If you are concerned about this issue, you can use the custom image feature in NKS to use a worker node image with the above workaround applied from the start.
 
+<a id="cannot-allocate-memory-error-occurs-and-the-pods-status-appears-as-failedcreatepodcontainer-apply-the-workaround-to-newly-created-clusters-using-the-nks-custom-image-feature"></a>
 #### Apply the workaround to newly created clusters using the NKS Custom Image feature
 NKS provides the feature to create a group of worker nodes based on your custom image. You can use the NKS custom image feature to create an image with kernel object accounting disabled for memory cgroups and utilize it when creating a cluster. For more information about the feature, see [](/Container/NKS/en/user-guide/#_25)Use Custom Image as Worker Image[](/Container/NKS/en/user-guide/#custom-image).
 
@@ -253,7 +267,8 @@ sudo sed -i "s/GRUB_CMDLINE_LINUX=\"\(.*\)\"/GRUB_CMDLINE_LINUX=\"\1 $args\"/" "
 sudo grub2-mkconfig -o /boot/grub2/grub.cfg
 ```
 
-### > rpc.statd is not running but is required for remote locking error occurs and the Pod fails to mount the NAS volume.
+<a id="rpcstatd-is-not-running-but-is-required-for-remote-locking-error-occurs-and-the-pod-fails-to-mount-the-nas-volume"></a>
+### > rpc.statd is not running but is required for remote locking error occurs and the Pod fails to mount the NAS volume. { #rpcstatd-is-not-running-but-is-required-for-remote-locking-error-occurs-and-the-pod-fails-to-mount-the-nas-volume }
 
 This issue is caused by the rpc.statd process on the worker node becoming a zombie process or being stopped by an administrator command. The rpcbind and rpc.statd processes on the worker node must be running normally in order to mount the volume. The workaround is as follows
 ```
@@ -261,7 +276,8 @@ systemctl restart rpc-statd
 systemctl restart rpcbind
 ```
 
-### > The Pod's file system does not reflect the increased capacity after the PV capacity is increased.
+<a id="the-pods-file-system-does-not-reflect-the-increased-capacity-after-the-pv-capacity-is-increased"></a>
+### > The Pod's file system does not reflect the increased capacity after the PV capacity is increased. { #the-pods-file-system-does-not-reflect-the-increased-capacity-after-the-pv-capacity-is-increased }
 This is an issue that can occur in clusters with version 1.20 or later that were created before August 2024. You can run the script below to update the cinder-csi-driver deployed in your cluster to resolve the issue. Only newly created or increased capacity PVs after running the script will reflect the configuration update.
 
 Define the absolute path value where the cluster's kubeconfig file is located in the kubeconfig_file_path variable, and then run the script.
@@ -297,13 +313,15 @@ kubectl -n kube-system rollout restart daemonet cinder-csi-nodeplugin
 kubectl -n kube-system rollout restart statefulset cinder-csi-controllerplugin
 ```
 
-### > Error of timed out waiting for condition occurs and the volume mount to the Pod fails.
+<a id="error-of-timed-out-waiting-for-condition-occurs-and-the-volume-mount-to-the-pod-fails"></a>
+### > Error of timed out waiting for condition occurs and the volume mount to the Pod fails. { #error-of-timed-out-waiting-for-condition-occurs-and-the-volume-mount-to-the-pod-fails }
 This is an issue that can occur when you mount large volumes in a Pod. By default, when Kubernetes mounts a volume, it changes the ownership and permissions on the contents of each volume to match the fsGroup specified in the SecurityContext of the Pod. If the volume is large, it can take a lot of time to check and change ownership and permissions, which can cause a timeout. 
 
 To prevent timeouts from occurring, you can use the fsGroupChangePolicy field of the securityContext to change the way Kubernetes checks and manages ownership and permissions for volumes. For more information, see [Configure volume permission and ownership change policy for pods](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#configure-volume-permission-and-ownership-change-policy-for-pods).
 
 
-### > Setting the hostnetwork: true, dnsPolicy: ClusterFirstWithHostNet option on a Pod in a cluster with Calico-eBPF CNI causes UDP communication issues.
+<a id="setting-the-hostnetwork-true-dnspolicy-clusterfirstwithhostnet-option-on-a-pod-in-a-cluster-with-calico-ebpf-cni-causes-udp-communication-issues"></a>
+### > Setting the hostnetwork: true, dnsPolicy: ClusterFirstWithHostNet option on a Pod in a cluster with Calico-eBPF CNI causes UDP communication issues. { #setting-the-hostnetwork-true-dnspolicy-clusterfirstwithhostnet-option-on-a-pod-in-a-cluster-with-calico-ebpf-cni-causes-udp-communication-issues }
 This is caused by the BPF NAT table not handling network packets correctly during UDP communication in Calico v3.28.0. When using eBPF, TCP communicates `in a connect-time load balancing (CTLB)` method and UDP communicates over `a NAT table`managed by BPF. This issue can be resolved by changing UDP communication to CTLB as well.
 
 `Connect-time load balancing (CTLB)` is a network load balancing technique in which a backend server is selected in the first packet when a client first connects to a server, and all subsequent traffic is directed to the selected backend server. This ensures session persistence and reduces the overhead of performing load balancing every time.
@@ -322,24 +340,29 @@ When the Pod template is modified, calico-node will resume on a rolling update b
     value: "Disabled"
 ```
 
+<a id="setting-the-hostnetwork-true-dnspolicy-clusterfirstwithhostnet-option-on-a-pod-in-a-cluster-with-calico-ebpf-cni-causes-udp-communication-issues-cautions-for-setting-up-udp-communication-after-applying-the-workaround"></a>
 #### Cautions for setting up UDP communication after applying the workaround
 UDP is a connectionless protocol, meaning that server/client communication transfers data without establishing or maintaining a separate session. However, UDP's `connect(` ) function, like the Golang `net.DialUDP(` ) function, allows you to associate a UDP socket with a specific address to send and receive data only to the specified address.
 With Calico's eBPF, if you deploy a Pod that uses the UD `connect()` function in a cluster with connect-time load balancing (CTLB) enabled for UDP, you might experience communication issues when the Pod acting as a server is redeployed. This is because the UDP socket only attempts to send data to the initially connected server address. When a server Pod is redeployed, its IP address or network path might change, and because the UDP connect() socket only sends data to the old server address, communication might fail.
 This is a known issue that occurs in CTLB environments due to the way UDP connect() works and the CTLB environment, you should be aware and careful when using UDP's connect() function in a cluster with Calico eBPF and UDP CTLB that you might encounter this communication issue.
 
-### > istio is not working properly in a Calico-eBPF cluster.
+<a id="istio-is-not-working-properly-in-a-calico-ebpf-cluster"></a>
+### > istio is not working properly in a Calico-eBPF cluster. { #istio-is-not-working-properly-in-a-calico-ebpf-cluster }
 When eBPF is enabled, it performs `connect-time` load balancing `(CTLB)`, which means that when a client tries to connect to a service, it selects a backend pod on the first packet and all subsequent packets are forwarded directly to that backend. Meanwhile, Istio deploys sidecar proxies to organize the service mesh, and the proxies intercept application traffic to act as control and monitoring.
 When CTLB is enabled, packets are forwarded directly from the BPF MAP to the destination Pod, and the packets are tampered with in the process. As a result, packets are forwarded directly to the destination Pod, bypassing Istio's proxy. Because of this eBPF networking structure, Istio might not work properly. If you need to manage a cluster with istio, you must consider using a Calico-VXLAN cluster.
 
 
-### > In a cluster using Calico-eBPF CNI, network failures occur when scaling up after node reduction.
+<a id="in-a-cluster-using-calico-ebpf-cni-network-failures-occur-when-scaling-up-after-node-reduction"></a>
+### > In a cluster using Calico-eBPF CNI, network failures occur when scaling up after node reduction. { #in-a-cluster-using-calico-ebpf-cni-network-failures-occur-when-scaling-up-after-node-reduction }
 This issue is caused by a bug found in calico/kube-controllers in Calico v3.28.0. During a node reduction, if the node on which the calico/kube-controllers pod is deployed is removed, the pod is scheduled and run on a different node. While calico/kube-controllers is being rerun, the node information is out of sync. In this state, if a node with the same name as the node that was removed is added, a network failure can occur.
 
 This issue has been resolved in Calico v3.28.2. To use Calico v3.28.2, you must upgrade your Kubernetes version or recreate your cluster. 
 
 
-### > Failed to upgrade clusters.
+<a id="failed-to-upgrade-clusters"></a>
+### > Failed to upgrade clusters. { #failed-to-upgrade-clusters }
 
+<a id="failed-to-upgrade-clusters-when-creating-an-nks-check-whether-finalizers-are-set-on-the-resources-that-are-deployed-by-default"></a>
 #### When creating an NKS, check whether finalizers are set on the resources that are deployed by default.
 If finalizers are set on deployed resources when the NKS is created, the upgrade fails because the resources cannot be removed. When the upgrade of all worker node groups is complete, the NKS initial deployment resources are redeployed.If finalizers are set on the NKS initial deployment resource during this process, the redeployment of the resources will fail and the upgrade will be stopped. To resolve this issue, you must remove the finalizers setting on the NKS initial deployment resource before upgrading.
 
@@ -353,17 +376,20 @@ kubectl patch clusterrole calico-kube-controllers --type=json -p='[{"op": "remov
 ```
 
 
-### > When scaling out nodes or adding node groups in a cluster running v1.29.3 or earlier with an inactive NKS registry, the calico-node pod deployment fails, causing the node initialization task to fail.
+<a id="when-scaling-out-nodes-or-adding-node-groups-in-a-cluster-running-v1293-or-earlier-with-an-inactive-nks-registry-the-calico-node-pod-deployment-fails-causing-the-node-initialization-task-to-fail"></a>
+### > When scaling out nodes or adding node groups in a cluster running v1.29.3 or earlier with an inactive NKS registry, the calico-node pod deployment fails, causing the node initialization task to fail. { #when-scaling-out-nodes-or-adding-node-groups-in-a-cluster-running-v1293-or-earlier-with-an-inactive-nks-registry-the-calico-node-pod-deployment-fails-causing-the-node-initialization-task-to-fail }
 This issue occurs when calico-related pods (calico-node, calico-kube-controllers, calico-typha) are not deployed when scaling out nodes or adding node groups due to incorrect image repository settings.
 
 This issue mainly results from clusters created before May 2024. The cluster created at that time had the NKS-specific image registry disabled by default, and the repository path for the Calico container image was incorrect, making image downloads impossible.
 
+<a id="when-scaling-out-nodes-or-adding-node-groups-in-a-cluster-running-v1293-or-earlier-with-an-inactive-nks-registry-the-calico-node-pod-deployment-fails-causing-the-node-initialization-task-to-fail-how-to-check-if-the-symptom-occurs"></a>
 #### How to check if the symptom occurs
 When checking with the `kubectl get all -n kube-system` command, the status of the pods below deployed on the node where the scale-out failed remains as **ImagePullBackOff** or **ErrImagePull**.
 - calico-node
 - calico-kube-controllers
 - calico-typha
 
+<a id="when-scaling-out-nodes-or-adding-node-groups-in-a-cluster-running-v1293-or-earlier-with-an-inactive-nks-registry-the-calico-node-pod-deployment-fails-causing-the-node-initialization-task-to-fail-solution"></a>
 #### Solution
 You can resolve this issue by changing the Calico-related image repository URL to a public repository. However, this only applies to clusters with internet access. Caution is required during this process, as cluster pod networking may be temporarily interrupted during the process. The steps are as follows:
 

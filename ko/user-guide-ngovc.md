@@ -1262,10 +1262,10 @@ NKS 클러스터 버전 관리 방식과 Kubernetes 버전 차이 지원 정책�
 주석
 
 * <a name="footnote_cluster_upgrade_rule_1">1</a>: 컨트롤 플레인과 모든 워커 노드 그룹의 버전이 일치하는 상태이기 때문에 업그레이드 가능
-* <a name="footnote_cluster_upgrade_rule_1">2</a>: 워커 노드 그룹은 컨트롤 플레인이 업그레이드된 후 업그레이드 가능
-* <a name="footnote_cluster_upgrade_rule_1">3</a>: 컨트롤 플레인과 모든 워커 노드 그룹의 버전이 일치해야 업그레이드 가능
-* <a name="footnote_cluster_upgrade_rule_1">4</a>: 컨트롤 플레인이 업그레이드됐기 때문에 업그레이드 가능
-* <a name="footnote_cluster_upgrade_rule_1">5</a>: NHN Cloud에서 지원하는 가장 최신 버전을 사용하고 있기 때문에 업그레이드 불가능
+* <a name="footnote_cluster_upgrade_rule_2">2</a>: 워커 노드 그룹은 컨트롤 플레인이 업그레이드된 후 업그레이드 가능
+* <a name="footnote_cluster_upgrade_rule_3">3</a>: 컨트롤 플레인과 모든 워커 노드 그룹의 버전이 일치해야 업그레이드 가능
+* <a name="footnote_cluster_upgrade_rule_4">4</a>: 컨트롤 플레인이 업그레이드됐기 때문에 업그레이드 가능
+* <a name="footnote_cluster_upgrade_rule_5">5</a>: NHN Cloud에서 지원하는 가장 최신 버전을 사용하고 있기 때문에 업그레이드 불가능
 
 <br>
 
@@ -2105,7 +2105,7 @@ Cilium CNI를 사용하는 클러스터에서 Hubble, Envoy, Prometheus 같은 �
 
 <a id="addon-mgmt-addon-calico"></a>
 #### Calico
-Calico는 Kubernetes의 네트워킹과 네트워크 보안을 제공하는 CNI 플러그인입니다. NHN Cloud에서 제공하는 Calico에 대한 설명은 [Calico CNI 종류](#calico_cni_types)를 참고하세요.
+Calico는 Kubernetes의 네트워킹과 네트워크 보안을 제공하는 CNI 플러그인입니다. NHN Cloud에서 제공하는 Calico에 대한 설명은 [Calico CNI 종류](#calico-cni-types)를 참고하세요.
 
 * 유형: CNI
 * 옵션
