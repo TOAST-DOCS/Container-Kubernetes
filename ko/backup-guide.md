@@ -1,6 +1,10 @@
-## Container > NHN Kubernetes Service(NKS) > 백업 가이드
+<!-- pre-align:aligned sig=dd3a912dfca5 -->
 
-## 개요
+<a id="container-nhn-kubernetes-service-nks-backup-guide"></a>
+## Container > NHN Kubernetes Service(NKS) > 백업 가이드 { #container-nhn-kubernetes-service-nks-backup-guide }
+
+<a id="overview"></a>
+## 개요 { #overview }
 
 NHN Kubernetes Service(NKS) 클러스터의 백업이 필요한 경우 Velero 플러그인을 사용하여 Object Storage에 백업할 수 있습니다.
 본 문서는 Object Storage와 Velero를 활용하여 클러스터를 백업 및 복구하는 방법에 대해 기술합니다.
@@ -11,12 +15,15 @@ NHN Kubernetes Service(NKS) 클러스터의 백업이 필요한 경우 Velero �
 
 Velero에 대한 자세한 내용은 [Velero Docs](https://velero.io/docs/v1.9/)를 참고해 주세요.
 
-## Velero를 이용한 클러스터 백업 및 복구
+<a id="cluster-backup-and-restoration-with-velero"></a>
+## Velero를 이용한 클러스터 백업 및 복구 { #cluster-backup-and-restoration-with-velero }
 
-### 사전 준비
+<a id="prerequisites"></a>
+### 사전 준비 { #prerequisites }
 
 Object Storage API를 사용하려면 테넌트 아이디(tenant ID) 및 API 엔드포인트(endpoint) 확인, API 비밀번호 설정, Temporary URL Key 생성이 필요합니다.
 
+<a id="prerequisites-check-the-tenant-id-and-api-endpoint"></a>
 #### 테넌트 아이디 및 API 엔드포인트 확인
 
 테넌트 아이디와 API의 엔드포인트는 Object Storage 서비스 페이지의 **API Endpoint 설정** 버튼을 클릭해 확인할 수 있습니다.
@@ -26,6 +33,7 @@ Object Storage API를 사용하려면 테넌트 아이디(tenant ID) 및 API 엔
 | Identity | https://api-identity-infrastructure.nhncloudservice.com/v2.0 | 인증 토큰 발급 |
 | Tenant ID | 숫자 + 영문자로 구성된 32자 길이의 문자열 | 인증 토큰 발급 |
 
+<a id="prerequisites-set-an-api-password"></a>
 #### API 비밀번호 설정
 
 API 비밀번호는 Object Storage 서비스 페이지의 **API Endpoint 설정** 버튼을 클릭해 설정할 수 있습니다.
@@ -36,6 +44,7 @@ API 비밀번호는 Object Storage 서비스 페이지의 **API Endpoint 설정*
 
 Object Storage API에 대한 자세한 내용은 [Object Storage API 가이드](/Storage/Object%20Storage/ko/api-guide/)를 참고해 주세요.
 
+<a id="prerequisites-create-temporary-url-key"></a>
 #### Temporary URL Key 생성
 
 Velero 클라이언트에서 `velero log` 명령어를 사용하기 위해서는 Object Storage에 Temporary URL Key를 생성해야 합니다.
@@ -53,24 +62,28 @@ Velero 클라이언트에서 `velero log` 명령어를 사용하기 위해서는
 $ curl -X POST {Object Store} -H "X-Auth-Token: {tokenId}" -H "X-Account-Meta-Temp-Url-Key: {key}"
 ```
 
-### Velero 클라이언트 설치
+<a id="install-the-velero-client"></a>
+### Velero 클라이언트 설치 { #install-the-velero-client }
 
 Velero 클라이언트는 클러스터의 백업 및 복구 명령을 입력하는 프로그램입니다.
 Velero Github 저장소에서 Velero 클라이언트를 다운로드하여 클러스터 백업 및 복구 시 활용할 수 있습니다. 다운로드한 Velero 클라이언트 명령을 실행하기 전에 백업 및 복구 클러스터의 kubeconfig 파일을 웹 콘솔에서 다운로드해야 하고, **KUBECONFIG 환경 변수를 설정하여 백업 및 복구 대상 클러스터를 정확하게 지정**해야 합니다.
 kubeconfig 설정에 대한 자세한 내용은 [kubectl 설치](/Container/NKS/ko/user-guide/#kubectl)를 참고하세요.
 
+<a id="install-the-velero-client-download-the-velero-client"></a>
 #### Velero 클라이언트 다운로드
 
 ```
 $ wget https://github.com/vmware-tanzu/velero/releases/download/v1.17.0/velero-v1.17.0-linux-amd64.tar.gz
 ```
 
+<a id="install-the-velero-client-decompress-the-file"></a>
 #### 압축 해제
 
 ```
 $ tar xzf velero-v1.17.0-linux-amd64.tar.gz
 ```
 
+<a id="install-the-velero-client-change-the-location-or-set-the-path"></a>
 #### 위치 변경 또는 경로 지정
 
 어느 경로에서든 Velero 클라이언트를 실행할 수 있도록 환경 변수에 지정된 경로로 옮기거나, Velero가 있는 경로를 환경 변수에 추가합니다.
@@ -87,16 +100,19 @@ $ sudo mv velero-v1.17.0-linux-amd64/velero /usr/local/bin
 $ export PATH=$PATH:$(pwd)
 ```
 
-### Velero 서버 설치
+<a id="install-the-velero-server"></a>
+### Velero 서버 설치 { #install-the-velero-server }
 
 Velero 서버는 Helm을 이용하여 설치합니다.
 
+<a id="install-the-velero-server-download-helm"></a>
 #### Helm 다운로드
 
 ```
 $ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
 ```
 
+<a id="install-the-velero-server-change-a-permission"></a>
 #### 권한 변경
 
 다운로드한 파일은 기본적으로 실행 권한이 없습니다. 실행 권한을 추가해 주세요.
@@ -105,12 +121,14 @@ $ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scr
 $ chmod 700 get_helm.sh
 ```
 
+<a id="install-the-velero-server-install-helm"></a>
 #### Helm 설치
 
 ```
 $ ./get_helm.sh
 ```
 
+<a id="install-the-velero-server-add-the-helm-repository"></a>
 #### Helm Repository 추가
 
 Velero 서버를 설치하기 위해서는 Helm Repository를 추가해야 합니다.
@@ -119,6 +137,7 @@ Velero 서버를 설치하기 위해서는 Helm Repository를 추가해야 합�
 $ helm repo add vmware-tanzu https://vmware-tanzu.github.io/helm-charts
 ```
 
+<a id="install-the-velero-server-2"></a>
 #### Velero 서버 설치
 
 Velero 서버는 `백업 클러스터`와 `복구 클러스터`에 각각 설치해야 합니다. 동일한 Object Storage를 사용하도록 `두 클러스터에 동일한 helm 명령어`를 사용하여 설치하시길 권장합니다.
@@ -174,10 +193,12 @@ $ helm install velero vmware-tanzu/velero \
 | Region | 한국(판교) 리전: `KR1`<br>한국(평촌) 리전: `KR2`<br>한국(광주) 리전: `KR3` |
 | OBS endpoint | Object Storage API Endpoint |
 
+<a id="install-the-velero-server-delete-the-velero-server"></a>
 #### Velero 서버 삭제
 Velero 서버는 `velero uninstall` 명령어로 삭제할 수 있습니다.
 
-### 클러스터 백업
+<a id="back-up-a-cluster"></a>
+### 클러스터 백업 { #back-up-a-cluster }
 
 클러스터 백업은 `velero backup create` 명령어로 설정할 수 있습니다.
 
@@ -203,7 +224,8 @@ my-backup    Completed   0        0          2025-10-13 11:01:53 +0900 KST   29d
 
 * 백업된 정보는 Object Storage 서비스 페이지에서 확인할 수 있습니다.
 
-### 클러스터 복구
+<a id="restore-a-cluster"></a>
+### 클러스터 복구 { #restore-a-cluster }
 
 클러스터 백업/복구는 `velero restore create` 명령어로 설정할 수 있습니다.
 
@@ -220,8 +242,10 @@ $ velero restore create --from-backup {name}
 > [주의]
 > `백업 클러스터`와 `복구 클러스터`의 버전이 다른 경우 복구 시 문제가 발생할 수 있습니다.
 
-### 예시
+<a id="examples"></a>
+### 예시 { #examples }
 
+<a id="examples-example-of-cluster-backup-and-restoration"></a>
 #### 클러스터 백업/복구 예시
 
 * 백업 클러스터에서 velero backup create 명령어를 사용하여 백업합니다.
@@ -250,6 +274,7 @@ $ velero restore create --from-backup my-backup
 $ kubectl get pod --all-namespaces
 ```
 
+<a id="examples-example-of-setting-periodic-backups"></a>
 #### 주기적 백업 설정 예시
 
 `velero schedule create` 명령어로 주기적 백업을 설정할 수 있습니다. 자세한 내용은 [schedule-a-backup](https://velero.io/docs/v1.17/backup-reference/#schedule-a-backup)을 참고하세요.
@@ -269,6 +294,7 @@ my-schedule-20251013055022   Completed   0        0          2025-10-13 14:50:22
 my-schedule-20251013054022   Completed   0        0          2025-10-13 14:40:22 +0900 KST   29d       default            <none>
 ```
 
+<a id="examples-example-of-clearing-periodic-backups"></a>
 #### 주기적 백업 설정 해제 예시
 `velero schedule delete` 명령어로 주기적 백업을 해제할 수 있습니다.
 
