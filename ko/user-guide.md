@@ -1128,7 +1128,6 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.28.3
 |  | Ubuntu Server 22.04.3 LTS (2026.03.10)  | 1.10 |
 |  | Ubuntu Server 24.04.3 LTS (2026.03.10)  | 1.10 |
 
-
 > [참고]
 > 커스텀 이미지를 워커 노드 이미지로 변환하는 과정에서 선택한 옵션에 따라 GPU 드라이버가 설치됩니다.
 > 따라서 커스텀 GPU 워커 노드 이미지를 생성하는 경우에도 커스텀 이미지 생성을 GPU 인스턴스로 할 필요가 없습니다.
@@ -1741,7 +1740,6 @@ NHN Kubernetes Service(NKS)는 컨트롤 플레인에서 실행 중인 주요 Ku
     * kube-scheduler
     * kube-controller-manager
 
-
 > [참고]
 > 로그 전송 대상은 하나만 설정할 수 있습니다. Log & Crash Search와 Object Storage에서 모두 로그를 관리하려면, 먼저 전송 대상을 Log & Crash Search로 설정한 후, "로그 외부 보관" 기능을 사용해 해당 로그를 Object Storage에 추가 저장할 수 있습니다.
 > 다른 프로젝트의 Log & Crash Search 또는 또는 Object Storage에도 전송할 수 있습니다.
@@ -2254,7 +2252,7 @@ NHN Kubernetes Service(NKS)가 제공하는 Calico-VXLAN, Calic-eBPF는 아래�
 | egress | TCP | 111 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc portmapper 포트, 방향: csi-nfs-node(워커 노드) → NHN Cloud NAS 서비스 |
 | egress | TCP | 635 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc mountd 포트, 방향: csi-nfs-node(워커 노드) → NHN Cloud NAS 서비스 |
 
-> [Calico-eBPF CNI 사용 시 주의] 
+> [Calico-eBPF CNI 사용 시 주의]
 > Calico-eBPF CNI를 사용할 경우 파드 간 통신과 노드에서 파드로의 통신은 파드에 설정된 포트를 통해 이루어집니다.
 > 강화된 보안 규칙을 사용하는 경우 해당 파드 포트에 대한 ingress, egress 보안 규칙을 수동으로 추가해야 합니다.
 
@@ -2295,7 +2293,6 @@ Cilium CNI를 사용하는 클러스터에서 Hubble, Envoy, Prometheus 같은 �
 | ingress | UDP | 1 - 65535 | IPv4 | NKS Control Plane | 모든 포트, 방향: NKS Control plane → 워커 노드 |
 | egress | 임의 | 1 - 65535 | IPv4 | 모두 허용 | 모든 포트, 방향: 워커 노드 → 외부 |
 | egress | 임의 | 1 - 65535 | IPv6 | 모두 허용 | 모든 포트, 방향: 워커 노드 → 외부 |
-
 
 <a id="addon-mgmt"></a>
 ## 애드온 관리 기능 { #addon-mgmt }
@@ -2391,10 +2388,13 @@ Calico는 Kubernetes의 네트워킹과 네트워크 보안을 제공하는 CNI 
     * v3.28.2-nks1
     * v3.28.2-nks2: 애드온 관리 기능의 안정성을 강화했습니다.
     * v3.28.2-nks3: konnectivity 환경을 지원합니다.
+    * v3.28.2-nks4: 애드온 관리 기능의 안정성을 강화했습니다.
     * v3.30.2-nks1
     * v3.30.2-nks2: 애드온 관리 기능의 안정성을 강화했습니다.
     * v3.30.2-nks3: konnectivity 환경을 지원합니다.
+    * v3.30.2-nks4: 애드온 관리 기능의 안정성을 강화했습니다.
     * v3.31.4-nks1: 데이터 저장소는 KDD(Kubernetes Datastore Driver)이고, konnectivity 환경을 지원합니다.
+    * v3.31.4-nks2: 애드온 관리 기능의 안정성을 강화했습니다.
 
 > [참고]
 > * konnectivity를 지원하는 플랫폼 버전(1.202605.0 이상)에서 설치/업데이트 가능한 calico 버전은 다음과 같습니다.
@@ -2431,6 +2431,7 @@ Cilium은 Kubernetes의 네트워킹과 네트워크 보안을 제공하는 CNI 
         * .spec.template.spec.containers[name="cilium-operator"].image
 * 지원 버전 목록
     * v1.18.0-nks1
+    * v1.18.0-nks2: 애드온 관리 기능의 안정성을 강화했습니다.
 
 <a id="addon-mgmt-addon-coredns"></a>
 #### CoreDNS
@@ -2451,6 +2452,7 @@ CoreDNS는 Kubernetes 클러스터의 기본 DNS 서버입니다.
                 * .metadata.labels.kubernetes.io/name 제거
                 * .spec.template.spec.nodeSelector 제거
                 * .spec.template.spec.serviceAccountName 제거
+    * 1.8.4-nks3: 애드온 관리 기능의 안정성을 강화했습니다.
 
 
 <a id="addon-mgmt-addon-cinder-csi-plugin">
@@ -2476,6 +2478,7 @@ Cinder CSI Plugin은 NHN Cloud에서 블록 스토리지를 프로비저닝하�
         * csi-snapshotter: v3.0.2 → v3.0.3
         * csi-resizer: v1.0.1 → v1.3.0
         * csi-node-driver-registrar: v2.0.1 → v2.3.0
+    * v1.27.101-nks3: 애드온 관리 기능의 안정성을 강화했습니다.
     * v1.27.102-nks1
     * v1.27.102-nks2: 내부 컨테이너 버전이 변경되었습니다.
         * csi-attacher: v3.0.2 → v3.3.0
@@ -2484,6 +2487,9 @@ Cinder CSI Plugin은 NHN Cloud에서 블록 스토리지를 프로비저닝하�
         * csi-resizer: v1.0.1 → v1.3.0
         * csi-node-driver-registrar: v2.0.1 → v2.3.0
     * v1.27.102-nks3: 애드온 관리 기능의 안정성을 강화했습니다.
+    * v1.27.102-nks4
+        * 애드온 관리 기능의 안정성을 강화했습니다.
+        * cinder-csi-nodeplugin DaemonSet toleration에서 `effect: NoExecute`를 제거했습니다.
 
 <a id="adoon-mgmt-addon-metrics-server">
 <a id="addon-mgmt-addon-list-metrics-server"></a>
@@ -2498,6 +2504,7 @@ Metrics Server는 오토 스케일링과 모니터링을 위해 노드와 파드
 * 지원 버전 목록
     * v0.4.4-nks1
     * v0.4.4-nks2: 애드온 관리 기능의 안정성을 강화했습니다.
+    * v0.4.4-nks3: 애드온 관리 기능의 안정성을 강화했습니다.
 
 <a id="addon-mgmt-addon-snapshot-controller">
 <a id="addon-mgmt-addon-list-snapshot-controller"></a>
@@ -2512,6 +2519,7 @@ Snapshot Controller는 볼륨 스냅숏의 생성, 삭제, PVC 연동을 포함�
 * 지원 버전 목록
     * v4.1.1-nks1
     * v4.1.1-nks2: 애드온 관리 기능의 안정성을 강화했습니다.
+    * v4.1.1-nks3: 애드온 관리 기능의 안정성을 강화했습니다.
 
 <a id="addon-mgmt-addon-nfs-csi-plugin">
 <a id="addon-mgmt-addon-list-nfs-csi-plugin"></a>
@@ -2535,8 +2543,11 @@ NFS CSI Plugin은 NHN Cloud의 NFS를 프로비저닝하고 관리할 수 있는
     * v1.0.1-nks2
         * 애드온 관리 기능의 안정성을 강화했습니다.
         * 사용자 변경 불가능 리소스/필드를 검사하지 않는 문제를 해결했습니다.
+    * v1.0.1-nks3: 애드온 관리 기능의 안정성을 강화했습니다.
     * v1.0.2-nks1
         * 선택 항목인 snapshot 설정이 필수로 요구되던 문제를 해결했습니다.
+    * v1.0.2-nks2: 애드온 관리 기능의 안정성을 강화했습니다.
+    * v1.0.3-nks1: reclaimPolicy가 Delete인 storageclass 기반의 PVC 삭제 시 PV가 삭제되지 않는 문제를 해결했습니다.
 
 <a id="loadbalancer-service"></a>
 ## LoadBalancer 서비스 { #loadbalancer-service }

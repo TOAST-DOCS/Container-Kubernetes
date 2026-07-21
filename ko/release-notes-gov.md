@@ -1,4 +1,34 @@
-## Container > NHN Kubernetes Service(NKS) > 릴리스 노트
+<!-- pre-align:aligned sig=a9faa149ecf3 -->
+
+<a id="container-nhn-kubernetes-service-nks-release-notes"></a>
+## Container > NHN Kubernetes Service(NKS) > 릴리스 노트 { #container-nhn-kubernetes-service-nks-release-notes }
+
+<a id="sep-01-2026"></a>
+### 2026. 09. 01. { #sep-01-2026 }
+
+#### 기능 추가
+* Kubernetes v1.35.5을 지원합니다.
+
+<a id="sep-01-2026-platform-version-updates"></a>
+#### 플랫폼 버전 업데이트
+* 1.202608.0이 추가되었습니다.
+    * Kubernetes 호환 버전: v1.31–v1.35
+
+<a id="sep-01-2026-add-on-updates"></a>
+#### 애드온 업데이트
+* 다음 애드온이 추가되었습니다.
+    * calico v3.28.2-nks4
+    * calico v3.30.2-nks4
+    * calico v3.31.4-nks2
+    * cilium v1.18.0-nks2
+    * cinder_csi_plugin v1.27.101-nks3
+    * cinder_csi_plugin v1.27.102-nks4
+    * coredns 1.8.4-nks3
+    * metrics_server v0.4.4-nks3
+    * nfs_csi_plugin v1.0.1-nks3
+    * nfs_csi_plugin v1.0.2-nks2
+    * nfs_csi_plugin v1.0.3-nks1
+    * snapshot_controller v4.1.1-nks3
 
 ### 2026. 06. 02.
 
