@@ -2368,15 +2368,16 @@ Add-on types categorize the add-ons installed in a cluster according to their ch
 ### Add-on List { #addon-mgmt-addon-list }
 
 <a id="addon-mgmt-addon-calico"></a>
+
 #### Calico
 Calico is a CNI plugin that provides networking and network security for Kubernetes. For more information about Calico provided by NHN Cloud, see [Calico CNI types](#calico-cni-types).
 
 * Type: CNI
 * Options
     * mode
-        * Determines the operating mode of Calico.
-        * Supported operating modes: vxlan, ebpf
-* Non-user-modifiable resources and fields
+        * Determines the mode of operation for Calico.
+        * Supported modes of operation: VXLAN, EBPF
+* Immutable resources and fields
     * Deployment/calico-kube-controllers, namespace kube-system
         * .spec.template.spec.containers[name="calico-kube-controllers"].image 
     * Deployment/calico-typha, namespace kube-system
@@ -2387,12 +2388,15 @@ Calico is a CNI plugin that provides networking and network security for Kuberne
         * .spec.template.spec.containers[name="calico-node"].image
 * Supported version list
     * v3.28.2-nks1
-    * v3.28.2-nks2: Improved the stability of the add-on management feature.
-    * v3.28.2-nks3: Added support for konnectivity environments.
+    * v3.28.2-nks2: Improved stability for add-on management.
+    * v3.28.2-nks3: Added support for the konnectivity environment.
+    * v3.28.2-nks4: Improved stability for add-on management.
     * v3.30.2-nks1
-    * v3.30.2-nks2: Improved the stability of the add-on management feature.
-    * v3.30.2-nks3: Added support for konnectivity environments.
-    * v3.31.4-nks1: The datastore is KDD (Kubernetes Datastore Driver) and supports konnectivity environments.
+    * v3.30.2-nks2: Improved stability for add-on management.
+    * v3.30.2-nks3: Added support for the konnectivity environment.
+    * v3.30.2-nks4: Improved stability for add-on management.
+    * v3.31.4-nks1: The data store is KDD (Kubernetes Datastore Driver), and the konnectivity environment is supported.
+    * v3.31.4-nks2: Improved stability for add-on management.
 
 > [Note]
 > * The Calico versions that can be installed/updated on platform versions that support konnectivity (1.202605.0 or later) are as follows:
@@ -2416,12 +2420,13 @@ The following versions use KDD as the datastore:
 > * Updating the add-on to change the datastore from KDD to etcd is not supported.
 
 <a id="addon-mgmt-addon-cilium"></a>
+
 #### Cilium
 Cilium is a CNI plugin that provides networking and network security for Kubernetes.
 
 * Type: CNI
 * Options: None
-* Non-user-modifiable resources and fields
+* Immutable resources and fields
     * DaemonSet/cilium, namespace kube-system
         * .spec.template.spec.containers[name="cilium-agent"].image
         * .spec.template.spec.containers[name="cilium-envoy"].image
@@ -2429,30 +2434,33 @@ Cilium is a CNI plugin that provides networking and network security for Kuberne
         * .spec.template.spec.containers[name="cilium-operator"].image
 * Supported version list
     * v1.18.0-nks1
+    * v1.18.0-nks2: Improved stability for add-on management.
 
 <a id="addon-mgmt-addon-coredns"></a>
+
 #### CoreDNS
 CoreDNS is the default DNS server for Kubernetes clusters.
 
 * Type: kube-dns
 * Options: None
-* Non-user-modifiable resources and fields
+* Immutable resources and fields
     * Deployment/coredns, namespace kube-system
         * .spec.template.spec.containers[name="coredns"].image'
 * Supported version list
     * 1.8.4-nks1
     * 1.8.4-nks2
-        * Improved the stability of the add-on management feature.
-        * Adjusted non-user-modifiable resources and fields.
+        * Improved stability for add-on management.
+        * Adjusted immutable resources and fields.
             * Deployment/coredns, namespace kube-system
                 * Removed .metadata.labels.k8s-app
                 * Removed .metadata.labels.kubernetes.io/name
                 * Removed .spec.template.spec.nodeSelector
                 * Removed .spec.template.spec.serviceAccountName
-
+    * 1.8.4-nks3: Improved stability for add-on management.
 
 <a id="addon-mgmt-addon-cinder-csi-plugin">
 <a id="addon-mgmt-addon-list-cinder-csi-plugin"></a>
+
 #### Cinder CSI Plugin
 Cinder CSI Plugin is a CSI driver that can provision and manage block storage in NHN Cloud.
 
@@ -2468,57 +2476,66 @@ Cinder CSI Plugin is a CSI driver that can provision and manage block storage in
 
 * Supported version list
     * v1.27.101-nks1
-    * v1.27.101-nks2: Internal container versions have been updated.
+    * v1.27.101-nks2: Changed internal container versions.
         * csi-attacher: v3.0.2 → v3.3.0
         * csi-provisioner: v2.0.4 → v2.2.2
         * csi-snapshotter: v3.0.2 → v3.0.3
         * csi-resizer: v1.0.1 → v1.3.0
         * csi-node-driver-registrar: v2.0.1 → v2.3.0
+    * v1.27.101-nks3: Improved stability for add-on management.
     * v1.27.102-nks1
-    * v1.27.102-nks2: Internal container versions have been updated.
+    * v1.27.102-nks2: Changed internal container versions.
         * csi-attacher: v3.0.2 → v3.3.0
         * csi-provisioner: v2.0.4 → v2.2.2
         * csi-snapshotter: v3.0.2 → v3.0.3
         * csi-resizer: v1.0.1 → v1.3.0
         * csi-node-driver-registrar: v2.0.1 → v2.3.0
-    * v1.27.102-nks3: Improved the stability of the add-on management feature.
+    * v1.27.102-nks3: Improved stability for add-on management.
+    * v1.27.102-nks4
+        * Improved stability for add-on management.
+        * Removed `effect: NoExecute` from the cinder-csi-nodeplugin DaemonSet toleration.
 
 <a id="adoon-mgmt-addon-metrics-server">
 <a id="addon-mgmt-addon-list-metrics-server"></a>
+
 #### Metrics Server
 Metrics Server is a Kubernetes component that collects resource usage metrics from nodes and pods for autoscaling and monitoring.
 
 * Type: metrics-server
 * Options: None
-* Non-user-modifiable resources and fields
+* Immutable resources and fields
     * Deployment/metrics-server, namespace kube-system
         * .spec.template.spec.containers[name="metrics-server"].image
 * Supported version list
     * v0.4.4-nks1
-    * v0.4.4-nks2: Improved the stability of the add-on management feature.
+    * v0.4.4-nks2: Improved stability for add-on management.
+    * v0.4.4-nks3: Improved stability for add-on management.
 
 <a id="addon-mgmt-addon-snapshot-controller">
 <a id="addon-mgmt-addon-list-snapshot-controller"></a>
+
 #### Snapshot Controller
 Snapshot Controller is a Kubernetes component that manages the lifecycle of volume snapshots, including creation, deletion, and PVC integration.
 
 * Type: snapshot-controller
 * Options: None
-* Non-user-modifiable resources and fields
+* Immutable resources and fields
     * Deployment/snapshot-controller, namespace kube-system
         * .spec.template.spec.containers[name="snapshot-controller"].image
 * Supported version list
     * v4.1.1-nks1
-    * v4.1.1-nks2: Improved the stability of the add-on management feature.
+    * v4.1.1-nks2: Improved stability for add-on management.
+    * v4.1.1-nks3: Improved stability for add-on management.
 
 <a id="addon-mgmt-addon-nfs-csi-plugin">
 <a id="addon-mgmt-addon-list-nfs-csi-plugin"></a>
+
 #### NFS CSI Plugin
 NFS CSI Plugin is a CSI driver that can provision and manage NFS in NHN Cloud.
 
 * Type: nfs-csi-plugin
 * Options: None
-* Non-user-modifiable resources and fields
+* Immutable resources and fields
     * Deployment/csi-nfs-controller, namespace kube-system
         * .spec.template.spec.containers[name="csi-provisioner"].image
         * .spec.template.spec.containers[name="csi-snapshotter"].image
@@ -2531,10 +2548,13 @@ NFS CSI Plugin is a CSI driver that can provision and manage NFS in NHN Cloud.
 * Supported version list
     * v1.0.1-nks1
     * v1.0.1-nks2
-        * Improved the stability of the add-on management feature.
-        * Fixed an issue where non-user-modifiable resources/fields were not being checked.
+        * Improved stability for add-on management.
+        * Fixed missing validation for immutable resources/fields.
+    * v1.0.1-nks3: Improved stability for add-on management.
     * v1.0.2-nks1
-        * Fixed an issue where the optional snapshot configuration was being required as mandatory.
+        * Fixed an issue where the optional snapshot setting was required.
+    * v1.0.2-nks2: Improved stability for add-on management.
+    * v1.0.3-nks1: Fixed an issue where a PV was not deleted when deleting a PVC based on a StorageClass with a reclaimPolicy of Delete.
 
 <a id="loadbalancer-service"></a>
 ## LoadBalancer Service { #loadbalancer-service }
