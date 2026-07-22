@@ -3,21 +3,19 @@
 <a id="container-nhn-kubernetes-service-nks-release-notes"></a>
 ## Container > Kubernetes > リリースノート { #container-nhn-kubernetes-service-nks-release-notes }
 
-<a id="may-27-2026"></a>
-
+<a id="aug-25-2026"></a>
 ### 2026. 08. 25. { #aug-25-2026 }
 
+<a id="aug-25-2026-added-features"></a>
 #### 新機能追加
 * Kubernetes v1.35.5 をサポートします。
 
 <a id="aug-25-2026-platform-version-updates"></a>
-
 #### プラットフォームバージョンのアップデート
 * 1.202608.0 追加
     * Kubernetes 互換バージョン: v1.31–v1.35
 
 <a id="aug-25-2026-add-on-updates"></a>
-
 #### アドオンの更新
 * アドオン追加
     * calico v3.28.2-nks4
@@ -34,11 +32,9 @@
     * snapshot_controller v4.1.1-nks3
 
 <a id="may-27-2026"></a>
-
 ### 2026. 05. 27. { #may-27-2026 }
 
 <a id="may-27-2026-added-features"></a>
-
 #### 新規機能追加
 * Kubernetes v1.34.3をサポートします。
     * k8s v1.34以降のバージョンでは、ワーカーノードイメージのCGroupバージョンに応じた制約事項が存在します。詳細については、[Kubernetesバージョンと CGroupバージョンに応じた制約事項](/Container/NKS/ja/version-guide/#constraints-on-cgroup)を参照してください。
@@ -46,7 +42,6 @@
 * Cilium CNIをサポートします。
 
 <a id="may-27-2026-platform-version-updates"></a>
-
 #### プラットフォームバージョンの更新
 * 1.202605.0 追加
     * Kubernetes 互換バージョン: v1.30–v1.34
@@ -56,7 +51,6 @@
         * k8s v1.34 クラスターの `ImageVolume` feature gate の有効化
 
 <a id="may-27-2026-add-on-updates"></a>
-
 #### アドオンの更新
 * アドオン追加
     * nfs_csi_plugin v1.0.2-nks1
@@ -71,7 +65,6 @@
 <!-- TODO: translate body -->
 
 <a id="march-17-2026-platform-version-updates"></a>
-
 #### プラットフォームバージョンのアップデート
 * 1.202602.1 追加
     * 機能改善
@@ -81,7 +74,6 @@
 ### 2026. 03. 10. { #march-10-2026 }
 
 <a id="march-10-2026-platform-version-updates"></a>
-
 #### プラットフォームバージョンのアップデート
 * 1.202602.0 追加
     * Kubernetes 互換バージョン: v1.29–v1.33
@@ -94,7 +86,6 @@
         * ノードおよびノードグループ削除時のロードバランサートラフィック損失の改善
 
 <a id="march-10-2026-add-on-updates"></a>
-
 #### アドオン更新
 * アドオン追加
     * calico v3.30.2-nks2
@@ -105,7 +96,6 @@
     * nfs_csi_plugin v1.0.1-nks2
 
 <a id="march-10-2026-added-features"></a>
-
 #### 新機能追加
 * CGroup が v2 に設定された OS イメージをサポートします。
     * 2026年3月以降に配布される OS イメージは、CGroup が v2 に設定されています。
@@ -117,7 +107,6 @@
 ### 2025. 12. 23. { #december-23-2025 }
 
 <a id="december-23-2025-platform-version-updates"></a>
-
 #### プラットフォームバージョンアップデート
 * 1.202511.1 追加
     * ヘルスチェック確認ポートの設定エラーを修正しました。
@@ -141,7 +130,6 @@
     * 詳細は[バージョンガイド](/Container/NKS/ko/version-guide)を参照してください。
 
 <a id="november-25-2025-updated-add-on"></a>
-
 #### アドオンの更新
 * アドオン追加
     * Calico CNI v3.30.2-nks1
@@ -151,7 +139,6 @@
     * NFS CSI Plugin v1.0.1-nks1
 
 <a id="november-25-2025-added-features"></a>
-
 #### 新機能追加
 * Kubernetes v1.33.4をサポートします。
 * コントロールプレーンとワーカーノードグループのプラットフォームバージョンの照会およびアップグレード機能が追加されました。
@@ -171,7 +158,6 @@
 ### 2025. 05. 27. { #may-27-2025 }
 
 <a id="may-27-2025-added-features"></a>
-
 #### 新規機能追加
 * Kubernetes v1.32.3をサポートします。
 * コントロールプレーンの Kubernetes コンポーネントログ保存機能が追加されました。
@@ -192,7 +178,6 @@
 ### 2025. 03. 04. { #march-4-2025 }
 
 <a id="march-4-2025-added-features"></a>
-
 #### 新規機能追加
 * Kubernetes v1.31.4 をサポートします。
 * OIDC (openID connect) 設定機能を使用できます。
@@ -208,7 +193,6 @@
 ### 2024. 11. 26. { #november-26-2024 }
 
 <a id="november-26-2024-added-features"></a>
-
 #### 新機能追加
 * Kubernetes コンポーネントの設定機能を使用できます。
 
@@ -259,7 +243,6 @@
 ### 2024. 08. 27. { #august-27-2024 }
 
 <a id="august-27-2024-added-features"></a>
-
 #### 新規機能追加
 * ノードグループに追加のセキュリティグループを指定する機能が追加されました。
 * ノードグループに追加のブロックストレージを指定する機能が追加されました。
@@ -275,7 +258,6 @@
 ### 2024. 07. 23. { #july-23-2024 }
 
 <a id="july-23-2024-added-features"></a>
-
 #### 新機能の追加
 
 * ロードバランサー詳細オプション設定でL7ルールと条件を適用できます。
@@ -285,7 +267,6 @@
 ### 2024. 05. 28. { #may-28-2024 }
 
 <a id="may-28-2024-added-features"></a>
-
 #### 新機能の追加
 
 * Kubernetes v1.29.3をサポートします。
@@ -308,7 +289,6 @@
 ### 2024. 02. 27. { #february-27-2024 }
 
 <a id="february-27-2024-added-features"></a>
-
 #### 新機能追加
 
 * 強化されたセキュリティルールをクラスタに適用できます。
@@ -320,7 +300,6 @@
 ### 2023. 11. 28. { #november-28-2023 }
 
 <a id="november-28-2023-added-features"></a>
-
 #### 新規機能追加
 * kubelet のカスタム引数設定機能が追加されました。
 * ロードバランサーの詳細オプション設定として、メンバーサブネット設定機能が追加されました。
@@ -349,7 +328,6 @@
 ### 2023. 08. 29. { #august-29-2023 }
 
 <a id="august-29-2023-added-features"></a>
-
 #### 新機能の追加
 
 * Kubernetes v1.27.3をサポートします。
@@ -395,7 +373,6 @@
 ### 2023. 05. 30. { #may-30-2023 }
 
 <a id="may-30-2023-added-features"></a>
-
 #### 新機能の追加
 
 * Kubernetes v1.26.3をサポートします。
@@ -430,7 +407,6 @@
 ### 2023. 03. 28. { #march-28-2023 }
 
 <a id="march-28-2023-added-features"></a>
-
 #### 新機能の追加
 
 * クラスタCNI変更機能が追加されました。
@@ -461,7 +437,6 @@
 ### 2023. 01. 31. { #january-31-2023 }
 
 <a id="january-31-2023-added-features"></a>
-
 #### 新機能の追加
 
 * クラスタOWNER変更機能が追加されました。
@@ -476,7 +451,6 @@
 ### 2022. 12. 27. { #december-27-2022 }
 
 <a id="december-27-2022-added-features"></a>
-
 #### 新機能の追加
 
 * イメージ追加
@@ -497,7 +471,6 @@
         * CentOS 7.9 - Container (2022.11.22)
 
 <a id="november-29-2022-added-features"></a>
-
 #### 新機能の追加
 
 * ノードの起動/停止機能を使用できます。
@@ -510,7 +483,6 @@
 ### 2022. 09. 27. { #september-27-2022 }
 
 <a id="september-27-2022-added-features"></a>
-
 #### 新機能追加
 
 * Kubernetes v1.24.3をサポートします。
@@ -523,7 +495,6 @@
 * ワーカーノードグループのアップグレード時に最大ノード数と最大サービス不可ノード数を指定できます。
 
 <a id="july-26-2022-added-features"></a>
-
 #### 新機能追加
 
 <!-- TODO: translate body -->
@@ -539,7 +510,6 @@
 ### 2022. 03. 29. { #march-29-2022 }
 
 <a id="march-29-2022-added-features"></a>
-
 #### 新機能の追加
 
 * Kubernetes v1.23.3をサポートします。
@@ -561,7 +531,6 @@
 * Kubernetesサービスの名前がNHN Kubernetes Service(NKS)に変更されました。
 
 <a id="january-25-2022-added-features"></a>
-
 #### 新機能追加
 
 * 以下のKubernetesバージョンをサポートします。
@@ -596,7 +565,6 @@
 ### 2021. 11. 23. { #november-23-2021 }
 
 <a id="november-23-2021-added-features"></a>
-
 #### 新機能追加
 * Kubernetes サービス向けの Public API が公開されました。
     * Public API の詳細については、[API ガイド](/Container/NKS/ja/public-api)を参照してください。
@@ -605,7 +573,6 @@
 ### 2021. 10. 26. { #october-26-2021 }
 
 <a id="october-26-2021-added-features"></a>
-
 #### 新機能の追加
 
 * Kubernetes v1.19.13をサポートします。
@@ -617,7 +584,6 @@
 ### 2021. 07. 27. { #july-27-2021 }
 
 <a id="july-27-2021-added-features"></a>
-
 #### 新機能の追加
 
 * ノードグループ作成時にユーザースクリプト機能を使用できます。
@@ -630,7 +596,6 @@
 ### 2021. 06. 29. { #june-29-2021 }
 
 <a id="june-29-2021-added-features"></a>
-
 #### 新機能追加
 
 * Kubernetes v1.18.19をサポートします。
@@ -640,7 +605,6 @@
 ### 2021. 03. 23. { #march-23-2021 }
 
 <a id="march-23-2021-added-features"></a>
-
 #### 新機能の追加
 
 * ユーザークラスターで発生したイベントをNHN CloudTrailで確認できます。
@@ -676,7 +640,6 @@
 <a id="november-24-2020"></a>
 ### 2020. 11. 24. { #november-24-2020 }
 <a id="november-24-2020-added-features"></a>
-
 #### 新機能の追加
 * オートスケーラー機能を使用できます。
 
@@ -687,7 +650,6 @@
 <a id="october-27-2020"></a>
 ### 2020. 10. 27. { #october-27-2020 }
 <a id="october-27-2020-more-feature"></a>
-
 #### 新機能追加
 * Kubernetes クラスターで GPU ベースのノードグループを使用できます。
     * イメージの更新
