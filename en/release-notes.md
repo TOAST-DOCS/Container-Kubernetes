@@ -3,21 +3,19 @@
 <a id="container-nhn-kubernetes-service-nks-release-notes"></a>
 ## Container > NHN Kubernetes Service (NKS) > Release Notes { #container-nhn-kubernetes-service-nks-release-notes }
 
-<a id="may-27-2026"></a>
-
+<a id="aug-25-2026"></a>
 ### August 25, 2026 { #aug-25-2026 }
 
+<a id="aug-25-2026-added-features"></a>
 #### Added Features
 * Added support for Kubernetes v1.35.5.
 
 <a id="aug-25-2026-platform-version-updates"></a>
-
 #### Platform Version Updates
 * Added 1.202608.0
     * Compatible Kubernetes versions: v1.31–v1.35
 
 <a id="aug-25-2026-add-on-updates"></a>
-
 #### Add-on Updates
 * Add-ons added
     * calico v3.28.2-nks4
@@ -34,11 +32,9 @@
     * snapshot_controller v4.1.1-nks3
 
 <a id="may-27-2026"></a>
-
 ### May 27, 2026 { #may-27-2026 }
 
 <a id="may-27-2026-added-features"></a>
-
 #### Added Features
 * Added support for Kubernetes v1.34.3.
     * In k8s v1.34 and later versions, there are constraints depending on the CGroup version of the worker node image. For more information, see [Constraints by Kubernetes Version and CGroup Version](/Container/NKS/en/version-guide/#constraints-on-cgroup).
@@ -46,7 +42,6 @@
 * Added support for Cilium CNI.
 
 <a id="may-27-2026-platform-version-updates"></a>
-
 #### Platform Version Updates
 * Added 1.202605.0
     * Compatible Kubernetes versions: v1.30–v1.34
@@ -56,7 +51,6 @@
         * Enabled `ImageVolume` feature gate for k8s v1.34 clusters
 
 <a id="may-27-2026-add-on-updates"></a>
-
 #### Add-on Updates
 * Add-ons added
     * nfs_csi_plugin v1.0.2-nks1
@@ -69,7 +63,6 @@
 ### March 17, 2026 { #march-17-2026 }
 
 <a id="march-17-2026-platform-version-updates"></a>
-
 #### Platform Version Updates
 * Added 1.202602.1
     * Improved
@@ -79,7 +72,6 @@
 ### March 10, 2026 { #march-10-2026 }
 
 <a id="march-10-2026-platform-version-updates"></a>
-
 #### Platform Version Updates
 * Added 1.202602.0
     * Kubernetes compatible versions: v1.29–v1.33
@@ -92,7 +84,6 @@
         * Support for improved traffic handling during node and node group deletion
 
 <a id="march-10-2026-add-on-updates"></a>
-
 #### Addon Updates
 * Added addons
     * calico v3.30.2-nks2
@@ -103,7 +94,6 @@
     * nfs_csi_plugin v1.0.1-nks2
 
 <a id="march-10-2026-added-features"></a>
-
 #### Added Features
 * Added support for OS images with CGroup set to v2.
     * OS images released after March 2026 have CGroup set to v2.
@@ -115,7 +105,6 @@
 ### December 23, 2025 { #december-23-2025 }
 
 <a id="december-23-2025-platform-version-updates"></a>
-
 #### Platform Version Updates
 * Added 1.202511.1
     * Fixed an issue with the health check port configuration.
@@ -139,7 +128,6 @@
     * For more information, refer to the [Version Guide](/Container/NKS/en/version-guide).
 
 <a id="november-25-2025-updated-add-on"></a>
-
 #### Addon Updates
 * Added addons
     * Calico CNI v3.30.2-nks1
@@ -149,7 +137,6 @@
     * NFS CSI Plugin v1.0.1-nks1
 
 <a id="november-25-2025-added-features"></a>
-
 #### Added Features
 * Added support for Kubernetes v1.33.4.
 * Added the feature to view and upgrade the platform version of control planes and worker node groups.
@@ -169,7 +156,6 @@
 ### May 27, 2025 { #may-27-2025 }
 
 <a id="may-27-2025-added-features"></a>
-
 #### Added Features
 * Added support for Kubernetes v1.32.3.
 * Added the feature to store logs of Kubernetes control plane components.
@@ -190,7 +176,6 @@
 ### March 4, 2025 { #march-4-2025 }
 
 <a id="march-4-2025-added-features"></a>
-
 #### Added Features
 * Added support for Kubernetes v1.31.4.
 * The OIDC(openID connect) setting feature is available.
@@ -206,7 +191,6 @@
 ### November 26, 2024 { #november-26-2024 }
 
 <a id="november-26-2024-added-features"></a>
-
 #### Added Features
 * Added the feature to set Kubernetes component.
 
@@ -257,7 +241,6 @@ Changed the minimum disk size required to create worker nodes in images.
 ### August 27, 2024 { #august-27-2024 }
 
 <a id="august-27-2024-added-features"></a>
-
 #### Added Features
 * Added the feature to specify additional security groups to a node group.
 * Added the feature to specify additional block storage for a group of nodes.
@@ -273,7 +256,6 @@ Changed the minimum disk size required to create worker nodes in images.
 ### July 23, 2024 { #july-23-2024 }
 
 <a id="july-23-2024-added-features"></a>
-
 #### Added Features
 
 * You can apply L7 rules and conditions by setting the load balancer details options.
@@ -283,7 +265,6 @@ Changed the minimum disk size required to create worker nodes in images.
 ### May 28, 2024 { #may-28-2024 }
 
 <a id="may-28-2024-added-features"></a>
-
 #### Added Features
 
 * Support for Kubernetes v1.29.3.
@@ -306,7 +287,6 @@ Changed the minimum disk size required to create worker nodes in images.
 ### February 27, 2024 { #february-27-2024 }
 
 <a id="february-27-2024-added-features"></a>
-
 #### Added Features
 
 * You can apply enforced security rules to clusters.
@@ -318,7 +298,6 @@ Changed the minimum disk size required to create worker nodes in images.
 ### November 28, 2023 { #november-28-2023 }
 
 <a id="november-28-2023-added-features"></a>
-
 #### Added Features
 * Added the feature to set kubelet custom arguments.
 * Added the feature to set member subnets as setting detailed options for load balancer
@@ -347,7 +326,6 @@ Changed the minimum disk size required to create worker nodes in images.
 ### August 29, 2023 { #august-29-2023 }
 
 <a id="august-29-2023-added-features"></a>
-
 #### Added Features
 
 * Added support for Kubernetes v1.27.3
@@ -392,7 +370,6 @@ Changed the minimum disk size required to create worker nodes in images.
 ### May 30, 2023 { #may-30-2023 }
 
 <a id="may-30-2023-added-features"></a>
-
 #### Added Features
 
 * Added support for Kubernetes v1.26.3.
@@ -426,7 +403,6 @@ Changed the minimum disk size required to create worker nodes in images.
 ### March 28, 2023 { #march-28-2023 }
 
 <a id="march-28-2023-added-features"></a>
-
 #### Added Features
 
 * Added the change cluster CNI feature.
@@ -457,7 +433,6 @@ Changed the minimum disk size required to create worker nodes in images.
 ### January 31, 2023 { #january-31-2023 }
 
 <a id="january-31-2023-added-features"></a>
-
 #### Added Features
 
 * Added a feature to change cluster OWNER.
@@ -470,7 +445,6 @@ Changed the minimum disk size required to create worker nodes in images.
 ### December 27, 2022 { #december-27-2022 }
 
 <a id="december-27-2022-added-features"></a>
-
 #### Added Features
 
 * Image added
@@ -491,7 +465,6 @@ Changed the minimum disk size required to create worker nodes in images.
         * CentOS 7.9 - Container (2022.11.22)
 
 <a id="november-29-2022-added-features"></a>
-
 #### Added Features
 
 * The start node/stop node features are available.
@@ -504,7 +477,6 @@ Changed the minimum disk size required to create worker nodes in images.
 ### September 27, 2022 { #september-27-2022 }
 
 <a id="september-27-2022-added-features"></a>
-
 #### Added Features
 
 * Added support for Kubernetes v1.24.3.
@@ -515,7 +487,6 @@ Changed the minimum disk size required to create worker nodes in images.
 ### July 26, 2022 { #july-26-2022 }
 
 <a id="july-26-2022-added-features"></a>
-
 #### Added Features
 
 * A user script can be changed after creating node groups.
@@ -534,7 +505,6 @@ Changed the minimum disk size required to create worker nodes in images.
 ### March 29, 2022 { #march-29-2022 }
 
 <a id="march-29-2022-added-features"></a>
-
 #### Added Features
 
 * Added support for Kubernetes v1.23.3.
@@ -556,7 +526,6 @@ Changed the minimum disk size required to create worker nodes in images.
 * The name of the Kubernetes service has been changed to NHN Kubernetes Service (NKS).
 
 <a id="january-25-2022-added-features"></a>
-
 #### Added Features
 
 * Added support for the following Kubernetes versions:
@@ -592,7 +561,6 @@ Changed the minimum disk size required to create worker nodes in images.
 ### November 23, 2021 { #november-23-2021 }
 
 <a id="november-23-2021-added-features"></a>
-
 #### Added Features
 * The Public API for Kubernetes service has been released.
     * For more information about the Public API, see the [API Guide](/Container/NKS/en/public-api).
@@ -601,7 +569,6 @@ Changed the minimum disk size required to create worker nodes in images.
 ### October 26, 2021 { #october-26-2021 }
 
 <a id="october-26-2021-added-features"></a>
-
 #### Added Features
 
 * Supports Kubernetes v1.19.13.
@@ -613,7 +580,6 @@ Changed the minimum disk size required to create worker nodes in images.
 ### July 27, 2021 { #july-27-2021 }
 
 <a id="july-27-2021-added-features"></a>
-
 #### Added Features
 
 * A user script feature is available when creating node groups.
@@ -626,7 +592,6 @@ Changed the minimum disk size required to create worker nodes in images.
 ### June 29, 2021 { #june-29-2021 }
 
 <a id="june-29-2021-added-features"></a>
-
 #### Added Features
 
 * Supports Kubernetes v1.18.19.
@@ -636,7 +601,6 @@ Changed the minimum disk size required to create worker nodes in images.
 ### March 23, 2021 { #march-23-2021 }
 
 <a id="march-23-2021-added-features"></a>
-
 #### Added Features
 
 * Events occurred in a user cluster can be checked in NHN CloudTrail.
@@ -672,7 +636,6 @@ Changed the minimum disk size required to create worker nodes in images.
 <a id="november-24-2020"></a>
 ### November 24, 2020 { #november-24-2020 }
 <a id="november-24-2020-added-features"></a>
-
 #### Added Features
 * Autoscaler feature is available.
 
@@ -683,7 +646,6 @@ Changed the minimum disk size required to create worker nodes in images.
 <a id="october-27-2020"></a>
 ### October 27, 2020 { #october-27-2020 }
 <a id="october-27-2020-more-feature"></a>
-
 #### Added Features
 * GPU-based node groups are now available in Kubernetes clusters.
     * Image updates
