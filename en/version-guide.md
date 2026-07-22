@@ -77,7 +77,6 @@ To ensure stable service operation, we apply a service support policy for each K
 > - The dates in the table are based on UTC+00:00.
 
 <a id="new-policy-applied-version-v133-or-later"></a>
-
 ### New Policy Applied Version (v1.33 or later) { #new-policy-applied-version-v133-or-later }
 
 | Version | Release | End of Service Support (Upgrade Support) | End of Service Support (EOS) |
@@ -86,7 +85,6 @@ To ensure stable service operation, we apply a service support policy for each K
 | v1.34 | May 2026 | July 31, 2027 | May 31, 2028 |
 | v1.35 | August 2026 | October 30, 2027 | August 31, 2028 |
 <a id="old-policy-applied-version-v132-or-earlier"></a>
-
 ### Old Policy Applied Version (v1.32 or earlier) { #old-policy-applied-version-v132-or-earlier }
 
 | Version | Release | End of Service Support (Upgrade Support) | End of Service Support (EOS) |
@@ -100,7 +98,6 @@ To ensure stable service operation, we apply a service support policy for each K
 ## Platform Version { #platform-version }
 
 <a id="platform-version-info"></a>
-
 ### Platform Version-Specific Information { #platform-version-info }
 
 | Version | Release Date | Kubernetes Compatible Version | Description |
@@ -113,7 +110,6 @@ To ensure stable service operation, we apply a service support policy for each K
 | 1.202605.0 | May 2026 | v1.30–v1.34 | Feature Updates<br>- Added support for worker node CGroup v1 → v2 migration<br>- Enabled the `ImageVolume` feature gate for Kubernetes v1.34 clusters<br>- Added support for konnectivity for communication between kube-apiserver and pods<br>- Added support for etcd upgrades |
 | 1.202608.0 | August 2026 | v1.31–v1.35 | Improved error message display when addon installation/update fails |
 <a id="platform-component-versions"></a>
-
 ### Key component versions by platform version { #platform-component-versions }
 
 | Platform Version | etcd | containerd |
