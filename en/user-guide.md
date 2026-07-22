@@ -2389,10 +2389,13 @@ Calico is a CNI plugin that provides networking and network security for Kuberne
     * v3.28.2-nks1
     * v3.28.2-nks2: Improved the stability of the add-on management feature.
     * v3.28.2-nks3: Added support for konnectivity environments.
+    * v3.28.2-nks4: Improved the stability of the add-on management feature.
     * v3.30.2-nks1
     * v3.30.2-nks2: Improved the stability of the add-on management feature.
     * v3.30.2-nks3: Added support for konnectivity environments.
+    * v3.30.2-nks4: Improved the stability of the add-on management feature.
     * v3.31.4-nks1: The datastore is KDD (Kubernetes Datastore Driver) and supports konnectivity environments.
+    * v3.31.4-nks2: Improved the stability of the add-on management feature.
 
 > [Note]
 > * The Calico versions that can be installed/updated on platform versions that support konnectivity (1.202605.0 or later) are as follows:
@@ -2429,6 +2432,7 @@ Cilium is a CNI plugin that provides networking and network security for Kuberne
         * .spec.template.spec.containers[name="cilium-operator"].image
 * Supported version list
     * v1.18.0-nks1
+    * v1.18.0-nks2: Improved the stability of the add-on management feature.
 
 <a id="addon-mgmt-addon-coredns"></a>
 #### CoreDNS
@@ -2449,6 +2453,7 @@ CoreDNS is the default DNS server for Kubernetes clusters.
                 * Removed .metadata.labels.kubernetes.io/name
                 * Removed .spec.template.spec.nodeSelector
                 * Removed .spec.template.spec.serviceAccountName
+    * 1.8.4-nks3: Improved the stability of the add-on management feature.
 
 
 <a id="addon-mgmt-addon-cinder-csi-plugin">
@@ -2474,6 +2479,7 @@ Cinder CSI Plugin is a CSI driver that can provision and manage block storage in
         * csi-snapshotter: v3.0.2 → v3.0.3
         * csi-resizer: v1.0.1 → v1.3.0
         * csi-node-driver-registrar: v2.0.1 → v2.3.0
+    * v1.27.101-nks3: Improved the stability of the add-on management feature.
     * v1.27.102-nks1
     * v1.27.102-nks2: Internal container versions have been updated.
         * csi-attacher: v3.0.2 → v3.3.0
@@ -2482,6 +2488,9 @@ Cinder CSI Plugin is a CSI driver that can provision and manage block storage in
         * csi-resizer: v1.0.1 → v1.3.0
         * csi-node-driver-registrar: v2.0.1 → v2.3.0
     * v1.27.102-nks3: Improved the stability of the add-on management feature.
+    * v1.27.102-nks4
+        * Improved the stability of the add-on management feature.
+        * Removed `effect: NoExecute` from cinder-csi-nodeplugin DaemonSet toleration.
 
 <a id="adoon-mgmt-addon-metrics-server">
 <a id="addon-mgmt-addon-list-metrics-server"></a>
@@ -2496,6 +2505,7 @@ Metrics Server is a Kubernetes component that collects resource usage metrics fr
 * Supported version list
     * v0.4.4-nks1
     * v0.4.4-nks2: Improved the stability of the add-on management feature.
+    * v0.4.4-nks3: Improved the stability of the add-on management feature.
 
 <a id="addon-mgmt-addon-snapshot-controller">
 <a id="addon-mgmt-addon-list-snapshot-controller"></a>
@@ -2510,6 +2520,7 @@ Snapshot Controller is a Kubernetes component that manages the lifecycle of volu
 * Supported version list
     * v4.1.1-nks1
     * v4.1.1-nks2: Improved the stability of the add-on management feature.
+    * v4.1.1-nks3: Improved the stability of the add-on management feature.
 
 <a id="addon-mgmt-addon-nfs-csi-plugin">
 <a id="addon-mgmt-addon-list-nfs-csi-plugin"></a>
@@ -2533,8 +2544,11 @@ NFS CSI Plugin is a CSI driver that can provision and manage NFS in NHN Cloud.
     * v1.0.1-nks2
         * Improved the stability of the add-on management feature.
         * Fixed an issue where non-user-modifiable resources/fields were not being checked.
+    * v1.0.1-nks3: Improved the stability of the add-on management feature.
     * v1.0.2-nks1
         * Fixed an issue where the optional snapshot configuration was being required as mandatory.
+    * v1.0.2-nks2: Improved the stability of the add-on management feature.
+    * v1.0.3-nks1: Fixed an issue where PVs were not deleted when deleting PVCs based on a StorageClass with a reclaimPolicy of Delete.
 
 <a id="loadbalancer-service"></a>
 ## LoadBalancer Service { #loadbalancer-service }
