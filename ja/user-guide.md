@@ -2368,7 +2368,6 @@ Cilium CNI を使用するクラスターで Hubble、Envoy、Prometheus など�
 ### アドオン一覧 { #addon-mgmt-addon-list }
 
 <a id="addon-mgmt-addon-calico"></a>
-
 #### Calico
 Calico は Kubernetes のネットワーキングとネットワークセキュリティを提供する CNI プラグインです。NHN Cloud が提供する Calico の詳細については、[Calico CNI の種類](#calico-cni-types) を参照してください。
 
@@ -2420,7 +2419,6 @@ calico は Pod IP、ノードごとの IP 帯域など、さまざまな情報�
 > * データストアを KDD → etcd に変更するアドオンアップデートはサポートされていません。
 
 <a id="addon-mgmt-addon-cilium"></a>
-
 #### Cilium
 Cilium は Kubernetes のネットワーキングとネットワークセキュリティを提供する CNI プラグインです。
 
@@ -2437,7 +2435,6 @@ Cilium は Kubernetes のネットワーキングとネットワークセキュ�
     * v1.18.0-nks2: アドオン管理機能の安定性を強化しました。
 
 <a id="addon-mgmt-addon-coredns"></a>
-
 #### CoreDNS
 CoreDNS は Kubernetes クラスターのデフォルト DNS サーバーです。
 
@@ -2460,7 +2457,6 @@ CoreDNS は Kubernetes クラスターのデフォルト DNS サーバーです�
 
 <a id="addon-mgmt-addon-cinder-csi-plugin">
 <a id="addon-mgmt-addon-list-cinder-csi-plugin"></a>
-
 #### Cinder CSI Plugin
 Cinder CSI Plugin は NHN Cloud でブロックストレージをプロビジョニングおよび管理できる CSI ドライバーです。
 
@@ -2497,7 +2493,6 @@ Cinder CSI Plugin は NHN Cloud でブロックストレージをプロビジョ
 
 <a id="adoon-mgmt-addon-metrics-server">
 <a id="addon-mgmt-addon-list-metrics-server"></a>
-
 #### Metrics Server
 Metrics Server は、オートスケーリングとモニタリングのためにノードと Pod からリソース使用指標を収集する Kubernetes の構成要素です。
 
@@ -2513,7 +2508,6 @@ Metrics Server は、オートスケーリングとモニタリングのため�
 
 <a id="addon-mgmt-addon-snapshot-controller">
 <a id="addon-mgmt-addon-list-snapshot-controller"></a>
-
 #### Snapshot Controller
 Snapshot Controller は、ボリュームスナップショットの作成、削除、PVC 連携を含むライフサイクルを管理する Kubernetes の構成要素です。
 
@@ -2529,7 +2523,6 @@ Snapshot Controller は、ボリュームスナップショットの作成、削
 
 <a id="addon-mgmt-addon-nfs-csi-plugin">
 <a id="addon-mgmt-addon-list-nfs-csi-plugin"></a>
-
 #### NFS CSI Plugin
 NFS CSI Plugin は NHN Cloud の NFS をプロビジョニングおよび管理できる CSI ドライバーです。
 
