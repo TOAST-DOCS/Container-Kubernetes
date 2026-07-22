@@ -78,7 +78,6 @@ NKSクラスタは、クラスタコントロールプレーンとワーカー�
 > - 表の日付はUTC+00:00基準です。
 
 <a id="new-policy-applied-version-v133-or-later"></a>
-
 ### 新規ポリシー適用バージョン (v1.33以上) { #new-policy-applied-version-v133-or-later }
 
 | バージョン | リリース | サービスサポート終了（アップグレードサポート） | サービスサポート終了（EOS） |
@@ -87,7 +86,6 @@ NKSクラスタは、クラスタコントロールプレーンとワーカー�
 | v1.34 | 2026. 5. | 2027.07.31 | 2028.05.31 |
 | v1.35 | 2026. 8. | 2027.10.30 | 2028.08.31 |
 <a id="old-policy-applied-version-v132-or-earlier"></a>
-
 ### 既存ポリシー適用バージョン (v1.32以下) { #old-policy-applied-version-v132-or-earlier }
 
 | バージョン | リリース | サービスサポート終了（アップグレードサポート） | サービスサポート終了（EOS） |
@@ -101,7 +99,6 @@ NKSクラスタは、クラスタコントロールプレーンとワーカー�
 ## プラットフォームバージョン { #platform-version }
 
 <a id="platform-version-info"></a>
-
 ### プラットフォームバージョン別情報 { #platform-version-info }
 
 | バージョン | リリース時期 | Kubernetes 互換バージョン | 説明 |
@@ -114,7 +111,6 @@ NKSクラスタは、クラスタコントロールプレーンとワーカー�
 | 1.202605.0 | 2026. 5. | v1.30–v1.34 | 機能改善<br>- ワーカーノード CGroup v1 → v2 マイグレーションのサポート<br>- Kubernetes v1.34 クラスターの `ImageVolume` feature gate の有効化<br>- kube-apiserver と pod 間の通信のための konnectivity のサポート<br>- etcd アップグレードのサポート |
 | 1.202608.0 | 2026. 8. | v1.31–v1.35 | addon インストール/アップデート失敗時のエラーメッセージ表示の改善 |
 <a id="platform-component-versions"></a>
-
 ### プラットフォームバージョン別の主要コンポーネントバージョン { #platform-component-versions }
 
 | プラットフォームバージョン | etcd | containerd |
