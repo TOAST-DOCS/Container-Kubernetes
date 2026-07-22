@@ -2368,6 +2368,7 @@ Cilium CNI を使用するクラスターで Hubble、Envoy、Prometheus など�
 ### アドオン一覧 { #addon-mgmt-addon-list }
 
 <a id="addon-mgmt-addon-calico"></a>
+
 #### Calico
 Calico は Kubernetes のネットワーキングとネットワークセキュリティを提供する CNI プラグインです。NHN Cloud が提供する Calico の詳細については、[Calico CNI の種類](#calico-cni-types) を参照してください。
 
@@ -2375,7 +2376,7 @@ Calico は Kubernetes のネットワーキングとネットワークセキュ�
 * オプション
     * mode
         * Calico の動作モードを決定します。
-        * サポートする動作モード: vxlan、ebpf
+        * サポートする動作モード: vxlan, ebpf
 * ユーザー変更不可リソースおよびフィールド
     * Deployment/calico-kube-controllers、ネームスペース kube-system
         * .spec.template.spec.containers[name="calico-kube-controllers"].image 
@@ -2389,10 +2390,13 @@ Calico は Kubernetes のネットワーキングとネットワークセキュ�
     * v3.28.2-nks1
     * v3.28.2-nks2: アドオン管理機能の安定性を強化しました。
     * v3.28.2-nks3: konnectivity 環境をサポートします。
+    * v3.28.2-nks4: アドオン管理機能の安定性を強化しました。
     * v3.30.2-nks1
     * v3.30.2-nks2: アドオン管理機能の安定性を強化しました。
     * v3.30.2-nks3: konnectivity 環境をサポートします。
-    * v3.31.4-nks1: データストアは KDD (Kubernetes Datastore Driver) で、konnectivity 環境をサポートします。
+    * v3.30.2-nks4: アドオン管理機能の安定性を強化しました。
+    * v3.31.4-nks1: データストアは KDD (Kubernetes Datastore Driver) であり、konnectivity 環境をサポートします。
+    * v3.31.4-nks2: アドオン管理機能の安定性を強化しました。
 
 > [注記]
 > * konnectivity をサポートするプラットフォームバージョン (1.202605.0 以上) でインストール/アップデート可能な calico バージョンは次のとおりです。
@@ -2416,6 +2420,7 @@ calico は Pod IP、ノードごとの IP 帯域など、さまざまな情報�
 > * データストアを KDD → etcd に変更するアドオンアップデートはサポートされていません。
 
 <a id="addon-mgmt-addon-cilium"></a>
+
 #### Cilium
 Cilium は Kubernetes のネットワーキングとネットワークセキュリティを提供する CNI プラグインです。
 
@@ -2429,30 +2434,33 @@ Cilium は Kubernetes のネットワーキングとネットワークセキュ�
         * .spec.template.spec.containers[name="cilium-operator"].image
 * サポートバージョン一覧
     * v1.18.0-nks1
+    * v1.18.0-nks2: アドオン管理機能の安定性を強化しました。
 
 <a id="addon-mgmt-addon-coredns"></a>
+
 #### CoreDNS
 CoreDNS は Kubernetes クラスターのデフォルト DNS サーバーです。
 
 * タイプ: kube-dns
 * オプション: なし
-* ユーザー変更不可リソースおよびフィールド
+* ユーザーが変更できないリソースおよびフィールド
     * Deployment/coredns、ネームスペース kube-system
         * .spec.template.spec.containers[name="coredns"].image'
 * サポートバージョン一覧
     * 1.8.4-nks1
     * 1.8.4-nks2
         * アドオン管理機能の安定性を強化しました。
-        * ユーザー変更不可リソースおよびフィールドを調整しました。
+        * ユーザーが変更できないリソースおよびフィールドを調整しました。
             * Deployment/coredns、ネームスペース kube-system
                 * .metadata.labels.k8s-app を削除
                 * .metadata.labels.kubernetes.io/name を削除
                 * .spec.template.spec.nodeSelector を削除
                 * .spec.template.spec.serviceAccountName を削除
-
+    * 1.8.4-nks3: アドオン管理機能の安定性を強化しました。
 
 <a id="addon-mgmt-addon-cinder-csi-plugin">
 <a id="addon-mgmt-addon-list-cinder-csi-plugin"></a>
+
 #### Cinder CSI Plugin
 Cinder CSI Plugin は NHN Cloud でブロックストレージをプロビジョニングおよび管理できる CSI ドライバーです。
 
@@ -2474,6 +2482,7 @@ Cinder CSI Plugin は NHN Cloud でブロックストレージをプロビジョ
         * csi-snapshotter: v3.0.2 → v3.0.3
         * csi-resizer: v1.0.1 → v1.3.0
         * csi-node-driver-registrar: v2.0.1 → v2.3.0
+    * v1.27.101-nks3: アドオン管理機能の安定性を強化しました。
     * v1.27.102-nks1
     * v1.27.102-nks2: 内部コンテナバージョンが変更されました。
         * csi-attacher: v3.0.2 → v3.3.0
@@ -2482,37 +2491,45 @@ Cinder CSI Plugin は NHN Cloud でブロックストレージをプロビジョ
         * csi-resizer: v1.0.1 → v1.3.0
         * csi-node-driver-registrar: v2.0.1 → v2.3.0
     * v1.27.102-nks3: アドオン管理機能の安定性を強化しました。
+    * v1.27.102-nks4
+        * アドオン管理機能の安定性を強化しました。
+        * cinder-csi-nodeplugin DaemonSet の toleration から `effect: NoExecute` を削除しました。
 
 <a id="adoon-mgmt-addon-metrics-server">
 <a id="addon-mgmt-addon-list-metrics-server"></a>
+
 #### Metrics Server
 Metrics Server は、オートスケーリングとモニタリングのためにノードと Pod からリソース使用指標を収集する Kubernetes の構成要素です。
 
 * タイプ: metrics-server
 * オプション: なし
-* ユーザー変更不可リソースおよびフィールド
+* ユーザーが変更不可能なリソースおよびフィールド
     * Deployment/metrics-server、ネームスペース kube-system
         * .spec.template.spec.containers[name="metrics-server"].image
 * サポートバージョン一覧
     * v0.4.4-nks1
     * v0.4.4-nks2: アドオン管理機能の安定性を強化しました。
+    * v0.4.4-nks3: アドオン管理機能の安定性を強化しました。
 
 <a id="addon-mgmt-addon-snapshot-controller">
 <a id="addon-mgmt-addon-list-snapshot-controller"></a>
+
 #### Snapshot Controller
 Snapshot Controller は、ボリュームスナップショットの作成、削除、PVC 連携を含むライフサイクルを管理する Kubernetes の構成要素です。
 
 * タイプ: snapshot-controller
 * オプション: なし
-* ユーザー変更不可リソースおよびフィールド
+* ユーザー変更不可のリソースおよびフィールド
     * Deployment/snapshot-controller、ネームスペース kube-system
         * .spec.template.spec.containers[name="snapshot-controller"].image
 * サポートバージョン一覧
     * v4.1.1-nks1
     * v4.1.1-nks2: アドオン管理機能の安定性を強化しました。
+    * v4.1.1-nks3: アドオン管理機能の安定性を強化しました。
 
 <a id="addon-mgmt-addon-nfs-csi-plugin">
 <a id="addon-mgmt-addon-list-nfs-csi-plugin"></a>
+
 #### NFS CSI Plugin
 NFS CSI Plugin は NHN Cloud の NFS をプロビジョニングおよび管理できる CSI ドライバーです。
 
@@ -2533,8 +2550,11 @@ NFS CSI Plugin は NHN Cloud の NFS をプロビジョニングおよび管理�
     * v1.0.1-nks2
         * アドオン管理機能の安定性を強化しました。
         * ユーザー変更不可リソース/フィールドを検査しない問題を修正しました。
+    * v1.0.1-nks3: アドオン管理機能の安定性を強化しました。
     * v1.0.2-nks1
-        * 任意項目である snapshot 設定が必須として要求されていた問題を修正しました。
+        * オプション項目である snapshot 設定が必須として要求される問題を修正しました。
+    * v1.0.2-nks2: アドオン管理機能の安定性を強化しました。
+    * v1.0.3-nks1: reclaimPolicy が Delete の storageclass ベースの PVC 削除時に PV が削除されない問題を修正しました。
 
 <a id="loadbalancer-service"></a>
 ## LoadBalancer サービス { #loadbalancer-service }
