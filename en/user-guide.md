@@ -2368,7 +2368,6 @@ Add-on types categorize the add-ons installed in a cluster according to their ch
 ### Add-on List { #addon-mgmt-addon-list }
 
 <a id="addon-mgmt-addon-calico"></a>
-
 #### Calico
 Calico is a CNI plugin that provides networking and network security for Kubernetes. For more information about Calico provided by NHN Cloud, see [Calico CNI types](#calico-cni-types).
 
@@ -2420,7 +2419,6 @@ The following versions use KDD as the datastore:
 > * Updating the add-on to change the datastore from KDD to etcd is not supported.
 
 <a id="addon-mgmt-addon-cilium"></a>
-
 #### Cilium
 Cilium is a CNI plugin that provides networking and network security for Kubernetes.
 
@@ -2437,7 +2435,6 @@ Cilium is a CNI plugin that provides networking and network security for Kuberne
     * v1.18.0-nks2: Improved stability for add-on management.
 
 <a id="addon-mgmt-addon-coredns"></a>
-
 #### CoreDNS
 CoreDNS is the default DNS server for Kubernetes clusters.
 
@@ -2460,7 +2457,6 @@ CoreDNS is the default DNS server for Kubernetes clusters.
 
 <a id="addon-mgmt-addon-cinder-csi-plugin">
 <a id="addon-mgmt-addon-list-cinder-csi-plugin"></a>
-
 #### Cinder CSI Plugin
 Cinder CSI Plugin is a CSI driver that can provision and manage block storage in NHN Cloud.
 
@@ -2497,7 +2493,6 @@ Cinder CSI Plugin is a CSI driver that can provision and manage block storage in
 
 <a id="adoon-mgmt-addon-metrics-server">
 <a id="addon-mgmt-addon-list-metrics-server"></a>
-
 #### Metrics Server
 Metrics Server is a Kubernetes component that collects resource usage metrics from nodes and pods for autoscaling and monitoring.
 
@@ -2513,7 +2508,6 @@ Metrics Server is a Kubernetes component that collects resource usage metrics fr
 
 <a id="addon-mgmt-addon-snapshot-controller">
 <a id="addon-mgmt-addon-list-snapshot-controller"></a>
-
 #### Snapshot Controller
 Snapshot Controller is a Kubernetes component that manages the lifecycle of volume snapshots, including creation, deletion, and PVC integration.
 
@@ -2529,7 +2523,6 @@ Snapshot Controller is a Kubernetes component that manages the lifecycle of volu
 
 <a id="addon-mgmt-addon-nfs-csi-plugin">
 <a id="addon-mgmt-addon-list-nfs-csi-plugin"></a>
-
 #### NFS CSI Plugin
 NFS CSI Plugin is a CSI driver that can provision and manage NFS in NHN Cloud.
 
