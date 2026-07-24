@@ -235,6 +235,7 @@ Enter information as required and click **Create Node Groups**, and a node group
 > Only the user who created the cluster can create node groups.
 
 <a id="nodegroup-delete"></a>
+
 ### Delete Node Groups { #nodegroup-delete }
 Select the node group to delete from the node group list and click **Delete Node Group** to proceed with deletion. It takes about 5 minutes to delete a node group; more time may be required depending on the node group status.
 
@@ -243,6 +244,9 @@ All nodes included in the node group are deleted in the following order:
 * The node is drained.
 * The node is deleted from the Kubernetes node resources.
 * The node is deleted at the instance level.
+
+> [Caution]
+> Pods using block storage-based PVCs are scheduled only on nodes in the availability zone (AZ) where the volume was created. If you delete the node group in that availability zone, the Pod will be stuck in a Pending state with a FailedScheduling status, which may cause a service outage. Volume data is preserved, and it will be automatically restored when you add a node or node group in the same availability zone. For more information, see [Volume Binding Mode](/Container/NKS/en/user-guide/#storageclass-volume-binding-mode-volumebindingmode).
 
 <a id="nodegroup-scale-out"></a>
 ### Add Nodes to a Node Group { #nodegroup-scale-out }
@@ -1521,6 +1525,7 @@ If the etcd upgrade fails, an automatic recovery procedure is triggered to resto
 <br>
 
 <a id="cluster-upgrade-upgrade-strategy"></a>
+
 #### Upgrade Strategy
 NKS clusters provide two upgrade strategies: Rolling Upgrade and Blue/Green Upgrade. You can select the appropriate strategy according to your operational policy to upgrade the cluster.
 
@@ -1593,6 +1598,9 @@ The NKS cluster control plane guarantees high availability. Because the control 
 
 ##### 2. Create a node group.
 Create a new node group to set up the Green environment for testing. New node groups created after the control plane component upgrade are created with the same Kubernetes version as the control plane. You can deploy the same resources as the Blue environment (existing node group) to the Green environment to validate the post-upgrade environment. At this time, you must separate application traffic so that the Blue environment does not affect the operation of the existing cluster.
+
+> [Caution]
+> If you have workloads that use block storage-based PVCs, you must select the same availability zone (AZ) for the Green node group as the existing Blue node group. Block storage volumes are fixed to the availability zone in which they were created, and cannot be attached to nodes in a different availability zone. If the availability zones do not match, Pods may remain in a Pending state with a FailedScheduling status. For more information, see [Volume Binding Mode](/Container/NKS/en/user-guide/#storageclass-volume-binding-mode-volumebindingmode).
 
 ##### 3. Validate the Green environment (new node group) and switch application traffic to the Green environment.
 Verify that the resources that existing users have been operating are compatible with the next version of Kubernetes in the newly built Green environment. Once validation is complete, switch application traffic from the existing Blue environment to the newly built Green environment. If a problem occurs during the validation phase in the Green environment, you can easily roll back by deleting the Green environment without switching traffic.
