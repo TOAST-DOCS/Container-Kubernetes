@@ -244,9 +244,6 @@ All nodes included in the node group are deleted in the following order:
 * The node is deleted from the Kubernetes node resources.
 * The node is deleted at the instance level.
 
-> [Caution]
-> Pods using block storage-based PVCs are scheduled only on nodes in the availability zone (AZ) where the volume was created. If you delete the node group in that availability zone, the Pod will be stuck in a Pending state with a FailedScheduling status, which may cause a service outage. Volume data is preserved, and it will be automatically restored when you add a node or node group in the same availability zone. For more information, see [Volume Binding Mode](/Container/NKS/en/user-guide/#storageclass-volume-binding-mode-volumebindingmode).
-
 <a id="nodegroup-scale-out"></a>
 ### Add Nodes to a Node Group { #nodegroup-scale-out }
 You can add nodes to an operating node group. The current list of nodes will appear upon clicking the node list tab on the node group information query page. Click the Add Node button and enter the number of nodes to add them.
@@ -1597,9 +1594,6 @@ The NKS cluster control plane guarantees high availability. Because the control 
 ##### 2. Create a node group.
 Create a new node group to set up the Green environment for testing. New node groups created after the control plane component upgrade are created with the same Kubernetes version as the control plane. You can deploy the same resources as the Blue environment (existing node group) to the Green environment to validate the post-upgrade environment. At this time, you must separate application traffic so that the Blue environment does not affect the operation of the existing cluster.
 
-> [Caution]
-> If you have workloads that use block storage-based PVCs, you must select the same availability zone (AZ) for the Green node group as the existing Blue node group. Block storage volumes are fixed to the availability zone in which they were created, and cannot be attached to nodes in a different availability zone. If the availability zones do not match, Pods may remain in a Pending state with a FailedScheduling status. For more information, see [Volume Binding Mode](/Container/NKS/en/user-guide/#storageclass-volume-binding-mode-volumebindingmode).
-
 ##### 3. Validate the Green environment (new node group) and switch application traffic to the Green environment.
 Verify that the resources that existing users have been operating are compatible with the next version of Kubernetes in the newly built Green environment. Once validation is complete, switch application traffic from the existing Blue environment to the newly built Green environment. If a problem occurs during the validation phase in the Green environment, you can easily roll back by deleting the Green environment without switching traffic.
 
@@ -2395,10 +2389,13 @@ Calico is a CNI plugin that provides networking and network security for Kuberne
     * v3.28.2-nks1
     * v3.28.2-nks2: Improved the stability of the add-on management feature.
     * v3.28.2-nks3: Added support for konnectivity environments.
+    * v3.28.2-nks4: Improved the stability of the add-on management feature.
     * v3.30.2-nks1
     * v3.30.2-nks2: Improved the stability of the add-on management feature.
     * v3.30.2-nks3: Added support for konnectivity environments.
+    * v3.30.2-nks4: Improved the stability of the add-on management feature.
     * v3.31.4-nks1: The datastore is KDD (Kubernetes Datastore Driver) and supports konnectivity environments.
+    * v3.31.4-nks2: Improved the stability of the add-on management feature.
 
 > [Note]
 > * The Calico versions that can be installed/updated on platform versions that support konnectivity (1.202605.0 or later) are as follows:
@@ -2435,6 +2432,7 @@ Cilium is a CNI plugin that provides networking and network security for Kuberne
         * .spec.template.spec.containers[name="cilium-operator"].image
 * Supported version list
     * v1.18.0-nks1
+    * v1.18.0-nks2: Improved the stability of the add-on management feature.
 
 <a id="addon-mgmt-addon-coredns"></a>
 #### CoreDNS
@@ -2455,6 +2453,7 @@ CoreDNS is the default DNS server for Kubernetes clusters.
                 * Removed .metadata.labels.kubernetes.io/name
                 * Removed .spec.template.spec.nodeSelector
                 * Removed .spec.template.spec.serviceAccountName
+    * 1.8.4-nks3: Improved the stability of the add-on management feature.
 
 
 <a id="addon-mgmt-addon-cinder-csi-plugin">
@@ -2480,6 +2479,7 @@ Cinder CSI Plugin is a CSI driver that can provision and manage block storage in
         * csi-snapshotter: v3.0.2 → v3.0.3
         * csi-resizer: v1.0.1 → v1.3.0
         * csi-node-driver-registrar: v2.0.1 → v2.3.0
+    * v1.27.101-nks3: Improved the stability of the add-on management feature.
     * v1.27.102-nks1
     * v1.27.102-nks2: Internal container versions have been updated.
         * csi-attacher: v3.0.2 → v3.3.0
@@ -2488,6 +2488,9 @@ Cinder CSI Plugin is a CSI driver that can provision and manage block storage in
         * csi-resizer: v1.0.1 → v1.3.0
         * csi-node-driver-registrar: v2.0.1 → v2.3.0
     * v1.27.102-nks3: Improved the stability of the add-on management feature.
+    * v1.27.102-nks4
+        * Improved the stability of the add-on management feature.
+        * Removed `effect: NoExecute` from the cinder-csi-nodeplugin DaemonSet toleration.
 
 <a id="adoon-mgmt-addon-metrics-server">
 <a id="addon-mgmt-addon-list-metrics-server"></a>
@@ -2502,6 +2505,7 @@ Metrics Server is a Kubernetes component that collects resource usage metrics fr
 * Supported version list
     * v0.4.4-nks1
     * v0.4.4-nks2: Improved the stability of the add-on management feature.
+    * v0.4.4-nks3: Improved the stability of the add-on management feature.
 
 <a id="addon-mgmt-addon-snapshot-controller">
 <a id="addon-mgmt-addon-list-snapshot-controller"></a>
@@ -2516,6 +2520,7 @@ Snapshot Controller is a Kubernetes component that manages the lifecycle of volu
 * Supported version list
     * v4.1.1-nks1
     * v4.1.1-nks2: Improved the stability of the add-on management feature.
+    * v4.1.1-nks3: Improved the stability of the add-on management feature.
 
 <a id="addon-mgmt-addon-nfs-csi-plugin">
 <a id="addon-mgmt-addon-list-nfs-csi-plugin"></a>
@@ -2539,8 +2544,11 @@ NFS CSI Plugin is a CSI driver that can provision and manage NFS in NHN Cloud.
     * v1.0.1-nks2
         * Improved the stability of the add-on management feature.
         * Fixed an issue where non-user-modifiable resources/fields were not being checked.
+    * v1.0.1-nks3: Improved the stability of the add-on management feature.
     * v1.0.2-nks1
         * Fixed an issue where the optional snapshot configuration was being required as mandatory.
+    * v1.0.2-nks2: Improved the stability of the add-on management feature.
+    * v1.0.3-nks1: Fixed an issue where PVs were not deleted when deleting PVCs based on a storageclass with a reclaimPolicy of Delete.
 
 <a id="loadbalancer-service"></a>
 ## LoadBalancer Service { #loadbalancer-service }

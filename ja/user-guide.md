@@ -244,9 +244,6 @@ k8s Node状態のアイコンの意味は次のとおりです。
 * 該当ノードが Kubernetes ノードリソースから削除されます。
 * 該当ノードがインスタンスレベルで削除されます。
 
-> [注意]
-> ブロックストレージベースのPVCを使用するPodは、ボリュームが作成されたアベイラビリティゾーン (AZ) のノードにのみスケジューリングされます。該当のアベイラビリティゾーンのノードグループを削除すると、PodがFailedScheduling状態でPendingになり、サービスが中断される可能性があります。ボリュームデータは保持されており、同じアベイラビリティゾーンにノードまたはノードグループを追加すると、自動的に復旧されます。詳細については、[ボリュームバインディングモード](/Container/NKS/ja/user-guide/#storageclass-volume-binding-mode-volumebindingmode)を参照してください。
-
 <a id="nodegroup-scale-out"></a>
 ### ノードグループへのノード追加 { #nodegroup-scale-out }
 動作中のノードグループにノードを追加できます。ノードグループ情報照会ページのノード一覧タブをクリックすると、現在のノード一覧が表示されます。ノード追加ボタンをクリックしてノード数を入力すると、ノードが追加されます。
@@ -1596,9 +1593,6 @@ NKS クラスターのコントロールプレーンは高可用性を保証し�
 ##### 2. ノードグループを作成します。
 新規ノードグループを作成して、テスト用の Green 環境を作成します。コントロールプレーンコンポーネントのアップグレード後に作成される新規ノードグループは、コントロールプレーンの Kubernetes バージョンと同じバージョンで作成されます。Green 環境に Blue 環境（既存のノードグループ）と同じリソースをデプロイして、アップグレード後の環境を検証できます。この際、Blue 環境が既存クラスターの運用に影響を与えないよう、アプリケーションのトラフィックを分離する必要があります。
 
-> [注意]
-> ブロックストレージベースの PVC を使用するワークロードがある場合、Green ノードグループの Availability Zone (AZ) を既存の Blue ノードグループと同じになるように選択する必要があります。ブロックストレージボリュームは作成された Availability Zone に固定されるため、別の Availability Zone のノードには接続することはできません。Availability Zone が一致しない場合、Pod が FailedScheduling 状態で Pending になる場合があります。詳細については、[ボリュームバインディングモード](/Container/NKS/ja/user-guide/#storageclass-volume-binding-mode-volumebindingmode)を参照してください。
-
 ##### 3. Green環境（新規ノードグループ）の検証後、アプリケーションのトラフィックをGreen環境に切り替えます。
 新しく構築した Green 環境で、既存のユーザーが運用していたリソースが次のバージョンの Kubernetes と正常に互換性があるかを検証し、検証が完了したらアプリケーションのトラフィックを既存の Blue 環境から新しく構築した Green 環境に切り替えます。Green 環境での検証段階で問題が発生した場合は、トラフィックを切り替えずに Blue 環境を削除することで簡単にロールバックできます。
 
@@ -2395,10 +2389,13 @@ Calico は Kubernetes のネットワーキングとネットワークセキュ�
     * v3.28.2-nks1
     * v3.28.2-nks2: アドオン管理機能の安定性を強化しました。
     * v3.28.2-nks3: konnectivity 環境をサポートします。
+    * v3.28.2-nks4: アドオン管理機能の安定性を強化しました。
     * v3.30.2-nks1
     * v3.30.2-nks2: アドオン管理機能の安定性を強化しました。
     * v3.30.2-nks3: konnectivity 環境をサポートします。
+    * v3.30.2-nks4: アドオン管理機能の安定性を強化しました。
     * v3.31.4-nks1: データストアは KDD (Kubernetes Datastore Driver) で、konnectivity 環境をサポートします。
+    * v3.31.4-nks2: アドオン管理機能の安定性を強化しました。
 
 > [注記]
 > * konnectivity をサポートするプラットフォームバージョン (1.202605.0 以上) でインストール/アップデート可能な calico バージョンは次のとおりです。
@@ -2435,6 +2432,7 @@ Cilium は Kubernetes のネットワーキングとネットワークセキュ�
         * .spec.template.spec.containers[name="cilium-operator"].image
 * サポートバージョン一覧
     * v1.18.0-nks1
+    * v1.18.0-nks2: アドオン管理機能の安定性を強化しました。
 
 <a id="addon-mgmt-addon-coredns"></a>
 #### CoreDNS
@@ -2455,6 +2453,7 @@ CoreDNS は Kubernetes クラスターのデフォルト DNS サーバーです�
                 * .metadata.labels.kubernetes.io/name を削除
                 * .spec.template.spec.nodeSelector を削除
                 * .spec.template.spec.serviceAccountName を削除
+    * 1.8.4-nks3: アドオン管理機能の安定性を強化しました。
 
 
 <a id="addon-mgmt-addon-cinder-csi-plugin">
@@ -2480,6 +2479,7 @@ Cinder CSI Plugin は NHN Cloud でブロックストレージをプロビジョ
         * csi-snapshotter: v3.0.2 → v3.0.3
         * csi-resizer: v1.0.1 → v1.3.0
         * csi-node-driver-registrar: v2.0.1 → v2.3.0
+    * v1.27.101-nks3: アドオン管理機能の安定性を強化しました。
     * v1.27.102-nks1
     * v1.27.102-nks2: 内部コンテナバージョンが変更されました。
         * csi-attacher: v3.0.2 → v3.3.0
@@ -2488,6 +2488,9 @@ Cinder CSI Plugin は NHN Cloud でブロックストレージをプロビジョ
         * csi-resizer: v1.0.1 → v1.3.0
         * csi-node-driver-registrar: v2.0.1 → v2.3.0
     * v1.27.102-nks3: アドオン管理機能の安定性を強化しました。
+    * v1.27.102-nks4
+        * アドオン管理機能の安定性を強化しました。
+        * cinder-csi-nodeplugin DaemonSet の toleration から `effect: NoExecute` を削除しました。
 
 <a id="adoon-mgmt-addon-metrics-server">
 <a id="addon-mgmt-addon-list-metrics-server"></a>
@@ -2502,6 +2505,7 @@ Metrics Server は、オートスケーリングとモニタリングのため�
 * サポートバージョン一覧
     * v0.4.4-nks1
     * v0.4.4-nks2: アドオン管理機能の安定性を強化しました。
+    * v0.4.4-nks3: アドオン管理機能の安定性を強化しました。
 
 <a id="addon-mgmt-addon-snapshot-controller">
 <a id="addon-mgmt-addon-list-snapshot-controller"></a>
@@ -2516,6 +2520,7 @@ Snapshot Controller は、ボリュームスナップショットの作成、削
 * サポートバージョン一覧
     * v4.1.1-nks1
     * v4.1.1-nks2: アドオン管理機能の安定性を強化しました。
+    * v4.1.1-nks3: アドオン管理機能の安定性を強化しました。
 
 <a id="addon-mgmt-addon-nfs-csi-plugin">
 <a id="addon-mgmt-addon-list-nfs-csi-plugin"></a>
@@ -2539,8 +2544,11 @@ NFS CSI Plugin は NHN Cloud の NFS をプロビジョニングおよび管理�
     * v1.0.1-nks2
         * アドオン管理機能の安定性を強化しました。
         * ユーザー変更不可リソース/フィールドを検査しない問題を修正しました。
+    * v1.0.1-nks3: アドオン管理機能の安定性を強化しました。
     * v1.0.2-nks1
         * 任意項目である snapshot 設定が必須として要求されていた問題を修正しました。
+    * v1.0.2-nks2: アドオン管理機能の安定性を強化しました。
+    * v1.0.3-nks1: reclaimPolicy が Delete の storageclass ベースの PVC 削除時に PV が削除されない問題を修正しました。
 
 <a id="loadbalancer-service"></a>
 ## LoadBalancer サービス { #loadbalancer-service }

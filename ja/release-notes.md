@@ -1,64 +1,93 @@
-<!-- pre-align:aligned sig=a9faa149ecf3 -->
+<!-- pre-align:aligned sig=8f6519afc382 -->
 
 <a id="container-nhn-kubernetes-service-nks-release-notes"></a>
 ## Container > Kubernetes > リリースノート { #container-nhn-kubernetes-service-nks-release-notes }
+
+<a id="aug-25-2026"></a>
+### 2026. 08. 25. { #aug-25-2026 }
+
+<a id="aug-25-2026-added-features"></a>
+#### 新規機能追加
+* Kubernetes v1.35.5をサポートします。
+
+<a id="aug-25-2026-platform-version-updates"></a>
+#### プラットフォームバージョンアップデート
+* 1.202608.0 追加
+    * Kubernetes 対応バージョン: v1.31–v1.35
+
+<a id="aug-25-2026-add-on-updates"></a>
+#### アドオン更新
+* アドオン追加
+    * calico v3.28.2-nks4
+    * calico v3.30.2-nks4
+    * calico v3.31.4-nks2
+    * cilium v1.18.0-nks2
+    * cinder_csi_plugin v1.27.101-nks3
+    * cinder_csi_plugin v1.27.102-nks4
+    * coredns 1.8.4-nks3
+    * metrics_server v0.4.4-nks3
+    * nfs_csi_plugin v1.0.1-nks3
+    * nfs_csi_plugin v1.0.2-nks2
+    * nfs_csi_plugin v1.0.3-nks1
+    * snapshot_controller v4.1.1-nks3
 
 <a id="may-27-2026"></a>
 ### 2026. 05. 27. { #may-27-2026 }
 
 <a id="may-27-2026-added-features"></a>
-#### 機能追加
+#### 新機能追加
 * Kubernetes v1.34.3をサポートします。
-    * k8s v1.34以上のバージョンにおいて、ワーカーノードイメージのCGroupバージョンによる制約事項が存在します。詳細は、[KubernetesバージョンとCGroupバージョンによる制約事項](/Container/NKS/ko/version-guide/#constraints-on-cgroup)を参照してください。
-    * k8s v1.34以上のバージョンにおいて、カスタムcontainerdレジストリ設定機能が動作しません。詳細は、[カスタムcontainerdレジストリ設定機能](/Container/NKS/ko/version-guide/#containerd-registry-config)を参照してください。
+    * k8s v1.34以降のバージョンでは、ワーカーノードイメージのCGroupバージョンに応じた制約事項があります。詳細については、[KubernetesバージョンとCGroupバージョンに応じた制約事項](/Container/NKS/ja/version-guide/#constraints-on-cgroup)を参照してください。
+    * k8s v1.34以降のバージョンでは、ユーザー定義containerdレジストリ設定機能が動作しません。詳細については、[ユーザー定義containerdレジストリ設定機能](/Container/NKS/ja/version-guide/#containerd-registry-config)を参照してください。
 * Cilium CNIをサポートします。
 
 <a id="may-27-2026-platform-version-updates"></a>
-#### プラットフォームバージョンのアップデート
-* 1.202605.0が追加されました。
-    * Kubernetes互換バージョン：v1.30～v1.34
+#### プラットフォームバージョンアップデート
+* 1.202605.0 追加
+    * Kubernetes 互換バージョン: v1.30〜v1.34
     * 機能追加
-        * ワーカーノードCGroup v1 → v2のマイグレーションサポート
-        * kube-apiserverとpod間の通信のためのkonnectivityサポート
-        * k8s v1.34クラスターの`ImageVolume` feature gate有効化
+        * ワーカーノード CGroup v1 → v2 マイグレーションのサポート
+        * kube-apiserver と Pod 間の通信のための konnectivity サポート
+        * k8s v1.34 クラスターの `ImageVolume` feature gate の有効化
 
 <a id="may-27-2026-add-on-updates"></a>
-#### アドオンのアップデート
-* 次のアドオンが追加されました。
+#### アドオンの更新
+* アドオン追加
     * nfs_csi_plugin v1.0.2-nks1
     * cilium v1.18.0-nks1
     * calico v3.31.4-nks1
     * calico v3.28.2-nks3
     * calico v3.30.2-nks3
-    
+
 <a id="march-17-2026"></a>
 ### 2026. 03. 17. { #march-17-2026 }
 
 <!-- TODO: translate body -->
 
 <a id="march-17-2026-platform-version-updates"></a>
-#### プラットフォームバージョンのアップデート
-
-<!-- TODO: translate body -->
+#### プラットフォームバージョンアップデート
+* 1.202602.1 追加
+    * 機能改善
+        * Service オブジェクトで作成された LB の安定性強化
 
 <a id="march-10-2026"></a>
 ### 2026. 03. 10. { #march-10-2026 }
 
 <a id="march-10-2026-platform-version-updates"></a>
 #### プラットフォームバージョンアップデート
-* 1.202602.0が追加されました。
-    * Kubernetes互換バージョン：v1.29–v1.33
+* 1.202602.0 追加
+    * Kubernetes互換バージョン: v1.29–v1.33
     * 機能追加
-        * Kubernetesテイント設定機能
-        * Kubernetesコンポーネント設定機能 max-pods設定対応
-        * Secure Key Managerを使用したetcdデータ暗号化対応
-        * CGroup v2 OSイメージ対応
+        * Kubernetesテイント設定機能
+        * Kubernetesコンポーネント設定機能のmax-pods設定のサポート
+        * Secure Key Managerを使用したetcdデータ暗号化のサポート
+        * CGroup v2 OSイメージのサポート
     * 機能改善
-        * ノード及びノードグループ削除時のロードバランサートラフィック消失改善
+        * ノードおよびノードグループ削除時のロードバランサートラフィック損失の改善
 
 <a id="march-10-2026-add-on-updates"></a>
-#### アドオンアップデート
-* 次のアドオンが追加されました。
+#### アドオンの更新
+* アドオンの追加
     * calico v3.30.2-nks2
     * coredns 1.8.4-nks2
     * metrics_server v0.4.4-nks2
@@ -67,20 +96,20 @@
     * nfs_csi_plugin v1.0.1-nks2
 
 <a id="march-10-2026-added-features"></a>
-#### 機能追加
-* CGroupがv2に設定されたOSイメージに対応します。
-    * 2026年3月以降に配布されるOSイメージは、CGroupがv2に設定されています。
-* Kubernetesコンポーネント設定機能により、kubeletの--max-podsを設定できます。
-* Kubernetesテイント設定機能が追加されました。
-* Secure Key Managerサービスを利用して、クラスターの機密データを暗号化/復号できます。
+#### 新機能追加
+* CGroup が v2 に設定された OS イメージをサポートします。
+    * 2026年3月以降に配布される OS イメージは、CGroup が v2 に設定されています。
+* Kubernetes コンポーネント設定機能で kubelet の --max-pods を設定できます。
+* Kubernetes テイント設定機能が追加されました。
+* Secure Key Manager サービスを使用して、クラスターの機密データを暗号化/復号化できます。
 
 <a id="december-23-2025"></a>
 ### 2025. 12. 23. { #december-23-2025 }
 
 <a id="december-23-2025-platform-version-updates"></a>
-#### プラットフォームバージョンのアップデート
-* 1.202511.1が追加されました。
-    * ヘルスチェック確認ポートの設定エラーを修正しました。
+#### プラットフォームバージョンアップデート
+* 1.202511.1 追加
+    * ヘルスチェック確認ポートの設定エラーを修正しました。
 
 <a id="december-23-2025-add-on-updates"></a>
 #### アドオンのアップデート
@@ -101,8 +130,8 @@
     * 詳細は[バージョンガイド](/Container/NKS/ko/version-guide)を参照してください。
 
 <a id="november-25-2025-updated-add-on"></a>
-#### アドオンアップデート
-* 次のアドオンが追加されました。
+#### アドオンの更新
+* アドオン追加
     * Calico CNI v3.30.2-nks1
     * Cinder CSI Plugin v1.27.101-nks1, v1.27.102-nks1
     * Metrics Server v0.4.4-nks1
@@ -110,12 +139,11 @@
     * NFS CSI Plugin v1.0.1-nks1
 
 <a id="november-25-2025-added-features"></a>
-#### 機能追加
+#### 新機能追加
 * Kubernetes v1.33.4をサポートします。
-* コントロールプレーンとワーカーノードグループのプラットフォームバージョンの照会及びアップグレード機能が追加されました。
-* ロードバランサー詳細オプション設定に、ヘルスチェックポート設定機能が追加されました。
-* ロードバランサー詳細オプション設定に、ヘルスチェックホストヘッダ設定機能が追加されました。
-
+* コントロールプレーンとワーカーノードグループのプラットフォームバージョンの照会およびアップグレード機能が追加されました。
+* ロードバランサーの詳細オプション設定にヘルスチェックポート設定機能が追加されました。
+* ロードバランサーの詳細オプション設定にヘルスチェックホストヘッダー設定機能が追加されました。
 
 <a id="july-15-2025"></a>
 ### 2025. 07. 15. { #july-15-2025 }
@@ -130,15 +158,14 @@
 ### 2025. 05. 27. { #may-27-2025 }
 
 <a id="may-27-2025-added-features"></a>
-#### 機能追加
+#### 新機能追加
 * Kubernetes v1.32.3をサポートします。
-* コントロールプレーンkubernetesコンポーネントログ保存機能を追加しました。
-* 指標ベースのオートスケーラー機能を追加しました。
-* コントロールプレーンKubernetesコンポーネントログ保存機能を追加しました。
-* ノードグループごとにフローティングIP自動割り当て機能を使用できます。
-* ノードグループごとにKubernetesラベル設定機能を使用できます。
+* コントロールプレーンのKubernetesコンポーネントログ保存機能が追加されました。
+* メトリクスベースのオートスケーラー機能が追加されました。
+* ノードグループ別のFloating IP自動割り当て機能を使用できます。
+* ノードグループ別のKubernetesラベル設定機能を使用できます。
 * Addon管理機能を使用できます。
-    * 詳細は[使用ガイド](/Container/NKS/ja/user-guide/#addon_mgmt)を参照してください。
+    * 詳細については、[使用ガイド](/Container/NKS/ja/user-guide/#addon-mgmt)を参照してください。
 
 <a id="may-27-2025-feature-updates"></a>
 #### 機能改善/変更
@@ -151,11 +178,11 @@
 ### 2025. 03. 04. { #march-4-2025 }
 
 <a id="march-4-2025-added-features"></a>
-#### 機能追加
+#### 新機能追加
 * Kubernetes v1.31.4をサポートします。
-* OIDC(openID connect)設定機能を使用できます。
+* OIDC（openID connect）設定機能を使用できます。
 * クラスターキーペアを変更できます。
-    * クラスターキーペアを設定したクラスターはサービスユーザーの権限で動作します。
+    * クラスターキーペアを設定したクラスターは、サービスユーザーの権限で動作します。
     * サービスユーザーの権限で動作するクラスターは、オーナーを変更/管理する必要がありません。
 
 <a id="march-4-2025-feature-updates"></a>
@@ -166,8 +193,8 @@
 ### 2024. 11. 26. { #november-26-2024 }
 
 <a id="november-26-2024-added-features"></a>
-#### 機能追加
-* Kubernetesコンポーネント設定機能を使用できます。
+#### 新規機能追加
+* Kubernetes コンポーネントの設定機能を使用できます。
 
 <a id="november-26-2024-feature-updates"></a>
 #### 機能改善
@@ -216,12 +243,12 @@
 ### 2024. 08. 27. { #august-27-2024 }
 
 <a id="august-27-2024-added-features"></a>
-#### 機能追加
-* ノードグループに追加セキュリティグループを指定する機能が追加されました。
-* ノードグループに追加ブロックストレージを指定する機能が追加されました。
+#### 新機能の追加
+* ノードグループに追加のセキュリティグループを指定する機能が追加されました。
+* ノードグループに追加のブロックストレージを指定する機能が追加されました。
 * Kubernetes v1.30.3をサポートします。
-* ロードバランサーの静的ルートを適用するかどうかを設定できます。
-* NKSレジストリを有効化できます。
+* ロードバランサーの静的ルート適用有無を設定できます。
+* NKSレジストリを有効にできます。
 
 <a id="august-27-2024-deprecated-image-support"></a>
 #### イメージサポート中断
@@ -231,7 +258,7 @@
 ### 2024. 07. 23. { #july-23-2024 }
 
 <a id="july-23-2024-added-features"></a>
-#### 機能追加
+#### 新機能の追加
 
 * ロードバランサー詳細オプション設定でL7ルールと条件を適用できます。
 * クラスタ作成時、Calico-VXLANとCalico-eBPF CNIを選択できます。
@@ -240,7 +267,7 @@
 ### 2024. 05. 28. { #may-28-2024 }
 
 <a id="may-28-2024-added-features"></a>
-#### 機能追加
+#### 新規機能の追加
 
 * Kubernetes v1.29.3をサポートします。
 * ロードバランサーのリスナープロトコルをTERMINATED_HTTPSに設定するとCertificate Managerの証明書を使用できます。
@@ -262,7 +289,7 @@
 ### 2024. 02. 27. { #february-27-2024 }
 
 <a id="february-27-2024-added-features"></a>
-#### 機能追加
+#### 新規機能の追加
 
 * 強化されたセキュリティルールをクラスタに適用できます。
 * クラスタAPIエンドポイントIPアクセス制御機能が追加されました。
@@ -273,10 +300,10 @@
 ### 2023. 11. 28. { #november-28-2023 }
 
 <a id="november-28-2023-added-features"></a>
-#### 機能追加
-* kubeletユーザー定義引数設定機能が追加されました。
-* ロードバランサー詳細オプション設定でメンバーサブネット設定機能が追加されました。
-* ロードバランサー詳細オプション設定でkeep-aliveタイムアウト値設定機能が追加されました。
+#### 新機能追加
+* kubeletのカスタム引数設定機能が追加されました。
+* ロードバランサーの詳細オプション設定として、メンバーサブネット設定機能が追加されました。
+* ロードバランサーの詳細オプション設定として、keep-aliveタイムアウト値の設定機能が追加されました。
 * 暗号化されたブロックストレージを使用してPVを作成する機能が追加されました。
 
 <a id="november-28-2023-image-update"></a>
@@ -301,7 +328,7 @@
 ### 2023. 08. 29. { #august-29-2023 }
 
 <a id="august-29-2023-added-features"></a>
-#### 機能追加
+#### 新規機能追加
 
 * Kubernetes v1.27.3をサポートします。
 * クラスタ作成時にKubernetes APIエンドポイントのプロパティを設定できます。
@@ -346,7 +373,7 @@
 ### 2023. 05. 30. { #may-30-2023 }
 
 <a id="may-30-2023-added-features"></a>
-#### 機能追加
+#### 新規機能の追加
 
 * Kubernetes v1.26.3をサポートします。
 * カスタムイメージをワーカーイメージとして活用する機能が追加されました。
@@ -380,7 +407,7 @@
 ### 2023. 03. 28. { #march-28-2023 }
 
 <a id="march-28-2023-added-features"></a>
-#### 機能追加
+#### 新規機能追加
 
 * クラスタCNI変更機能が追加されました。
     * 詳細については[使用ガイド](/Container/NKS/ja/user-guide/#_5)を参照してください。
@@ -410,7 +437,7 @@
 ### 2023. 01. 31. { #january-31-2023 }
 
 <a id="january-31-2023-added-features"></a>
-#### 機能追加
+#### 新機能の追加
 
 * クラスタOWNER変更機能が追加されました。
     * 詳細については[使用ガイド](/Container/NKS/ja/user-guide/#_4)をご覧ください。
@@ -424,7 +451,7 @@
 ### 2022. 12. 27. { #december-27-2022 }
 
 <a id="december-27-2022-added-features"></a>
-#### 機能追加
+#### 新機能の追加
 
 * イメージ追加
     * Rocky Linux 8.6 - Container (2022.12)
@@ -444,7 +471,7 @@
         * CentOS 7.9 - Container (2022.11.22)
 
 <a id="november-29-2022-added-features"></a>
-#### 機能追加
+#### 新規機能の追加
 
 * ノードの起動/停止機能を使用できます。
 * さまざまなタイプのロードバランサーを作成できます。
@@ -456,7 +483,7 @@
 ### 2022. 09. 27. { #september-27-2022 }
 
 <a id="september-27-2022-added-features"></a>
-#### 機能追加
+#### 新機能の追加
 
 * Kubernetes v1.24.3をサポートします。
 * クラスタ作成時、Kubernetes v1.20.12のサポートは終了します。ただし、使用中のクラスタには影響がありません。
@@ -468,7 +495,7 @@
 * ワーカーノードグループのアップグレード時に最大ノード数と最大サービス不可ノード数を指定できます。
 
 <a id="july-26-2022-added-features"></a>
-#### 機能追加
+#### 新規機能追加
 
 <!-- TODO: translate body -->
 
@@ -483,7 +510,7 @@
 ### 2022. 03. 29. { #march-29-2022 }
 
 <a id="march-29-2022-added-features"></a>
-#### 機能追加
+#### 新機能追加
 
 * Kubernetes v1.23.3をサポートします。
 * クラスタ作成時、Kubernetes v1.19.13はサポートしません。ただし、使用中のクラスタには影響がありません。
@@ -504,7 +531,7 @@
 * Kubernetesサービスの名前がNHN Kubernetes Service(NKS)に変更されました。
 
 <a id="january-25-2022-added-features"></a>
-#### 機能追加
+#### 新機能の追加
 
 * 以下のKubernetesバージョンをサポートします。
     * v1.20.12
@@ -538,15 +565,15 @@
 ### 2021. 11. 23. { #november-23-2021 }
 
 <a id="november-23-2021-added-features"></a>
-#### 機能追加
-* KubernetesサービスのためのPublic APIが公開されました。
-    * Public APIの詳しい内容は[APIガイド](/Container/NKS/ja/public-api)を参照してください。
+#### 新機能追加
+* Kubernetes サービス向けの Public API が公開されました。
+    * Public API の詳細については、[API ガイド](/Container/NKS/ja/public-api)を参照してください。
 
 <a id="october-26-2021"></a>
 ### 2021. 10. 26. { #october-26-2021 }
 
 <a id="october-26-2021-added-features"></a>
-#### 機能追加
+#### 新機能の追加
 
 * Kubernetes v1.19.13をサポートします。
 * LoadBalancerタイプのサービスオブジェクト作成時、ロードバランサーのさまざまなオプションを設定できます。 
@@ -557,7 +584,7 @@
 ### 2021. 07. 27. { #july-27-2021 }
 
 <a id="july-27-2021-added-features"></a>
-#### 機能追加
+#### 新規機能追加
 
 * ノードグループ作成時にユーザースクリプト機能を使用できます。
 * ワーカーノードにコンテナログローテーションの設定が追加されました。
@@ -569,7 +596,7 @@
 ### 2021. 06. 29. { #june-29-2021 }
 
 <a id="june-29-2021-added-features"></a>
-#### 機能追加
+#### 新規機能追加
 
 * Kubernetes v1.18.19をサポートします。
 * クラスターバージョンをアップグレードできます。
@@ -578,7 +605,7 @@
 ### 2021. 03. 23. { #march-23-2021 }
 
 <a id="march-23-2021-added-features"></a>
-#### 機能追加
+#### 新規機能追加
 
 * ユーザークラスターで発生したイベントをNHN CloudTrailで確認できます。
 
@@ -613,7 +640,7 @@
 <a id="november-24-2020"></a>
 ### 2020. 11. 24. { #november-24-2020 }
 <a id="november-24-2020-added-features"></a>
-#### 機能追加
+#### 新機能追加
 * オートスケーラー機能を使用できます。
 
 <a id="november-24-2020-feature-updates"></a>
@@ -623,9 +650,9 @@
 <a id="october-27-2020"></a>
 ### 2020. 10. 27. { #october-27-2020 }
 <a id="october-27-2020-more-feature"></a>
-#### 機能追加
-* KubernetesクラスターでGPU基盤のノードグループを使用できます。 
-    * イメージアップデート
+#### 新規機能追加
+* Kubernetes クラスターで GPU ベースのノードグループを使用できます。
+    * イメージの更新
         * CentOS 7.5 - Container (2020.10.27)
 
 <a id="09-22"></a>
