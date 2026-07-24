@@ -235,7 +235,6 @@ Enter information as required and click **Create Node Groups**, and a node group
 > Only the user who created the cluster can create node groups.
 
 <a id="nodegroup-delete"></a>
-
 ### Delete Node Groups { #nodegroup-delete }
 Select the node group to delete from the node group list and click **Delete Node Group** to proceed with deletion. It takes about 5 minutes to delete a node group; more time may be required depending on the node group status.
 
@@ -1525,7 +1524,6 @@ If the etcd upgrade fails, an automatic recovery procedure is triggered to resto
 <br>
 
 <a id="cluster-upgrade-upgrade-strategy"></a>
-
 #### Upgrade Strategy
 NKS clusters provide two upgrade strategies: Rolling Upgrade and Blue/Green Upgrade. You can select the appropriate strategy according to your operational policy to upgrade the cluster.
 
