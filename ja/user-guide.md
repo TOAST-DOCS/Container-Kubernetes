@@ -244,6 +244,9 @@ k8s Node状態のアイコンの意味は次のとおりです。
 * 該当ノードが Kubernetes ノードリソースから削除されます。
 * 該当ノードがインスタンスレベルで削除されます。
 
+> [注意]
+> ブロックストレージベースの PVC を使用する Pod は、ボリュームが作成された Availability Zone (AZ) のノードにのみスケジューリングされます。該当 Availability Zone のノードグループを削除すると、Pod が FailedScheduling 状態で Pending になりサービスが中断される可能性があります。ボリュームデータは保持され、同じ Availability Zone にノードまたはノードグループを追加すると自動的に復旧されます。詳細については、[ボリュームバインディングモード](/Container/NKS/ja/user-guide/#storageclass-volume-binding-mode-volumebindingmode)を参照してください。
+
 <a id="nodegroup-scale-out"></a>
 ### ノードグループへのノード追加 { #nodegroup-scale-out }
 動作中のノードグループにノードを追加できます。ノードグループ情報照会ページのノード一覧タブをクリックすると、現在のノード一覧が表示されます。ノード追加ボタンをクリックしてノード数を入力すると、ノードが追加されます。
@@ -1592,6 +1595,9 @@ NKS クラスターのコントロールプレーンは高可用性を保証し�
 
 ##### 2. ノードグループを作成します。
 新規ノードグループを作成して、テスト用の Green 環境を作成します。コントロールプレーンコンポーネントのアップグレード後に作成される新規ノードグループは、コントロールプレーンの Kubernetes バージョンと同じバージョンで作成されます。Green 環境に Blue 環境（既存のノードグループ）と同じリソースをデプロイして、アップグレード後の環境を検証できます。この際、Blue 環境が既存クラスターの運用に影響を与えないよう、アプリケーションのトラフィックを分離する必要があります。
+
+> [注意]
+> ブロックストレージベースの PVC を使用するワークロードがある場合、Green ノードグループの Availability Zone (AZ) を既存の Blue ノードグループと同じものを選択する必要があります。ブロックストレージボリュームは作成された Availability Zone に固定されるため、異なる Availability Zone のノードには接続できません。Availability Zone が一致しない場合、Pod が FailedScheduling 状態で Pending になる可能性があります。詳細については、[ボリュームバインディングモード](/Container/NKS/ja/user-guide/#storageclass-volume-binding-mode-volumebindingmode)を参照してください。
 
 ##### 3. Green環境（新規ノードグループ）の検証後、アプリケーションのトラフィックをGreen環境に切り替えます。
 新しく構築した Green 環境で、既存のユーザーが運用していたリソースが次のバージョンの Kubernetes と正常に互換性があるかを検証し、検証が完了したらアプリケーションのトラフィックを既存の Blue 環境から新しく構築した Green 環境に切り替えます。Green 環境での検証段階で問題が発生した場合は、トラフィックを切り替えずに Blue 環境を削除することで簡単にロールバックできます。
@@ -3910,12 +3916,14 @@ PV を Pod にマウントして使用します。
 プロビジョニングを行うには、まずストレージクラスが定義されている必要があります。ストレージクラスは、特定の特性に基づいてストレージを分類する方法を提供します。ストレージ提供者（provisioner）に関する情報をはじめ、メディアの種類や Availability Zone などを設定できます。
 
 <a id="storageclass-storage-provider-provisioner"></a>
+<a id="storageclass-storage-provider-provisioner"></a>
 #### ストレージ提供者（provisioner）
 ストレージの提供者情報を設定します。Kubernetes のバージョンによってサポートされるストレージ提供者情報は次のとおりです。
 
 * v1.19.13 以前のバージョン: provisioner フィールドを必ず `kubernetes.io/cinder` に設定する必要があります。
 * v1.20.12 以降のバージョン: provisioner フィールドを `cinder.csi.openstack.org` に設定して使用できます。
 
+<a id="storageclass-parameters-parameter"></a>
 <a id="storageclass-parameters-parameter"></a>
 #### パラメータ（parameter）
 ストレージクラスを通じて次のパラメータを設定できます。
@@ -3929,12 +3937,14 @@ PV を Pod にマウントして使用します。
     * 光州リージョン: **kr3-pub-a** または **kr3-pub-b**
 
 <a id="storageclass-volume-binding-mode-volumebindingmode"></a>
+<a id="storageclass-volume-binding-mode-volumebindingmode"></a>
 #### ボリュームバインディングモード（VolumeBindingMode）
 ボリュームバインディングモードは、ボリュームバインディングと動的プロビジョニングの開始タイミングを制御します。この設定は、ストレージ提供者が `cinder.csi.openstack.org` の場合にのみ設定可能です。
 
-* **Immediate**: パシステントボリュームクレームが作成されると即座にボリュームバインディングと動的プロビジョニングが開始されます。パシステントボリュームクレームが作成される時点では、ボリュームを接続する Pod に関する事前情報がない状態です。そのため、ボリュームの Availability Zone と Pod がスケジューリングされるノードの Availability Zone が異なる場合、Pod が正常に動作しないことがあります。
+* **Immediate**: パシステントボリュームクレームが作成されると即座にボリュームバインディングと動的プロビジョニングが開始されます。パシステントボリュームクレームが作成される時点では、ボリュームを接続する Pod に関する事前情報がない状態です。したがって、ボリュームの Availability Zone と Pod がスケジューリングされるノードの Availability Zone が異なる場合、Pod が正常に動作しないことがあります。
 * **WaitForFirstConsumer**: パシステントボリュームクレームが作成された時点では、ボリュームバインディングと動的プロビジョニングは行われません。このパシステントボリュームクレームが初めて Pod に接続されると、Pod がスケジューリングされたノードの Availability Zone 情報に基づいてボリュームバインディングと動的プロビジョニングを実行します。そのため、Immediate モードで発生するような、ボリュームの Availability Zone とインスタンスの Availability Zone が異なることで Pod が正常に動作しないケースは発生しません。
 
+<a id="storageclass-allow-volume-expansion-allowvolumeexpansion"></a>
 <a id="storageclass-allow-volume-expansion-allowvolumeexpansion"></a>
 #### ボリューム拡張の許可（allowVolumeExpansion）
 作成されたボリュームの拡張を許可するかどうかを設定します（未入力の場合は false が設定されます）。
