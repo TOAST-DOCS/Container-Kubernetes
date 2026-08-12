@@ -1,3 +1,5 @@
+<!-- machine_translated: true -->
+
 ## Container > NHN Kubernetes Service(NKS) > トラブルシューティング
 
 NHN Kubernetes Service(NKS)を使用する際に発生する可能性のあるさまざまな問題の解決方法を説明します。
@@ -40,6 +42,8 @@ EOF
     * クラスタオートスケーラーまたはノードグループサイズ調整を行って追加された新規ノードvs既存ノード
 
 上記のような状況で全てのワーカーノードに一貫性のあるログローテーション設定を維持したい場合は、次のような同期方法を検討することができます。
+
+このような状況で、すべてのワーカーノードに対して一貫したログローテーション設定を維持したい場合は、次のような同期方法を検討できます。
 
 ##### ```SSH経由でログローテーション設定ファイルを同期する```
 
@@ -126,7 +130,7 @@ $
 > [参考]上記の内容は同期を行うための1つの方法にすぎません。ユーザーの環境に、より適切な方法があれば、その方法で同期処理を行ってください。
 
 
-#### > Podの状態がImagePullBackOffと表示されます。
+### > PodのステータスがImagePullBackOffと表示されます。
 
 2020年11月20日からdockerhubはコンテナイメージpullリクエスト回数に次のような制限を設けるポリシーを実施しました。制限の詳細については、[Understanding Docker Hub Rate Limiting](https://www.docker.com/increase-rate-limits)と[Pricing & Subscriptions](https://www.docker.com/pricing)を参照してください。
 
@@ -143,6 +147,9 @@ NKSのワーカーノードでdockerhubからコンテナイメージをダウ�
 * dockerhubにログインすると、イメージを受け取ることができる数が増え、パブリックIPによる制限ではなくアカウント等級に基づいて制限を受けます。dockerhubアカウントを作成し、必要なpull数を提供するTierに加入してNKSを利用します。 [KubernetesでPrivate Registryを使用する方法](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)を参照してください。
 * dockerhubにログインしていない状況で独立したパブリックIPによる制約を受けたい場合は、ワーカーノードにFloating IPを割り当てます。
 
+
+* dockerhubにログインすると、取得できるイメージの数が増加し、パブリックIPによる制限ではなく、アカウントのTierによる制限が適用されます。dockerhubアカウントを作成し、必要なpull数を提供するTierに加入してNKSを利用します。[KubernetesでのPrivate Registryの使用方法](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)を参照してください。
+* dockerhubにログインしていない状況で、独立したパブリックIPによる制限を受けたい場合は、ワーカーノードにFloating IPを割り当てます。
 
 ### > クローズドネットワーク環境でfailed to pull image `k8s.gcr.io/pause:3.2`が発生します。
 クローズドネットワーク環境のクラスターがパブリックレジストリからイメージを取得できないため発生する問題であり、2024年8月以前に作成されたクラスターで発生する可能性があります。k8s.gcr.io/pause:3.2`イメージのように、デフォルトで配布されているイメージは、ワーカーノード作成時にNHN Cloud内部レジストリからプルされます。しかし、最初にイメージをプルされた後、イメージが削除された場合、問題が発生する可能性があります。クラスター作成時、基本的に配布されるイメージのリストは次のとおりです。
@@ -175,6 +182,37 @@ NKSのワーカーノードでdockerhubからコンテナイメージをダウ�
 * k8s.gcr.io/autoscaling/cluster-autoscaler
 * nvidia/k8s-device-plugin
 該当イメージに対して同じ問題が発生する可能性があります。
+
+* kubernetesui/dashboard
+* k8s.gcr.io/pause
+* k8s.gcr.io/kube-proxy
+* kubernetesui/dashboard
+* kubernetesui/metrics-scraper
+* quay.io/coreos/flannel
+* quay.io/coreos/flannel-cni
+* calico-kube-controllers
+* calico-typha
+* calico-cni
+* calico-node
+* coredns/coredns
+* k8s.gcr.io/metrics-server-amd64
+* k8s.gcr.io/metrics-server/metrics-server
+* gcr.io/google_containers/cluster-proportional-autoscaler-amd64
+* k8s.gcr.io/cpa/cluster-proportional-autoscaler-amd64
+* k8s.gcr.io/cpa/cluster-proportional-autoscaler-amd64
+* k8s.gcr.io/sig-storage/csi-attacher
+* k8s.gcr.io/sig-storage/csi-provisioner
+* k8s.gcr.io/sig-storage/csi-snapshotter
+* k8s.gcr.io/sig-storage/csi-resizer
+* k8s.gcr.io/sig-storage/csi-node-driver-registrar
+* k8s.gcr.io/sig-storage/snapshot-controller
+* docker.io/k8scloudprovider/cinder-csi-plugin
+* k8s.gcr.io/node-problem-detector
+* k8s.gcr.io/node-problem-detector/node-problem-detector
+* k8s.gcr.io/autoscaling/cluster-autoscaler
+* nvidia/k8s-device-plugin
+
+該当のイメージについても、同じ問題が発生する可能性があります。
 
 基本イメージはkubeletのImage garbage collectionによって削除されることがあります。 kubelet garbage collection関連情報は[Garbage Collection](https://kubernetes.io/docs/concepts/architecture/garbage-collection/)をご覧ください。NKSの場合、imageGCHighThresholdPercent, imageGCLowThresholdPercentがデフォルト値に設定されています。
 ```
@@ -396,4 +434,28 @@ kubectl -n kube-system set image deployment/calico-kube-controllers \
 [例]
 kubectl -n kube-system set image deployment/calico-kube-controllers \
   calico-kube-controllers=calico/kube-controllers:v3.24.1
+```
+### > GPU flavor ワーカーノードのGPU関連モニタリング情報が表示されません。
+
+dcgm-exporterが参照するライブラリリンクに問題があるため発生します。dcgm-exporterが`libdcgm.so.4`ライブラリを見つけられず実行に失敗し、その結果、GPU関連のモニタリング指標が収集されません。
+
+この問題は、以下のイメージを使用する GPU ワーカーノードで発生します。
+* Rocky Linux 8.10 - Container (2026.03.10)
+* Rocky Linux 9.7 - Container (2026.03.10)
+* Ubuntu Server 22.04.5 LTS - Container (2026.03.10)
+* Ubuntu Server 24.04.4 LTS - Container (2026.03.10)
+
+#### 症状発生時の確認方法
+GPU ワーカーノードで dcgm-exporter を実行すると、次のようなエラーログが出力されます。
+```
+# /usr/bin/dcgm-exporter --address localhost:9400
+time=2026-08-06T00:13:18.786+09:00 level=INFO msg="Starting dcgm-exporter" Version=4.4.0-4.5.0
+time=2026-08-06T00:13:18.792+09:00 level=ERROR msg="the libdcgm.so.4 library was not found. Install Data Center GPU Manager (DCGM)."
+```
+
+#### 解決方法
+この問題は、2026年8月の定期メンテナンス時に対処される予定です。定期メンテナンスまでの間は、各 GPU ワーカーノードで次のコマンドを実行して一時的に対処できます。
+```
+sed -i 's/DCGM_FI_PROF/#DCGM_FI_PROF/g' /etc/dcgm-exporter/default-counters.csv
+ldconfig && systemctl restart dcgm-exporter.service
 ```
