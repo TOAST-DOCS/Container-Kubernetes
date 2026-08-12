@@ -406,7 +406,7 @@ kubectl -n kube-system set image deployment/calico-kube-controllers \
 ```
 
 ### > GPU flavor 워커 노드의 GPU 관련 모니터링 정보가 노출되지 않습니다.
-dcgm-exporter가 참조하는 라이브러리 링크에 문제가 있어 발생하는 문제입니다. dcgm-exporter가 `libdcgm.so.4` 라이브러리를 찾지 못해 실행에 실패하며, 그 결과 GPU 관련 모니터링 지표가 수집되지 않습니다.
+dcgm-exporter가 참조하는 라이브러리 링크에 문제가 있어 발생합니다. dcgm-exporter가 `libdcgm.so.4` 라이브러리를 찾지 못해 실행에 실패하며, 그 결과 GPU 관련 모니터링 지표가 수집되지 않습니다.
 
 이 문제는 아래 이미지를 사용하는 GPU 워커 노드에서 발생합니다.
 * Rocky Linux 8.10 - Container (2026.03.10)
