@@ -1,3 +1,5 @@
+<!-- machine_translated: true -->
+
 ## Container > NHN Kubernetes Service (NKS) > Troubleshooting Guide
 
 This guide explains how to solve various problems that you might encounter while using NHN Kubernetes Service (NKS).
@@ -191,8 +193,6 @@ By enabling NKS registry, you can change the cluster settings to receive contain
 
 
 ### > Image pull for Flannel CNI related images from `quay.io` fails.
-
-The repository address for Flannel-related container images is based on `quay.io`. The pull service for these images on `quay.io` has been terminated, so they can no longer be pulled.
 
 Here's how to solve the problem:
 
@@ -406,4 +406,27 @@ kubectl -n kube-system set image deployment/calico-kube-controllers \
 [Example]
 kubectl -n kube-system set image deployment/calico-kube-controllers \
   calico-kube-controllers=calico/kube-controllers:v3.24.1
+```
+### > GPU-related monitoring information is not exposed for GPU flavor worker nodes.
+This occurs because there is a problem with the library link referenced by dcgm-exporter. dcgm-exporter fails to run because it cannot find the `libdcgm.so.4` library, and as a result, GPU-related monitoring metrics are not collected.
+
+This issue occurs on GPU worker nodes that use the following images:
+* Rocky Linux 8.10 - Container (2026.03.10)
+* Rocky Linux 9.7 - Container (2026.03.10)
+* Ubuntu Server 22.04.5 LTS - Container (2026.03.10)
+* Ubuntu Server 24.04.4 LTS - Container (2026.03.10)
+
+#### How to check when the issue occurs
+When you run dcgm-exporter on a GPU worker node, the following error log appears.
+```
+# /usr/bin/dcgm-exporter --address localhost:9400
+time=2026-08-06T00:13:18.786+09:00 level=INFO msg="Starting dcgm-exporter" Version=4.4.0-4.5.0
+time=2026-08-06T00:13:18.792+09:00 level=ERROR msg="the libdcgm.so.4 library was not found. Install Data Center GPU Manager (DCGM)."
+```
+
+#### Solution
+This issue is scheduled to be addressed during the regular maintenance in August 2026. Until the regular maintenance, you can apply a temporary workaround by running the following commands on each GPU worker node.
+```
+sed -i 's/DCGM_FI_PROF/#DCGM_FI_PROF/g' /etc/dcgm-exporter/default-counters.csv
+ldconfig && systemctl restart dcgm-exporter.service
 ```
