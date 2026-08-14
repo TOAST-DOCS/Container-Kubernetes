@@ -430,3 +430,27 @@ kubectl -n kube-system set image deployment/calico-kube-controllers \
 kubectl -n kube-system set image deployment/calico-kube-controllers \
   calico-kube-controllers=calico/kube-controllers:v3.24.1
 ```
+
+### > GPU flavor 워커 노드의 GPU 관련 모니터링 정보가 노출되지 않습니다.
+dcgm-exporter가 참조하는 라이브러리 링크에 문제가 있어 발생합니다. dcgm-exporter가 `libdcgm.so.4` 라이브러리를 찾지 못해 실행에 실패하며, 그 결과 GPU 관련 모니터링 지표가 수집되지 않습니다.
+
+이 문제는 아래 이미지를 사용하는 GPU 워커 노드에서 발생합니다.
+* Rocky Linux 8.10 - Container (2026.03.10)
+* Rocky Linux 9.7 - Container (2026.03.10)
+* Ubuntu Server 22.04.5 LTS - Container (2026.03.10)
+* Ubuntu Server 24.04.4 LTS - Container (2026.03.10)
+
+#### 증상 발생 시 확인 방법
+GPU 워커 노드에서 dcgm-exporter를 실행하면 아래와 같은 오류 로그가 출력됩니다.
+```
+# /usr/bin/dcgm-exporter --address localhost:9400
+time=2026-08-06T00:13:18.786+09:00 level=INFO msg="Starting dcgm-exporter" Version=4.4.0-4.5.0
+time=2026-08-06T00:13:18.792+09:00 level=ERROR msg="the libdcgm.so.4 library was not found. Install Data Center GPU Manager (DCGM)."
+```
+
+#### 해결 방안
+이 문제는 2026년 8월 정기 점검 시 조치될 예정입니다. 정기 점검 전까지는 각 GPU 워커 노드에서 아래 명령을 실행하여 임시로 조치할 수 있습니다.
+```
+sed -i 's/DCGM_FI_PROF/#DCGM_FI_PROF/g' /etc/dcgm-exporter/default-counters.csv
+ldconfig && systemctl restart dcgm-exporter.service
+```

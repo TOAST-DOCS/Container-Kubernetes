@@ -244,6 +244,11 @@ k8s Node 상태의 아이콘별 의미는 다음과 같습니다.
 * 해당 노드가 Kubernetes 노드 자원에서 삭제됩니다.
 * 해당 노드가 인스턴스 수준에서 삭제됩니다.
 
+> [주의]
+> 블록 스토리지 기반 PVC를 사용하는 Pod는 볼륨이 생성된 가용성 영역(AZ)의 노드에만 스케줄링됩니다. 해당 가용성 영역의 노드 그룹을 삭제하면 Pod가 FailedScheduling 상태로 Pending되어 서비스가 중단될 수 있습니다. 볼륨 데이터는 유지되며, 동일한 가용성 영역에 노드 또는 노드 그룹을 추가하면 자동으로 복구됩니다. 자세한 내용은 [볼륨 바인딩 모드](/Container/NKS/ko/user-guide/#storageclass-volume-binding-mode-volumebindingmode)를 참고하세요.
+
+
+
 <a id="nodegroup-scale-out"></a>
 ### 노드 그룹에 노드 추가 { #nodegroup-scale-out }
 동작 중인 노드 그룹에 노드를 추가할 수 있습니다. 노드 그룹 정보 조회 페이지의 노드 목록 탭을 클릭하면 현재 노드 목록이 나타납니다. 노드 추가 버튼을 클릭하고 노드 수를 입력하면 노드가 추가됩니다.
@@ -1128,7 +1133,6 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.28.3
 |  | Ubuntu Server 22.04.3 LTS (2026.03.10)  | 1.10 |
 |  | Ubuntu Server 24.04.3 LTS (2026.03.10)  | 1.10 |
 
-
 > [참고]
 > 커스텀 이미지를 워커 노드 이미지로 변환하는 과정에서 선택한 옵션에 따라 GPU 드라이버가 설치됩니다.
 > 따라서 커스텀 GPU 워커 노드 이미지를 생성하는 경우에도 커스텀 이미지 생성을 GPU 인스턴스로 할 필요가 없습니다.
@@ -1594,6 +1598,9 @@ NKS 클러스터 컨트롤 플레인은 고가용성을 보장합니다. 컨트�
 ##### 2. 노드 그룹을 생성합니다.
 신규 노드 그룹을 생성하여 테스트를 위한 Green 환경을 생성합니다. 컨트롤 플레인 구성 요소 업그레이드 이후 생성되는 신규 노드 그룹은 컨트롤 플레인의 Kubernetes 버전과 동일한 버전으로 생성됩니다. Green 환경에 Blue 환경(기존 노드 그룹)과 동일한 리소스를 배포하여 업그레이드 이후 환경의 검증을 수행할 수 있습니다. 이 때, Blue 환경이 기존 클러스터의 운영에 영향을 주지 않도록 애플리케이션 트래픽을 분리해야 합니다.
 
+> [주의]
+> 블록 스토리지 기반 PVC를 사용하는 워크로드가 있는 경우, Green 노드 그룹의 가용성 영역(AZ)을 기존 Blue 노드 그룹과 동일하게 선택해야 합니다. 블록 스토리지 볼륨은 생성된 가용성 영역에 고정되므로, 다른 가용성 영역의 노드에는 연결할 수 없습니다. 가용성 영역이 일치하지 않으면 Pod가 FailedScheduling 상태로 Pending될 수 있습니다. 자세한 내용은 [볼륨 바인딩 모드](/Container/NKS/ko/user-guide/#storageclass-volume-binding-mode-volumebindingmode)를 참고하세요.
+
 ##### 3. Green 환경(신규 노드 그룹)에 대한 검증 후 애플리케이션 트래픽을 Green 환경으로 전환합니다.
 새로 구축한 Green 환경에서 기존 사용자가 운영 중이던 리소스가 다음 버전의 쿠버네티스와 정상적으로 호환되는지에 대해 검증하고, 검증이 완료되면 애플리케이션 트래픽을 기존의 Blue 환경에서 새로 구축한 Green 환경으로 전환합니다. 만약 Green 환경에서의 검증 단계에서 문제가 발생하는 경우, 트래픽을 전환하지 않고 Blue 환경을 삭제함으로써 간단하게 롤백할 수 있습니다.
 
@@ -1740,7 +1747,6 @@ NHN Kubernetes Service(NKS)는 컨트롤 플레인에서 실행 중인 주요 Ku
     * kube-apiserver
     * kube-scheduler
     * kube-controller-manager
-
 
 > [참고]
 > 로그 전송 대상은 하나만 설정할 수 있습니다. Log & Crash Search와 Object Storage에서 모두 로그를 관리하려면, 먼저 전송 대상을 Log & Crash Search로 설정한 후, "로그 외부 보관" 기능을 사용해 해당 로그를 Object Storage에 추가 저장할 수 있습니다.
@@ -2254,7 +2260,7 @@ NHN Kubernetes Service(NKS)가 제공하는 Calico-VXLAN, Calic-eBPF는 아래�
 | egress | TCP | 111 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc portmapper 포트, 방향: csi-nfs-node(워커 노드) → NHN Cloud NAS 서비스 |
 | egress | TCP | 635 | IPv4 | NHN Cloud NAS 서비스 IP주소 | csi-nfs-node의 rpc mountd 포트, 방향: csi-nfs-node(워커 노드) → NHN Cloud NAS 서비스 |
 
-> [Calico-eBPF CNI 사용 시 주의] 
+> [Calico-eBPF CNI 사용 시 주의]
 > Calico-eBPF CNI를 사용할 경우 파드 간 통신과 노드에서 파드로의 통신은 파드에 설정된 포트를 통해 이루어집니다.
 > 강화된 보안 규칙을 사용하는 경우 해당 파드 포트에 대한 ingress, egress 보안 규칙을 수동으로 추가해야 합니다.
 
@@ -2295,7 +2301,6 @@ Cilium CNI를 사용하는 클러스터에서 Hubble, Envoy, Prometheus 같은 �
 | ingress | UDP | 1 - 65535 | IPv4 | NKS Control Plane | 모든 포트, 방향: NKS Control plane → 워커 노드 |
 | egress | 임의 | 1 - 65535 | IPv4 | 모두 허용 | 모든 포트, 방향: 워커 노드 → 외부 |
 | egress | 임의 | 1 - 65535 | IPv6 | 모두 허용 | 모든 포트, 방향: 워커 노드 → 외부 |
-
 
 <a id="addon-mgmt"></a>
 ## 애드온 관리 기능 { #addon-mgmt }
@@ -2391,10 +2396,13 @@ Calico는 Kubernetes의 네트워킹과 네트워크 보안을 제공하는 CNI 
     * v3.28.2-nks1
     * v3.28.2-nks2: 애드온 관리 기능의 안정성을 강화했습니다.
     * v3.28.2-nks3: konnectivity 환경을 지원합니다.
+    * v3.28.2-nks4: 애드온 관리 기능의 안정성을 강화했습니다.
     * v3.30.2-nks1
     * v3.30.2-nks2: 애드온 관리 기능의 안정성을 강화했습니다.
     * v3.30.2-nks3: konnectivity 환경을 지원합니다.
+    * v3.30.2-nks4: 애드온 관리 기능의 안정성을 강화했습니다.
     * v3.31.4-nks1: 데이터 저장소는 KDD(Kubernetes Datastore Driver)이고, konnectivity 환경을 지원합니다.
+    * v3.31.4-nks2: 애드온 관리 기능의 안정성을 강화했습니다.
 
 > [참고]
 > * konnectivity를 지원하는 플랫폼 버전(1.202605.0 이상)에서 설치/업데이트 가능한 calico 버전은 다음과 같습니다.
@@ -2431,6 +2439,7 @@ Cilium은 Kubernetes의 네트워킹과 네트워크 보안을 제공하는 CNI 
         * .spec.template.spec.containers[name="cilium-operator"].image
 * 지원 버전 목록
     * v1.18.0-nks1
+    * v1.18.0-nks2: 애드온 관리 기능의 안정성을 강화했습니다.
 
 <a id="addon-mgmt-addon-coredns"></a>
 #### CoreDNS
@@ -2451,6 +2460,7 @@ CoreDNS는 Kubernetes 클러스터의 기본 DNS 서버입니다.
                 * .metadata.labels.kubernetes.io/name 제거
                 * .spec.template.spec.nodeSelector 제거
                 * .spec.template.spec.serviceAccountName 제거
+    * 1.8.4-nks3: 애드온 관리 기능의 안정성을 강화했습니다.
 
 
 <a id="addon-mgmt-addon-cinder-csi-plugin">
@@ -2476,6 +2486,7 @@ Cinder CSI Plugin은 NHN Cloud에서 블록 스토리지를 프로비저닝하�
         * csi-snapshotter: v3.0.2 → v3.0.3
         * csi-resizer: v1.0.1 → v1.3.0
         * csi-node-driver-registrar: v2.0.1 → v2.3.0
+    * v1.27.101-nks3: 애드온 관리 기능의 안정성을 강화했습니다.
     * v1.27.102-nks1
     * v1.27.102-nks2: 내부 컨테이너 버전이 변경되었습니다.
         * csi-attacher: v3.0.2 → v3.3.0
@@ -2484,6 +2495,9 @@ Cinder CSI Plugin은 NHN Cloud에서 블록 스토리지를 프로비저닝하�
         * csi-resizer: v1.0.1 → v1.3.0
         * csi-node-driver-registrar: v2.0.1 → v2.3.0
     * v1.27.102-nks3: 애드온 관리 기능의 안정성을 강화했습니다.
+    * v1.27.102-nks4
+        * 애드온 관리 기능의 안정성을 강화했습니다.
+        * cinder-csi-nodeplugin DaemonSet toleration에서 `effect: NoExecute`를 제거했습니다.
 
 <a id="adoon-mgmt-addon-metrics-server">
 <a id="addon-mgmt-addon-list-metrics-server"></a>
@@ -2498,6 +2512,7 @@ Metrics Server는 오토 스케일링과 모니터링을 위해 노드와 파드
 * 지원 버전 목록
     * v0.4.4-nks1
     * v0.4.4-nks2: 애드온 관리 기능의 안정성을 강화했습니다.
+    * v0.4.4-nks3: 애드온 관리 기능의 안정성을 강화했습니다.
 
 <a id="addon-mgmt-addon-snapshot-controller">
 <a id="addon-mgmt-addon-list-snapshot-controller"></a>
@@ -2512,6 +2527,7 @@ Snapshot Controller는 볼륨 스냅숏의 생성, 삭제, PVC 연동을 포함�
 * 지원 버전 목록
     * v4.1.1-nks1
     * v4.1.1-nks2: 애드온 관리 기능의 안정성을 강화했습니다.
+    * v4.1.1-nks3: 애드온 관리 기능의 안정성을 강화했습니다.
 
 <a id="addon-mgmt-addon-nfs-csi-plugin">
 <a id="addon-mgmt-addon-list-nfs-csi-plugin"></a>
@@ -2535,8 +2551,11 @@ NFS CSI Plugin은 NHN Cloud의 NFS를 프로비저닝하고 관리할 수 있는
     * v1.0.1-nks2
         * 애드온 관리 기능의 안정성을 강화했습니다.
         * 사용자 변경 불가능 리소스/필드를 검사하지 않는 문제를 해결했습니다.
+    * v1.0.1-nks3: 애드온 관리 기능의 안정성을 강화했습니다.
     * v1.0.2-nks1
         * 선택 항목인 snapshot 설정이 필수로 요구되던 문제를 해결했습니다.
+    * v1.0.2-nks2: 애드온 관리 기능의 안정성을 강화했습니다.
+    * v1.0.3-nks1: reclaimPolicy가 Delete인 storageclass 기반의 PVC 삭제 시 PV가 삭제되지 않는 문제를 해결했습니다.
 
 <a id="loadbalancer-service"></a>
 ## LoadBalancer 서비스 { #loadbalancer-service }
@@ -3932,9 +3951,9 @@ PV를 파드에 마운트해 사용합니다.
 
 <a id="storageclass-volume-binding-mode-volumebindingmode"></a>
 #### 볼륨 바인딩 모드(VolumeBindingMode)
-볼륨 바인딩 모드는 볼륨 바인딩과 동적 프로비저닝의 시작 시점을 제어합니다. 이 설정은 스토리지 제공자가 cinder.csi.openstack.org인 경우에만 설정 가능합니다. 
+볼륨 바인딩 모드는 볼륨 바인딩과 동적 프로비저닝의 시작 시점을 제어합니다. 이 설정은 스토리지 제공자가 cinder.csi.openstack.org인 경우에만 설정 가능합니다.
 
-* **Immediate**: 퍼시스턴트 볼륨 클레임이 생성되는 즉시 볼륨 바인딩과 동적 프로비저닝이 시작됩니다. 퍼시스턴트 볼륨 클레임이 생성되는 시점에는 볼륨을 연결할 파드에 대한 사전 지식이 없는 상태입니다. 그래서 볼륨의 가용성 영역과 파드가 스케줄링될 노드의 가용성 영역이 서로 다르면 경우 파드가 정상 동작하지 않습니다. 
+* **Immediate**: 퍼시스턴트 볼륨 클레임이 생성되는 즉시 볼륨 바인딩과 동적 프로비저닝이 시작됩니다. 퍼시스턴트 볼륨 클레임이 생성되는 시점에는 볼륨을 연결할 파드에 대한 사전 지식이 없는 상태입니다. 따라서 볼륨의 가용성 영역과 파드가 스케줄링될 노드의 가용성 영역이 서로 다르면 경우 파드가 정상 동작하지 않습니다.
 * **WaitForFirstConsumer**: 퍼시스턴트 볼륨 클레임이 생성될 때는 볼륨 바인딩과 동적 프로비저닝을 하지 않습니다. 이 퍼시스턴트 볼륨 클레임이 처음으로 파드에 연결되면, 파드가 스케줄링된 노드의 가용성 영역 정보를 기반으로 볼륨 바인딩과 동적 프로비저닝을 수행합니다. 따라서 Immediate 모드와 같은 볼륨의 가용성 영역과 인스턴스의 가용성 영역이 서로 달라 파드가 정상 동작하지 않는 경우가 발생하지 않습니다.
 
 <a id="storageclass-allow-volume-expansion-allowvolumeexpansion"></a>

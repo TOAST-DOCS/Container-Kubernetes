@@ -1,7 +1,35 @@
-<!-- pre-align:aligned sig=a9faa149ecf3 -->
+<!-- pre-align:aligned sig=8f6519afc382 -->
 
 <a id="container-nhn-kubernetes-service-nks-release-notes"></a>
 ## Container > NHN Kubernetes Service (NKS) > Release Notes { #container-nhn-kubernetes-service-nks-release-notes }
+
+<a id="aug-25-2026"></a>
+### August 25, 2026 { #aug-25-2026 }
+
+<a id="aug-25-2026-added-features"></a>
+#### Added Features
+* Added support for Kubernetes v1.35.5.
+
+<a id="aug-25-2026-platform-version-updates"></a>
+#### Platform Version Updates
+* Added 1.202608.0
+    * Kubernetes compatible versions: v1.31–v1.35
+
+<a id="aug-25-2026-add-on-updates"></a>
+#### Addon Updates
+* Added
+    * calico v3.28.2-nks4
+    * calico v3.30.2-nks4
+    * calico v3.31.4-nks2
+    * cilium v1.18.0-nks2
+    * cinder_csi_plugin v1.27.101-nks3
+    * cinder_csi_plugin v1.27.102-nks4
+    * coredns 1.8.4-nks3
+    * metrics_server v0.4.4-nks3
+    * nfs_csi_plugin v1.0.1-nks3
+    * nfs_csi_plugin v1.0.2-nks2
+    * nfs_csi_plugin v1.0.3-nks1
+    * snapshot_controller v4.1.1-nks3
 
 <a id="may-27-2026"></a>
 ### May 27, 2026 { #may-27-2026 }
@@ -9,22 +37,22 @@
 <a id="may-27-2026-added-features"></a>
 #### Added Features
 * Added support for Kubernetes v1.34.3.
-    * There are constraints based on the CGroup version of the worker node image for k8s v1.34 and later. For more information, see [Constraints based on Kubernetes version and CGroup version](/Container/NKS/ko/version-guide/#constraints-on-cgroup).
-    * The custom containerd registry configuration feature does not work for k8s v1.34 and later. For more information, see [Custom containerd registry configuration feature](/Container/NKS/ko/version-guide/#containerd-registry-config).
+    * In k8s v1.34 and later, there are constraints based on the CGroup version of the worker node image. For more information, see [Constraints Based on Kubernetes Version and CGroup Version](/Container/NKS/en/version-guide/#constraints-on-cgroup).
+    * In k8s v1.34 and later, the custom containerd registry settings feature does not work. For more information, see [Custom containerd Registry Settings Feature](/Container/NKS/en/version-guide/#containerd-registry-config).
 * Added support for Cilium CNI.
 
 <a id="may-27-2026-platform-version-updates"></a>
 #### Platform Version Updates
-* Added 1.202605.0.
-    * Compatible Kubernetes versions: v1.30–v1.34
+* Added 1.202605.0
+    * Kubernetes compatible versions: v1.30–v1.34
     * Added Features
         * Added support for worker node CGroup v1 → v2 migration
         * Added support for konnectivity for communication between kube-apiserver and pods
-        * Enabled `ImageVolume` feature gate for k8s v1.34 clusters
+        * Enabled the `ImageVolume` feature gate for k8s v1.34 clusters
 
 <a id="may-27-2026-add-on-updates"></a>
 #### Add-on Updates
-* The following add-ons are added:
+* Added add-ons
     * nfs_csi_plugin v1.0.2-nks1
     * cilium v1.18.0-nks1
     * calico v3.31.4-nks1
@@ -36,17 +64,17 @@
 
 <a id="march-17-2026-platform-version-updates"></a>
 #### Platform Version Updates
-* Added 1.202602.1.
-    * Feature Updates
-        * Enhanced stability of LBs created with Service objects
+* Added 1.202602.1
+    * Improved
+        * Improved the stability of load balancers created with Service objects
 
 <a id="march-10-2026"></a>
 ### March 10, 2026 { #march-10-2026 }
 
 <a id="march-10-2026-platform-version-updates"></a>
 #### Platform Version Updates
-* Added 1.202602.0.
-    * Kubernetes compatible version: v1.29–v1.33
+* Added 1.202602.0
+    * Kubernetes compatible versions: v1.29–v1.33
     * Added Features
         * Kubernetes taint configuration
         * Support for Kubernetes component configuration for max-pods
@@ -57,7 +85,7 @@
 
 <a id="march-10-2026-add-on-updates"></a>
 #### Add-on Updates
-* The following add-ons are added:
+* Added add-ons
     * calico v3.30.2-nks2
     * coredns 1.8.4-nks2
     * metrics_server v0.4.4-nks2
@@ -67,19 +95,19 @@
 
 <a id="march-10-2026-added-features"></a>
 #### Added Features
-* Support for OS images with CGroup v2 enabled.
-    * Starting from March 2026, all new OS image deployments will be configured with CGroup v2.
-* Configure the kubelet --max-pods parameter through the Kubernetes configuration.
-* Added Kubernetes taint configuration feature.
-* Enable encryption and decryption of sensitive cluster data using the Secure Key Manager service.
+* Added support for OS images configured with CGroup v2.
+    * OS images deployed after March 2026 are configured with CGroup v2.
+* Added support for configuring kubelet's --max-pods through the Kubernetes component configuration feature.
+* Added the Kubernetes taint configuration feature.
+* Added support for encrypting and decrypting cluster confidential data using Secure Key Manager.
 
 <a id="december-23-2025"></a>
 ### December 23, 2025 { #december-23-2025 }
 
 <a id="december-23-2025-platform-version-updates"></a>
 #### Platform Version Updates
-* Added 1.202511.1.
-    * Fixed an issue for configurating health check port configuration.
+* Added 1.202511.1
+    * Fixed an issue with the health check port configuration settings.
 
 <a id="december-23-2025-add-on-updates"></a>
 #### Add-on Updates
@@ -100,8 +128,8 @@
     * For more information, refer to the [Version Guide](/Container/NKS/en/version-guide).
 
 <a id="november-25-2025-updated-add-on"></a>
-#### Updated Add-on
-* The following add-ons are added:
+#### Add-on Updates
+* Added add-ons
     * Calico CNI v3.30.2-nks1
     * Cinder CSI Plugin v1.27.101-nks1, v1.27.102-nks1
     * Metrics Server v0.4.4-nks1
@@ -111,10 +139,9 @@
 <a id="november-25-2025-added-features"></a>
 #### Added Features
 * Added support for Kubernetes v1.33.4.
-* Added the feature to query and upgrade the platform version of the control plane and worker node groups.
-* Added the feature to configure the health check port in the load balancer detailed options.
-* Added the feature to configure the health check host header in the load balancer detailed options.
-
+* Added the feature to view and upgrade the platform version of the control plane and worker node groups.
+* Added the feature to set a health check port as setting detailed options for load balancer.
+* Added the feature to set a health check host header as setting detailed options for load balancer.
 
 <a id="july-15-2025"></a>
 ### July 15, 2025 { #july-15-2025 }
@@ -130,13 +157,13 @@
 
 <a id="may-27-2025-added-features"></a>
 #### Added Features
-* Support for Kubernetes v1.32.3.
-* Added the feature to save control plane Kubernetes component logs.
+* Added support for Kubernetes v1.32.3.
+* Added the log storage feature for Kubernetes control plane components.
 * Added metric-based autoscaler.
 * The feature to automatically assign floating IPs per node group is available.
 * The feature to set Kubernetes labels by node group is available.
 * Addon management feature is available.
-    * For more information, see [User Guide](/Container/NKS/en/user-guide/#addon_mgmt).
+    * For more information, see [User Guide](/Container/NKS/en/user-guide/#addon-mgmt).
 
 <a id="may-27-2025-feature-updates"></a>
 #### Feature Updates
@@ -150,10 +177,10 @@
 
 <a id="march-4-2025-added-features"></a>
 #### Added Features
-* Support for Kubernetes v1.31.4.
+* Added support for Kubernetes v1.31.4.
 * The OIDC(openID connect) setting feature is available.
 * You can change the cluster key pair.
-    * Clusters that enabled a cluster key pair operate with the service user's permissions
+    * Clusters that enabled a cluster key pair operate with the service user's permissions.
     * Clusters that operate under the service user's permissions do not need to change/manage owners.
 
 <a id="march-4-2025-feature-updates"></a>
@@ -217,7 +244,7 @@ Changed the minimum disk size required to create worker nodes in images.
 #### Added Features
 * Added the feature to specify additional security groups to a node group.
 * Added the feature to specify additional block storage for a group of nodes.
-* Support for Kubernetes v1.30.3.
+* Added support for Kubernetes v1.30.3.
 * You can set whether the load balancer applies static routes.
 * You can enable the NKS registry.
 
@@ -273,8 +300,8 @@ Changed the minimum disk size required to create worker nodes in images.
 <a id="november-28-2023-added-features"></a>
 #### Added Features
 * Added the feature to set kubelet custom arguments.
-* Added the feature to set member subnets as setting detailed options for load balancer
-* Added the feature to set the keep-alive timeout value as setting detailed options for load balancer
+* Added the feature to set member subnets as setting detailed options for load balancer.
+* Added the feature to set the keep-alive timeout value as setting detailed options for load balancer.
 * Added the feature to create PVs using encrypted block storage.
 
 <a id="november-28-2023-image-update"></a>
@@ -414,8 +441,6 @@ Changed the minimum disk size required to create worker nodes in images.
 * Kubernetes v1.21.6 is no longer supported when creating clusters. But, clusters in use are not affected.
 * Proxy protocol can be set for the listener of load balancer.
 
-* You can create physical load balancers.
-
 <a id="december-27-2022"></a>
 ### December 27, 2022 { #december-27-2022 }
 
@@ -537,8 +562,8 @@ Changed the minimum disk size required to create worker nodes in images.
 
 <a id="november-23-2021-added-features"></a>
 #### Added Features
-* Released the public API for the Kubernetes service.
-     * For details on the public API, refer to [API Guide](/Container/NKS/en/public-api).
+* The Public API for Kubernetes services has been released.
+    * For more information about the Public API, see the [API Guide](/Container/NKS/en/public-api).
 
 <a id="october-26-2021"></a>
 ### October 26, 2021 { #october-26-2021 }
@@ -612,7 +637,7 @@ Changed the minimum disk size required to create worker nodes in images.
 ### November 24, 2020 { #november-24-2020 }
 <a id="november-24-2020-added-features"></a>
 #### Added Features
-* Autoscaling is now available.
+* Autoscaler feature is available.
 
 <a id="november-24-2020-feature-updates"></a>
 #### Feature Updates
@@ -621,9 +646,9 @@ Changed the minimum disk size required to create worker nodes in images.
 <a id="october-27-2020"></a>
 ### October 27, 2020 { #october-27-2020 }
 <a id="october-27-2020-more-feature"></a>
-#### More Feature
-* Kubernetes clusters now support GPU-based node groups.
-    * Image update
+#### Added Features
+* Added support for GPU-based node groups in Kubernetes clusters.
+    * Updated images
         * CentOS 7.5 - Container (2020.10.27)
 
 <a id="09-22"></a>
