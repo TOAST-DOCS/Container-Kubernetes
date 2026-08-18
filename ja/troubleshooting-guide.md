@@ -1,11 +1,16 @@
 <!-- machine_translated: true -->
 
-## Container > NHN Kubernetes Service(NKS) > トラブルシューティングガイド
+<!-- pre-align:aligned sig=0f5c5df2f6a5 -->
+
+<a id="container-nhn-kubernetes-service-nks-troubleshooting-guide"></a>
+## Container > NHN Kubernetes Service(NKS) > トラブルシューティングガイド { #container-nhn-kubernetes-service-nks-troubleshooting-guide }
 
 NHN Kubernetes Service(NKS)を使用する際に発生する可能性のあるさまざまな問題の解決方法を説明します。
 
-### > ワーカーノードのコンテナログファイルサイズが大きくなり、ディスクスペースが減ります。
+<a id="disk-space-is-reduced-as-the-size-of-the-worker-nodes-container-log-file-increases"></a>
+### > ワーカーノードのコンテナログファイルサイズが大きくなり、ディスクスペースが減ります。 { #disk-space-is-reduced-as-the-size-of-the-worker-nodes-container-log-file-increases }
 
+<a id="disk-space-is-reduced-as-the-size-of-the-worker-nodes-container-log-file-increases-set-log-rotation"></a>
 #### ログローテーションを設定する
 コンテナログファイルの管理（最大ファイルサイズ、ログファイル数の設定など）のために、ワーカーノードに以下の設定を追加します。
 
@@ -31,6 +36,7 @@ EOF
 > [参考] `CentOS 7.8 - Container (2021.07.27)`以降のインスタンスイメージには上記のようなログローテーション設定が基本的に提供されます。
 <br>
 
+<a id="disk-space-is-reduced-as-the-size-of-the-worker-nodes-container-log-file-increases-synchronize-log-rotation-setting"></a>
 #### ログローテーション設定を同期する
 
 クラスタ運用過程で次のような場合は一部ワーカーノードのログローテーション設定が変わる状況が発生することもあります。
@@ -135,7 +141,8 @@ $
 > [参考]上記の内容は同期を行うための1つの方法にすぎません。ユーザーの環境に、より適切な方法があれば、その方法で同期処理を行ってください。
 
 
-### > Podの状態がImagePullBackOffと表示されます。
+<a id="the-status-of-the-pod-appears-as-imagepullbackoff"></a>
+### > Podの状態がImagePullBackOffと表示されます。 { #the-status-of-the-pod-appears-as-imagepullbackoff }
 
 2020年11月20日からdockerhubはコンテナイメージpullリクエスト回数に次のような制限を設けるポリシーを実施しました。制限の詳細については、[Understanding Docker Hub Rate Limiting](https://www.docker.com/increase-rate-limits)と[Pricing & Subscriptions](https://www.docker.com/pricing)を参照してください。
 
@@ -156,7 +163,8 @@ NKSのワーカーノードでdockerhubからコンテナイメージをダウ�
 * Docker Hubにログインすると、イメージをプルできる数が増加し、パブリックIPによる制限ではなくアカウントのティアごとの制限が適用されます。Docker Hubアカウントを作成し、希望するプル数を提供するティアに登録してNKSを使用します。[KubernetesでのPrivate Registryの使用方法](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)を参照してください。
 * Docker Hubにログインしていない状態で、独立したパブリックIPによる制限を受けたい場合は、ワーカーノードにFloating IPを割り当てます。
 
-### > クローズドネットワーク環境でfailed to pull image `k8s.gcr.io/pause:3.2`が発生します。
+<a id="failed-to-pull-image-k8sgcriopause32-in-a-closed-network-environment"></a>
+### > クローズドネットワーク環境でfailed to pull image `k8s.gcr.io/pause:3.2`が発生します。 { #failed-to-pull-image-k8sgcriopause32-in-a-closed-network-environment }
 クローズドネットワーク環境のクラスターがパブリックレジストリからイメージを取得できないために発生する問題で、2024 年 8 月以前に作成されたクラスターで発生する場合があります。`k8s.gcr.io/pause:3.2` イメージのようにデフォルトでデプロイされているイメージは、ワーカーノード作成時に NHN Cloud 内部レジストリから pull されます。ただし、最初にイメージを pull した後にイメージが削除された場合、問題が発生する可能性があります。クラスター作成時にデフォルトでデプロイされるイメージの一覧は次のとおりです。
 
 * kubernetesui/dashboard
@@ -196,10 +204,12 @@ imageGCHighThresholdPercent=85 : ディスク使用率が 85% を超える場合
 imageGCLowThresholdPercent=80 : ディスク使用率が 80% 以下の場合、イメージ Garbage Collection を実行しません。
 ```
 
+<a id="failed-to-pull-image-k8sgcriopause32-in-a-closed-network-environment-workaround"></a>
 #### 解決策
 NKS レジストリを有効にすると、閉域網環境でコンテナイメージをパブリックレジストリから取得せず、NHN Cloud 内部レジストリから取得するようにクラスター設定を変更できます。NKS レジストリはクラスター照会画面から有効にできます。
 
-### > `quay.io`からFlannel CNI関連イメージのpullが失敗します。
+<a id="image-pull-for-flannel-cni-related-images-from-quayio-fails"></a>
+### > `quay.io`からFlannel CNI関連イメージのpullが失敗します。 { #image-pull-for-flannel-cni-related-images-from-quayio-fails }
 
 Flannel関連コンテナイメージのリポジトリドメインは`quay.io`をベースに設定されています。`quay.io`で該当イメージに対するpullサービスが終了したため、該当イメージをpullできなくなりました。
 
@@ -213,7 +223,8 @@ Flannel関連コンテナイメージのリポジトリドメインは`quay.io`�
     * 変更前: `quay.io/coreos/flannel*`
     * 変更後: `ghcr.io/flannel-io/flannel*`
     
-### > k8s v1.24 以上のバージョンで `pulling from host docker.pkg.github.com failed` エラーが発生し、イメージpullが失敗します。
+<a id="in-k8s-v124-and-later-the-pull-from-host-dockerpkggithubcom-failed-error-occurs-and-the-image-pull-fails"></a>
+### > k8s v1.24 以上のバージョンで `pulling from host docker.pkg.github.com failed` エラーが発生し、イメージpullが失敗します。 { #in-k8s-v124-and-later-the-pull-from-host-dockerpkggithubcom-failed-error-occurs-and-the-image-pull-fails }
 
 githubのパッケージレジストリがDockerレジストリからContainerレジストリに変更されたため発生した問題です。 v1.24以前のバージョンのクラスタはコンテナランタイムとしてDockerを使用して `docker.pkg.github.com` レジストリからイメージpullが可能でしたが、v1.24以降のバージョンのNKSクラスタはコンテナランタイムとしてcotainerdを使用するため、`docker.pkg.github.com` レジストリからイメージpullができません。パッケージレジストリの移行に関する詳細は[Migration to Container registry from the Docker registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/migrating-to-the-container-registry-from-the-docker-registry) を参照してください。
 
@@ -221,10 +232,12 @@ githubのパッケージレジストリがDockerレジストリからContainer�
 解決方法は次のとおりです。
 Podマニフェストに定義されたimage URLのbaseを`docker.pkg.github.com`から`gchr.io`に変更します。
 
-### > `cannot allocate memory`エラーが発生し、Podの状態が`FailedCreatePodContainer`と表示されます。
+<a id="cannot-allocate-memory-error-occurs-and-the-pods-status-appears-as-failedcreatepodcontainer"></a>
+### > `cannot allocate memory`エラーが発生し、Podの状態が`FailedCreatePodContainer`と表示されます。 { #cannot-allocate-memory-error-occurs-and-the-pods-status-appears-as-failedcreatepodcontainer }
 
 Linuxカーネルの機能の中でmemory cgroupに対するkernel object accounting機能のバグで発生する現象です。主にLinuxカーネル3.x, 4.xバージョンで発生し、dying memory cgroup problem問題として知られています。ユーザーがイメージレベルでmemory cgroupに対するkernel object accounting機能を無効にしてこの問題を回避できます。
 
+<a id="cannot-allocate-memory-error-occurs-and-the-pods-status-appears-as-failedcreatepodcontainer-apply-the-workaround-to-existing-clusters"></a>
 #### 作成済みのクラスタに解決策を適用
 ワーカーノードに接続してブートオプションを変更し、再起動します。
 
@@ -248,6 +261,7 @@ $ reboot
 
 この問題は常に発生するわけではなく、ユーザーのアプリケーション特性によって発生する可能性があります。もし問題発生が懸念される場合、NKSのカスタムイメージ機能を利用して、最初から上記のような解決策が適用されたワーカーノードイメージを使用できます。
 
+<a id="cannot-allocate-memory-error-occurs-and-the-pods-status-appears-as-failedcreatepodcontainer-apply-the-workaround-to-newly-created-clusters-using-the-nks-custom-image-feature"></a>
 #### NKSのカスタムイメージ機能を使って新しく作成したクラスタに解決策を適用
 NKS では、ユーザーのカスタムイメージを基にしたワーカーノードグループを作成する機能を提供しています。NKS カスタムイメージ機能を使用して、memory cgroup に対する kernel object accounting 機能が無効化されたイメージを作成し、クラスター作成時に活用できます。カスタムイメージ使用機能の詳細については、[カスタムイメージをワーカーイメージとして活用](/Container/NKS/ja/user-guide/#custom-image)を参照してください。
 
@@ -261,7 +275,8 @@ sudo grub2-mkconfig -o /boot/grub2/grub.cfg
 ```
 
 
-### > rpc.statd is not running but is required for remote lockingエラーが発生し、PodでNASボリュームマウントが失敗します。
+<a id="rpcstatd-is-not-running-but-is-required-for-remote-locking-error-occurs-and-the-pod-fails-to-mount-the-nas-volume"></a>
+### > rpc.statd is not running but is required for remote lockingエラーが発生し、PodでNASボリュームマウントが失敗します。 { #rpcstatd-is-not-running-but-is-required-for-remote-locking-error-occurs-and-the-pod-fails-to-mount-the-nas-volume }
 
 ワーカーノードのrpc.statdプロセスがゾンビプロセスになったり、管理者のコマンドによって停止して発生する問題です。ボリュームをマウントするためには、ワーカーノードでrpcbindとrpc.statdプロセスが正常に実行されている必要があります。解決策は次のとおりです。
 ```
@@ -269,7 +284,8 @@ systemctl restart rpc-statd
 systemctl restart rpcbind
 ```
 
-### > PV容量を増設しても、Podのファイルシステムに増設された容量が反映されません。
+<a id="the-pods-file-system-does-not-reflect-the-increased-capacity-after-the-pv-capacity-is-increased"></a>
+### > PV容量を増設しても、Podのファイルシステムに増設された容量が反映されません。 { #the-pods-file-system-does-not-reflect-the-increased-capacity-after-the-pv-capacity-is-increased }
 2024年8月以前に作成されたバージョン 1.20 以降のクラスターで発生する可能性がある問題です。以下のスクリプトを実行することで、クラスターにデプロイされた cinder-csi-driver をアップデートして問題を解決できます。スクリプト実行後、新規作成または容量拡張された PV にのみ設定のアップデートが反映されます。
 
 kubeconfig_file_path変数にクラスターのkubeconfigファイルが位置する絶対パス値を定義した後、スクリプトを実行します。
@@ -305,12 +321,14 @@ kubectl -n kube-system rollout restart daemonet cinder-csi-nodeplugin
 kubectl -n kube-system rollout restart statefulset cinder-csi-controllerplugin
 ```
 
-### > timed out waiting for conditionエラーが発生し、Podのボリュームマウントが失敗します。
+<a id="error-of-timed-out-waiting-for-condition-occurs-and-the-volume-mount-to-the-pod-fails"></a>
+### > timed out waiting for conditionエラーが発生し、Podのボリュームマウントが失敗します。 { #error-of-timed-out-waiting-for-condition-occurs-and-the-volume-mount-to-the-pod-fails }
 Pod に大きなサイズのボリュームをマウントする場合に発生する可能性がある問題です。デフォルトで Kubernetes は、ボリュームをマウントする際に Pod の SecurityContext に指定された fsGroup と一致するよう、各ボリュームの内容に対する所有権と権限を変更します。ボリュームが大きい場合、所有権と権限の確認および変更に多くの時間がかかり、タイムアウトが発生する場合があります。
 
 タイムアウトの発生を防ぐために、securityContextのfsGroupChangePolicyフィールドを使用して、Kubernetesがボリュームの所有権と権限を確認して管理する方法を変更できます。詳細は[Configure volume permission and ownership change policy for pods](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#configure-volume-permission-and-ownership-change-policy-for-pods)を参照してください。
 
-### > Calico-eBPF CNIを使用するクラスターのPodにhostnetwork: true, dnsPolicy: ClusterFirstWithHostNetオプションを設定すると、UDP通信の問題が発生します。
+<a id="setting-the-hostnetwork-true-dnspolicy-clusterfirstwithhostnet-option-on-a-pod-in-a-cluster-with-calico-ebpf-cni-causes-udp-communication-issues"></a>
+### > Calico-eBPF CNIを使用するクラスターのPodにhostnetwork: true, dnsPolicy: ClusterFirstWithHostNetオプションを設定すると、UDP通信の問題が発生します。 { #setting-the-hostnetwork-true-dnspolicy-clusterfirstwithhostnet-option-on-a-pod-in-a-cluster-with-calico-ebpf-cni-causes-udp-communication-issues }
 Calico v3.28.0 において、UDP 通信中に BPF NAT テーブルがネットワークパケットを正しく処理できないことで発生する問題です。eBPF を使用する場合、TCP は `CTLB(connect-time load balancing)` 方式で通信し、UDP は BPF が管理する `NAT テーブル` を通じて通信します。この問題は、UDP 通信も CTLB 方式に変更することで解決できます。
 
 `CTLB(connect-time load balancing)`は、ネットワークロードバランシング技術の1つで、クライアントがサーバーに初めて接続する際、最初のパケットでバックエンドサーバーを選択し、その後の全てのトラフィックは選択されたバックエンドサーバーに直接転送されます。これにより、セッションの永続性が保証され、毎回ロードバランシングを実行するオーバーヘッドを減らすことができます。
@@ -329,22 +347,27 @@ Podのテンプレートが修正されると、ローリングアップデー�
     value: "Disabled"
 ```
 
+<a id="setting-the-hostnetwork-true-dnspolicy-clusterfirstwithhostnet-option-on-a-pod-in-a-cluster-with-calico-ebpf-cni-causes-udp-communication-issues-cautions-for-setting-up-udp-communication-after-applying-the-workaround"></a>
 #### 解決策適用後、UDP通信を設定する際の注意事項
 UDP は非接続型プロトコルであり、サーバー/クライアント間の通信時に別途セッションを確立したり接続を維持したりせずにデータを送信します。しかし、Golang の `net.DialUDP()` 関数のような UDP の `connect()` 関数を使用すると、UDP ソケットを特定のアドレスと接続し、指定されたアドレスにのみデータを送受信できます。
 Calico の eBPF を使用する場合、UDP に CTLB(connect-time load balancing) が有効なクラスターに UD `connect()` 関数を使用する Pod をデプロイした場合、サーバーの役割を担う Pod が再デプロイされると通信の問題が発生する場合があります。これは、UDP ソケットが初期接続されたサーバーアドレスにのみデータ送信を試みるためです。サーバー Pod が再デプロイされると IP アドレスやネットワーク経路が変更される場合があり、UDP connect() ソケットは以前のサーバーアドレスにのみデータを送信するため、通信に失敗する可能性があります。
 この問題は UDP connect() の動作方式と CTLB 環境で発生する既知の問題であるため、Calico eBPF と UDP CTLB を使用するクラスターで UDP の connect() 関数を使用する場合は、このような通信の問題が発生する可能性があることを認識し、注意が必要です。
 
-### > Calico-eBPFクラスターでistioが誤動作します。
+<a id="istio-is-not-working-properly-in-a-calico-ebpf-cluster"></a>
+### > Calico-eBPFクラスターでistioが誤動作します。 { #istio-is-not-working-properly-in-a-calico-ebpf-cluster }
 eBPF が有効になると、`CTLB(connect-time load balancing)` 方式で接続時点にロードバランシングを実行し、クライアントがサービスへの接続を試みる際に最初のパケットでバックエンド Pod を選択し、以降のすべてのパケットはそのバックエンドに直接転送されます。一方、Istio はサービスメッシュを構成するためにサイドカープロキシをデプロイし、プロキシはアプリケーショントラフィックを傍受して制御および監視の役割を担います。
 CTLB が有効な場合、パケットは BPF MAP から目的地の Pod に直接転送され、この過程でパケットが変換されます。そのため、Istio のプロキシを経由せず、パケットが直接目的地の Pod に転送されます。このような eBPF ネットワーキング構造により、Istio の機能が正常に動作しない場合があります。istio を使用したクラスター管理が必要な場合は、Calico-VXLAN クラスターの使用を検討する必要があります。
 
-### > Calico-eBPF CNIを使用するクラスターでノード削減後、増設時にネットワーク障害が発生します。
+<a id="in-a-cluster-using-calico-ebpf-cni-network-failures-occur-when-scaling-up-after-node-reduction"></a>
+### > Calico-eBPF CNIを使用するクラスターでノード削減後、増設時にネットワーク障害が発生します。 { #in-a-cluster-using-calico-ebpf-cni-network-failures-occur-when-scaling-up-after-node-reduction }
 Calico v3.28.0 の calico/kube-controllers で発見されたバグにより発生する問題です。ノード削減の進行時に calico/kube-controllers Pod がデプロイされたノードが削除されると、その Pod は別のノードにスケジューリングされて実行されます。calico/kube-controllers が再実行される間、ノード情報が同期されません。この状態で削除したノードと同じ名前のノードが追加されると、ネットワーク障害が発生する場合があります。
 
 この問題はCalico v3.28.2で修正されました。Calico v3.28.2を使うためには、Kubernetesのバージョンをアップグレードするか、クラスターを再作成する必要があります。
 
-### > クラスターアップグレードに失敗します。
+<a id="failed-to-upgrade-clusters"></a>
+### > クラスターアップグレードに失敗します。 { #failed-to-upgrade-clusters }
 
+<a id="failed-to-upgrade-clusters-when-creating-an-nks-check-whether-finalizers-are-set-on-the-resources-that-are-deployed-by-default"></a>
 #### NKS作成時に基本的に配布されるリソースにfinalizersが設定されているかどうかを確認する必要があります。
 NKS 作成時にデプロイされたリソースに finalizers が設定されている場合、リソースを削除できずアップグレードが失敗します。すべてのワーカーノードグループのアップグレードが完了すると、NKS 初期デプロイリソースが再デプロイされます。この過程で NKS 初期デプロイリソースに finalizers が設定されていると、リソースの再デプロイに失敗してアップグレードが中断されます。この問題を解決するには、アップグレード前に NKS 初期デプロイリソースの finalizers 設定を削除する必要があります。
 
@@ -358,17 +381,20 @@ kubectl patch clusterrole calico-kube-controllers --type=json -p='[{"op": "remov
 ```
 
 
-### > NKSレジストリが非活性状態のv1.29.3以下バージョンのクラスタで、ノード増設またはノードグループ追加時にcalico-node Podのデプロイに失敗し、ノード初期化作業に失敗します。
+<a id="when-scaling-out-nodes-or-adding-node-groups-in-a-cluster-running-v1293-or-earlier-with-an-inactive-nks-registry-the-calico-node-pod-deployment-fails-causing-the-node-initialization-task-to-fail"></a>
+### > NKSレジストリが非活性状態のv1.29.3以下バージョンのクラスタで、ノード増設またはノードグループ追加時にcalico-node Podのデプロイに失敗し、ノード初期化作業に失敗します。 { #when-scaling-out-nodes-or-adding-node-groups-in-a-cluster-running-v1293-or-earlier-with-an-inactive-nks-registry-the-calico-node-pod-deployment-fails-causing-the-node-initialization-task-to-fail }
 誤ったイメージリポジトリの設定により、ノード増設またはノードグループ追加時に calico 関連の Pod（calico-node、calico-kube-controllers、calico-typha）がデプロイされないことで発生する問題です。
 
 この問題は主に2024年5月以前に作成されたクラスタで発生する可能性があります。当時作成されたクラスタはNKS専用イメージレジストリが基本的に非活性状態であり、Calicoコンテナイメージのリポジトリパスが正しくないため、イメージのダウンロードが不可能なことが原因です。
 
+<a id="when-scaling-out-nodes-or-adding-node-groups-in-a-cluster-running-v1293-or-earlier-with-an-inactive-nks-registry-the-calico-node-pod-deployment-fails-causing-the-node-initialization-task-to-fail-how-to-check-if-the-symptom-occurs"></a>
 #### 症状発生時の確認方法
 `kubectl get all -n kube-system` コマンドで確認すると、増設作業が失敗したノードにデプロイされている以下の Pod のステータスが **ImagePullBackOff** または **ErrImagePull** のままになります。
 - calico-node
 - calico-kube-controllers
 - calico-typha
 
+<a id="when-scaling-out-nodes-or-adding-node-groups-in-a-cluster-running-v1293-or-earlier-with-an-inactive-nks-registry-the-calico-node-pod-deployment-fails-causing-the-node-initialization-task-to-fail-solution"></a>
 #### 解決策
 calico 関連のイメージリポジトリ URL をパブリックリポジトリに変更することで問題を解決できます。ただし、インターネットに接続可能なクラスターにのみ適用可能です。作業中に一時的にクラスターの Pod ネットワークが切断される場合があるため、作業時には注意が必要です。作業手順は以下のとおりです。
 
@@ -409,7 +435,8 @@ kubectl -n kube-system set image deployment/calico-kube-controllers \
 kubectl -n kube-system set image deployment/calico-kube-controllers \
   calico-kube-controllers=calico/kube-controllers:v3.24.1
 ```
-### > GPU フレーバーのワーカーノードの GPU 関連モニタリング情報が表示されません。
+<a id="gpu-monitoring-information-for-gpu-flavor-worker-nodes-is-not-exposed"></a>
+### > GPU フレーバーのワーカーノードの GPU 関連モニタリング情報が表示されません。 { #gpu-monitoring-information-for-gpu-flavor-worker-nodes-is-not-exposed }
 dcgm-exporter が参照するライブラリリンクに問題があることで発生します。dcgm-exporter が `libdcgm.so.4` ライブラリを見つけられず実行に失敗し、その結果 GPU 関連のモニタリング指標が収集されません。
 
 この問題は、以下のイメージを使用する GPU ワーカーノードで発生します。
@@ -418,6 +445,7 @@ dcgm-exporter が参照するライブラリリンクに問題があることで
 * Ubuntu Server 22.04.5 LTS - Container (2026.03.10)
 * Ubuntu Server 24.04.4 LTS - Container (2026.03.10)
 
+<a id="gpu-monitoring-information-for-gpu-flavor-worker-nodes-is-not-exposed-how-to-check-when-symptoms-occur"></a>
 #### 症状が発生した場合の確認方法
 GPUワーカーノードでdcgm-exporterを実行すると、次のようなエラーログが出力されます。
 ```
@@ -426,6 +454,7 @@ time=2026-08-06T00:13:18.786+09:00 level=INFO msg="Starting dcgm-exporter" Versi
 time=2026-08-06T00:13:18.792+09:00 level=ERROR msg="the libdcgm.so.4 library was not found. Install Data Center GPU Manager (DCGM)."
 ```
 
+<a id="gpu-monitoring-information-for-gpu-flavor-worker-nodes-is-not-exposed-workaround"></a>
 #### 解決方法
 この問題は、2026年8月の定期メンテナンス時に対応される予定です。定期メンテナンスまでの間は、各GPUワーカーノードで次のコマンドを実行して一時的に対処できます。
 ```
