@@ -1,4 +1,4 @@
-<!-- pre-align:aligned sig=d435f80f360f -->
+<!-- pre-align:aligned sig=0f5c5df2f6a5 -->
 
 <a id="container-nhn-kubernetes-service-nks-troubleshooting-guide"></a>
 ## Container > NHN Kubernetes Service(NKS) > 문제 해결 가이드 { #container-nhn-kubernetes-service-nks-troubleshooting-guide }
@@ -431,7 +431,8 @@ kubectl -n kube-system set image deployment/calico-kube-controllers \
   calico-kube-controllers=calico/kube-controllers:v3.24.1
 ```
 
-### > GPU flavor 워커 노드의 GPU 관련 모니터링 정보가 노출되지 않습니다.
+<a id="gpu-monitoring-information-for-gpu-flavor-worker-nodes-is-not-exposed"></a>
+### > GPU flavor 워커 노드의 GPU 관련 모니터링 정보가 노출되지 않습니다. { #gpu-monitoring-information-for-gpu-flavor-worker-nodes-is-not-exposed }
 dcgm-exporter가 참조하는 라이브러리 링크에 문제가 있어 발생합니다. dcgm-exporter가 `libdcgm.so.4` 라이브러리를 찾지 못해 실행에 실패하며, 그 결과 GPU 관련 모니터링 지표가 수집되지 않습니다.
 
 이 문제는 아래 이미지를 사용하는 GPU 워커 노드에서 발생합니다.
@@ -440,6 +441,7 @@ dcgm-exporter가 참조하는 라이브러리 링크에 문제가 있어 발생�
 * Ubuntu Server 22.04.5 LTS - Container (2026.03.10)
 * Ubuntu Server 24.04.4 LTS - Container (2026.03.10)
 
+<a id="gpu-monitoring-information-for-gpu-flavor-worker-nodes-is-not-exposed-how-to-check-when-symptoms-occur"></a>
 #### 증상 발생 시 확인 방법
 GPU 워커 노드에서 dcgm-exporter를 실행하면 아래와 같은 오류 로그가 출력됩니다.
 ```
@@ -448,6 +450,7 @@ time=2026-08-06T00:13:18.786+09:00 level=INFO msg="Starting dcgm-exporter" Versi
 time=2026-08-06T00:13:18.792+09:00 level=ERROR msg="the libdcgm.so.4 library was not found. Install Data Center GPU Manager (DCGM)."
 ```
 
+<a id="gpu-monitoring-information-for-gpu-flavor-worker-nodes-is-not-exposed-workaround"></a>
 #### 해결 방안
 이 문제는 2026년 8월 정기 점검 시 조치될 예정입니다. 정기 점검 전까지는 각 GPU 워커 노드에서 아래 명령을 실행하여 임시로 조치할 수 있습니다.
 ```
