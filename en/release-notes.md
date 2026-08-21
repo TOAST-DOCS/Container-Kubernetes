@@ -1,3 +1,5 @@
+<!-- machine_translated: true -->
+
 <!-- pre-align:aligned sig=8f6519afc382 -->
 
 <a id="container-nhn-kubernetes-service-nks-release-notes"></a>
