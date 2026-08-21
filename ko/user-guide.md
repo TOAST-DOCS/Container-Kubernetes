@@ -2463,7 +2463,6 @@ CoreDNS는 Kubernetes 클러스터의 기본 DNS 서버입니다.
     * 1.8.4-nks3: 애드온 관리 기능의 안정성을 강화했습니다.
 
 
-<a id="addon-mgmt-addon-cinder-csi-plugin">
 <a id="addon-mgmt-addon-list-cinder-csi-plugin"></a>
 #### Cinder CSI Plugin
 Cinder CSI Plugin은 NHN Cloud에서 블록 스토리지를 프로비저닝하고 관리할 수 있는 CSI 드라이버입니다.
@@ -2499,7 +2498,6 @@ Cinder CSI Plugin은 NHN Cloud에서 블록 스토리지를 프로비저닝하�
         * 애드온 관리 기능의 안정성을 강화했습니다.
         * cinder-csi-nodeplugin DaemonSet toleration에서 `effect: NoExecute`를 제거했습니다.
 
-<a id="adoon-mgmt-addon-metrics-server">
 <a id="addon-mgmt-addon-list-metrics-server"></a>
 #### Metrics Server
 Metrics Server는 오토 스케일링과 모니터링을 위해 노드와 파드로부터 리소스 사용 지표를 수집하는 Kubernetes의 구성 요소입니다.
@@ -2514,7 +2512,6 @@ Metrics Server는 오토 스케일링과 모니터링을 위해 노드와 파드
     * v0.4.4-nks2: 애드온 관리 기능의 안정성을 강화했습니다.
     * v0.4.4-nks3: 애드온 관리 기능의 안정성을 강화했습니다.
 
-<a id="addon-mgmt-addon-snapshot-controller">
 <a id="addon-mgmt-addon-list-snapshot-controller"></a>
 #### Snapshot Controller
 Snapshot Controller는 볼륨 스냅숏의 생성, 삭제, PVC 연동을 포함한 라이프 사이클을 관리하는 Kubernetes의 구성 요소입니다.
@@ -2529,7 +2526,6 @@ Snapshot Controller는 볼륨 스냅숏의 생성, 삭제, PVC 연동을 포함�
     * v4.1.1-nks2: 애드온 관리 기능의 안정성을 강화했습니다.
     * v4.1.1-nks3: 애드온 관리 기능의 안정성을 강화했습니다.
 
-<a id="addon-mgmt-addon-nfs-csi-plugin">
 <a id="addon-mgmt-addon-list-nfs-csi-plugin"></a>
 #### NFS CSI Plugin
 NFS CSI Plugin은 NHN Cloud의 NFS를 프로비저닝하고 관리할 수 있는 CSI 드라이버입니다.
@@ -4339,7 +4335,7 @@ $ systemctl start rpcbind
 
 <a id="nas-integration-install-csi-driver-nfs"></a>
 #### csi-driver-nfs 설치
-NHN Cloud NAS 서비스를 사용하기 위해 클러스터에 NHN Kubernetes Service(NKS)의 Addon 기능으로 [nfs-csi-plugin](/Container/NKS/ko/user-guide/#addon-mgmt-addon-nfs-csi-plugin)을 배포해야 합니다.
+NHN Cloud NAS 서비스를 사용하기 위해 클러스터에 NHN Kubernetes Service(NKS)의 Addon 기능으로 [nfs-csi-plugin](/Container/NKS/ko/user-guide/#addon-mgmt-addon-list-nfs-csi-plugin)을 배포해야 합니다.
 
 csi-driver-nfs는 NFS 스토리지에 새 하위 디렉터리를 생성하는 방식으로 동작하는 NFS 스토리지 프로비저닝을 지원하는 드라이버입니다.
 csi-driver-nfs는 스토리지 클래스에 NFS 스토리지 정보를 제공하는 방식으로 동작하여 사용자가 관리해야 하는 대상을 줄여 줍니다.
