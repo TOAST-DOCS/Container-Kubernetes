@@ -59,19 +59,19 @@
     * calico v3.28.2-nks3
     * calico v3.30.2-nks3
 
-<a id="march-17-2026"></a>
-### March 17, 2026 { #march-17-2026 }
+<a id="mar-17-2026"></a>
+### March 17, 2026 { #mar-17-2026 }
 
-<a id="march-17-2026-platform-version-updates"></a>
+<a id="mar-17-2026-platform-version-updates"></a>
 #### Platform Version Updates
 * Added 1.202602.1
     * Improved
         * Improved the stability of load balancers created with Service objects
 
-<a id="march-10-2026"></a>
-### March 10, 2026 { #march-10-2026 }
+<a id="mar-10-2026"></a>
+### March 10, 2026 { #mar-10-2026 }
 
-<a id="march-10-2026-platform-version-updates"></a>
+<a id="mar-10-2026-platform-version-updates"></a>
 #### Platform Version Updates
 * Added 1.202602.0
     * Kubernetes compatible versions: v1.29–v1.33
@@ -83,7 +83,7 @@
     * Feature Updates
         * Support for improved traffic handling during node and node group deletion
 
-<a id="march-10-2026-add-on-updates"></a>
+<a id="mar-10-2026-add-on-updates"></a>
 #### Add-on Updates
 * Added add-ons
     * calico v3.30.2-nks2
@@ -93,7 +93,7 @@
     * snapshot_controller v4.1.1-nks2
     * nfs_csi_plugin v1.0.1-nks2
 
-<a id="march-10-2026-added-features"></a>
+<a id="mar-10-2026-added-features"></a>
 #### Added Features
 * Added support for OS images configured with CGroup v2.
     * OS images deployed after March 2026 are configured with CGroup v2.
@@ -101,15 +101,15 @@
 * Added the Kubernetes taint configuration feature.
 * Added support for encrypting and decrypting cluster confidential data using Secure Key Manager.
 
-<a id="december-23-2025"></a>
-### December 23, 2025 { #december-23-2025 }
+<a id="dec-23-2025"></a>
+### December 23, 2025 { #dec-23-2025 }
 
-<a id="december-23-2025-platform-version-updates"></a>
+<a id="dec-23-2025-platform-version-updates"></a>
 #### Platform Version Updates
 * Added 1.202511.1
     * Fixed an issue with the health check port configuration settings.
 
-<a id="december-23-2025-add-on-updates"></a>
+<a id="dec-23-2025-add-on-updates"></a>
 #### Add-on Updates
 * Added Cinder CSI Plugin v1.27.101-nks2, v1.27.102-nks2.
     * Updated internal container versions as follows:
@@ -119,15 +119,15 @@
         * csi-resizer: v1.0.1 → v1.3.0
         * csi-node-driver-registrar: v2.0.1 → v2.3.0
 
-<a id="november-25-2025"></a>
-### November 25, 2025 { #november-25-2025 }
+<a id="nov-25-2025"></a>
+### November 25, 2025 { #nov-25-2025 }
 
-<a id="november-25-2025-changed-service-support-policy"></a>
+<a id="nov-25-2025-changed-service-support-policy"></a>
 #### Changed Service Support Policy
 * Changed the support policy for the Kubernetes version of NKS.
     * For more information, refer to the [Version Guide](/Container/NKS/en/version-guide).
 
-<a id="november-25-2025-updated-add-on"></a>
+<a id="nov-25-2025-add-on-updates"></a>
 #### Add-on Updates
 * Added add-ons
     * Calico CNI v3.30.2-nks1
@@ -136,17 +136,17 @@
     * Snapshot Controller v4.1.1-nks1
     * NFS CSI Plugin v1.0.1-nks1
 
-<a id="november-25-2025-added-features"></a>
+<a id="nov-25-2025-added-features"></a>
 #### Added Features
 * Added support for Kubernetes v1.33.4.
 * Added the feature to view and upgrade the platform version of the control plane and worker node groups.
 * Added the feature to set a health check port as setting detailed options for load balancer.
 * Added the feature to set a health check host header as setting detailed options for load balancer.
 
-<a id="july-15-2025"></a>
-### July 15, 2025 { #july-15-2025 }
+<a id="jul-15-2025"></a>
+### July 15, 2025 { #jul-15-2025 }
 
-<a id="july-15-2025-image-update"></a>
+<a id="jul-15-2025-image-update"></a>
 #### Image Update
 * The following images are no longer supported when creating clusters and node groups:
     * Target image
@@ -172,10 +172,10 @@
 * Removed the system pod upgrade step during Blue/Green Upgrade.
     * System pods like Calico, CoreDNS, and others can be updated through the add-on management.
 
-<a id="march-4-2025"></a>
-### March 4, 2025 { #march-4-2025 }
+<a id="mar-4-2025"></a>
+### March 4, 2025 { #mar-4-2025 }
 
-<a id="march-4-2025-added-features"></a>
+<a id="mar-4-2025-added-features"></a>
 #### Added Features
 * Added support for Kubernetes v1.31.4.
 * The OIDC(openID connect) setting feature is available.
@@ -183,22 +183,22 @@
     * Clusters that enabled a cluster key pair operate with the service user's permissions.
     * Clusters that operate under the service user's permissions do not need to change/manage owners.
 
-<a id="march-4-2025-feature-updates"></a>
+<a id="mar-4-2025-feature-updates"></a>
 #### Feature Updates
 * The feature to change cluster owners is not supported.
 
-<a id="november-26-2024"></a>
-### November 26, 2024 { #november-26-2024 }
+<a id="nov-26-2024"></a>
+### November 26, 2024 { #nov-26-2024 }
 
-<a id="november-26-2024-added-features"></a>
+<a id="nov-26-2024-added-features"></a>
 #### Added Features
 * Added the feature to set Kubernetes component.
 
-<a id="november-26-2024-feature-updates"></a>
+<a id="nov-26-2024-feature-updates"></a>
 #### Feature Updates
 * Changed to automatically set the maximum number of Pods that can be created per node based on the pod subnet size.
 
-<a id="november-26-2024-image-update"></a>
+<a id="nov-26-2024-image-update"></a>
 #### Image Update
 Chagned the version of the GPU driver installed in images.
 
@@ -224,23 +224,23 @@ Changed the minimum disk size required to create worker nodes in images.
 | Ubuntu Server 20.04.6 LTS (2024.11.19) | 20GB | 30GB |
 | Ubuntu Server 22.04.6 LTS (2024.11.19) | 20GB | 30GB |
 
-<a id="november-26-2024-deprecated-image-support"></a>
+<a id="nov-26-2024-deprecated-image-support"></a>
 #### Deprecated Image Support
 * You can't create new clusters and node groups using CentOS images.
 
-<a id="october-29-2024"></a>
-### October 29, 2024 { #october-29-2024 }
+<a id="oct-29-2024"></a>
+### October 29, 2024 { #oct-29-2024 }
 
-<a id="october-29-2024-feature-updates"></a>
+<a id="oct-29-2024-feature-updates"></a>
 #### Feature Updates
 
 * CNI Updates
     * Changed the Calico CNI version for Kubernetes v1.27.3 and later clusters from v3.28.0 to v3.28.2.
 
-<a id="august-27-2024"></a>
-### August 27, 2024 { #august-27-2024 }
+<a id="aug-27-2024"></a>
+### August 27, 2024 { #aug-27-2024 }
 
-<a id="august-27-2024-added-features"></a>
+<a id="aug-27-2024-added-features"></a>
 #### Added Features
 * Added the feature to specify additional security groups to a node group.
 * Added the feature to specify additional block storage for a group of nodes.
@@ -248,14 +248,14 @@ Changed the minimum disk size required to create worker nodes in images.
 * You can set whether the load balancer applies static routes.
 * You can enable the NKS registry.
 
-<a id="august-27-2024-deprecated-image-support"></a>
+<a id="aug-27-2024-deprecated-image-support"></a>
 #### Deprecated Image Support
 * You can't create new clusters and node groups using Debian images.
 
-<a id="july-23-2024"></a>
-### July 23, 2024 { #july-23-2024 }
+<a id="jul-23-2024"></a>
+### July 23, 2024 { #jul-23-2024 }
 
-<a id="july-23-2024-added-features"></a>
+<a id="jul-23-2024-added-features"></a>
 #### Added Features
 
 * You can apply L7 rules and conditions by setting the load balancer details options.
@@ -274,19 +274,19 @@ Changed the minimum disk size required to create worker nodes in images.
 * The Resource Watcher service allows you to receive notifications about events that occur in your cluster.
     * For more information, see [Resource Watcher](/Governance%20&%20Audit/Resource%20Watcher/en/overview).
 
-<a id="march-26-2024"></a>
-### March 26, 2024 { #march-26-2024 }
+<a id="mar-26-2024"></a>
+### March 26, 2024 { #mar-26-2024 }
 
-<a id="march-26-2024-feature-updates"></a>
+<a id="mar-26-2024-feature-updates"></a>
 #### Feature Updates
 * Changed the valid range for the service gateway you enter when creating a cluster.
     * Previous: A service gateway created on the same subnet as the cluster's subnet.
     * Current: A service gateway created on a subnet that is included in a VPC in the cluster.
     
-<a id="february-27-2024"></a>
-### February 27, 2024 { #february-27-2024 }
+<a id="feb-27-2024"></a>
+### February 27, 2024 { #feb-27-2024 }
 
-<a id="february-27-2024-added-features"></a>
+<a id="feb-27-2024-added-features"></a>
 #### Added Features
 
 * You can apply enforced security rules to clusters.
@@ -294,17 +294,17 @@ Changed the minimum disk size required to create worker nodes in images.
 * Added support for Kubernetes v1.28.3.
 * You can view the history of tasks on the clusters and node groups lookup screen.
 
-<a id="november-28-2023"></a>
-### November 28, 2023 { #november-28-2023 }
+<a id="nov-28-2023"></a>
+### November 28, 2023 { #nov-28-2023 }
 
-<a id="november-28-2023-added-features"></a>
+<a id="nov-28-2023-added-features"></a>
 #### Added Features
 * Added the feature to set kubelet custom arguments.
 * Added the feature to set member subnets as setting detailed options for load balancer.
 * Added the feature to set the keep-alive timeout value as setting detailed options for load balancer.
 * Added the feature to create PVs using encrypted block storage.
 
-<a id="november-28-2023-image-update"></a>
+<a id="nov-28-2023-image-update"></a>
 #### Image update
 * Added new images that can be used when creating clusters and node groups.
     * Target image
@@ -322,10 +322,10 @@ Changed the minimum disk size required to create worker nodes in images.
         * Rocky Linux 8.8 - Container (2023.11.21)
         * Ubuntu Server 20.04.6 LTS - Container (2023.11.21)
 
-<a id="august-29-2023"></a>
-### August 29, 2023 { #august-29-2023 }
+<a id="aug-29-2023"></a>
+### August 29, 2023 { #aug-29-2023 }
 
-<a id="august-29-2023-added-features"></a>
+<a id="aug-29-2023-added-features"></a>
 #### Added Features
 
 * Added support for Kubernetes v1.27.3
@@ -334,7 +334,7 @@ Changed the minimum disk size required to create worker nodes in images.
 * Provided more detailed status information on the cluster and node group query screen.
 * Added a feature to create new NAS Volume upon provisioning.
 
-<a id="august-29-2023-feature-updates"></a>
+<a id="aug-29-2023-feature-updates"></a>
 #### Feature Updates
 * Changed the distribution version of the images used at the time of generating clusters or node groups.
     * AS-IS
@@ -342,7 +342,7 @@ Changed the minimum disk size required to create worker nodes in images.
     * TO-BE
         * Rocky Linux 8.8 - Container (2023.08.22)
 
-<a id="august-29-2023-image-update"></a>
+<a id="aug-29-2023-image-update"></a>
 #### Image update 
 * Changes
     * Changed the nvidia-device-plugin version from 470.182.03 to 470.199.02.
@@ -353,10 +353,10 @@ Changed the minimum disk size required to create worker nodes in images.
     * Rocky Linux 8.8 - Container (2023.08.22)
     * Ubuntu Server 20.04.6 LTS - Container (2023.08.22)
 
-<a id="july-19-2023"></a>
-### July 19, 2023 { #july-19-2023 }
+<a id="jul-19-2023"></a>
+### July 19, 2023 { #jul-19-2023 }
 
-<a id="july-19-2023-image-update"></a>
+<a id="jul-19-2023-image-update"></a>
 #### Image Update
 * Fixed an issue where, when creating node groups, the iptables kernel module is not initialized normally on some images.
     * AS-IS: Rocky Linux 8.7 - Container (2023.05.25)
@@ -399,10 +399,10 @@ Changed the minimum disk size required to create worker nodes in images.
         * Rocky Linux 8.7 - Container (2023.05.25)
         * Ubuntu Server 20.04.6 LTS - Container (2023.05.25)
 
-<a id="march-28-2023"></a>
-### March 28, 2023 { #march-28-2023 }
+<a id="mar-28-2023"></a>
+### March 28, 2023 { #mar-28-2023 }
 
-<a id="march-28-2023-added-features"></a>
+<a id="mar-28-2023-added-features"></a>
 #### Added Features
 
 * Added the change cluster CNI feature.
@@ -410,7 +410,7 @@ Changed the minimum disk size required to create worker nodes in images.
 * You can change the instance flavor of a node group.
 * You can use a feature to view Kubernetes resources fron the console.
 
-<a id="march-28-2023-feature-updates"></a>
+<a id="mar-28-2023-feature-updates"></a>
 #### Feature Updates
 
 * The NKS API domain has been changed.
@@ -421,7 +421,7 @@ Changed the minimum disk size required to create worker nodes in images.
         * AS-IS: https://kr2-api-kubernetes.infrastructure.cloud.toast.com
         * TO-BE: https://kr2-api-kubernetes-infrastructure.nhncloudservice.com
 
-<a id="march-28-2023-march-28-2023-feature-updates"></a>
+<a id="mar-28-2023-mar-28-2023-feature-updates"></a>
 #### Feature Updates
 
 * Image update
@@ -429,10 +429,10 @@ Changed the minimum disk size required to create worker nodes in images.
     * Debian 11.6 Bullseye - Container (2023.02.21)
     * Rocky Linux 8.6 - Container (2023.02.21)
 
-<a id="january-31-2023"></a>
-### January 31, 2023 { #january-31-2023 }
+<a id="jan-31-2023"></a>
+### January 31, 2023 { #jan-31-2023 }
 
-<a id="january-31-2023-added-features"></a>
+<a id="jan-31-2023-added-features"></a>
 #### Added Features
 
 * Added a feature to change cluster OWNER.
@@ -441,19 +441,19 @@ Changed the minimum disk size required to create worker nodes in images.
 * Kubernetes v1.21.6 is no longer supported when creating clusters. But, clusters in use are not affected.
 * Proxy protocol can be set for the listener of load balancer.
 
-<a id="december-27-2022"></a>
-### December 27, 2022 { #december-27-2022 }
+<a id="dec-27-2022"></a>
+### December 27, 2022 { #dec-27-2022 }
 
-<a id="december-27-2022-added-features"></a>
+<a id="dec-27-2022-added-features"></a>
 #### Added Features
 
 * Image added
     * Rocky Linux 8.6 - Container (2022.12)
 
-<a id="november-29-2022"></a>
-### November 29, 2022 { #november-29-2022 }
+<a id="nov-29-2022"></a>
+### November 29, 2022 { #nov-29-2022 }
 
-<a id="november-29-2022-feature-updates"></a>
+<a id="nov-29-2022-feature-updates"></a>
 #### Feature Updates
 
 * Image update
@@ -464,7 +464,7 @@ Changed the minimum disk size required to create worker nodes in images.
         * Ubuntu Server 18.04.6 LTS - Container (2022.11.22)
         * CentOS 7.9 - Container (2022.11.22)
 
-<a id="november-29-2022-added-features"></a>
+<a id="nov-29-2022-added-features"></a>
 #### Added Features
 
 * The start node/stop node features are available.
@@ -473,20 +473,20 @@ Changed the minimum disk size required to create worker nodes in images.
 * Image added
     * Debian 11.5 Bullseye - Container (2022.11.22)
 
-<a id="september-27-2022"></a>
-### September 27, 2022 { #september-27-2022 }
+<a id="sep-27-2022"></a>
+### September 27, 2022 { #sep-27-2022 }
 
-<a id="september-27-2022-added-features"></a>
+<a id="sep-27-2022-added-features"></a>
 #### Added Features
 
 * Added support for Kubernetes v1.24.3.
 * Kubernetes v1.20.12 is no longer supported for cluster creation. However, the clusters in use are not affected.
 
 
-<a id="july-26-2022"></a>
-### July 26, 2022 { #july-26-2022 }
+<a id="jul-26-2022"></a>
+### July 26, 2022 { #jul-26-2022 }
 
-<a id="july-26-2022-added-features"></a>
+<a id="jul-26-2022-added-features"></a>
 #### Added Features
 
 * A user script can be changed after creating node groups.
@@ -501,31 +501,31 @@ Changed the minimum disk size required to create worker nodes in images.
 * Enhanced the performance and reliability of the service by improving the internal architecture
 
 
-<a id="march-29-2022"></a>
-### March 29, 2022 { #march-29-2022 }
+<a id="mar-29-2022"></a>
+### March 29, 2022 { #mar-29-2022 }
 
-<a id="march-29-2022-added-features"></a>
+<a id="mar-29-2022-added-features"></a>
 #### Added Features
 
 * Added support for Kubernetes v1.23.3.
 * Kubernetes v1.19.13 is no longer supported for cluster creation. However, the clusters in use are not affected.
 * When you set the load balancer's listener protocol to TERMINATED_HTTPS, the SSL version can be set to TLSv1.3.
 
-<a id="march-29-2022-feature-updates"></a>
+<a id="mar-29-2022-feature-updates"></a>
 #### Feature Updates
 
 * Changed a feature name:
     * Before change: Scheduled script
     * After change: User script
 
-<a id="january-25-2022"></a>
-### January 25, 2022 { #january-25-2022 }
+<a id="jan-25-2022"></a>
+### January 25, 2022 { #jan-25-2022 }
 
-<a id="january-25-2022-feature-updates"></a>
+<a id="jan-25-2022-feature-updates"></a>
 #### Feature Updates
 * The name of the Kubernetes service has been changed to NHN Kubernetes Service (NKS).
 
-<a id="january-25-2022-added-features"></a>
+<a id="jan-25-2022-added-features"></a>
 #### Added Features
 
 * Added support for the following Kubernetes versions:
@@ -544,10 +544,10 @@ Changed the minimum disk size required to create worker nodes in images.
     * Ubuntu Server 18.04.6 LTS - Container (2022.01.20)
         * You can use an Ubuntu worker image for cluster creation and node group creation.
 
-<a id="december-28-2021"></a>
-### December 28, 2021 { #december-28-2021 }
+<a id="dec-28-2021"></a>
+### December 28, 2021 { #dec-28-2021 }
 
-<a id="december-28-2021-feature-updates"></a>
+<a id="dec-28-2021-feature-updates"></a>
 #### Feature Updates
 
 * Updated the NVIDIA driver used in the GPU worker nodes.
@@ -557,18 +557,18 @@ Changed the minimum disk size required to create worker nodes in images.
 * Image update
     * CentOS 7.8 - Container (2021.12.21)
 
-<a id="november-23-2021"></a>
-### November 23, 2021 { #november-23-2021 }
+<a id="nov-23-2021"></a>
+### November 23, 2021 { #nov-23-2021 }
 
-<a id="november-23-2021-added-features"></a>
+<a id="nov-23-2021-added-features"></a>
 #### Added Features
 * The Public API for Kubernetes services has been released.
     * For more information about the Public API, see the [API Guide](/Container/NKS/en/public-api).
 
-<a id="october-26-2021"></a>
-### October 26, 2021 { #october-26-2021 }
+<a id="oct-26-2021"></a>
+### October 26, 2021 { #oct-26-2021 }
 
-<a id="october-26-2021-added-features"></a>
+<a id="oct-26-2021-added-features"></a>
 #### Added Features
 
 * Supports Kubernetes v1.19.13.
@@ -576,10 +576,10 @@ Changed the minimum disk size required to create worker nodes in images.
 * The minimum value of the autoscaler's 'Scale Down Delay After Add' setting has been changed to 10 minutes.
 * In new clusters, the default worker node group can be deleted if there are two or more worker node groups.
 
-<a id="july-27-2021"></a>
-### July 27, 2021 { #july-27-2021 }
+<a id="jul-27-2021"></a>
+### July 27, 2021 { #jul-27-2021 }
 
-<a id="july-27-2021-added-features"></a>
+<a id="jul-27-2021-added-features"></a>
 #### Added Features
 
 * A user script feature is available when creating node groups.
@@ -588,87 +588,87 @@ Changed the minimum disk size required to create worker nodes in images.
         * CentOS 7.8 - Container (2021.07.27)
     * Refer to [Troubleshooting Guide](/Container/NKS/en/troubleshooting-guide) for details on container log management.
 
-<a id="june-29-2021"></a>
-### June 29, 2021 { #june-29-2021 }
+<a id="jun-29-2021"></a>
+### June 29, 2021 { #jun-29-2021 }
 
-<a id="june-29-2021-added-features"></a>
+<a id="jun-29-2021-added-features"></a>
 #### Added Features
 
 * Supports Kubernetes v1.18.19.
 * Can upgrade the cluster version.
 
-<a id="march-23-2021"></a>
-### March 23, 2021 { #march-23-2021 }
+<a id="mar-23-2021"></a>
+### March 23, 2021 { #mar-23-2021 }
 
-<a id="march-23-2021-added-features"></a>
+<a id="mar-23-2021-added-features"></a>
 #### Added Features
 
 * Events occurred in a user cluster can be checked in NHN CloudTrail.
 
-<a id="march-23-2021-bug-fixes"></a>
+<a id="mar-23-2021-bug-fixes"></a>
 #### Bug Fixes
 * Fixed an issue where initialization does not work properly when a node group is created with a graphic-optimized instance type (g2).
 
-<a id="february-23-2021"></a>
-### February 23, 2021 { #february-23-2021 }
+<a id="feb-23-2021"></a>
+### February 23, 2021 { #feb-23-2021 }
 
-<a id="february-23-2021-feature-updates"></a>
+<a id="feb-23-2021-feature-updates"></a>
 #### Feature Updates
 * The PodSecurityPolicy plugin has been added to Kubernetes admission controller.
 * Changed the distribution version of the images used at the time of generating clusters or node groups.
     * Image update
         * CentOS 7.8 - Container (2021.02.23)
 
-<a id="january-26-2021"></a>
-### January 26, 2021 { #january-26-2021 }
-<a id="january-26-2021-bug-fixes"></a>
+<a id="jan-26-2021"></a>
+### January 26, 2021 { #jan-26-2021 }
+<a id="jan-26-2021-bug-fixes"></a>
 #### Bug Fixes
 * Fixed an issue where autoscaler does not work in an environment with no internet gateway connection.
     * Image update
         * CentOS 7.5 - Container (2021.01.26)
 
-<a id="december-29-2020"></a>
-### December 29, 2020 { #december-29-2020 }
-<a id="december-29-2020-feature-updates"></a>
+<a id="dec-29-2020"></a>
+### December 29, 2020 { #dec-29-2020 }
+<a id="dec-29-2020-feature-updates"></a>
 #### Feature Updates
 * Kubernetes CSR (Certificate Signing Request) is now available.
 
-<a id="november-24-2020"></a>
-### November 24, 2020 { #november-24-2020 }
-<a id="november-24-2020-added-features"></a>
+<a id="nov-24-2020"></a>
+### November 24, 2020 { #nov-24-2020 }
+<a id="nov-24-2020-added-features"></a>
 #### Added Features
 * Autoscaler feature is available.
 
-<a id="november-24-2020-feature-updates"></a>
+<a id="nov-24-2020-feature-updates"></a>
 #### Feature Updates
 * Remaining load balancers and floating IPs are also deleted when deleting clusters.
 
-<a id="october-27-2020"></a>
-### October 27, 2020 { #october-27-2020 }
-<a id="october-27-2020-more-feature"></a>
+<a id="oct-27-2020"></a>
+### October 27, 2020 { #oct-27-2020 }
+<a id="oct-27-2020-added-features"></a>
 #### Added Features
 * Added support for GPU-based node groups in Kubernetes clusters.
     * Updated images
         * CentOS 7.5 - Container (2020.10.27)
 
-<a id="09-22"></a>
-### 2020. 09. 22. { #09-22 }
-<a id="09-22-feature-updates"></a>
+<a id="sep-22-2020"></a>
+### 2020. 09. 22. { #sep-22-2020 }
+<a id="sep-22-2020-feature-updates"></a>
 #### Feature Updates
 * Nodes can be added to or deleted from a running node group.
 
-<a id="09-22-release-of-new-service"></a>
+<a id="sep-22-2020-release-of-new-service"></a>
 #### Release of New Service
 * Kubernetes service is now available in the Korea (Pyeongchon) region.
 
-<a id="august-25-2020"></a>
-### August 25, 2020 { #august-25-2020 }
-<a id="august-25-2020-feature-updates"></a>
+<a id="aug-25-2020"></a>
+### August 25, 2020 { #aug-25-2020 }
+<a id="aug-25-2020-feature-updates"></a>
 #### Feature Updates
 * A random zone can be selected when creating a Kubernetes cluster on console.
 
-<a id="june-23-2020"></a>
-### June 23, 2020 { #june-23-2020 }
-<a id="june-23-2020-release-of-new-service"></a>
+<a id="jun-23-2020"></a>
+### June 23, 2020 { #jun-23-2020 }
+<a id="jun-23-2020-release-of-new-service"></a>
 #### Release of New Service 
 * Kubernetes clusters can be created and managed on console. 

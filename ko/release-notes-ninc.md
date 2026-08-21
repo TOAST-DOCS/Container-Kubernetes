@@ -1,4 +1,5 @@
-## Container > NHN Kubernetes Service(NKS) > 릴리스 노트
+<a id="container-nhn-kubernetes-service-nks-release-notes"></a>
+## Container > NHN Kubernetes Service(NKS) > 릴리스 노트 { #container-nhn-kubernetes-service-nks-release-notes }
 
 ### 2026. 07. xx.
 
@@ -24,8 +25,10 @@
     * calico v3.28.2-nks3
     * calico v3.30.2-nks3
 
-### 2026. 03. 14.
+<a id="mar-14-2026"></a>
+### 2026. 03. 14. { #mar-14-2026 }
 
+<a id="mar-14-2026-platform-version-updates"></a>
 #### 플랫폼 버전 업데이트
 * 1.202602.0 추가
     * Kubernetes 호환 버전: v1.29–v1.33
@@ -37,6 +40,7 @@
     * 기능 개선
         * 노드 및 노드 그룹 삭제 시 로드 밸런서 트래픽 유실 개선
 
+<a id="mar-14-2026-add-on-updates"></a>
 #### 애드온 업데이트
 * 애드온 추가
     * calico v3.30.2-nks2
@@ -46,6 +50,7 @@
     * snapshot_controller v4.1.1-nks2
     * nfs_csi_plugin v1.0.1-nks2
 
+<a id="mar-14-2026-added-features"></a>
 #### 신규 기능 추가
 * CGroup이 v2로 설정된 OS 이미지를 지원합니다.
     * 2026년 3월 이후 배포되는 OS 이미지는 CGroup이 v2로 설정되어 있습니다.
@@ -53,12 +58,15 @@
 * Kubernetes 테인트 설정 기능이 추가되었습니다.
 * Secure Key Manager 서비스를 이용해 클러스터의 기밀 데이터를 암/복호화할 수 있습니다.
 
-### 2025. 11. 28.
+<a id="nov-28-2025"></a>
+### 2025. 11. 28. { #nov-28-2025 }
 
+<a id="nov-28-2025-changed-service-support-policy"></a>
 #### 서비스 지원 정책 변경
 * NKS의 Kubernetes 버전 지원 정책이 변경됩니다.
     * 자세한 내용은 [사용 가이드](/Container/NKS/ko/version-guide-ninc)를 참고하세요.
 
+<a id="nov-28-2025-add-on-updates"></a>
 #### 애드온 업데이트
 * 애드온 추가
     * Calico CNI v3.30.2-nks1
@@ -67,6 +75,7 @@
     * Snapshot Controller v4.1.1-nks1
     * NFS CSI Plugin v1.0.1-nks1
 
+<a id="nov-28-2025-added-features"></a>
 #### 신규 기능 추가
 * Kubernetes v1.33.4를 지원합니다.
 * 컨트롤 플레인과 워커 노드 그룹의 플랫폼 버전의 조회 및 업그레이드 기능이 추가되었습니다.
@@ -74,6 +83,8 @@
 * 로드 밸런서 상세 옵션 설정에 상태 확인 호스트 헤더 설정 기능이 추가되었습니다.
 
 
-### 2025. 01. 24.
+<a id="jan-24-2025"></a>
+### 2025. 01. 24. { #jan-24-2025 }
+<a id="jan-24-2025-release-of-new-service"></a>
 #### 신규 서비스 출시
 * 콘솔에서 Kubernetes 클러스터를 생성하고 관리할 수 있습니다.
