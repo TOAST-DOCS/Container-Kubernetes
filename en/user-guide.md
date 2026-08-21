@@ -1,3 +1,5 @@
+<!-- machine_translated: true -->
+
 <!-- pre-align:aligned sig=98b43adf5be7 -->
 
 <a id="container-nhn-kubernetes-service-nks-user-guide"></a>
@@ -2434,36 +2436,34 @@ Cilium is a CNI plugin that provides networking and network security for Kuberne
     * v1.18.0-nks1
     * v1.18.0-nks2: Improved the stability of the add-on management feature.
 
-<a id="addon-mgmt-addon-coredns"></a>
 #### CoreDNS
-CoreDNS is the default DNS server for Kubernetes clusters.
+CoreDNS is the default DNS server for a Kubernetes cluster.
 
 * Type: kube-dns
 * Options: None
-* Non-user-modifiable resources and fields
+* Immutable resources and fields
     * Deployment/coredns, namespace kube-system
         * .spec.template.spec.containers[name="coredns"].image'
 * Supported version list
     * 1.8.4-nks1
     * 1.8.4-nks2
-        * Improved the stability of the add-on management feature.
-        * Adjusted non-user-modifiable resources and fields.
+        * Improved stability for add-on management.
+        * Adjusted immutable resources and fields.
             * Deployment/coredns, namespace kube-system
                 * Removed .metadata.labels.k8s-app
                 * Removed .metadata.labels.kubernetes.io/name
                 * Removed .spec.template.spec.nodeSelector
                 * Removed .spec.template.spec.serviceAccountName
-    * 1.8.4-nks3: Improved the stability of the add-on management feature.
+    * 1.8.4-nks3: Improved stability for add-on management.
 
 
-<a id="addon-mgmt-addon-cinder-csi-plugin">
 <a id="addon-mgmt-addon-list-cinder-csi-plugin"></a>
 #### Cinder CSI Plugin
-Cinder CSI Plugin is a CSI driver that can provision and manage block storage in NHN Cloud.
+The Cinder CSI Plugin is a CSI driver that allows you to provision and manage block storage in NHN Cloud.
 
 * Type: cinder-csi-plugin
 * Options: None
-* Non-user-modifiable resources and fields
+* Immutable resources and fields
     * StatefulSet/csi-cinder-controllerplugin, namespace kube-system
         * .spec.template.spec.containers[name="csi-attacher"].image
         * .spec.template.spec.containers[name="csi-provisioner"].image
@@ -2473,56 +2473,53 @@ Cinder CSI Plugin is a CSI driver that can provision and manage block storage in
 
 * Supported version list
     * v1.27.101-nks1
-    * v1.27.101-nks2: Internal container versions have been updated.
+    * v1.27.101-nks2: Updated the internal container versions.
         * csi-attacher: v3.0.2 → v3.3.0
         * csi-provisioner: v2.0.4 → v2.2.2
         * csi-snapshotter: v3.0.2 → v3.0.3
         * csi-resizer: v1.0.1 → v1.3.0
         * csi-node-driver-registrar: v2.0.1 → v2.3.0
-    * v1.27.101-nks3: Improved the stability of the add-on management feature.
+    * v1.27.101-nks3: Improved stability for add-on management.
     * v1.27.102-nks1
-    * v1.27.102-nks2: Internal container versions have been updated.
+    * v1.27.102-nks2: Updated the internal container versions.
         * csi-attacher: v3.0.2 → v3.3.0
         * csi-provisioner: v2.0.4 → v2.2.2
         * csi-snapshotter: v3.0.2 → v3.0.3
         * csi-resizer: v1.0.1 → v1.3.0
         * csi-node-driver-registrar: v2.0.1 → v2.3.0
-    * v1.27.102-nks3: Improved the stability of the add-on management feature.
+    * v1.27.102-nks3: Improved stability for add-on management.
     * v1.27.102-nks4
-        * Improved the stability of the add-on management feature.
+        * Improved stability for add-on management.
         * Removed `effect: NoExecute` from the cinder-csi-nodeplugin DaemonSet toleration.
 
-<a id="adoon-mgmt-addon-metrics-server">
 <a id="addon-mgmt-addon-list-metrics-server"></a>
 #### Metrics Server
 Metrics Server is a Kubernetes component that collects resource usage metrics from nodes and pods for autoscaling and monitoring.
 
 * Type: metrics-server
 * Options: None
-* Non-user-modifiable resources and fields
+* Immutable resources and fields
     * Deployment/metrics-server, namespace kube-system
         * .spec.template.spec.containers[name="metrics-server"].image
 * Supported version list
     * v0.4.4-nks1
-    * v0.4.4-nks2: Improved the stability of the add-on management feature.
-    * v0.4.4-nks3: Improved the stability of the add-on management feature.
+    * v0.4.4-nks2: Improved stability for add-on management.
+    * v0.4.4-nks3: Improved stability for add-on management.
 
-<a id="addon-mgmt-addon-snapshot-controller">
 <a id="addon-mgmt-addon-list-snapshot-controller"></a>
 #### Snapshot Controller
 Snapshot Controller is a Kubernetes component that manages the lifecycle of volume snapshots, including creation, deletion, and PVC integration.
 
 * Type: snapshot-controller
 * Options: None
-* Non-user-modifiable resources and fields
+* Immutable resources and fields
     * Deployment/snapshot-controller, namespace kube-system
         * .spec.template.spec.containers[name="snapshot-controller"].image
 * Supported version list
     * v4.1.1-nks1
-    * v4.1.1-nks2: Improved the stability of the add-on management feature.
-    * v4.1.1-nks3: Improved the stability of the add-on management feature.
+    * v4.1.1-nks2: Improved stability for add-on management.
+    * v4.1.1-nks3: Improved stability for add-on management.
 
-<a id="addon-mgmt-addon-nfs-csi-plugin">
 <a id="addon-mgmt-addon-list-nfs-csi-plugin"></a>
 #### NFS CSI Plugin
 NFS CSI Plugin is a CSI driver that can provision and manage NFS in NHN Cloud.
@@ -4330,7 +4327,7 @@ For clusters using enhanced security rules, additional security rules must be ad
 
 <a id="nas-integration-install-csi-driver-nfs"></a>
 #### Install csi-driver-nfs
-To use the NHN Cloud NAS service, you must deploy [nfs-csi-plugin](/Container/NKS/en/user-guide/#addon-mgmt-addon-nfs-csi-plugin) to the cluster using the Addon feature of NHN Kubernetes Service (NKS).
+To use the NHN Cloud NAS service, you must deploy [nfs-csi-plugin](/Container/NKS/en/user-guide/#addon-mgmt-addon-list-nfs-csi-plugin) to the cluster using the Addon feature of NHN Kubernetes Service (NKS).
 
 csi-driver-nfs is a driver that supports NFS storage provisioning that works by creating new subdirectories on NFS storage.
 csi-driver-nfs works by presenting NFS storage information to storage classes, reducing what you have to manage.
