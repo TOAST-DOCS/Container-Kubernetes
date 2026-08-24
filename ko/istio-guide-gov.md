@@ -1,14 +1,18 @@
-## Container > NHN Kubernetes Service(NKS) > 외부 서비스 연동 가이드 > Istio
+<a id="container-nhn-kubernetes-service-nks-application-guide-istio"></a>
+## Container > NHN Kubernetes Service(NKS) > 외부 서비스 연동 가이드 > Istio { #container-nhn-kubernetes-service-nks-application-guide-istio }
 
-### 개요
+<a id="overview"></a>
+### 개요 { #overview }
 이 문서는 사용자가 NKS(NHN Kubernetes Service) 클러스터에 Istio를 구성하고 테스트할 수 있는 예제에 대해 기술한 가이드 문서입니다. NKS에서는 인터넷에 연결되지 않은 클러스터에서도 Istio를 구성할 수 있도록 가이드 및 NCR 레지스트리를 통한 Istio 이미지를 제공하고 있습니다. 사용자는 이 가이드 문서를 통해 NKS에서 제공하는 이미지를 사용하여 Istio를 구성하거나, Istio 공식 가이드 문서를 참고하여 직접 Istio를 구성할 수 있습니다.
 
-### Istio
+<a id="istio"></a>
+### Istio { #istio }
 서비스 메시(Service Mesh)는 분산 시스템에서 서비스 간 통신을 제어하고, 효율적으로 관리할 수 있도록 하는 데 특화된 마이크로서비스를 위한 인프라 계층입니다.
 Istio는 많이 사용되는 오픈소스 서비스 메시 중 하나입니다. 이 예제에서는 클러스터에 demo 프로파일의 Istio 서비스를 배포한 후 동작하는 것을 보여줍니다. Istio에 대한 자세한 내용은 [Istio](https://istio.io/latest/about/service-mesh/)를 참고하세요.
 
 
-### Istio 배포를 위한 사전 준비
+<a id="prerequisites-for-istio-deployment"></a>
+### Istio 배포를 위한 사전 준비 { #prerequisites-for-istio-deployment }
 배포하려는 Istio 버전 및 클러스터에 맞는 올바른 레지스트리 정보를 확인 후 변수에 지정합니다. 설정한 변수는 이후 배포 과정에 사용됩니다.
 
 ```
@@ -16,6 +20,7 @@ $ VERSION="{다운로드하려는 istio 버전}"
 $ REGISTRY="{리전별 레지스트리}"
 ```
 
+<a id="prerequisites-for-istio-deployment-supported-kubernetes-versions-by-istio-version"></a>
 #### Istio 버전별 지원되는 Kubernetes 버전
 
 | 버전 | 지원되는 Kubernetes 버전 |
@@ -27,6 +32,7 @@ $ REGISTRY="{리전별 레지스트리}"
 > NKS는 위 표에 명시된 Istio 버전에 대해서만 설치를 제공합니다. NKS에서 제공하지 않는 버전을 사용하려면 사용자가 직접 Istio를 구성해야 합니다. 지원되는 Istio 버전에 관한 정보는 [istio 지원 정책](https://istio.io/latest/docs/releases/supported-releases/)을 참고하세요.
 
 
+<a id="prerequisites-for-istio-deployment-registry-information-by-region-and-internet-environment"></a>
 #### 리전 및 인터넷 환경별 레지스트리 정보
 | 리전 | 인터넷 연결 | 레지스트리 |
 | --- | --- | --- |
@@ -38,6 +44,7 @@ $ REGISTRY="{리전별 레지스트리}"
 > 인터넷에 연결되어 있지 않은 클러스터가 NCR 레지스트리를 사용하기 위해서는 Private URI를 사용하기 위한 환경 구성이 필요합니다. Private URI 사용법에 대한 자세한 내용은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/user-guide/#private-uri)를 참고하세요.
 
 
+<a id="prerequisites-for-istio-deployment-install-the-oras-command-line-tool"></a>
 #### ORAS 명령줄 도구 설치
 아티팩트 pull을 위해 ORAS(OCI Registry As Storage) 명령줄 도구를 다운로드합니다. ORAS는 OCI 레지스트리에서 OCI 아티팩트를 push 및 pull 하는 방법을 제공하는 툴입니다.
 아래 커맨드를 실행하여 ORAS 명령줄 도구를 설치합니다. ORAS 명령줄 도구의 자세한 사용법은 [ORAS docs](https://oras.land/docs/)를 참고하세요.
@@ -53,8 +60,10 @@ $ export PATH="/usr/local/bin:$PATH"
 ```
 
 
-### Istio 설치
+<a id="install-istio"></a>
+### Istio 설치 { #install-istio }
 
+<a id="install-istio-download-and-install-istioctl-using-the-oras-command-line-tool"></a>
 #### 1. ORAS 명령줄 도구를 사용하여 istioctl을 다운로드 및 설치합니다.
 istioctl은 Istio가 제공하는 서비스 메시 배포를 디버깅하고 진단할 수 있게 해주는 구성 명령줄 유틸리티로 Istio 배포 구성 옵션 설정 등 다양한 기능을 제공합니다. istioctl에 대한 자세한 설명은 [istioctl](https://istio.io/latest/docs/reference/commands/istioctl/)을 참고하세요. 
 
@@ -66,6 +75,7 @@ $ cd istio-${VERSION}
 $ export PATH=$PWD/bin:$PATH
 ```
 
+<a id="install-istio-deploy-istio-components-using-istioctl"></a>
 #### 2. istioctl을 사용해 Istio 구성 요소를 배포합니다.
 프로파일은 Istio 컨트롤 플레인과 데이터 플레인의 사이드카에 대한 사용자 정의 배포 기능을 제공합니다. 설정된 프로파일에 따라 배포 시 활성화되는 구성 요소가 달라집니다. 사용자는 클러스터의 환경 구성에 따라 기본 제공되는 프로파일을 사용하거나 특정 요구에 맞춰 구성을 사용자 정의할 수 있습니다. Istio 프로파일에 대한 자세한 설명은 [Istio 설치 구성 프로파일](https://istio.io/latest/docs/setup/additional-setup/config-profiles/)을 참고하세요. 이 예제에서는 기본으로 제공되는 demo 프로파일을 사용하여 배포합니다.
 
@@ -155,9 +165,11 @@ replicaset.apps/istio-ingressgateway-b8844867c   1         1         1       86s
 replicaset.apps/istiod-8c7fbbdc8                 1         1         1       90s
 ```
 
-### 애플리케이션 배포
+<a id="deploy-application"></a>
+### 애플리케이션 배포 { #deploy-application }
 Istio가 정상적으로 설치되고, 동작하는지 확인하기 위해 애플리케이션을 배포합니다. 이 예제에서는 Istio에서 기본적으로 제공하는 Bookinfo 샘플 애플리케이션을 사용합니다. 샘플 애플리케이션은 productpage, details, reviews, ratings 4개의 마이크로서비스로 구성되어 있습니다. Bookinfo 샘플 애플리케이션에 대한 자세한 내용은 [Istio Bookinfo Application](https://istio.io/latest/docs/examples/bookinfo/)을 참고하세요.
 
+<a id="deploy-application-label-namespace"></a>
 #### 1. 네임스페이스에 레이블을 지정하기
 Istio 사이드카 프락시를 사용하기 위해 파드가 생성될 네임스페이스에 레이블을 지정해야 합니다. 레이블은 Istio 구성 요소를 배포할 네임스페이스를 식별하는 데 사용됩니다. 레이블이 설정되어 있는 네임스페이스에 파드가 배포되면 파드에 자동으로 Istio 사이드카 프락시가 배포됩니다.
 
@@ -167,6 +179,7 @@ $ kubectl label namespace default istio-injection=enabled
 namespace/default labeled
 ```
 
+<a id="deploy-application-components"></a>
 #### 2. 애플리케이션 구성 요소 배포하기
 애플리케이션 구성 요소를 배포하고 정상적으로 배포되었는지 확인합니다.
 
@@ -214,9 +227,11 @@ $ kubectl exec "$(kubectl get pod -l app=ratings -o jsonpath='{.items[0].metadat
 <title>Simple Bookstore App</title>
 ```
 
-### 서비스 노출
+<a id="expose-service"></a>
+### 서비스 노출 { #expose-service }
 위의 과정까지 수행했을 때, 서비스는 클러스터 내부의 호스트에서만 접속 가능한 `ClusterIP` 형태로 설정되어 있습니다. Kubernetes에서는 서비스 노출을 위해 `NodePort`, `LoadBalancer` 등 다양한 타입의 `Service` 오브젝트를 제공하지만, Istio에서는 더 넓은 범위에서의 네트워크 트래픽을 처리하기 위한 gateway 오브젝트를 제공하고 있습니다. 아래 예제에서는 Istio에서 기본적으로 제공하는 샘플 bookinfo gateway를 사용하여 서비스를 노출하는 과정을 보여줍니다. Istio gateway에 대한 자세한 설명은 [Istio Gateway](https://istio.io/latest/docs/concepts/traffic-management/#gateways)를 참고하세요.
 
+<a id="expose-service-configure-ingress-gateway"></a>
 #### 인그레스 게이트웨이 구성하기
 서비스를 노출하기 위한 Istio 인그레스 게이트웨이를 추가로 구성합니다.
 
@@ -233,6 +248,7 @@ $ istioctl analyze
 ✔ No validation issues found when analyzing namespace: default.
 ```
 
+<a id="expose-service-access-service"></a>
 #### 서비스 접근하기
 노출된 서비스에 접근하기 위해 게이트웨이 URL 정보를 확인합니다. 게이트웨이 URL은 기본적으로 `인그레스 호스트:인그레스 IP`의 구성으로 되어 있습니다. 클러스터가 인터넷망 또는 폐쇄망 환경에 구성되었는지에 따라 게이트웨이 URL 정보를 확인하는 방법이 달라집니다. 인터넷망에 구성된 클러스터는 로드 밸런서의 `EXTERNAL-IP` 정보를 기반으로 게이트웨이 URL이 구성되며 폐쇄망 환경에 구성된 클러스터는 노드 포트를 기반으로 게이트웨이 URL이 구성됩니다.
 
@@ -268,7 +284,8 @@ $ curl http://114.110.160.79:80/productpage
 ```
 
 
-### Istio 제거
+<a id="delete-istio"></a>
+### Istio 제거 { #delete-istio }
 아래 명령어를 수행하여 예제에서 사용되었던 bookinfo 애플리케이션 관련 구성 요소를 제거합니다.
 ```
 $ kubectl delete -f samples/bookinfo/networking/bookinfo-gateway.yaml

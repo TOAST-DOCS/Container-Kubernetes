@@ -1,6 +1,10 @@
-## Container > NHN Kubernetes Service (NKS) > Application Guide > Gateway API
+<!-- pre-align:aligned sig=091ebaa2b119 -->
 
-### Overview
+<a id="container-nhn-kubernetes-service-nks-application-guide-gateway-api"></a>
+## Container > NHN Kubernetes Service (NKS) > Application Guide > Gateway API { #container-nhn-kubernetes-service-nks-application-guide-gateway-api }
+
+<a id="overview"></a>
+### Overview { #overview }
 
 Gateway API is a next-generation standard API for managing traffic routing in Kubernetes. It overcomes the limitations of the existing Ingress API and enables routing of various traffic types — such as HTTP, HTTPS, and TCP — from outside the cluster to internal services in a more expressive and extensible way. For more information on Gateway API and related resources, see the [Gateway API](https://gateway-api.sigs.k8s.io/) documentation.
 
@@ -14,6 +18,7 @@ Gateway API supports various implementations, and you can choose the one that be
 
 > [Note] The supported Gateway API version may vary by implementation. For more information, refer to the official documentation of each implementation.
 
+<a id="overview-key-gateway-api-resources"></a>
 #### Key Gateway API Resources
 
 Gateway API is designed to separate resources by role, allowing platform operators and application developers to configure settings within their respective scopes of authority.
@@ -31,11 +36,13 @@ Gateway API is designed to separate resources by role, allowing platform operato
 
 > [Note] In NGF, the NginxProxy resource can be used to additionally configure NGINX data plane behavior (service settings, replica count, etc.).
 
-### Install NGINX Gateway Fabric
+<a id="install-nginx-gateway-fabric"></a>
+### Install NGINX Gateway Fabric { #install-nginx-gateway-fabric }
 
 For more information on installing NGINX Gateway Fabric, see the [NGINX Gateway Fabric installation guide](https://docs.nginx.com/nginx-gateway-fabric/install) documentation.
 
-### HTTP Routing Example
+<a id="http-routing-example"></a>
+### HTTP Routing Example { #http-routing-example }
 
 The following is an example of routing traffic to multiple services based on the URI path. The diagram below shows the structure for routing requests to different services based on the `/coffee` and `/tea` paths.
 
@@ -45,6 +52,7 @@ Client → Gateway (LoadBalancer) → HTTPRoute
                                     └── /tea    → tea-svc    → tea Pod
 ```
 
+<a id="http-routing-example-deploy-services-and-pods"></a>
 #### Deploy Services and Pods
 
 Write a manifest to create services and Pods as shown below. Connect the `coffee` Pod to the `coffee-svc` service and the `tea` Pod to the `tea-svc` service.
@@ -124,6 +132,7 @@ Apply the above manifest.
 kubectl apply -f cafe.yaml
 ```
 
+<a id="http-routing-example-verify-gatewayclass"></a>
 #### Verify GatewayClass
 
 When NGINX Gateway Fabric is installed via Helm, a GatewayClass named `nginx` is created. Depending on the installation method, the GatewayClass may not be created automatically, in which case you must create it manually.
@@ -141,6 +150,7 @@ nginx   gateway.nginx.org/nginx-gateway-controller    True       10s
 
 If the `ACCEPTED` field is `True`, the GatewayClass has been created successfully.
 
+<a id="http-routing-example-create-gateway"></a>
 #### Create Gateway
 
 Create a gateway to receive traffic from outside the cluster. The following manifest defines a gateway that receives HTTP traffic on port 80.
@@ -180,6 +190,7 @@ nginx   nginx   123.123.123.44   True         1m
 
 Verify that the `PROGRAMMED` field is `True` and that an IP address has been assigned to `ADDRESS`.
 
+<a id="http-routing-example-create-httproute"></a>
 #### Create HTTPRoute
 
 Create an HTTPRoute that defines path-based routing rules. Write and apply the following manifest.
@@ -216,6 +227,7 @@ Apply the above manifest.
 kubectl apply -f cafe-route.yaml
 ```
 
+<a id="http-routing-example-verify-operation"></a>
 #### Verify Operation
 
 Send an HTTP request from an external host to the gateway IP address to verify that routing has been configured correctly.
@@ -232,7 +244,8 @@ curl http://${GATEWAY_IP}/tea
 
 When a request is sent to the `/coffee` path, it is forwarded to the `coffee-svc` service and the `coffee` Pod responds. The `Server name` field in the response shows that the `coffee` Pods respond alternately in a round-robin manner.
 
-### Host-Based Routing Example
+<a id="host-based-routing-example"></a>
+### Host-Based Routing Example { #host-based-routing-example }
 
 The following is an example of routing traffic to different services based on the hostname (Host header) of the request. The diagram below shows the structure for routing requests to different services based on the `coffee.example.com` and `tea.example.com` hostnames.
 
@@ -243,6 +256,7 @@ Client → Gateway (LoadBalancer) → HTTPRoute (coffee.example.com) → coffee-
 
 The services and Pods use the `cafe.yaml` from the previous example as-is.
 
+<a id="host-based-routing-example-create-httproute"></a>
 #### Create HTTPRoute
 
 Create an HTTPRoute for each hostname. Specify the hostname to route to in the `spec.hostnames` field.
@@ -284,6 +298,7 @@ Apply the above manifest.
 kubectl apply -f cafe-route-host.yaml
 ```
 
+<a id="host-based-routing-example-verify-operation"></a>
 #### Verify Operation
 
 Send a request from an external host by mapping the hostname to the gateway IP using the `--resolve` option.
@@ -304,7 +319,8 @@ When a request is sent to the `coffee.example.com` host, it is forwarded to the 
 
 > [Note] In a production environment, each hostname must be registered in DNS to point to the gateway's external IP. For testing, you can map the hostname directly to the gateway IP using the `--resolve` option as shown above, or by adding a record to the `/etc/hosts` file.
 
-### Cross-Namespace Routing Example
+<a id="cross-namespace-routing-example"></a>
+### Cross-Namespace Routing Example { #cross-namespace-routing-example }
 
 Gateway API supports traffic routing across multiple namespaces. In this example, a Gateway is deployed in the `nginx-gateway` namespace, an HTTPRoute in the `default` namespace, and a Service in the `app` namespace.
 
@@ -313,6 +329,7 @@ Cross-namespace references in Gateway API are controlled by the following two se
 * **`allowedRoutes.namespaces`**: Required when the Gateway and HTTPRoute are in different namespaces. Allows the HTTPRoute to reference a Gateway in another namespace as a `parentRef`.
 * **`ReferenceGrant`**: Required when the HTTPRoute and backend Service are in different namespaces. Allows the HTTPRoute to reference a Service in another namespace as a `backendRef`.
 
+<a id="cross-namespace-routing-example-deploy-services-and-pods"></a>
 #### Deploy Services and Pods
 
 Create the `app` namespace to be used in the example.
@@ -327,6 +344,7 @@ Deploy the `cafe.yaml` from the previous example to the `app` namespace.
 kubectl apply -f cafe.yaml -n app
 ```
 
+<a id="cross-namespace-routing-example-create-gateway"></a>
 #### Create Gateway
 
 Create a Gateway in the `nginx-gateway` namespace. Set `allowedRoutes.namespaces.from: All` to allow the HTTPRoute in the `default` namespace to reference this Gateway. Write and apply the following manifest.
@@ -355,6 +373,7 @@ Apply the above manifest.
 kubectl apply -f gateway-cross-ns.yaml
 ```
 
+<a id="cross-namespace-routing-example-create-referencegrant"></a>
 #### Create ReferenceGrant
 
 Create a `ReferenceGrant` to allow the HTTPRoute in the `default` namespace to reference the Service in the `app` namespace. Write and apply the following manifest.
@@ -384,6 +403,7 @@ kubectl apply -f reference-grant.yaml
 
 > [Note] The ReferenceGrant resource is available as a v1 API starting from Gateway API v1.5. Depending on the Gateway API version or implementation in use, the v1beta1 API may be used.
 
+<a id="cross-namespace-routing-example-create-httproute"></a>
 #### Create HTTPRoute
 
 Create an HTTPRoute in the `default` namespace. Specify the Gateway's namespace (`nginx-gateway`) in `parentRef` and the Service's namespace (`app`) in `backendRef`. Write and apply the following manifest.
@@ -424,6 +444,7 @@ Apply the above manifest.
 kubectl apply -f cafe-route-cross-ns.yaml
 ```
 
+<a id="cross-namespace-routing-example-verify-operation"></a>
 #### Verify Operation
 
 Use the following command to verify that routing has been configured correctly.
@@ -438,7 +459,8 @@ curl http://${GATEWAY_IP}/coffee
 curl http://${GATEWAY_IP}/tea
 ```
 
-### Migrate from Ingress to Gateway API
+<a id="migrate-from-ingress-to-gateway-api"></a>
+### Migrate from Ingress to Gateway API { #migrate-from-ingress-to-gateway-api }
 
 `ingress2gateway` is a tool managed by Kubernetes SIG-Network that can be used to convert existing Ingress resources to Gateway API resources (Gateway, HTTPRoute, etc.). However, not all Ingress settings are fully converted, and some features may require manual adjustments. For more information, see the [ingress2gateway](https://github.com/kubernetes-sigs/ingress2gateway) documentation.
 
@@ -446,10 +468,12 @@ curl http://${GATEWAY_IP}/tea
 
 > [Note] Not all Ingress annotations are converted to Gateway API. If there are unsupported annotations after conversion, a warning message is displayed. For more information, see the [supported providers list](https://github.com/kubernetes-sigs/ingress2gateway?tab=readme-ov-file#supported-providers).
 
+<a id="migrate-from-ingress-to-gateway-api-install-ingress2gateway"></a>
 #### Install ingress2gateway
 
 For more information on installing ingress2gateway, see the [ingress2gateway installation guide](https://github.com/kubernetes-sigs/ingress2gateway?tab=readme-ov-file#installation) documentation.
 
+<a id="migrate-from-ingress-to-gateway-api-convert-ingress-resources"></a>
 #### Convert Ingress Resources
 
 Convert the Ingress resources deployed in the current cluster to Gateway API resources. Specify the Ingress controller in use with the `--providers` option and convert resources from all namespaces with the `-A` option. Use the following command to save the conversion results to a file.
@@ -470,6 +494,7 @@ Convert the saved file as input.
 ingress2gateway print --providers=ingress-nginx --input-file /path/to/ingress.yaml > gateway-resources.yaml
 ```
 
+<a id="migrate-from-ingress-to-gateway-api-conversion-example"></a>
 #### Conversion Example
 
 The following is an example of an Ingress resource before conversion and a Gateway API resource after conversion.
@@ -553,6 +578,7 @@ status:
 
 > [Note] The `gatewayClassName` of the converted resource uses the existing Ingress class name (`nginx`) as-is. Verify that it matches the GatewayClass name specified during installation.
 
+<a id="migrate-from-ingress-to-gateway-api-apply-conversion-results"></a>
 #### Apply Conversion Results
 
 Review the converted resources and apply them to the cluster.

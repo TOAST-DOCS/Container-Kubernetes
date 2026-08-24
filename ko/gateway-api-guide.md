@@ -1,6 +1,10 @@
-## Container > NHN Kubernetes Service(NKS) > 애플리케이션 가이드 > Gateway API
+<!-- pre-align:aligned sig=091ebaa2b119 -->
 
-### 개요
+<a id="container-nhn-kubernetes-service-nks-application-guide-gateway-api"></a>
+## Container > NHN Kubernetes Service(NKS) > 애플리케이션 가이드 > Gateway API { #container-nhn-kubernetes-service-nks-application-guide-gateway-api }
+
+<a id="overview"></a>
+### 개요 { #overview }
 
 Gateway API는 Kubernetes에서 트래픽 라우팅을 관리하기 위한 차세대 표준 API입니다. 기존 Ingress API의 한계를 극복하고 보다 표현력 있고 확장 가능한 방식으로 클러스터 외부에서 내부 서비스로의 HTTP, HTTPS, TCP 등 다양한 트래픽을 라우팅할 수 있습니다. Gateway API와 관련 리소스에 대한 자세한 내용은 [Gateway API](https://gateway-api.sigs.k8s.io/) 문서를 참고하세요.
 
@@ -14,6 +18,7 @@ Gateway API는 다양한 구현체를 지원하며, 사용 환경에 따라 적�
 
 > [참고] 구현체별로 지원하는 Gateway API 버전이 다를 수 있으므로, 자세한 내용은 각 구현체의 공식 문서를 참고하세요.
 
+<a id="overview-key-gateway-api-resources"></a>
 #### Gateway API 주요 리소스
 
 Gateway API는 역할에 따라 리소스를 분리하여 운영자와 애플리케이션 개발자가 각자의 권한 범위 내에서 설정할 수 있도록 설계되어 있습니다.
@@ -31,11 +36,13 @@ Gateway API는 역할에 따라 리소스를 분리하여 운영자와 애플리
 
 > [참고] NGF에서는 NginxProxy 리소스를 통해 NGINX data plane 동작(서비스 설정, 레플리카 수 등)을 추가로 구성할 수 있습니다.
 
-### NGINX Gateway Fabric 설치
+<a id="install-nginx-gateway-fabric"></a>
+### NGINX Gateway Fabric 설치 { #install-nginx-gateway-fabric }
 
 NGINX Gateway Fabric 설치에 대한 자세한 내용은 [NGINX Gateway Fabric 설치 가이드](https://docs.nginx.com/nginx-gateway-fabric/install) 문서를 참고하세요.
 
-### HTTP 라우팅 예제
+<a id="http-routing-example"></a>
+### HTTP 라우팅 예제 { #http-routing-example }
 
 다음은 URI 경로를 기반으로 여러 서비스로 트래픽을 분기하는 예제입니다. 아래 그림은 `/coffee`와 `/tea` 경로에 따라 각각 다른 서비스로 요청을 라우팅하는 구조를 나타냅니다.
 
@@ -45,6 +52,7 @@ NGINX Gateway Fabric 설치에 대한 자세한 내용은 [NGINX Gateway Fabric 
                                          └── /tea    → tea-svc    → tea 파드
 ```
 
+<a id="http-routing-example-deploy-services-and-pods"></a>
 #### 서비스 및 파드 배포
 
 다음과 같이 서비스와 파드를 생성하기 위한 매니페스트를 작성합니다. `coffee-svc` 서비스에는 `coffee` 파드를, `tea-svc` 서비스에는 `tea` 파드를 연결합니다.
@@ -124,6 +132,7 @@ spec:
 kubectl apply -f cafe.yaml
 ```
 
+<a id="http-routing-example-verify-gatewayclass"></a>
 #### GatewayClass 확인
 
 NGINX Gateway Fabric은 Helm 설치 시 `nginx`라는 이름의 GatewayClass가 생성됩니다. 설치 방식에 따라 GatewayClass가 자동 생성되지 않을 수 있으므로, 필요시 직접 생성해야 합니다.
@@ -141,6 +150,7 @@ nginx   gateway.nginx.org/nginx-gateway-controller    True       10s
 
 `ACCEPTED` 항목이 `True`인 경우 GatewayClass가 정상적으로 생성된 것입니다.
 
+<a id="http-routing-example-create-gateway"></a>
 #### Gateway 생성
 
 클러스터 외부에서 트래픽을 수신할 게이트웨이를 생성합니다. 아래 매니페스트는 80번 포트로 HTTP 트래픽을 수신하는 게이트웨이를 정의합니다.
@@ -180,6 +190,7 @@ nginx   nginx   123.123.123.44   True         1m
 
 `PROGRAMMED` 항목이 `True`이고 `ADDRESS`에 IP 주소가 할당된 것을 확인합니다.
 
+<a id="http-routing-example-create-httproute"></a>
 #### HTTPRoute 생성
 
 경로 기반 라우팅 규칙을 정의하는 HTTPRoute를 생성합니다. 아래 매니페스트를 작성하고 적용합니다.
@@ -216,6 +227,7 @@ spec:
 kubectl apply -f cafe-route.yaml
 ```
 
+<a id="http-routing-example-verify-operation"></a>
 #### 동작 확인
 
 외부 호스트에서 게이트웨이의 IP 주소로 HTTP 요청을 전송하여 라우팅이 올바르게 설정되었는지 확인합니다.
@@ -232,7 +244,8 @@ curl http://${GATEWAY_IP}/tea
 
 `/coffee` 경로로 요청 시 `coffee-svc` 서비스에 전달되어 `coffee` 파드가 응답합니다. 응답의 `Server name` 항목을 보면 `coffee` 파드들이 라운드-로빈 방식으로 번갈아 응답하는 것을 확인할 수 있습니다.
 
-### 호스트 기반 라우팅 예제
+<a id="host-based-routing-example"></a>
+### 호스트 기반 라우팅 예제 { #host-based-routing-example }
 
 다음은 요청의 호스트명(Host 헤더)을 기반으로 서로 다른 서비스로 트래픽을 분기하는 예제입니다. 아래 그림은 `coffee.example.com`과 `tea.example.com` 호스트명에 따라 각각 다른 서비스로 요청을 라우팅하는 구조를 나타냅니다.
 
@@ -243,6 +256,7 @@ curl http://${GATEWAY_IP}/tea
 
 서비스 및 파드는 앞선 예제의 `cafe.yaml`을 그대로 사용합니다.
 
+<a id="host-based-routing-example-create-httproute"></a>
 #### HTTPRoute 생성
 
 호스트명별로 HTTPRoute를 각각 생성합니다. `spec.hostnames` 필드에 라우팅할 호스트명을 지정합니다.
@@ -284,6 +298,7 @@ spec:
 kubectl apply -f cafe-route-host.yaml
 ```
 
+<a id="host-based-routing-example-verify-operation"></a>
 #### 동작 확인
 
 외부 호스트에서 `--resolve` 옵션으로 호스트명을 게이트웨이 IP에 매핑하여 요청을 전송합니다.
@@ -304,7 +319,8 @@ curl --resolve tea.example.com:80:${GATEWAY_IP} \
 
 > [참고] 실제 운영 환경에서는 DNS에 각 호스트명이 게이트웨이의 외부 IP로 등록되어 있어야 합니다. 테스트 시에는 위와 같이 `--resolve` 옵션으로 호스트명을 게이트웨이 IP로 직접 매핑하거나, `/etc/hosts` 파일에 레코드를 추가하여 확인할 수 있습니다.
 
-### 네임스페이스 간 라우팅 예제
+<a id="cross-namespace-routing-example"></a>
+### 네임스페이스 간 라우팅 예제 { #cross-namespace-routing-example }
 
 Gateway API는 여러 네임스페이스에 걸친 트래픽 라우팅을 지원합니다. 이 예제에서는 `nginx-gateway` 네임스페이스에 Gateway를, `default` 네임스페이스에 HTTPRoute를, `app` 네임스페이스에 Service를 배포합니다.
 
@@ -313,6 +329,7 @@ Gateway API에서 네임스페이스 간 참조는 다음 두 가지 설정으�
 * **`allowedRoutes.namespaces`**: Gateway와 HTTPRoute의 네임스페이스가 다를 때 필요합니다. HTTPRoute가 다른 네임스페이스의 Gateway를 `parentRef`로 참조할 수 있도록 허용합니다.
 * **`ReferenceGrant`**: HTTPRoute와 백엔드 Service의 네임스페이스가 다를 때 필요합니다. HTTPRoute가 다른 네임스페이스의 Service를 `backendRef`로 참조할 수 있도록 허용합니다.
 
+<a id="cross-namespace-routing-example-deploy-services-and-pods"></a>
 #### 서비스 및 파드 배포
 
 예제에서 사용할 `app` 네임스페이스를 생성합니다.
@@ -327,6 +344,7 @@ kubectl create namespace app
 kubectl apply -f cafe.yaml -n app
 ```
 
+<a id="cross-namespace-routing-example-create-gateway"></a>
 #### Gateway 생성
 
 `nginx-gateway` 네임스페이스에 Gateway를 생성합니다. `default` 네임스페이스의 HTTPRoute가 이 Gateway를 참조할 수 있도록 `allowedRoutes.namespaces.from: All`로 설정합니다. 아래 매니페스트를 작성하고 적용합니다.
@@ -355,6 +373,7 @@ spec:
 kubectl apply -f gateway-cross-ns.yaml
 ```
 
+<a id="cross-namespace-routing-example-create-referencegrant"></a>
 #### ReferenceGrant 생성
 
 `default` 네임스페이스의 HTTPRoute가 `app` 네임스페이스의 Service를 참조할 수 있도록 `ReferenceGrant`를 생성합니다. 아래 매니페스트를 작성하고 적용합니다.
@@ -384,6 +403,7 @@ kubectl apply -f reference-grant.yaml
 
 > [참고] ReferenceGrant 리소스는 Gateway API v1.5부터 v1 API로 제공됩니다. 사용 중인 Gateway API 버전 또는 구현체에 따라 v1beta1 API를 사용할 수 있습니다.
 
+<a id="cross-namespace-routing-example-create-httproute"></a>
 #### HTTPRoute 생성
 
 `default` 네임스페이스에 HTTPRoute를 생성합니다. `parentRef`에 Gateway의 네임스페이스(`nginx-gateway`)를, `backendRef`에 Service의 네임스페이스(`app`)를 명시합니다. 아래 매니페스트를 작성하고 적용합니다.
@@ -424,6 +444,7 @@ spec:
 kubectl apply -f cafe-route-cross-ns.yaml
 ```
 
+<a id="cross-namespace-routing-example-verify-operation"></a>
 #### 동작 확인
 
 아래 명령어로 라우팅이 올바르게 설정되었는지 확인합니다.
@@ -438,7 +459,8 @@ curl http://${GATEWAY_IP}/coffee
 curl http://${GATEWAY_IP}/tea
 ```
 
-### Ingress에서 Gateway API로 마이그레이션
+<a id="migrate-from-ingress-to-gateway-api"></a>
+### Ingress에서 Gateway API로 마이그레이션 { #migrate-from-ingress-to-gateway-api }
 
 `ingress2gateway`는 Kubernetes SIG-Network에서 관리하는 도구로, 기존 Ingress 리소스를 Gateway API 리소스(Gateway, HTTPRoute 등)로 변환하는 데 사용할 수 있습니다. 다만 모든 Ingress 설정이 완전히 변환되는 것은 아니며, 일부 기능은 수동 보정이 필요할 수 있습니다. 자세한 내용은 [ingress2gateway](https://github.com/kubernetes-sigs/ingress2gateway) 문서를 참고하세요.
 
@@ -446,10 +468,12 @@ curl http://${GATEWAY_IP}/tea
 
 > [참고] 모든 Ingress 어노테이션이 Gateway API로 변환되는 것은 아닙니다. 변환 후 지원되지 않는 어노테이션이 있는 경우 경고 메시지가 출력됩니다. 자세한 내용은 [지원 프로바이더 목록](https://github.com/kubernetes-sigs/ingress2gateway?tab=readme-ov-file#supported-providers)을 참고하세요.
 
+<a id="migrate-from-ingress-to-gateway-api-install-ingress2gateway"></a>
 #### ingress2gateway 설치
 
 ingress2gateway 설치에 대한 자세한 내용은 [ingress2gateway 설치 가이드](https://github.com/kubernetes-sigs/ingress2gateway?tab=readme-ov-file#installation) 문서를 참고하세요.
 
+<a id="migrate-from-ingress-to-gateway-api-convert-ingress-resources"></a>
 #### Ingress 리소스 변환
 
 현재 클러스터에 배포된 Ingress 리소스를 Gateway API 리소스로 변환합니다. `--providers` 옵션으로 사용 중인 Ingress 컨트롤러를 지정하고, `-A` 옵션으로 모든 네임스페이스의 리소스를 변환합니다. 변환 결과를 파일로 저장하려면 아래 명령어를 사용합니다.
@@ -470,6 +494,7 @@ kubectl get ingress -A -o yaml > /path/to/ingress.yaml
 ingress2gateway print --providers=ingress-nginx --input-file /path/to/ingress.yaml > gateway-resources.yaml
 ```
 
+<a id="migrate-from-ingress-to-gateway-api-conversion-example"></a>
 #### 변환 예시
 
 아래는 변환 전 Ingress 리소스와 변환 후 Gateway API 리소스의 예시입니다.
@@ -553,6 +578,7 @@ status:
 
 > [참고] 변환된 리소스의 `gatewayClassName`은 기존 Ingress 클래스명(`nginx`)을 그대로 사용합니다. 앞서 설치 시 지정한 GatewayClass 이름과 일치하는지 확인하세요.
 
+<a id="migrate-from-ingress-to-gateway-api-apply-conversion-results"></a>
 #### 변환 결과 적용
 
 변환된 리소스를 검토한 후 클러스터에 적용합니다.
