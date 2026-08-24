@@ -2442,6 +2442,7 @@ Cilium は Kubernetes のネットワーキングとネットワークセキュ�
     * v1.18.0-nks1
     * v1.18.0-nks2: アドオン管理機能の安定性を強化しました。
 
+<a id="addon-mgmt-addon-coredns"></a>
 #### CoreDNS
 CoreDNS は Kubernetes クラスターのデフォルト DNS サーバーです。
 
