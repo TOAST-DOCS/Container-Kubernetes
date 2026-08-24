@@ -236,6 +236,9 @@ k8s Node状態のアイコンの意味は次のとおりです。
 > [注意]
 > 該当するクラスターを作成したユーザーのみがノードグループを作成できます。
 
+> [注意] 新規ノードの `node.cloudprovider.kubernetes.io/uninitialized` テイントを削除しないでください。
+> 新しく作成されたノードは、このテイントが設定された状態でクラスターに登録され、クラウドコントローラーマネージャー (cloud-controller-manager) がノードの初期化を完了した後に直接削除します。クラウドコントローラーマネージャーは、このテイントの有無によって初期化が必要なノードを判断するため、初期化が完了する前に自動化ツールや手動作業でテイントを削除すると、該当ノードはエラーログなしに初期化の対象から除外されます。このように欠落した初期化は自動的に復旧されず、一部の機能が正常に動作しない場合があります。
+
 <a id="nodegroup-delete"></a>
 ### ノードグループ削除 { #nodegroup-delete }
 ノードグループ一覧で削除するノードグループを選択し、**[ノードグループ削除]** ボタンをクリックすると削除が開始されます。ノードグループの削除には約 5 分程度かかります。ノードグループの状態によってはさらに時間がかかる場合があります。
@@ -252,6 +255,9 @@ k8s Node状態のアイコンの意味は次のとおりです。
 
 > [注意]
 > オートスケーラーが有効になっているノードグループは、手動でノードを追加することはできません。
+
+> [注意] 新規ノードの `node.cloudprovider.kubernetes.io/uninitialized` テイントを削除しないでください。
+> 詳細については、[ノードグループ作成](/Container/NKS/ja/user-guide/#nodegroup-create)の注意事項を参照してください。
 
 <a id="nodegroup-scale-in"></a>
 ### ノードグループからのノード削除 { #nodegroup-scale-in }
@@ -2497,9 +2503,9 @@ Cinder CSI Plugin は、NHN Cloud でブロックストレージをプロビジ�
 #### Metrics Server
 Metrics Server は、オートスケーリングとモニタリングのために、ノードと Pod からリソース使用状況のメトリクスを収集する Kubernetes のコンポーネントです。
 
-* タイプ: metrics-server
+* 種類: metrics-server
 * オプション: なし
-* ユーザー変更不可リソースおよびフィールド
+* ユーザー変更不可のリソースおよびフィールド
     * Deployment/metrics-server、ネームスペース kube-system
         * .spec.template.spec.containers[name="metrics-server"].image
 * サポートバージョン一覧

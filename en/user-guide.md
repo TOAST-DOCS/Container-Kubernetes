@@ -236,6 +236,9 @@ Enter information as required and click **Create Node Groups**, and a node group
 > [Caution]
 > Only the user who created the cluster can create node groups.
 
+> [Caution] Do not remove the `node.cloudprovider.kubernetes.io/uninitialized` taint from new nodes.
+> Newly created nodes are registered to the cluster with this taint set, and the cloud-controller-manager removes it directly after completing node initialization. Because the cloud controller manager determines which nodes require initialization based on the presence of this taint, if the taint is removed by an automation tool or manual operation before initialization is complete, the node is excluded from initialization targets without any error logs. Initialization that is missed in this way is not automatically recovered, and some features may not work properly.
+
 <a id="nodegroup-delete"></a>
 ### Delete Node Groups { #nodegroup-delete }
 Select the node group to delete from the node group list and click **Delete Node Group** to proceed with deletion. It takes about 5 minutes to delete a node group; more time may be required depending on the node group status.
@@ -252,6 +255,9 @@ You can add nodes to an operating node group. The current list of nodes will app
 
 > [Caution]
 > Nodes cannot be added manually to a node group with the autoscaler enabled.
+
+> [Caution] Do not remove the `node.cloudprovider.kubernetes.io/uninitialized` taint from new nodes.
+> For more information, see the precautions in [Creating Node Groups](/Container/NKS/en/user-guide/#nodegroup-create).
 
 <a id="nodegroup-scale-in"></a>
 ### Delete Nodes from a Node Group { #nodegroup-scale-in }
