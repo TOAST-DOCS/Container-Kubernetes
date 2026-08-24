@@ -3,18 +3,19 @@
 <a id="container-nhn-kubernetes-service-nks-release-notes"></a>
 ## Container > NHN Kubernetes Service(NKS) > 릴리스 노트 { #container-nhn-kubernetes-service-nks-release-notes }
 
-<a id="sep-01-2026"></a>
-### 2026. 09. 01. { #sep-01-2026 }
+<a id="sep-1-2026"></a>
+### 2026. 09. 01. { #sep-1-2026 }
 
+<a id="sep-1-2026-added-features"></a>
 #### 신규 기능 추가
 * Kubernetes v1.35.5를 지원합니다.
 
-<a id="sep-01-2026-platform-version-updates"></a>
+<a id="sep-1-2026-platform-version-updates"></a>
 #### 플랫폼 버전 업데이트
 * 1.202608.0 추가
     * Kubernetes 호환 버전: v1.31–v1.35
 
-<a id="sep-01-2026-add-on-updates"></a>
+<a id="sep-1-2026-add-on-updates"></a>
 #### 애드온 업데이트
 * 애드온 추가
     * calico v3.28.2-nks4
@@ -30,14 +31,17 @@
     * nfs_csi_plugin v1.0.3-nks1
     * snapshot_controller v4.1.1-nks3
 
-### 2026. 06. 02.
+<a id="jun-2-2026"></a>
+### 2026. 06. 02. { #jun-2-2026 }
 
+<a id="jun-2-2026-added-features"></a>
 #### 신규 기능 추가
 * Kubernetes v1.34.3을 지원합니다.
     * k8s v1.34 이상 버전에서 워커 노드 이미지의 CGroup 버전에 따른 제약 사항이 존재합니다. 자세한 내용은 [Kubernetes 버전과 CGroup 버전에 따른 제약 사항](/Container/NKS/ko/version-guide/#constraints-on-cgroup)을 참고하세요.
     * k8s v1.34 이상 버전에서 사용자 정의 containerd 레지스트리 설정 기능이 동작하지 않습니다. 자세한 내용은 [사용자 정의 containerd 레지스트리 설정 기능](/Container/NKS/ko/version-guide/#containerd-registry-config)을 참고하세요.
 * Cilium CNI를 지원합니다.
 
+<a id="jun-2-2026-platform-version-updates"></a>
 #### 플랫폼 버전 업데이트
 * 1.202605.0 추가
     * Kubernetes 호환 버전: v1.30–v1.34
@@ -46,6 +50,7 @@
         * kube-apiserver와 pod 간의 통신을 위한 konnectivity 지원
         * k8s v1.34 클러스터의 `ImageVolume` feature gate 활성화
 
+<a id="jun-2-2026-add-on-updates"></a>
 #### 애드온 업데이트
 * 애드온 추가
     * nfs_csi_plugin v1.0.2-nks1
@@ -54,8 +59,10 @@
     * calico v3.28.2-nks3
     * calico v3.30.2-nks3
 
-### 2026. 03. 17.
+<a id="mar-17-2026"></a>
+### 2026. 03. 17. { #mar-17-2026 }
 
+<a id="mar-17-2026-platform-version-updates"></a>
 #### 플랫폼 버전 업데이트
 * 1.202602.0 추가
     * Kubernetes 호환 버전: v1.29–v1.33
@@ -67,6 +74,7 @@
     * 기능 개선
         * 노드 및 노드 그룹 삭제 시 로드 밸런서 트래픽 유실 개선
 
+<a id="mar-17-2026-add-on-updates"></a>
 #### 애드온 업데이트
 * 애드온 추가
     * calico v3.30.2-nks2
@@ -76,6 +84,7 @@
     * snapshot_controller v4.1.1-nks2
     * nfs_csi_plugin v1.0.1-nks2
 
+<a id="mar-17-2026-added-features"></a>
 #### 신규 기능 추가
 * CGroup이 v2로 설정된 OS 이미지를 지원합니다.
     * 2026년 3월 이후 배포되는 OS 이미지는 CGroup이 v2로 설정되어 있습니다.
@@ -83,12 +92,15 @@
 * Kubernetes 테인트 설정 기능이 추가되었습니다.
 * Secure Key Manager 서비스를 이용해 클러스터의 기밀 데이터를 암/복호화할 수 있습니다.
 
-### 2025. 12. 23.
+<a id="dec-23-2025"></a>
+### 2025. 12. 23. { #dec-23-2025 }
 
+<a id="dec-23-2025-platform-version-updates"></a>
 #### 플랫폼 버전 업데이트
 * 1.202511.1 추가
     * 헬스 체크 확인 포트 설정 오류를 수정했습니다.
 
+<a id="dec-23-2025-add-on-updates"></a>
 #### 애드온 업데이트
 * Cinder CSI Plugin v1.27.101-nks2, v1.27.102-nks2가 추가되었습니다.
     * 내부 컨테이너 버전이 다음과 같이 변경되었습니다.
@@ -98,12 +110,15 @@
         * csi-resizer: v1.0.1 → v1.3.0
         * csi-node-driver-registrar: v2.0.1 → v2.3.0
 
-### 2025. 12. 02.
+<a id="dec-2-2025"></a>
+### 2025. 12. 02. { #dec-2-2025 }
 
+<a id="dec-2-2025-changed-service-support-policy"></a>
 #### 서비스 지원 정책 변경
 * NKS의 Kubernetes 버전 지원 정책이 변경됩니다.
     * 자세한 내용은 [사용 가이드](/Container/NKS/ko/version-guide-gov)를 참고하세요.
 
+<a id="dec-2-2025-add-on-updates"></a>
 #### 애드온 업데이트
 * 애드온 추가
     * Calico CNI v3.30.2-nks1
@@ -112,6 +127,7 @@
     * Snapshot Controller v4.1.1-nks1
     * NFS CSI Plugin v1.0.1-nks1
 
+<a id="dec-2-2025-added-features"></a>
 #### 신규 기능 추가
 * Kubernetes v1.33.4를 지원합니다.
 * 컨트롤 플레인과 워커 노드 그룹의 플랫폼 버전의 조회 및 업그레이드 기능이 추가되었습니다.
@@ -119,15 +135,19 @@
 * 로드 밸런서 상세 옵션 설정에 상태 확인 호스트 헤더 설정 기능이 추가되었습니다.
 
 
-### 2025. 07. 15.
+<a id="jul-15-2025"></a>
+### 2025. 07. 15. { #jul-15-2025 }
 
+<a id="jul-15-2025-image-update"></a>
 #### 이미지 업데이트
 * 클러스터 및 노드 그룹 생성 시 더 이상 아래 이미지를 지원하지 않습니다.
     * 대상 이미지
         * Ubuntu Server 20.04.3 LTS - Container
 
-### 2025. 06. 05.
+<a id="jun-5-2025"></a>
+### 2025. 06. 05. { #jun-5-2025 }
 
+<a id="jun-5-2025-added-features"></a>
 #### 신규 기능 추가
 * Kubernetes v1.32.3를 지원합니다.
 * 컨트롤 플레인 kubernetes 컴포넌트 로그 저장 기능이 추가되었습니다.
@@ -137,13 +157,16 @@
 * Addon 관리 기능을 사용할 수 있습니다.
     * 자세한 내용은 [사용 가이드](/Container/NKS/ko/user-guide-gov/#addon-mgmt)를 참고하세요.
 
+<a id="jun-5-2025-feature-updates"></a>
 #### 기능 개선/변경
 * 클러스터 CNI 변경 기능은 더 이상 지원하지 않습니다.
 * Blue/Green Upgrade 시 시스템 파드 업그레이드 단계가 제거되었습니다.
     * Calico, CoreDNS 등의 시스템 파드는 애드온 관리 기능을 통해 업데이트할 수 있습니다.
 
-### 2025. 03. 11.
+<a id="mar-11-2025"></a>
+### 2025. 03. 11. { #mar-11-2025 }
 
+<a id="mar-11-2025-added-features"></a>
 #### 신규 기능 추가
 * Kubernetes v1.31.4를 지원합니다.
 * OIDC(openID connect) 설정 기능을 사용할 수 있습니다.
@@ -151,17 +174,22 @@
     * 클러스터 키페어를 설정한 클러스터는 서비스 사용자의 권한으로 동작합니다.
     * 서비스 사용자의 권한으로 동작하는 클러스터는 오너를 변경/관리할 필요가 없습니다.
 
+<a id="mar-11-2025-feature-updates"></a>
 #### 기능 개선/변경
 * 클러스터 오너 변경 기능은 더 이상 지원하지 않습니다.
 
-### 2024. 12. 03.
+<a id="dec-3-2024"></a>
+### 2024. 12. 03. { #dec-3-2024 }
 
+<a id="dec-3-2024-added-features"></a>
 #### 신규 기능 추가
 * Kubernetes 컴포넌트 설정 기능을 사용할 수 있습니다.
 
+<a id="dec-3-2024-feature-updates"></a>
 #### 기능 개선
 * 파드 서브넷 크기에 따라 노드당 생성 가능한 최대 파드 수가 자동으로 설정되도록 변경되었습니다.
 
+<a id="dec-3-2024-image-update"></a>
 #### 이미지 업데이트
 이미지에 설치된 GPU 드라이버의 버전이 변경되었습니다.
 
@@ -187,18 +215,23 @@
 | Ubuntu Server 20.04.6 LTS (2024.11.19) | 20GB | 30GB |
 | Ubuntu Server 22.04.6 LTS (2024.11.19) | 20GB | 30GB |
 
+<a id="dec-3-2024-deprecated-image-support"></a>
 #### 이미지 지원 중단
 * CentOS 이미지를 사용하여 신규 클러스터 및 노드 그룹을 생성할 수 없습니다.
 
-### 2024. 10. 29.
+<a id="oct-29-2024"></a>
+### 2024. 10. 29. { #oct-29-2024 }
 
+<a id="oct-29-2024-feature-updates"></a>
 #### 기능 개선
 
 * CNI 업데이트
     * Kubernetes v1.27.3 이상 클러스터의 Calico CNI 버전이 v3.28.0에서 v3.28.2로 변경되었습니다.
 
-### 2024. 09. 05.
+<a id="sep-5-2024"></a>
+### 2024. 09. 05. { #sep-5-2024 }
 
+<a id="sep-5-2024-added-features"></a>
 #### 신규 기능 추가
 
 * Kubernetes v1.30.3을 지원합니다.
@@ -209,12 +242,15 @@
 * 로드 밸런서의 정적 라우트 적용 여부를 설정할 수 있습니다.
 * NKS 레지스트리를 활성화할 수 있습니다.
 
+<a id="sep-5-2024-deprecated-image-support"></a>
 #### 이미지 지원 중단
 * Debian 이미지를 사용하여 신규 클러스터 및 노드 그룹을 생성할 수 없습니다.
 
 
-### 2024. 06. 04.
+<a id="jun-4-2024"></a>
+### 2024. 06. 04. { #jun-4-2024 }
 
+<a id="jun-4-2024-added-features"></a>
 #### 신규 기능 추가
 
 * Kubernetes v1.29.3을 지원합니다.
@@ -223,8 +259,10 @@
 * Resource Watcher 서비스를 통해 클러스터에서 발생하는 이벤트에 대한 알림을 받을 수 있습니다.
     * 자세한 내용은 [Resource Watcher](/Governance%20&%20Audit/Resource%20Watcher/ko/overview)를 참고하세요.
 
-### 2024. 03. 05.
+<a id="mar-5-2024"></a>
+### 2024. 03. 05. { #mar-5-2024 }
 
+<a id="mar-5-2024-added-features"></a>
 #### 신규 기능 추가
 
 * 클러스터에 강화된 보안 규칙을 적용할 수 있습니다.
@@ -233,8 +271,10 @@
 * 클러스터와 노드 그룹 조회 화면에서 작업 이력을 확인할 수 있습니다.
 
 
-### 2023. 11. 30.
+<a id="nov-30-2023"></a>
+### 2023. 11. 30. { #nov-30-2023 }
 
+<a id="nov-30-2023-added-features"></a>
 #### 신규 기능 추가
 * kubelet 사용자 정의 아규먼트 설정 기능이 추가되었습니다.
 * 로드 밸런서 상세 옵션 설정으로 멤버 서브넷 설정 기능이 추가되었습니다.
@@ -242,6 +282,7 @@
 * 커스텀 이미지를 워커 이미지로 활용하는 기능이 추가되었습니다.
     * 자세한 내용은 [사용자 가이드](/Container/NKS/ko/user-guide-gov/#custom-image)를 참고하세요.
 
+<a id="nov-30-2023-image-update"></a>
 #### 이미지 업데이트
 * 클러스터 및 노드 그룹 생성 시 사용 가능한 신규 이미지가 추가되었습니다.
     * 대상 이미지
@@ -259,17 +300,21 @@
         * Rocky Linux 8.8 - Container (2023.11.21)
         * Ubuntu Server 20.04.6 LTS - Container (2023.11.21)
 
-### 2023. 08. 31.
+<a id="aug-31-2023"></a>
+### 2023. 08. 31. { #aug-31-2023 }
 
+<a id="aug-31-2023-release-of-new-service"></a>
 #### 신규 서비스 출시
 * 한국(평촌) 리전에서도 Kubernetes 서비스를 사용할 수 있습니다.
 
+<a id="aug-31-2023-added-features"></a>
 #### 신규 기능 추가
 
 * Kubernetes v1.27.3을 지원합니다.
 * 클러스터 생성 시 Kubernetes API 엔드포인트의 속성을 설정할 수 있습니다.
 * 클러스터와 노드 그룹 목록 조회 화면에서 좀 더 상세한 상태 정보를 제공합니다.
 
+<a id="aug-31-2023-feature-updates"></a>
 #### 기능 개선
 * 클러스터 및 노드 그룹 생성 시 사용하는 이미지의 배포판 버전이 변경되었습니다.
     * 변경 전
@@ -277,6 +322,7 @@
     * 변경 후
         * Rocky Linux 8.8 - Container (2023.08.22)
 
+<a id="aug-31-2023-image-update"></a>
 #### 이미지 업데이트 
 * 변경 사항
     * nvidia-device-plugin 버전이 470.182.03에서 470.199.02로 변경되었습니다.
@@ -287,8 +333,10 @@
     * Rocky Linux 8.8 - Container (2023.08.22)
     * Ubuntu Server 20.04.6 LTS - Container (2023.08.22)
 
-### 2023. 07. 19.
+<a id="jul-19-2023"></a>
+### 2023. 07. 19. { #jul-19-2023 }
 
+<a id="jul-19-2023-image-update"></a>
 #### 이미지 업데이트
 * 노드 그룹 생성 시 일부 이미지에서 iptables 커널 모듈이 정상적으로 초기화되지 않는 문제를 수정했습니다.
     * 문제 이미지: Rocky Linux 8.7 - Container (2023.05.25)
@@ -298,12 +346,15 @@
     * 해결 이미지: CentOS 7.9 - Container (2023.07.25)
 
 
-### 2023. 06. 06.
+<a id="jun-6-2023"></a>
+### 2023. 06. 06. { #jun-6-2023 }
 
+<a id="jun-6-2023-added-features"></a>
 #### 신규 기능 추가
 
 * Kubernetes v1.26.3을 지원합니다.
 
+<a id="jun-6-2023-feature-updates"></a>
 #### 기능 개선
 
 * 클러스터 및 노드 그룹 생성 시 사용하는 이미지의 배포판 버전이 변경되었습니다.
@@ -326,8 +377,10 @@
         * Rocky Linux 8.7 - Container (2023.05.25)
         * Ubuntu Server 20.04.6 LTS - Container (2023.05.25)
 
-### 2023. 04. 04.
+<a id="apr-4-2023"></a>
+### 2023. 04. 04. { #apr-4-2023 }
 
+<a id="apr-4-2023-added-features"></a>
 #### 신규 기능 추가
 
 * 클러스터 CNI 변경 기능이 추가되었습니다.
@@ -335,12 +388,14 @@
 * 노드 그룹의 인스턴스 타입을 변경할 수 있습니다.
 * 콘솔에서 Kubernetes 자원 조회 기능을 사용할 수 있습니다.
 
+<a id="apr-4-2023-feature-updates"></a>
 #### 기능 변경
 
 * NKS API 주소 도메인이 변경되었습니다.
     * 기존: https://gov-api-kubernetes.infrastructure.cloud.toast.com
     * 변경: https://kr1-api-kubernetes-infrastructure.gov-nhncloudservice.com
 
+<a id="apr-4-2023-apr-4-2023-feature-updates"></a>
 #### 기능 개선
 
 * 이미지 업데이트
@@ -348,8 +403,10 @@
     * Debian 11.6 Bullseye - Container (2023.02.21)
     * Rocky Linux 8.6 - Container (2023.02.21)
 
-### 2023. 02. 07.
+<a id="feb-7-2023"></a>
+### 2023. 02. 07. { #feb-7-2023 }
 
+<a id="feb-7-2023-added-features"></a>
 #### 신규 기능 추가
 
 * 클러스터 OWNER 변경 기능이 추가되었습니다.
@@ -358,15 +415,19 @@
 * 클러스터 생성 시 Kubernetes v1.21.6은 더 이상 지원하지 않습니다. 단, 사용 중인 클러스터에는 영향이 없습니다.
 * 로드 밸런서의 리스너에 프록시 프로토콜(Proxy Protocol)을 설정할 수 있습니다.
 
-### 2023. 01. 05.
+<a id="jan-5-2023"></a>
+### 2023. 01. 05. { #jan-5-2023 }
 
+<a id="jan-5-2023-added-features"></a>
 #### 신규 기능 추가
 
 * 이미지 추가
     * Rocky Linux 8.6 - Container (2022.12)
 
-### 2022. 12. 06.
+<a id="dec-6-2022"></a>
+### 2022. 12. 06. { #dec-6-2022 }
 
+<a id="dec-6-2022-feature-updates"></a>
 #### 기능 개선
 
 * 이미지 업데이트
@@ -377,6 +438,7 @@
         * Ubuntu Server 18.04.6 LTS - Container (2022.11.22)
         * CentOS 7.9 - Container (2022.11.22)
 
+<a id="dec-6-2022-added-features"></a>
 #### 신규 기능 추가
 
 * 노드 시작/중지 기능을 사용할 수 있습니다.
@@ -386,30 +448,38 @@
     * Debian 11.5 Bullseye - Container (2022.11.22)
 
 
-### 2022. 10. 04.
+<a id="oct-4-2022"></a>
+### 2022. 10. 04. { #oct-4-2022 }
 
+<a id="oct-4-2022-added-features"></a>
 #### 신규 기능 추가
 
 * Kubernetes v1.24.3을 지원합니다.
 * 클러스터 생성 시 Kubernetes v1.20.12는 더 이상 지원하지 않습니다. 단, 사용 중인 클러스터에는 영향이 없습니다.
 
 
-### 2022. 08. 02.
+<a id="aug-2-2022"></a>
+### 2022. 08. 02. { #aug-2-2022 }
 
+<a id="aug-2-2022-added-features"></a>
 #### 신규 기능 추가
 
 * 노드 그룹 생성 후에도 사용자 스크립트를 변경할 수 있습니다.
 * 사용자 스크립트 변경 API가 추가됐습니다.
 * 워커 노드 그룹 업그레이드 시 최대 노드 수와 최대 서비스 불가 노드 수를 지정할 수 있습니다.
 
-### 2022. 05. 31.
+<a id="may-31-2022"></a>
+### 2022. 05. 31. { #may-31-2022 }
 
+<a id="may-31-2022-feature-updates"></a>
 #### 기능 개선
 * 내부 구조를 개선해 서비스의 성능과 안정성을 향상했습니다.
 
 
-### 2022. 04. 05.
+<a id="apr-5-2022"></a>
+### 2022. 04. 05. { #apr-5-2022 }
 
+<a id="apr-5-2022-feature-updates"></a>
 #### 기능 변경
 
 * Kubernetes 서비스의 이름이 NHN Kubernetes Service(NKS)로 변경되었습니다.
@@ -422,6 +492,7 @@
 * 인스턴스 생성 시 Prometheus 호환 exporter가 자동으로 설치되지 않도록 변경했습니다.
 
 
+<a id="apr-5-2022-added-features"></a>
 #### 신규 기능 추가
 
 * 아래 Kubernetes 버전을 지원합니다.
@@ -445,8 +516,10 @@
         * 클러스터 생성 및 노드 그룹 생성 시 Ubuntu 워커 이미지를 사용할 수 있습니다.
 
 
-### 2022. 02. 22.
+<a id="feb-22-2022"></a>
+### 2022. 02. 22. { #feb-22-2022 }
 
+<a id="feb-22-2022-release-of-new-service"></a>
 #### 신규 서비스 출시
 * 콘솔에서 Kubernetes 클러스터를 생성하고 관리할 수 있습니다.
 
