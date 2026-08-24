@@ -1,3 +1,5 @@
+<!-- machine_translated: true -->
+
 <!-- pre-align:aligned sig=98b43adf5be7 -->
 
 <a id="container-nhn-kubernetes-service-nks-user-guide"></a>
@@ -234,6 +236,9 @@ Enter information as required and click **Create Node Groups**, and a node group
 > [Caution]
 > Only the user who created the cluster can create node groups.
 
+> [Caution] Do not remove the `node.cloudprovider.kubernetes.io/uninitialized` taint from new nodes.
+> Newly created nodes are registered to the cluster with this taint set, and the cloud-controller-manager removes it directly after completing node initialization. Because the cloud controller manager determines which nodes require initialization based on the presence of this taint, if the taint is removed by an automation tool or manual operation before initialization is complete, the node is excluded from initialization targets without any error logs. Initialization that is missed in this way is not automatically recovered, and some features may not work properly.
+
 <a id="nodegroup-delete"></a>
 ### Delete Node Groups { #nodegroup-delete }
 Select the node group to delete from the node group list and click **Delete Node Group** to proceed with deletion. It takes about 5 minutes to delete a node group; more time may be required depending on the node group status.
@@ -250,6 +255,9 @@ You can add nodes to an operating node group. The current list of nodes will app
 
 > [Caution]
 > Nodes cannot be added manually to a node group with the autoscaler enabled.
+
+> [Caution] Do not remove the `node.cloudprovider.kubernetes.io/uninitialized` taint from new nodes.
+> For more information, see the precautions in [Creating Node Groups](/Container/NKS/en/user-guide/#nodegroup-create).
 
 <a id="nodegroup-scale-in"></a>
 ### Delete Nodes from a Node Group { #nodegroup-scale-in }
@@ -2434,36 +2442,34 @@ Cilium is a CNI plugin that provides networking and network security for Kuberne
     * v1.18.0-nks1
     * v1.18.0-nks2: Improved the stability of the add-on management feature.
 
-<a id="addon-mgmt-addon-coredns"></a>
 #### CoreDNS
-CoreDNS is the default DNS server for Kubernetes clusters.
+CoreDNS is the default DNS server for a Kubernetes cluster.
 
 * Type: kube-dns
 * Options: None
-* Non-user-modifiable resources and fields
+* Immutable resources and fields
     * Deployment/coredns, namespace kube-system
         * .spec.template.spec.containers[name="coredns"].image'
 * Supported version list
     * 1.8.4-nks1
     * 1.8.4-nks2
-        * Improved the stability of the add-on management feature.
-        * Adjusted non-user-modifiable resources and fields.
+        * Improved stability for add-on management.
+        * Adjusted immutable resources and fields.
             * Deployment/coredns, namespace kube-system
                 * Removed .metadata.labels.k8s-app
                 * Removed .metadata.labels.kubernetes.io/name
                 * Removed .spec.template.spec.nodeSelector
                 * Removed .spec.template.spec.serviceAccountName
-    * 1.8.4-nks3: Improved the stability of the add-on management feature.
+    * 1.8.4-nks3: Improved stability for add-on management.
 
 
-<a id="addon-mgmt-addon-cinder-csi-plugin">
 <a id="addon-mgmt-addon-list-cinder-csi-plugin"></a>
 #### Cinder CSI Plugin
-Cinder CSI Plugin is a CSI driver that can provision and manage block storage in NHN Cloud.
+Cinder CSI Plugin is a CSI driver that provisions and manages block storage in NHN Cloud.
 
 * Type: cinder-csi-plugin
 * Options: None
-* Non-user-modifiable resources and fields
+* Immutable resources and fields
     * StatefulSet/csi-cinder-controllerplugin, namespace kube-system
         * .spec.template.spec.containers[name="csi-attacher"].image
         * .spec.template.spec.containers[name="csi-provisioner"].image
@@ -2473,56 +2479,53 @@ Cinder CSI Plugin is a CSI driver that can provision and manage block storage in
 
 * Supported version list
     * v1.27.101-nks1
-    * v1.27.101-nks2: Internal container versions have been updated.
+    * v1.27.101-nks2: Updated the internal container versions.
         * csi-attacher: v3.0.2 → v3.3.0
         * csi-provisioner: v2.0.4 → v2.2.2
         * csi-snapshotter: v3.0.2 → v3.0.3
         * csi-resizer: v1.0.1 → v1.3.0
         * csi-node-driver-registrar: v2.0.1 → v2.3.0
-    * v1.27.101-nks3: Improved the stability of the add-on management feature.
+    * v1.27.101-nks3: Improved stability for add-on management.
     * v1.27.102-nks1
-    * v1.27.102-nks2: Internal container versions have been updated.
+    * v1.27.102-nks2: Updated the internal container versions.
         * csi-attacher: v3.0.2 → v3.3.0
         * csi-provisioner: v2.0.4 → v2.2.2
         * csi-snapshotter: v3.0.2 → v3.0.3
         * csi-resizer: v1.0.1 → v1.3.0
         * csi-node-driver-registrar: v2.0.1 → v2.3.0
-    * v1.27.102-nks3: Improved the stability of the add-on management feature.
+    * v1.27.102-nks3: Improved stability for add-on management.
     * v1.27.102-nks4
-        * Improved the stability of the add-on management feature.
+        * Improved stability for add-on management.
         * Removed `effect: NoExecute` from the cinder-csi-nodeplugin DaemonSet toleration.
 
-<a id="adoon-mgmt-addon-metrics-server">
 <a id="addon-mgmt-addon-list-metrics-server"></a>
 #### Metrics Server
 Metrics Server is a Kubernetes component that collects resource usage metrics from nodes and pods for autoscaling and monitoring.
 
 * Type: metrics-server
 * Options: None
-* Non-user-modifiable resources and fields
+* Immutable resources and fields
     * Deployment/metrics-server, namespace kube-system
         * .spec.template.spec.containers[name="metrics-server"].image
 * Supported version list
     * v0.4.4-nks1
-    * v0.4.4-nks2: Improved the stability of the add-on management feature.
-    * v0.4.4-nks3: Improved the stability of the add-on management feature.
+    * v0.4.4-nks2: Improved stability for add-on management.
+    * v0.4.4-nks3: Improved stability for add-on management.
 
-<a id="addon-mgmt-addon-snapshot-controller">
 <a id="addon-mgmt-addon-list-snapshot-controller"></a>
 #### Snapshot Controller
 Snapshot Controller is a Kubernetes component that manages the lifecycle of volume snapshots, including creation, deletion, and PVC integration.
 
 * Type: snapshot-controller
 * Options: None
-* Non-user-modifiable resources and fields
+* Immutable resources and fields
     * Deployment/snapshot-controller, namespace kube-system
         * .spec.template.spec.containers[name="snapshot-controller"].image
 * Supported version list
     * v4.1.1-nks1
-    * v4.1.1-nks2: Improved the stability of the add-on management feature.
-    * v4.1.1-nks3: Improved the stability of the add-on management feature.
+    * v4.1.1-nks2: Improved stability for add-on management.
+    * v4.1.1-nks3: Improved stability for add-on management.
 
-<a id="addon-mgmt-addon-nfs-csi-plugin">
 <a id="addon-mgmt-addon-list-nfs-csi-plugin"></a>
 #### NFS CSI Plugin
 NFS CSI Plugin is a CSI driver that can provision and manage NFS in NHN Cloud.
