@@ -2442,6 +2442,7 @@ Cilium is a CNI plugin that provides networking and network security for Kuberne
     * v1.18.0-nks1
     * v1.18.0-nks2: Improved the stability of the add-on management feature.
 
+<a id="addon-mgmt-addon-coredns"></a>
 #### CoreDNS
 CoreDNS is the default DNS server for a Kubernetes cluster.
 
