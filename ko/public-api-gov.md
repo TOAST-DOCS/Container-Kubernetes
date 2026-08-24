@@ -2719,9 +2719,10 @@ X-Auth-Token: {tokenId}
 <a id="other-features"></a>
 ## 기타 기능 { #other-features }
 
-### 지원되는 Kubernetes 버전 보기
+<a id="view-supported-kubernetes-versions-and-task-types"></a>
+### 지원되는 Kubernetes 버전 및 작업 종류 보기 { #view-supported-kubernetes-versions-and-task-types }
 
-NHN Kubernetes Service(NKS)에서 지원하는 Kubernetes 버전을 조회합니다.
+NHN Kubernetes Service(NKS)에서 지원하는 Kubernetes 버전 및 작업 타입을 조회합니다.
 
 ```
 GET /v1/supports
@@ -2731,6 +2732,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="view-supported-kubernetes-versions-and-task-types-request"></a>
 #### 요청
 
 이 API는 요청 본문을 요구하지 않습니다.
@@ -2740,6 +2742,7 @@ X-Auth-Token: {tokenId}
 | tokenId | Header | String | O | 토큰 ID |
 
 
+<a id="view-supported-kubernetes-versions-and-task-types-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
