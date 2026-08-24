@@ -2466,7 +2466,7 @@ CoreDNS is the default DNS server for a Kubernetes cluster.
 
 <a id="addon-mgmt-addon-list-cinder-csi-plugin"></a>
 #### Cinder CSI Plugin
-Cinder CSI Plugin is a CSI driver that provisions and manages block storage in NHN Cloud.
+The Cinder CSI Plugin is a CSI driver that allows you to provision and manage block storage in NHN Cloud.
 
 * Type: cinder-csi-plugin
 * Options: None
@@ -4334,7 +4334,7 @@ For clusters using enhanced security rules, additional security rules must be ad
 
 <a id="nas-integration-install-csi-driver-nfs"></a>
 #### Install csi-driver-nfs
-To use the NHN Cloud NAS service, you must deploy [nfs-csi-plugin](/Container/NKS/en/user-guide/#addon-mgmt-addon-nfs-csi-plugin) to the cluster using the Addon feature of NHN Kubernetes Service (NKS).
+To use the NHN Cloud NAS service, you must deploy [nfs-csi-plugin](/Container/NKS/en/user-guide/#addon-mgmt-addon-list-nfs-csi-plugin) to the cluster using the Addon feature of NHN Kubernetes Service (NKS).
 
 csi-driver-nfs is a driver that supports NFS storage provisioning that works by creating new subdirectories on NFS storage.
 csi-driver-nfs works by presenting NFS storage information to storage classes, reducing what you have to manage.

@@ -1,4 +1,4 @@
-<!-- pre-align:aligned sig=8f6519afc382 -->
+<!-- pre-align:aligned sig=4b7ae5d19238 -->
 
 <a id="container-nhn-kubernetes-service-nks-release-notes"></a>
 ## Container > NHN Kubernetes Service(NKS) > 릴리스 노트 { #container-nhn-kubernetes-service-nks-release-notes }

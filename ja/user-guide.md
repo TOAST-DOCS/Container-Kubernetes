@@ -2448,19 +2448,19 @@ CoreDNS は Kubernetes クラスターのデフォルト DNS サーバーです�
 
 * 種類: kube-dns
 * オプション: なし
-* ユーザー変更不可リソースおよびフィールド
+* ユーザーが変更できないリソースおよびフィールド
     * Deployment/coredns、ネームスペース kube-system
         * .spec.template.spec.containers[name="coredns"].image'
 * サポートバージョン一覧
     * 1.8.4-nks1
     * 1.8.4-nks2
         * アドオン管理機能の安定性を強化しました。
-        * ユーザー変更不可リソースおよびフィールドを調整しました。
+        * ユーザーが変更できないリソースおよびフィールドを調整しました。
             * Deployment/coredns、ネームスペース kube-system
-                * .metadata.labels.k8s-app を削除
-                * .metadata.labels.kubernetes.io/name を削除
-                * .spec.template.spec.nodeSelector を削除
-                * .spec.template.spec.serviceAccountName を削除
+                * .metadata.labels.k8s-app 削除
+                * .metadata.labels.kubernetes.io/name 削除
+                * .spec.template.spec.nodeSelector 削除
+                * .spec.template.spec.serviceAccountName 削除
     * 1.8.4-nks3: アドオン管理機能の安定性を強化しました。
 
 
@@ -2501,7 +2501,7 @@ Cinder CSI Plugin は、NHN Cloud でブロックストレージをプロビジ�
 
 <a id="addon-mgmt-addon-list-metrics-server"></a>
 #### Metrics Server
-Metrics Server は、オートスケーリングとモニタリングのためにノードと Pod からリソース使用状況のメトリクスを収集する Kubernetes のコンポーネントです。
+Metrics Server は、オートスケーリングとモニタリングのために、ノードと Pod からリソース使用状況のメトリクスを収集する Kubernetes のコンポーネントです。
 
 * 種類: metrics-server
 * オプション: なし
@@ -2517,9 +2517,9 @@ Metrics Server は、オートスケーリングとモニタリングのため�
 #### Snapshot Controller
 Snapshot Controller は、ボリュームスナップショットの作成、削除、PVC 連携を含むライフサイクルを管理する Kubernetes のコンポーネントです。
 
-* 種類: snapshot-controller
+* 種別: snapshot-controller
 * オプション: なし
-* ユーザーが変更できないリソースおよびフィールド
+* ユーザー変更不可のリソースおよびフィールド
     * Deployment/snapshot-controller、ネームスペース kube-system
         * .spec.template.spec.containers[name="snapshot-controller"].image
 * サポートバージョン一覧
@@ -4335,7 +4335,7 @@ $ systemctl start rpcbind
 
 <a id="nas-integration-install-csi-driver-nfs"></a>
 #### csi-driver-nfs のインストール
-NHN Cloud NAS サービスを使用するために、クラスターに NHN Kubernetes Service (NKS) の Addon 機能として [nfs-csi-plugin](/Container/NKS/ja/user-guide/#addon-mgmt-addon-nfs-csi-plugin) をデプロイする必要があります。
+NHN Cloud NAS サービスを使用するには、クラスターに NHN Kubernetes Service(NKS) の Addon 機能として [nfs-csi-plugin](/Container/NKS/ja/user-guide/#addon-mgmt-addon-list-nfs-csi-plugin) をデプロイする必要があります。
 
 csi-driver-nfs は、NFS ストレージに新しいサブディレクトリを作成する方式で動作する NFS ストレージプロビジョニングをサポートするドライバーです。
 csi-driver-nfs は、ストレージクラスに NFS ストレージ情報を提供する方式で動作し、ユーザーが管理する対象を減らします。

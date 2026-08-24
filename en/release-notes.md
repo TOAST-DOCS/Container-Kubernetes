@@ -1,4 +1,6 @@
-<!-- pre-align:aligned sig=8f6519afc382 -->
+<!-- machine_translated: true -->
+
+<!-- pre-align:aligned sig=4b7ae5d19238 -->
 
 <a id="container-nhn-kubernetes-service-nks-release-notes"></a>
 ## Container > NHN Kubernetes Service (NKS) > Release Notes { #container-nhn-kubernetes-service-nks-release-notes }
