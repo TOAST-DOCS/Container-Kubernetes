@@ -1,3 +1,5 @@
+<!-- machine_translated: true -->
+
 <!-- pre-align:aligned sig=98b43adf5be7 -->
 
 <a id="container-nhn-kubernetes-service-nks-user-guide"></a>
@@ -234,6 +236,9 @@ k8s Node状態のアイコンの意味は次のとおりです。
 > [注意]
 > 該当するクラスターを作成したユーザーのみがノードグループを作成できます。
 
+> [注意] 新規ノードの `node.cloudprovider.kubernetes.io/uninitialized` テイントを削除しないでください。
+> 新しく作成されたノードは、このテイントが設定された状態でクラスターに登録され、クラウドコントローラーマネージャー (cloud-controller-manager) がノードの初期化を完了した後に直接削除します。クラウドコントローラーマネージャーは、このテイントの有無によって初期化が必要なノードを判断するため、初期化が完了する前に自動化ツールや手動作業でテイントを削除すると、該当ノードはエラーログなしに初期化の対象から除外されます。このように欠落した初期化は自動的に復旧されず、一部の機能が正常に動作しない場合があります。
+
 <a id="nodegroup-delete"></a>
 ### ノードグループ削除 { #nodegroup-delete }
 ノードグループ一覧で削除するノードグループを選択し、**[ノードグループ削除]** ボタンをクリックすると削除が開始されます。ノードグループの削除には約 5 分程度かかります。ノードグループの状態によってはさらに時間がかかる場合があります。
@@ -250,6 +255,9 @@ k8s Node状態のアイコンの意味は次のとおりです。
 
 > [注意]
 > オートスケーラーが有効になっているノードグループは、手動でノードを追加することはできません。
+
+> [注意] 新規ノードの `node.cloudprovider.kubernetes.io/uninitialized` テイントを削除しないでください。
+> 詳細については、[ノードグループ作成](/Container/NKS/ja/user-guide/#nodegroup-create)の注意事項を参照してください。
 
 <a id="nodegroup-scale-in"></a>
 ### ノードグループからのノード削除 { #nodegroup-scale-in }
@@ -2434,11 +2442,10 @@ Cilium は Kubernetes のネットワーキングとネットワークセキュ�
     * v1.18.0-nks1
     * v1.18.0-nks2: アドオン管理機能の安定性を強化しました。
 
-<a id="addon-mgmt-addon-coredns"></a>
 #### CoreDNS
 CoreDNS は Kubernetes クラスターのデフォルト DNS サーバーです。
 
-* タイプ: kube-dns
+* 種類: kube-dns
 * オプション: なし
 * ユーザー変更不可リソースおよびフィールド
     * Deployment/coredns、ネームスペース kube-system
@@ -2456,14 +2463,13 @@ CoreDNS は Kubernetes クラスターのデフォルト DNS サーバーです�
     * 1.8.4-nks3: アドオン管理機能の安定性を強化しました。
 
 
-<a id="addon-mgmt-addon-cinder-csi-plugin">
 <a id="addon-mgmt-addon-list-cinder-csi-plugin"></a>
 #### Cinder CSI Plugin
-Cinder CSI Plugin は NHN Cloud でブロックストレージをプロビジョニングおよび管理できる CSI ドライバーです。
+Cinder CSI Plugin は、NHN Cloud でブロックストレージをプロビジョニングおよび管理できる CSI ドライバーです。
 
-* タイプ: cinder-csi-plugin
+* 種類: cinder-csi-plugin
 * オプション: なし
-* ユーザー変更不可リソースおよびフィールド
+* ユーザーが変更できないリソースおよびフィールド
     * StatefulSet/csi-cinder-controllerplugin、ネームスペース kube-system
         * .spec.template.spec.containers[name="csi-attacher"].image
         * .spec.template.spec.containers[name="csi-provisioner"].image
@@ -2492,14 +2498,13 @@ Cinder CSI Plugin は NHN Cloud でブロックストレージをプロビジョ
         * アドオン管理機能の安定性を強化しました。
         * cinder-csi-nodeplugin DaemonSet の toleration から `effect: NoExecute` を削除しました。
 
-<a id="adoon-mgmt-addon-metrics-server">
 <a id="addon-mgmt-addon-list-metrics-server"></a>
 #### Metrics Server
-Metrics Server は、オートスケーリングとモニタリングのためにノードと Pod からリソース使用指標を収集する Kubernetes の構成要素です。
+Metrics Server は、オートスケーリングとモニタリングのためにノードと Pod からリソース使用状況のメトリクスを収集する Kubernetes のコンポーネントです。
 
-* タイプ: metrics-server
+* 種類: metrics-server
 * オプション: なし
-* ユーザー変更不可リソースおよびフィールド
+* ユーザー変更不可のリソースおよびフィールド
     * Deployment/metrics-server、ネームスペース kube-system
         * .spec.template.spec.containers[name="metrics-server"].image
 * サポートバージョン一覧
@@ -2507,14 +2512,13 @@ Metrics Server は、オートスケーリングとモニタリングのため�
     * v0.4.4-nks2: アドオン管理機能の安定性を強化しました。
     * v0.4.4-nks3: アドオン管理機能の安定性を強化しました。
 
-<a id="addon-mgmt-addon-snapshot-controller">
 <a id="addon-mgmt-addon-list-snapshot-controller"></a>
 #### Snapshot Controller
-Snapshot Controller は、ボリュームスナップショットの作成、削除、PVC 連携を含むライフサイクルを管理する Kubernetes の構成要素です。
+Snapshot Controller は、ボリュームスナップショットの作成、削除、PVC 連携を含むライフサイクルを管理する Kubernetes のコンポーネントです。
 
-* タイプ: snapshot-controller
+* 種類: snapshot-controller
 * オプション: なし
-* ユーザー変更不可リソースおよびフィールド
+* ユーザーが変更できないリソースおよびフィールド
     * Deployment/snapshot-controller、ネームスペース kube-system
         * .spec.template.spec.containers[name="snapshot-controller"].image
 * サポートバージョン一覧
@@ -2522,7 +2526,6 @@ Snapshot Controller は、ボリュームスナップショットの作成、削
     * v4.1.1-nks2: アドオン管理機能の安定性を強化しました。
     * v4.1.1-nks3: アドオン管理機能の安定性を強化しました。
 
-<a id="addon-mgmt-addon-nfs-csi-plugin">
 <a id="addon-mgmt-addon-list-nfs-csi-plugin"></a>
 #### NFS CSI Plugin
 NFS CSI Plugin は NHN Cloud の NFS をプロビジョニングおよび管理できる CSI ドライバーです。
