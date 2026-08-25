@@ -1,4 +1,5 @@
-## Container > NHN Kubernetes Service(NKS) > API v2 가이드
+<a id="container-nhn-kubernetes-service-nks-api-v2-guide"></a>
+## Container > NHN Kubernetes Service(NKS) > API v2 가이드 { #container-nhn-kubernetes-service-nks-api-v2-guide }
 
 Kubernetes 클러스터를 구성하기 위한 API를 기술합니다.
 API를 사용하려면 API 엔드포인트와 토큰 등이 필요합니다. [API 사용 준비](/Compute/Compute/ko/identity-api-gov/)를 참고하여 API 사용에 필요한 정보를 준비합니다.
@@ -12,11 +13,13 @@ API를 사용하려면 API 엔드포인트와 토큰 등이 필요합니다. [AP
 
 API 응답에 가이드에 명시되지 않은 필드가 나타날 수 있습니다. 이런 필드는 NHN Cloud 내부 용도로 사용되며 사전 공지 없이 변경될 수 있으므로 사용하지 않습니다.
 
-## API에 사용되는 리소스 정보 확인
+<a id="check-the-information-of-resources-used-in-api"></a>
+## API에 사용되는 리소스 정보 확인 { #check-the-information-of-resources-used-in-api }
 
 NHN Kubernetes Service(NKS) API는 클러스터 및 노드 그룹 구성을 위해 여러 가지 리소스를 사용합니다. 리소스별 정보 확인 방법은 다음과 같습니다.
 
-### 인터넷 게이트웨이에 연결된 VPC 네트워크 UUID
+<a id="uuid-of-the-vpc-network-attached-to-the-internet-gateway"></a>
+### 인터넷 게이트웨이에 연결된 VPC 네트워크 UUID { #uuid-of-the-vpc-network-attached-to-the-internet-gateway }
 
 인터넷 게이트웨이에 연결된 VPC 네트워크는 VPC 네트워크 목록 조회 API에 **router:external=True** 쿼리 파라미터를 이용해 조회할 수 있습니다.
 
@@ -27,44 +30,54 @@ GET /v2.0/networks?router:external=True
 네트워크 목록 조회 API에 대한 좀 더 자세한 내용은 [네트워크 목록 보기](/Network/VPC/ko/public-api-ngovc/#_2)를 참고하세요.
 
 
-### 인터넷 게이트웨이에 연결된 서브넷 UUID 목록
+<a id="list-of-uuids-of-subnets-attached-to-the-internet-gateway"></a>
+### 인터넷 게이트웨이에 연결된 서브넷 UUID 목록 { #list-of-uuids-of-subnets-attached-to-the-internet-gateway }
 
 인터넷 게이트웨이에 연결된 VPC 네트워크와 연결된 서브넷 UUID를 입력합니다. 여러 서브넷이 조회됐다면 콜론(`:`)으로 연결해 입력합니다. 서브넷 목록 조회 API에 대한 좀 더 자세한 내용은 [서브넷 목록 보기](/Network/VPC/ko/public-api-ngovc/#_6)를 참고하세요.
 
 
-### VPC 네트워크 UUID
+<a id="vpc-network-uuid"></a>
+### VPC 네트워크 UUID { #vpc-network-uuid }
 
 노드와 연결할 내부 VPC 네트워크 UUID를 입력합니다. 네트워크 목록 조회 API에 대한 좀 더 자세한 내용은 [네트워크 목록 보기](/Network/VPC/ko/public-api-ngovc/#_2)를 참고하세요.
 
-### VPC 서브넷 UUID
+<a id="vpc-subnet-uuid"></a>
+### VPC 서브넷 UUID { #vpc-subnet-uuid }
 
 노드와 연결할 내부 VPC 네트워크와 연결된 서브넷 UUID를 입력합니다. 서브넷 목록 조회 API에 대한 좀 더 자세한 내용은 [서브넷 목록 보기](/Network/VPC/ko/public-api-ngovc/#_6)를 참고하세요.
 
-### 가용성 영역 UUID
+<a id="availability-zone-uuid"></a>
+### 가용성 영역 UUID { #availability-zone-uuid }
 
 노드를 생성할 가용성 영역 UUID를 입력합니다. 가용성 영역 목록 조회 API에 대한 좀 더 자세한 내용은 [가용성 목록 보기](/Compute/Instance/ko/public-api-ngovc/#_9)를 참고하세요.
 
-### 키페어 명
+<a id="key-pair-uuid"></a>
+### 키페어 명 { #key-pair-uuid }
 
 노드 접속 시 사용할 키페어를 입력합니다. 키페어 목록 조회 API에 대한 좀 더 자세한 내용은 [키페어 목록 보기](/Compute/Instance/ko/public-api-ngovc/#_13)를 참고하세요.
 
-### 베이스 이미지 UUID
+<a id="base-image-uuid"></a>
+### 베이스 이미지 UUID { #base-image-uuid }
 
 노드 생성에 사용할 베이스 이미지 UUID를 입력합니다. NKS 노드 생성에 사용되는 베이스 이미지만을 필터링하기 위해 API 호출 시 쿼리 스트링 파라미터에 `nhncloud_allow_nks_cpu_flavor=true&visibility=public` 값을 입력합니다. 베이스 이미지 목록 조회 API에 대한 좀 더 자세한 내용은 [이미지 목록 조회](/Compute/Image/ko/public-api-ngovc/#_2)를 참고하세요.
 
-### 블록 스토리지 종류
+<a id="block-storage-type"></a>
+### 블록 스토리지 종류 { #block-storage-type }
 
 노드에 사용할 블록 스토리지 UUID를 입력합니다. 블록 스토리지 타입 목록 조회 API에 대한 좀 더 자세한 내용은 [볼륨 타입 목록 보기](/Storage/Block%20Storage/ko/public-api-ngovc/#_2)를 참고하세요.
 
-### 인스턴스 타입 UUID
+<a id="flavor-uuid"></a>
+### 인스턴스 타입 UUID { #flavor-uuid }
 
 생성할 노드의 인스턴스 타입 UUID를 입력합니다. 인스턴스 타입 목록 조회 API에 대한 좀 더 자세한 내용은 [인스턴스 타입 목록 보기](/Compute/Instance/ko/public-api-ngovc/#_2)를 참고하세요.
 
 
 
-## 클러스터
+<a id="cluster"></a>
+## 클러스터 { #cluster }
 
-### 클러스터 목록 보기
+<a id="list-clusters"></a>
+### 클러스터 목록 보기 { #list-clusters }
 
 클러스터 목록을 조회합니다.
 
@@ -76,6 +89,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="list-clusters-request"></a>
 #### 요청
 
 이 API는 요청 본문을 요구하지 않습니다.
@@ -84,6 +98,7 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|---|
 | tokenId | Header | String | O | 토큰 ID |
 
+<a id="list-clusters-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -186,7 +201,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 클러스터 보기
+<a id="get-a-cluster"></a>
+### 클러스터 보기 { #get-a-cluster }
 
 개별 클러스터 정보를 조회합니다.
 
@@ -198,6 +214,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="get-a-cluster-request"></a>
 #### 요청
 
 이 API는 요청 본문을 요구하지 않습니다.
@@ -207,6 +224,7 @@ X-Auth-Token: {tokenId}
 | tokenId | Header | String | O | 토큰 ID |
 | CLUSTER_ID_OR_NAME| URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 |
 
+<a id="get-a-cluster-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -331,7 +349,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 작업 이력 목록 보기
+<a id="view-task-history-list"></a>
+### 작업 이력 목록 보기 { #view-task-history-list }
 
 클러스터의 작업 이력 목록을 조회합니다.
 
@@ -343,6 +362,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="view-task-history-list-request"></a>
 #### 요청
 
 이 API는 요청 본문을 요구하지 않습니다.
@@ -353,6 +373,7 @@ X-Auth-Token: {tokenId}
 | CLUSTER_UUID | URL | UUID | O | 클러스터 UUID |
 
 
+<a id="view-task-history-list-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -404,7 +425,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 작업 이력 보기
+<a id="list-task-history"></a>
+### 작업 이력 보기 { #list-task-history }
 
 클러스터의 작업 이력을 조회합니다.
 
@@ -416,6 +438,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="list-task-history-request"></a>
 #### 요청
 
 이 API는 요청 본문을 요구하지 않습니다.
@@ -427,6 +450,7 @@ X-Auth-Token: {tokenId}
 | EVENT_UUID | URL | UUID | O | 작업 UUID |
 
 
+<a id="list-task-history-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -473,7 +497,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 클러스터 생성하기
+<a id="create-a-cluster"></a>
+### 클러스터 생성하기 { #create-a-cluster }
 
 클러스터를 생성합니다.
 
@@ -485,6 +510,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="create-a-cluster-request"></a>
 #### 요청
 
 | 이름 | 종류 | 형식 | 필수 | 설명 |
@@ -617,6 +643,7 @@ X-Auth-Token: {tokenId}
 </p>
 </details>
 
+<a id="create-a-cluster-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -637,7 +664,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 클러스터 삭제하기
+<a id="delete-a-cluster"></a>
+### 클러스터 삭제하기 { #delete-a-cluster }
 
 클러스터를 삭제합니다.
 
@@ -649,6 +677,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="delete-a-cluster-request"></a>
 #### 요청
 
 이 API는 요청 본문을 요구하지 않습니다.
@@ -659,13 +688,15 @@ X-Auth-Token: {tokenId}
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
 
 
+<a id="delete-a-cluster-response"></a>
 #### 응답
 
 이 API는 응답 본문을 반환하지 않습니다.
 
 ---
 
-### 리사이즈
+<a id="resize"></a>
+### 리사이즈 { #resize }
 
 클러스터의 노드 수를 조정합니다.
 
@@ -677,6 +708,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="resize-request"></a>
 #### 요청
 
 | 이름 | 종류 | 형식 | 필수 | 설명 |
@@ -723,6 +755,7 @@ X-Auth-Token: {tokenId}
 
 
 
+<a id="resize-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -744,7 +777,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 클러스터 kubeconfig 조회
+<a id="get-kubeconfig-of-a-cluster"></a>
+### 클러스터 kubeconfig 조회 { #get-kubeconfig-of-a-cluster }
 
 클러스터 설정 파일(kubeconfig)을 조회합니다.
 
@@ -756,6 +790,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="get-kubeconfig-of-a-cluster-request"></a>
 #### 요청
 
 이 API는 요청 본문을 요구하지 않습니다.
@@ -766,6 +801,7 @@ X-Auth-Token: {tokenId}
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
 
 
+<a id="get-kubeconfig-of-a-cluster-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -786,7 +822,8 @@ X-Auth-Token: {tokenId}
 </details>
 
 
-### 클러스터 API 엔드포인트 IP 접근 제어 적용
+<a id="enforce-ip-access-control-to-cluster-api-endpoints"></a>
+### 클러스터 API 엔드포인트 IP 접근 제어 적용 { #enforce-ip-access-control-to-cluster-api-endpoints }
 클러스터 API 엔드포인트에 IP 접근 제어를 적용하거나 해제할 수 있습니다.
 IP 접근 제어 기능에 대한 자세한 사항은 [IP 접근제어](/Network/Load%20Balancer/ko/overview-gov/#ip) 문서를 참고하세요.
 클러스터 API 엔드포인트에 IP 접근 제어 규칙에 대한 자세한 사항은 [사용자 가이드](/Container/NKS/ko/user-guide-ngovc/#api_endpoint_ipacl)를 참고하세요.
@@ -799,6 +836,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="enforce-ip-access-control-to-cluster-api-endpoints-request"></a>
 #### 요청
 
 | 이름 | 종류 | 형식 | 필수 | 설명 |
@@ -835,6 +873,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="enforce-ip-access-control-to-cluster-api-endpoints-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -854,7 +893,8 @@ X-Auth-Token: {tokenId}
 </details>
 
 
-### 클러스터 API 엔드포인트 IP 접근 제어 조회
+<a id="get-cluster-api-endpoint-ip-access-control"></a>
+### 클러스터 API 엔드포인트 IP 접근 제어 조회 { #get-cluster-api-endpoint-ip-access-control }
 클러스터 API 엔드포인트에 적용된 IP 접근 제어 정보를 확인할 수 있습니다.
 
 ```
@@ -865,6 +905,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="get-cluster-api-endpoint-ip-access-control-request"></a>
 #### 요청
 이 API는 요청 본문을 요구하지 않습니다.
 
@@ -874,6 +915,7 @@ X-Auth-Token: {tokenId}
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
 
 
+<a id="get-cluster-api-endpoint-ip-access-control-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -922,7 +964,8 @@ X-Auth-Token: {tokenId}
 </details>
 
 ---
-### 클러스터 인증서 갱신
+<a id="renew-cluster-certificate"></a>
+### 클러스터 인증서 갱신 { #renew-cluster-certificate }
 
 클러스터의 인증서를 갱신합니다.
 ```
@@ -933,6 +976,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="renew-cluster-certificate-name"></a>
 #### 요청
 | 이름 | 종류 | 형식 | 필수 | 설명 |
 |---|---|---|---|---|
@@ -952,6 +996,7 @@ X-Auth-Token: {tokenId}
 </p>
 </details>
 
+<a id="renew-cluster-certificate-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -972,7 +1017,8 @@ X-Auth-Token: {tokenId}
 </details>
 
 ---
-### 컨트롤 플레인 Kubernetes 컴포넌트 로그 저장
+<a id="store-logs-of-kubernetes-control-plane-components"></a>
+### 컨트롤 플레인 Kubernetes 컴포넌트 로그 저장 { #store-logs-of-kubernetes-control-plane-components }
 NHN Kubernetes Service(NKS)의 컨트롤 플레인에서 실행 중인 주요 Kubernetes 컴포넌트들의 로그를 Log & Crash Search 또는 또는 Object Storage에 저장합니다.
 ```
 PATCH /v1/clusters/{CLUSTER_ID_OR_NAME}
@@ -982,6 +1028,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="store-logs-of-kubernetes-control-plane-components-name"></a>
 #### 요청
 
 | 이름 | 종류 | 형식 | 필수 | 설명 |
@@ -1055,6 +1102,7 @@ X-Auth-Token: {tokenId}
 </p>
 </details>
 
+<a id="store-logs-of-kubernetes-control-plane-components-type"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -1076,9 +1124,11 @@ X-Auth-Token: {tokenId}
 
 ---
 
-## 노드 그룹
+<a id="node-group"></a>
+## 노드 그룹 { #node-group }
 
-### 노드 그룹 목록 보기
+<a id="list-node-groups"></a>
+### 노드 그룹 목록 보기 { #list-node-groups }
 
 노드 그룹 목록을 조회합니다.
 
@@ -1090,6 +1140,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="list-node-groups-request"></a>
 #### 요청
 
 이 API는 요청 본문을 요구하지 않습니다.
@@ -1100,6 +1151,7 @@ X-Auth-Token: {tokenId}
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
 
 
+<a id="list-node-groups-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -1144,7 +1196,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 노드 그룹 보기
+<a id="get-a-node-group"></a>
+### 노드 그룹 보기 { #get-a-node-group }
 
 개별 노드 그룹 정보를 조회합니다.
 
@@ -1156,6 +1209,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="get-a-node-group-request"></a>
 #### 요청
 
 이 API는 요청 본문을 요구하지 않습니다.
@@ -1166,6 +1220,7 @@ X-Auth-Token: {tokenId}
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
 | NODEGROUP_ID_OR_NAME | URL | UUID or String | O | 노드 그룹 UUID 또는 노드 그룹 이름 | 
 
+<a id="get-a-node-group-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -1290,7 +1345,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 노드 그룹 생성하기
+<a id="create-a-node-group"></a>
+### 노드 그룹 생성하기 { #create-a-node-group }
 
 노드 그룹을 생성합니다.
 
@@ -1302,6 +1358,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="create-a-node-group-request"></a>
 #### 요청
 
 | 이름 | 종류 | 형식 | 필수 | 설명 |
@@ -1366,6 +1423,7 @@ X-Auth-Token: {tokenId}
 </p>
 </details>
 
+<a id="create-a-node-group-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -1446,7 +1504,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 노드 그룹 삭제하기
+<a id="delete-a-node-group"></a>
+### 노드 그룹 삭제하기 { #delete-a-node-group }
 
 지정한 노드 그룹를 삭제합니다.
 ```
@@ -1457,6 +1516,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="delete-a-node-group-request"></a>
 #### 요청
 
 이 API는 요청 본문을 요구하지 않습니다.
@@ -1467,13 +1527,15 @@ X-Auth-Token: {tokenId}
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 | 
 | NODEGROUP_ID_OR_NAME | URL | UUID or String | O | 노드 그룹 UUID 또는 노드 그룹 이름 | 
 
+<a id="delete-a-node-group-response"></a>
 #### 응답
 
 이 API는 응답 본문을 반환하지 않습니다.
 
 ---
 
-### 노드 중지하기
+<a id="stop-a-node-group"></a>
+### 노드 중지하기 { #stop-a-node-group }
 
 지정한 노드 목록을 중지시킵니다.
 
@@ -1485,6 +1547,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="stop-a-node-group-request"></a>
 #### 요청
 
 | 이름 | 종류 | 형식 | 필수 | 설명 |
@@ -1507,6 +1570,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="stop-a-node-group-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -1527,7 +1591,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 노드 시작하기
+<a id="start-a-node"></a>
+### 노드 시작하기 { #start-a-node }
 
 지정한 노드 목록을 시작시킵니다.
 
@@ -1539,6 +1604,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="start-a-node-request"></a>
 #### 요청
 
 | 이름 | 종류 | 형식 | 필수 | 설명 |
@@ -1560,6 +1626,7 @@ X-Auth-Token: {tokenId}
 </p>
 </details>
 
+<a id="start-a-node-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -1580,7 +1647,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 노드 그룹의 클러스터 오토스케일러 설정 보기
+<a id="view-cluster-autoscaler-configuration-of-a-node-group"></a>
+### 노드 그룹의 클러스터 오토스케일러 설정 보기 { #view-cluster-autoscaler-configuration-of-a-node-group }
 
 노드 그룹의 클러스터 오토스케일러 설정을 조회합니다.
 
@@ -1592,6 +1660,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="view-cluster-autoscaler-configuration-of-a-node-group-request"></a>
 #### 요청
 
 이 API는 요청 본문을 요구하지 않습니다.
@@ -1603,6 +1672,7 @@ X-Auth-Token: {tokenId}
 | NODEGROUP_ID_OR_NAME | URL | UUID or String | O | 노드 그룹 UUID 또는 노드 그룹 이름 | 
 
 
+<a id="view-cluster-autoscaler-configuration-of-a-node-group-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -1638,7 +1708,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 노드 그룹의 클러스터 오토스케일러 설정 변경하기
+<a id="change-cluster-autoscaler-configuration-of-a-node-group"></a>
+### 노드 그룹의 클러스터 오토스케일러 설정 변경하기 { #change-cluster-autoscaler-configuration-of-a-node-group }
 
 노드 그룹의 클러스터 오토스케일러 설정을 변경합니다.
 
@@ -1650,6 +1721,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="change-cluster-autoscaler-configuration-of-a-node-group-request"></a>
 #### 요청
 
 | 이름 | 종류 | 형식 | 필수 | 설명 |
@@ -1687,6 +1759,7 @@ X-Auth-Token: {tokenId}
 
 
 
+<a id="change-cluster-autoscaler-configuration-of-a-node-group-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -1707,7 +1780,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 노드 그룹의 지표 기반 오토스케일러 설정 변경하기
+<a id="change-metric-based-autoscaler-configuration-of-a-node-group"></a>
+### 노드 그룹의 지표 기반 오토스케일러 설정 변경하기 { #change-metric-based-autoscaler-configuration-of-a-node-group }
 
 노드 그룹의 지표 기반 오토스케일러 설정을 변경합니다.
 
@@ -1719,6 +1793,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="change-metric-based-autoscaler-configuration-of-a-node-group-request"></a>
 #### 요청
 
 | 이름 | 종류 | 형식 | 필수 | 설명 |
@@ -1820,6 +1895,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="change-metric-based-autoscaler-configuration-of-a-node-group-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -1840,7 +1916,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 클러스터 업그레이드
+<a id="upgrade-a-cluster"></a>
+### 클러스터 업그레이드 { #upgrade-a-cluster }
 
 클러스터를 업그레이드합니다.
 
@@ -1852,6 +1929,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="upgrade-a-cluster-request"></a>
 #### 요청
 
 | 이름 | 종류 | 형식 | 필수 | 설명 |
@@ -1885,6 +1963,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="upgrade-a-cluster-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -1905,7 +1984,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 사용자 스크립트 변경하기
+<a id="change-user-script"></a>
+### 사용자 스크립트 변경하기 { #change-user-script }
 
 노드 그룹의 사용자 스크립트를 변경합니다.
 
@@ -1917,6 +1997,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="change-user-script-request"></a>
 #### 요청
 
 | 이름 | 종류 | 형식 | 필수 | 설명 |
@@ -1940,6 +2021,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="change-user-script-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -1960,7 +2042,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 인스턴스 타입 변경하기
+<a id="change-instance-flavor"></a>
+### 인스턴스 타입 변경하기 { #change-instance-flavor }
 
 노드 그룹의 인스턴스 타입을 변경합니다.
 
@@ -1972,6 +2055,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="change-instance-flavor-request"></a>
 #### 요청
 
 | 이름 | 종류 | 형식 | 필수 | 설명 |
@@ -2001,6 +2085,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="change-instance-flavor-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -2021,7 +2106,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 노드 그룹의 플로팅 IP 자동 할당 설정 변경하기
+<a id="change-floating-ip-auto-assignment-configuration-of-a-node-group"></a>
+### 노드 그룹의 플로팅 IP 자동 할당 설정 변경하기 { #change-floating-ip-auto-assignment-configuration-of-a-node-group }
 
 노드 그룹의 플로팅 IP 자동 할당 설정을 변경합니다.
 
@@ -2033,6 +2119,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="change-floating-ip-auto-assignment-configuration-of-a-node-group-request"></a>
 #### 요청
 
 | 이름 | 종류 | 형식 | 필수 | 설명 |
@@ -2065,6 +2152,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="change-floating-ip-auto-assignment-configuration-of-a-node-group-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -2085,7 +2173,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 노드 그룹의 Kubernetes 레이블 설정 변경하기
+<a id="change-kubernetes-label-configuration-of-a-node-group"></a>
+### 노드 그룹의 Kubernetes 레이블 설정 변경하기 { #change-kubernetes-label-configuration-of-a-node-group }
 
 노드 그룹의 Kubernetes 레이블 설정을 변경합니다.
 
@@ -2097,6 +2186,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="change-kubernetes-label-configuration-of-a-node-group-request"></a>
 #### 요청
 
 | 이름 | 종류 | 형식 | 필수 | 설명 |
@@ -2125,6 +2215,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="change-kubernetes-label-configuration-of-a-node-group-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -2145,9 +2236,11 @@ X-Auth-Token: {tokenId}
 
 ---
 
-## 애드온 관리 기능
+<a id="add-on-management"></a>
+## 애드온 관리 기능 { #add-on-management }
 
-### NHN Cloud에서 제공하는 애드온 유형 보기
+<a id="view-the-types-of-add-ons-offered-by-nhn-cloud"></a>
+### NHN Cloud에서 제공하는 애드온 유형 보기 { #view-the-types-of-add-ons-offered-by-nhn-cloud }
 NHN Cloud에서 제공하는 애드온 유형을 확인할 수 있습니다.
 
 ```
@@ -2158,6 +2251,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="view-the-types-of-add-ons-offered-by-nhn-cloud-request"></a>
 #### 요청
 
 | 이름 | 종류 | 형식 | 필수 | 설명 |
@@ -2165,6 +2259,7 @@ X-Auth-Token: {tokenId}
 | tokenId | Header | String | O | 토큰 ID |
 | ADDON_TYPE_UUID_OR_NAME | URL | UUID or String | O | 애드온 유형의 UUID 혹은 이름 |
 
+<a id="view-the-types-of-add-ons-offered-by-nhn-cloud-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -2189,7 +2284,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### NHN Cloud에서 제공하는 애드온 유형 목록 보기
+<a id="view-a-list-of-add-ons-types-offered-by-nhn-cloud"></a>
+### NHN Cloud에서 제공하는 애드온 유형 목록 보기 { #view-a-list-of-add-ons-types-offered-by-nhn-cloud }
 NHN Cloud에서 제공하는 애드온 유형의 목록을 확인할 수 있습니다.
 
 ```
@@ -2200,11 +2296,13 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="view-a-list-of-add-ons-types-offered-by-nhn-cloud-request"></a>
 #### 요청
 | 이름 | 종류 | 형식 | 필수 | 설명 |
 |---|---|---|---|---|
 | tokenId | Header | String | O | 토큰 ID |
 
+<a id="view-a-list-of-add-ons-types-offered-by-nhn-cloud-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -2228,7 +2326,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### NHN Cloud에서 제공하는 애드온 보기
+<a id="view-add-ons-offered-by-nhn-cloud"></a>
+### NHN Cloud에서 제공하는 애드온 보기 { #view-add-ons-offered-by-nhn-cloud }
 NHN Cloud에서 제공하는 애드온을 확인할 수 있습니다.
 
 ```
@@ -2239,6 +2338,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="view-add-ons-offered-by-nhn-cloud-request"></a>
 #### 요청
 
 | 이름 | 종류 | 형식 | 필수 | 설명 |
@@ -2247,6 +2347,7 @@ X-Auth-Token: {tokenId}
 | tokenId | Header | String | O | 토큰 ID |
 
 
+<a id="view-add-ons-offered-by-nhn-cloud-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -2298,7 +2399,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### NHN Cloud에서 제공하는 애드온 목록 보기
+<a id="view-a-list-of-add-ons-offered-by-nhn-cloud"></a>
+### NHN Cloud에서 제공하는 애드온 목록 보기 { #view-a-list-of-add-ons-offered-by-nhn-cloud }
 NHN Cloud에서 제공하는 애드온 목록을 확인할 수 있습니다.
 
 ```
@@ -2309,6 +2411,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="view-a-list-of-add-ons-offered-by-nhn-cloud-request"></a>
 #### 요청
 
 | 이름 | 종류 | 형식 | 필수 | 설명 |
@@ -2318,6 +2421,7 @@ X-Auth-Token: {tokenId}
 | image | Query | UUID | X | 베이스 이미지 UUID. 지정 시 해당 이미지에 설치 가능한 애드온만 반환합니다. |
 | platform_version | Query | String | X | 플랫폼 버전(예: `1.202605.0`). 지정 시 해당 플랫폼 버전에서 사용 가능한 애드온만 반환합니다. |
 
+<a id="view-a-list-of-add-ons-offered-by-nhn-cloud-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -2344,7 +2448,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 클러스터에 설치된 애드온 보기
+<a id="view-add-ons-installed-on-a-cluster"></a>
+### 클러스터에 설치된 애드온 보기 { #view-add-ons-installed-on-a-cluster }
 클러스터에 설치된 애드온을 확인할 수 있습니다.
 
 ```
@@ -2355,6 +2460,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="view-add-ons-installed-on-a-cluster-request"></a>
 #### 요청
 
 | 이름 | 종류 | 형식 | 필수 | 설명 |
@@ -2364,6 +2470,7 @@ X-Auth-Token: {tokenId}
 | ADDON_UUID_OR_NAME | URL | UUID or String | O | 애드온 UUID 또는 애드온 이름 |
 
 
+<a id="view-add-ons-installed-on-a-cluster-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -2410,7 +2517,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 클러스터에 설치된 애드온 목록 보기
+<a id="view-a-list-of-add-ons-installed-on-a-cluster"></a>
+### 클러스터에 설치된 애드온 목록 보기 { #view-a-list-of-add-ons-installed-on-a-cluster }
 클러스터에 설치된 애드온 목록을 확인할 수 있습니다.
 
 ```
@@ -2421,6 +2529,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="view-a-list-of-add-ons-installed-on-a-cluster-request"></a>
 #### 요청
 
 | 이름 | 종류 | 형식 | 필수 | 설명 |
@@ -2428,6 +2537,7 @@ X-Auth-Token: {tokenId}
 | tokenId | Header | String | O | 토큰 ID |
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 |
 
+<a id="view-a-list-of-add-ons-installed-on-a-cluster-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -2451,7 +2561,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 클러스터에 애드온 설치
+<a id="install-add-ons-on-a-cluster"></a>
+### 클러스터에 애드온 설치 { #install-add-ons-on-a-cluster }
 클러스터에 애드온을 설치합니다.
 
 ```
@@ -2462,6 +2573,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="install-add-ons-on-a-cluster-request"></a>
 #### 요청
 
 | 이름 | 종류 | 형식 | 필수 | 설명 |
@@ -2484,6 +2596,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="install-add-ons-on-a-cluster-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -2504,7 +2617,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 클러스터에 애드온 업데이트
+<a id="update-add-ons-to-a-cluster"></a>
+### 클러스터에 애드온 업데이트 { #update-add-ons-to-a-cluster }
 클러스터에 설치된 애드온을 업데이트합니다.
 
 ```
@@ -2515,6 +2629,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="update-add-ons-to-a-cluster-request"></a>
 #### 요청
 
 | 이름 | 종류 | 형식 | 필수 | 설명 |
@@ -2537,6 +2652,7 @@ X-Auth-Token: {tokenId}
 </details>
 
 
+<a id="update-add-ons-to-a-cluster-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -2557,7 +2673,8 @@ X-Auth-Token: {tokenId}
 
 ---
 
-### 클러스터에 애드온 제거
+<a id="remove-add-ons-from-a-cluster"></a>
+### 클러스터에 애드온 제거 { #remove-add-ons-from-a-cluster }
 클러스터에 설치된 애드온을 제거합니다.
 
 ```
@@ -2568,6 +2685,7 @@ OpenStack-API-Version: container-infra latest
 X-Auth-Token: {tokenId}
 ```
 
+<a id="remove-add-ons-from-a-cluster-request"></a>
 #### 요청
 
 | 이름 | 종류 | 형식 | 필수 | 설명 |
@@ -2576,6 +2694,7 @@ X-Auth-Token: {tokenId}
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | 클러스터 UUID 또는 클러스터 이름 |
 | ADDON_UUID_OR_NAME | URL | UUID or String | O | 애드온 UUID 또는 애드온 이름 |
 
+<a id="remove-add-ons-from-a-cluster-response"></a>
 #### 응답
 
 | 이름 | 종류 | 형식 | 설명 |
@@ -2596,7 +2715,8 @@ X-Auth-Token: {tokenId}
 
 
 
-## 기타 기능
+<a id="other-features"></a>
+## 기타 기능 { #other-features }
 
 ### 지원되는 Kubernetes 버전 보기
 
