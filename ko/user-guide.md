@@ -3640,7 +3640,7 @@ service "tea-svc" deleted
 
 <a id="host-based-service-routing-create-services-and-pods"></a>
 #### 서비스와 파드 생성
-[URI 기반 서비스 분기](/Container/NKS/ko/user-guide/#uri-based-service-routingi)와 동일한 매니페스트를 이용해 서비스와 파드를 생성합니다.
+[URI 기반 서비스 분기](/Container/NKS/ko/user-guide/#uri-based-service-routing)와 동일한 매니페스트를 이용해 서비스와 파드를 생성합니다.
 
 <a id="host-based-service-routing-create-ingress"></a>
 #### 인그레스 생성

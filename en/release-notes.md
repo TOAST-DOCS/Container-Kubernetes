@@ -39,8 +39,8 @@
 <a id="may-27-2026-added-features"></a>
 #### Added Features
 * Added support for Kubernetes v1.34.3.
-    * In k8s v1.34 and later, there are constraints based on the CGroup version of the worker node image. For more information, see [Constraints Based on Kubernetes Version and CGroup Version](/Container/NKS/en/version-guide/#constraints-on-cgroup).
-    * In k8s v1.34 and later, the custom containerd registry settings feature does not work. For more information, see [Custom containerd Registry Settings Feature](/Container/NKS/en/version-guide/#containerd-registry-config).
+    * In k8s v1.34 and later, there are constraints based on the CGroup version of the worker node image. For more information, see [Constraints Based on Kubernetes Version and CGroup Version](/Container/NKS/en/version-guide/#platform-version-cgroup-v2-support).
+    * In k8s v1.34 and later, the custom containerd registry settings feature does not work. For more information, see [Custom containerd Registry Settings Feature](/Container/NKS/en/user-guide/#containerd-registry-config).
 * Added support for Cilium CNI.
 
 <a id="may-27-2026-platform-version-updates"></a>

@@ -838,7 +838,7 @@ X-Auth-Token: {tokenId}
 <a id="enforce-ip-access-control-to-cluster-api-endpoints"></a>
 ### クラスタAPIエンドポイントIPアクセス制御適用 { #enforce-ip-access-control-to-cluster-api-endpoints }
 クラスタAPIエンドポイントにIPアクセス制御を適用または解除できます。
-IPアクセス制御機能の詳細については、 [IPアクセス制御](/Network/Load%20Balancer/ja/overview/#ip)文書を参照してください。
+IPアクセス制御機能の詳細については、 [IPアクセス制御](/Network/Load%20Balancer/ja/overview/#load-balancer-ip-access-control)文書を参照してください。
 クラスタAPIエンドポイントへのIPアクセス制御ルールに関する詳細については、 [ユーザーガイド](/Container/NKS/ja/user-guide/#api_endpoint_ipacl)を参照してください。
 
 ```

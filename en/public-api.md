@@ -828,7 +828,7 @@ This API does not require a request body.
 <a id="enforce-ip-access-control-to-cluster-api-endpoints"></a>
 ### Enforce IP Access Control to Cluster API Endpoints { #enforce-ip-access-control-to-cluster-api-endpoints }
 You can enforce or disable IP access control to cluster API endpoints.
-For more information about IP access control features, see [IP access control](/Network/Load%20Balancer/en/overview/#ip).
+For more information about IP access control features, see [IP access control](/Network/Load%20Balancer/en/overview/#load-balancer-ip-access-control).
 For more information about IP access control rules for Cluster API endpoints, see the [user guide](/Container/NKS/en/user-guide/#api_endpoint_ipacl).
 
 ```

@@ -49,7 +49,7 @@ Object Storage APIの詳細については[Object Storage APIガイド](/Storage
 
 Veleroクライアントで`velero log`コマンドを使用するにはObject StorageにTemporary URL Keyを作成する必要があります。
 
-1. [Object Storage認証トークン発行](/Storage/Object%20Storage/ko/api-guide/#_2)を行います。
+1. [Object Storage認証トークン発行](/Storage/Object%20Storage/ko/api-guide/#auth)を行います。
 2. **API Endpoint設定**ボタンをクリックしてサービスのObject Store URLを確認します。
 3. APIを利用してTemporary URL Keyを作成します。
 
@@ -67,7 +67,7 @@ $ curl -X POST {Object Store} -H "X-Auth-Token: {tokenId}" -H "X-Account-Meta-Te
 
 Veleroクライアントはクラスタのバックアップおよび復元コマンドを入力するプログラムです。
 Velero GithubリポジトリからVeleroクライアントをダウンロードして、クラスタのバックアップおよび復元に活用できます。ダウンロードしたVeleroクライアントコマンドを実行する前にバックアップおよび復元クラスタのkubeconfigファイルをWebコンソールからダウンロードし、**KUBECONFIG環境変数を設定してバックアップおよび復元対象クラスタを正確に指定**する必要があります。
-kubeconfig設定の詳細については[kubectlインストール](/Container/NKS/ja/user-guide/#kubectl)を参照してください。
+kubeconfig設定の詳細については[kubectlインストール](/Container/NKS/ja/user-guide/#kubectl-install)を参照してください。
 
 <a id="install-the-velero-client-download-the-velero-client"></a>
 #### Veleroクライアントのダウンロード
