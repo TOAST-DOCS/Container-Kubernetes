@@ -4310,10 +4310,10 @@ spec:
 
 <a id="nas-integration"></a>
 ### NHN Cloud NAS サービス連携 { #nas-integration }
-NHN Cloud が提供する NAS ボリュームを PV として活用できます。NAS サービスを使用するには、v1.20 以降のバージョンのクラスターを使用する必要があります。NHN Cloud NAS の使用に関する詳細については、[NAS コンソール使用ガイド](/Storage/NAS%20(online)/ja/console-guide) を参照してください。
+NHN Cloud が提供する NAS ボリュームを PV として活用できます。NAS サービスを使用するには、v1.20 以降のバージョンのクラスターを使用する必要があります。NHN Cloud NAS の使用に関する詳細については、[NAS コンソール使用ガイド](/Storage/NAS/ja/console-guide) を参照してください。
 
 > [注記]
-> NHN Cloud NAS サービスは、現時点 (2024年8月) において一部のリージョンでのみ提供されています。NHN Cloud NAS サービスのサポートリージョンに関する詳細については、[NAS サービス概要](/Storage/NAS%20(online)/ja/overview) を参照してください。
+> NHN Cloud NAS サービスは、現時点 (2024年8月) において一部のリージョンでのみ提供されています。NHN Cloud NAS サービスのサポートリージョンに関する詳細については、[NAS サービス概要](/Storage/NAS/ja/overview) を参照してください。
 
 <a id="nas-integration-run-the-rpcbind-service-on-all-worker-nodes"></a>
 #### すべてのワーカーノードで rpcbind サービスを実行

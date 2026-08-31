@@ -4316,10 +4316,10 @@ spec:
 
 <a id="nas-integration"></a>
 ### NHN Cloud NAS 서비스 연동 { #nas-integration }
-NHN Cloud에서 제공하는 NAS 볼륨을 PV로 활용할 수 있습니다. NAS 서비스를 사용하기 위해서는 v1.20 이후 버전의 클러스터를 사용해야 합니다. NHN Cloud NAS 사용에 대한 자세한 내용은 [NAS 콘솔 사용 가이드](/Storage/NAS%20(online)/ko/console-guide)를 참고하세요.
+NHN Cloud에서 제공하는 NAS 볼륨을 PV로 활용할 수 있습니다. NAS 서비스를 사용하기 위해서는 v1.20 이후 버전의 클러스터를 사용해야 합니다. NHN Cloud NAS 사용에 대한 자세한 내용은 [NAS 콘솔 사용 가이드](/Storage/NAS/ko/console-guide)를 참고하세요.
 
 > [참고]
-> NHN Cloud NAS 서비스는 현재(2024. 08.) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS%20(online)/ko/overview)를 참고하세요.
+> NHN Cloud NAS 서비스는 현재(2024. 08.) 기준 일부 리전에서만 제공되고 있습니다. NHN Cloud NAS 서비스의 지원 리전에 대한 자세한 정보는 [NAS 서비스 개요](/Storage/NAS/ko/overview)를 참고하세요.
 
 <a id="nas-integration-run-the-rpcbind-service-on-all-worker-nodes"></a>
 #### 모든 워커 노드에서 rpcbind 서비스 실행

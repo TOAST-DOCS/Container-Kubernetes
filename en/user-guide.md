@@ -4309,10 +4309,10 @@ spec:
 
 <a id="nas-integration"></a>
 ### NHN Cloud NAS Service Integration { #nas-integration }
-You can utilize NAS volumes provided by NHN Cloud as PV. In order to use NAS services, you must use a cluster of version v1.20 or later. For more information on using NHN Cloud NAS, please refer to the [NAS Console User Guide](/Storage/NAS%20(online)/en/console-guide).
+You can utilize NAS volumes provided by NHN Cloud as PV. In order to use NAS services, you must use a cluster of version v1.20 or later. For more information on using NHN Cloud NAS, please refer to the [NAS Console User Guide](/Storage/NAS/en/console-guide).
 
 > [Note]
-> As of the current date (August 2024), the NHN Cloud NAS service is only available in select regions. For more information on the supported regions for the NHN Cloud NAS service, see the [NAS Service Overview](/Storage/NAS%20(online)/en/overview).
+> As of the current date (August 2024), the NHN Cloud NAS service is only available in select regions. For more information on the supported regions for the NHN Cloud NAS service, see the [NAS Service Overview](/Storage/NAS/en/overview).
 
 <a id="nas-integration-run-the-rpcbind-service-on-all-worker-nodes"></a>
 #### Run the rpcbind Service on All Worker Nodes
