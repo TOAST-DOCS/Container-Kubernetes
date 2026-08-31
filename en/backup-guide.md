@@ -1,3 +1,5 @@
+<!-- machine_translated: true -->
+
 <!-- pre-align:aligned sig=dd3a912dfca5 -->
 
 <a id="container-nhn-kubernetes-service-nks-backup-guide"></a>
@@ -49,9 +51,9 @@ For more information about the Object Storage API, see the [Object Storage API G
 
 To use the `velero log` command in the Velero client, you must create a Temporary URL Key in Object Storage.
 
-1. [Obtain bject Storage Authentication Token](/Storage/Object%20Storage/en/api-guide/#auth).
-2. Click **Set API Endpoint** to check the Object Storage URL of the service.
-3. Create Temporary URL Key using the API.
+1. See [Object Storage Authentication and Authorization](/Storage/Object%20Storage/en/api-guide/#auth) to issue a token.
+2. Click the **API Endpoint Setting** button to check the Object Store URL of the service.
+3. Generate a Temporary URL Key by using the API.
 
 | Name | Type | Format | Required | Description |
 | --- | --- | --- | --- | --- |
