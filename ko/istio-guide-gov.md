@@ -41,7 +41,7 @@ $ REGISTRY="{리전별 레지스트리}"
 
 
 > [참고]
-> 인터넷에 연결되어 있지 않은 클러스터가 NCR 레지스트리를 사용하기 위해서는 Private URI를 사용하기 위한 환경 구성이 필요합니다. Private URI 사용법에 대한 자세한 내용은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/user-guide/#private-uri)를 참고하세요.
+> 인터넷에 연결되어 있지 않은 클러스터가 NCR 레지스트리를 사용하기 위해서는 Private URI를 사용하기 위한 환경 구성이 필요합니다. Private URI 사용법에 대한 자세한 내용은 [NHN Cloud Container Registry(NCR) 사용자 가이드](/Container/NCR/ko/user-guide/#use-private-uri)를 참고하세요.
 
 
 <a id="prerequisites-for-istio-deployment-install-the-oras-command-line-tool"></a>

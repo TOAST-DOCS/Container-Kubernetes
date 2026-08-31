@@ -39,8 +39,8 @@
 <a id="may-27-2026-added-features"></a>
 #### Added Features
 * Added support for Kubernetes v1.34.3.
-    * In k8s v1.34 and later, there are constraints based on the CGroup version of the worker node image. For more information, see [Constraints Based on Kubernetes Version and CGroup Version](/Container/NKS/en/version-guide/#constraints-on-cgroup).
-    * In k8s v1.34 and later, the custom containerd registry settings feature does not work. For more information, see [Custom containerd Registry Settings Feature](/Container/NKS/en/version-guide/#containerd-registry-config).
+    * In k8s v1.34 or later, there are restrictions based on the CGroup version of worker node images. For more information, see [Platform version for using CGroup v2 OS images](/Container/NKS/en/version-guide/#platform-version-cgroup-v2-support).
+    * In k8s v1.34 or later, the custom containerd registry settings feature does not work. For more information, see [Custom containerd registry settings](/Container/NKS/en/user-guide/#containerd-registry-config).
 * Added support for Cilium CNI.
 
 <a id="may-27-2026-platform-version-updates"></a>
@@ -437,11 +437,11 @@ Changed the minimum disk size required to create worker nodes in images.
 <a id="jan-31-2023-added-features"></a>
 #### Added Features
 
-* Added a feature to change cluster OWNER.
-    * For more details, see [User Guide](/Container/NKS/en/user-guide/#_4).
-* Kubernetes v1.25.4 is supported.
-* Kubernetes v1.21.6 is no longer supported when creating clusters. But, clusters in use are not affected.
-* Proxy protocol can be set for the listener of load balancer.
+* Added a feature to change the cluster OWNER.
+* Added support for Kubernetes v1.25.4.
+* Kubernetes v1.21.6 is no longer supported when creating a cluster. However, this does not affect clusters that are already in use.
+* Added support for configuring Proxy Protocol on load balancer listeners.
+* Added support for creating physical load balancers.
 
 <a id="dec-27-2022"></a>
 ### December 27, 2022 { #dec-27-2022 }

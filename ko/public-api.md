@@ -836,7 +836,7 @@ X-Auth-Token: {tokenId}
 <a id="enforce-ip-access-control-to-cluster-api-endpoints"></a>
 ### 클러스터 API 엔드포인트 IP 접근 제어 적용 { #enforce-ip-access-control-to-cluster-api-endpoints }
 클러스터 API 엔드포인트에 IP 접근 제어를 적용하거나 해제할 수 있습니다.
-IP 접근 제어 기능에 대한 자세한 사항은 [IP 접근제어](/Network/Load%20Balancer/ko/overview/#ip) 문서를 참고하세요.
+IP 접근 제어 기능에 대한 자세한 사항은 [IP 접근제어](/Network/Load%20Balancer/ko/overview/#load-balancer-ip-access-control) 문서를 참고하세요.
 클러스터 API 엔드포인트에 IP 접근 제어 규칙에 대한 자세한 사항은 [사용자 가이드](/Container/NKS/ko/user-guide/#api_endpoint_ipacl)를 참고하세요.
 
 ```

@@ -1,3 +1,5 @@
+<!-- machine_translated: true -->
+
 <!-- pre-align:aligned sig=77a9bfc5cb0a -->
 
 <a id="container-nhn-kubernetes-service-nks-api-v2-guide"></a>
@@ -130,6 +132,7 @@ This API does not require a request body.
 | clusters.labels.cert_manager_api | Body | String | Whether to enable the certificate signing request (CSR) feature. Must be set to "True" |
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Whether to create a public domain address for Kubernetes API endpoint ("True" / "False") |
 | clusters.labels.strict_sg_rules | Body | String |Create only required security rules in worker node security groups ("True" / "False"), (available for clusters created on or after February 27, 2024) |
+| clusters.labels.skm | Body | String | SKM symmetric key ID applied to etcd encryption. Outputs a JSON object in the format `{"key_id": "${SKM_KEY_ID}"}` as a string |
 | clusters.labels.additional_network_id_list | Body | String | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
 | clusters.labels.additional_subnet_id_list | Body | String | Applied to the default worker node group: List of VPC subnet UUIDs for additional networks (separated by colons) |
 | clusters.labels.cni_driver | Body | String | Cluster CNI (Available for clusters created on or after 2023.03.31) |
@@ -139,7 +142,7 @@ This API does not require a request body.
 | clusters.labels.ncr_sgw | Body | String | Service gateway UUID of NCR type |
 | clusters.labels.obs_sgw | Body | String | Service gateway UUID of OBS type |
 | clusters.labels.term_of_validity | Body | String | Certificate validity period |
-| clusters.labels.certificate_expiry | Body | String | Certificate expiration date | 
+| clusters.labels.certificate_expiry | Body | String | Certificate expiration date |
 
 <details><summary>Example</summary>
 <p>
@@ -263,8 +266,9 @@ This API does not require a request body.
 | labels.cert_manager_api | Body | String | Whether to enable the certificate signing request (CSR) feature. Must be set to "True" |
 | labels.master_lb_floating_ip_enabled | Body | String | Whether to create a public domain address for Kubernetes API endpoint ("True" / "False") |
 | labels.strict_sg_rules | Body | String | Create only required security rules in worker node security groups ("True" / "False"), (available for clusters created on or after February 27, 2024) |
+| labels.skm | Body | String | SKM symmetric key ID applied to etcd encryption. Outputs a JSON object in the format `{"key_id": "${SKM_KEY_ID}"}` as a string |
 | labels.additional_network_id_list | Body | String | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
-| labels.additional_subnet_id_list | Body | String | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
+| labels.additional_subnet_id_list | Body | String | Applied to the default worker node group: List of VPC subnet UUIDs for additional networks (separated by colons) |
 | labels.cni_driver  | Body | String | Cluster CNI (Available for clusters created on or after 2023.03.31) |
 | labels.service_cluster_ip_range | Body | String | Cluster CIDR, IP range allocated to ClusterIP when creating the service in the cluster and K8s service networks (Available for clusters created on or after 2023.05.30) |
 | labels.pods_network_cidr | Body | String | Cluster pod network (Available for clusters created on or after 2023.05.30) |
@@ -393,6 +397,7 @@ This API does not require a request body.
 | events.type | Body | String | Task type |
 | events.state | Body | String | Task status ("SUCCESS" / "FAIL" / "IN_PROGRESS") |
 | events.contents | Body | String | Task progress (null when successful) |
+| events.details | Body | String | Task request information |
 | events.created_at | Body | String | Task start time (UTC) |
 | events.updated_at | Body | String | Task end time (UTC) |
 
@@ -463,11 +468,12 @@ This API does not require a request body.
 | cluster_uuid | Body | UUID | Cluster UUID |
 | cluster_name | Body | String | Cluster name |
 | resource_uuid | Body | UUID | Target UUID for the task |
-| resource.name | Body | String | Target name |
+| resource_name | Body | String | Target name |
 | resource_type | Body | String | Target type ("cluster" / "nodegroup") |
 | type | Body | String | Task type |
 | state | Body | String | Task status ("SUCCESS" / "FAIL" / "IN_PROGRESS") |
 | contents | Body | String | Task progress (null when successful) |
+| events.details | Body | String | Task request information |
 | created_at | Body | String | Task start time (UTC) |
 | updated_at | Body | String | Task end time (UTC) |
 
@@ -531,7 +537,7 @@ X-Auth-Token: {tokenId}
 | labels.external_network_id | Body | String | X | UUID of the VPC network attached to the internet gateway<br>Must be set when a router associated with a VPC subnet is attached to the internet gateway |
 | labels.external_subnet_id_list | Body | String | X | List of UUIDs of subnets attached to the internet gateway (separated by colon)<br>Must be set when a router associated with a VPC subnet is attached to the internet gateway |
 | labels.cert_manager_api | Body | String | O | Whether to enable the certificate signing request (CSR) feature. Must be set to "True" |
-| labels.ca_enable | Body | String | CLUSTER_ID_OR_NAME | Applied to the default worker node group: Cluster Autoscaler: Whether to enable the feature (“True” / “False”) |
+| labels.ca_enable | Body | String | O | Applied to the default worker node group: Cluster Autoscaler: Whether to enable the feature ("True" / "False") |
 | labels.ca_pod_replicas | Body | String | X | Applied to the default worker node group: Cluster Autoscaler: Number of Pods |
 | labels.ca_max_node_count | Body | String | X | Applied to the default worker node group: Autoscaler: Maximum number of nodes |
 | labels.ca_min_node_count | Body | String | X | Applied to the default worker node group: Autoscaler: Minimum number of nodes |
@@ -544,25 +550,26 @@ X-Auth-Token: {tokenId}
 | labels.kube_tag | Body | String | O | Kubernetes Version |
 | labels.user_script | Body | String | X | User script (old) |
 | labels.user_script_v2 | Body | String | X | User script |
-| labels.master_lb_floating_ip_enabled | Body | String | O |  Whether to create a public domain address for Kubernetes API endpoint ("True" / "False") |
+| labels.master_lb_floating_ip_enabled | Body | String | O | Whether to create a public domain address for Kubernetes API endpoint ("True" / "False")<br>Can only be set to "True" when labels.external_network_id and external_subnet_id_list are set |
 | labels.strict_sg_rules | Body | String | X | Create only required security rules in the worker node security group ("True" / "False"), default: "False" |
 | labels.additional_network_id_list | Body | String | X |  Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
-| labels.additional_subnet_id_list | Body | String | X |  Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
+| labels.additional_subnet_id_list | Body | String | X |  Applied to the default worker node group: List of VPC subnet UUIDs for additional networks (separated by colons) |
 | labels.service_cluster_ip_range | Body | String  | X |  K8s service network, the IP band assigned to the ClusterIP when creating a service in the cluster. See fixed_subnet, pods_network_cidr, and service_cluster_ip_range input rules. |
 | labels.pods_network_cidr | Body | String |  X |  Cluster Pod Network. See fixed_subnet, pods_network_cidr, service_cluster_ip_range input rules |
 | labels.pods_network_subnet | Body | Integer | X |  Cluster Pod subnet size. See pods_network_subnet input rules |
 | labels.ncr_sgw | Body | String | X | Service gateway UUID of NCR type<br>But, only created in the same VPC as the cluster VPC. |
 | labels.obs_sgw | Body | String | X | Service gateway UUID of OBS type<br>But, only created in the same VPC as the cluster VPC. |
 | labels.extra_security_groups | Body | Array | X | Applied to the default worker node group: List of additional security group objects |
-| labels.extra_security_groups[].target_subnet | UUID | X | Cluster Pod subnet size. See pods_network_subnet input rules | The UUID of a subnet to be specified by additional security groups |
+| labels.extra_security_groups[].target_subnet | Body | String | X | The UUID of a subnet to be specified by additional security groups |
 | labels.extra_security_groups[].security_group_ids | Body | String | X | List of additional security group UUIDs (comma-separated) |
 | labels.extra_volumes | Body | Array | X | Applied to the default worker node group: List of additional block storage objects |
 | labels.extra_volumes[].volume_type | Body | String | X | Additional block storage types |
-| labels.extra_volumes[].volume_size | Body | X | X | Additional block storage size (GB) |
+| labels.extra_volumes[].volume_size | Body | Integer | X | Additional block storage size (GB) |
 | labels.extra_volumes[].volume_key_id | Body | String | X | (Symmetric key ID to apply to encrypted block storage (if using encrypted block storage) |
 | labels.extra_volumes[].volume_appkey | Body | String | X | The appkey for the symmetric key to apply to encrypted block storage (if using encrypted block storage) |
 | labels.extra_volumes[].volume_mount_path | Body | String | X | Path where additional block storage will be mounted |
 | labels.control_plane_log | Body | String | X | Enable logging for the K8s control plane |
+| labels.skm | Body | String | X | Applies etcd encryption via SKM integration. Uses a string representation of a JSON object in the format `{"key_id": "${SKM_KEY_ID}"}` |
 | labels.fip_auto_bind_enable | Body | String | X | Auto-assign floating IP: Whether to enable the feature ("True" / "False") |
 | labels.fip_bind_subnet | Body | String | X | Auto-assign floating IP: The subnet of the network interface to which the floating IP is connected |
 | labels.fip_selector | Body | String | X | Auto-assign floating IP: An identifier for selecting a floating IP to assign to a node |
@@ -573,10 +580,10 @@ X-Auth-Token: {tokenId}
 | flavor_id | Body | UUID | O | Applied to the default worker node group: Node instance flavor UUID |
 | fixed_network | Body | UUID | O | VPC Network UUID |
 | fixed_subnet | Body | UUID | O | VPC subnet UUID. Note the rules for entering fixed_subnet, pods_network_cidr, and service_cluster_ip_range. |
-| addons | Body | ipacl_targets.cidr_address | X | List of add-on information to install |
-| addons.name | Body | String | enable | Add-on name |
-| addons.version | Body | String | enable | Add-on versions |
-| addons.options | Body | labels.availability_zone | X | Add-on-specific options |
+| addons | Body | List of Object | X | List of add-on information to install |
+| addons.name | Body | String | O | Add-on name |
+| addons.version | Body | String | O | Add-on version |
+| addons.options | Body | Object | X | Add-on-specific options |
 
 > [Caution]
 > The CIDRs for fixed_subnet, pods_network_cidr, and service_cluster_ip_range must be entered in the following conventions
@@ -828,8 +835,8 @@ This API does not require a request body.
 <a id="enforce-ip-access-control-to-cluster-api-endpoints"></a>
 ### Enforce IP Access Control to Cluster API Endpoints { #enforce-ip-access-control-to-cluster-api-endpoints }
 You can enforce or disable IP access control to cluster API endpoints.
-For more information about IP access control features, see [IP access control](/Network/Load%20Balancer/en/overview/#ip).
-For more information about IP access control rules for Cluster API endpoints, see the [user guide](/Container/NKS/en/user-guide/#api_endpoint_ipacl).
+For more information about the IP access control feature, see [IP Access Control](/Network/Load%20Balancer/en/overview/#load-balancer-ip-access-control).
+For more information about IP access control rules for cluster API endpoints, see the [user guide](/Container/NKS/en/user-guide/#api_endpoint_ipacl).
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/api_ep_ipacl
@@ -1307,7 +1314,7 @@ This API does not require a request body.
 | labels.ca_max_node_count | Body | String | Applied to the worker node group:  Cluster Autoscaler: Maximum number of nodes |
 | labels.ca_min_node_count | Body | String | Applied to the worker node group:  Cluster Autoscaler: Minimum number of nodes |
 | labels.ca_scale_down_enable | Body | String | Applied to the worker node group:  Cluster Autoscaler: Whether to enable scale-down  ("True" / "False") |
-| labels.ca_scale_down_unneeded_time | Applied to the worker node group:  Cluster Autoscaler: Scale down unneeded time |
+| labels.ca_scale_down_unneeded_time | Body | String | Applied to the worker node group:  Cluster Autoscaler: Scale down unneeded time |
 | labels.ca_scale_down_util_thresh | Body | String | Applied to the worker node group:  Cluster Autoscaler: Scale down utilization threshold  |
 | labels.ca_scale_down_delay_after_add | Body | String | Applied to the worker node group: Cluster Autoscaler: Scale down delay after add |
 | labels.mba_scale_out | Body | String | Applied to the worker node group:  Configure metric-based autoscaler scale-out policy |
@@ -1315,8 +1322,8 @@ This API does not require a request body.
 | labels.kube_tag | Body | String | Kubernetes version of the worker node group |
 | labels.user_script | Body | String | User Script (old) |
 | labels.user_script_v2 | Body | String | User Script |
-| labels.additional_network_id_list | Body | String | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
-| labels.additional_subnet_id_list | Body | String | Applied to the default worker node group: List of VPC subnet UUIDs for additional networks (separated by colons) |
+| labels.additional_network_id_list | Body | String | Applied to the worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
+| labels.additional_subnet_id_list | Body | String | Applied to the worker node group: List of VPC subnet UUIDs for additional networks (separated by colons) |
 | labels.strict_sg_rules | Body | String | Create only required security rules in worker node security groups ("True" / "False"), (available for clusters created on or after February 27, 2024) |
 | labels.platform_version | Body | String | Platform version |
 | max_node_count | Body | Integer | Maximum Node Count |
@@ -1435,7 +1442,9 @@ X-Auth-Token: {tokenId}
 | labels.availability_zone | Body | String | O | Applied to the default worker node group: Availability zone |
 | labels.boot_volume_type | Body | String | O | Applied to the default worker node group: Block storage type|
 | labels.boot_volume_size | Body | String | O | Applied to the default worker node group: Block storage size (GB) |
-| labels.ca_enable | Body | String | O | Applied to the default worker node group: Cluster Autoscaler: Whether to enable the feature (“True” / “False”) |
+| labels.boot_volume_key_id | Body | String | X | Symmetric key ID to apply to block storage (if using encrypted block storage) |
+| labels.boot_volume_appkey | Body | String | X | The appkey for the symmetric key to apply to block storage (if using encrypted block storage) |
+| labels.ca_enable | Body | String | O | Applied to the default worker node group: Cluster Autoscaler: Whether to enable the feature ("True" / "False") |
 | labels.ca_pod_replicas | Body | String | X | Applied to the default worker node group: Cluster Autoscaler: Number of Pods |
 | labels.ca_max_node_count | Body | String | X |Applied to the default worker node group: Autoscaler: Maximum number of nodes |
 | labels.ca_min_node_count | Body | String | X | Applied to the default worker node group: Autoscaler: Minimum number of nodes |
@@ -1447,14 +1456,14 @@ X-Auth-Token: {tokenId}
 | labels.mba_scale_in | Body | String | X | Applied to the default worker node group: Configure metric-based autoscaler scale-in policy |
 | labels.user_script | Body | String | X | User Script (old) |
 | labels.user_script_v2 | Body | String | X | User Script |
-| labels.additional_network_id_list | Body | String | X | Applied to the default worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
-| labels.additional_subnet_id_list | Body | String | X | Applied to the default worker node group: List of VPC subnet UUIDs for additional networks (separated by colons)) |
-| labels.extra_security_groups | Body | nodegroups.uuid | X | List of additional security group objects |
+| labels.additional_network_id_list | Body | String | X | Applied to the worker node group: List of VPC network UUIDs for additional networks (separated by colons) |
+| labels.additional_subnet_id_list | Body | String | X | Applied to the worker node group: List of VPC subnet UUIDs for additional networks (separated by colons) |
+| labels.extra_security_groups | Body | Array | X | List of additional security group objects |
 | labels.extra_security_groups[].target_subnet | Body | String | X | The UUID of a subnet to be specified by additional security groups |
 | labels.extra_security_groups[].security_group_ids | Body | String | X | List of additional security group UUIDs (comma-separated) |
-| labels.extra_volumes | Body | nodegroups.uuid | X | List of additional block storage objects |
+| labels.extra_volumes | Body | Array | X | List of additional block storage objects |
 | labels.extra_volumes[].volume_type | Body | String | X | Additional block storage type |
-| labels.extra_volumes[].volume_size | Body | project_id | X | Additional block storage size (GB) |
+| labels.extra_volumes[].volume_size | Body | Integer | X | Additional block storage size (GB) |
 | labels.extra_volumes[].volume_key_id | Body | String | X | (Symmetric key ID to apply to encrypted block storage (if using encrypted block storage) |
 | labels.extra_volumes[].volume_appkey | Body | String | X | The appkey for the symmetric key to apply to encrypted block storage (if using encrypted block storage) |
 | labels.extra_volumes[].volume_mount_path | Body | String | X | Path where additional block storage will be mounted |
@@ -2808,12 +2817,7 @@ This API does not require a request body.
 <a id="view-supported-kubernetes-versions-and-task-types-response"></a>
 #### Response
 
-| Name | Type | Format | Description |
-|---|---|---|---|
-| Object | Body | Object | Supported Kubernetes version object |
-| String | Body | String | Validity of the Kubernetes version (“True”/”False”) |
-| Object| Body | Object | Supported task type object (“cluster_events”/”nodegroup_events”) |
-| Object| Body | Object | Task type and descriptions |
+<todo: translate>
 
 <details><summary>Example</summary>
 <p>
