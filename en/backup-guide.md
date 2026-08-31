@@ -49,7 +49,7 @@ For more information about the Object Storage API, see the [Object Storage API G
 
 To use the `velero log` command in the Velero client, you must create a Temporary URL Key in Object Storage.
 
-1. [Obtain bject Storage Authentication Token](/Storage/Object%20Storage/en/api-guide/#_2).
+1. [Obtain bject Storage Authentication Token](/Storage/Object%20Storage/en/api-guide/#auth).
 2. Click **Set API Endpoint** to check the Object Storage URL of the service.
 3. Create Temporary URL Key using the API.
 
@@ -67,7 +67,7 @@ $ curl -X POST {Object Store} -H "X-Auth-Token: {tokenId}" -H "X-Account-Meta-Te
 
 The Velero client is a program where you can enter the cluster's backup and restore commands.
 You can download the Velero client from the Velero Github repository and use it for cluster backup and restoration. Before running the downloaded Velero client command, you must download the kubeconfig file of the backup and restore clusters from the web console, and **set the KUBECONFIG environment variable to specify the target clusters for backup and restoration exactly**.
-For more information on kubeconfig settings, see [Installing kubectl](/Container/NKS/en/user-guide/#kubectl).
+For more information on kubeconfig settings, see [Installing kubectl](/Container/NKS/en/user-guide/#kubectl-install).
 
 <a id="install-the-velero-client-download-the-velero-client"></a>
 #### Download the Velero Client

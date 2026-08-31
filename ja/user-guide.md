@@ -1108,7 +1108,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.28.3
 <a id="custom-image"></a>
 ### カスタムイメージをワーカーイメージとして活用 { #custom-image }
 
-ユーザーのカスタムイメージを基にしたワーカーノードグループを作成できます。カスタムイメージをワーカーノードイメージとして活用できるようにするために、NHN Cloud Image Builder サービスで追加作業 (NKS ワーカーノード化) が必要です。Image Builder サービスで NHN Kubernetes Service (NKS) ワーカーノードアプリケーションを使用してイメージテンプレートを作成し、カスタムワーカーノードイメージを生成できます。Image Builder サービスの詳細については、[Image Builder ユーザーガイド](/Compute/Image%20Builder/ja/console-guide/#_1)を参照してください。
+ユーザーのカスタムイメージを基にしたワーカーノードグループを作成できます。カスタムイメージをワーカーノードイメージとして活用できるようにするために、NHN Cloud Image Builder サービスで追加作業 (NKS ワーカーノード化) が必要です。Image Builder サービスで NHN Kubernetes Service (NKS) ワーカーノードアプリケーションを使用してイメージテンプレートを作成し、カスタムワーカーノードイメージを生成できます。Image Builder サービスの詳細については、[Image Builder ユーザーガイド](/Compute/Image%20Builder/ja/overview/)を参照してください。
 
 > [注意]
 > NKS ワーカーノード化の作業にはパッケージのインストールおよび設定の変更などが含まれており、正常に動作しないイメージで作業を進めた場合、失敗する可能性があります。
@@ -1514,7 +1514,7 @@ NKS クラスターのバージョン管理方式と Kubernetes バージョン�
 
 <a id="cluster-upgrade-considerations-for-etcd-version-changes"></a>
 #### etcdバージョン変更に伴う注意事項
-クラスターアップグレード作業の実施時、アップグレード対象のプラットフォームバージョンに定義された [etcd バージョン](/Container/NKS/ja/user-guide/#platform-version-etcd-version) が現在のクラスターの etcd バージョンと異なる場合に限り、etcd のアップグレード作業が同時に実施されます。該当作業を開始する前に注意事項を必ず把握し、事前告知・点検時間の確保などの対策を講じることをお勧めします。
+クラスターアップグレード作業の実施時、アップグレード対象のプラットフォームバージョンに定義された [etcd バージョン](/Container/NKS/ja/version-guide/#platform-version-etcd-version) が現在のクラスターの etcd バージョンと異なる場合に限り、etcd のアップグレード作業が同時に実施されます。該当作業を開始する前に注意事項を必ず把握し、事前告知・点検時間の確保などの対策を講じることをお勧めします。
 
 ##### データ整合性確認のため頻繁なリソース変更を控える
 etcd アップグレード時にリソースのデプロイ・削除作業が頻繁に発生すると、データ整合性の確認に失敗してアップグレードが失敗する可能性があります。安全なアップグレードのために、次のような環境でアップグレードすることをお勧めします。
@@ -1610,7 +1610,7 @@ Blue 環境のリソースをすべて廃棄すると、コントロールプレ
 <a id="api-endpoint-ipacl"></a>
 ### クラスター API エンドポイント IP アクセス制御の適用 { #api-endpoint-ipacl }
 クラスター API エンドポイントに IP アクセス制御を適用または解除できます。
-IP アクセス制御機能の詳細については、[IP アクセス制御](/Network/Load%20Balancer/ja/overview/#ip) のドキュメントを参照してください。
+IP アクセス制御機能の詳細については、[IP アクセス制御](/Network/Load%20Balancer/ja/overview/#load-balancer-ip-access-control) のドキュメントを参照してください。
 
 <a id="api-endpoint-ipacl-ip-access-control-rules"></a>
 #### IP アクセス制御対象ルール
@@ -2775,7 +2775,7 @@ spec:
 >
 
 > [注意]
-> 以下の機能の設定値はすべて文字列形式で入力する必要があります。YAML ファイルの入力形式において、入力値の形式に関わらず文字列形式で入力するには、入力値を二重引用符 (") で囲んでください。YAML ファイル形式の詳細については、[Yaml Cookbook](https://yaml.org/YAML_for_ruby.html) ドキュメントを参照してください。
+> 以下の機能の設定値はすべて文字列形式で入力する必要があります。YAML ファイルの入力形式において、入力値の形式に関わらず文字列形式で入力するには、入力値を二重引用符 (") で囲んでください。YAML ファイル形式の詳細については、[Yaml homepage](https://yaml.org/) ドキュメントを参照してください。
 >
 
 <a id="loadbalancer-update-without-modification"></a>
@@ -3150,7 +3150,7 @@ metadata:
 
 <a id="advanced-lb-configuration-set-the-listener-proxy-protocol"></a>
 #### リスナープロキシプロトコル (Proxy Protocol) 設定
-リスナープロトコルが TCP または HTTPS の場合、リスナーにプロキシプロトコルを設定できます。プロキシプロトコルの詳細については、[ロードバランサープロキシモード](/Network/Load%20Balancer/ja/overview/#_4)を参照してください。
+リスナープロトコルが TCP または HTTPS の場合、リスナーにプロキシプロトコルを設定できます。プロキシプロトコルの詳細については、[ロードバランサープロキシモード](/Network/Load%20Balancer/ja/overview/#load-balancer-proxy-mode)を参照してください。
 
 * 設定位置は .metadata.annotations 配下の loadbalancer.nhncloud/proxy-protocol です。
 * リスナーごとに設定を適用できます。
@@ -3635,7 +3635,7 @@ Ingressコントローラーは、ホスト名を基にサービスを分岐で�
 
 <a id="host-based-service-routing-create-services-and-pods"></a>
 #### サービスとPodの作成
-[URIベースのサービス分岐](/Container/NKS/ja/user-guide/#uri)と同じマニフェストを使用して、サービスとPodを作成します。
+[URIベースのサービス分岐](/Container/NKS/ja/user-guide/#uri-based-service-routing)と同じマニフェストを使用して、サービスとPodを作成します。
 
 <a id="host-based-service-routing-create-ingress"></a>
 #### Ingressの作成
@@ -3835,7 +3835,7 @@ Ingress は、クラスター内部の複数のサービスへのアクセスを
 
 ![dashboard-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-02.png)
 
-[NGINX Ingress Controller のインストール](/Container/NKS/ja/user-guide/#nginx-ingress-controller)を参照して `NGINX Ingress Controller` をインストールし、次のように Ingress オブジェクト作成のためのマニフェストを作成します。
+[NGINX Ingress Controller のインストール](/Container/NKS/ja/user-guide/#install-nginx-ingress-controller)を参照して `NGINX Ingress Controller` をインストールし、次のように Ingress オブジェクト作成のためのマニフェストを作成します。
 
 ```yaml
 # kubernetes-dashboard-ingress-tls-passthrough.yaml
@@ -4015,7 +4015,7 @@ csi-storageclass   cinder.csi.openstack.org   Delete          WaitForFirstConsum
 <a id="static-provisioning"></a>
 ### 静的プロビジョニング { #static-provisioning }
 
-静的プロビジョニング (static provisioning) では、ユーザーが自分でブロックストレージを準備する必要があります。NHN Cloud ウェブコンソールの **Storage > Block Storage** サービスページで **[ブロックストレージ作成]** ボタンをクリックし、PV と接続するブロックストレージを作成します。ブロックストレージガイドの[ブロックストレージ作成](/Storage/Block%20Storage/ja/console-guide/#_1)を参照してください。
+静的プロビジョニング (static provisioning) では、ユーザーが自分でブロックストレージを準備する必要があります。NHN Cloud ウェブコンソールの **Storage > Block Storage** サービスページで **[ブロックストレージ作成]** ボタンをクリックし、PV と接続するブロックストレージを作成します。ブロックストレージガイドの[ブロックストレージ作成](/Storage/Block%20Storage/ja/console-guide/#create-block-storage)を参照してください。
 
 PV を作成するには、ブロックストレージの ID が必要です。**Storage > Block Storage** サービスページのブロックストレージ一覧から使用するブロックストレージを選択します。下部の **[情報]** タブのブロックストレージ名項目から ID を確認できます。
 
@@ -4310,10 +4310,10 @@ spec:
 
 <a id="nas-integration"></a>
 ### NHN Cloud NAS サービス連携 { #nas-integration }
-NHN Cloud が提供する NAS ボリュームを PV として活用できます。NAS サービスを使用するには、v1.20 以降のバージョンのクラスターを使用する必要があります。NHN Cloud NAS の使用に関する詳細については、[NAS コンソール使用ガイド](/Storage/NAS%20(online)/ja/console-guide) を参照してください。
+NHN Cloud が提供する NAS ボリュームを PV として活用できます。NAS サービスを使用するには、v1.20 以降のバージョンのクラスターを使用する必要があります。NHN Cloud NAS の使用に関する詳細については、[NAS コンソール使用ガイド](/Storage/NAS/ja/console-guide) を参照してください。
 
 > [注記]
-> NHN Cloud NAS サービスは、現時点 (2024年8月) において一部のリージョンでのみ提供されています。NHN Cloud NAS サービスのサポートリージョンに関する詳細については、[NAS サービス概要](/Storage/NAS%20(online)/ja/overview) を参照してください。
+> NHN Cloud NAS サービスは、現時点 (2024年8月) において一部のリージョンでのみ提供されています。NHN Cloud NAS サービスのサポートリージョンに関する詳細については、[NAS サービス概要](/Storage/NAS/ja/overview) を参照してください。
 
 <a id="nas-integration-run-the-rpcbind-service-on-all-worker-nodes"></a>
 #### すべてのワーカーノードで rpcbind サービスを実行

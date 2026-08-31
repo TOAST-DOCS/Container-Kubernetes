@@ -5,8 +5,8 @@
 
 #### 신규 기능 추가
 * Kubernetes v1.34.3을 지원합니다.
-    * k8s v1.34 이상 버전에서 워커 노드 이미지의 CGroup 버전에 따른 제약 사항이 존재합니다. 자세한 내용은 [Kubernetes 버전과 CGroup 버전에 따른 제약 사항](/Container/NKS/ko/version-guide/#constraints-on-cgroup)을 참고하세요.
-    * k8s v1.34 이상 버전에서 사용자 정의 containerd 레지스트리 설정 기능이 동작하지 않습니다. 자세한 내용은 [사용자 정의 containerd 레지스트리 설정 기능](/Container/NKS/ko/version-guide/#containerd-registry-config)을 참고하세요.
+    * k8s v1.34 이상 버전에서 워커 노드 이미지의 CGroup 버전에 따른 제약 사항이 존재합니다. 자세한 내용은 [CGroup v2 OS 이미지 사용을 위한 플랫폼 버전](/Container/NKS/ko/version-guide-ngoic/#platform-version-cgroup-v2-support)을 참고하세요.
+    * k8s v1.34 이상 버전에서 사용자 정의 containerd 레지스트리 설정 기능이 동작하지 않습니다. 자세한 내용은 [사용자 정의 containerd 레지스트리 설정 기능](/Container/NKS/ko/user-guide-ngoic/#containerd-registry-config)을 참고하세요.
 * Cilium CNI를 지원합니다.
 
 #### 플랫폼 버전 업데이트

@@ -37,8 +37,8 @@
 <a id="jun-2-2026-added-features"></a>
 #### 신규 기능 추가
 * Kubernetes v1.34.3을 지원합니다.
-    * k8s v1.34 이상 버전에서 워커 노드 이미지의 CGroup 버전에 따른 제약 사항이 존재합니다. 자세한 내용은 [Kubernetes 버전과 CGroup 버전에 따른 제약 사항](/Container/NKS/ko/version-guide/#constraints-on-cgroup)을 참고하세요.
-    * k8s v1.34 이상 버전에서 사용자 정의 containerd 레지스트리 설정 기능이 동작하지 않습니다. 자세한 내용은 [사용자 정의 containerd 레지스트리 설정 기능](/Container/NKS/ko/version-guide/#containerd-registry-config)을 참고하세요.
+    * k8s v1.34 이상 버전에서 워커 노드 이미지의 CGroup 버전에 따른 제약 사항이 존재합니다. 자세한 내용은 [CGroup v2 OS 이미지 사용을 위한 플랫폼 버전](/Container/NKS/ko/version-guide-gov/#platform-version-cgroup-v2-support)을 참고하세요.
+    * k8s v1.34 이상 버전에서 사용자 정의 containerd 레지스트리 설정 기능이 동작하지 않습니다. 자세한 내용은 [사용자 정의 containerd 레지스트리 설정 기능](/Container/NKS/ko/user-guide-gov/#containerd-registry-config)을 참고하세요.
 * Cilium CNI를 지원합니다.
 
 <a id="jun-2-2026-platform-version-updates"></a>
@@ -257,7 +257,7 @@
 * 로드 밸런서의 리스너 프로토콜을 TERMINATED_HTTPS로 설정할 때 Certificate Manager의 인증서를 사용할 수 있습니다.
 * 클러스터의 인증서를 갱신하는 기능이 추가되었습니다.
 * Resource Watcher 서비스를 통해 클러스터에서 발생하는 이벤트에 대한 알림을 받을 수 있습니다.
-    * 자세한 내용은 [Resource Watcher](/Governance%20&%20Audit/Resource%20Watcher/ko/overview)를 참고하세요.
+    * 자세한 내용은 [Resource Watcher](/Governance%20&%20Audit/Resource%20Watcher/ko/overview-gov)를 참고하세요.
 
 <a id="mar-5-2024"></a>
 ### 2024. 03. 05. { #mar-5-2024 }
@@ -410,7 +410,6 @@
 #### 신규 기능 추가
 
 * 클러스터 OWNER 변경 기능이 추가되었습니다.
-    * 자세한 내용은 [사용 가이드](/Container/NKS/ko/user-guide-gov/#owner)를 참고하세요.
 * Kubernetes v1.25.4를 지원합니다.
 * 클러스터 생성 시 Kubernetes v1.21.6은 더 이상 지원하지 않습니다. 단, 사용 중인 클러스터에는 영향이 없습니다.
 * 로드 밸런서의 리스너에 프록시 프로토콜(Proxy Protocol)을 설정할 수 있습니다.

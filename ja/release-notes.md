@@ -39,8 +39,8 @@
 <a id="may-27-2026-added-features"></a>
 #### 新機能追加
 * Kubernetes v1.34.3をサポートします。
-    * k8s v1.34以降のバージョンでは、ワーカーノードイメージのCGroupバージョンに応じた制約事項があります。詳細については、[KubernetesバージョンとCGroupバージョンに応じた制約事項](/Container/NKS/ja/version-guide/#constraints-on-cgroup)を参照してください。
-    * k8s v1.34以降のバージョンでは、ユーザー定義containerdレジストリ設定機能が動作しません。詳細については、[ユーザー定義containerdレジストリ設定機能](/Container/NKS/ja/version-guide/#containerd-registry-config)を参照してください。
+    * k8s v1.34以降のバージョンでは、ワーカーノードイメージのCGroupバージョンに応じた制約事項があります。詳細については、[KubernetesバージョンとCGroupバージョンに応じた制約事項](/Container/NKS/ja/version-guide/#platform-version-cgroup-v2-support)を参照してください。
+    * k8s v1.34以降のバージョンでは、ユーザー定義containerdレジストリ設定機能が動作しません。詳細については、[ユーザー定義containerdレジストリ設定機能](/Container/NKS/ja/user-guide/#containerd-registry-config)を参照してください。
 * Cilium CNIをサポートします。
 
 <a id="may-27-2026-platform-version-updates"></a>
