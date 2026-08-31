@@ -1108,7 +1108,7 @@ The flavors that can be changed to depend on the current instance flavor.
 <a id="custom-image"></a>
 ### Use Custom Images as Worker Images { #custom-image }
 
-You can create a worker node group using your custom images. This requires additional work (conversion to NKS worker node) in NHN Cloud Image Builder so that the custom image can be used as a worker node image. In Image Builder, you can create custom worker node images by creating image templates with the worker node application of NHN Kubernetes Service (NKS). For more information on Image Builder, see [Image Builder User Guide](/Compute/Image%20Builder/en/console-guide/#_1).
+You can create a worker node group using your custom images. This requires additional work (conversion to NKS worker node) in NHN Cloud Image Builder so that the custom image can be used as a worker node image. In Image Builder, you can create custom worker node images by creating image templates with the worker node application of NHN Kubernetes Service (NKS). For more information on Image Builder, see [Image Builder User Guide](/Compute/Image%20Builder/en/overview/).
 
 > [Caution]
 > Conversion to NKS worker node involves installing packages and changing settings, so if you work with images that don't work properly, it may fail.
@@ -1515,7 +1515,7 @@ Notes
 
 <a id="cluster-upgrade-considerations-for-etcd-version-changes"></a>
 #### Considerations for etcd Version Changes
-When performing a cluster upgrade, an etcd upgrade is carried out together only when the [etcd version](/Container/NKS/en/user-guide/#platform-version-etcd-version) defined in the target platform version differs from the current cluster's etcd version. Before starting the upgrade, make sure you are aware of the following considerations, and we recommend that you take measures such as notifying users in advance and securing a maintenance window.
+When a cluster upgrade is performed, an etcd upgrade is also performed only if the etcd version defined in the target platform version differs from the current cluster's etcd version. We recommend that you review the precautions before starting this operation and take measures such as providing advance notifications and scheduling maintenance windows. The etcd version for each platform version can be found in [Key Component Versions by Platform Version](/Container/NKS/en/version-guide/#platform-component-versions).
 
 ##### Avoid Frequent Resource Changes During the Upgrade to Ensure Data Consistency
 If resource deployment or deletion operations occur frequently during an etcd upgrade, data consistency verification may fail and the upgrade may fail. For a safe upgrade, we recommend that you perform the upgrade under the following conditions:
@@ -1611,7 +1611,7 @@ When all resources in the Blue environment are decommissioned, the versions of t
 <a id="api-endpoint-ipacl"></a>
 ### Apply IP Access Control to Cluster API Endpoints { #api-endpoint-ipacl }
 You can enforce or disable IP access control to cluster API endpoints.
-For more information about the IP access control feature, see [IP Access Control](/Network/Load%20Balancer/en/overview/#ip).
+For more information about the IP access control feature, see [IP Access Control](/Network/Load%20Balancer/en/overview/#load-balancer-ip-access-control).
 
 <a id="api-endpoint-ipacl-ip-access-control-rules"></a>
 #### IP Access Control Rules
@@ -2775,7 +2775,7 @@ When this manifest is applied, the per-listener settings are configured as shown
 >
 
 > [Caution]
-> All setting values for the features below must be entered in string format. In the YAML file input format, to enter in string format regardless of the input value, enclose the input value in double quotation marks ("). For more information about the YAML file format, see [Yaml Cookbook](https://yaml.org/YAML_for_ruby.html).
+> All setting values for the features below must be entered in string format. In the YAML file input format, to enter in string format regardless of the input value, enclose the input value in double quotation marks ("). For more information about the YAML file format, see the [Yaml website](https://yaml.org/).
 >
 
 <a id="loadbalancer-update-without-modification"></a>
@@ -3150,7 +3150,7 @@ metadata:
 
 <a id="advanced-lb-configuration-set-the-listener-proxy-protocol"></a>
 #### Set the listener proxy protocol (Proxy Protocol)
-When the listener protocol is TCP or HTTPS, you can set the proxy protocol to the listener. For more information on proxy protocol, see [Load Balancer Proxy Mode](/Network/Load%20Balancer/en/overview/#_4).
+When the listener protocol is TCP or HTTPS, you set the proxy protocol to the listener. For more information on proxy protocol, see [Load Balancer Proxy Mode](/Network/Load%20Balancer/en/overview/#load-balancer-proxy-mode).
 
 * The setting is located at `loadbalancer.nhncloud/proxy-protocol` under `.metadata.annotations`.
 * Per-listener settings can be applied.
@@ -3635,7 +3635,7 @@ Ingress controller can diverge services based on the host name. The following fi
 
 <a id="host-based-service-routing-create-services-and-pods"></a>
 #### Create Services and Pods
-Create services and pods by using the same manifest as in [URI-based service routing](/Container/NKS/en/user-guide/#uri).
+Create services and pods by using the same manifest as [Diverging Service on URI](/Container/NKS/en/user-guide/#uri-based-service-routing).
 
 <a id="host-based-service-routing-create-ingress"></a>
 #### Create Ingress
@@ -3834,7 +3834,7 @@ Ingress refers to the network object providing routing to access many services w
 
 ![dashboard-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-02.png)
 
-Refer to [Install NGINX Ingress Controller](/Container/NKS/en/user-guide/#nginx-ingress-controller) to install `NGINX Ingress Controller`, and write a manifest to create an ingress object as follows.
+Install `NGINX Ingress Controller` by referring to [Install NGINX Ingress Controller](/Container/NKS/en/user-guide/#install-nginx-ingress-controller) and write the manifest for creating an ingress object as follows:
 
 ```yaml
 # kubernetes-dashboard-ingress-tls-passthrough.yaml
@@ -4014,7 +4014,7 @@ csi-storageclass   cinder.csi.openstack.org   Delete          WaitForFirstConsum
 <a id="static-provisioning"></a>
 ### Static Provisioning { #static-provisioning }
 
-Static provisioning requires the user to prepare a block storage manually. On the **Storage > Block Storage** service page of the NHN Cloud web console, click the **Create Block Storage** button to create a block storage to attach to the PV. See [Create Block Storage](/Storage/Block%20Storage/en/console-guide/#_1) in the Block Storage guide.
+Static provisioning requires the user to prepare a block storage manually. On the **Storage > Block Storage** service page of the NHN Cloud web console, click the **Create Block Storage** button to create a block storage to attach to the PV. See [Create Block Storage](/Storage/Block%20Storage/en/console-guide/#create-block-storage) in the Block Storage guide.
 
 To create a PV, you need the ID of the block storage. On the **Storage > Block Storage** service page, select the block storage you want to use from the block storage list. You can find the ID under the block storage name section in the **Information** tab at the bottom.
 
@@ -4309,10 +4309,10 @@ spec:
 
 <a id="nas-integration"></a>
 ### NHN Cloud NAS Service Integration { #nas-integration }
-You can utilize NAS volumes provided by NHN Cloud as PV. In order to use NAS services, you must use a cluster of version v1.20 or later. For more information on using NHN Cloud NAS, please refer to the [NAS Console User Guide](/Storage/NAS%20(online)/en/console-guide).
+You can use NAS volumes provided by NHN Cloud as a PV. To use NAS services, you must use a cluster of version v1.20 or later. For more information on using NHN Cloud NAS, see [NAS Console User Guide](/Storage/NAS/en/console-guide).
 
 > [Note]
-> As of the current date (August 2024), the NHN Cloud NAS service is only available in select regions. For more information on the supported regions for the NHN Cloud NAS service, see the [NAS Service Overview](/Storage/NAS%20(online)/en/overview).
+> The NHN Cloud NAS service is currently (2024.08) only available in some regions. For more information on supported regions for NHN Cloud NAS service, see [NAS Service Overview](/Storage/NAS/en/overview).
 
 <a id="nas-integration-run-the-rpcbind-service-on-all-worker-nodes"></a>
 #### Run the rpcbind Service on All Worker Nodes
@@ -4764,7 +4764,7 @@ $ kubectl -n kube-system patch daemonset csi-cinder-nodeplugin -p "{\"spec\": {\
 ```
 
 > [Note]
-> The cinder-csi-plugin container image is maintained in NHN Cloud NCR. Since the cluster configured in a closed network environment is not connected to the Internet, it is necessary to configure the environment to use a private URI in order to receive images normally. For information on how to use Private URI, refer to the [NHN Cloud Container Registry (NCR) User Guide](/Container/NCR/en/user-guide/#private-uri).
+> The cinder-csi-plugin container image is maintained in NHN Cloud NCR. Since the cluster configured in a closed network environment is not connected to the Internet, it is necessary to configure the environment to use a private URI in order to receive images normally. For information on how to use Private URI, refer to the [NHN Cloud Container Registry (NCR) User Guide](/Container/NCR/en/user-guide/#use-private-uri).
 
 
 <a id="encrypted-block-storage-integration-static-provisioning"></a>

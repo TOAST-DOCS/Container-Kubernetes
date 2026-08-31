@@ -46,7 +46,7 @@ $ REGISTRY="{リージョン別レジストリ}"
 | | X | private-d6628457-kr3-registry.container.nhncloud.com/container_service/istio |
 
 > [参考]
-> インターネットに接続されていないクラスタがNCRレジストリを使用するためには、Private URIを使用するための環境設定が必要です。Private URIの使用方法の詳細は[NHN Cloud Container Registry(NCR)ユーザーガイド](/Container/NCR/ja/user-guide/#private-uri)を参照してください。
+> インターネットに接続されていないクラスタがNCRレジストリを使用するためには、Private URIを使用するための環境設定が必要です。Private URIの使用方法の詳細は[NHN Cloud Container Registry(NCR)ユーザーガイド](/Container/NCR/ja/user-guide/#use-private-uri)を参照してください。
 
 
 <a id="prerequisites-for-istio-deployment-install-the-oras-command-line-tool"></a>
