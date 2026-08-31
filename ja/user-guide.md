@@ -4765,7 +4765,7 @@ $ kubectl -n kube-system patch daemonset csi-cinder-nodeplugin -p "{\"spec\": {\
 ```
 
 > [注記]
-> cinder-csi-plugin コンテナイメージは NHN Cloud NCR で管理されています。閉域網環境に構成されたクラスターはインターネットに接続されていないため、イメージを正常に取得するには Private URI を使用するための環境構成が必要です。Private URI の使用方法の詳細については、[NHN Cloud Container Registry(NCR) ユーザーガイド](/Container/NCR/ja/user-guide/#private-uri)を参照してください。
+> cinder-csi-plugin コンテナイメージは NHN Cloud NCR で管理されています。閉域網環境に構成されたクラスターはインターネットに接続されていないため、イメージを正常に取得するには Private URI を使用するための環境構成が必要です。Private URI の使用方法の詳細については、[NHN Cloud Container Registry(NCR) ユーザーガイド](/Container/NCR/ja/user-guide/#use-private-uri)を参照してください。
 
 
 <a id="encrypted-block-storage-integration-static-provisioning"></a>

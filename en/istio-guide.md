@@ -47,7 +47,7 @@ NKS provides installation only for the Istio versions specified in the table abo
 
 
 > [Note]
-For clusters to use NCR registries that are not connected to the internet, it is necessary to configure an environment to use a private URI. For information on how to use Private URI, refer to the [](/Container/NCR/ko/user-guide/#private-uri)NHN Cloud Container Registry (NCR) User Guide[](/Container/NCR/ko/user-guide/#private-uri).
+For clusters to use NCR registries that are not connected to the internet, it is necessary to configure an environment to use a private URI. For information on how to use Private URI, refer to the [](/Container/NCR/ko/user-guide/#use-private-uri)NHN Cloud Container Registry (NCR) User Guide[](/Container/NCR/ko/user-guide/#use-private-uri).
 
 
 <a id="prerequisites-for-istio-deployment-install-the-oras-command-line-tool"></a>
