@@ -1112,7 +1112,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.28.3
 <a id="custom-image"></a>
 ### 커스텀 이미지를 워커 이미지로 활용 { #custom-image }
 
-사용자의 커스텀 이미지를 기반으로 한 워커 노드 그룹을 생성할 수 있습니다. 커스텀 이미지가 워커 노드 이미지로 활용될 수 있도록 NHN Cloud Image Builder 서비스에서 추가적인 작업(NKS 워커 노드화)이 필요합니다. Image Builder 서비스에서 NHN Kubernetes Service(NKS) 워커 노드 애플리케이션으로 이미지 템플릿을 생성하여 커스텀 워커 노드 이미지를 생성할 수 있습니다. Image Builder 서비스에 대한 자세한 내용은 [Image Builder 사용자 가이드](/Compute/Image%20Builder/ko/console-guide/#_1)를 참고하세요.
+사용자의 커스텀 이미지를 기반으로 한 워커 노드 그룹을 생성할 수 있습니다. 커스텀 이미지가 워커 노드 이미지로 활용될 수 있도록 NHN Cloud Image Builder 서비스에서 추가적인 작업(NKS 워커 노드화)이 필요합니다. Image Builder 서비스에서 NHN Kubernetes Service(NKS) 워커 노드 애플리케이션으로 이미지 템플릿을 생성하여 커스텀 워커 노드 이미지를 생성할 수 있습니다. Image Builder 서비스에 대한 자세한 내용은 [Image Builder 사용자 가이드](/Compute/Image%20Builder/ko/overview/)를 참고하세요.
 
 > [주의]
 > NKS 워커 노드화 작업에는 패키지 설치 및 설정 변경 등이 포함되어 있어 정상적으로 동작하지 않는 이미지로 작업을 진행하는 경우 실패할 수 있습니다.
@@ -1517,7 +1517,7 @@ NKS 클러스터 버전 관리 방식과 Kubernetes 버전 차이 지원 정책�
 
 <a id="cluster-upgrade-considerations-for-etcd-version-changes"></a>
 #### etcd 버전 변경에 따른 주의 사항
-클러스터 업그레이드 작업 진행 시, 업그레이드 대상 플랫폼 버전에 정의된 [etcd 버전](/Container/NKS/ko/user-guide/#platform-version-etcd-version)이 현재 클러스터의 etcd 버전과 다른 경우에 한해 etcd 업그레이드 작업이 함께 진행됩니다. 해당 작업을 시작하기 전에 주의 사항을 반드시 인지하고 사전 공지/점검 시간 확보 등의 조치를 권장합니다.
+클러스터 업그레이드 작업 진행 시, 업그레이드 대상 플랫폼 버전에 정의된 etcd 버전이 현재 클러스터의 etcd 버전과 다른 경우에 한해 etcd 업그레이드 작업이 함께 진행됩니다. 해당 작업을 시작하기 전에 주의 사항을 반드시 인지하고 사전 공지/점검 시간 확보 등의 조치를 권장합니다. 플랫폼 버전 별 etcd 버전은 [플랫폼 버전별 주요 컴포넌트 버전](/Container/NKS/ko/version-guide/#platform-component-versions)에서 확인할 수 있습니다.
 
 ##### 데이터 정합성 확인을 위해 빈번한 리소스 변경 자제
 etcd 업그레이드 시 리소스 배포/삭제 작업이 빈번하게 발생하면, 데이터 정합성 확인에 실패해 업그레이드가 실패할 수 있습니다. 안전한 업그레이드를 위해 다음과 같은 환경에서 업그레이드하는 것을 권장합니다.
@@ -1616,7 +1616,7 @@ Blue 환경의 리소스를 모두 폐기하면 컨트롤 플레인과 모든 �
 <a id="api-endpoint-ipacl"></a>
 ### 클러스터 API 엔드포인트 IP 접근 제어 적용 { #api-endpoint-ipacl }
 클러스터 API 엔드포인트에 IP 접근 제어를 적용하거나 해제할 수 있습니다.
-IP 접근 제어 기능에 대한 자세한 사항은 [IP 접근제어](/Network/Load%20Balancer/ko/overview/#ip) 문서를 참고하세요.
+IP 접근 제어 기능에 대한 자세한 사항은 [IP 접근제어](/Network/Load%20Balancer/ko/overview/#load-balancer-ip-access-control) 문서를 참고하세요.
 
 <a id="api-endpoint-ipacl-ip-access-control-rules"></a>
 #### IP 접근 제어 대상 규칙
@@ -2780,7 +2780,7 @@ spec:
 >
 
 > [주의]
-> 아래 기능의 설정값은 모두 문자열 형식으로 입력해야 합니다. YAML 파일 입력 형식에서 입력값 형태에 관계없이 문자열 형식으로 입력하기 위해서는 입력값을 큰따옴표(")로 감싸주면 됩니다. YAML 파일 형식에 대한 더 자세한 내용은 [Yaml Cookbook](https://yaml.org/YAML_for_ruby.html) 문서를 참조하세요.
+> 아래 기능의 설정값은 모두 문자열 형식으로 입력해야 합니다. YAML 파일 입력 형식에서 입력값 형태에 관계없이 문자열 형식으로 입력하기 위해서는 입력값을 큰따옴표(")로 감싸주면 됩니다. YAML 파일 형식에 대한 더 자세한 내용은 [Yaml 홈페이지](https://yaml.org/)를 참조하세요.
 >
 
 <a id="loadbalancer-update-without-modification"></a>
@@ -3155,7 +3155,7 @@ metadata:
 
 <a id="advanced-lb-configuration-set-the-listener-proxy-protocol"></a>
 #### 리스너 프록시 프로토콜(Proxy Protocol) 설정
-리스너 프로토콜이 TCP 혹은 HTTPS인 경우 리스너에 프록시 프로토콜을 설정할 수 있습니다. 프록시 프로토콜에 대한 자세한 내용은 [로드 밸런서 프록시 모드](/Network/Load%20Balancer/ko/overview/#_4)를 참고하세요.
+리스너 프로토콜이 TCP 혹은 HTTPS인 경우 리스너에 프록시 프로토콜을 설정할 수 있습니다. 프록시 프로토콜에 대한 자세한 내용은 [로드 밸런서 프록시 모드](/Network/Load%20Balancer/ko/overview/#load-balancer-proxy-mode)를 참고하세요.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/proxy-protocol입니다.
 * 리스너별 설정을 적용할 수 있습니다.
@@ -3640,7 +3640,7 @@ service "tea-svc" deleted
 
 <a id="host-based-service-routing-create-services-and-pods"></a>
 #### 서비스와 파드 생성
-[URI 기반 서비스 분기](/Container/NKS/ko/user-guide/#uri)와 동일한 매니페스트를 이용해 서비스와 파드를 생성합니다.
+[URI 기반 서비스 분기](/Container/NKS/ko/user-guide/#uri-based-service-routingi)와 동일한 매니페스트를 이용해 서비스와 파드를 생성합니다.
 
 <a id="host-based-service-routing-create-ingress"></a>
 #### 인그레스 생성
@@ -3840,7 +3840,7 @@ kubernetes-dashboard   LoadBalancer   10.254.95.176   123.123.123.81   443:30963
 
 ![dashboard-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-02.png)
 
-[NGINX Ingress Controller 설치](/Container/NKS/ko/user-guide/#nginx-ingress-controller)를 참고해 `NGINX Ingress Controller`를 설치하고 다음과 같이 인그레스 객체 생성을 위한 매니페스트를 작성합니다.
+[NGINX Ingress Controller 설치](/Container/NKS/ko/user-guide/#install-nginx-ingress-controller)를 참고해 `NGINX Ingress Controller`를 설치하고 다음과 같이 인그레스 객체 생성을 위한 매니페스트를 작성합니다.
 
 ```yaml
 # kubernetes-dashboard-ingress-tls-passthrough.yaml
@@ -4020,7 +4020,7 @@ csi-storageclass   cinder.csi.openstack.org   Delete          WaitForFirstConsum
 <a id="static-provisioning"></a>
 ### 정적 프로비저닝 { #static-provisioning }
 
-정적 프로비저닝(static provisioning)은 사용자가 직접 블록 스토리지를 준비해야 합니다. NHN Cloud 웹 콘솔의 **Storage > Block Storage** 서비스 페이지에서 **블록 스토리지 생성** 버튼을 클릭해 PV와 연결할 블록 스토리지를 생성합니다. 블록 스토리지 가이드의 [블록 스토리지 생성](/Storage/Block%20Storage/ko/console-guide/#_1)을 참고하세요.
+정적 프로비저닝(static provisioning)은 사용자가 직접 블록 스토리지를 준비해야 합니다. NHN Cloud 웹 콘솔의 **Storage > Block Storage** 서비스 페이지에서 **블록 스토리지 생성** 버튼을 클릭해 PV와 연결할 블록 스토리지를 생성합니다. 블록 스토리지 가이드의 [블록 스토리지 생성](/Storage/Block%20Storage/ko/console-guide/#create-block-storage)을 참고하세요.
 
 PV를 생성하려면 블록 스토리지의 ID가 필요합니다. **Storage > Block Storage** 서비스 페이지의 블록 스토리지 목록에서 사용할 블록 스토리지를 선택합니다. 하단 **정보** 탭의 블록 스토리지 이름 항목에서 ID를 확인할 수 있습니다.
 
