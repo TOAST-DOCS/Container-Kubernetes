@@ -1,3 +1,5 @@
+<!-- machine_translated: true -->
+
 <!-- pre-align:aligned sig=77a9bfc5cb0a -->
 
 <a id="container-nhn-kubernetes-service-nks-api-v2-guide"></a>
@@ -837,9 +839,9 @@ X-Auth-Token: {tokenId}
 
 <a id="enforce-ip-access-control-to-cluster-api-endpoints"></a>
 ### クラスタAPIエンドポイントIPアクセス制御適用 { #enforce-ip-access-control-to-cluster-api-endpoints }
-クラスタAPIエンドポイントにIPアクセス制御を適用または解除できます。
-IPアクセス制御機能の詳細については、 [IPアクセス制御](/Network/Load%20Balancer/ja/overview/#load-balancer-ip-access-control)文書を参照してください。
-クラスタAPIエンドポイントへのIPアクセス制御ルールに関する詳細については、 [ユーザーガイド](/Container/NKS/ja/user-guide/#api_endpoint_ipacl)を参照してください。
+クラスター API エンドポイントに IP アクセス制御を適用または解除できます。
+IP アクセス制御機能の詳細については、「[IP アクセス制御](/Network/Load%20Balancer/ja/overview/#load-balancer-ip-access-control)」を参照してください。
+クラスター API エンドポイントの IP アクセス制御ルールの詳細については、「[ユーザーガイド](/Container/NKS/ja/user-guide/#api_endpoint_ipacl)」を参照してください。
 
 ```
 POST /v1/clusters/{CLUSTER_ID_OR_NAME}/api_ep_ipacl
@@ -2269,9 +2271,7 @@ X-Auth-Token: {tokenId}
 <a id="change-kubernetes-label-configuration-of-a-node-group-response"></a>
 #### レスポンス
 
-| 名前 | 種類 | 形式 | 説明 |
-|---|---|---|---|
-| uuid | Body | UUID | ノードグループUUID |
+<todo: translate>
 
 <details><summary>例</summary>
 <p>
@@ -2465,19 +2465,12 @@ X-Auth-Token: {tokenId}
 <a id="view-a-list-of-add-ons-offered-by-nhn-cloud-request"></a>
 #### リクエスト
 
-| 名前 | 種類 | 形式 | 必須 | 説明 |
-|---|---|---|---|---|
-| tokenId | Header | String | O | トークンID |
-| k8s_version | Query | String | X | Kubernetesバージョン(例：`v1.30.0`)。指定時、該当バージョンと互換性のあるアドオンのみを返却します。 |
-| image | Query | UUID | X | ベースイメージのUUID。指定時、該当イメージにインストール可能なアドオンのみを返却します。 |
-| platform_version | Query | String | X | プラットフォームバージョン(例：`1.202605.0`)。指定時、該当プラットフォームバージョンで使用可能なアドオンのみを返却します。 |
+<todo: translate>
 
 <a id="view-a-list-of-add-ons-offered-by-nhn-cloud-response"></a>
 #### レスポンス
 
-| 名前 | 種類 | 形式 | 説明 |
-|---|---|---|---|
-| addons | Body | List of object | アドオン情報のリスト |
+<todo: translate>
 
 
 <details><summary>例</summary>
@@ -2867,3 +2860,4 @@ X-Auth-Token: {tokenId}
 
 </p>
 </details>
+<todo: translate>
