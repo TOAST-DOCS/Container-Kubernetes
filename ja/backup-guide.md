@@ -1,3 +1,5 @@
+<!-- machine_translated: true -->
+
 <!-- pre-align:aligned sig=dd3a912dfca5 -->
 
 <a id="container-nhn-kubernetes-service-nks-backup-guide"></a>
@@ -49,9 +51,9 @@ Object Storage APIの詳細については[Object Storage APIガイド](/Storage
 
 Veleroクライアントで`velero log`コマンドを使用するにはObject StorageにTemporary URL Keyを作成する必要があります。
 
-1. [Object Storage認証トークン発行](/Storage/Object%20Storage/ko/api-guide/#auth)を行います。
-2. **API Endpoint設定**ボタンをクリックしてサービスのObject Store URLを確認します。
-3. APIを利用してTemporary URL Keyを作成します。
+1. [Object Storage 認証および権限](/Storage/Object%20Storage/ja/api-guide/#auth)を参照して、トークンを発行します。
+2. **[API Endpoint 設定]** ボタンをクリックして、サービスのObject Store URLを確認します。
+3. APIを使用して、Temporary URL Keyを生成します。
 
 | 名前 | 種類 | 形式 | 必須 | 説明 |
 | --- | --- | --- | --- | --- |
@@ -65,9 +67,11 @@ $ curl -X POST {Object Store} -H "X-Auth-Token: {tokenId}" -H "X-Account-Meta-Te
 <a id="install-the-velero-client"></a>
 ### Veleroクライアントのインストール { #install-the-velero-client }
 
-Veleroクライアントはクラスタのバックアップおよび復元コマンドを入力するプログラムです。
-Velero GithubリポジトリからVeleroクライアントをダウンロードして、クラスタのバックアップおよび復元に活用できます。ダウンロードしたVeleroクライアントコマンドを実行する前にバックアップおよび復元クラスタのkubeconfigファイルをWebコンソールからダウンロードし、**KUBECONFIG環境変数を設定してバックアップおよび復元対象クラスタを正確に指定**する必要があります。
-kubeconfig設定の詳細については[kubectlインストール](/Container/NKS/ja/user-guide/#kubectl-install)を参照してください。
+Velero クライアントは、クラスターのバックアップおよびリストアコマンドを入力するプログラムです。
+Velero GitHub リポジトリから Velero クライアントをダウンロードして、クラスターのバックアップおよびリストア時に活用できます。ダウンロードした Velero クライアントのコマンドを実行する前に、バックアップおよびリストア対象クラスターの kubeconfigファイルをウェブコンソールからダウンロードし、**KUBECONFIG 環境変数を設定してバックアップおよびリストア対象クラスターを正確に指定**する必要があります。
+
+
+kubeconfigの設定の詳細については、[kubectl のインストール](/Container/NKS/ja/user-guide/#kubectl-install)を参照してください。
 
 <a id="install-the-velero-client-download-the-velero-client"></a>
 #### Veleroクライアントのダウンロード

@@ -1515,7 +1515,7 @@ Notes
 
 <a id="cluster-upgrade-considerations-for-etcd-version-changes"></a>
 #### Considerations for etcd Version Changes
-When performing a cluster upgrade, an etcd upgrade is carried out together only when the [etcd version](/Container/NKS/en/version-guide/#platform-version-etcd-version) defined in the target platform version differs from the current cluster's etcd version. Before starting the upgrade, make sure you are aware of the following considerations, and we recommend that you take measures such as notifying users in advance and securing a maintenance window.
+When a cluster upgrade is performed, an etcd upgrade is also performed only if the etcd version defined in the target platform version differs from the current cluster's etcd version. We recommend that you review the precautions before starting this operation and take measures such as providing advance notifications and scheduling maintenance windows. The etcd version for each platform version can be found in [Key Component Versions by Platform Version](/Container/NKS/en/version-guide/#platform-component-versions).
 
 ##### Avoid Frequent Resource Changes During the Upgrade to Ensure Data Consistency
 If resource deployment or deletion operations occur frequently during an etcd upgrade, data consistency verification may fail and the upgrade may fail. For a safe upgrade, we recommend that you perform the upgrade under the following conditions:
@@ -2775,7 +2775,7 @@ When this manifest is applied, the per-listener settings are configured as shown
 >
 
 > [Caution]
-> All setting values for the features below must be entered in string format. In the YAML file input format, to enter in string format regardless of the input value, enclose the input value in double quotation marks ("). For more information about the YAML file format, see [Yaml homepage](https://yaml.org/).
+> All setting values for the features below must be entered in string format. In the YAML file input format, to enter in string format regardless of the input value, enclose the input value in double quotation marks ("). For more information about the YAML file format, see the [Yaml website](https://yaml.org/).
 >
 
 <a id="loadbalancer-update-without-modification"></a>
@@ -3150,7 +3150,7 @@ metadata:
 
 <a id="advanced-lb-configuration-set-the-listener-proxy-protocol"></a>
 #### Set the listener proxy protocol (Proxy Protocol)
-When the listener protocol is TCP or HTTPS, you can set the proxy protocol to the listener. For more information on proxy protocol, see [Load Balancer Proxy Mode](/Network/Load%20Balancer/en/overview/#load-balancer-proxy-mode).
+When the listener protocol is TCP or HTTPS, you set the proxy protocol to the listener. For more information on proxy protocol, see [Load Balancer Proxy Mode](/Network/Load%20Balancer/en/overview/#load-balancer-proxy-mode).
 
 * The setting is located at `loadbalancer.nhncloud/proxy-protocol` under `.metadata.annotations`.
 * Per-listener settings can be applied.
@@ -3635,7 +3635,7 @@ Ingress controller can diverge services based on the host name. The following fi
 
 <a id="host-based-service-routing-create-services-and-pods"></a>
 #### Create Services and Pods
-Create services and pods by using the same manifest as in [URI-based service routing](/Container/NKS/en/user-guide/#uri-based-service-routing).
+Create services and pods by using the same manifest as [Diverging Service on URI](/Container/NKS/en/user-guide/#uri-based-service-routing).
 
 <a id="host-based-service-routing-create-ingress"></a>
 #### Create Ingress
@@ -3834,7 +3834,7 @@ Ingress refers to the network object providing routing to access many services w
 
 ![dashboard-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-02.png)
 
-Refer to [Install NGINX Ingress Controller](/Container/NKS/en/user-guide/#install-nginx-ingress-controller) to install `NGINX Ingress Controller`, and write a manifest to create an ingress object as follows.
+Install `NGINX Ingress Controller` by referring to [Install NGINX Ingress Controller](/Container/NKS/en/user-guide/#install-nginx-ingress-controller) and write the manifest for creating an ingress object as follows:
 
 ```yaml
 # kubernetes-dashboard-ingress-tls-passthrough.yaml
@@ -4309,10 +4309,10 @@ spec:
 
 <a id="nas-integration"></a>
 ### NHN Cloud NAS Service Integration { #nas-integration }
-You can utilize NAS volumes provided by NHN Cloud as PV. In order to use NAS services, you must use a cluster of version v1.20 or later. For more information on using NHN Cloud NAS, please refer to the [NAS Console User Guide](/Storage/NAS/en/console-guide).
+You can use NAS volumes provided by NHN Cloud as a PV. To use NAS services, you must use a cluster of version v1.20 or later. For more information on using NHN Cloud NAS, see [NAS Console User Guide](/Storage/NAS/en/console-guide).
 
 > [Note]
-> As of the current date (August 2024), the NHN Cloud NAS service is only available in select regions. For more information on the supported regions for the NHN Cloud NAS service, see the [NAS Service Overview](/Storage/NAS/en/overview).
+> The NHN Cloud NAS service is currently (2024.08) only available in some regions. For more information on supported regions for NHN Cloud NAS service, see [NAS Service Overview](/Storage/NAS/en/overview).
 
 <a id="nas-integration-run-the-rpcbind-service-on-all-worker-nodes"></a>
 #### Run the rpcbind Service on All Worker Nodes
