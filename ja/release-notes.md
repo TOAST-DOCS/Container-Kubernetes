@@ -38,10 +38,10 @@
 
 <a id="may-27-2026-added-features"></a>
 #### 新機能追加
-* Kubernetes v1.34.3をサポートします。
-    * k8s v1.34以降のバージョンでは、ワーカーノードイメージのCGroupバージョンに応じた制約事項があります。詳細については、[KubernetesバージョンとCGroupバージョンに応じた制約事項](/Container/NKS/ja/version-guide/#constraints-on-cgroup)を参照してください。
-    * k8s v1.34以降のバージョンでは、ユーザー定義containerdレジストリ設定機能が動作しません。詳細については、[ユーザー定義containerdレジストリ設定機能](/Container/NKS/ja/version-guide/#containerd-registry-config)を参照してください。
-* Cilium CNIをサポートします。
+* Kubernetes v1.34.3 をサポートします。
+    * k8s v1.34 以降のバージョンでは、ワーカーノードイメージの CGroup バージョンによる制約事項があります。詳細については、[CGroup v2 OS イメージ使用のためのプラットフォームバージョン](/Container/NKS/ja/version-guide/#platform-version-cgroup-v2-support)を参照してください。
+    * k8s v1.34 以降のバージョンでは、ユーザー定義の containerd レジストリ設定機能は動作しません。詳細については、[ユーザー定義 containerd レジストリ設定機能](/Container/NKS/ja/user-guide/#containerd-registry-config)を参照してください。
+* Cilium CNI をサポートします。
 
 <a id="may-27-2026-platform-version-updates"></a>
 #### プラットフォームバージョンアップデート
@@ -441,13 +441,11 @@
 <a id="jan-31-2023-added-features"></a>
 #### 新機能の追加
 
-* クラスタOWNER変更機能が追加されました。
-    * 詳細については[使用ガイド](/Container/NKS/ja/user-guide/#_4)をご覧ください。
+* クラスターのOWNER変更機能が追加されました。
 * Kubernetes v1.25.4をサポートします。
-* クラスタ作成時、Kubernetes v1.21.6はサポートしなくなります」。ただし、使用中のクラスタには影響がありません。
-* ロードバランサーのリスナーにプロキシプロトコル(Proxy Protocol)を設定できます。
+* クラスター作成時、Kubernetes v1.21.6はサポートされなくなりました。ただし、使用中のクラスターには影響がありません。
+* ロードバランサーのリスナーにプロキシプロトコル (Proxy Protocol) を設定できます。
 * 物理ロードバランサーを作成できます。
-
 
 <a id="dec-27-2022"></a>
 ### 2022. 12. 27. { #dec-27-2022 }

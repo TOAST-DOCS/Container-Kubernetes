@@ -245,7 +245,7 @@ k8s Node 상태의 아이콘별 의미는 다음과 같습니다.
 * 해당 노드가 인스턴스 수준에서 삭제됩니다.
 
 > [주의]
-> 블록 스토리지 기반 PVC를 사용하는 Pod는 볼륨이 생성된 가용성 영역(AZ)의 노드에만 스케줄링됩니다. 해당 가용성 영역의 노드 그룹을 삭제하면 Pod가 FailedScheduling 상태로 Pending되어 서비스가 중단될 수 있습니다. 볼륨 데이터는 유지되며, 동일한 가용성 영역에 노드 또는 노드 그룹을 추가하면 자동으로 복구됩니다. 자세한 내용은 [볼륨 바인딩 모드](/Container/NKS/ko/user-guide-ngoic/#storageclass-VolumeBindingMode)를 참고하세요.
+> 블록 스토리지 기반 PVC를 사용하는 Pod는 볼륨이 생성된 가용성 영역(AZ)의 노드에만 스케줄링됩니다. 해당 가용성 영역의 노드 그룹을 삭제하면 Pod가 FailedScheduling 상태로 Pending되어 서비스가 중단될 수 있습니다. 볼륨 데이터는 유지되며, 동일한 가용성 영역에 노드 또는 노드 그룹을 추가하면 자동으로 복구됩니다. 자세한 내용은 [볼륨 바인딩 모드](/Container/NKS/ko/user-guide-ngoic/#volume-binding-mode-volumebindingmode)를 참고하세요.
 
 <a id="nodegroup-scale-out"></a>
 ### 노드 그룹에 노드 추가 { #nodegroup-scale-out }
@@ -338,7 +338,7 @@ k8s Node 상태의 아이콘별 의미는 다음과 같습니다.
 
 <a id="metric-base-autoscaler"></a>
 #### 지표 기반 오토스케일러
-지표 기반 오토스케일러는 NHN Cloud의 [Cloud Monitoring](/Monitoring/Cloud%20Monitoring/ko/overview/) 서비스 기반으로 동작합니다. 워커 노드에 설치된 지표 수집 에이전트가 1분 주기로 시스템 지표를 Cloud Monitoring으로 전송하고, 수집된 지표가 설정한 임계치를 초과하거나 미달할 경우 자동으로 노드를 추가하거나 제거합니다. 증설(Scale Out)과 감축(Scale In) 기능은 각각 독립적으로 활성화할 수 있습니다.
+지표 기반 오토스케일러는 NHN Cloud의 [Cloud Monitoring](/Monitoring/Cloud%20Monitoring/ko/overview-ngoic/) 서비스 기반으로 동작합니다. 워커 노드에 설치된 지표 수집 에이전트가 1분 주기로 시스템 지표를 Cloud Monitoring으로 전송하고, 수집된 지표가 설정한 임계치를 초과하거나 미달할 경우 자동으로 노드를 추가하거나 제거합니다. 증설(Scale Out)과 감축(Scale In) 기능은 각각 독립적으로 활성화할 수 있습니다.
 
 <a id="metric-base-autoscaler-set"></a>
 ##### 지표 기반 오토스케일러 설정
@@ -1293,7 +1293,7 @@ NKS 클러스터 버전 관리 방식과 Kubernetes 버전 차이 지원 정책�
 
 <a id="cluster-upgrade-considerations-for-etcd-version-changes"></a>
 #### etcd 버전 변경에 따른 주의 사항
-클러스터 업그레이드 작업 진행 시, 업그레이드 대상 플랫폼 버전에 정의된 [etcd 버전](/Container/NKS/ko/user-guide/#platform-version-etcd-version)이 현재 클러스터의 etcd 버전과 다른 경우에 한해 etcd 업그레이드 작업이 함께 진행됩니다. 해당 작업을 시작하기 전에 주의 사항을 반드시 인지하고 사전 공지/점검 시간 확보 등의 조치를 권장합니다.
+클러스터 업그레이드 작업 진행 시, 업그레이드 대상 플랫폼 버전에 정의된 etcd 버전이 현재 클러스터의 etcd 버전과 다른 경우에 한해 etcd 업그레이드 작업이 함께 진행됩니다. 해당 작업을 시작하기 전에 주의 사항을 반드시 인지하고 사전 공지/점검 시간 확보 등의 조치를 권장합니다. 플랫폼 버전 별 etcd 버전은 [플랫폼 버전별 주요 컴포넌트 버전](/Container/NKS/ko/version-guide-ngoic/#platform-component-versions)에서 확인할 수 있습니다.
 
 ##### 데이터 정합성 확인을 위해 빈번한 리소스 변경 자제
 etcd 업그레이드 시 리소스 배포/삭제 작업이 빈번하게 발생하면, 데이터 정합성 확인에 실패해 업그레이드가 실패할 수 있습니다. 안전한 업그레이드를 위해 다음과 같은 환경에서 업그레이드하는 것을 권장합니다.
@@ -1381,7 +1381,7 @@ NKS 클러스터 컨트롤 플레인은 고가용성을 보장합니다. 컨트�
 신규 노드 그룹을 생성하여 테스트를 위한 Green 환경을 생성합니다. 컨트롤 플레인 구성 요소 업그레이드 이후 생성되는 신규 노드 그룹은 컨트롤 플레인의 Kubernetes 버전과 동일한 버전으로 생성됩니다. Green 환경에 Blue 환경(기존 노드 그룹)과 동일한 리소스를 배포하여 업그레이드 이후 환경의 검증을 수행할 수 있습니다. 이 때, Blue 환경이 기존 클러스터의 운영에 영향을 주지 않도록 애플리케이션 트래픽을 분리해야 합니다.
 
 > [주의]
-> 블록 스토리지 기반 PVC를 사용하는 워크로드가 있는 경우, Green 노드 그룹의 가용성 영역(AZ)을 기존 Blue 노드 그룹과 동일하게 선택해야 합니다. 블록 스토리지 볼륨은 생성된 가용성 영역에 고정되므로, 다른 가용성 영역의 노드에는 연결할 수 없습니다. 가용성 영역이 일치하지 않으면 Pod가 FailedScheduling 상태로 Pending될 수 있습니다. 자세한 내용은 [볼륨 바인딩 모드](/Container/NKS/ko/user-guide-ngoic/#storageclass-VolumeBindingMode)를 참고하세요.
+> 블록 스토리지 기반 PVC를 사용하는 워크로드가 있는 경우, Green 노드 그룹의 가용성 영역(AZ)을 기존 Blue 노드 그룹과 동일하게 선택해야 합니다. 블록 스토리지 볼륨은 생성된 가용성 영역에 고정되므로, 다른 가용성 영역의 노드에는 연결할 수 없습니다. 가용성 영역이 일치하지 않으면 Pod가 FailedScheduling 상태로 Pending될 수 있습니다. 자세한 내용은 [볼륨 바인딩 모드](/Container/NKS/ko/user-guide-ngoic/#volume-binding-mode-volumebindingmode)를 참고하세요.
 
 ##### 3. Green 환경(신규 노드 그룹)에 대한 검증 후 애플리케이션 트래픽을 Green 환경으로 전환합니다.
 새로 구축한 Green 환경에서 기존 사용자가 운영 중이던 리소스가 다음 버전의 쿠버네티스와 정상적으로 호환되는지에 대해 검증하고, 검증이 완료되면 애플리케이션 트래픽을 기존의 Blue 환경에서 새로 구축한 Green 환경으로 전환합니다. 만약 Green 환경에서의 검증 단계에서 문제가 발생하는 경우, 트래픽을 전환하지 않고 Blue 환경을 삭제함으로써 간단하게 롤백할 수 있습니다.
@@ -1392,7 +1392,7 @@ Blue 환경의 리소스를 모두 폐기하면 컨트롤 플레인과 모든 �
 <a id="api-endpoint-ipacl"></a>
 ### 클러스터 API 엔드포인트 IP 접근 제어 적용 { #api-endpoint-ipacl }
 클러스터 API 엔드포인트에 IP 접근 제어를 적용하거나 해제할 수 있습니다.
-IP 접근 제어 기능에 대한 자세한 사항은 [IP 접근제어](/Network/Load%20Balancer/ko/overview-ngoic/#ip) 문서를 참고하세요.
+IP 접근 제어 기능에 대한 자세한 사항은 [IP 접근제어](/Network/Load%20Balancer/ko/overview-ngoic/#load-balancer-ip-access-control) 문서를 참고하세요.
 
 <a id="api-endpoint-ipacl-ip-access-control-rules"></a>
 #### IP 접근 제어 대상 규칙
@@ -1403,7 +1403,6 @@ IP 접근 제어 기능에 대한 자세한 사항은 [IP 접근제어](/Network
 * IP 접근 제어 타입이 **차단**으로 설정된 경우 클러스터 기본 서브넷 CIDR 대역에 중첩되는 IP 대역이 접근 제어 대상 목록에 있으면 요청이 거절됩니다.
 * 최대 설정 가능한 IP 접근 제어 대상 수는 100개입니다.
 * IP 접근 제어 대상은 1개 이상 존재해야 합니다.
-
 
 <a id="rotate-certificate"></a>
 ### 클러스터 인증서 갱신 { #rotate-certificate }
@@ -2534,7 +2533,7 @@ spec:
 | 리스너 프로토콜 | HTTP | TCP | TCP-80 리스너와 TCP-443 리스너 모두 리스너별 설정에 따라 설정   |
 
 > [주의]
-> 아래 기능의 설정값은 모두 문자열 형식으로 입력해야 합니다. YAML 파일 입력 형식에서 입력값 형태에 관계없이 문자열 형식으로 입력하기 위해서는 입력값을 큰따옴표(")로 감싸주면 됩니다. YAML 파일 형식에 대한 더 자세한 내용은 [Yaml Cookbook](https://yaml.org/YAML_for_ruby.html) 문서를 참조하세요.
+> 아래 기능의 설정값은 모두 문자열 형식으로 입력해야 합니다. YAML 파일 입력 형식에서 입력값 형태에 관계없이 문자열 형식으로 입력하기 위해서는 입력값을 큰따옴표(")로 감싸주면 됩니다. YAML 파일 형식에 대한 더 자세한 내용은 [Yaml 홈페이지](https://yaml.org/)를 참조하세요.
 >
 
 <a id="loadbalancer-update-without-modification"></a>
@@ -2897,7 +2896,7 @@ metadata:
 
 <a id="advanced-lb-configuration-set-the-listener-proxy-protocol"></a>
 #### 리스너 프록시 프로토콜(Proxy Protocol) 설정
-리스너 프로토콜이 TCP 혹은 HTTPS인 경우 리스너에 프록시 프로토콜을 설정할 수 있습니다. 프록시 프로토콜에 대한 자세한 내용은 [로드 밸런서 프록시 모드](/Network/Load%20Balancer/ko/overview-ngoic/#_4)를 참고하세요.
+리스너 프로토콜이 TCP 혹은 HTTPS인 경우 리스너에 프록시 프로토콜을 설정할 수 있습니다. 프록시 프로토콜에 대한 자세한 내용은 [로드 밸런서 프록시 모드](/Network/Load%20Balancer/ko/overview-ngoic/#load-balancer-proxy-mode)를 참고하세요.
 
 * 설정 위치는 .metadata.annotations 하위의 loadbalancer.nhncloud/proxy-protocol입니다.
 * 리스너별 설정을 적용할 수 있습니다.
@@ -3383,7 +3382,7 @@ service "tea-svc" deleted
 
 <a id="host-based-service-routing-create-services-and-pods"></a>
 #### 서비스와 파드 생성
-[URI 기반 서비스 분기](/Container/NKS/ko/user-guide-ngoic/#uri)와 동일한 매니페스트를 이용해 서비스와 파드를 생성합니다.
+[URI 기반 서비스 분기](/Container/NKS/ko/user-guide-ngoic/#uri-based-service-routing)와 동일한 매니페스트를 이용해 서비스와 파드를 생성합니다.
 
 <a id="host-based-service-routing-create-ingress"></a>
 #### 인그레스 생성
@@ -3583,7 +3582,7 @@ kubernetes-dashboard   LoadBalancer   10.254.95.176   123.123.123.81   443:30963
 
 ![dashboard-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-02.png)
 
-[NGINX Ingress Controller 설치](/Container/NKS/ko/user-guide-ngoic/#nginx-ingress-controller)를 참고해 `NGINX Ingress Controller`를 설치하고 `LoadBalancer` 유형의 서비스를 생성합니다. 그리고 다음과 같이 인그레스 객체 생성을 위한 매니페스트를 작성합니다.
+[NGINX Ingress Controller 설치](/Container/NKS/ko/user-guide-ngoic/#install-nginx-ingress-controller)를 참고해 `NGINX Ingress Controller`를 설치하고 `LoadBalancer` 유형의 서비스를 생성합니다. 그리고 다음과 같이 인그레스 객체 생성을 위한 매니페스트를 작성합니다.
 
 ```yaml
 # kubernetes-dashboard-ingress-tls-passthrough.yaml
@@ -3736,7 +3735,7 @@ csi-storageclass   cinder.csi.openstack.org   Delete          WaitForFirstConsum
 <a id="static-provisioning"></a>
 ### 정적 프로비저닝 { #static-provisioning }
 
-정적 프로비저닝(static provisioning)은 사용자가 직접 블록 스토리지를 준비해야 합니다. NHN Cloud 웹 콘솔의 **Storage > Block Storage** 서비스 페이지에서 **블록 스토리지 생성** 버튼을 클릭해 PV와 연결할 블록 스토리지를 생성합니다. 블록 스토리지 가이드의 [블록 스토리지 생성](/Storage/Block%20Storage/ko/console-guide/#_2)을 참고하세요.
+정적 프로비저닝(static provisioning)은 사용자가 직접 블록 스토리지를 준비해야 합니다. NHN Cloud 웹 콘솔의 **Storage > Block Storage** 서비스 페이지에서 **블록 스토리지 생성** 버튼을 클릭해 PV와 연결할 블록 스토리지를 생성합니다. 블록 스토리지 가이드의 [블록 스토리지 생성](/Storage/Block%20Storage/ko/console-guide/#create-block-storage)을 참고하세요.
 
 PV를 생성하려면 블록 스토리지의 ID가 필요합니다. **Storage > Block Storage** 서비스 페이지의 블록 스토리지 목록에서 사용할 블록 스토리지를 선택합니다. 하단 **정보** 탭의 블록 스토리지 이름 항목에서 ID를 확인할 수 있습니다.
 
