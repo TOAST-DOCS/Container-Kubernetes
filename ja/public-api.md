@@ -1837,9 +1837,24 @@ X-Auth-Token: {tokenId}
 <a id="change-cluster-autoscaler-configuration-of-a-node-group-response"></a>
 #### レスポンス
 
-<!-- TODO: translate body -->
+| 名前 | 種類 | 形式 | 説明 |
+|---|---|---|---|
+| uuid | Body | UUID | ノードグループ UUID |
 
-<!-- pre-align: ko에 대응 섹션 없음 — 검토 필요 (Duplicate L4 リクエスト under t74 section; semantically corresponds to k77 (ノードグループの指標ベースオートスケーラー設定変更) request, but k77 is L3 and t76 is L4 — matched to k77 above, so not extra) -->
+<details><summary>例</summary>
+<p>
+
+```json
+{
+    "uuid": "018b06c5-1293-4081-8242-167a1cb9f262"
+}
+```
+
+</p>
+</details>
+
+---
+
 <a id="change-metric-based-autoscaler-configuration-of-a-node-group"></a>
 ### リクエスト { #change-metric-based-autoscaler-configuration-of-a-node-group }
 
@@ -1873,7 +1888,32 @@ X-Auth-Token: {tokenId}
 <a id="change-metric-based-autoscaler-configuration-of-a-node-group-request"></a>
 #### リクエスト
 
-<!-- TODO: translate body -->
+| 名前 | 種類 | 形式 | 必須 | 説明 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | トークンID |
+| CLUSTER_ID_OR_NAME | URL | UUID or String | O | クラスターUUIDまたはクラスター名 | 
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | ノードグループUUIDまたはノードグループ名 | 
+| type | Body | String | O | metric_base_autoscale の設定 |
+| mba_scale_out | Body | Object | X | メトリクスベースのオートスケール増設ポリシーの設定 |
+| mba_scale_out.enable | Body | Boolean | X | 機能の有効化の有無 (true / false) |
+| mba_scale_out.max_node_count | Body | Integer | X | ノードグループの最大ノード数 |
+| mba_scale_out.rules_operator | Body | String | X | 増設ルール間に適用される演算子 ("AND" / "OR") |
+| mba_scale_out.delay | Body | Integer | X | 増設待機時間 (1〜60) 分 |
+| mba_scale_out.adjustment_count | Body | Integer | X | 増設ノード数 (1〜10) |
+| mba_scale_out.rules | Body | List of Object | mba_scale_out.enable の設定が true の場合、1 つ以上のルール設定が必要 | 増設ルールの設定 |
+| mba_scale_out.rules.metric | Body | Integer | mba_scale_out.enable の設定が true の場合は必須 | メトリクスの設定 |
+| mba_scale_out.rules.threshold | Body | Integer | mba_scale_out.enable の設定が true の場合は必須 | しきい値の設定 |
+| mba_scale_out.rules.duration | Body | Integer | mba_scale_out.enable の設定が true の場合は必須 | しきい値超過状態の維持時間 (2〜60) 分 |
+| mba_scale_in | Body | Object | X | メトリクスベースのオートスケール縮小ポリシーの設定 |
+| mba_scale_in.enable | Body | Boolean | X | 機能の有効化の有無 (true / false) |
+| mba_scale_in.min_node_count | Body | Integer | X | ノードグループの最小ノード数 |
+| mba_scale_in.rules_operator | Body | String | X | 縮小ルール間に適用される演算子 ("AND" / "OR") |
+| mba_scale_in.delay | Body | Integer | X | 縮小待機時間 (1〜60) 分 |
+| mba_scale_in.adjustment_count | Body | Integer | X | 縮小ノード数 (1〜10) |
+| mba_scale_in.rules | Body | List of Object | mba_scale_in.enable の設定が true の場合、1 つ以上のルール設定が必要 | 縮小ルールの設定 |
+| mba_scale_in.rules.metric | Body | Integer | mba_scale_in.enable の設定が true の場合は必須 | メトリクスの設定 |
+| mba_scale_in.rules.threshold | Body | Integer | mba_scale_in.enable の設定が true の場合は必須 | しきい値の設定 |
+| mba_scale_in.rules.duration | Body | Integer | mba_scale_in.enable の設定が true の場合は必須 | しきい値超過状態の維持時間 (2〜60) 分 |
 
 ##### 指標設定リスト
 
