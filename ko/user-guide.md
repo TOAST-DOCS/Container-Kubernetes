@@ -14,7 +14,7 @@ NHN Kubernetes Service(NKS)를 사용하려면 먼저 클러스터를 생성해�
 > [주의] 클러스터 사용을 위한 권한 설정<br>
 > 클러스터를 만들고자 하는 사용자는 대상 프로젝트에 대해 반드시 기본 인프라 서비스의 **Infrastructure ADMIN** 또는 **Infrastructure LoadBalancer ADMIN** 또는 **Infrastructure NKS ADMIN** 권한을 가져야 합니다.
 > 해당 권한이 있어야만 기본 인프라 서비스를 기반으로 하는 클러스터를 정상적으로 생성하고 활용할 수 있으며, 이 중 하나의 권한을 가진 상태에서 다른 권한이 추가되는 것은 사용에 문제가 없습니다.
-> 권한 설정에 대해서는 [프로젝트 멤버 관리](/nhncloud/ko/console-user-guide/#_3)를 참고하세요.
+> 권한 설정에 대해서는 [프로젝트 멤버 관리](/nhncloud/ko/console-user-guide/#project)를 참고하세요.
 
 **Container > NHN Kubernetes Service(NKS)** 페이지에서 **클러스터 생성**을 클릭하면 클러스터 생성 페이지가 나타납니다. 클러스터 생성에 필요한 항목은 다음과 같습니다.
 
@@ -248,7 +248,7 @@ k8s Node 상태의 아이콘별 의미는 다음과 같습니다.
 * 해당 노드가 인스턴스 수준에서 삭제됩니다.
 
 > [주의]
-> 블록 스토리지 기반 PVC를 사용하는 Pod는 볼륨이 생성된 가용성 영역(AZ)의 노드에만 스케줄링됩니다. 해당 가용성 영역의 노드 그룹을 삭제하면 Pod가 FailedScheduling 상태로 Pending되어 서비스가 중단될 수 있습니다. 볼륨 데이터는 유지되며, 동일한 가용성 영역에 노드 또는 노드 그룹을 추가하면 자동으로 복구됩니다. 자세한 내용은 [볼륨 바인딩 모드](/Container/NKS/ko/user-guide/#storageclass-volume-binding-mode-volumebindingmode)를 참고하세요.
+> 블록 스토리지 기반 PVC를 사용하는 Pod는 볼륨이 생성된 가용성 영역(AZ)의 노드에만 스케줄링됩니다. 해당 가용성 영역의 노드 그룹을 삭제하면 Pod가 FailedScheduling 상태로 Pending되어 서비스가 중단될 수 있습니다. 볼륨 데이터는 유지되며, 동일한 가용성 영역에 노드 또는 노드 그룹을 추가하면 자동으로 복구됩니다. 자세한 내용은 [볼륨 바인딩 모드](#storageclass-volume-binding-mode-volumebindingmode)를 참고하세요.
 
 
 
@@ -260,7 +260,7 @@ k8s Node 상태의 아이콘별 의미는 다음과 같습니다.
 >오토스케일러가 활성화된 노드 그룹은 수동으로 노드를 추가할 수 없습니다.
 
 > [주의] 신규 노드의 `node.cloudprovider.kubernetes.io/uninitialized` 테인트를 제거하면 안 됩니다.
-> 자세한 내용은 [노드 그룹 생성](/Container/NKS/ko/user-guide/#nodegroup-create)의 주의 사항을 참고하세요.
+> 자세한 내용은 [노드 그룹 생성](#nodegroup-create)의 주의 사항을 참고하세요.
 
 <a id="nodegroup-scale-in"></a>
 ### 노드 그룹에서 노드 삭제 { #nodegroup-scale-in }
@@ -322,7 +322,7 @@ Kubernetes를 통한 GPU 기반 워크로드 실행이 필요한 경우, GPU 인
 클러스터 혹은 노드 그룹 생성 과정에서 인스턴스 타입 선택 시, `g2` 타입을 선택하면 GPU 노드 그룹을 만들 수 있습니다.
 
 > [참고]
-> NHN Cloud GPU 인스턴스에서 제공되는 GPU는 NVIDIA 계열입니다. ([사용 가능한 GPU 제원 확인하기](/Compute/GPU%20Instance/ko/overview/#gpu))
+> NHN Cloud GPU 인스턴스에서 제공되는 GPU는 NVIDIA 계열입니다. ([사용 가능한 GPU 제원 확인하기](/Compute/GPU%20Instance/ko/overview/))
 > NVIDIA GPU 이용을 위해 Kubernetes에 필요한 nvidia-device-plugin은 GPU 노드 그룹 생성 시 자동으로 설치됩니다.
 
 생성된 GPU 노드에 대한 기본적인 설정 상태 확인 및 간단한 동작 테스트는 다음과 같은 방법을 이용하면 됩니다.
@@ -1097,7 +1097,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.28.3
 4. 버퍼 노드에서 동작 중인 파드를 축출하고 버퍼 노드를 삭제합니다.
 5. 클러스터 오토스케일러 기능을 다시 활성화합니다.
 
-인스턴스 타입 변경은 워커 구성 요소 업그레이드와 유사한 방법으로 진행됩니다. 버퍼 노드의 생성과 삭제, 파드의 축출에 대해서는 [클러스터 업그레이드](/Container/NKS/ko/user-guide/#cluster-upgrade)를 참고하세요.
+인스턴스 타입 변경은 워커 구성 요소 업그레이드와 유사한 방법으로 진행됩니다. 버퍼 노드의 생성과 삭제, 파드의 축출에 대해서는 [클러스터 업그레이드](#cluster-upgrade)를 참고하세요.
 
 
 <a id="instance-flavor-update-constraints"></a>
@@ -1517,7 +1517,7 @@ NKS 클러스터 버전 관리 방식과 Kubernetes 버전 차이 지원 정책�
 
 <a id="cluster-upgrade-considerations-for-etcd-version-changes"></a>
 #### etcd 버전 변경에 따른 주의 사항
-클러스터 업그레이드 작업 진행 시, 업그레이드 대상 플랫폼 버전에 정의된 etcd 버전이 현재 클러스터의 etcd 버전과 다른 경우에 한해 etcd 업그레이드 작업이 함께 진행됩니다. 해당 작업을 시작하기 전에 주의 사항을 반드시 인지하고 사전 공지/점검 시간 확보 등의 조치를 권장합니다. 플랫폼 버전 별 etcd 버전은 [플랫폼 버전별 주요 컴포넌트 버전](/Container/NKS/ko/version-guide/#platform-component-versions)에서 확인할 수 있습니다.
+클러스터 업그레이드 작업 진행 시, 업그레이드 대상 플랫폼 버전에 정의된 etcd 버전이 현재 클러스터의 etcd 버전과 다른 경우에 한해 etcd 업그레이드 작업이 함께 진행됩니다. 해당 작업을 시작하기 전에 주의 사항을 반드시 인지하고 사전 공지/점검 시간 확보 등의 조치를 권장합니다. 플랫폼 버전 별 etcd 버전은 [플랫폼 버전별 주요 컴포넌트 버전](./version-guide/#platform-component-versions)에서 확인할 수 있습니다.
 
 ##### 데이터 정합성 확인을 위해 빈번한 리소스 변경 자제
 etcd 업그레이드 시 리소스 배포/삭제 작업이 빈번하게 발생하면, 데이터 정합성 확인에 실패해 업그레이드가 실패할 수 있습니다. 안전한 업그레이드를 위해 다음과 같은 환경에서 업그레이드하는 것을 권장합니다.
@@ -1605,7 +1605,7 @@ NKS 클러스터 컨트롤 플레인은 고가용성을 보장합니다. 컨트�
 신규 노드 그룹을 생성하여 테스트를 위한 Green 환경을 생성합니다. 컨트롤 플레인 구성 요소 업그레이드 이후 생성되는 신규 노드 그룹은 컨트롤 플레인의 Kubernetes 버전과 동일한 버전으로 생성됩니다. Green 환경에 Blue 환경(기존 노드 그룹)과 동일한 리소스를 배포하여 업그레이드 이후 환경의 검증을 수행할 수 있습니다. 이 때, Blue 환경이 기존 클러스터의 운영에 영향을 주지 않도록 애플리케이션 트래픽을 분리해야 합니다.
 
 > [주의]
-> 블록 스토리지 기반 PVC를 사용하는 워크로드가 있는 경우, Green 노드 그룹의 가용성 영역(AZ)을 기존 Blue 노드 그룹과 동일하게 선택해야 합니다. 블록 스토리지 볼륨은 생성된 가용성 영역에 고정되므로, 다른 가용성 영역의 노드에는 연결할 수 없습니다. 가용성 영역이 일치하지 않으면 Pod가 FailedScheduling 상태로 Pending될 수 있습니다. 자세한 내용은 [볼륨 바인딩 모드](/Container/NKS/ko/user-guide/#storageclass-volume-binding-mode-volumebindingmode)를 참고하세요.
+> 블록 스토리지 기반 PVC를 사용하는 워크로드가 있는 경우, Green 노드 그룹의 가용성 영역(AZ)을 기존 Blue 노드 그룹과 동일하게 선택해야 합니다. 블록 스토리지 볼륨은 생성된 가용성 영역에 고정되므로, 다른 가용성 영역의 노드에는 연결할 수 없습니다. 가용성 영역이 일치하지 않으면 Pod가 FailedScheduling 상태로 Pending될 수 있습니다. 자세한 내용은 [볼륨 바인딩 모드](#storageclass-volume-binding-mode-volumebindingmode)를 참고하세요.
 
 ##### 3. Green 환경(신규 노드 그룹)에 대한 검증 후 애플리케이션 트래픽을 Green 환경으로 전환합니다.
 새로 구축한 Green 환경에서 기존 사용자가 운영 중이던 리소스가 다음 버전의 쿠버네티스와 정상적으로 호환되는지에 대해 검증하고, 검증이 완료되면 애플리케이션 트래픽을 기존의 Blue 환경에서 새로 구축한 Green 환경으로 전환합니다. 만약 Green 환경에서의 검증 단계에서 문제가 발생하는 경우, 트래픽을 전환하지 않고 Blue 환경을 삭제함으로써 간단하게 롤백할 수 있습니다.
@@ -3031,7 +3031,7 @@ spec:
 >     * eth0: 서브넷#1
 >     * eth1: 서브넷#2(멤버)
 > 
-> 이 경우 인스턴스 eth1의 IP 주소가 멤버로 등록됩니다. 로드 밸런서에서 전송한 헬스체크 패킷은 인스턴스의 eth1로 수신하고, eth0을 통해 송신을 시도합니다. 이 때, eth0으로 보내는 패킷의 소스 IP 주소가 eth0의 IP 주소와 다릅니다. eth0의 네트워크 인터페이스에 소스/대상 확인 기능이 활성화되어 있으면 이 패킷은 송신되지 못하고 버려집니다. 이와 같은 구성에서는 eth0의 네트워크 인터페이스에서 소스/대상 확인 기능을 비활성화해야 멤버가 정상 동작합니다. 소스/대상 확인 기능에 대한 설명은 [소스/대상 확인 변경](/Network/Network%20Interface/ko/console-guide/#_4)을 참고하세요.
+> 이 경우 인스턴스 eth1의 IP 주소가 멤버로 등록됩니다. 로드 밸런서에서 전송한 헬스체크 패킷은 인스턴스의 eth1로 수신하고, eth0을 통해 송신을 시도합니다. 이 때, eth0으로 보내는 패킷의 소스 IP 주소가 eth0의 IP 주소와 다릅니다. eth0의 네트워크 인터페이스에 소스/대상 확인 기능이 활성화되어 있으면 이 패킷은 송신되지 못하고 버려집니다. 이와 같은 구성에서는 eth0의 네트워크 인터페이스에서 소스/대상 확인 기능을 비활성화해야 멤버가 정상 동작합니다. 소스/대상 확인 기능에 대한 설명은 [소스/대상 확인 변경](/Network/Network%20Interface/ko/console-guide/#change)을 참고하세요.
 > 
 > **예시2.**
 > 
@@ -3640,7 +3640,7 @@ service "tea-svc" deleted
 
 <a id="host-based-service-routing-create-services-and-pods"></a>
 #### 서비스와 파드 생성
-[URI 기반 서비스 분기](/Container/NKS/ko/user-guide/#uri-based-service-routing)와 동일한 매니페스트를 이용해 서비스와 파드를 생성합니다.
+[URI 기반 서비스 분기](#uri-based-service-routing)와 동일한 매니페스트를 이용해 서비스와 파드를 생성합니다.
 
 <a id="host-based-service-routing-create-ingress"></a>
 #### 인그레스 생성
@@ -3804,7 +3804,7 @@ Events:            <none>
 <a id="expose-dashboard-change-into-loadbalancer"></a>
 #### LoadBalancer 서비스 객체로 변경
 
-`LoadBalancer` 유형으로 서비스 객체를 변경하면 클러스터 외부에 NHN Cloud Load Balancer가 생성되고, 로드 밸런서와 서비스 객체가 연결됩니다. 로드 밸런서와 연결된 서비스 객체를 조회하면 **EXTERNAL-IP** 필드에 로드 밸런서의 IP가 표시됩니다. `LoadBalancer` 유형의 서비스 객체에 대한 설명은 [LoadBalancer 서비스](/Container/NKS/ko/user-guide/#loadbalancer)를 참고하세요. 아래 그림은 `LoadBalancer` 유형의 서비스를 이용해 대시보드를 외부에 공개하는 구조를 나타냅니다.
+`LoadBalancer` 유형으로 서비스 객체를 변경하면 클러스터 외부에 NHN Cloud Load Balancer가 생성되고, 로드 밸런서와 서비스 객체가 연결됩니다. 로드 밸런서와 연결된 서비스 객체를 조회하면 **EXTERNAL-IP** 필드에 로드 밸런서의 IP가 표시됩니다. `LoadBalancer` 유형의 서비스 객체에 대한 설명은 [LoadBalancer 서비스](#loadbalancer)를 참고하세요. 아래 그림은 `LoadBalancer` 유형의 서비스를 이용해 대시보드를 외부에 공개하는 구조를 나타냅니다.
 
 ![dashboard-01.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-01.png)
 
@@ -3828,7 +3828,7 @@ kubernetes-dashboard   LoadBalancer   10.254.95.176   123.123.123.81   443:30963
 > 생성된 로드 밸런서는 **Network > Load Balancer** 페이지에서 확인할 수 있습니다.
 > 로드 밸런서의 IP는 외부에서 접근할 수 있는 플로팅 IP입니다. **Network > Floating IP** 페이지에서 확인할 수 있습니다.
 
-웹 브라우저에서 `https://{EXTERNAL-IP}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 액세스 토큰](/Container/NKS/ko/user-guide/#dashboard-access-token)을 참고하세요.
+웹 브라우저에서 `https://{EXTERNAL-IP}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 액세스 토큰](#dashboard-access-token)을 참고하세요.
 
 > [참고]
 > Kubernetes 대시보드는 자동 생성되는 사설 인증서를 사용하기 때문에 웹 브라우저의 종류와 보안 설정에 따라 안전하지 않은 페이지로 표시될 수 있습니다.
@@ -3836,11 +3836,11 @@ kubernetes-dashboard   LoadBalancer   10.254.95.176   123.123.123.81   443:30963
 <a id="expose-dashboard-open-services-with-ingress"></a>
 #### 인그레스(Ingress)를 이용한 서비스 공개
 
-인그레스는 클러스터 내부의 여러 서비스들로 접근하기 위한 라우팅을 제공하는 네트워크 객체입니다. 인그레스 객체의 설정은 인그레스 컨트롤러로 구동됩니다. `kubernetes-dashboard` 서비스 객체를 인그레스를 통해 공개할 수 있습니다. 인그레스와 인그레스 컨트롤러에 대한 설명은 [인그레스 컨트롤러](/Container/NKS/ko/user-guide/#ingress-controller)를 참고하세요. 아래 그림은 인그레스를 통해 대시보드를 외부에 공개하는 구조를 나타냅니다.
+인그레스는 클러스터 내부의 여러 서비스들로 접근하기 위한 라우팅을 제공하는 네트워크 객체입니다. 인그레스 객체의 설정은 인그레스 컨트롤러로 구동됩니다. `kubernetes-dashboard` 서비스 객체를 인그레스를 통해 공개할 수 있습니다. 인그레스와 인그레스 컨트롤러에 대한 설명은 [인그레스 컨트롤러](#ingress-controller)를 참고하세요. 아래 그림은 인그레스를 통해 대시보드를 외부에 공개하는 구조를 나타냅니다.
 
 ![dashboard-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-02.png)
 
-[NGINX Ingress Controller 설치](/Container/NKS/ko/user-guide/#install-nginx-ingress-controller)를 참고해 `NGINX Ingress Controller`를 설치하고 다음과 같이 인그레스 객체 생성을 위한 매니페스트를 작성합니다.
+[NGINX Ingress Controller 설치](#install-nginx-ingress-controller)를 참고해 `NGINX Ingress Controller`를 설치하고 다음과 같이 인그레스 객체 생성을 위한 매니페스트를 작성합니다.
 
 ```yaml
 # kubernetes-dashboard-ingress-tls-passthrough.yaml
@@ -3883,7 +3883,7 @@ NAME                    CLASS   HOSTS   ADDRESS          PORTS     AGE
 k8s-dashboard-ingress   nginx   *       123.123.123.44   80, 443   34s
 ```
 
-웹 브라우저에서 `https://{ADDRESS}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 액세스 토큰](/Container/NKS/ko/user-guide/#dashboard-access-token)을 참고하세요.
+웹 브라우저에서 `https://{ADDRESS}`로 접속하면 Kubernetes 대시보드 페이지가 로딩됩니다. 로그인을 위해 필요한 토큰은 [대시보드 액세스 토큰](#dashboard-access-token)을 참고하세요.
 
 <a id="dashboard-access-token"></a>
 ### 대시보드 액세스 토큰 { #dashboard-access-token }
@@ -4341,7 +4341,7 @@ $ systemctl start rpcbind
 
 <a id="nas-integration-install-csi-driver-nfs"></a>
 #### csi-driver-nfs 설치
-NHN Cloud NAS 서비스를 사용하려면 클러스터에 NHN Kubernetes Service(NKS)의 Addon 기능으로 [nfs-csi-plugin](/Container/NKS/ko/user-guide/#addon-mgmt-addon-list-nfs-csi-plugin)을 배포해야 합니다.
+NHN Cloud NAS 서비스를 사용하려면 클러스터에 NHN Kubernetes Service(NKS)의 Addon 기능으로 [nfs-csi-plugin](#addon-mgmt-addon-list-nfs-csi-plugin)을 배포해야 합니다.
 
 csi-driver-nfs는 NFS 스토리지에 새 하위 디렉터리를 생성하는 방식으로 동작하는 NFS 스토리지 프로비저닝을 지원하는 드라이버입니다.
 csi-driver-nfs는 스토리지 클래스에 NFS 스토리지 정보를 제공하는 방식으로 동작하여 사용자가 관리해야 하는 대상을 줄여 줍니다.
@@ -4726,7 +4726,7 @@ tmpfs                                                                          1
 
 <a id="encrypted-block-storage-integration"></a>
 ### NHN Cloud 암호화 블록 스토리지 연동 { #encrypted-block-storage-integration }
-NHN Cloud에서 제공하는 암호화된 블록 스토리지를 PV로 활용할 수 있습니다. NHN Cloud 암호화 블록 스토리지에 대한 자세한 내용은 [암호화 블록 스토리지](/Storage/Block%20Storage/ko/console-guide/#_2)를 참고하세요.
+NHN Cloud에서 제공하는 암호화된 블록 스토리지를 PV로 활용할 수 있습니다. NHN Cloud 암호화 블록 스토리지에 대한 자세한 내용은 [암호화 블록 스토리지](/Storage/Block%20Storage/ko/console-guide/#encrypted-block-storage)를 참고하세요.
 
 > [참고]
 > 암호화 블록 스토리지 서비스 연동 기능은 v1.24.3 이상 버전의 클러스터에서 사용 가능합니다.
@@ -4806,7 +4806,7 @@ spec:
     volumeHandle: 9f606b78-256b-4f74-8988-1331cd6d398b
 ```
 
-PVC 매니페스트 작성 및 파드에 마운트하는 과정은 일반 블록 스토리지의 정적 프로비저닝과 동일합니다. 자세한 내용은 [정적 프로비저닝](/Container/NKS/ko/user-guide/#static-provisioning)을 참고하세요.
+PVC 매니페스트 작성 및 파드에 마운트하는 과정은 일반 블록 스토리지의 정적 프로비저닝과 동일합니다. 자세한 내용은 [정적 프로비저닝](#static-provisioning)을 참고하세요.
 
 <a id="encrypted-block-storage-integration-dynamic-provisioning"></a>
 #### 동적 프로비저닝
@@ -4836,7 +4836,7 @@ parameters:
   volume_appkey: "uaUW..."
 ```
 
-PVC 매니페스트 작성 및 파드에 마운트하는 과정은 일반 블록 스토리지의 동적 프로비저닝과 동일합니다. 자세한 내용은 [동적 프로비저닝](/Container/NKS/ko/user-guide/#dynamic-provisioning)을 참고하세요.
+PVC 매니페스트 작성 및 파드에 마운트하는 과정은 일반 블록 스토리지의 동적 프로비저닝과 동일합니다. 자세한 내용은 [동적 프로비저닝](#dynamic-provisioning)을 참고하세요.
 
 
 <a id="etcd-encryption-with-skm"></a>

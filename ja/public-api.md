@@ -31,50 +31,50 @@ NHN Kubernetes Service(NKS)APIは、クラスタおよびノードグループ�
 GET /v2.0/networks?router:external=True
 ```
 
-ネットワークリスト照会APIの詳細については、[ネットワークリスト表示](/Network/VPC/ja/public-api/#_2)を参照してください。
+ネットワークリスト照会APIの詳細については、[ネットワークリスト表示](/Network/VPC/ja/public-api/#view-vpc-list)を参照してください。
 
 
 <a id="list-of-uuids-of-subnets-attached-to-the-internet-gateway"></a>
 ### インターネットゲートウェイに接続されたサブネットUUIDリスト { #list-of-uuids-of-subnets-attached-to-the-internet-gateway }
 
-インターネットゲートウェイに接続されたVPCネットワークに接続されたサブネットUUIDを入力します。複数のサブネットが検索された場合はコロン(`:`)でつなげて入力します。サブネットリスト照会APIの詳細については、[サブネットリスト表示](/Network/VPC/ja/public-api/#vpc_7)を参照してください。
+インターネットゲートウェイに接続されたVPCネットワークに接続されたサブネットUUIDを入力します。複数のサブネットが検索された場合はコロン(`:`)でつなげて入力します。サブネットリスト照会APIの詳細については、[サブネットリスト表示](/Network/VPC/ja/public-api/#list-vpc-subnets)を参照してください。
 
 
 <a id="vpc-network-uuid"></a>
 ### VPCネットワークUUID { #vpc-network-uuid }
 
-ノードと接続する内部VPCネットワークUUIDを入力します。ネットワークリスト照会APIの詳細については[ネットワークリスト表示](/Network/VPC/ja/public-api/#vpc_1)を参照してください。
+ノードと接続する内部VPCネットワークUUIDを入力します。ネットワークリスト照会APIの詳細については[ネットワークリスト表示](/Network/VPC/ja/public-api/#view-vpc-list)を参照してください。
 
 <a id="vpc-subnet-uuid"></a>
 ### VPCサブネットUUID { #vpc-subnet-uuid }
 
-ノードと接続する内部VPCネットワークに接続されたサブネットUUIDを入力します。サブネットリスト照会APIの詳細については[サブネットリスト表示](/Network/VPC/ja/public-api/#vpc_7)を参照してください。
+ノードと接続する内部VPCネットワークに接続されたサブネットUUIDを入力します。サブネットリスト照会APIの詳細については[サブネットリスト表示](/Network/VPC/ja/public-api/#list-vpc-subnets)を参照してください。
 
 <a id="availability-zone-uuid"></a>
 ### アベイラビリティゾーンUUID { #availability-zone-uuid }
 
-ノードを作成するアベイラビリティゾーンUUIDを入力します。アベイラビリティゾーンリスト照会APIの詳細については[可用性リスト表示](/Compute/Instance/ja/public-api/#_9)を参照してください。
+ノードを作成するアベイラビリティゾーンUUIDを入力します。アベイラビリティゾーンリスト照会APIの詳細については[可用性リスト表示](/Compute/Instance/ja/public-api/#list-availability-zones)を参照してください。
 
 <!-- pre-align: ko에 대응 섹션 없음 — 검토 필요 (t8 translates k8 (キーペア名) but uses 'UUID' instead of '名' — still semantically matched to k8; however if treated as mistranslation note: matched above) -->
 <a id="key-pair-uuid"></a>
 ### キーペアUUID { #key-pair-uuid }
 
-ノード接続時に使用するキーペアを入力します。キーペアリスト照会APIの詳細については[キーペアリスト表示](/Compute/Instance/ja/public-api/#_13)を参照してください。
+ノード接続時に使用するキーペアを入力します。キーペアリスト照会APIの詳細については[キーペアリスト表示](/Compute/Instance/ja/public-api/#list-key-pairs)を参照してください。
 
 <a id="base-image-uuid"></a>
 ### ベースイメージUUID { #base-image-uuid }
 
-ノードの作成に使用するベースイメージのUUIDを入力します。NKSノードの作成に使用されるベースイメージだけをフィルタリングするため、API呼び出し時にクエリ文字列パラメータに`nhncloud_allow_nks_cpu_flavor=true&visibility=public`を入力します。ベースイメージリスト照会APIの詳細については、[イメージリスト照会](/Compute/Image/ja/public-api/#_2)を参照してください。
+ノードの作成に使用するベースイメージのUUIDを入力します。NKSノードの作成に使用されるベースイメージだけをフィルタリングするため、API呼び出し時にクエリ文字列パラメータに`nhncloud_allow_nks_cpu_flavor=true&visibility=public`を入力します。ベースイメージリスト照会APIの詳細については、[イメージリスト照会](/Compute/Image/ja/public-api/#list-images)を参照してください。
 
 <a id="block-storage-type"></a>
 ### ブロックストレージの種類 { #block-storage-type }
 
-ノードに使用するブロックストレージUUIDを入力します。ブロックストレージタイプリスト照会APIの詳細については[ボリュームタイプリスト表示](/Storage/Block%20Storage/ja/public-api/#_2)を参照してください。
+ノードに使用するブロックストレージUUIDを入力します。ブロックストレージタイプリスト照会APIの詳細については[ボリュームタイプリスト表示](/Storage/Block%20Storage/ja/public-api/#list-block-storage-types)を参照してください。
 
 <a id="flavor-uuid"></a>
 ### インスタンスタイプUUID { #flavor-uuid }
 
-作成するノードのインスタンスタイプUUIDを入力します。インスタンスタイプリスト照会APIの詳細については[インスタンスタイプリスト表示](/Compute/Instance/ja/public-api/#_2)を参照してください。
+作成するノードのインスタンスタイプUUIDを入力します。インスタンスタイプリスト照会APIの詳細については[インスタンスタイプリスト表示](/Compute/Instance/ja/public-api/#list-flavors)を参照してください。
 
 
 

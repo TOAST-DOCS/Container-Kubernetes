@@ -29,49 +29,49 @@ NHN Kubernetes Service(NKS) API는 클러스터 및 노드 그룹 구성을 위�
 GET /v2.0/networks?router:external=True
 ```
 
-네트워크 목록 조회 API에 대한 좀 더 자세한 내용은 [네트워크 목록 보기](/Network/VPC/ko/public-api/#_2)를 참고하세요.
+네트워크 목록 조회 API에 대한 좀 더 자세한 내용은 [네트워크 목록 보기](/Network/VPC/ko/public-api/#view-vpc-list)를 참고하세요.
 
 
 <a id="list-of-uuids-of-subnets-attached-to-the-internet-gateway"></a>
 ### 인터넷 게이트웨이에 연결된 서브넷 UUID 목록 { #list-of-uuids-of-subnets-attached-to-the-internet-gateway }
 
-인터넷 게이트웨이에 연결된 VPC 네트워크와 연결된 서브넷 UUID를 입력합니다. 여러 서브넷이 조회되었다면 콜론(`:`)으로 연결해 입력합니다. 서브넷 목록 조회 API에 대한 좀 더 자세한 내용은 [서브넷 목록 보기](/Network/VPC/ko/public-api/#vpc_7)를 참고하세요.
+인터넷 게이트웨이에 연결된 VPC 네트워크와 연결된 서브넷 UUID를 입력합니다. 여러 서브넷이 조회되었다면 콜론(`:`)으로 연결해 입력합니다. 서브넷 목록 조회 API에 대한 좀 더 자세한 내용은 [서브넷 목록 보기](/Network/VPC/ko/public-api/#list-vpc-subnets)를 참고하세요.
 
 
 <a id="vpc-network-uuid"></a>
 ### VPC 네트워크 UUID { #vpc-network-uuid }
 
-노드와 연결할 내부 VPC 네트워크 UUID를 입력합니다. 네트워크 목록 조회 API에 대한 좀 더 자세한 내용은 [네트워크 목록 보기](/Network/VPC/ko/public-api/#vpc_1)를 참고하세요.
+노드와 연결할 내부 VPC 네트워크 UUID를 입력합니다. 네트워크 목록 조회 API에 대한 좀 더 자세한 내용은 [네트워크 목록 보기](/Network/VPC/ko/public-api/#view-vpc-list)를 참고하세요.
 
 <a id="vpc-subnet-uuid"></a>
 ### VPC 서브넷 UUID { #vpc-subnet-uuid }
 
-노드와 연결할 내부 VPC 네트워크와 연결된 서브넷 UUID를 입력합니다. 서브넷 목록 조회 API에 대한 좀 더 자세한 내용은 [서브넷 목록 보기](/Network/VPC/ko/public-api/#vpc_7)를 참고하세요.
+노드와 연결할 내부 VPC 네트워크와 연결된 서브넷 UUID를 입력합니다. 서브넷 목록 조회 API에 대한 좀 더 자세한 내용은 [서브넷 목록 보기](/Network/VPC/ko/public-api/#list-vpc-subnets)를 참고하세요.
 
 <a id="availability-zone-uuid"></a>
 ### 가용성 영역 UUID { #availability-zone-uuid }
 
-노드를 생성할 가용성 영역 UUID를 입력합니다. 가용성 영역 목록 조회 API에 대한 좀 더 자세한 내용은 [가용성 목록 보기](/Compute/Instance/ko/public-api/#_9)를 참고하세요.
+노드를 생성할 가용성 영역 UUID를 입력합니다. 가용성 영역 목록 조회 API에 대한 좀 더 자세한 내용은 [가용성 목록 보기](/Compute/Instance/ko/public-api/#list-availability-zones)를 참고하세요.
 
 <a id="key-pair-uuid"></a>
 ### 키페어 명 { #key-pair-uuid }
 
-노드 접속 시 사용할 키페어를 입력합니다. 키페어 목록 조회 API에 대한 좀 더 자세한 내용은 [키페어 목록 보기](/Compute/Instance/ko/public-api/#_13)를 참고하세요.
+노드 접속 시 사용할 키페어를 입력합니다. 키페어 목록 조회 API에 대한 좀 더 자세한 내용은 [키페어 목록 보기](/Compute/Instance/ko/public-api/#list-key-pairs)를 참고하세요.
 
 <a id="base-image-uuid"></a>
 ### 베이스 이미지 UUID { #base-image-uuid }
 
-노드 생성에 사용할 베이스 이미지 UUID를 입력합니다. NKS 노드 생성에 사용되는 베이스 이미지만을 필터링하기 위해 API 호출 시 쿼리 스트링 파라미터에 `nhncloud_allow_nks_cpu_flavor=true&visibility=public` 값을 입력합니다. 베이스 이미지 목록 조회 API에 대한 좀 더 자세한 내용은 [이미지 목록 조회](/Compute/Image/ko/public-api/#_2)를 참고하세요.
+노드 생성에 사용할 베이스 이미지 UUID를 입력합니다. NKS 노드 생성에 사용되는 베이스 이미지만을 필터링하기 위해 API 호출 시 쿼리 스트링 파라미터에 `nhncloud_allow_nks_cpu_flavor=true&visibility=public` 값을 입력합니다. 베이스 이미지 목록 조회 API에 대한 좀 더 자세한 내용은 [이미지 목록 조회](/Compute/Image/ko/public-api/#list-images)를 참고하세요.
 
 <a id="block-storage-type"></a>
 ### 블록 스토리지 종류 { #block-storage-type }
 
-노드에 사용할 블록 스토리지 UUID를 입력합니다. 블록 스토리지 타입 목록 조회 API에 대한 좀 더 자세한 내용은 [볼륨 타입 목록 보기](/Storage/Block%20Storage/ko/public-api/#_2)를 참고하세요.
+노드에 사용할 블록 스토리지 UUID를 입력합니다. 블록 스토리지 타입 목록 조회 API에 대한 좀 더 자세한 내용은 [볼륨 타입 목록 보기](/Storage/Block%20Storage/ko/public-api/#list-block-storage-types)를 참고하세요.
 
 <a id="flavor-uuid"></a>
 ### 인스턴스 타입 UUID { #flavor-uuid }
 
-생성할 노드의 인스턴스 타입 UUID를 입력합니다. 인스턴스 타입 목록 조회 API에 대한 좀 더 자세한 내용은 [인스턴스 타입 목록 보기](/Compute/Instance/ko/public-api/#_2)를 참고하세요.
+생성할 노드의 인스턴스 타입 UUID를 입력합니다. 인스턴스 타입 목록 조회 API에 대한 좀 더 자세한 내용은 [인스턴스 타입 목록 보기](/Compute/Instance/ko/public-api/#list-flavors)를 참고하세요.
 
 
 

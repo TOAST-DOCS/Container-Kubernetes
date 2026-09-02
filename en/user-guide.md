@@ -16,7 +16,7 @@ To use NHN Kubernetes Service (NKS), you must first create a cluster.
 > [Caution] Permission settings required to use clusters<br>
 > To create a cluster, the user must have **Infrastructure ADMIN**, **Infrastructure LoadBalancer ADMIN**, or **Infrastructure NKS ADMIN** permissions of basic infrastructure services for the project.
 > Only with the permissions, the user can normally create and operate clusters running on basic infrastructure services. It is totally possible to add one of the two permissions when the other is already acquired.
-> To learn more about setting up permissions, see [Manage Project Members](/nhncloud/en/console-user-guide/#_3).
+> To learn more about setting up permissions, see [Manage Project Members](/nhncloud/en/console-user-guide/#project).
 
 On the **Container > NHN Kubernetes Service(NKS)** page, click **Create Cluster** to open the cluster creation page. The following items are required to create a cluster:
 
@@ -257,7 +257,7 @@ You can add nodes to an operating node group. The current list of nodes will app
 > Nodes cannot be added manually to a node group with the autoscaler enabled.
 
 > [Caution] Do not remove the `node.cloudprovider.kubernetes.io/uninitialized` taint from new nodes.
-> For more information, see the precautions in [Creating Node Groups](/Container/NKS/en/user-guide/#nodegroup-create).
+> For more information, see the precautions in [Creating Node Groups](#nodegroup-create).
 
 <a id="nodegroup-scale-in"></a>
 ### Delete Nodes from a Node Group { #nodegroup-scale-in }
@@ -319,7 +319,7 @@ When you need to run GPU-based workloads through Kubernetes, you can create a no
 Select the `g2` type when selecting a flavor while creating the clusters or node groups to create a GPU node group.
 
 > [Note]
-> GPU provided by NHN Cloud GPU instance is affiliated with NVIDIA. ([Identify available GPU specifications that can be used](/Compute/GPU%20Instance/en/overview/#gpu))
+> GPU provided by NHN Cloud GPU instance is affiliated with NVIDIA. ([Identify available GPU specifications that can be used](/Compute/GPU%20Instance/en/overview/))
 > nvidia-device-plugin required for Kubernetes to use an NVIDIA GPU will be installed automatically when creating a GPU node group.
 
 You can check the basic configuration status of the created GPU nodes and run a simple operation test using the following methods.
@@ -1093,7 +1093,7 @@ Instance flavor changes proceed in the following order:
 4. Evict the pods running on the buffer node and delete the buffer node.
 5. Re-enable the cluster autoscaler feature.
 
-Instance flavor changes work similarly to worker component upgrades. For more details on creating and deleting buffer nodes and evicting pods, see [Upgrade a Cluster](/Container/NKS/en/user-guide/#cluster-upgrade).
+Instance flavor changes work similarly to worker component upgrades. For more details on creating and deleting buffer nodes and evicting pods, see [Upgrade a Cluster](#cluster-upgrade).
 
 
 <a id="instance-flavor-update-constraints"></a>
@@ -1515,7 +1515,7 @@ Notes
 
 <a id="cluster-upgrade-considerations-for-etcd-version-changes"></a>
 #### Considerations for etcd Version Changes
-When a cluster upgrade is performed, an etcd upgrade is also performed only if the etcd version defined in the target platform version differs from the current cluster's etcd version. We recommend that you review the precautions before starting this operation and take measures such as providing advance notifications and scheduling maintenance windows. The etcd version for each platform version can be found in [Key Component Versions by Platform Version](/Container/NKS/en/version-guide/#platform-component-versions).
+When a cluster upgrade is performed, an etcd upgrade is also performed only if the etcd version defined in the target platform version differs from the current cluster's etcd version. We recommend that you review the precautions before starting this operation and take measures such as providing advance notifications and scheduling maintenance windows. The etcd version for each platform version can be found in [Key Component Versions by Platform Version](./version-guide/#platform-component-versions).
 
 ##### Avoid Frequent Resource Changes During the Upgrade to Ensure Data Consistency
 If resource deployment or deletion operations occur frequently during an etcd upgrade, data consistency verification may fail and the upgrade may fail. For a safe upgrade, we recommend that you perform the upgrade under the following conditions:
@@ -3026,7 +3026,7 @@ spec:
 >     * eth0: subnet#1
 >     * eth1: subnet#2 (member)
 >
-> In this case, the IP address of instance eth1 is registered as a member. Healthcheck packets sent by the load balancer are received by instance eth1 and attempted to be sent through eth0. Please note that the source IP address of the packet to eth0 is different from the IP address of eth0. If source/destination verification is enabled on eth0's network interface, this packet will not be sent and discarded. In a configuration like this, you must disable source/destination verification on eth0's network interface for the member to function properly. For more information on the source/destination verification feature, see [Change source/destination verification](/Network/Network%20Interface/en/console-guide/#_4).
+> In this case, the IP address of instance eth1 is registered as a member. Healthcheck packets sent by the load balancer are received by instance eth1 and attempted to be sent through eth0. Please note that the source IP address of the packet to eth0 is different from the IP address of eth0. If source/destination verification is enabled on eth0's network interface, this packet will not be sent and discarded. In a configuration like this, you must disable source/destination verification on eth0's network interface for the member to function properly. For more information on the source/destination verification feature, see [Change source/destination verification](/Network/Network%20Interface/en/console-guide/#change).
 >
 > **Example 2.**
 >
@@ -3635,7 +3635,7 @@ Ingress controller can diverge services based on the host name. The following fi
 
 <a id="host-based-service-routing-create-services-and-pods"></a>
 #### Create Services and Pods
-Create services and pods by using the same manifest as [Diverging Service on URI](/Container/NKS/en/user-guide/#uri-based-service-routing).
+Create services and pods by using the same manifest as [Diverging Service on URI](#uri-based-service-routing).
 
 <a id="host-based-service-routing-create-ingress"></a>
 #### Create Ingress
@@ -3798,7 +3798,7 @@ However, the `kubernetes-dashboard` object belongs to the ClusterIP type and is 
 <a id="expose-dashboard-change-into-loadbalancer"></a>
 #### Change to LoadBalancer Service Object
 
-Once the type of service object is changed to `LoadBalancer`, NHN Cloud Load Balancer is created from the cluster, which is associated with the load balancer and the service object. By querying the service object associated with the load balancer, the IP of the load balancer is displayed in the **EXTERNAL-IP** field. See [LoadBalancer Service](/Container/NKS/en/user-guide/#loadbalancer) for the description of service objects of the `LoadBalancer` type. The following figure shows the structure of making a dashboard public using the `LoadBalancer` type service.
+Once the type of service object is changed to `LoadBalancer`, NHN Cloud Load Balancer is created from the cluster, which is associated with the load balancer and the service object. By querying the service object associated with the load balancer, the IP of the load balancer is displayed in the **EXTERNAL-IP** field. See [LoadBalancer Service](#loadbalancer-service) for the description of service objects of the `LoadBalancer` type. The following figure shows the structure of making a dashboard public using the `LoadBalancer` type service.
 
 ![dashboard-01.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-01.png)
 
@@ -3822,7 +3822,7 @@ kubernetes-dashboard   LoadBalancer   10.254.95.176   123.123.123.81   443:30963
 > You can view the created load balancer on the **Network > Load Balancer** page.
 > Load balancer IP is a floating IP allowing external access. You can check it on the **Network > Floating IP** page.
 
-When you access `https://{EXTERNAL-IP}` in a web browser, the Kubernetes dashboard page loads. For the token required to log in, see [Dashboard Access Token](/Container/NKS/en/user-guide/#dashboard-access-token).
+When you access `https://{EXTERNAL-IP}` in a web browser, the Kubernetes dashboard page loads. For the token required to log in, see [Dashboard Access Token](#dashboard-access-token).
 
 > [Note]
 > Since Kubernetes dashboard is based on a private certificate that is automatically created, the page may be displayed as unsafe, depending on the web browser or security setting.
@@ -3830,11 +3830,11 @@ When you access `https://{EXTERNAL-IP}` in a web browser, the Kubernetes dashboa
 <a id="expose-dashboard-open-services-with-ingress"></a>
 #### Expose Services Using Ingress
 
-Ingress refers to the network object providing routing to access many services within a cluster. The setting of an ingress object runs by ingress controller. The `kubernetes-dashboard` service object can go public through ingress. See [Ingress Controller](/Container/NKS/en/user-guide/#ingress-controller) regarding description on ingress and ingress controller. The following figure shows the structure of making dashboard public through ingress.
+Ingress refers to the network object providing routing to access many services within a cluster. The setting of an ingress object runs by ingress controller. The `kubernetes-dashboard` service object can go public through ingress. See [Ingress Controller](#ingress-controller) regarding description on ingress and ingress controller. The following figure shows the structure of making dashboard public through ingress.
 
 ![dashboard-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-02.png)
 
-Install `NGINX Ingress Controller` by referring to [Install NGINX Ingress Controller](/Container/NKS/en/user-guide/#install-nginx-ingress-controller) and write the manifest for creating an ingress object as follows:
+Install `NGINX Ingress Controller` by referring to [Install NGINX Ingress Controller](#install-nginx-ingress-controller) and write the manifest for creating an ingress object as follows:
 
 ```yaml
 # kubernetes-dashboard-ingress-tls-passthrough.yaml
@@ -3877,7 +3877,7 @@ NAME                    CLASS   HOSTS   ADDRESS          PORTS     AGE
 k8s-dashboard-ingress   nginx   *       123.123.123.44   80, 443   34s
 ```
 
-When you access `https://{ADDRESS}` in a web browser, the Kubernetes dashboard page loads. For the token required to log in, see [Dashboard Access Token](/Container/NKS/en/user-guide/#dashboard-access-token).
+When you access `https://{ADDRESS}` in a web browser, the Kubernetes dashboard page loads. For the token required to log in, see [Dashboard Access Token](#dashboard-access-token).
 
 <a id="dashboard-access-token"></a>
 ### Dashboard Access Token { #dashboard-access-token }
@@ -4334,7 +4334,7 @@ For clusters using enhanced security rules, additional security rules must be ad
 
 <a id="nas-integration-install-csi-driver-nfs"></a>
 #### Install csi-driver-nfs
-To use the NHN Cloud NAS service, you must deploy [nfs-csi-plugin](/Container/NKS/en/user-guide/#addon-mgmt-addon-list-nfs-csi-plugin) to the cluster using the Addon feature of NHN Kubernetes Service (NKS).
+To use the NHN Cloud NAS service, you must deploy [nfs-csi-plugin](#addon-mgmt-addon-list-nfs-csi-plugin) to the cluster using the Addon feature of NHN Kubernetes Service (NKS).
 
 csi-driver-nfs is a driver that supports NFS storage provisioning that works by creating new subdirectories on NFS storage.
 csi-driver-nfs works by presenting NFS storage information to storage classes, reducing what you have to manage.
@@ -4719,7 +4719,7 @@ tmpfs                                                                          1
 
 <a id="encrypted-block-storage-integration"></a>
 ### NHN Cloud Encrypted Block Storage Integration { #encrypted-block-storage-integration }
-You can utilize encrypted block storage provided by NHN Cloud as PV. For more information about NHN Cloud encrypted block storage, see [Encrypted Block Storage](/Storage/Block%20Storage/en/console-guide/#_2).
+You can utilize encrypted block storage provided by NHN Cloud as PV. For more information about NHN Cloud encrypted block storage, see [Encrypted Block Storage](/Storage/Block%20Storage/en/console-guide/#encrypted-block-storage).
 
 > [Note]
 > The Encrypted Block Storage service integration is available for clusters running v1.24.3 or later.
@@ -4799,7 +4799,7 @@ spec:
     volumeHandle: 9f606b78-256b-4f74-8988-1331cd6d398b
 ```
 
-The process of creating a PVC manifest and mounting it to a Pod is the same as static provisioning for general block storage. For more information, see [Static Provisioning](/Container/NKS/en/user-guide/#static-provisioning).
+The process of creating a PVC manifest and mounting it to a Pod is the same as static provisioning for general block storage. For more information, see [Static Provisioning](#static-provisioning).
 
 <a id="encrypted-block-storage-integration-dynamic-provisioning"></a>
 #### Dynamic Provisioning
@@ -4829,7 +4829,7 @@ parameters:
   volume_appkey: "uaUW..."
 ```
 
-The process of creating a PVC manifest and mounting it to a Pod is the same as dynamic provisioning for general block storage. For more information, see [Dynamic Provisioning](/Container/NKS/en/user-guide/#dynamic-provisioning).
+The process of creating a PVC manifest and mounting it to a Pod is the same as dynamic provisioning for general block storage. For more information, see [Dynamic Provisioning](#dynamic-provisioning).
 
 
 <a id="etcd-encryption-with-skm"></a>

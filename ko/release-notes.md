@@ -37,8 +37,8 @@
 <a id="may-27-2026-added-features"></a>
 #### 신규 기능 추가
 * Kubernetes v1.34.3을 지원합니다.
-    * k8s v1.34 이상 버전에서 워커 노드 이미지의 CGroup 버전에 따른 제약 사항이 존재합니다. 자세한 내용은 [CGroup v2 OS 이미지 사용을 위한 플랫폼 버전](/Container/NKS/ko/version-guide/#platform-version-cgroup-v2-support)을 참고하세요.
-    * k8s v1.34 이상 버전에서 사용자 정의 containerd 레지스트리 설정 기능이 동작하지 않습니다. 자세한 내용은 [사용자 정의 containerd 레지스트리 설정 기능](/Container/NKS/ko/user-guide/#containerd-registry-config)을 참고하세요.
+    * k8s v1.34 이상 버전에서 워커 노드 이미지의 CGroup 버전에 따른 제약 사항이 존재합니다. 자세한 내용은 [CGroup v2 OS 이미지 사용을 위한 플랫폼 버전](./version-guide/#platform-version-cgroup-v2-support)을 참고하세요.
+    * k8s v1.34 이상 버전에서 사용자 정의 containerd 레지스트리 설정 기능이 동작하지 않습니다. 자세한 내용은 [사용자 정의 containerd 레지스트리 설정 기능](./user-guide/#containerd-registry-config)을 참고하세요.
 * Cilium CNI를 지원합니다.
 
 <a id="may-27-2026-platform-version-updates"></a>
@@ -125,7 +125,7 @@
 <a id="nov-25-2025-changed-service-support-policy"></a>
 #### 서비스 지원 정책 변경
 * NKS의 Kubernetes 버전 지원 정책이 변경됩니다.
-    * 자세한 내용은 [버전 가이드](/Container/NKS/ko/version-guide)를 참고하세요.
+    * 자세한 내용은 [버전 가이드](./version-guide/)를 참고하세요.
 
 <a id="nov-25-2025-add-on-updates"></a>
 #### 애드온 업데이트
@@ -164,7 +164,7 @@
 * 노드 그룹 별 플로팅 IP 자동 할당 기능을 사용할 수 있습니다.
 * 노드 그룹 별 Kubernetes 레이블 설정 기능을 사용할 수 있습니다.
 * Addon 관리 기능을 사용할 수 있습니다.
-    * 자세한 내용은 [사용 가이드](/Container/NKS/ko/user-guide/#addon-mgmt)를 참고하세요.
+    * 자세한 내용은 [사용 가이드](./user-guide/#addon-mgmt)를 참고하세요.
 
 <a id="may-27-2025-feature-updates"></a>
 #### 기능 개선/변경
@@ -377,7 +377,7 @@
 
 * Kubernetes v1.26.3을 지원합니다.
 * 커스텀 이미지를 워커 이미지로 활용하는 기능이 추가되었습니다.
-    * 자세한 내용은 [사용자 가이드](/Container/NKS/ko/user-guide/#custom-image)를 참고하세요.
+    * 자세한 내용은 [사용자 가이드](./user-guide/#custom-image)를 참고하세요.
 * 클러스터 서비스 네트워크, 파드 네트워크, 파드 서브넷 크기 변경 기능이 추가되었습니다.
 
 <a id="may-30-2023-feature-updates"></a>
@@ -410,7 +410,7 @@
 #### 신규 기능 추가
 
 * 클러스터 CNI 변경 기능이 추가되었습니다.
-    * 자세한 내용은 [사용 가이드](/Container/NKS/ko/user-guide/#cni)를 참고하세요.
+    * 자세한 내용은 [사용 가이드](./user-guide/#cni)를 참고하세요.
 * 노드 그룹의 인스턴스 타입을 변경할 수 있습니다.
 * 콘솔에서 Kubernetes 자원 조회 기능을 사용할 수 있습니다.
 
@@ -568,7 +568,7 @@
 <a id="nov-23-2021-added-features"></a>
 #### 신규 기능 추가
 * Kubernetes 서비스를 위한 Public API가 공개되었습니다.
-    * Public API에 대한 내용은 [API 가이드](/Container/NKS/ko/public-api)를 참고하세요.
+    * Public API에 대한 내용은 [API 가이드](./public-api/)를 참고하세요.
 
 <a id="oct-26-2021"></a>
 ### 2021. 10. 26. { #oct-26-2021 }
@@ -591,7 +591,7 @@
 * 워커 노드에 컨테이너 로그 로테이션 설정이 추가되었습니다.
     * 이미지 업데이트
         * CentOS 7.8 - Container (2021.07.27)
-    * 컨테이너 로그 관리에 대한 내용은 [문제 해결 가이드](/Container/NKS/ko/troubleshooting-guide)를 참고하세요.
+    * 컨테이너 로그 관리에 대한 내용은 [문제 해결 가이드](./troubleshooting-guide/)를 참고하세요.
 
 <a id="jun-29-2021"></a>
 ### 2021. 06. 29. { #jun-29-2021 }

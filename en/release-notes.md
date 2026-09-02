@@ -39,8 +39,8 @@
 <a id="may-27-2026-added-features"></a>
 #### Added Features
 * Added support for Kubernetes v1.34.3.
-    * In k8s v1.34 or later, there are restrictions based on the CGroup version of worker node images. For more information, see [Platform version for using CGroup v2 OS images](/Container/NKS/en/version-guide/#platform-version-cgroup-v2-support).
-    * In k8s v1.34 or later, the custom containerd registry settings feature does not work. For more information, see [Custom containerd registry settings](/Container/NKS/en/user-guide/#containerd-registry-config).
+    * In k8s v1.34 or later, there are restrictions based on the CGroup version of worker node images. For more information, see [Platform version for using CGroup v2 OS images](./version-guide/#platform-version-cgroup-v2-support).
+    * In k8s v1.34 or later, the custom containerd registry settings feature does not work. For more information, see [Custom containerd registry settings](./user-guide/#containerd-registry-config).
 * Added support for Cilium CNI.
 
 <a id="may-27-2026-platform-version-updates"></a>
@@ -127,7 +127,7 @@
 <a id="nov-25-2025-changed-service-support-policy"></a>
 #### Changed Service Support Policy
 * Changed the support policy for the Kubernetes version of NKS.
-    * For more information, refer to the [Version Guide](/Container/NKS/en/version-guide).
+    * For more information, refer to the [Version Guide](./version-guide/).
 
 <a id="nov-25-2025-add-on-updates"></a>
 #### Add-on Updates
@@ -165,7 +165,7 @@
 * The feature to automatically assign floating IPs per node group is available.
 * The feature to set Kubernetes labels by node group is available.
 * Addon management feature is available.
-    * For more information, see [User Guide](/Container/NKS/en/user-guide/#addon-mgmt).
+    * For more information, see [User Guide](./user-guide/#addon-mgmt).
 
 <a id="may-27-2025-feature-updates"></a>
 #### Feature Updates
@@ -408,7 +408,7 @@ Changed the minimum disk size required to create worker nodes in images.
 #### Added Features
 
 * Added the change cluster CNI feature.
-    * For more details, see [Console User Guide](/Container/NKS/en/user-guide/#cni).
+    * For more details, see [Console User Guide](./user-guide/#cni).
 * You can change the instance flavor of a node group.
 * You can use a feature to view Kubernetes resources fron the console.
 
@@ -565,7 +565,7 @@ Changed the minimum disk size required to create worker nodes in images.
 <a id="nov-23-2021-added-features"></a>
 #### Added Features
 * The Public API for Kubernetes services has been released.
-    * For more information about the Public API, see the [API Guide](/Container/NKS/en/public-api).
+    * For more information about the Public API, see the [API Guide](./public-api/).
 
 <a id="oct-26-2021"></a>
 ### October 26, 2021 { #oct-26-2021 }
@@ -588,7 +588,7 @@ Changed the minimum disk size required to create worker nodes in images.
 * Added container log rotation setting to the worker nodes.
     * Image update
         * CentOS 7.8 - Container (2021.07.27)
-    * Refer to [Troubleshooting Guide](/Container/NKS/en/troubleshooting-guide) for details on container log management.
+    * Refer to [Troubleshooting Guide](./troubleshooting-guide/) for details on container log management.
 
 <a id="jun-29-2021"></a>
 ### June 29, 2021 { #jun-29-2021 }

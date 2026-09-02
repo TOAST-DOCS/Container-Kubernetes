@@ -39,8 +39,8 @@
 <a id="may-27-2026-added-features"></a>
 #### 新機能追加
 * Kubernetes v1.34.3 をサポートします。
-    * k8s v1.34 以降のバージョンでは、ワーカーノードイメージの CGroup バージョンによる制約事項があります。詳細については、[CGroup v2 OS イメージ使用のためのプラットフォームバージョン](/Container/NKS/ja/version-guide/#platform-version-cgroup-v2-support)を参照してください。
-    * k8s v1.34 以降のバージョンでは、ユーザー定義の containerd レジストリ設定機能は動作しません。詳細については、[ユーザー定義 containerd レジストリ設定機能](/Container/NKS/ja/user-guide/#containerd-registry-config)を参照してください。
+    * k8s v1.34 以降のバージョンでは、ワーカーノードイメージの CGroup バージョンによる制約事項があります。詳細については、[CGroup v2 OS イメージ使用のためのプラットフォームバージョン](./version-guide/#platform-version-cgroup-v2-support)を参照してください。
+    * k8s v1.34 以降のバージョンでは、ユーザー定義の containerd レジストリ設定機能は動作しません。詳細については、[ユーザー定義 containerd レジストリ設定機能](./user-guide/#containerd-registry-config)を参照してください。
 * Cilium CNI をサポートします。
 
 <a id="may-27-2026-platform-version-updates"></a>
@@ -129,7 +129,7 @@
 <a id="nov-25-2025-changed-service-support-policy"></a>
 #### サービスサポートポリシーの変更
 * NKSのKubernetesバージョンサポートポリシーが変更されます。
-    * 詳細は[バージョンガイド](/Container/NKS/ko/version-guide)を参照してください。
+    * 詳細は[バージョンガイド](./version-guide/)を参照してください。
 
 <a id="nov-25-2025-add-on-updates"></a>
 #### アドオンの更新
@@ -167,7 +167,7 @@
 * ノードグループ別のFloating IP自動割り当て機能を使用できます。
 * ノードグループ別のKubernetesラベル設定機能を使用できます。
 * Addon管理機能を使用できます。
-    * 詳細については、[使用ガイド](/Container/NKS/ja/user-guide/#addon-mgmt)を参照してください。
+    * 詳細については、[使用ガイド](./user-guide/#addon-mgmt)を参照してください。
 
 <a id="may-27-2025-feature-updates"></a>
 #### 機能改善/変更
@@ -276,7 +276,7 @@
 * クラスタの証明書を更新する機能が追加されました。
 * クラスタ作成時に設定したサービスゲートウェイを変更する機能が追加されました。
 * Resource Watcherサービスを通じて、クラスタで発生するイベントに関する通知を受け取ることができます。
-    * 詳細は[Resource Watcher](/Governance%20&%20Audit/Resource%20Watcher/ko/overview)を参照してください。
+    * 詳細は[Resource Watcher](/Governance%20%26%20Audit/Resource%20Watcher/ja/overview/)を参照してください。
 
 <a id="mar-26-2024"></a>
 ### 2024. 03. 26. { #mar-26-2024 }
@@ -379,7 +379,7 @@
 
 * Kubernetes v1.26.3をサポートします。
 * カスタムイメージをワーカーイメージとして活用する機能が追加されました。
-    * 詳細な内容は[ユーザーガイド](/Container/NKS/ja/user-guide/#custom-image)を参照してください。
+    * 詳細な内容は[ユーザーガイド](./user-guide/#custom-image)を参照してください。
 * クラスタサービスネットワーク、 Podネットワーク、 Podサブネットサイズの変更機能が追加されました。
 
 <a id="may-30-2023-feature-updates"></a>
@@ -412,7 +412,7 @@
 #### 新規機能追加
 
 * クラスタCNI変更機能が追加されました。
-    * 詳細については[使用ガイド](/Container/NKS/ja/user-guide/#_5)を参照してください。
+    * 詳細については[使用ガイド](./user-guide/#_5)を参照してください。
 * ノードグループのインスタンスタイプを変更できます。
 * コンソールでKubernetesリソース照会機能を使用できます。
 
@@ -567,7 +567,7 @@
 <a id="nov-23-2021-added-features"></a>
 #### 新機能追加
 * Kubernetes サービス向けの Public API が公開されました。
-    * Public API の詳細については、[API ガイド](/Container/NKS/ja/public-api)を参照してください。
+    * Public API の詳細については、[API ガイド](./public-api/)を参照してください。
 
 <a id="oct-26-2021"></a>
 ### 2021. 10. 26. { #oct-26-2021 }
@@ -590,7 +590,7 @@
 * ワーカーノードにコンテナログローテーションの設定が追加されました。
     * イメージアップデート
         * CentOS 7.8 - Container (2021.07.27)
-    * コンテナログ管理については[問題解決ガイド](/Container/NKS/ja/troubleshooting-guide)を参照してください。
+    * コンテナログ管理については[問題解決ガイド](./troubleshooting-guide/)を参照してください。
 
 <a id="jun-29-2021"></a>
 ### 2021. 06. 29. { #jun-29-2021 }

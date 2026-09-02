@@ -16,7 +16,7 @@ NHN Kubernetes Service(NKS) を使用するには、まずクラスターを作�
 > [注意] クラスター使用のための権限設定<br>
 > クラスターを作成するユーザーは、対象プロジェクトに対して基本インフラサービスの **Infrastructure ADMIN** または **Infrastructure LoadBalancer ADMIN** または **Infrastructure NKS ADMIN** 権限を持つ必要があります。
 > 該当する権限がある場合にのみ、基本インフラサービスをベースとするクラスターを正常に作成および活用できます。また、いずれかの権限を持った状態で他の権限が追加されても使用上の問題はありません。
-> 権限設定については、[プロジェクトメンバー管理](/nhncloud/ja/console-user-guide/#_3)を参照してください。
+> 権限設定については、[プロジェクトメンバー管理](/nhncloud/ja/console-user-guide/#project)を参照してください。
 
 **Container > NHN Kubernetes Service(NKS)** ページで **[クラスター作成]** をクリックすると、クラスター作成ページが表示されます。クラスター作成に必要な項目は次のとおりです。
 
@@ -257,7 +257,7 @@ k8s Node状態のアイコンの意味は次のとおりです。
 > オートスケーラーが有効になっているノードグループは、手動でノードを追加することはできません。
 
 > [注意] 新規ノードの `node.cloudprovider.kubernetes.io/uninitialized` テイントを削除しないでください。
-> 詳細については、[ノードグループ作成](/Container/NKS/ja/user-guide/#nodegroup-create)の注意事項を参照してください。
+> 詳細については、[ノードグループ作成](#nodegroup-create)の注意事項を参照してください。
 
 <a id="nodegroup-scale-in"></a>
 ### ノードグループからのノード削除 { #nodegroup-scale-in }
@@ -319,7 +319,7 @@ Kubernetes を通じた GPU ベースのワークロード実行が必要な場�
 クラスターまたはノードグループの作成時にインスタンスタイプを選択する際、`g2` タイプを選択すると GPU ノードグループを作成できます。
 
 > [注記]
-> NHN Cloud GPU インスタンスで提供される GPU は NVIDIA 系です。([使用可能な GPU 仕様の確認](/Compute/GPU%20Instance/ja/overview/#gpu))
+> NHN Cloud GPU インスタンスで提供される GPU は NVIDIA 系です。([使用可能な GPU 仕様の確認](/Compute/GPU%20Instance/ja/overview/))
 > NVIDIA GPU の利用のために Kubernetes に必要な nvidia-device-plugin は、GPU ノードグループ作成時に自動的にインストールされます。
 
 作成された GPU ノードの基本的な設定状態の確認および簡単な動作テストには、次の方法を使用します。
@@ -1093,7 +1093,7 @@ autoscaler-test-default-w-ohw5ab5wpzug-node-0   Ready    <none>   22d   v1.28.3
 4. バッファーノードで動作中のPodを退避させ、バッファーノードを削除します。
 5. クラスターオートスケーラー機能を再度有効にします。
 
-インスタンスタイプの変更は、ワーカーコンポーネントのアップグレードと同様の方法で進行します。バッファーノードの作成と削除、Podの退避については、[クラスターアップグレード](/Container/NKS/ja/user-guide/#cluster-upgrade)を参照してください。
+インスタンスタイプの変更は、ワーカーコンポーネントのアップグレードと同様の方法で進行します。バッファーノードの作成と削除、Podの退避については、[クラスターアップグレード](#cluster-upgrade)を参照してください。
 
 
 <a id="instance-flavor-update-constraints"></a>
@@ -1514,7 +1514,7 @@ NKS クラスターのバージョン管理方式と Kubernetes バージョン�
 
 <a id="cluster-upgrade-considerations-for-etcd-version-changes"></a>
 #### etcdバージョン変更に伴う注意事項
-クラスターアップグレード作業を進める際、アップグレード対象のプラットフォームバージョンに定義された etcd バージョンが現在のクラスターの etcd バージョンと異なる場合に限り、etcd アップグレード作業が併せて進められます。当該作業を開始する前に、注意事項を必ず確認し、事前告知・点検時間の確保などの措置を講じることをお勧めします。プラットフォームバージョン別の etcd バージョンは[プラットフォームバージョン別主要コンポーネントバージョン](/Container/NKS/ja/version-guide/#platform-component-versions)で確認できます。
+クラスターアップグレード作業を進める際、アップグレード対象のプラットフォームバージョンに定義された etcd バージョンが現在のクラスターの etcd バージョンと異なる場合に限り、etcd アップグレード作業が併せて進められます。当該作業を開始する前に、注意事項を必ず確認し、事前告知・点検時間の確保などの措置を講じることをお勧めします。プラットフォームバージョン別の etcd バージョンは[プラットフォームバージョン別主要コンポーネントバージョン](./version-guide/#platform-component-versions)で確認できます。
 
 ##### データ整合性確認のため頻繁なリソース変更を控える
 etcd アップグレード時にリソースのデプロイ・削除作業が頻繁に発生すると、データ整合性の確認に失敗してアップグレードが失敗する可能性があります。安全なアップグレードのために、次のような環境でアップグレードすることをお勧めします。
@@ -3026,7 +3026,7 @@ spec:
 >     * eth0: サブネット#1
 >     * eth1: サブネット#2（メンバー）
 > 
-> この場合、インスタンスの eth1 の IP アドレスがメンバーとして登録されます。ロードバランサーから送信されたヘルスチェックパケットはインスタンスの eth1 で受信し、eth0 を通じて送信を試みます。このとき、eth0 に送信するパケットのソース IP アドレスが eth0 の IP アドレスと異なります。eth0 のネットワークインターフェイスでソース/宛先確認機能が有効になっている場合、このパケットは送信されずに破棄されます。このような構成では、eth0 のネットワークインターフェイスでソース/宛先確認機能を無効にする必要があり、それによってメンバーが正常動作します。ソース/宛先確認機能については、[ソース/宛先確認の変更](/Network/Network%20Interface/ja/console-guide/#_4)を参照してください。
+> この場合、インスタンスの eth1 の IP アドレスがメンバーとして登録されます。ロードバランサーから送信されたヘルスチェックパケットはインスタンスの eth1 で受信し、eth0 を通じて送信を試みます。このとき、eth0 に送信するパケットのソース IP アドレスが eth0 の IP アドレスと異なります。eth0 のネットワークインターフェイスでソース/宛先確認機能が有効になっている場合、このパケットは送信されずに破棄されます。このような構成では、eth0 のネットワークインターフェイスでソース/宛先確認機能を無効にする必要があり、それによってメンバーが正常動作します。ソース/宛先確認機能については、[ソース/宛先確認の変更](/Network/Network%20Interface/ja/console-guide/#change)を参照してください。
 > 
 > **例2.**
 > 
@@ -3635,7 +3635,7 @@ Ingressコントローラーは、ホスト名を基にサービスを分岐で�
 
 <a id="host-based-service-routing-create-services-and-pods"></a>
 #### サービスとPodの作成
-[URIベースのサービスルーティング](/Container/NKS/ja/user-guide/#uri-based-service-routing)と同じマニフェストを使用して、サービスとPodを作成します。
+[URIベースのサービスルーティング](#uri-based-service-routing)と同じマニフェストを使用して、サービスとPodを作成します。
 
 <a id="host-based-service-routing-create-ingress"></a>
 #### Ingressの作成
@@ -3799,7 +3799,7 @@ Events:            <none>
 <a id="expose-dashboard-change-into-loadbalancer"></a>
 #### LoadBalancer サービスオブジェクトへの変更
 
-`LoadBalancer` タイプにサービスオブジェクトを変更すると、クラスター外部に NHN Cloud Load Balancer が作成され、ロードバランサーとサービスオブジェクトが接続されます。ロードバランサーと接続されたサービスオブジェクトを照会すると、**EXTERNAL-IP** フィールドにロードバランサーの IP が表示されます。`LoadBalancer` タイプのサービスオブジェクトの説明については、[LoadBalancer サービス](/Container/NKS/ja/user-guide/#loadbalancer)を参照してください。次の図は、`LoadBalancer` タイプのサービスを使用してダッシュボードを外部に公開する構造を示しています。
+`LoadBalancer` タイプにサービスオブジェクトを変更すると、クラスター外部に NHN Cloud Load Balancer が作成され、ロードバランサーとサービスオブジェクトが接続されます。ロードバランサーと接続されたサービスオブジェクトを照会すると、**EXTERNAL-IP** フィールドにロードバランサーの IP が表示されます。`LoadBalancer` タイプのサービスオブジェクトの説明については、[LoadBalancer サービス](#loadbalancer)を参照してください。次の図は、`LoadBalancer` タイプのサービスを使用してダッシュボードを外部に公開する構造を示しています。
 
 ![dashboard-01.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-01.png)
 
@@ -3823,7 +3823,7 @@ kubernetes-dashboard   LoadBalancer   10.254.95.176   123.123.123.81   443:30963
 > 作成されたロードバランサーは **Network > Load Balancer** ページで確認できます。
 > ロードバランサーの IP は外部からアクセスできるフローティング IP です。**Network > Floating IP** ページで確認できます。
 
-Web ブラウザーで `https://{EXTERNAL-IP}` にアクセスすると、Kubernetes ダッシュボードページが読み込まれます。ログインに必要なトークンについては、[ダッシュボードアクセストークン](/Container/NKS/ja/user-guide/#dashboard-access-token)を参照してください。
+Web ブラウザーで `https://{EXTERNAL-IP}` にアクセスすると、Kubernetes ダッシュボードページが読み込まれます。ログインに必要なトークンについては、[ダッシュボードアクセストークン](#dashboard-access-token)を参照してください。
 
 > [注記]
 > Kubernetes ダッシュボードは自動生成されるプライベート証明書を使用するため、Web ブラウザーの種類とセキュリティ設定によっては、安全でないページとして表示される場合があります。
@@ -3831,11 +3831,11 @@ Web ブラウザーで `https://{EXTERNAL-IP}` にアクセスすると、Kubern
 <a id="expose-dashboard-open-services-with-ingress"></a>
 #### Ingress を使用したサービスの公開
 
-Ingress は、クラスター内部の複数のサービスへのアクセスを提供するルーティングを実現するネットワークオブジェクトです。Ingress オブジェクトの設定は Ingress コントローラーによって動作します。`kubernetes-dashboard` サービスオブジェクトを Ingress 経由で公開できます。Ingress および Ingress コントローラーの説明については、[Ingress コントローラー](/Container/NKS/ja/user-guide/#ingress-controller)を参照してください。次の図は、Ingress を通じてダッシュボードを外部に公開する構造を示しています。
+Ingress は、クラスター内部の複数のサービスへのアクセスを提供するルーティングを実現するネットワークオブジェクトです。Ingress オブジェクトの設定は Ingress コントローラーによって動作します。`kubernetes-dashboard` サービスオブジェクトを Ingress 経由で公開できます。Ingress および Ingress コントローラーの説明については、[Ingress コントローラー](#ingress-controller)を参照してください。次の図は、Ingress を通じてダッシュボードを外部に公開する構造を示しています。
 
 ![dashboard-02.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/dashboard-02.png)
 
-[NGINX Ingress Controller のインストール](/Container/NKS/ja/user-guide/#install-nginx-ingress-controller) を参照して `NGINX Ingress Controller` をインストールし、次のようにイングレスオブジェクト作成用のマニフェストを作成します。
+[NGINX Ingress Controller のインストール](#install-nginx-ingress-controller) を参照して `NGINX Ingress Controller` をインストールし、次のようにイングレスオブジェクト作成用のマニフェストを作成します。
 
 ```yaml
 # kubernetes-dashboard-ingress-tls-passthrough.yaml
@@ -3878,7 +3878,7 @@ NAME                    CLASS   HOSTS   ADDRESS          PORTS     AGE
 k8s-dashboard-ingress   nginx   *       123.123.123.44   80, 443   34s
 ```
 
-Web ブラウザーで `https://{ADDRESS}` にアクセスすると、Kubernetes ダッシュボードページが読み込まれます。ログインに必要なトークンについては、[ダッシュボードアクセストークン](/Container/NKS/ja/user-guide/#dashboard-access-token)を参照してください。
+Web ブラウザーで `https://{ADDRESS}` にアクセスすると、Kubernetes ダッシュボードページが読み込まれます。ログインに必要なトークンについては、[ダッシュボードアクセストークン](#dashboard-access-token)を参照してください。
 
 <a id="dashboard-access-token"></a>
 ### ダッシュボードアクセストークン { #dashboard-access-token }
@@ -4335,7 +4335,7 @@ $ systemctl start rpcbind
 
 <a id="nas-integration-install-csi-driver-nfs"></a>
 #### csi-driver-nfs のインストール
-NHN Cloud NAS サービスを使用するには、クラスターに NHN Kubernetes Service(NKS) の Addon 機能として [nfs-csi-plugin](/Container/NKS/ja/user-guide/#addon-mgmt-addon-list-nfs-csi-plugin) をデプロイする必要があります。
+NHN Cloud NAS サービスを使用するには、クラスターに NHN Kubernetes Service(NKS) の Addon 機能として [nfs-csi-plugin](#addon-mgmt-addon-list-nfs-csi-plugin) をデプロイする必要があります。
 
 csi-driver-nfs は、NFS ストレージに新しいサブディレクトリを作成する方式で動作する NFS ストレージプロビジョニングをサポートするドライバーです。
 csi-driver-nfs は、ストレージクラスに NFS ストレージ情報を提供する方式で動作し、ユーザーが管理する対象を減らします。
@@ -4720,7 +4720,7 @@ tmpfs                                                                          1
 
 <a id="encrypted-block-storage-integration"></a>
 ### NHN Cloud 暗号化ブロックストレージ連動 { #encrypted-block-storage-integration }
-NHN Cloud が提供する暗号化されたブロックストレージを PV として活用できます。NHN Cloud 暗号化ブロックストレージの詳細については、[暗号化ブロックストレージ](/Storage/Block%20Storage/ja/console-guide/#_2)を参照してください。
+NHN Cloud が提供する暗号化されたブロックストレージを PV として活用できます。NHN Cloud 暗号化ブロックストレージの詳細については、[暗号化ブロックストレージ](/Storage/Block%20Storage/ja/console-guide/#encrypted-block-storage)を参照してください。
 
 > [注記]
 > 暗号化ブロックストレージサービス連動機能は、v1.24.3 以上のバージョンのクラスターで使用できます。
@@ -4800,7 +4800,7 @@ spec:
     volumeHandle: 9f606b78-256b-4f74-8988-1331cd6d398b
 ```
 
-PVC マニフェストの作成および Pod へのマウント手順は、通常のブロックストレージの静的プロビジョニングと同様です。詳細については、[静的プロビジョニング](/Container/NKS/ja/user-guide/#static-provisioning)を参照してください。
+PVC マニフェストの作成および Pod へのマウント手順は、通常のブロックストレージの静的プロビジョニングと同様です。詳細については、[静的プロビジョニング](#static-provisioning)を参照してください。
 
 <a id="encrypted-block-storage-integration-dynamic-provisioning"></a>
 #### 動的プロビジョニング
@@ -4830,7 +4830,7 @@ parameters:
   volume_appkey: "uaUW..."
 ```
 
-PVC マニフェストの作成および Pod へのマウント手順は、通常のブロックストレージの動的プロビジョニングと同様です。詳細については、[動的プロビジョニング](/Container/NKS/ja/user-guide/#dynamic-provisioning)を参照してください。
+PVC マニフェストの作成および Pod へのマウント手順は、通常のブロックストレージの動的プロビジョニングと同様です。詳細については、[動的プロビジョニング](#dynamic-provisioning)を参照してください。
 
 
 <a id="etcd-encryption-with-skm"></a>

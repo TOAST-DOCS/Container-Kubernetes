@@ -71,7 +71,7 @@ Velero クライアントは、クラスターのバックアップおよびリ�
 Velero GitHub リポジトリから Velero クライアントをダウンロードして、クラスターのバックアップおよびリストア時に活用できます。ダウンロードした Velero クライアントのコマンドを実行する前に、バックアップおよびリストア対象クラスターの kubeconfigファイルをウェブコンソールからダウンロードし、**KUBECONFIG 環境変数を設定してバックアップおよびリストア対象クラスターを正確に指定**する必要があります。
 
 
-kubeconfigの設定の詳細については、[kubectl のインストール](/Container/NKS/ja/user-guide/#kubectl-install)を参照してください。
+kubeconfigの設定の詳細については、[kubectl のインストール](./user-guide/#kubectl-install)を参照してください。
 
 <a id="install-the-velero-client-download-the-velero-client"></a>
 #### Veleroクライアントのダウンロード

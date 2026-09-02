@@ -254,7 +254,7 @@ This issue may not always occur, and may depend on the nature of your applicatio
 
 <a id="cannot-allocate-memory-error-occurs-and-the-pods-status-appears-as-failedcreatepodcontainer-apply-the-workaround-to-newly-created-clusters-using-the-nks-custom-image-feature"></a>
 #### Apply the workaround to newly created clusters using the NKS Custom Image feature
-NKS provides a feature that allows you to create worker node groups based on custom images. You can use the NKS custom image feature to create an image with the kernel object accounting feature for memory cgroup disabled, and use it when creating a cluster. For more information about using custom images, see [Use a custom image as a worker image](/Container/NKS/en/user-guide/#custom-image).
+NKS provides a feature that allows you to create worker node groups based on custom images. You can use the NKS custom image feature to create an image with the kernel object accounting feature for memory cgroup disabled, and use it when creating a cluster. For more information about using custom images, see [Use a custom image as a worker image](./user-guide/#custom-image).
 
 1. While creating the image template, enter the following in the user script.
 ```

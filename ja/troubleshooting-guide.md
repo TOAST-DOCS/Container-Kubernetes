@@ -263,7 +263,7 @@ $ reboot
 
 <a id="cannot-allocate-memory-error-occurs-and-the-pods-status-appears-as-failedcreatepodcontainer-apply-the-workaround-to-newly-created-clusters-using-the-nks-custom-image-feature"></a>
 #### NKSのカスタムイメージ機能を使って新しく作成したクラスタに解決策を適用
-NKS では、ユーザーのカスタムイメージを基にしたワーカーノードグループを作成する機能を提供しています。NKS カスタムイメージ機能を使用して、memory cgroup に対する kernel object accounting 機能が無効化されたイメージを作成し、クラスター作成時に活用できます。カスタムイメージ使用機能の詳細については、[カスタムイメージをワーカーイメージとして活用](/Container/NKS/ja/user-guide/#custom-image)を参照してください。
+NKS では、ユーザーのカスタムイメージを基にしたワーカーノードグループを作成する機能を提供しています。NKS カスタムイメージ機能を使用して、memory cgroup に対する kernel object accounting 機能が無効化されたイメージを作成し、クラスター作成時に活用できます。カスタムイメージ使用機能の詳細については、[カスタムイメージをワーカーイメージとして活用](./user-guide/#custom-image)を参照してください。
 
 1. イメージテンプレート作成過程でユーザースクリプトに下記の内容を入力します。
 ```
