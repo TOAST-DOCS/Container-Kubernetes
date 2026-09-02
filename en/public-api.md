@@ -6,7 +6,7 @@
 ## Container > NHN Kubernetes Service (NKS) > API v2 Guide { #container-nhn-kubernetes-service-nks-api-v2-guide }
 
 This guide describes the API for configuring Kubernetes clusters.
-NKS uses IaaS tokens for authentication and authorization when making API calls. The IaaS token is an authentication token used for NHN Cloud's OpenStack-based infrastructure services (IaaS). For more information on issuing and using IaaS tokens, see the [IaaS token](/nhncloud/ko/public-api/iaas-token).
+NKS uses IaaS tokens for authentication and authorization when making API calls. The IaaS token is an authentication token used for NHN Cloud's OpenStack-based infrastructure services (IaaS). For more information on issuing and using IaaS tokens, see the [IaaS token](/nhncloud/en/public-api/iaas-token/).
 All API calls are made using the `kubernetes` type endpoint.
 
 | Type | Region | Endpoint |
@@ -30,7 +30,7 @@ You can query the VPC network attached to the internet gateway by using the **ro
 GET /v2.0/networks?router:external=True
 ```
 
-For more information about the network list query API, refer to [List Networks](/Network/VPC/en/public-api/#list-networks).
+For more information about the network list query API, refer to [List Networks](/Network/VPC/en/public-api/#view-vpc-list).
 
 
 <a id="list-of-uuids-of-subnets-attached-to-the-internet-gateway"></a>
@@ -62,12 +62,12 @@ Enter the key pair to use when connecting to the node. For more information abou
 <a id="base-image-uuid"></a>
 ### Base Image UUID { #base-image-uuid }
 
-Enter the base image UUID to use for node creation. To filter only the base images used to create NKS nodes, enter the value `nhncloud_allow_nks_cpu_flavor=true&visibility=public` in the query string parameter when calling the API. For more information on the retrieve base image list API, see [Retrieve Image list](/Compute/Image/en/public-api/#_2).
+Enter the base image UUID to use for node creation. To filter only the base images used to create NKS nodes, enter the value `nhncloud_allow_nks_cpu_flavor=true&visibility=public` in the query string parameter when calling the API. For more information on the retrieve base image list API, see [Retrieve Image list](/Compute/Image/en/public-api/#list-images).
 
 <a id="block-storage-type"></a>
 ### Block Storage Type { #block-storage-type }
 
-Enter the block storage UUID to use for the node. For more information about the block storage type list query API, refer to [List Volume Types](/Storage/Block%20Storage/en/public-api/#list-volume-types) .
+Enter the block storage UUID to use for the node. For more information about the block storage type list query API, refer to [List Volume Types](/Storage/Block%20Storage/en/public-api/#list-block-storage-types) .
 
 <a id="flavor-uuid"></a>
 ### Flavor UUID { #flavor-uuid }

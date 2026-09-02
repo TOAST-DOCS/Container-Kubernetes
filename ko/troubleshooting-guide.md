@@ -254,7 +254,7 @@ $ reboot
 
 <a id="cannot-allocate-memory-error-occurs-and-the-pods-status-appears-as-failedcreatepodcontainer-apply-the-workaround-to-newly-created-clusters-using-the-nks-custom-image-feature"></a>
 #### NKS 커스텀 이미지 기능을 사용하여 새로 생성한 클러스터에 해결 방안 적용
-NKS에서는 사용자의 커스텀 이미지를 기반으로 한 워커 노드 그룹을 생성하는 기능을 제공하고 있습니다. NKS 커스텀 이미지 기능을 사용하여 memory cgroup에 대한 kernel object accounting 기능이 비활성화된 이미지를 만들고 클러스터 생성 시 활용할 수 있습니다. 커스텀 이미지 사용 기능에 대한 자세한 내용은 [커스텀 이미지를 워커 이미지로 활용](/Container/NKS/ko/user-guide/#custom-image)을 참고하세요.
+NKS에서는 사용자의 커스텀 이미지를 기반으로 한 워커 노드 그룹을 생성하는 기능을 제공하고 있습니다. NKS 커스텀 이미지 기능을 사용하여 memory cgroup에 대한 kernel object accounting 기능이 비활성화된 이미지를 만들고 클러스터 생성 시 활용할 수 있습니다. 커스텀 이미지 사용 기능에 대한 자세한 내용은 [커스텀 이미지를 워커 이미지로 활용](./user-guide/#custom-image)을 참고하세요.
 
 1. 이미지 템플릿 생성 과정에서 사용자 스크립트에 아래 내용을 입력합니다.
 ```
