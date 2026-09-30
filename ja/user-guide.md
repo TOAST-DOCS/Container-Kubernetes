@@ -3405,7 +3405,7 @@ spec:
 NGINX Ingress Controller は、広く使用されているIngressコントローラーの1つです。詳細については、[NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/) および [NGINX Ingress Controller for Kubernetes](https://www.nginx.com/products/nginx-ingress-controller/) のドキュメントを参照してください。NGINX Ingress Controller のインストールについては、[Installation Guide](https://kubernetes.github.io/ingress-nginx/deploy/) のドキュメントを参照してください。
 
 <a id="uri-based-service-routing"></a>
-### URI 기반 서비스 분기 { #uri-based-service-routing }
+### URI ベースのサービス分岐 { #uri-based-service-routing }
 Ingressコントローラーは、URIを基にサービスを分岐できます。以下の図は、URIを基にサービスを分岐する簡単な例の構造を示しています。
 
 ![ingress-01.png](http://static.toastoven.net/prod_infrastructure/container/kubernetes/ingress-01.png)
@@ -3759,7 +3759,7 @@ ingress-nginxコントローラーを通じてサービスを外部に公開す�
 
 
 <a id="k8s-dashboard"></a>
-## Kubernetes 대시보드 { #k8s-dashboard }
+## Kubernetes ダッシュボード { #k8s-dashboard }
 NHN Kubernetes Service(NKS) は、デフォルトの Web UI ダッシュボード (dashboard) を提供します。Kubernetes ダッシュボードの詳細については、[Web UI (ダッシュボード)](https://kubernetes.io/ko/docs/tasks/access-application-cluster/web-ui-dashboard/) のドキュメントを参照してください。
 
 > [注意]
