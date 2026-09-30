@@ -2266,9 +2266,9 @@ X-Auth-Token: {tokenId}
 |---|---|---|---|---|
 | tokenId | Header | String | O | Token ID |
 | CLUSTER_ID_OR_NAME | URL | UUID or String | O | Cluster UUID or cluster name | 
-| UUID or String | URL | UUID or String | O | Node group UUID or node group name | 
-| String | Body | String | O | Set to `k8s_node_labels` |
-| k8s_node_labels | Body | <summary>Example</summary> | O | A configuration object consisting of Kubernetes label key-value pairs. Up to 20 can be configured |
+| NODEGROUP_ID_OR_NAME | URL | UUID or String | O | Node group UUID or node group name | 
+| type | Body | String | O | Set to `k8s_node_labels` |
+| k8s_node_labels | Body | Object | O | A configuration object consisting of Kubernetes label key-value pairs. Up to 20 can be configured |
 
 
 <details><summary>Example</summary>
@@ -2548,20 +2548,20 @@ X-Auth-Token: {tokenId}
 
 | Name | Type | Format | Description |
 |---|---|---|---|
-| UUID | Body | UUID | Add-on type UUID |
-| String | Body | String | Project ID |
-| UUID | Body | UUID | Cluster UUID |
+| uuid | Body | UUID | Add-on type UUID |
+| project_id | Body | String | Project ID |
+| cluster_uuid | Body | UUID | Cluster UUID |
 | cluster_name | Body | String | Cluster name |
-| String | Body | String | Add-on type name |
-| String | Body | String | Add-on versions |
+| type | Body | String | Add-on type name |
+| version | Body | String | Add-on versions |
 | options | Body | Object | Add-on-specific options |
-| String | Body | String | Add-on name |
-| String | Body | String | Add-on status |
-| String | Body | String | Add-on status reasons |
+| name | Body | String | Add-on name |
+| status | Body | String | Add-on status |
+| status_reason | Body | String | Add-on status reasons |
 | scope | Body | String | Coverage |
 | target_uuid | Body | UUID | Target UUID |
-| String | Body | String | Created time (UTC) |
-| String | Body | String | Last updated time (UTC) |
+| created_at | Body | String | Created time (UTC) |
+| updated_at | Body | String | Last updated time (UTC) |
 
 <details><summary>Example</summary>
 <p>
@@ -2817,7 +2817,12 @@ This API does not require a request body.
 <a id="view-supported-kubernetes-versions-and-task-types-response"></a>
 #### Response
 
-<todo: translate>
+| Name | Type | Format | Description |
+|---|---|---|---|
+| supported_k8s | Body | Object | Supported Kubernetes version object |
+| supported_k8s."version name" | Body | String | Validity of the Kubernetes version ("True"/"False") |
+| supported_event_type."task type"| Body | Object | Supported task type object ("cluster_events"/"nodegroup_events") |
+| supported_event_type."task type"."task name"| Body | Object | Task type and descriptions |
 
 <details><summary>Example</summary>
 <p>
@@ -2843,39 +2848,39 @@ This API does not require a request body.
         "v1.32.3": true
     },
     "supported_event_type": {
-        "CLUSTER_CREATE": "Create a cluster",
-        "CLUSTER_DELETE": "Delete a cluster",
-        "CLUSTER_HANDOVER": "Cluster OWNER change",
+        "CLUSTER_CREATE": "Create cluster",
+        "CLUSTER_DELETE": "Delete clusters",
+        "CLUSTER_HANDOVER": "Change cluster owner",
         "CLUSTER_UPDATE_VM_AUTH_KEY": "Update key pair",
-        "NODEGROUP_CREATE": "Create a node group",
-        "NODEGROUP_DELETE": "Delete a node group",
-        "CLUSTER_RESIZE": "Resize a cluster",
+        "NODEGROUP_CREATE": "Create node groups",
+        "NODEGROUP_DELETE": "Delete node group",
+        "CLUSTER_RESIZE": "Resize cluster",
         "NODEGROUP_SCALE_OUT": "Scale out nodes",
         "NODEGROUP_SCALE_IN": "Scale in nodes",
         "NODEGROUP_UPDATE_FLAVOR": "Change instance type",
-        "NODEGROUP_UPGRADE": "Node group upgrade",
-        "NODEGROUP_USERSCRIPT_UPDATE": "Change userscript",
+        "NODEGROUP_UPGRADE": "Upgrade node group",
+        "NODEGROUP_USERSCRIPT_UPDATE": "Change user script",
         "NODEGROUP_SET_CLUSTER_AUTOSCALER": "Change cluster autoscaler settings",
         "NODEGROUP_SET_METRIC_BASE_AUTOSCALER": "Change metric-based autoscaler settings",
-        "NODEGROUP_METRIC_BASE_AUTOSCALER_SCALE_OUT": "Scale out nodes with threshold-based autoscaler",
-        "NODEGROUP_METRIC_BASE_AUTOSCALER_SCALE_IN": "Scale in nodes with threshold-based autoscaler",
-        "CLUSTER_API_EP_IPACL_UPDATE": "Cluster API endpoint IP access control change",
+        "NODEGROUP_METRIC_BASE_AUTOSCALER_SCALE_OUT": "Scale out nodes via threshold-based autoscaler",
+        "NODEGROUP_METRIC_BASE_AUTOSCALER_SCALE_IN": "Scale in nodes via threshold-based autoscaler",
+        "CLUSTER_API_EP_IPACL_UPDATE": "Change cluster API endpoint IP access control",
         "NODEGROUP_NODE_ACTION_START_NODE": "Start worker node",
         "NODEGROUP_NODE_ACTION_STOP_NODE": "Stop worker node",
-        "CLUSTER_UPDATE_SGW": "Update Cluster Service Gateway",
-        "CLUSTER_ROTATE_CERTIFICATE": "Rotate cluster certificate",
-        "CLUSTER_UPDATE_NKS_REGISTRY": "Activate NKS registry",
-        "NODEGROUP_UPDATE_EXTRA_VOLUME": "Update extra block storage",
-        "NODEGROUP_UPDATE_EXTRA_SECURITY_GROUP": "Update Extra security groups",
-        "CLUSTER_UPDATE_K8S_ARGS": "Update to Kubernetes component options",
-        "CLUSTER_UPDATE_OIDC_ARGS": "Update OIDC settings",
-        "NODEGROUP_UPDATE_K8S_NODE_LABELS": "Update node group Kubernetes label settings",
-        "CLUSTER_INSTALL_ADDON": "Install Addon",
-        "CLUSTER_UNINSTALL_ADDON": "Uninstall Addon",
-        "CLUSTER_UPDATE_ADDON": "Update Addon",
+        "CLUSTER_UPDATE_SGW": "Change cluster service gateway",
+        "CLUSTER_ROTATE_CERTIFICATE": "Renew cluster certificate",
+        "CLUSTER_UPDATE_NKS_REGISTRY": "Enable NKS registry",
+        "NODEGROUP_UPDATE_EXTRA_VOLUME": "Change additional block storage",
+        "NODEGROUP_UPDATE_EXTRA_SECURITY_GROUP": "Change additional security group",
+        "CLUSTER_UPDATE_K8S_ARGS": "Change Kubernetes component options",
+        "CLUSTER_UPDATE_OIDC_ARGS": "Change OIDC settings",
+        "NODEGROUP_UPDATE_K8S_NODE_LABELS": "Change node group Kubernetes label settings",
+        "CLUSTER_INSTALL_ADDON": "Install addon",
+        "CLUSTER_UNINSTALL_ADDON": "Remove addon",
+        "CLUSTER_UPDATE_ADDON": "Update addon",
         "CLUSTER_UPDATE_CONTROL_PLANE_LOG": "Update control plane log collection",
         "NODEGROUP_UPDATE_FIP_AUTO_BIND": "Change node group floating IP auto-assignment settings",
-        "K8S_API_NOT_WORKING": "Stop kube-apiserver",
+        "K8S_API_NOT_WORKING": "kube-apiserver stopped",
         "ALL_NODES_NOT_READY": "All nodes stopped",
         "AUTO_HEALING": "Auto healing"
     }

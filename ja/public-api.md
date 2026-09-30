@@ -134,6 +134,7 @@ X-Auth-Token: {tokenId}
 | clusters.labels.cert_manager_api | Body | String | CSR(Certificate Signing Request)機能を有効にするかどうか。必ず"True"に設定 |
 | clusters.labels.master_lb_floating_ip_enabled | Body | String | Kubernetes APIエンドポイントに公認ドメインアドレスを作成するかどうか("True" / "False") |
 | clusters.labels.strict_sg_rules | Body | String | ワーカーノードセキュリティグループに必須セキュリティルールのみ作成("True" / "False"), (2024.02.27. 以降に作成されたクラスタで確認可能) |
+| clusters.labels.skm | Body | String | etcdの暗号化に適用されたSKM対称キーID。`{"key_id": "${SKM_KEY_ID}"}`形式のJSONオブジェクトを文字列として出力 |
 | clusters.labels.additional_network_id_list | Body | String | 基本ワーカーノードグループ適用：追加ネットワークのVPCネットワークUUIDリスト(コロン区切り) |
 | clusters.labels.additional_subnet_id_list | Body | String | 基本ワーカーノードグループ適用：追加ネットワークのVPCサブネットUUIDリスト(コロン区切り) |
 | clusters.labels.cni_driver | Body | String | クラスタCNI(2023.03.31. 以降に作成されたクラスタで確認可能) |
@@ -268,6 +269,7 @@ X-Auth-Token: {tokenId}
 | labels.cert_manager_api | Body | String | CSR(Certificate Signing Request)機能を有効にするかどうか。必ず"True"に設定 |
 | labels.master_lb_floating_ip_enabled | Body | String | Kubernetes APIエンドポイントに公認ドメインアドレスを作成するかどうか("True" / "False") |
 | labels.strict_sg_rules | Body | String | ワーカーノードセキュリティグループに必須セキュリティルールのみ作成("True" / "False"), (2024.02.27. 以降に作成されたクラスタで確認可能) |
+| labels.skm | Body | String | etcdの暗号化に適用されたSKM対称キーID。`{"key_id": "${SKM_KEY_ID}"}` 形式のJSONオブジェクトを文字列として出力 |
 | labels.additional_network_id_list | Body | String | 基本ワーカーノードグループ適用：追加ネットワークのVPCネットワークUUIDリスト(コロンで区切る) |
 | labels.additional_subnet_id_list | Body | String | 基本ワーカーノードグループ適用:追加ネットワークのVPCサブネットUUIDリスト(コロンで区切る) |
 | labels.cni_driver | Body | String | クラスタCNI(2023.03.31. 以降に作成されたクラスタで確認可能) |
@@ -524,7 +526,7 @@ X-Auth-Token: {tokenId}
 | 名前 | 種類 | 形式 | 必須 | 説明 |
 |---|---|---|---|---|
 | tokenId | Header | String | O | トークンID |
-| keypair | Body | String | O | 基本ワーカーノードグループに適用するキーペアUUID |
+| keypair | Body | String | O | 基本ワーカーノードグループに適用するキーペア名 |
 | name | Body | String | O | クラスタ名 |
 | cluster_template_id | Body | String | O | クラスタテンプレートID。必ず"iaas_console"に設定 |
 | node_count | Body | String | O | 基本ワーカーノードグループに適用するノード数 |
@@ -552,6 +554,7 @@ X-Auth-Token: {tokenId}
 | labels.user_script | Body | String | X | ユーザースクリプト(old) |
 | labels.user_script_v2 | Body | String | X | ユーザースクリプト |
 | labels.master_lb_floating_ip_enabled | Body | String | O | Kubernetes APIエンドポイントに公認ドメインアドレスを作成するかどうか("True" / "False")<br>labels.external_network_idとexternal_subnet_id_listが設定されている場合にのみ"True"に設定可能 |
+| labels.strict_sg_rules | Body | String | X | ワーカーノードのセキュリティグループに必須のセキュリティルールのみ作成("True" / "False")、デフォルト値: "False" |
 | labels.additional_network_id_list | Body | String | X | 基本ワーカーノードグループ適用：追加ネットワークのVPCネットワークUUIDリスト(コロン区切り) |
 | labels.additional_subnet_id_list | Body | String | X | 基本ワーカーノードグループ適用：追加ネットワークのVPCサブネットUUIDリスト(コロン区切り) |
 | labels.service_cluster_ip_range | Body | String  | X |  K8sサービスネットワーク、クラスタでサービス作作成時、ClusterIPに割り当てられるIP帯域。 fixed_subnet, pods_network_cidr, service_cluster_ip_range入力ルール参考 |
@@ -569,6 +572,7 @@ X-Auth-Token: {tokenId}
 | labels.extra_volumes[].volume_appkey | Body | String | X | (暗号化されたブロックストレージを使用する場合)暗号化されたブロックストレージに適用する共通鍵のアプリキー |
 | labels.extra_volumes[].volume_mount_path | Body | String | X | 追加ブロックストレージがマウントされるパス |
 | labels.control_plane_log | Body | String | X | K8Sコントロールプレーンログ保存有効 |
+| labels.skm | Body | String | X | SKMと連携してetcdの暗号化を適用。`{"key_id": "${SKM_KEY_ID}"}` 形式のJSONオブジェクトを文字列として出力した値を使用 |
 | labels.fip_auto_bind_enable | Body | String | X | フローティングIP自動割り当て:機能有効かどうか(`True` / `False`) |
 | labels.fip_bind_subnet | Body | String | X | フローティングIP自動割り当て:フローティングIPが接続されるネットワークインターフェースのサブネット |
 | labels.fip_selector | Body | String | X | フローティングIP自動割り当て:ノードに割り当てるフローティングIPを選別するための識別子 |
@@ -2311,7 +2315,9 @@ X-Auth-Token: {tokenId}
 <a id="change-kubernetes-label-configuration-of-a-node-group-response"></a>
 #### レスポンス
 
-<todo: translate>
+| 名前 | 種類 | 形式 | 説明 |
+|---|---|---|---|
+| uuid | Body | UUID | ノードグループ UUID |
 
 <details><summary>例</summary>
 <p>
@@ -2505,15 +2511,22 @@ X-Auth-Token: {tokenId}
 <a id="view-a-list-of-add-ons-offered-by-nhn-cloud-request"></a>
 #### リクエスト
 
-<todo: translate>
+| 名前 | 種類 | 形式 | 必須 | 説明 |
+|---|---|---|---|---|
+| tokenId | Header | String | O | トークン ID |
+| k8s_version | Query | String | X | Kubernetesバージョン（例：`v1.30.0`）。指定した場合、そのバージョンと互換性のあるアドオンのみを返します。 |
+| image | Query | UUID | X | ベースイメージ UUID。指定した場合、そのイメージにインストール可能なアドオンのみを返します。 |
+| platform_version | Query | String | X | プラットフォームバージョン（例：`1.202605.0`）。指定した場合、そのプラットフォームバージョンで使用可能なアドオンのみを返します。 |
 
 <a id="view-a-list-of-add-ons-offered-by-nhn-cloud-response"></a>
 #### レスポンス
 
-<todo: translate>
+| 名前 | 種類 | 形式 | 説明 |
+|---|---|---|---|
+| addons | Body | List of object | アドオン情報のリスト |
 
 
-<details><summary>例</summary>
+<details><summary>例示</summary>
 <p>
 
 ```json
