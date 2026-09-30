@@ -587,6 +587,7 @@ X-Auth-Token: {tokenId}
 | addons.name | Body | String | O | アドオン名 |
 | addons.version | Body | String | O | アドオンのバージョン |
 | addons.options | Body | Object | X | アドオンごとのオプション |
+
 > pods_network_cidr, service_cluster_ip_rangeのCIDRは以下のようなルールで入力する必要があります。
 >  - CIDRはリンクローカルアドレス帯域(169.254.0.0/16)と重複することはできません。
 >  - PodネットワークとK8sサービスネットワーク帯域は重複することができません。
